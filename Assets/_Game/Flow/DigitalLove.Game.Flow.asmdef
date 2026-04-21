@@ -1,0 +1,31 @@
+{
+    "name": "DigitalLove.Game.Flow",
+    "rootNamespace": "",
+    "references": [
+        "GUID:65917f6bc12bb4a4cad49ea83a119a2b",
+        "GUID:e92401e0d4937944f9a0beae62ddf4b5",
+        "GUID:fe5d69302f4d8a940849caf8ffb59889",
+        "GUID:ddca81f93c9e44d2fbf5efa600ddbada",
+        "GUID:1530a967b84cfb44dbdd5e8a1989764f",
+        "GUID:1fad3ef53db4844a79bb95d8f18d033d",
+        "GUID:85ce956ae0925e443918fea86f1e0898",
+        "GUID:447181e61705f4d6f954add1124817a5",
+        "GUID:8f41e88a3ae2bd84787063e7bbf23c45",
+        "GUID:41741fc70e2562e498cc7127cf8aa8b3",
+        "GUID:9f19307718f0e4ba7a6d6c188029fd97",
+        "GUID:acb6b1ebdd4e55347b7c3d5e5127d357",
+        "GUID:074ac4d0b9d6f1849b7bd177fcc7c4bd",
+        "GUID:4823059b47a7c4abb836b44cc751cbf6",
+        "GUID:d4ac05b7256104c4c8b955b02fbbc122",
+        "GUID:84bf6b279981c1b4d9e12424b2714e57"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

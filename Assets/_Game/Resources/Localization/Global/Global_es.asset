@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Global_es
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: es
+  m_SharedData: {fileID: 11400000, guid: 5f3366d8a8f04457dbe70990b72f11fd, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 1002513813504
+    m_Localized: La realidad aumentada no es compatible. Se requiere Meta Quest 3
+      o Meta Quest 3S.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1002538979328
+    m_Localized: "Se requiere conexi\xF3n a Internet. Reiniciar cuando se tenga conexi\xF3n."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1002538979329
+    m_Localized: "Aseg\xFArese de que haya una escena de realidad aumentada configurada
+      en su dispositivo para reproducirla."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1002538979330
+    m_Localized: Salida {0}
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
