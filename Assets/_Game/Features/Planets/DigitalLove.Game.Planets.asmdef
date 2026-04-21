@@ -1,0 +1,19 @@
+{
+    "name": "DigitalLove.Game.Planets",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f5eda1afa2a1241a59c4db6830e1c890",
+        "GUID:fed789df5adfe407a90513540307e91a",
+        "GUID:447181e61705f4d6f954add1124817a5",
+        "GUID:8d1a0410b0c159b49879a29ad02b2fbb"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

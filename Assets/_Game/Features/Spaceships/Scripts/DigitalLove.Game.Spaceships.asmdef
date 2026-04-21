@@ -1,0 +1,22 @@
+{
+    "name": "DigitalLove.Game.Spaceships",
+    "rootNamespace": "",
+    "references": [
+        "GUID:65917f6bc12bb4a4cad49ea83a119a2b",
+        "GUID:2a230cb87a1d3ba4a98bdc0ddae76e6c",
+        "GUID:447181e61705f4d6f954add1124817a5",
+        "GUID:8d1a0410b0c159b49879a29ad02b2fbb",
+        "GUID:64cc67f4d810af040bbe47679f3f5416",
+        "GUID:21d1eb854b91ade49bc69a263d12bee2",
+        "GUID:d8b63aba1907145bea998dd612889d6b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,17 @@
+{
+    "name": "DigitalLove.Game.Levels",
+    "rootNamespace": "",
+    "references": [
+        "DigitalLove.Game.Planets",
+        "DigitalLove.Casual.Levels"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
