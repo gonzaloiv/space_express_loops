@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using DigitalLove.Game.Planets;
 using DigitalLove.Global;
 using Oculus.Interaction;
@@ -61,7 +62,13 @@ namespace DigitalLove.Game.Spaceships
         private void CheckHits()
         {
             transform.SetPose(body.ToWorldPose());
-            RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward, 100, layerMask);
+            RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward, 100, layerMask).Where(h =>
+            {
+                PlanetBehaviour planet = h.rigidbody.GetComponent<PlanetBehaviour>();
+                if (planet != null && planet != originPlanet)
+                    return true;
+                return false;
+            }).ToArray();
             if (hits.Length <= 0)
             {
                 if (destinationPlanet != null)

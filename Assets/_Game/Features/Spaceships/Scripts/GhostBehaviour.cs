@@ -13,8 +13,6 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private float rotationSnap = 5f;
         [SerializeField] private float translationSnap = 0.05f;
 
-        private Pose poseToMatch = new();
-
         public Transform Body => body.transform;
 
         public void SetActive(bool isActive)
@@ -55,14 +53,12 @@ namespace DigitalLove.Game.Spaceships
             float magnitude = offset.magnitude;
             float snappedMagnitude = Mathf.Round(magnitude / translationSnap) * translationSnap;
             offset = offset / magnitude * snappedMagnitude;
-            poseToMatch.position = transform.position + offset;
-            body.transform.position = poseToMatch.position;
+            body.transform.position = transform.position + offset;
 
             Vector3 lookDir = transform.position - grabbable.transform.position;
             Quaternion targetRot = Quaternion.LookRotation(lookDir);
             targetRot = Quaternion.Euler(targetRot.eulerAngles.Snap(rotationSnap));
-            poseToMatch.rotation = targetRot;
-            body.transform.rotation = poseToMatch.rotation;
+            body.transform.rotation = targetRot;
         }
     }
 }
