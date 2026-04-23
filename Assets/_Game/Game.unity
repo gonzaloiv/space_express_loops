@@ -2808,15 +2808,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 970025017559047009, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.29999998
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 970025017559047009, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.3
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 970025017559047009, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.29999998
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 970025017559047009, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4551,7 +4551,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9607844, g: 0.72156864, b: 0.39607847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4567,7 +4567,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 2.5
+  m_PixelsPerUnitMultiplier: 0.39
 --- !u!222 &1237533879
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4809,7 +4809,7 @@ Transform:
   m_GameObject: {fileID: 1345896425}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5, y: -0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: -0.000000014901161, y: -0.02, z: 0.20000002}
+  m_LocalPosition: {x: -0.000000014901161, y: 0, z: 0.20000002}
   m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5796,7 +5796,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -30, y: -30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1739230870
 MonoBehaviour:
@@ -5811,7 +5811,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9607844, g: 0.72156864, b: 0.39607847, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7116,11 +7116,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Spaceships::DigitalLove.Game.Spaceships.GhostBehaviour
   grabbable: {fileID: 7825666702032387513}
-  radius: 0.05
+  radius: 0.03
   dragZone: {fileID: 2093653612}
   body: {fileID: 990094188}
-  rotationSnap: 5
-  translationSnap: 0.025
+  positionBufferSize: 36
 --- !u!1 &1873983738
 GameObject:
   m_ObjectHideFlags: 0
@@ -9902,7 +9901,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 449770837783413211, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
       propertyPath: m_Name
-      value: Body
+      value: Model
       objectReference: {fileID: 0}
     - target: {fileID: 449770837783413211, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
       propertyPath: m_Layer
@@ -9910,15 +9909,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 970025017559047009, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.3
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 970025017559047009, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.3
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 970025017559047009, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.3
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 970025017559047009, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10304,8 +10303,8 @@ GameObject:
   - component: {fileID: 7825666702032387510}
   - component: {fileID: 7825666702032387511}
   - component: {fileID: 7825666702032387513}
-  - component: {fileID: 7825666702032387512}
   - component: {fileID: 7825666702032387514}
+  - component: {fileID: 7825666702032387515}
   m_Layer: 12
   m_Name: Grabbable
   m_TagString: Untagged
@@ -10495,26 +10494,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7825666702032387512
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6208319147033581314}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7cb4a09355f9dc244bfbcd2ac9208ef7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interactorFilters: []
-  _maxInteractors: 1
-  _maxSelectingInteractors: 1
-  _data: {fileID: 0}
-  _pointableElement: {fileID: 7825666702032387513}
-  _boundsCollider: {fileID: 1393437284}
-  _colliders:
-  - {fileID: 110219813}
 --- !u!114 &7825666702032387513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10552,6 +10531,47 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Interactables.OculusInteraction::DigitalLove.Interactables.GrabbableOutline
   grabbable: {fileID: 7825666702032387513}
   outline: {fileID: 110219817}
+--- !u!114 &7825666702032387515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6208319147033581314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9a7676b01585ce43908639a27765dfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interactorFilters: []
+  _maxInteractors: -1
+  _maxSelectingInteractors: -1
+  _data: {fileID: 0}
+  _pointableElement: {fileID: 7825666702032387513}
+  _rigidbody: {fileID: 7825666702032387511}
+  _physicsGrabbable: {fileID: 0}
+  _resetGrabOnGrabsUpdated: 1
+  _scoringModifier:
+    _positionRotationWeight: 0.5
+  _slippiness: 0
+  _supportedGrabTypes: 3
+  _pinchGrabRules:
+    _thumbRequirement: 0
+    _indexRequirement: 1
+    _middleRequirement: 1
+    _ringRequirement: 0
+    _pinkyRequirement: 0
+    _unselectMode: 1
+  _palmGrabRules:
+    _thumbRequirement: 1
+    _indexRequirement: 0
+    _middleRequirement: 2
+    _ringRequirement: 2
+    _pinkyRequirement: 1
+    _unselectMode: 0
+  _movementProvider: {fileID: 0}
+  _handAligment: 0
+  _handGrabPoses: []
 --- !u!223 &7834780671779256475
 Canvas:
   m_ObjectHideFlags: 0
