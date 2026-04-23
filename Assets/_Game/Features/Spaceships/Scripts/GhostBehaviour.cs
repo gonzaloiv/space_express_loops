@@ -10,22 +10,26 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private float radius = 0.1f;
         [SerializeField] private float speed = 3f;
         [SerializeField] private Transform dragZone;
-        [SerializeField] private GameObject ghostBody;
+        [SerializeField] private GameObject body;
+        [SerializeField] private float rotationSnap = 5f;
+        [SerializeField] private float translationSnap = 0.05f;
 
         private Pose poseToMatch = new();
+
+        public Transform Body => body.transform;
 
         public void SetActive(bool isActive)
         {
             if (isActive)
             {
                 dragZone.gameObject.SetActive(true);
-                ghostBody.transform.LocalReset();
-                ghostBody.SetActive(true);
+                body.transform.LocalReset();
+                body.SetActive(true);
             }
             else
             {
                 dragZone.gameObject.SetActive(false);
-                ghostBody.SetActive(false);
+                body.SetActive(false);
             }
         }
 
@@ -47,20 +51,24 @@ namespace DigitalLove.Game.Spaceships
 
         private void OnMove()
         {
-            Vector3 current = grabbable.transform.position;
-            Vector3 offset = current - transform.position;
-            poseToMatch.position = transform.position + offset.ClampSimetric(radius);
+            Vector3 offset = grabbable.transform.position - transform.position;
+            Vector3 targetPos = transform.position + offset.ClampSimetric(radius);
+            poseToMatch.position = targetPos.Snap(translationSnap);
+            body.transform.position = poseToMatch.position;
 
-            Vector3 lookDir = transform.position - current;
-            poseToMatch.rotation = Quaternion.LookRotation(lookDir);
+            Vector3 lookDir = transform.position - grabbable.transform.position;
+            Quaternion targetRot = Quaternion.LookRotation(lookDir);
+            targetRot = Quaternion.Euler(targetRot.eulerAngles.Snap(rotationSnap));
+            poseToMatch.rotation = targetRot;
+            body.transform.rotation = poseToMatch.rotation;
         }
 
         private void Update()
         {
-            if (!ghostBody.activeInHierarchy)
+            if (!body.activeInHierarchy)
                 return;
-            ghostBody.transform.position = Vector3.Lerp(ghostBody.transform.position, poseToMatch.position, speed * Time.deltaTime);
-            ghostBody.transform.rotation = Quaternion.Lerp(ghostBody.transform.rotation, poseToMatch.rotation, speed * Time.deltaTime);
+            // body.transform.position = Vector3.Lerp(body.transform.position, poseToMatch.position, speed * Time.deltaTime);
+            // body.transform.rotation = Quaternion.Lerp(body.transform.rotation, poseToMatch.rotation, speed * Time.deltaTime);
         }
     }
 }

@@ -1,5 +1,4 @@
 using Unity.Mathematics;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Splines;
 

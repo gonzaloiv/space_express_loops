@@ -28,6 +28,7 @@ namespace DigitalLove.Game.Spaceships
         private void OnUnselect()
         {
             ghost.SetActive(false);
+
             parent.SetCurrentState<OnRouteState>();
         }
     }

@@ -17,7 +17,8 @@ namespace DigitalLove.Game.Spaceships
         {
             base.Init(parent);
             ghost.SetActive(false);
-            bezierRay.SetOriginPlanet(origin);
+            bezierRay.Init(origin, ghost.Body);
+            bezierRay.SetActive(false);
         }
 
         public override void Enter()
@@ -26,6 +27,7 @@ namespace DigitalLove.Game.Spaceships
             grabbable.WhenPointerEventRaised += OnPointerEvent;
 
             ghost.SetActive(true);
+            bezierRay.SetActive(true);
         }
 
         public override void Exit()

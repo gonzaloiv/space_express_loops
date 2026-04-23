@@ -1,6 +1,7 @@
 using System;
 using DigitalLove.Game.Planets;
 using DigitalLove.Global;
+using Oculus.Interaction;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -15,8 +16,9 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private LayerMask layerMask;
         [SerializeField] private float lineDistance = 1;
         [SerializeField] private SplineContainer splineContainer;
-        [SerializeField] private PlanetBehaviour originPlanet;
 
+        private PlanetBehaviour originPlanet;
+        private Transform body;
         private float countdown;
         private PlanetBehaviour destinationPlanet;
 
@@ -25,11 +27,16 @@ namespace DigitalLove.Game.Spaceships
 
         public Action<PlanetBehaviour> planetFound = (planet) => { };
 
-        public void SetOriginPlanet(PlanetBehaviour originPlanet) => this.originPlanet = originPlanet;
-
-        private void OnEnable()
+        public void Init(PlanetBehaviour originPlanet, Transform body)
         {
-            ShowLineRenderer();
+            this.originPlanet = originPlanet;
+            this.body = body;
+        }
+
+        public void DeselectPlanet()
+        {
+            if (destinationPlanet != null)
+                destinationPlanet.SetIsDestination(false);
         }
 
         private void OnDisable()
@@ -48,6 +55,7 @@ namespace DigitalLove.Game.Spaceships
         {
             if (destinationPlanet != null && destinationPlanet.IsDestination)
                 return;
+            transform.SetPose(body.ToWorldPose());
             RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward, 100, layerMask);
             if (hits.Length <= 0)
             {
@@ -97,21 +105,29 @@ namespace DigitalLove.Game.Spaceships
 
             Vector3 direction = (destinationPlanet.transform.position - originPlanet.transform.position).normalized;
 
-            // Vector3 originPosition = splineContainer.transform.InverseTransformPoint(originPlanet.transform.position - direction * originPlanet.RadiusOffset);
             splineContainer.transform.position = originPlanet.transform.position - direction * originPlanet.RadiusOffset;
-
             splineContainer.transform.forward = direction;
 
             Vector3 destinationPosition = destinationPlanet.transform.position + direction * destinationPlanet.RadiusOffset;
-            splineContainer.SetKnotPosition(2, splineContainer.transform.InverseTransformPoint(destinationPosition));
+            splineContainer.SetKnotPosition(3, splineContainer.transform.InverseTransformPoint(destinationPosition));
 
-            Vector3 middlePosition = (splineContainer.transform.position + destinationPosition) / 2;
+            float distance = Vector3.Distance(destinationPosition, splineContainer.transform.position);
 
-            float biggerRadius = destinationPlanet.RadiusOffset > originPlanet.RadiusOffset ? destinationPlanet.RadiusOffset : originPlanet.RadiusOffset;
-            Vector3 midRight = splineContainer.transform.InverseTransformPoint(middlePosition + splineContainer.transform.right.normalized * biggerRadius);
-            splineContainer.SetKnotPosition(1, midRight);
-            Vector3 midLeft = splineContainer.transform.InverseTransformPoint(middlePosition - splineContainer.transform.right.normalized * biggerRadius);
-            splineContainer.SetKnotPosition(3, midLeft);
+            Vector3 oneThirdPosition = splineContainer.transform.position + direction * distance / 3;
+            Vector3 originOffset = splineContainer.transform.right.normalized * originPlanet.RadiusOffset;
+
+            Vector3 oneThirdRight = splineContainer.transform.InverseTransformPoint(oneThirdPosition + originOffset);
+            splineContainer.SetKnotPosition(1, oneThirdRight);
+            Vector3 oneThirdLeft = splineContainer.transform.InverseTransformPoint(oneThirdPosition - originOffset);
+            splineContainer.SetKnotPosition(5, oneThirdLeft);
+
+            Vector3 twoThirdsPosition = destinationPosition - direction * distance / 3;
+            Vector3 destinationOffset = splineContainer.transform.right.normalized * destinationPlanet.RadiusOffset;
+
+            Vector3 twoThirdsRight = splineContainer.transform.InverseTransformPoint(twoThirdsPosition + destinationOffset);
+            splineContainer.SetKnotPosition(2, twoThirdsRight);
+            Vector3 twoThirdsLeft = splineContainer.transform.InverseTransformPoint(twoThirdsPosition - destinationOffset);
+            splineContainer.SetKnotPosition(4, twoThirdsLeft);
         }
 
         [Header("Debug")]
