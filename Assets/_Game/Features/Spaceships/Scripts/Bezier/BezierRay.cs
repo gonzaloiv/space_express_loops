@@ -16,16 +16,21 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private LayerMask layerMask;
         [SerializeField] private float lineDistance = 1;
         [SerializeField] private SplineContainer splineContainer;
+        [SerializeField] private GameObject arrow;
 
-        private PlanetBehaviour originPlanet;
         private Transform body;
         private float countdown;
+        private PlanetBehaviour originPlanet;
         private PlanetBehaviour destinationPlanet;
+        private bool isLookingForDestination;
 
-        private Vector3 LineDefaultDestinationPosition => lineRenderer.transform.position + lineRenderer.transform.forward * lineDistance;
         public Vector3[] GetSplinePositions() => splineContainer.GetPositions(Resolution);
+        public PlanetBehaviour Origin => originPlanet;
+        public PlanetBehaviour Destination => destinationPlanet;
 
-        public Action<PlanetBehaviour> planetFound = (planet) => { };
+        public Action<PlanetBehaviour> planetSelected = (planet) => { };
+
+        public void SetIsLookingForDestination(bool isLookingForDestination) => this.isLookingForDestination = isLookingForDestination;
 
         public void Init(PlanetBehaviour originPlanet, Transform body)
         {
@@ -33,35 +38,36 @@ namespace DigitalLove.Game.Spaceships
             this.body = body;
         }
 
-        public void DeselectPlanet()
+        private void OnEnable()
         {
-            if (destinationPlanet != null)
-                destinationPlanet.SetIsDestination(false);
+            isLookingForDestination = true;
         }
 
         private void OnDisable()
         {
             if (destinationPlanet != null)
-                destinationPlanet.SetIsDestination(false);
+                destinationPlanet.SetIsDestination(0);
         }
 
         private void Update()
         {
+            arrow.SetActive(isLookingForDestination);
+            if (!isLookingForDestination)
+                return;
             CheckHits();
             ShowLineRenderer();
         }
 
         private void CheckHits()
         {
-            if (destinationPlanet != null && destinationPlanet.IsDestination)
-                return;
             transform.SetPose(body.ToWorldPose());
             RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward, 100, layerMask);
             if (hits.Length <= 0)
             {
                 if (destinationPlanet != null)
-                    destinationPlanet.SetIsDestination(false);
+                    destinationPlanet.SetIsDestination(0);
                 destinationPlanet = null;
+                planetSelected.Invoke(null);
             }
             else
             {
@@ -69,17 +75,18 @@ namespace DigitalLove.Game.Spaceships
                 if (hitPlanet != null && hitPlanet != destinationPlanet && hitPlanet != originPlanet)
                 {
                     if (destinationPlanet != null)
-                        destinationPlanet.SetIsDestination(false);
+                        destinationPlanet.SetIsDestination(0);
                     destinationPlanet = hitPlanet;
                     countdown = secsToSelect;
                 }
-                else if (destinationPlanet != null)
+                else if (destinationPlanet != null && !destinationPlanet.IsDestination)
                 {
                     countdown -= Time.deltaTime;
+                    destinationPlanet.SetIsDestination(countdown / secsToSelect);
                     if (countdown <= 0)
                     {
-                        planetFound.Invoke(destinationPlanet);
-                        destinationPlanet.SetIsDestination(true);
+                        planetSelected.Invoke(destinationPlanet);
+                        destinationPlanet.SetIsDestination(1);
                     }
                 }
             }
@@ -87,14 +94,14 @@ namespace DigitalLove.Game.Spaceships
 
         private void ShowLineRenderer()
         {
-            if (destinationPlanet == null || !destinationPlanet.IsDestination)
+            bool hasDestination = destinationPlanet != null && destinationPlanet.IsDestination;
+            if (!hasDestination)
             {
-                Vector3 lineDestination = destinationPlanet != null ? destinationPlanet.transform.position : LineDefaultDestinationPosition;
-                lineRenderer.positionCount = 2;
-                lineRenderer.SetPositions(new Vector3[] { transform.position, lineDestination });
+                lineRenderer.enabled = false;
             }
             else
             {
+                lineRenderer.enabled = true;
                 UpdateSpline();
                 lineRenderer.MatchSpline(splineContainer, Resolution);
             }
@@ -137,7 +144,7 @@ namespace DigitalLove.Game.Spaceships
         private void SetDestinationPlanet()
         {
             destinationPlanet = toSet;
-            destinationPlanet.SetIsDestination(true);
+            destinationPlanet.SetIsDestination(1);
         }
     }
 }

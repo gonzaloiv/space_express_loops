@@ -13,6 +13,8 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private PlanetBehaviour origin;
         [SerializeField] private GhostBehaviour ghost;
 
+        private PlanetBehaviour destination;
+
         public override void Init(StateMachine parent)
         {
             base.Init(parent);
@@ -23,7 +25,7 @@ namespace DigitalLove.Game.Spaceships
 
         public override void Enter()
         {
-            bezierRay.planetFound += OnPlanetFound;
+            bezierRay.planetSelected += OnPlanetFound;
             grabbable.WhenPointerEventRaised += OnPointerEvent;
 
             ghost.SetActive(true);
@@ -32,13 +34,13 @@ namespace DigitalLove.Game.Spaceships
 
         public override void Exit()
         {
-            bezierRay.planetFound -= OnPlanetFound;
+            bezierRay.planetSelected -= OnPlanetFound;
             grabbable.WhenPointerEventRaised -= OnPointerEvent;
         }
 
-        private void OnPlanetFound(PlanetBehaviour behaviour)
+        private void OnPlanetFound(PlanetBehaviour planet)
         {
-            parent.SetCurrentState<LoopDesignState>();
+            destination = planet;
         }
 
         private void OnPointerEvent(PointerEvent pointer)
@@ -51,7 +53,14 @@ namespace DigitalLove.Game.Spaceships
         private void OnUnselect()
         {
             ghost.SetActive(false);
-            parent.SetCurrentState<WaitingForRouteState>();
+            if (destination != null)
+            {
+                parent.SetCurrentState<OnRouteState>();
+            }
+            else
+            {
+                parent.SetCurrentState<WaitingForRouteState>();
+            }
         }
     }
 }

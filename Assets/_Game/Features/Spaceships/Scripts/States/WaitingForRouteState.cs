@@ -17,6 +17,7 @@ namespace DigitalLove.Game.Spaceships
 
             grabbableBody.Show();
             bezierRay.SetActive(false);
+            grabbable.SetActive(true);
         }
 
         public override void Exit()
