@@ -3,7 +3,9 @@
     "rootNamespace": "",
     "references": [
         "DigitalLove.Game.Planets",
-        "DigitalLove.Casual.Levels"
+        "DigitalLove.Casual.Levels",
+        "DigitalLove.Game.Spaceships",
+        "meta.xr.mrutilitykit"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -21,21 +21,21 @@ namespace DigitalLove.Game.Spaceships
 
         private Transform body;
         private float countdown;
-        private PlanetBehaviour originPlanet;
+        private BasePlanetBehaviour basePlanet;
         private PlanetBehaviour destinationPlanet;
         private bool isLookingForDestination;
 
         public Vector3[] GetSplinePositions() => splineContainer.GetPositions(Resolution);
-        public PlanetBehaviour Origin => originPlanet;
+        public BasePlanetBehaviour Origin => basePlanet;
         public PlanetBehaviour Destination => destinationPlanet;
 
         public Action<PlanetBehaviour> planetSelected = (planet) => { };
 
         public void SetIsLookingForDestination(bool isLookingForDestination) => this.isLookingForDestination = isLookingForDestination;
 
-        public void Init(PlanetBehaviour originPlanet, Transform body)
+        public void Init(BasePlanetBehaviour basePlanet, Transform body)
         {
-            this.originPlanet = originPlanet;
+            this.basePlanet = basePlanet;
             this.body = body;
         }
 
@@ -65,7 +65,7 @@ namespace DigitalLove.Game.Spaceships
             RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward, 100, layerMask).Where(h =>
             {
                 PlanetBehaviour planet = h.rigidbody.GetComponent<PlanetBehaviour>();
-                if (planet != null && planet != originPlanet)
+                if (planet != null && planet.gameObject != basePlanet.gameObject)
                     return true;
                 return false;
             }).ToArray();
@@ -79,7 +79,7 @@ namespace DigitalLove.Game.Spaceships
             else
             {
                 PlanetBehaviour hitPlanet = hits[0].rigidbody.GetComponent<PlanetBehaviour>();
-                if (hitPlanet != null && hitPlanet != destinationPlanet && hitPlanet != originPlanet)
+                if (hitPlanet != null && hitPlanet != destinationPlanet && hitPlanet.gameObject != basePlanet.gameObject)
                 {
                     if (destinationPlanet != null)
                         destinationPlanet.SetIsDestination(0);
@@ -117,9 +117,9 @@ namespace DigitalLove.Game.Spaceships
         private void UpdateSpline()
         {
 
-            Vector3 direction = (destinationPlanet.transform.position - originPlanet.transform.position).normalized;
+            Vector3 direction = (destinationPlanet.transform.position - basePlanet.transform.position).normalized;
 
-            splineContainer.transform.position = originPlanet.transform.position - direction * originPlanet.RadiusOffset;
+            splineContainer.transform.position = basePlanet.transform.position - direction * basePlanet.GetComponent<PlanetBehaviour>().RadiusOffset;
             splineContainer.transform.forward = direction;
 
             Vector3 destinationPosition = destinationPlanet.transform.position + direction * destinationPlanet.RadiusOffset;
@@ -128,7 +128,7 @@ namespace DigitalLove.Game.Spaceships
             float distance = Vector3.Distance(destinationPosition, splineContainer.transform.position);
 
             Vector3 oneThirdPosition = splineContainer.transform.position + direction * distance / 3;
-            Vector3 originOffset = splineContainer.transform.right.normalized * originPlanet.RadiusOffset;
+            Vector3 originOffset = splineContainer.transform.right.normalized * basePlanet.GetComponent<PlanetBehaviour>().RadiusOffset;
 
             Vector3 oneThirdRight = splineContainer.transform.InverseTransformPoint(oneThirdPosition + originOffset);
             splineContainer.SetKnotPosition(1, oneThirdRight);
@@ -144,14 +144,13 @@ namespace DigitalLove.Game.Spaceships
             splineContainer.SetKnotPosition(4, twoThirdsLeft);
         }
 
-        [Header("Debug")]
-        [SerializeField] private PlanetBehaviour toSet;
+        // ! DEBUG
 
-        [Button]
-        private void SetDestinationPlanet()
+        public void SetDestinationPlanet(PlanetBehaviour toSet)
         {
             destinationPlanet = toSet;
             destinationPlanet.SetIsDestination(1);
+            gameObject.SetActive(true);
         }
     }
 }

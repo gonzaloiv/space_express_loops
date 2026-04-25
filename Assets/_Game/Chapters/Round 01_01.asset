@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.Levels::DigitalLove.Game.Levels.RoundData
   id: 01_01
   prefab: {fileID: 0}
-  planets:
-  - radius:
-      min: 0.2
-      max: 0.4
-  - radius:
-      min: 0.2
-      max: 0.4
-  - radius:
-      min: 0.2
-      max: 0.4
+  planetsSeed:
+    count:
+      min: 2
+      max: 4
+    planetSeed:
+      radius:
+        min: 0.15
+        max: 0.35
+      distanceToBase:
+        min: 0.75
+        max: 2

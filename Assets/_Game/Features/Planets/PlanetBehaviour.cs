@@ -13,6 +13,7 @@ namespace DigitalLove.Game.Planets
         [SerializeField] private ColorValue routeColor;
         [SerializeField] private ColorValue defaultColor;
         [SerializeField] private Renderer rend;
+        [SerializeField] private LayerMask layerMask;
 
         private float percentage;
 
@@ -32,9 +33,12 @@ namespace DigitalLove.Game.Planets
             outline.OutlineWidth = (1 - percentage) * maxOutlineWidth;
         }
 
-        public void Setup(float radius)
+        public void Setup(float radius, Vector3 position)
         {
             body.localScale = Vector3.one * radius;
+            transform.position = position;
+            rend.material.color = defaultColor.value;
+            gameObject.SetActive(true);
         }
 
         public void SetIsInRoute(bool isInRoute)

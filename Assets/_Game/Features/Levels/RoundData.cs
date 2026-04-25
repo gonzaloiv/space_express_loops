@@ -8,6 +8,6 @@ namespace DigitalLove.Game.Levels
     public class RoundData : LevelData
     {
         [Header("RoundData")]
-        public PlanetSeed[] planets;
+        public PlanetsSeed planetsSeed;
     }
 }

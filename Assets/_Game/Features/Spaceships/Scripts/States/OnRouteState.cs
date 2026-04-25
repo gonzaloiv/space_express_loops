@@ -4,6 +4,7 @@ using UnityEngine;
 using DigitalLove.Global;
 using Oculus.Interaction;
 using UnityEngine.UI;
+using DigitalLove.Game.Planets;
 
 namespace DigitalLove.Game.Spaceships
 {
@@ -31,7 +32,7 @@ namespace DigitalLove.Game.Spaceships
             editButton.onClick.AddListener(OnEditButtonClick);
 
             body.SetActive(true);
-            bezierRay.Origin.SetIsInRoute(true);
+            bezierRay.Origin.GetComponent<PlanetBehaviour>().SetIsInRoute(true);
             bezierRay.Destination.SetIsInRoute(true);
             bezierRay.SetIsLookingForDestination(false);
             positions = bezierRay.GetSplinePositions();
@@ -51,7 +52,7 @@ namespace DigitalLove.Game.Spaceships
 
             followTween?.Kill();
             body.SetActive(false);
-            bezierRay.Origin.SetIsInRoute(false);
+            bezierRay.Origin.GetComponent<PlanetBehaviour>().SetIsInRoute(false);
             bezierRay.Destination.SetIsInRoute(false);
             editPanel.SetActive(false);
         }

@@ -23,6 +23,7 @@
   <Project Path="DigitalLove.Player.csproj" />
   <Project Path="DigitalLove.Analytics.csproj" />
   <Project Path="DigitalLove.XR.OVR.csproj" />
+  <Project Path="DigitalLove.Game.Planets.csproj" />
   <Project Path="DigitalLove.Casual.Levels.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.csproj" />
   <Project Path="DigitalLove.Game.Spaceships.csproj" />
@@ -32,19 +33,18 @@
   <Project Path="DigitalLove.Casual.Analytics.csproj" />
   <Project Path="DigitalLove.Timeline.csproj" />
   <Project Path="DigitalLove.XR.MRUK.csproj" />
+  <Project Path="DigitalLove.Game.Flow.csproj" />
   <Project Path="Unity.XR.Hands.Samples.Gestures.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="DigitalLove.Theming.csproj" />
   <Project Path="DigitalLove.DataAccess.Local.csproj" />
   <Project Path="DigitalLove.Timeline.Integrations.csproj" />
   <Project Path="DigitalLove.Analytics.GameAnalytics.csproj" />
-  <Project Path="DigitalLove.Game.Flow.csproj" />
   <Project Path="DigitalLove.Audio.Runtime.csproj" />
   <Project Path="DigitalLove.XR.Platform.csproj" />
   <Project Path="DigitalLove.XR.ARFoundation.csproj" />
   <Project Path="DigitalLove.Game.Levels.csproj" />
   <Project Path="Unity.XR.Hands.Samples.VisualizerSample.csproj" />
-  <Project Path="DigitalLove.Game.Planets.csproj" />
   <Project Path="DigitalLove.Interactables.OculusInteraction.csproj" />
   <Project Path="DigitalLove.VFX.ShadowLike.csproj" />
   <Project Path="Simple360Render.Runtime.csproj" />
@@ -56,6 +56,7 @@
   <Project Path="DigitalLove.Casual.Flow.Setup.MRUK.csproj" />
   <Project Path="DigitalLove.Reflex.csproj" />
   <Project Path="DigitalLove.FlowControl.Routes.Editor.csproj" />
+  <Project Path="DigitalLove.Game.Debug.csproj" />
   <Project Path="DigitalLove.VFX.Materials.csproj" />
   <Project Path="TrinarySoftware.MEC.Runtime.csproj" />
   <Project Path="DigitalLove.Analytics.Unity.csproj" />

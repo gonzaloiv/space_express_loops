@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec51a654463684b09b62dc9bd8ed023a, type: 3}
   m_Name: Color.DarkBlue
   m_EditorClassIdentifier: DigitalLove.Global::DigitalLove.Global.ColorValue
-  value: {r: 0.20392159, g: 0.37254903, b: 0.49803925, a: 1}
+  value: {r: 0.24446416, g: 0.31359044, b: 0.4113207, a: 1}

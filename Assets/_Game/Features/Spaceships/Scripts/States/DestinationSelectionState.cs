@@ -10,16 +10,20 @@ namespace DigitalLove.Game.Spaceships
     {
         [SerializeField] private Grabbable grabbable;
         [SerializeField] private BezierRay bezierRay;
-        [SerializeField] private PlanetBehaviour origin;
         [SerializeField] private GhostBehaviour ghost;
 
         private PlanetBehaviour destination;
+
+        public void SetBasePlanet(BasePlanetBehaviour basePlanet)
+        {
+            bezierRay.Init(basePlanet, ghost.Body);
+        }
 
         public override void Init(StateMachine parent)
         {
             base.Init(parent);
             ghost.SetActive(false);
-            bezierRay.Init(origin, ghost.Body);
+
             bezierRay.SetActive(false);
         }
 
