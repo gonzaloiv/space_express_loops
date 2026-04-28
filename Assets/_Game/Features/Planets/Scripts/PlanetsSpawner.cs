@@ -16,14 +16,7 @@ namespace DigitalLove.Game.Planets
 
         public BasePlanetBehaviour BasePlanet => basePlanet;
 
-        public List<PlanetData> Spawn(PlanetsSeed seed)
-        {
-            HideAll();
-            basePlanet.Spawn(idCreator.NextId);
-            return SpawnPlanets(seed);
-        }
-
-        private List<PlanetData> SpawnPlanets(PlanetsSeed seed)
+        public List<PlanetData> GeneratePlanetDataFromPlanetsSeed(PlanetsSeed seed)
         {
             List<PlanetData> result = new();
             int count = seed.count.GetRandomValue();

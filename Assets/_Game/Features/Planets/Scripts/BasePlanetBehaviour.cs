@@ -11,15 +11,20 @@ namespace DigitalLove.Game.Planets
         [SerializeField] private StationData[] stations;
         [SerializeField] private LettersPanel lettersPanel;
 
+        private string id;
+
+        public string Id => id;
         public float RadiusOffset => rend.transform.lossyScale.x;
 
         public void Spawn(string id, int currentLetters = 0)
         {
+            this.id = id;
+            this.SetActive(true);
+            ShowLetters(currentLetters);
+            
             transform.localPosition = Vector3.zero;
             rend.material.color = baseColor.value;
-            this.SetActive(true);
             lettersPanel.Init(transform.position + transform.up * RadiusOffset);
-            ShowLetters(currentLetters);
         }
 
         public Pose GetValidStationPose()

@@ -22,6 +22,8 @@ namespace DigitalLove.Game.Flow
             levelContainer.SpaceshipsSpawner.Current.SetOnLoopComplete(OnLoopComplete);
 
             gameSnapshot = memoryDataClient.Get<GameSnapshot>();
+            
+            levelContainer.PlanetsSpawner.BasePlanet.ShowLetters(gameSnapshot.CurrentLetters);
         }
 
         private void OnLoopCreated(LoopData data)

@@ -47,7 +47,7 @@ namespace DigitalLove.Game.Spaceships
         public void SetRoute(PlanetBehaviour planet)
         {
             bezierRay.SetDestinationPlanet(planet);
-            stateMachine.SetCurrentState<OnRouteState>();
+            destinationSelectionState.OnLoopCreated();
         }
 
         public void Hide() => this.SetActive(false);

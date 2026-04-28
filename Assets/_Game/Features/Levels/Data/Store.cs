@@ -11,7 +11,7 @@ namespace DigitalLove.Levels
         public void IncreaseLetters(int value)
         {
             letters += value;
-            totalCollectedLetters += letters;
+            totalCollectedLetters += value;
         }
 
         public void Reset()

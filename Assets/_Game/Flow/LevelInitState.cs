@@ -1,9 +1,7 @@
-using System.Collections.Generic;
 using DigitalLove.DataAccess;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Levels;
 using DigitalLove.Game.Persistence;
-using DigitalLove.Game.Planets;
 using Newtonsoft.Json;
 using Reflex.Attributes;
 using UnityEngine;
@@ -36,9 +34,13 @@ namespace DigitalLove.Game.Flow
             if (hasPreviousData)
                 spawnedFromData = TryToSpawnFromData();
             if (!spawnedFromData)
+            {
                 SpawnNewLevel();
-            if (nextState != null)
-                parent.SetCurrentState(nextState.RouteId);
+            }
+            else
+            {
+                ToNextState();
+            }
         }
 
         private bool InitData()
@@ -76,8 +78,17 @@ namespace DigitalLove.Game.Flow
         private void SpawnNewLevel()
         {
             RoundData roundData = roundSelector.GetCurrent();
-            List<PlanetData> planetsData = levelContainer.SpawnNew(roundData);
-            gameSnapshot.SetPlanets(planetsData);
+            levelContainer.SpawnNew(roundData, planetsData =>
+            {
+                gameSnapshot.SetPlanets(planetsData);
+                ToNextState();
+            });
+        }
+
+        private void ToNextState()
+        {
+            if (nextState != null)
+                parent.SetCurrentState(nextState.RouteId);
         }
 
         public override void Exit()

@@ -77,15 +77,16 @@ namespace DigitalLove.Game.Spaceships
             }
         }
 
-        private void OnLoopCreated()
+        public void OnLoopCreated()
         {
             LoopData loopData = new()
             {
                 spaceshipId = id,
                 destinationId = bezierRay.Destination.Id
             };
-            onLoopCreated.Invoke(loopData);
             parent.SetCurrentState<OnRouteState>();
+            if (onLoopCreated != null)
+                onLoopCreated.Invoke(loopData);
         }
     }
 }
