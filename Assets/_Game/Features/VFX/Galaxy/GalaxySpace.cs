@@ -18,12 +18,13 @@ namespace DigitalLove.Game.VFX
 
         private void OnSceneLoaded()
         {
-            ShapeModule shapeModule = ps.shape;
-            Bounds roomBounds = MRUK.Instance.GetCurrentRoom().GetRoomBounds();
-            shapeModule.scale = Vector3.one * roomBounds.size.magnitude;
-            ps.transform.position = roomBounds.center;
-            ps.transform.rotation = MRUK.Instance.GetCurrentRoom().transform.rotation;
-            List<MRUKAnchor> anchors = new List<MRUKAnchor>();
+            SetupMaterial();
+            SetupPS();
+        }
+
+        private void SetupMaterial()
+        {
+            List<MRUKAnchor> anchors = new();
             anchors.AddRange(MRUK.Instance.GetCurrentRoom().FloorAnchors);
             anchors.AddRange(MRUK.Instance.GetCurrentRoom().CeilingAnchors);
             anchors.AddRange(MRUK.Instance.GetCurrentRoom().WallAnchors);
@@ -42,6 +43,16 @@ namespace DigitalLove.Game.VFX
                     }
                 }
             }
+        }
+
+        private void SetupPS()
+        {
+            ShapeModule shapeModule = ps.shape;
+            Bounds roomBounds = MRUK.Instance.GetCurrentRoom().GetRoomBounds();
+            shapeModule.scale = Vector3.one * roomBounds.size.magnitude;
+            ps.transform.position = roomBounds.center;
+            ps.transform.rotation = MRUK.Instance.GetCurrentRoom().transform.rotation;
+            ps.Play();
         }
     }
 }

@@ -3,7 +3,7 @@ using DigitalLove.Game.Spaceships;
 using DigitalLove.Global;
 using UnityEngine;
 
-namespace DigitalLove.Game.Debug
+namespace DigitalLove.Game
 {
     public class EditorDebugActions : MonoBehaviour
     {
@@ -16,7 +16,9 @@ namespace DigitalLove.Game.Debug
         public void CreateRandomRoute()
         {
             SpaceshipBehaviour selected = spaceship != null ? spaceship : spaceships.Current;
-            selected.SetRoute(planets.GetRandom());
+            PlanetBehaviour planet = planets.GetRandom();
+            Debug.LogWarning($"Setting destination planet to {planet}");
+            selected.SetRoute(planet);
         }
     }
 }

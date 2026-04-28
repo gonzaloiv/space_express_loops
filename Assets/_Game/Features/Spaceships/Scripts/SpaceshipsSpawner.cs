@@ -9,9 +9,14 @@ namespace DigitalLove.Game.Spaceships
 
         public SpaceshipBehaviour Current => spaceship;
 
-        public void Setup(BasePlanetBehaviour planet)
+        public void Spawn(BasePlanetBehaviour planet)
         {
-            spaceship.SetBasePlanet(planet);
+            spaceship.Spawn(planet);
+        }
+
+        public void HideAll()
+        {
+            spaceship.Hide();
         }
     }
 }

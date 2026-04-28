@@ -4,6 +4,8 @@ using UnityEngine;
 using DigitalLove.Global;
 using Oculus.Interaction;
 using UnityEngine.UI;
+using System;
+using System.Collections;
 using DigitalLove.Game.Planets;
 
 namespace DigitalLove.Game.Spaceships
@@ -16,34 +18,85 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private Grabbable grabbable;
         [SerializeField] private GameObject editPanel;
         [SerializeField] private Button editButton;
+        [SerializeField] private LettersPanel lettersPanel;
 
-        private Vector3[] positions;
         private DG.Tweening.Tween followTween;
+        private Action<int> loopComplete;
+        private int currentLetters;
 
         public override void Init(StateMachine parent)
         {
             base.Init(parent);
             body.SetActive(false);
             editPanel.SetActive(false);
+            lettersPanel.SetActive(false);
         }
+
+        public void SetOnLoopComplete(Action<int> loopComplete) => this.loopComplete = loopComplete;
 
         public override void Enter()
         {
             editButton.onClick.AddListener(OnEditButtonClick);
 
-            body.SetActive(true);
-            bezierRay.Origin.GetComponent<PlanetBehaviour>().SetIsInRoute(true);
-            bezierRay.Destination.SetIsInRoute(true);
-            bezierRay.SetIsLookingForDestination(false);
-            positions = bezierRay.GetSplinePositions();
-            FollowPath();
-            grabbable.SetActive(false);
-            editPanel.SetActive(true);
+            ShowBody();
+            ShowEditPanel(bezierRay.Spline.OriginPosition);
+            OnGotBackToBase();
         }
 
-        private void OnEditButtonClick()
+        private void OnEditButtonClick() => parent.SetCurrentState<WaitingForRouteState>();
+
+        private void ShowBody()
         {
-            parent.SetCurrentState<WaitingForRouteState>();
+            body.SetActive(true);
+            grabbable.SetActive(false);
+            bezierRay.Destination.SetIsInRoute(true);
+            bezierRay.SetIsLookingForDestination(false);
+        }
+
+        private void ShowEditPanel(Vector3 position)
+        {
+            editPanel.SetActive(true);
+            editPanel.transform.position = position;
+        }
+
+        private void FollowPath(Vector3[] positions, Action onComplete)
+        {
+            if (positions == null || positions.Length < 2)
+                return;
+            float totalDistance = positions.GetTotalDistance();
+            float duration = totalDistance / travelSpeed;
+            body.transform.position = positions[0];
+            followTween = body.transform.DOPath(positions, duration, PathType.Linear)
+                .SetLookAt(0.02f)
+                .SetEase(Ease.Linear)
+                .OnComplete(onComplete.Invoke);
+        }
+
+        private void OnArrivedToDestination()
+        {
+            IEnumerator Stop()
+            {
+                yield return new WaitForSeconds(1);
+                currentLetters = bezierRay.Destination.Letters;
+                bezierRay.Destination.EmptyLetters();
+                lettersPanel.Show(currentLetters);
+                FollowPath(bezierRay.Spline.ReturnPositions, OnGotBackToBase);
+            }
+            StartCoroutine(Stop());
+        }
+
+        private void OnGotBackToBase()
+        {
+            IEnumerator Stop()
+            {
+                yield return new WaitForSeconds(1);
+                if (loopComplete != null && currentLetters != 0)
+                    loopComplete(currentLetters);
+                currentLetters = 0;
+                lettersPanel.SetActive(false);
+                FollowPath(bezierRay.Spline.GoPositions, OnArrivedToDestination);
+            }
+            StartCoroutine(Stop());
         }
 
         public override void Exit()
@@ -51,24 +104,14 @@ namespace DigitalLove.Game.Spaceships
             editButton.onClick.RemoveListener(OnEditButtonClick);
 
             followTween?.Kill();
-            body.SetActive(false);
-            bezierRay.Origin.GetComponent<PlanetBehaviour>().SetIsInRoute(false);
-            bezierRay.Destination.SetIsInRoute(false);
-            editPanel.SetActive(false);
+            HideBody();
         }
 
-        private void FollowPath()
+        private void HideBody()
         {
-            if (positions == null || positions.Length < 2)
-                return;
-            float totalDistance = positions.GetTotalDistance();
-            float duration = totalDistance / travelSpeed;
-            editPanel.transform.position = positions[0];
-            body.transform.position = positions[0];
-            followTween = body.transform.DOPath(positions, duration, PathType.Linear)
-                .SetLoops(-1)
-                .SetLookAt(0.02f)
-                .SetEase(Ease.Linear);
+            body.SetActive(false);
+            bezierRay.Destination.SetIsInRoute(false);
+            editPanel.SetActive(false);
         }
     }
 }

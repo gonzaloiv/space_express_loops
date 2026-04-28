@@ -15,7 +15,7 @@ namespace DigitalLove.Game.Planets
 
         public void Spawn(PlanetsSeed seed)
         {
-            DisableAll();
+            HideAll();
             basePlanet.Init();
             SpawnPlanets(seed);
         }
@@ -33,7 +33,8 @@ namespace DigitalLove.Game.Planets
                 }
                 float radius = seed.planetSeed.radius.GetRandomValue();
                 Vector3 position = GetValidPosition(radius, seed.planetSeed.distanceToBase);
-                planets[i].Setup(radius, position);
+                int lettersPerMinute = seed.planetSeed.lettersPerMinute.GetRandomValue();
+                planets[i].Setup(radius, position, lettersPerMinute);
             }
         }
 
@@ -59,7 +60,7 @@ namespace DigitalLove.Game.Planets
             return result;
         }
 
-        private void DisableAll()
+        public void HideAll()
         {
             basePlanet.SetActive(false);
             foreach (PlanetBehaviour planet in planets)

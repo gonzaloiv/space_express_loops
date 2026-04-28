@@ -9,14 +9,23 @@ namespace DigitalLove.Game.Levels
     {
         [SerializeField] private RoundSelector roundSelector;
         [SerializeField] private PlanetsSpawner planetsSpawner;
-        [SerializeField] private SpaceshipsSpawner spaceshipSpawner;
+        [SerializeField] private SpaceshipsSpawner spaceshipsSpawner;
 
-        public void Setup()
+        public PlanetsSpawner PlanetsSpawner => planetsSpawner;
+        public SpaceshipsSpawner SpaceshipsSpawner => spaceshipsSpawner;
+
+        public void HideAll()
+        {
+            planetsSpawner.HideAll();
+            spaceshipsSpawner.HideAll();
+        }
+
+        public void Spawn()
         {
             SetPose();
             RoundData roundData = roundSelector.GetCurrent();
             planetsSpawner.Spawn(roundData.planetsSeed);
-            spaceshipSpawner.Setup(planetsSpawner.BasePlanet);
+            spaceshipsSpawner.Spawn(planetsSpawner.BasePlanet);
         }
 
         private void SetPose()

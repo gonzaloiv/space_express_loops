@@ -16,8 +16,8 @@ MonoBehaviour:
   prefab: {fileID: 0}
   planetsSeed:
     count:
-      min: 2
-      max: 4
+      min: 4
+      max: 8
     planetSeed:
       radius:
         min: 0.15
@@ -25,3 +25,6 @@ MonoBehaviour:
       distanceToBase:
         min: 0.75
         max: 2
+      lettersPerMinute:
+        min: 10
+        max: 20

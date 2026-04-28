@@ -4,7 +4,10 @@
     "references": [
         "DigitalLove.FlowControl",
         "DigitalLove.Game.Levels",
-        "DigitalLove.Game.Planets"
+        "DigitalLove.Game.Planets",
+        "Reflex",
+        "DigitalLove.DataAccess.Local",
+        "DigitalLove.Game.Spaceships"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

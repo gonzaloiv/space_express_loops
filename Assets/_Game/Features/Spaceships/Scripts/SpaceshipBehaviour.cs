@@ -1,3 +1,4 @@
+using System;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Planets;
 using DigitalLove.Global;
@@ -10,6 +11,7 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private MonoState[] states;
         [SerializeField] private BezierRay bezierRay;
         [SerializeField] private DestinationSelectionState destinationSelectionState;
+        [SerializeField] private OnRouteState onRouteState;
 
         private StateMachine stateMachine;
 
@@ -19,10 +21,16 @@ namespace DigitalLove.Game.Spaceships
             stateMachine.SetCurrentState<WaitingForRouteState>();
         }
 
-        public void SetBasePlanet(BasePlanetBehaviour basePlanet)
+        public void SetOnLoopComplete(Action<int> onLoopComplete)
+        {
+            onRouteState.SetOnLoopComplete(onLoopComplete);
+        }
+
+        public void Spawn(BasePlanetBehaviour basePlanet)
         {
             transform.SetWorldPose(basePlanet.GetValidSpaceshipPose());
             destinationSelectionState.SetBasePlanet(basePlanet);
+            this.SetActive(true);
         }
 
         // ! DEBUG
@@ -32,5 +40,7 @@ namespace DigitalLove.Game.Spaceships
             bezierRay.SetDestinationPlanet(planet);
             stateMachine.SetCurrentState<OnRouteState>();
         }
+
+        public void Hide() => this.SetActive(false);
     }
 }

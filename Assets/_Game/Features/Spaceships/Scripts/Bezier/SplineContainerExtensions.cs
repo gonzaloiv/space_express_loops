@@ -2,17 +2,16 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
 
-namespace DigitalLove.Global
+namespace DigitalLove.Game.Spaceships
 {
     public static class SplineContainerExtensions
     {
-        public static void MatchSpline(this LineRenderer lineRenderer, SplineContainer splineContainer, int resolution)
+        public static void SetSplinePositions(this LineRenderer lineRenderer, Vector3[] positions)
         {
-            lineRenderer.positionCount = resolution;
-            Vector3[] splinePositions = splineContainer.GetPositions(resolution);
-            for (int i = 0; i < resolution; i++)
+            lineRenderer.positionCount = positions.Length;
+            for (int i = 0; i < positions.Length; i++)
             {
-                lineRenderer.SetPosition(i, splinePositions[i]);
+                lineRenderer.SetPosition(i, positions[i]);
             }
         }
 
