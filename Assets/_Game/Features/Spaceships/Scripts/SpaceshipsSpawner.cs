@@ -7,11 +7,19 @@ namespace DigitalLove.Game.Spaceships
     {
         [SerializeField] private SpaceshipBehaviour spaceship;
 
+        private IdCreator idCreator = new();
+
         public SpaceshipBehaviour Current => spaceship;
 
-        public void Spawn(BasePlanetBehaviour planet)
+        public void Spawn(BasePlanetBehaviour basePlanet)
         {
-            spaceship.Spawn(planet);
+            spaceship.Spawn(idCreator.NextId, basePlanet);
+        }
+
+        public void Respawn(string id, BasePlanetBehaviour basePlanet, PlanetBehaviour destinationPlanet)
+        {
+            spaceship.Spawn(id, basePlanet);
+            spaceship.SetRoute(destinationPlanet);
         }
 
         public void HideAll()

@@ -15,10 +15,18 @@ namespace DigitalLove.Game.Spaceships
 
         private StateMachine stateMachine;
 
+        private string id;
+        public string Id => id;
+
         private void Awake()
         {
             stateMachine = StateMachineFactory.Create(states);
             stateMachine.SetCurrentState<WaitingForRouteState>();
+        }
+
+        public void SetOnLoopCreated(Action<LoopData> onLoopCreated)
+        {
+            destinationSelectionState.SetOnLoopCreated(id, onLoopCreated);
         }
 
         public void SetOnLoopComplete(Action<int> onLoopComplete)
@@ -26,9 +34,10 @@ namespace DigitalLove.Game.Spaceships
             onRouteState.SetOnLoopComplete(onLoopComplete);
         }
 
-        public void Spawn(BasePlanetBehaviour basePlanet)
+        public void Spawn(string id, BasePlanetBehaviour basePlanet)
         {
-            transform.SetWorldPose(basePlanet.GetValidSpaceshipPose());
+            this.id = id;
+            transform.SetWorldPose(basePlanet.GetValidStationPose());
             destinationSelectionState.SetBasePlanet(basePlanet);
             this.SetActive(true);
         }

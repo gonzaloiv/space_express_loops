@@ -7,7 +7,10 @@
         "DigitalLove.Game.Planets",
         "Reflex",
         "DigitalLove.DataAccess.Local",
-        "DigitalLove.Game.Spaceships"
+        "DigitalLove.Game.Spaceships",
+        "DigitalLove.Game.Persistence",
+        "DigitalLove.DataAccess.Remote",
+        "DigitalLove.Global"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

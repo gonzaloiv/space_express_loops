@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using DigitalLove.Game.Planets;
 using DigitalLove.Game.Spaceships;
+using DigitalLove.XR.MRUtilityKit;
 using Meta.XR.MRUtilityKit;
 using UnityEngine;
 
@@ -7,7 +9,7 @@ namespace DigitalLove.Game.Levels
 {
     public class LevelContainer : MonoBehaviour
     {
-        [SerializeField] private RoundSelector roundSelector;
+        [SerializeField] private MRUKRoomAnchorsContainer mrukRoomAnchorsContainer;
         [SerializeField] private PlanetsSpawner planetsSpawner;
         [SerializeField] private SpaceshipsSpawner spaceshipsSpawner;
 
@@ -20,18 +22,44 @@ namespace DigitalLove.Game.Levels
             spaceshipsSpawner.HideAll();
         }
 
-        public void Spawn()
+        public List<PlanetData> SpawnNew(RoundData roundData)
         {
-            SetPose();
-            RoundData roundData = roundSelector.GetCurrent();
-            planetsSpawner.Spawn(roundData.planetsSeed);
+            SetRoomBasedPose();
+            List<PlanetData> result = planetsSpawner.Spawn(roundData.planetsSeed);
             spaceshipsSpawner.Spawn(planetsSpawner.BasePlanet);
+            return result;
         }
 
-        private void SetPose()
+        public void Respawn(GameSnapshot gameSnapshot)
         {
-            Bounds roomBounds = MRUK.Instance.GetCurrentRoom().GetRoomBounds();
-            transform.position = roomBounds.center;
+            SetRoomBasedPose();
+            planetsSpawner.Spawn(gameSnapshot.planets, gameSnapshot.CurrentLetters);
+            if (gameSnapshot.HasLoops)
+            {
+                LoopData loopData = gameSnapshot.loops[0];
+                PlanetBehaviour destinationPlanet = PlanetsSpawner.GetById(loopData.destinationId);
+                spaceshipsSpawner.Respawn(loopData.spaceshipId, planetsSpawner.BasePlanet, destinationPlanet);
+            }
+            else
+            {
+                spaceshipsSpawner.Spawn(planetsSpawner.BasePlanet);
+            }
+        }
+
+        private void SetRoomBasedPose()
+        {
+            MRUKRoom room = MRUK.Instance.GetCurrentRoom();
+            Pose originPose = new Pose
+            {
+                position = room.GetRoomBounds().center,
+                rotation = room.transform.rotation
+            };
+            mrukRoomAnchorsContainer.InitAndLoadRoomAnchors("UniqueRoomName", originPose, anchors =>
+            {
+                Pose toSet = mrukRoomAnchorsContainer.OVRAnchorPose;
+                transform.position = toSet.position;
+                transform.rotation = toSet.rotation;
+            });
         }
     }
 }

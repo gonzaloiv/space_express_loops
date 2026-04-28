@@ -31,6 +31,18 @@ MonoBehaviour:
     m_Key: exit_button
     m_Metadata:
       m_Items: []
+  - m_Id: 2611552355799040
+    m_Key: reset_data_panel_title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2611552385159168
+    m_Key: reset_data_panel_continue_button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2611552385159169
+    m_Key: reset_data_panel_reset_data_button
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

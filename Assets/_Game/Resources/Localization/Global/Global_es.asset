@@ -36,6 +36,18 @@ MonoBehaviour:
     m_Localized: Salida {0}
     m_Metadata:
       m_Items: []
+  - m_Id: 2611552355799040
+    m_Localized: "\xBFContinuar donde lo dejaste o restablecer tus datos?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2611552385159168
+    m_Localized: Continuar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2611552385159169
+    m_Localized: Restablecer datos
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

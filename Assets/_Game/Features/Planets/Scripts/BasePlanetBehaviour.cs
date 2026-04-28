@@ -8,22 +8,23 @@ namespace DigitalLove.Game.Planets
     {
         [SerializeField] private Renderer rend;
         [SerializeField] private ColorValue baseColor;
-        [SerializeField] private AnchorData[] anchors;
+        [SerializeField] private StationData[] stations;
         [SerializeField] private LettersPanel lettersPanel;
 
         public float RadiusOffset => rend.transform.lossyScale.x;
 
-        public void Init()
+        public void Spawn(string id, int currentLetters = 0)
         {
             transform.localPosition = Vector3.zero;
             rend.material.color = baseColor.value;
             this.SetActive(true);
             lettersPanel.Init(transform.position + transform.up * RadiusOffset);
+            ShowLetters(currentLetters);
         }
 
-        public Pose GetValidSpaceshipPose()
+        public Pose GetValidStationPose()
         {
-            AnchorData pair = anchors[UnityEngine.Random.Range(0, anchors.Length)];
+            StationData pair = stations[UnityEngine.Random.Range(0, stations.Length)];
             pair.isTaken = true;
             return pair.anchor.ToWorldPose();
         }
@@ -35,7 +36,7 @@ namespace DigitalLove.Game.Planets
     }
 
     [Serializable]
-    public class AnchorData
+    public class StationData
     {
         public Transform anchor;
         public bool isTaken;

@@ -21,8 +21,10 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private LettersPanel lettersPanel;
 
         private DG.Tweening.Tween followTween;
-        private Action<int> loopComplete;
         private int currentLetters;
+
+        private string id;
+        private Action<int> loopComplete;
 
         public override void Init(StateMachine parent)
         {

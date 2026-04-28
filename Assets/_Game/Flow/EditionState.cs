@@ -1,7 +1,7 @@
 using DigitalLove.DataAccess;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Levels;
-using DigitalLove.Levels;
+using DigitalLove.Game.Spaceships;
 using Reflex.Attributes;
 using UnityEngine;
 
@@ -11,24 +11,33 @@ namespace DigitalLove.Game.Flow
     {
         [SerializeField] private LevelContainer levelContainer;
 
-        [Inject] private MemoryDataClient memoryDataClient;
+        [Header("Debug")]
+        [SerializeField] private GameSnapshot gameSnapshot;
 
-        private GamePlay gamePlay;
+        [Inject] private MemoryDataClient memoryDataClient;
 
         public override void Enter()
         {
+            levelContainer.SpaceshipsSpawner.Current.SetOnLoopCreated(OnLoopCreated);
             levelContainer.SpaceshipsSpawner.Current.SetOnLoopComplete(OnLoopComplete);
-            gamePlay = memoryDataClient.Get<GamePlay>();
+
+            gameSnapshot = memoryDataClient.Get<GameSnapshot>();
+        }
+
+        private void OnLoopCreated(LoopData data)
+        {
+            gameSnapshot.AddLoop(data);
         }
 
         private void OnLoopComplete(int letters)
         {
-            gamePlay.IncreaseLetters(letters);
-            levelContainer.PlanetsSpawner.BasePlanet.ShowLetters(gamePlay.CurrentLetters);
+            gameSnapshot.IncreaseLetters(letters);
+            levelContainer.PlanetsSpawner.BasePlanet.ShowLetters(gameSnapshot.CurrentLetters);
         }
 
         public override void Exit()
         {
+            levelContainer.SpaceshipsSpawner.Current.SetOnLoopCreated(null);
             levelContainer.SpaceshipsSpawner.Current.SetOnLoopComplete(null);
         }
     }

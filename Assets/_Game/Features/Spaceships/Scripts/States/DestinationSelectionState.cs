@@ -1,3 +1,4 @@
+using System;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Planets;
 using DigitalLove.Global;
@@ -13,6 +14,15 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private GhostBehaviour ghost;
 
         private PlanetBehaviour destination;
+        private string id;
+
+        private Action<LoopData> onLoopCreated;
+
+        public void SetOnLoopCreated(string id, Action<LoopData> onLoopCreated)
+        {
+            this.id = id;
+            this.onLoopCreated = onLoopCreated;
+        }
 
         public void SetBasePlanet(BasePlanetBehaviour basePlanet)
         {
@@ -59,12 +69,23 @@ namespace DigitalLove.Game.Spaceships
             ghost.SetActive(false);
             if (destination != null)
             {
-                parent.SetCurrentState<OnRouteState>();
+                OnLoopCreated();
             }
             else
             {
                 parent.SetCurrentState<WaitingForRouteState>();
             }
+        }
+
+        private void OnLoopCreated()
+        {
+            LoopData loopData = new()
+            {
+                spaceshipId = id,
+                destinationId = bezierRay.Destination.Id
+            };
+            onLoopCreated.Invoke(loopData);
+            parent.SetCurrentState<OnRouteState>();
         }
     }
 }

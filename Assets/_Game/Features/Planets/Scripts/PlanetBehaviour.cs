@@ -22,10 +22,12 @@ namespace DigitalLove.Game.Planets
         private int letters;
         private int lettersPerMinute;
         private float countdown;
+        private string id;
 
         public bool IsDestination => percentage >= 1;
         public float RadiusOffset => body.lossyScale.x;
         public int Letters => letters;
+        public string Id => id;
 
         public void SetIsDestination(float percentage)
         {
@@ -49,15 +51,17 @@ namespace DigitalLove.Game.Planets
             }
         }
 
-        public void Setup(float radius, Vector3 position, int lettersPerMinute)
+        public void Spawn(PlanetData planetData)
         {
-            body.localScale = Vector3.one * radius;
-            transform.position = position;
-            this.lettersPerMinute = lettersPerMinute;
+            this.id = planetData.id;
+            this.lettersPerMinute = planetData.lettersPerMinute;
+            body.localScale = Vector3.one * planetData.radius;
+            lettersPanel.Init(transform.position + transform.up * planetData.radius);
+            transform.localPosition = planetData.localPosition.ToVector3();
+
             ResetCoundown();
             rend.material.color = defaultColor.value;
             gameObject.SetActive(true);
-            lettersPanel.Init(transform.position + transform.up * radius);
         }
 
         private void ResetCoundown()

@@ -1,14 +1,12 @@
 {
-    "name": "DigitalLove.Game.Spaceships",
+    "name": "DigitalLove.Game.Planets",
     "rootNamespace": "",
     "references": [
-        "GUID:65917f6bc12bb4a4cad49ea83a119a2b",
-        "GUID:2a230cb87a1d3ba4a98bdc0ddae76e6c",
+        "GUID:f5eda1afa2a1241a59c4db6830e1c890",
+        "GUID:fed789df5adfe407a90513540307e91a",
         "GUID:447181e61705f4d6f954add1124817a5",
         "GUID:8d1a0410b0c159b49879a29ad02b2fbb",
-        "GUID:64cc67f4d810af040bbe47679f3f5416",
-        "GUID:21d1eb854b91ade49bc69a263d12bee2",
-        "GUID:d8b63aba1907145bea998dd612889d6b",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
         "GUID:1fad3ef53db4844a79bb95d8f18d033d"
     ],
     "includePlatforms": [],

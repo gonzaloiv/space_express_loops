@@ -1,13 +1,9 @@
 {
-    "name": "DigitalLove.Game.Levels",
+    "name": "DigitalLove.Game.UI",
     "rootNamespace": "",
     "references": [
-        "DigitalLove.Game.Planets",
-        "DigitalLove.Casual.Levels",
-        "DigitalLove.Game.Spaceships",
-        "meta.xr.mrutilitykit",
-        "DigitalLove.Global",
-        "DigitalLove.XR.MRUK"
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:8d1a0410b0c159b49879a29ad02b2fbb"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

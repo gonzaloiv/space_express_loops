@@ -1,11 +1,12 @@
+using System;
+
 namespace DigitalLove.Levels
 {
-    public class GamePlay
+    [Serializable]
+    public class Store
     {
-        private int letters;
-        private int totalCollectedLetters;
-
-        public int CurrentLetters => letters;
+        public int letters;
+        public int totalCollectedLetters;
 
         public void IncreaseLetters(int value)
         {
@@ -17,6 +18,12 @@ namespace DigitalLove.Levels
         {
             letters = 0;
             totalCollectedLetters = 0;
+        }
+
+        public void CopyValues(Store other)
+        {
+            letters = other.letters;
+            totalCollectedLetters = other.totalCollectedLetters;
         }
     }
 }

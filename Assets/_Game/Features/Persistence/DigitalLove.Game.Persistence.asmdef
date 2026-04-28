@@ -1,12 +1,11 @@
 {
-    "name": "DigitalLove.Game.Planets",
+    "name": "DigitalLove.Game.Persistence",
     "rootNamespace": "",
     "references": [
-        "GUID:f5eda1afa2a1241a59c4db6830e1c890",
-        "GUID:fed789df5adfe407a90513540307e91a",
-        "GUID:447181e61705f4d6f954add1124817a5",
-        "GUID:8d1a0410b0c159b49879a29ad02b2fbb",
-        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+        "GUID:4823059b47a7c4abb836b44cc751cbf6",
+        "GUID:1530a967b84cfb44dbdd5e8a1989764f",
+        "GUID:41741fc70e2562e498cc7127cf8aa8b3",
+        "GUID:ddca81f93c9e44d2fbf5efa600ddbada"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
