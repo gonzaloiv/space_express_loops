@@ -1,6 +1,7 @@
 using DigitalLove.VFX;
 using TMPro;
 using UnityEngine;
+using DigitalLove.UI.DesignSystem;
 
 namespace DigitalLove.Game.Planets
 {
@@ -8,18 +9,28 @@ namespace DigitalLove.Game.Planets
     {
         [SerializeField] private ScalePunch scalePunch;
         [SerializeField] private TextMeshProUGUI lettersLabel;
+        [SerializeField] private LayoutUpdater layoutUpdater;
 
-        public void Init(Vector3 position)
+        private int maxLetters;
+
+        public void Init(Vector3 position, int maxLetters)
         {
             transform.position = position;
-            lettersLabel.text = "0";
+            this.maxLetters = maxLetters;
+            Show(0);
+        }
+
+        public void SetMaxLetters(int maxLetters)
+        {
+            this.maxLetters = maxLetters;
         }
 
         public void Show(int letters)
         {
             gameObject.SetActive(true);
-            lettersLabel.text = letters.ToString();
+            lettersLabel.text = maxLetters > 0 ? $"{letters} / {maxLetters}" : $"{letters}";
             scalePunch.Animate();
+            layoutUpdater.ForceUpdate();
         }
     }
 }

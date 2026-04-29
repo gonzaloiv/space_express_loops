@@ -8,6 +8,8 @@ namespace DigitalLove.Game.Spaceships
 {
     public class SpaceshipBehaviour : MonoBehaviour
     {
+        public const int MaxLetters = 5;
+
         [SerializeField] private MonoState[] states;
         [SerializeField] private BezierRay bezierRay;
         [SerializeField] private DestinationSelectionState destinationSelectionState;
@@ -16,6 +18,7 @@ namespace DigitalLove.Game.Spaceships
         private StateMachine stateMachine;
 
         private string id;
+
         public string Id => id;
         public bool IsActive => gameObject.activeInHierarchy;
 

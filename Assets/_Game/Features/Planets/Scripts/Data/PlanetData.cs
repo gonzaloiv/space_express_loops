@@ -10,5 +10,6 @@ namespace DigitalLove.Game.Planets
         public float radius;
         public SerializableVector3 localPosition;
         public int lettersPerMinute;
+        public int maxLetters;
     }
 }

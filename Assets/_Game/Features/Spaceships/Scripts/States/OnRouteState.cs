@@ -21,7 +21,7 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private LettersPanel lettersPanel;
 
         private DG.Tweening.Tween followTween;
-        private int currentLetters;
+        private int pickedLetters;
 
         private string id;
         private Action<int> loopComplete;
@@ -32,6 +32,8 @@ namespace DigitalLove.Game.Spaceships
             body.SetActive(false);
             editPanel.SetActive(false);
             lettersPanel.SetActive(false);
+            lettersPanel.SetMaxLetters(SpaceshipBehaviour.MaxLetters);
+            followTween?.Kill();
         }
 
         public void SetOnLoopComplete(Action<int> loopComplete) => this.loopComplete = loopComplete;
@@ -79,9 +81,8 @@ namespace DigitalLove.Game.Spaceships
             IEnumerator Stop()
             {
                 yield return new WaitForSeconds(1);
-                currentLetters = bezierRay.Destination.Letters;
-                bezierRay.Destination.EmptyLetters();
-                lettersPanel.Show(currentLetters);
+                pickedLetters = bezierRay.Destination.PickLetters(SpaceshipBehaviour.MaxLetters);
+                lettersPanel.Show(pickedLetters);
                 FollowPath(bezierRay.Spline.ReturnPositions, OnGotBackToBase);
             }
             StartCoroutine(Stop());
@@ -92,9 +93,9 @@ namespace DigitalLove.Game.Spaceships
             IEnumerator Stop()
             {
                 yield return new WaitForSeconds(1);
-                if (loopComplete != null && currentLetters != 0)
-                    loopComplete(currentLetters);
-                currentLetters = 0;
+                if (loopComplete != null && pickedLetters != 0)
+                    loopComplete(pickedLetters);
+                pickedLetters = 0;
                 lettersPanel.SetActive(false);
                 FollowPath(bezierRay.Spline.GoPositions, OnArrivedToDestination);
             }

@@ -21,9 +21,7 @@ namespace DigitalLove.Game.Levels
 
         public bool IsRoundComplete(Store store)
         {
-            if (CurrentRound == rounds.Last())
-                return false;
-            return currentRound.minLetters <= store.letters;
+            return currentRound.lettersToComplete > 0 && store.letters >= currentRound.lettersToComplete;
         }
     }
 }

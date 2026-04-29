@@ -37,7 +37,8 @@ namespace DigitalLove.Game.Planets
                 id = id,
                 radius = radius,
                 localPosition = SerializableVector3.FromVector3(localPosition),
-                lettersPerMinute = seed.planetSeed.lettersPerMinute.GetRandomValue()
+                lettersPerMinute = seed.planetSeed.lettersPerMinute.GetRandomValue(),
+                maxLetters = seed.planetSeed.maxLetters.GetRandomValue()
             };
             return planetData;
         }
@@ -48,13 +49,13 @@ namespace DigitalLove.Game.Planets
             Vector3 result = Vector3.zero;
             for (int i = 0; i < maxIterations && result == Vector3.zero; i++)
             {
-                Vector3? candidate = MRUK.Instance.GetCurrentRoom().GenerateRandomPositionInRoom(radius * 2, true);
+                Vector3? candidate = MRUK.Instance.GetCurrentRoom().GenerateRandomPositionInRoom(radius, true);
                 if (candidate.HasValue)
                 {
                     float distance = Vector3.Distance(candidate.Value, basePlanet.transform.position);
                     if (distance > distanceToBase.min && distance < distanceToBase.max)
                     {
-                        Collider[] colliders = Physics.OverlapSphere(candidate.Value, radius * 3f, planetsLayerMask);
+                        Collider[] colliders = Physics.OverlapSphere(candidate.Value, radius * 2f, planetsLayerMask);
                         if (colliders.Length == 0)
                         {
                             Debug.LogWarning($"Generated candidate position: {candidate.Value} iteration: {i}");

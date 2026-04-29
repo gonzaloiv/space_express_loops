@@ -19,5 +19,5 @@ MonoBehaviour:
       min: 2
       max: 2
     planetSeed: {fileID: 11400000, guid: 31c02de9e722c3e4fb35c71153032b45, type: 2}
-  minLetters: 0
+  lettersToComplete: 5
   newSpaceship: 1

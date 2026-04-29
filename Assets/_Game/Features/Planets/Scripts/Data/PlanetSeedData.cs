@@ -9,5 +9,6 @@ namespace DigitalLove.Game.Planets
         public MinMaxFloat radius;
         public MinMaxFloat distanceToBase;
         public MinMaxInt lettersPerMinute;
+        public MinMaxInt maxLetters;
     }
 }

@@ -6,8 +6,6 @@ namespace DigitalLove.Game.Planets
 {
     public class PlanetBehaviour : MonoBehaviour
     {
-        private const int MaxLetters = 99;
-
         [SerializeField] private Outline outline;
         [SerializeField] private Transform body;
         [SerializeField] private ScalePunch scalePunch;
@@ -18,16 +16,16 @@ namespace DigitalLove.Game.Planets
         [SerializeField] private LayerMask layerMask;
         [SerializeField] private LettersPanel lettersPanel;
 
+        private PlanetData planetData;
+
         private float percentage;
         private int letters;
-        private int lettersPerMinute;
         private float countdown;
-        private string id;
 
         public bool IsDestination => percentage >= 1;
         public float RadiusOffset => body.lossyScale.x;
         public int Letters => letters;
-        public string Id => id;
+        public string Id => planetData != null ? planetData.id : string.Empty;
         public bool IsActive => gameObject.activeInHierarchy;
 
         public void SetIsDestination(float percentage)
@@ -45,8 +43,8 @@ namespace DigitalLove.Game.Planets
             if (countdown <= 0)
             {
                 letters++;
-                if (letters > MaxLetters)
-                    letters = MaxLetters;
+                if (letters > planetData.maxLetters)
+                    letters = planetData.maxLetters;
                 lettersPanel.Show(letters);
                 ResetCoundown();
             }
@@ -54,20 +52,20 @@ namespace DigitalLove.Game.Planets
 
         public void Spawn(PlanetData planetData)
         {
-            this.id = planetData.id;
-            this.lettersPerMinute = planetData.lettersPerMinute;
+            this.planetData = planetData;
             body.localScale = Vector3.one * planetData.radius;
-            lettersPanel.Init(transform.position + transform.up * planetData.radius);
             transform.localPosition = planetData.localPosition.ToVector3();
 
             ResetCoundown();
             rend.material.color = defaultColor.value;
+
             gameObject.SetActive(true);
+            lettersPanel.Init(transform.position + transform.up * planetData.radius, planetData.maxLetters);
         }
 
         private void ResetCoundown()
         {
-            countdown = 60 / (float)lettersPerMinute;
+            countdown = 60 / (float)planetData.lettersPerMinute;
         }
 
         public void SetIsInRoute(bool isInRoute)
@@ -75,11 +73,13 @@ namespace DigitalLove.Game.Planets
             rend.material.color = isInRoute ? routeColor.value : defaultColor.value;
         }
 
-        public void EmptyLetters()
+        public int PickLetters(int value)
         {
-            letters = 0;
+            int picked = 0;
+            picked = value > letters ? letters : value;
+            letters -= picked;
             lettersPanel.Show(letters);
+            return picked;
         }
-
     }
 }

@@ -24,7 +24,12 @@ namespace DigitalLove.Game.Planets
 
             transform.localPosition = Vector3.zero;
             rend.material.color = baseColor.value;
-            lettersPanel.Init(transform.position + transform.up * RadiusOffset);
+            lettersPanel.Init(transform.position + transform.up * RadiusOffset, 0);
+        }
+
+        public void SetRoundLetters(int maxLetters)
+        {
+            lettersPanel.SetMaxLetters(maxLetters);
         }
 
         public Pose GetValidStationPose()

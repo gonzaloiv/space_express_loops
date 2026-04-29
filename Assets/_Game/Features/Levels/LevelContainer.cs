@@ -37,9 +37,10 @@ namespace DigitalLove.Game.Levels
             List<PlanetData> roundPlanets = planetsSpawner.GeneratePlanetDataFromPlanetsSeed(roundData.planetsSeed);
             gameSnapshot.AddPlanets(roundPlanets);
             planetsSpawner.SpawnPlanets(gameSnapshot.planets);
+            planetsSpawner.BasePlanet.SetRoundLetters(roundData.lettersToComplete);
         }
 
-        public void RespawnFromData(GameSnapshot gameSnapshot)
+        public void RespawnFromData(RoundData roundData, GameSnapshot gameSnapshot)
         {
             planetsSpawner.SpawnPlanets(gameSnapshot.planets);
             UnityEngine.Assertions.Assert.IsTrue(gameSnapshot.HasLoops);
@@ -47,6 +48,7 @@ namespace DigitalLove.Game.Levels
             {
                 spaceshipsSpawner.SpawnFromLoop(loop.spaceshipId, planetsSpawner.BasePlanet, planetsSpawner.GetById(loop.destinationId));
             }
+            planetsSpawner.BasePlanet.SetRoundLetters(roundData.lettersToComplete);
         }
 
         public void SetRoomBasedPose(Action onComplete)
