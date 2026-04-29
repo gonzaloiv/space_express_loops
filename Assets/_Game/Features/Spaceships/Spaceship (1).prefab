@@ -2211,6 +2211,7 @@ GameObject:
   - component: {fileID: 4389718944525644669}
   - component: {fileID: 1597963955494664207}
   - component: {fileID: 3206308840059686159}
+  - component: {fileID: 4201779968097309476}
   m_Layer: 5
   m_Name: Panel (1)
   m_TagString: Untagged
@@ -2248,6 +2249,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Planets.PlanetPanel
   scalePunch: {fileID: 3292421933743203956}
   lettersLabel: {fileID: 7194246063489764194}
+  layoutUpdater: {fileID: 4201779968097309476}
 --- !u!1818360608 &3206308840059686159
 PositionConstraint:
   m_ObjectHideFlags: 0
@@ -2268,6 +2270,18 @@ PositionConstraint:
   m_Sources:
   - sourceTransform: {fileID: 5276640881619765824}
     weight: 1
+--- !u!114 &4201779968097309476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7198065008415384296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bfee54bfbe4243a0abce52d2086a141, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.UI.DesignSystem::DigitalLove.UI.DesignSystem.LayoutUpdater
 --- !u!1 &7368550685193808644
 GameObject:
   m_ObjectHideFlags: 0
@@ -2525,11 +2539,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.Spaceships::DigitalLove.Game.Spaceships.OnRouteState
   body: {fileID: 6811115792836008139}
   bezierRay: {fileID: 856102399462632852}
-  travelSpeed: 1
+  speed: {fileID: 11400000, guid: c3660b33f404c6344ae786218d0e7437, type: 2}
   grabbable: {fileID: 4077278212989867320}
   editPanel: {fileID: 2129318450302961712}
   editButton: {fileID: 4541673302978254465}
   lettersPanel: {fileID: 1597963955494664207}
+  rend: {fileID: 6445011914356420911}
+  loadedColor: {fileID: 11400000, guid: dff8dc489b79d584da97922cb11baafa, type: 2}
+  defaultColor: {fileID: 11400000, guid: 3added88e14ad544685a37cf8d5fda1c, type: 2}
 --- !u!114 &6434439280635227958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2639,7 +2656,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 449770837783413211, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
       propertyPath: m_Name
-      value: 'Body '
+      value: Rend
       objectReference: {fileID: 0}
     - target: {fileID: 449770837783413211, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
       propertyPath: m_Layer
@@ -2752,6 +2769,11 @@ PrefabInstance:
 --- !u!4 &5276640881619765824 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 970025017559047009, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
+  m_PrefabInstance: {fileID: 4921410137481629985}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &6445011914356420911 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2106862472748507150, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
   m_PrefabInstance: {fileID: 4921410137481629985}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7182670908292220264

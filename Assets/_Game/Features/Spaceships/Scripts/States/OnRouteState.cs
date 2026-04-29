@@ -14,22 +14,24 @@ namespace DigitalLove.Game.Spaceships
     {
         [SerializeField] private GameObject body;
         [SerializeField] private BezierRay bezierRay;
-        [SerializeField] private float travelSpeed = 2f;
+        [SerializeField] private FloatValue speed;
         [SerializeField] private Grabbable grabbable;
         [SerializeField] private GameObject editPanel;
         [SerializeField] private Button editButton;
         [SerializeField] private LettersPanel lettersPanel;
+        [SerializeField] private Renderer rend;
+        [SerializeField] private ColorValue loadedColor;
+        [SerializeField] private ColorValue defaultColor;
 
         private DG.Tweening.Tween followTween;
         private int pickedLetters;
 
-        private string id;
         private Action<int> loopComplete;
 
         public override void Init(StateMachine parent)
         {
             base.Init(parent);
-            body.SetActive(false);
+            body.gameObject.SetActive(false);
             editPanel.SetActive(false);
             lettersPanel.SetActive(false);
             lettersPanel.SetMaxLetters(SpaceshipBehaviour.MaxLetters);
@@ -51,10 +53,11 @@ namespace DigitalLove.Game.Spaceships
 
         private void ShowBody()
         {
-            body.SetActive(true);
+            body.gameObject.SetActive(true);
             grabbable.SetActive(false);
             bezierRay.Destination.SetIsInRoute(true);
             bezierRay.SetIsLookingForDestination(false);
+            rend.material.color = defaultColor.value;
         }
 
         private void ShowEditPanel(Vector3 position)
@@ -68,7 +71,7 @@ namespace DigitalLove.Game.Spaceships
             if (positions == null || positions.Length < 2)
                 return;
             float totalDistance = positions.GetTotalDistance();
-            float duration = totalDistance / travelSpeed;
+            float duration = totalDistance / speed.value;
             body.transform.position = positions[0];
             followTween = body.transform.DOPath(positions, duration, PathType.Linear)
                 .SetLookAt(0.02f)
@@ -83,6 +86,7 @@ namespace DigitalLove.Game.Spaceships
                 yield return new WaitForSeconds(1);
                 pickedLetters = bezierRay.Destination.PickLetters(SpaceshipBehaviour.MaxLetters);
                 lettersPanel.Show(pickedLetters);
+                rend.material.color = loadedColor.value;
                 FollowPath(bezierRay.Spline.ReturnPositions, OnGotBackToBase);
             }
             StartCoroutine(Stop());
@@ -97,6 +101,7 @@ namespace DigitalLove.Game.Spaceships
                     loopComplete(pickedLetters);
                 pickedLetters = 0;
                 lettersPanel.SetActive(false);
+                rend.material.color = defaultColor.value;
                 FollowPath(bezierRay.Spline.GoPositions, OnArrivedToDestination);
             }
             StartCoroutine(Stop());
@@ -112,7 +117,7 @@ namespace DigitalLove.Game.Spaceships
 
         private void HideBody()
         {
-            body.SetActive(false);
+            body.gameObject.SetActive(false);
             bezierRay.Destination.SetIsInRoute(false);
             editPanel.SetActive(false);
         }
