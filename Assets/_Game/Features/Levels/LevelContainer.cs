@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DigitalLove.Game.Planets;
+using DigitalLove.Game.Persistence;
 using DigitalLove.Game.Spaceships;
 using DigitalLove.XR.MRUtilityKit;
 using Meta.XR.MRUtilityKit;
@@ -26,7 +27,6 @@ namespace DigitalLove.Game.Levels
         public void SpawnInitialRound(RoundData roundData, GameSnapshot gameSnapshot)
         {
             planetsSpawner.HideAll();
-            planetsSpawner.SpawnBase(0);
             SpawnRound(roundData, gameSnapshot);
         }
 
@@ -37,7 +37,7 @@ namespace DigitalLove.Game.Levels
             List<PlanetData> roundPlanets = planetsSpawner.GeneratePlanetDataFromPlanetsSeed(roundData.planetsSeed);
             gameSnapshot.AddPlanets(roundPlanets);
             planetsSpawner.SpawnPlanets(gameSnapshot.planets);
-            planetsSpawner.BasePlanet.SetRoundLetters(roundData.lettersToComplete);
+            planetsSpawner.SpawnBase(gameSnapshot.CurrentLetters, roundData.lettersToComplete);
         }
 
         public void RespawnFromData(RoundData roundData, GameSnapshot gameSnapshot)
@@ -48,7 +48,7 @@ namespace DigitalLove.Game.Levels
             {
                 spaceshipsSpawner.SpawnFromLoop(loop.spaceshipId, planetsSpawner.BasePlanet, planetsSpawner.GetById(loop.destinationId));
             }
-            planetsSpawner.BasePlanet.SetRoundLetters(roundData.lettersToComplete);
+            planetsSpawner.SpawnBase(gameSnapshot.CurrentLetters, roundData.lettersToComplete);
         }
 
         public void SetRoomBasedPose(Action onComplete)

@@ -17,7 +17,7 @@ namespace DigitalLove.Game.Planets
         {
             transform.position = position;
             this.maxLetters = maxLetters;
-            Show(0);
+            Hide();
         }
 
         public void SetMaxLetters(int maxLetters)
@@ -31,6 +31,11 @@ namespace DigitalLove.Game.Planets
             lettersLabel.text = maxLetters > 0 ? $"{letters} / {maxLetters}" : $"{letters}";
             scalePunch.Animate();
             layoutUpdater.ForceUpdate();
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

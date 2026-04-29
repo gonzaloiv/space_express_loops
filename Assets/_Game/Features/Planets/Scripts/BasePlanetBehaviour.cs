@@ -16,20 +16,15 @@ namespace DigitalLove.Game.Planets
         public string Id => id;
         public float RadiusOffset => rend.transform.lossyScale.x;
 
-        public void Spawn(string id, int currentLetters = 0)
+        public void Spawn(string id)
         {
             this.id = id;
-            this.SetActive(true);
-            ShowLetters(currentLetters);
 
             transform.localPosition = Vector3.zero;
             rend.material.color = baseColor.value;
             lettersPanel.Init(transform.position + transform.up * RadiusOffset, 0);
-        }
 
-        public void SetRoundLetters(int maxLetters)
-        {
-            lettersPanel.SetMaxLetters(maxLetters);
+            this.SetActive(true);
         }
 
         public Pose GetValidStationPose()
@@ -39,8 +34,9 @@ namespace DigitalLove.Game.Planets
             return pair.anchor.ToWorldPose();
         }
 
-        public void ShowLetters(int letters)
+        public void ShowLetters(int letters, int maxLetters)
         {
+            lettersPanel.SetMaxLetters(maxLetters);
             lettersPanel.Show(letters);
         }
     }

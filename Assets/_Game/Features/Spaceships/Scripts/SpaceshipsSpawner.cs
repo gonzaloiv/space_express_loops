@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DigitalLove.Global;
 
 namespace DigitalLove.Game.Spaceships
 {
@@ -10,7 +11,7 @@ namespace DigitalLove.Game.Spaceships
     {
         [SerializeField] private List<SpaceshipBehaviour> spaceships;
 
-        private IdCreator idCreator = new();
+        private IdCounter idCounter = new();
 
         public void SetOnLoopCreated(Action<LoopCreatedEventArgs> onLoopCreated)
         {
@@ -31,7 +32,7 @@ namespace DigitalLove.Game.Spaceships
         public void SpawnNew(BasePlanetBehaviour basePlanet)
         {
             SpaceshipBehaviour spaceship = GetOrInstantiate();
-            spaceship.Spawn(idCreator.NextId, basePlanet);
+            spaceship.Spawn(idCounter.NextId, basePlanet);
         }
 
         public void SpawnFromLoop(string id, BasePlanetBehaviour basePlanet, PlanetBehaviour destinationPlanet)

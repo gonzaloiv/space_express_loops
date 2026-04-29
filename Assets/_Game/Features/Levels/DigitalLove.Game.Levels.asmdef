@@ -7,7 +7,8 @@
         "DigitalLove.Game.Spaceships",
         "meta.xr.mrutilitykit",
         "DigitalLove.Global",
-        "DigitalLove.XR.MRUK"
+        "DigitalLove.XR.MRUK",
+        "DigitalLove.Game.Persistence"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

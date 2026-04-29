@@ -4,6 +4,7 @@ using DigitalLove.Game.Levels;
 using DigitalLove.Game.Spaceships;
 using Reflex.Attributes;
 using UnityEngine;
+using DigitalLove.Game.Persistence;
 
 namespace DigitalLove.Game.Flow
 {
@@ -24,8 +25,6 @@ namespace DigitalLove.Game.Flow
             levelContainer.SpaceshipsSpawner.SetOnLoopComplete(OnLoopComplete);
 
             gameSnapshot = memoryDataClient.Get<GameSnapshot>();
-
-            levelContainer.PlanetsSpawner.BasePlanet.ShowLetters(gameSnapshot.CurrentLetters);
         }
 
         private void OnLoopCreated(LoopCreatedEventArgs args)
@@ -33,6 +32,7 @@ namespace DigitalLove.Game.Flow
             LoopData data = new()
             {
                 spaceshipId = args.spaceshipId,
+
                 destinationId = args.destinationId
             };
             gameSnapshot.AddLoop(data);
@@ -41,7 +41,7 @@ namespace DigitalLove.Game.Flow
         private void OnLoopComplete(int value)
         {
             gameSnapshot.IncreaseLetters(value);
-            levelContainer.PlanetsSpawner.BasePlanet.ShowLetters(gameSnapshot.CurrentLetters);
+            levelContainer.PlanetsSpawner.SpawnBase(gameSnapshot.CurrentLetters, roundSelector.CurrentRound.lettersToComplete);
             if (roundSelector.IsRoundComplete(gameSnapshot.store))
                 parent.SetCurrentState(newRoundState.RouteId);
         }

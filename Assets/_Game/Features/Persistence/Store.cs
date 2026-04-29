@@ -1,6 +1,6 @@
 using System;
 
-namespace DigitalLove.Levels
+namespace DigitalLove.Game.Persistence
 {
     [Serializable]
     public class Store

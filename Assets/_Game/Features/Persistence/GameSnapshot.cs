@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using DigitalLove.Game.Planets;
 using DigitalLove.Game.Spaceships;
-using DigitalLove.Levels;
 using Newtonsoft.Json;
 
-namespace DigitalLove.Game.Levels
+namespace DigitalLove.Game.Persistence
 {
     [Serializable]
     public class GameSnapshot

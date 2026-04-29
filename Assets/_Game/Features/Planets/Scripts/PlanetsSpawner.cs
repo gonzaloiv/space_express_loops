@@ -12,7 +12,7 @@ namespace DigitalLove.Game.Planets
         [SerializeField] private List<PlanetBehaviour> planets;
         [SerializeField] private LayerMask planetsLayerMask;
 
-        private IdCreator idCreator = new();
+        private IdCounter idCreator = new();
 
         public BasePlanetBehaviour BasePlanet => basePlanet;
 
@@ -22,16 +22,16 @@ namespace DigitalLove.Game.Planets
             int count = seed.count.GetRandomValue();
             for (int i = 0; i < count; i++)
             {
-                PlanetData planetData = CreateDataFromSeed(idCreator.NextId, seed);
+                PlanetData planetData = CreateDataFromSeed(idCreator.NextId, seed, result);
                 result.Add(planetData);
             }
             return result;
         }
 
-        private PlanetData CreateDataFromSeed(string id, PlanetsSeed seed)
+        private PlanetData CreateDataFromSeed(string id, PlanetsSeed seed, List<PlanetData> otherPlanets)
         {
             float radius = seed.planetSeed.radius.GetRandomValue();
-            Vector3 localPosition = GetValidPosition(radius, seed.planetSeed.distanceToBase);
+            Vector3 localPosition = GetValidPosition(radius, seed.planetSeed.distanceToBase, otherPlanets);
             PlanetData planetData = new()
             {
                 id = id,
@@ -43,7 +43,7 @@ namespace DigitalLove.Game.Planets
             return planetData;
         }
 
-        private Vector3 GetValidPosition(float radius, MinMaxFloat distanceToBase)
+        private Vector3 GetValidPosition(float radius, MinMaxFloat distanceToBase, List<PlanetData> otherPlanets)
         {
             int maxIterations = 333;
             Vector3 result = Vector3.zero;
@@ -55,22 +55,21 @@ namespace DigitalLove.Game.Planets
                     float distance = Vector3.Distance(candidate.Value, basePlanet.transform.position);
                     if (distance > distanceToBase.min && distance < distanceToBase.max)
                     {
-                        Collider[] colliders = Physics.OverlapSphere(candidate.Value, radius * 2f, planetsLayerMask);
-                        if (colliders.Length == 0)
-                        {
-                            Debug.LogWarning($"Generated candidate position: {candidate.Value} iteration: {i}");
-                            Vector3 localPos = transform.InverseTransformPoint(candidate.Value);
-                            result = localPos;
-                        }
+                        if (otherPlanets.Any(p => Vector3.Distance(p.localPosition.ToVector3(), candidate.Value) < radius * 2f))
+                            continue;
+                        Debug.LogWarning($"Generated candidate position: {candidate.Value} iteration: {i}");
+                        Vector3 localPos = transform.InverseTransformPoint(candidate.Value);
+                        result = localPos;
                     }
                 }
             }
             return result;
         }
 
-        public void SpawnBase(int currentLetters)
+        public void SpawnBase(int letters, int maxLetters)
         {
-            basePlanet.Spawn(idCreator.NextId, currentLetters);
+            basePlanet.Spawn(idCreator.NextId);
+            basePlanet.ShowLetters(letters, maxLetters);
         }
 
         public void SpawnPlanets(List<PlanetData> data)
