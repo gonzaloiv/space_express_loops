@@ -16,22 +16,23 @@ namespace DigitalLove.Game.Planets
 
         public BasePlanetBehaviour BasePlanet => basePlanet;
 
-        public List<PlanetData> GeneratePlanetDataFromPlanetsSeed(PlanetsSeed seed)
+        public List<PlanetData> GeneratePlanetDataFromPlanetsSeed(PlanetsSeed seed, List<PlanetData> spawnedPlanets)
         {
             List<PlanetData> result = new();
             int count = seed.count.GetRandomValue();
             for (int i = 0; i < count; i++)
             {
-                PlanetData planetData = CreateDataFromSeed(idCreator.NextId, seed, result);
+                PlanetData planetData = CreateDataFromSeed(idCreator.NextId, seed, spawnedPlanets);
                 result.Add(planetData);
+                spawnedPlanets.Add(planetData);
             }
             return result;
         }
 
-        private PlanetData CreateDataFromSeed(string id, PlanetsSeed seed, List<PlanetData> otherPlanets)
+        private PlanetData CreateDataFromSeed(string id, PlanetsSeed seed, List<PlanetData> spawnedPlanets)
         {
             float radius = seed.planetSeed.radius.GetRandomValue();
-            Vector3 localPosition = GetValidPosition(radius, seed.planetSeed.distanceToBase, otherPlanets);
+            Vector3 localPosition = GetValidPosition(radius, seed.planetSeed.distanceToBase, spawnedPlanets);
             PlanetData planetData = new()
             {
                 id = id,
@@ -43,7 +44,7 @@ namespace DigitalLove.Game.Planets
             return planetData;
         }
 
-        private Vector3 GetValidPosition(float radius, MinMaxFloat distanceToBase, List<PlanetData> otherPlanets)
+        private Vector3 GetValidPosition(float radius, MinMaxFloat distanceToBase, List<PlanetData> spawnedPlanets)
         {
             int maxIterations = 333;
             Vector3 result = Vector3.zero;
@@ -55,7 +56,7 @@ namespace DigitalLove.Game.Planets
                     float distance = Vector3.Distance(candidate.Value, basePlanet.transform.position);
                     if (distance > distanceToBase.min && distance < distanceToBase.max)
                     {
-                        if (otherPlanets.Any(p => Vector3.Distance(p.localPosition.ToVector3(), candidate.Value) < radius * 2f))
+                        if (spawnedPlanets.Any(p => Vector3.Distance(p.localPosition.ToVector3(), candidate.Value) < radius * 2f))
                             continue;
                         Debug.LogWarning($"Generated candidate position: {candidate.Value} iteration: {i}");
                         Vector3 localPos = transform.InverseTransformPoint(candidate.Value);

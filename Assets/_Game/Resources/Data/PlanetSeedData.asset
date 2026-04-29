@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: PlanetSeedData
   m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Planets.PlanetSeedData
   radius:
-    min: 0.2
-    max: 0.4
+    min: 0.15
+    max: 0.35
   distanceToBase:
     min: 0.75
     max: 2
   lettersPerMinute:
-    min: 40
-    max: 80
+    min: 30
+    max: 60
   maxLetters:
-    min: 20
-    max: 30
+    min: 5
+    max: 10
