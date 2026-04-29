@@ -8,5 +8,7 @@ namespace DigitalLove.Game.Levels
     {
         [Header("RoundData")]
         public PlanetsSeed planetsSeed;
+        public int minLetters;
+        public bool newSpaceship;
     }
 }

@@ -7,14 +7,6 @@ namespace DigitalLove.Game.Planets
     public class PlanetsSeed
     {
         public MinMaxInt count;
-        public PlanetSeed planetSeed;
-    }
-
-    [Serializable]
-    public class PlanetSeed
-    {
-        public MinMaxFloat radius;
-        public MinMaxFloat distanceToBase;
-        public MinMaxInt lettersPerMinute;
+        public PlanetSeedData planetSeed;
     }
 }

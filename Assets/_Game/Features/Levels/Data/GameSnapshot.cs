@@ -13,6 +13,7 @@ namespace DigitalLove.Game.Levels
     {
         public static string CookieKey => typeof(GameSnapshot).Name;
 
+        public int roundIndex;
         public List<PlanetData> planets;
         public List<LoopData> loops;
         public Store store;
@@ -25,25 +26,38 @@ namespace DigitalLove.Game.Levels
 
         public GameSnapshot()
         {
+            roundIndex = 0;
             planets = new();
             loops = new();
             store = new();
         }
 
-        public void SetPlanets(List<PlanetData> planets)
+        public void IncreaseRoundIndex()
         {
-            this.planets = planets;
+            roundIndex++;
+            onUpdated?.Invoke();
         }
 
-        public void AddLoop(LoopData loopData)
+        public void SetPlanets(List<PlanetData> toSet)
+        {
+            planets = toSet;
+        }
+
+        public void AddPlanets(List<PlanetData> toAdd)
+        {
+            planets.AddRange(toAdd);
+            onUpdated?.Invoke();
+        }
+
+        public void AddLoop(LoopData toAdd)
         {
             if (loops.Count > 0)
             {
-                LoopData toRemove = loops.FirstOrDefault(l => string.Equals(l.spaceshipId, loopData.spaceshipId));
+                LoopData toRemove = loops.FirstOrDefault(l => string.Equals(l.spaceshipId, toAdd.spaceshipId));
                 if (toRemove != null)
                     loops.Remove(toRemove);
             }
-            loops.Add(loopData);
+            loops.Add(toAdd);
             onUpdated?.Invoke();
         }
 

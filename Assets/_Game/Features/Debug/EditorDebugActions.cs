@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DigitalLove.Game.Planets;
 using DigitalLove.Game.Spaceships;
 using DigitalLove.Global;
@@ -10,15 +11,31 @@ namespace DigitalLove.Game
         [SerializeField] private PlanetsSpawner planets;
         [SerializeField] private SpaceshipsSpawner spaceships;
 
-        [SerializeField] private SpaceshipBehaviour spaceship;
+        private List<string> excludedIds = new();
 
         [Button]
         public void CreateRandomRoute()
         {
-            SpaceshipBehaviour selected = spaceship != null ? spaceship : spaceships.Current;
-            PlanetBehaviour planet = planets.GetRandom();
-            Debug.LogWarning($"Setting destination planet to {planet}");
-            selected.SetRoute(planet);
+            excludedIds.Clear();
+            FillRoute(spaceships.GetRandom());
+        }
+
+        [Button]
+        public void FillRoutes()
+        {
+            excludedIds.Clear();
+            List<SpaceshipBehaviour> toFill = spaceships.GetAll();
+            foreach (SpaceshipBehaviour spaceship in toFill)
+            {
+                FillRoute(spaceship);
+            }
+        }
+
+        private void FillRoute(SpaceshipBehaviour spaceship)
+        {
+            PlanetBehaviour planet = planets.GetRandom(excludedIds);
+            excludedIds.Add(planet.Id);
+            spaceship.SetRoute(planet);
         }
     }
 }

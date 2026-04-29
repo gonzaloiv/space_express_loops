@@ -21,7 +21,7 @@ namespace DigitalLove.Game.Planets
             this.id = id;
             this.SetActive(true);
             ShowLetters(currentLetters);
-            
+
             transform.localPosition = Vector3.zero;
             rend.material.color = baseColor.value;
             lettersPanel.Init(transform.position + transform.up * RadiusOffset);
@@ -38,12 +38,5 @@ namespace DigitalLove.Game.Planets
         {
             lettersPanel.Show(letters);
         }
-    }
-
-    [Serializable]
-    public class StationData
-    {
-        public Transform anchor;
-        public bool isTaken;
     }
 }

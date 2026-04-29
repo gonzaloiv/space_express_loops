@@ -23,36 +23,33 @@ namespace DigitalLove.Game.Levels
             spaceshipsSpawner.HideAll();
         }
 
-        public void SpawnNew(RoundData roundData, Action<List<PlanetData>> onComplete)
+        public void SpawnInitialRound(RoundData roundData, GameSnapshot gameSnapshot)
         {
-            SetRoomBasedPose(() =>
-            {
-                List<PlanetData> planetsData = planetsSpawner.GeneratePlanetDataFromPlanetsSeed(roundData.planetsSeed);
-                planetsSpawner.Spawn(planetsData, 0);
-                spaceshipsSpawner.Spawn(planetsSpawner.BasePlanet);
-                onComplete.Invoke(planetsData);
-            });
+            planetsSpawner.HideAll();
+            planetsSpawner.SpawnBase(0);
+            SpawnRound(roundData, gameSnapshot);
         }
 
-        public void Respawn(GameSnapshot gameSnapshot)
+        public void SpawnRound(RoundData roundData, GameSnapshot gameSnapshot)
         {
-            SetRoomBasedPose(() =>
-            {
-                planetsSpawner.Spawn(gameSnapshot.planets, gameSnapshot.CurrentLetters);
-                if (gameSnapshot.HasLoops)
-                {
-                    LoopData loopData = gameSnapshot.loops[0];
-                    PlanetBehaviour destinationPlanet = PlanetsSpawner.GetById(loopData.destinationId);
-                    spaceshipsSpawner.Respawn(loopData.spaceshipId, planetsSpawner.BasePlanet, destinationPlanet);
-                }
-                else
-                {
-                    spaceshipsSpawner.Spawn(planetsSpawner.BasePlanet);
-                }
-            });
+            if (roundData.newSpaceship)
+                spaceshipsSpawner.SpawnNew(planetsSpawner.BasePlanet);
+            List<PlanetData> roundPlanets = planetsSpawner.GeneratePlanetDataFromPlanetsSeed(roundData.planetsSeed);
+            gameSnapshot.AddPlanets(roundPlanets);
+            planetsSpawner.SpawnPlanets(gameSnapshot.planets);
         }
 
-        private void SetRoomBasedPose(Action onComplete)
+        public void RespawnFromData(GameSnapshot gameSnapshot)
+        {
+            planetsSpawner.SpawnPlanets(gameSnapshot.planets);
+            UnityEngine.Assertions.Assert.IsTrue(gameSnapshot.HasLoops);
+            foreach (LoopData loop in gameSnapshot.loops)
+            {
+                spaceshipsSpawner.SpawnFromLoop(loop.spaceshipId, planetsSpawner.BasePlanet, planetsSpawner.GetById(loop.destinationId));
+            }
+        }
+
+        public void SetRoomBasedPose(Action onComplete)
         {
             MRUKRoom room = MRUK.Instance.GetCurrentRoom();
             Pose originPose = new Pose

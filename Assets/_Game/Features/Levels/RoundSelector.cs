@@ -1,4 +1,7 @@
+using DigitalLove.Levels;
 using UnityEngine;
+using System.Linq;
+using System;
 
 namespace DigitalLove.Game.Levels
 {
@@ -6,9 +9,21 @@ namespace DigitalLove.Game.Levels
     {
         [SerializeField] private RoundData[] rounds;
 
-        public RoundData GetCurrent()
+        private RoundData currentRound;
+
+        public RoundData CurrentRound => currentRound;
+        public int FormattedCurrentRoundIndex => Array.IndexOf(rounds, currentRound) + 1;
+
+        public void SetCurrentRound(int index)
         {
-            return rounds[0];
+            currentRound = rounds[index];
+        }
+
+        public bool IsRoundComplete(Store store)
+        {
+            if (CurrentRound == rounds.Last())
+                return false;
+            return currentRound.minLetters <= store.letters;
         }
     }
 }

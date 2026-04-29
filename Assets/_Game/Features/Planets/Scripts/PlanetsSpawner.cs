@@ -25,7 +25,6 @@ namespace DigitalLove.Game.Planets
                 PlanetData planetData = CreateDataFromSeed(idCreator.NextId, seed);
                 result.Add(planetData);
             }
-            SpawnPlanets(result);
             return result;
         }
 
@@ -55,10 +54,10 @@ namespace DigitalLove.Game.Planets
                     float distance = Vector3.Distance(candidate.Value, basePlanet.transform.position);
                     if (distance > distanceToBase.min && distance < distanceToBase.max)
                     {
-                        Debug.LogWarning($"Generated candidate position: {candidate.Value} iteration: {i}");
-                        Collider[] colliders = Physics.OverlapSphere(candidate.Value, radius * 2.5f, planetsLayerMask);
+                        Collider[] colliders = Physics.OverlapSphere(candidate.Value, radius * 3f, planetsLayerMask);
                         if (colliders.Length == 0)
                         {
+                            Debug.LogWarning($"Generated candidate position: {candidate.Value} iteration: {i}");
                             Vector3 localPos = transform.InverseTransformPoint(candidate.Value);
                             result = localPos;
                         }
@@ -68,20 +67,26 @@ namespace DigitalLove.Game.Planets
             return result;
         }
 
-        public void Spawn(List<PlanetData> planets, int currentLetters)
+        public void SpawnBase(int currentLetters)
         {
-            HideAll();
-            basePlanet.Spawn(0.ToString(), currentLetters);
-            SpawnPlanets(planets);
+            basePlanet.Spawn(idCreator.NextId, currentLetters);
         }
 
-        private void SpawnPlanets(List<PlanetData> data)
+        public void SpawnPlanets(List<PlanetData> data)
         {
+            Debug.LogWarning($"Spawning {data.Count} planets");
             for (int i = 0; i < data.Count; i++)
             {
                 if (i >= planets.Count)
                     Instantiate();
-                planets[i].Spawn(data[i]);
+                if (!string.IsNullOrEmpty(planets[i].Id) && planets[i].Id.Equals(data[i].id) && planets[i].IsActive)
+                {
+                    continue;
+                }
+                else
+                {
+                    planets[i].Spawn(data[i]);
+                }
             }
         }
 
@@ -99,9 +104,10 @@ namespace DigitalLove.Game.Planets
                 planet.SetActive(false);
         }
 
-        public PlanetBehaviour GetRandom()
+        public PlanetBehaviour GetRandom(List<string> excludedIds = null)
         {
-            return planets[Random.Range(0, planets.Count)];
+            List<PlanetBehaviour> selection = excludedIds != null ? planets.Where(p => !excludedIds.Contains(p.Id)).ToList() : planets;
+            return selection[Random.Range(0, selection.Count)];
         }
 
         public PlanetBehaviour GetById(string id)

@@ -16,9 +16,9 @@ namespace DigitalLove.Game.Spaceships
         private PlanetBehaviour destination;
         private string id;
 
-        private Action<LoopData> onLoopCreated;
+        private Action<LoopCreatedEventArgs> onLoopCreated;
 
-        public void SetOnLoopCreated(string id, Action<LoopData> onLoopCreated)
+        public void SetOnLoopCreated(string id, Action<LoopCreatedEventArgs> onLoopCreated)
         {
             this.id = id;
             this.onLoopCreated = onLoopCreated;
@@ -79,14 +79,19 @@ namespace DigitalLove.Game.Spaceships
 
         public void OnLoopCreated()
         {
-            LoopData loopData = new()
+            LoopCreatedEventArgs args = new()
             {
                 spaceshipId = id,
                 destinationId = bezierRay.Destination.Id
             };
+            onLoopCreated?.Invoke(args);
             parent.SetCurrentState<OnRouteState>();
-            if (onLoopCreated != null)
-                onLoopCreated.Invoke(loopData);
         }
+    }
+
+    public class LoopCreatedEventArgs : EventArgs
+    {
+        public string spaceshipId;
+        public string destinationId;
     }
 }

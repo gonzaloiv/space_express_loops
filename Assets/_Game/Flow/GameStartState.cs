@@ -1,14 +1,16 @@
+using System.Collections.Generic;
 using DigitalLove.DataAccess;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Levels;
 using DigitalLove.Game.Persistence;
+using DigitalLove.Game.Planets;
 using Newtonsoft.Json;
 using Reflex.Attributes;
 using UnityEngine;
 
 namespace DigitalLove.Game.Flow
 {
-    public class LevelInitState : MonoState
+    public class GameStartState : MonoState
     {
         [SerializeField] private LevelContainer levelContainer;
         [SerializeField] private RoundSelector roundSelector;
@@ -29,29 +31,24 @@ namespace DigitalLove.Game.Flow
 
         public override void Enter()
         {
-            bool spawnedFromData = false;
-            bool hasPreviousData = InitData();
-            if (hasPreviousData)
-                spawnedFromData = TryToSpawnFromData();
-            if (!spawnedFromData)
+            InitData();
+            if (!gameSnapshot.HasPlanets)
             {
-                SpawnNewLevel();
+                SpawnLevelFromInitialRound();
             }
             else
             {
-                ToNextState();
+                RespawnFromData();
             }
         }
 
-        private bool InitData()
+        private void InitData()
         {
-            bool result = false;
             playerData = memoryDataClient.Get<PlayerData>();
             if (playerData.HasCookie(GameSnapshot.CookieKey))
             {
                 string metadata = playerData.GetCookieById(GameSnapshot.CookieKey).metadata;
                 gameSnapshot = JsonConvert.DeserializeObject<GameSnapshot>(metadata);
-                result = true;
             }
             else
             {
@@ -59,28 +56,23 @@ namespace DigitalLove.Game.Flow
             }
             gameSnapshot.SetOnUpdated(() => gameSnapshotClient.SetHasToUpdate());
             memoryDataClient.Put(gameSnapshot);
-            return result;
+            roundSelector.SetCurrentRound(gameSnapshot.roundIndex);
         }
 
-        private bool TryToSpawnFromData()
+        private void SpawnLevelFromInitialRound()
         {
-            if (gameSnapshot.HasPlanets)
+            levelContainer.SetRoomBasedPose(() =>
             {
-                levelContainer.Respawn(gameSnapshot);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+                levelContainer.SpawnInitialRound(roundSelector.CurrentRound, gameSnapshot);
+                ToNextState();
+            });
         }
 
-        private void SpawnNewLevel()
+        private void RespawnFromData()
         {
-            RoundData roundData = roundSelector.GetCurrent();
-            levelContainer.SpawnNew(roundData, planetsData =>
+            levelContainer.SetRoomBasedPose(() =>
             {
-                gameSnapshot.SetPlanets(planetsData);
+                levelContainer.RespawnFromData(gameSnapshot);
                 ToNextState();
             });
         }

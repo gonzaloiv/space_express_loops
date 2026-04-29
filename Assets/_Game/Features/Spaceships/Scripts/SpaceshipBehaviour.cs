@@ -17,6 +17,7 @@ namespace DigitalLove.Game.Spaceships
 
         private string id;
         public string Id => id;
+        public bool IsActive => gameObject.activeInHierarchy;
 
         private void Awake()
         {
@@ -24,7 +25,7 @@ namespace DigitalLove.Game.Spaceships
             stateMachine.SetCurrentState<WaitingForRouteState>();
         }
 
-        public void SetOnLoopCreated(Action<LoopData> onLoopCreated)
+        public void SetOnLoopCreated(Action<LoopCreatedEventArgs> onLoopCreated)
         {
             destinationSelectionState.SetOnLoopCreated(id, onLoopCreated);
         }

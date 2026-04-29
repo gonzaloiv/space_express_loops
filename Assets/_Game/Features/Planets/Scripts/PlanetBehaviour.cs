@@ -28,6 +28,7 @@ namespace DigitalLove.Game.Planets
         public float RadiusOffset => body.lossyScale.x;
         public int Letters => letters;
         public string Id => id;
+        public bool IsActive => gameObject.activeInHierarchy;
 
         public void SetIsDestination(float percentage)
         {
