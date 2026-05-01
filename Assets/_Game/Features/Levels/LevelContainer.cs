@@ -34,7 +34,7 @@ namespace DigitalLove.Game.Levels
         {
             if (roundData.newSpaceship)
                 spaceshipsSpawner.SpawnNew(planetsSpawner.BasePlanet);
-            List<PlanetData> roundPlanets = planetsSpawner.GeneratePlanetDataFromPlanetsSeed(roundData.planetsSeed);
+            List<PlanetData> roundPlanets = planetsSpawner.GeneratePlanetDataFromPlanetsSeed(roundData.planetsSeed, gameSnapshot.planets);
             gameSnapshot.AddPlanets(roundPlanets);
             planetsSpawner.SpawnPlanets(gameSnapshot.planets);
             planetsSpawner.SpawnBase(gameSnapshot.CurrentLetters, roundData.lettersToComplete);
