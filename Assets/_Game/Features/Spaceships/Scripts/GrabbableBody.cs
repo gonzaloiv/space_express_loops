@@ -21,14 +21,14 @@ namespace DigitalLove.Game.Spaceships
             scalePunch.OnShow();
             grabbable.SetActive(false);
             grabbable.transform.LocalReset();
-            grabbableRenderer.enabled = true;
+            grabbableRenderer.gameObject.SetActive(true);
             grabbable.SetActive(true);
         }
 
         public void Hide()
         {
             scalePunch.OnHide();
-            grabbableRenderer.enabled = false;
+            grabbableRenderer.gameObject.SetActive(false);
         }
     }
 }

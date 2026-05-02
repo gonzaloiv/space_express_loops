@@ -25,39 +25,47 @@ namespace DigitalLove.Game.Spaceships
 
         private DG.Tweening.Tween followTween;
         private int pickedLetters;
+        private string id;
 
-        private Action<int> loopComplete;
+        private Action<LoopCompleteEventArgs> loopComplete;
+        private Action<LoopEventArgs> onLoopEditionButtonClicked;
 
         public override void Init(StateMachine parent)
         {
             base.Init(parent);
             body.gameObject.SetActive(false);
             editPanel.SetActive(false);
-            lettersPanel.SetActive(false);
-            lettersPanel.SetMaxLetters(SpaceshipBehaviour.MaxLetters);
             followTween?.Kill();
         }
 
-        public void SetOnLoopComplete(Action<int> loopComplete) => this.loopComplete = loopComplete;
+        public void SetOnLoopComplete(Action<LoopCompleteEventArgs> loopComplete) => this.loopComplete = loopComplete;
+
+        public void SetOnLoopEditionButtonClicked(string id, Action<LoopEventArgs> onLoopEditionButtonClicked)
+        {
+            this.id = id;
+            this.onLoopEditionButtonClicked = onLoopEditionButtonClicked;
+        }
 
         public override void Enter()
         {
             editButton.onClick.AddListener(OnEditButtonClick);
 
-            ShowBody();
             ShowEditPanel(bezierRay.Spline.OriginPosition);
+            bezierRay.SetIsLookingForDestination(false);
+            bezierRay.Destination.SetIsInRoute(true);
+            grabbable.SetActive(false);
             OnGotBackToBase();
         }
 
-        private void OnEditButtonClick() => parent.SetCurrentState<WaitingForRouteState>();
-
-        private void ShowBody()
+        private void OnEditButtonClick()
         {
-            body.gameObject.SetActive(true);
-            grabbable.SetActive(false);
-            bezierRay.Destination.SetIsInRoute(true);
-            bezierRay.SetIsLookingForDestination(false);
-            rend.material.color = defaultColor.value;
+            onLoopEditionButtonClicked(new LoopEventArgs()
+            {
+                spaceshipId = id,
+                originId = bezierRay.OriginId,
+                destinationId = bezierRay.Destination.Id
+            });
+            parent.SetCurrentState<WaitingForRouteState>();
         }
 
         private void ShowEditPanel(Vector3 position)
@@ -84,9 +92,11 @@ namespace DigitalLove.Game.Spaceships
             IEnumerator Stop()
             {
                 yield return new WaitForSeconds(1);
-                pickedLetters = bezierRay.Destination.PickLetters(SpaceshipBehaviour.MaxLetters);
-                lettersPanel.Show(pickedLetters);
+                pickedLetters = bezierRay.Destination.PlanetStore.PickLetters(SpaceshipBehaviour.MaxLetters);
+
+                lettersPanel.ShowLetters(pickedLetters, 0);
                 rend.material.color = loadedColor.value;
+
                 FollowPath(bezierRay.Spline.ReturnPositions, OnGotBackToBase);
             }
             StartCoroutine(Stop());
@@ -97,14 +107,29 @@ namespace DigitalLove.Game.Spaceships
             IEnumerator Stop()
             {
                 yield return new WaitForSeconds(1);
-                if (loopComplete != null && pickedLetters != 0)
-                    loopComplete(pickedLetters);
+                InvokeLoopComplete();
                 pickedLetters = 0;
+
+                body.gameObject.SetActive(true);
                 lettersPanel.SetActive(false);
                 rend.material.color = defaultColor.value;
+
                 FollowPath(bezierRay.Spline.GoPositions, OnArrivedToDestination);
             }
             StartCoroutine(Stop());
+        }
+
+        private void InvokeLoopComplete()
+        {
+            if (loopComplete == null || pickedLetters == 0)
+                return;
+            loopComplete(new LoopCompleteEventArgs()
+            {
+                spaceshipId = id,
+                originId = bezierRay.OriginId,
+                destinationId = bezierRay.Destination.Id,
+                value = pickedLetters
+            });
         }
 
         public override void Exit()
@@ -120,6 +145,13 @@ namespace DigitalLove.Game.Spaceships
             body.gameObject.SetActive(false);
             bezierRay.Destination.SetIsInRoute(false);
             editPanel.SetActive(false);
+        }
+
+        // ! DEBUG
+
+        public void Debug_InvokeOnLoopEditionButtonClicked()
+        {
+            OnEditButtonClick();
         }
     }
 }

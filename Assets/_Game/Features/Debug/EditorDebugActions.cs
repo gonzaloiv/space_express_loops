@@ -14,14 +14,14 @@ namespace DigitalLove.Game
         private List<string> excludedIds = new();
 
         [Button]
-        public void CreateRandomRoute()
+        public void Debug_CreateRandomRoute()
         {
             excludedIds.Clear();
             FillRoute(spaceships.GetRandom());
         }
 
         [Button]
-        public void FillRoutes()
+        public void Debug_FillRoutes()
         {
             excludedIds.Clear();
             List<SpaceshipBehaviour> toFill = spaceships.GetAll();
@@ -36,6 +36,13 @@ namespace DigitalLove.Game
             PlanetBehaviour planet = planets.GetRandom(excludedIds);
             excludedIds.Add(planet.Id);
             spaceship.SetRoute(planet);
+        }
+
+        [Button]
+        public void Debug_RemoveRandomLoop()
+        {
+            SpaceshipBehaviour spaceship = spaceships.GetRandom();
+            spaceship.Debug_InvokeOnLoopEditionButtonClicked();
         }
     }
 }

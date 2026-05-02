@@ -16,15 +16,15 @@ namespace DigitalLove.Game.Spaceships
         private PlanetBehaviour destination;
         private string id;
 
-        private Action<LoopCreatedEventArgs> onLoopCreated;
+        private Action<LoopEventArgs> onLoopCreated;
 
-        public void SetOnLoopCreated(string id, Action<LoopCreatedEventArgs> onLoopCreated)
+        public void SetOnLoopCreated(string id, Action<LoopEventArgs> onLoopCreated)
         {
             this.id = id;
             this.onLoopCreated = onLoopCreated;
         }
 
-        public void SetBasePlanet(BasePlanetBehaviour basePlanet)
+        public void SetBasePlanet(PlanetBaseBehaviour basePlanet)
         {
             bezierRay.Init(basePlanet, ghost.Body);
         }
@@ -33,7 +33,6 @@ namespace DigitalLove.Game.Spaceships
         {
             base.Init(parent);
             ghost.SetActive(false);
-
             bezierRay.SetActive(false);
         }
 
@@ -79,19 +78,14 @@ namespace DigitalLove.Game.Spaceships
 
         public void OnLoopCreated()
         {
-            LoopCreatedEventArgs args = new()
+            LoopEventArgs args = new()
             {
                 spaceshipId = id,
+                originId = bezierRay.OriginId,
                 destinationId = bezierRay.Destination.Id
             };
-            onLoopCreated?.Invoke(args);
+            onLoopCreated(args);
             parent.SetCurrentState<OnRouteState>();
         }
-    }
-
-    public class LoopCreatedEventArgs : EventArgs
-    {
-        public string spaceshipId;
-        public string destinationId;
     }
 }

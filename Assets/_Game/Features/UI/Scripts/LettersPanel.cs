@@ -11,31 +11,23 @@ namespace DigitalLove.Game.Planets
         [SerializeField] private TextMeshProUGUI lettersLabel;
         [SerializeField] private LayoutUpdater layoutUpdater;
 
-        private int maxLetters;
-
-        public void Init(Vector3 position, int maxLetters)
+        public void Init(Vector3 position)
         {
             transform.position = position;
-            this.maxLetters = maxLetters;
             Hide();
-        }
-
-        public void SetMaxLetters(int maxLetters)
-        {
-            this.maxLetters = maxLetters;
-        }
-
-        public void Show(int letters)
-        {
-            gameObject.SetActive(true);
-            lettersLabel.text = maxLetters > 0 ? $"{letters} / {maxLetters}" : $"{letters}";
-            scalePunch.Animate();
-            layoutUpdater.ForceUpdate();
         }
 
         public void Hide()
         {
             gameObject.SetActive(false);
+        }
+
+        public void ShowLetters(int letters, int maxLetters)
+        {
+            gameObject.SetActive(true);
+            lettersLabel.text = maxLetters > 0 ? $"{letters} / {maxLetters}" : $"{letters}";
+            scalePunch.Animate();
+            layoutUpdater.ForceUpdate();
         }
     }
 }

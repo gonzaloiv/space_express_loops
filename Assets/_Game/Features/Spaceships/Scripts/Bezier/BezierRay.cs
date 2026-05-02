@@ -17,19 +17,26 @@ namespace DigitalLove.Game.Spaceships
 
         private Transform body;
         private float countdown;
-        private BasePlanetBehaviour basePlanet;
+        private PlanetBaseBehaviour basePlanet;
         private PlanetBehaviour destinationPlanet;
         private bool isLookingForDestination;
 
         public SplineContainerWrapper Spline => splineContainerWrapper;
-        public BasePlanetBehaviour Origin => basePlanet;
+        public string OriginId
+        {
+            get
+            {
+                PlanetBehaviour origin = basePlanet.GetComponent<PlanetBehaviour>();
+                return origin != null ? origin.Id : string.Empty;
+            }
+        }
         public PlanetBehaviour Destination => destinationPlanet;
 
         public Action<PlanetBehaviour> planetSelected = (planet) => { };
 
         public void SetIsLookingForDestination(bool isLookingForDestination) => this.isLookingForDestination = isLookingForDestination;
 
-        public void Init(BasePlanetBehaviour basePlanet, Transform body)
+        public void Init(PlanetBaseBehaviour basePlanet, Transform body)
         {
             this.basePlanet = basePlanet;
             this.body = body;
@@ -75,22 +82,28 @@ namespace DigitalLove.Game.Spaceships
             else
             {
                 PlanetBehaviour hitPlanet = hits[0].rigidbody.GetComponent<PlanetBehaviour>();
-                if (hitPlanet != null && hitPlanet != destinationPlanet && hitPlanet.gameObject != basePlanet.gameObject)
+                bool isValidNewDestination = hitPlanet != null && hitPlanet != destinationPlanet && hitPlanet.gameObject != basePlanet.gameObject && hitPlanet.CanBeDestination;
+                if (isValidNewDestination)
                 {
                     if (destinationPlanet != null)
                         destinationPlanet.SetIsDestination(0);
                     destinationPlanet = hitPlanet;
                     countdown = secsToSelect;
                 }
-                else if (destinationPlanet != null && !destinationPlanet.IsDestination)
+                UpdateDestinationCandidate();
+            }
+        }
+
+        private void UpdateDestinationCandidate()
+        {
+            if (destinationPlanet != null && !destinationPlanet.IsDestination)
+            {
+                countdown -= Time.deltaTime;
+                destinationPlanet.SetIsDestination(countdown / secsToSelect);
+                if (countdown <= 0)
                 {
-                    countdown -= Time.deltaTime;
-                    destinationPlanet.SetIsDestination(countdown / secsToSelect);
-                    if (countdown <= 0)
-                    {
-                        planetSelected.Invoke(destinationPlanet);
-                        destinationPlanet.SetIsDestination(1);
-                    }
+                    planetSelected.Invoke(destinationPlanet);
+                    destinationPlanet.SetIsDestination(1);
                 }
             }
         }

@@ -71,7 +71,7 @@ namespace DigitalLove.Game.Flow
             levelContainer.SetRoomBasedPose(() =>
             {
                 roundSelector.SetCurrentRound(gameSnapshot.roundIndex);
-                levelContainer.RespawnFromData(roundSelector.CurrentRound, gameSnapshot);
+                levelContainer.RespawnFromData(gameSnapshot);
                 ToNextState();
             });
         }

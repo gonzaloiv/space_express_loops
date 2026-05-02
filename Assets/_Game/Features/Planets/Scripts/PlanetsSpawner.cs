@@ -8,13 +8,10 @@ namespace DigitalLove.Game.Planets
 {
     public class PlanetsSpawner : MonoBehaviour
     {
-        [SerializeField] private BasePlanetBehaviour basePlanet;
         [SerializeField] private List<PlanetBehaviour> planets;
         [SerializeField] private LayerMask planetsLayerMask;
 
         private IdCounter idCreator = new();
-
-        public BasePlanetBehaviour BasePlanet => basePlanet;
 
         public List<PlanetData> GeneratePlanetDataFromPlanetsSeed(PlanetsSeed seed, List<PlanetData> initialPlanets)
         {
@@ -53,7 +50,7 @@ namespace DigitalLove.Game.Planets
                 Vector3? candidate = MRUK.Instance.GetCurrentRoom().GenerateRandomPositionInRoom(radius, true);
                 if (candidate.HasValue)
                 {
-                    float distance = Vector3.Distance(candidate.Value, basePlanet.transform.position);
+                    float distance = Vector3.Distance(candidate.Value, transform.position);
                     if (distance > distanceToBase.min && distance < distanceToBase.max)
                     {
                         if (allPlanets.Any(p => Vector3.Distance(p.localPosition.ToVector3(), candidate.Value) < radius * 2f))
@@ -65,12 +62,6 @@ namespace DigitalLove.Game.Planets
                 }
             }
             return result;
-        }
-
-        public void SpawnBase(int letters, int maxLetters)
-        {
-            basePlanet.Spawn(idCreator.NextId);
-            basePlanet.ShowLetters(letters, maxLetters);
         }
 
         public void SpawnPlanets(List<PlanetData> data)
@@ -100,7 +91,6 @@ namespace DigitalLove.Game.Planets
 
         public void HideAll()
         {
-            basePlanet.SetActive(false);
             foreach (PlanetBehaviour planet in planets)
                 planet.SetActive(false);
         }

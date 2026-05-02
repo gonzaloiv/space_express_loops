@@ -10,7 +10,8 @@
         "DigitalLove.Game.Spaceships",
         "DigitalLove.Game.Persistence",
         "DigitalLove.DataAccess.Remote",
-        "DigitalLove.Global"
+        "DigitalLove.Global",
+        "DigitalLove.Game.UI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

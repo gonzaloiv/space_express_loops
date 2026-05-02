@@ -12,6 +12,19 @@ namespace DigitalLove.Game.Levels
 
         public RoundData CurrentRound => currentRound;
         public int FormattedCurrentRoundIndex => Array.IndexOf(rounds, currentRound) + 1;
+        public bool IsLastRound => rounds.Length == FormattedCurrentRoundIndex;
+        public int TotalLettersToComplete
+        {
+            get
+            {
+                int lettersToComplete = 0;
+                for (int i = 0; i < Array.IndexOf(rounds, currentRound); i++)
+                {
+                    lettersToComplete += rounds[i].lettersToComplete;
+                }
+                return lettersToComplete;
+            }
+        }
 
         public void SetCurrentRound(int index)
         {

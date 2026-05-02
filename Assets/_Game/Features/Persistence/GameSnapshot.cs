@@ -70,5 +70,13 @@ namespace DigitalLove.Game.Persistence
         {
             this.onUpdated = onUpdated;
         }
+
+        public void RemoveLoopBySpaceshipId(string spaceshipId)
+        {
+            LoopData toRemove = loops.FirstOrDefault(l => string.Equals(l.spaceshipId, spaceshipId));
+            if (toRemove != null)
+                loops.Remove(toRemove);
+            onUpdated?.Invoke();
+        }
     }
 }

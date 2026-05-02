@@ -13,33 +13,38 @@ namespace DigitalLove.Game.Spaceships
 
         private IdCounter idCounter = new();
 
-        public void SetOnLoopCreated(Action<LoopCreatedEventArgs> onLoopCreated)
+        public Action<LoopEventArgs> loopCreated = args => { };
+        public Action<LoopEventArgs> loopEditionButtonClicked = args => { };
+        public Action<LoopCompleteEventArgs> loopComplete = args => { };
+
+        public void SpawnNew(PlanetBaseBehaviour basePlanet)
         {
-            foreach (SpaceshipBehaviour spaceship in spaceships)
-            {
-                spaceship.SetOnLoopCreated(onLoopCreated);
-            }
+            SpawnSpaceship(idCounter.NextId, basePlanet);
         }
 
-        public void SetOnLoopComplete(Action<int> onLoopComplete)
-        {
-            foreach (SpaceshipBehaviour spaceship in spaceships)
-            {
-                spaceship.SetOnLoopComplete(onLoopComplete);
-            }
-        }
-
-        public void SpawnNew(BasePlanetBehaviour basePlanet)
-        {
-            SpaceshipBehaviour spaceship = GetOrInstantiate();
-            spaceship.Spawn(idCounter.NextId, basePlanet);
-        }
-
-        public void SpawnFromLoop(string id, BasePlanetBehaviour basePlanet, PlanetBehaviour destinationPlanet)
+        private SpaceshipBehaviour SpawnSpaceship(string id, PlanetBaseBehaviour basePlanet)
         {
             SpaceshipBehaviour spaceship = GetOrInstantiate();
             spaceship.Spawn(id, basePlanet);
-            spaceship.SetRoute(destinationPlanet);
+            spaceship.SetOnLoopCreated(OnLoopCreated);
+            spaceship.SetOnLoopComplete(OnLoopComplete);
+            spaceship.SetOnLoopEditionButtonClicked(OnLoopEditionButtonClicked);
+            return spaceship;
+        }
+
+        private void OnLoopCreated(LoopEventArgs args)
+        {
+            loopCreated(args);
+        }
+
+        private void OnLoopComplete(LoopCompleteEventArgs args)
+        {
+            loopComplete(args);
+        }
+
+        private void OnLoopEditionButtonClicked(LoopEventArgs args)
+        {
+            loopEditionButtonClicked(args);
         }
 
         private SpaceshipBehaviour GetOrInstantiate()
@@ -52,6 +57,12 @@ namespace DigitalLove.Game.Spaceships
                 spaceships.Add(spaceship);
             }
             return spaceship;
+        }
+
+        public void SpawnFromLoop(string id, PlanetBaseBehaviour basePlanet, PlanetBehaviour destinationPlanet)
+        {
+            SpaceshipBehaviour spaceship = SpawnSpaceship(id, basePlanet);
+            spaceship.SetRoute(destinationPlanet);
         }
 
         public void HideAll()

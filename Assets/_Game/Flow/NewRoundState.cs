@@ -18,10 +18,12 @@ namespace DigitalLove.Game.Flow
         public override void Enter()
         {
             GameSnapshot gameSnapshot = memoryDataClient.Get<GameSnapshot>();
-            gameSnapshot.IncreaseRoundIndex();
-            roundSelector.SetCurrentRound(gameSnapshot.roundIndex);
-
-            levelContainer.SpawnRound(roundSelector.CurrentRound, gameSnapshot);
+            if (!roundSelector.IsLastRound)
+            {
+                gameSnapshot.IncreaseRoundIndex();
+                roundSelector.SetCurrentRound(gameSnapshot.roundIndex);
+                levelContainer.SpawnRound(roundSelector.CurrentRound, gameSnapshot);
+            }
 
             parent.SetCurrentState(editionState.RouteId);
         }

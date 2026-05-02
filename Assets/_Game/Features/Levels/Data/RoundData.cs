@@ -1,4 +1,5 @@
 using DigitalLove.Game.Planets;
+using DigitalLove.Game.Spaceships;
 using UnityEngine;
 
 namespace DigitalLove.Game.Levels
@@ -9,6 +10,6 @@ namespace DigitalLove.Game.Levels
         [Header("RoundData")]
         public PlanetsSeed planetsSeed;
         public int lettersToComplete;
-        public bool newSpaceship;
+        public SpaceshipSeed spaceshipSeed;
     }
 }

@@ -5,6 +5,7 @@ using DigitalLove.Game.Spaceships;
 using Reflex.Attributes;
 using UnityEngine;
 using DigitalLove.Game.Persistence;
+using DigitalLove.Game.Planets;
 
 namespace DigitalLove.Game.Flow
 {
@@ -13,43 +14,65 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private LevelContainer levelContainer;
         [SerializeField] private RoundSelector roundSelector;
         [SerializeField] private MonoState newRoundState;
+        [SerializeField] private LettersPanel lettersPanel;
 
         [Header("Debug")]
         [SerializeField] private GameSnapshot gameSnapshot;
 
         [Inject] private MemoryDataClient memoryDataClient;
 
-        public override void Enter()
+        public override void Init(StateMachine parent)
         {
-            levelContainer.SpaceshipsSpawner.SetOnLoopCreated(OnLoopCreated);
-            levelContainer.SpaceshipsSpawner.SetOnLoopComplete(OnLoopComplete);
-
-            gameSnapshot = memoryDataClient.Get<GameSnapshot>();
+            base.Init(parent);
+            lettersPanel.Hide();
         }
 
-        private void OnLoopCreated(LoopCreatedEventArgs args)
+        public override void Enter()
+        {
+            levelContainer.SpaceshipsSpawner.loopCreated += OnLoopCreated;
+            levelContainer.SpaceshipsSpawner.loopComplete += OnLoopComplete;
+            levelContainer.SpaceshipsSpawner.loopEditionButtonClicked += OnLoopEditionButtonClicked;
+
+            gameSnapshot = memoryDataClient.Get<GameSnapshot>();
+            lettersPanel.ShowLetters(gameSnapshot.CurrentLetters, roundSelector.TotalLettersToComplete);
+        }
+
+        private void OnLoopCreated(LoopEventArgs args)
         {
             LoopData data = new()
             {
                 spaceshipId = args.spaceshipId,
-
+                originId = args.originId,
                 destinationId = args.destinationId
             };
             gameSnapshot.AddLoop(data);
         }
 
-        private void OnLoopComplete(int value)
+        private void OnLoopComplete(LoopCompleteEventArgs args)
         {
-            gameSnapshot.IncreaseLetters(value);
-            levelContainer.PlanetsSpawner.SpawnBase(gameSnapshot.CurrentLetters, roundSelector.CurrentRound.lettersToComplete);
-            if (roundSelector.IsRoundComplete(gameSnapshot.store))
-                parent.SetCurrentState(newRoundState.RouteId);
+            if (args.IsBaseLoop)
+            {
+                gameSnapshot.IncreaseLetters(args.value);
+                lettersPanel.ShowLetters(gameSnapshot.CurrentLetters, roundSelector.TotalLettersToComplete);
+                if (roundSelector.IsRoundComplete(gameSnapshot.store))
+                    parent.SetCurrentState(newRoundState.RouteId);
+            }
+            else
+            {
+                levelContainer.PlanetsSpawner.GetById(args.originId).PlanetStore.IncreaseLetters(args.value);
+            }
+        }
+
+        private void OnLoopEditionButtonClicked(LoopEventArgs args)
+        {
+            gameSnapshot.RemoveLoopBySpaceshipId(args.spaceshipId);
         }
 
         public override void Exit()
         {
-            levelContainer.SpaceshipsSpawner.SetOnLoopCreated(null);
-            levelContainer.SpaceshipsSpawner.SetOnLoopComplete(null);
+            levelContainer.SpaceshipsSpawner.loopCreated -= OnLoopCreated;
+            levelContainer.SpaceshipsSpawner.loopComplete -= OnLoopComplete;
+            levelContainer.SpaceshipsSpawner.loopEditionButtonClicked -= OnLoopEditionButtonClicked;
         }
     }
 }

@@ -28,20 +28,26 @@ namespace DigitalLove.Game.Spaceships
             stateMachine.SetCurrentState<WaitingForRouteState>();
         }
 
-        public void SetOnLoopCreated(Action<LoopCreatedEventArgs> onLoopCreated)
+        public void SetOnLoopCreated(Action<LoopEventArgs> onLoopCreated)
         {
             destinationSelectionState.SetOnLoopCreated(id, onLoopCreated);
         }
 
-        public void SetOnLoopComplete(Action<int> onLoopComplete)
+        public void SetOnLoopComplete(Action<LoopCompleteEventArgs> onLoopComplete)
         {
             onRouteState.SetOnLoopComplete(onLoopComplete);
         }
 
-        public void Spawn(string id, BasePlanetBehaviour basePlanet)
+        public void SetOnLoopEditionButtonClicked(Action<LoopEventArgs> onLoopEditionButtonClicked)
+        {
+            onRouteState.SetOnLoopEditionButtonClicked(id, onLoopEditionButtonClicked);
+        }
+
+        public void Spawn(string id, PlanetBaseBehaviour basePlanet)
         {
             this.id = id;
-            transform.SetWorldPose(basePlanet.GetValidStationPose());
+            StationBehaviour station = basePlanet.GetValidStation();
+            transform.SetWorldPose(station.WorldPose);
             destinationSelectionState.SetBasePlanet(basePlanet);
             this.SetActive(true);
         }
@@ -55,5 +61,10 @@ namespace DigitalLove.Game.Spaceships
         }
 
         public void Hide() => this.SetActive(false);
+
+        public void Debug_InvokeOnLoopEditionButtonClicked()
+        {
+            onRouteState.Debug_InvokeOnLoopEditionButtonClicked();
+        }
     }
 }
