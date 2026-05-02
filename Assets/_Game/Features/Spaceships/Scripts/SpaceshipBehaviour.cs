@@ -11,7 +11,7 @@ namespace DigitalLove.Game.Spaceships
         public const int MaxLetters = 5;
 
         [SerializeField] private MonoState[] states;
-        [SerializeField] private BezierRay bezierRay;
+        [SerializeField] private DestinationSelector destinationSelector;
         [SerializeField] private DestinationSelectionState destinationSelectionState;
         [SerializeField] private OnRouteState onRouteState;
 
@@ -21,6 +21,7 @@ namespace DigitalLove.Game.Spaceships
 
         public string Id => id;
         public bool IsActive => gameObject.activeInHierarchy;
+        public bool HasRoute => stateMachine.IsCurrentState<OnRouteState>();
 
         private void Awake()
         {
@@ -48,19 +49,21 @@ namespace DigitalLove.Game.Spaceships
             this.id = id;
             StationBehaviour station = basePlanet.GetValidStation();
             transform.SetWorldPose(station.WorldPose);
-            destinationSelectionState.SetBasePlanet(basePlanet);
+            station.SetIsTaken(true);
+            destinationSelector.SetBase(basePlanet);
             this.SetActive(true);
         }
 
-        // ! DEBUG
+        public void Hide() => this.SetActive(false);
 
         public void SetRoute(PlanetBehaviour planet)
         {
-            bezierRay.SetDestinationPlanet(planet);
-            destinationSelectionState.OnLoopCreated();
+            stateMachine.SetCurrentState<DestinationSelectionState>();
+            destinationSelector.Debug_SetDestinationPlanet(planet);
+            destinationSelectionState.Debug_OnLoopCreated();
         }
 
-        public void Hide() => this.SetActive(false);
+        // ! DEBUG
 
         public void Debug_InvokeOnLoopEditionButtonClicked()
         {

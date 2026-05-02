@@ -19,8 +19,8 @@ MonoBehaviour:
     min: 0.75
     max: 2
   lettersPerMinute:
-    min: 30
-    max: 60
+    min: 15
+    max: 30
   maxLetters:
     min: 5
     max: 10

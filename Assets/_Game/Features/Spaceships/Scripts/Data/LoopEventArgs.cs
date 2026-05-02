@@ -16,5 +16,13 @@ namespace DigitalLove.Game.Spaceships
     public class LoopCompleteEventArgs : LoopEventArgs
     {
         public int value;
+
+        public LoopCompleteEventArgs(LoopEventArgs args, int value) : base()
+        {
+            originId = args.originId;
+            spaceshipId = args.spaceshipId;
+            destinationId = args.destinationId;
+            this.value = value;
+        }
     }
 }

@@ -16,8 +16,8 @@ MonoBehaviour:
   prefab: {fileID: 0}
   planetsSeed:
     count:
-      min: 2
-      max: 2
+      min: 20
+      max: 20
     planetSeed: {fileID: 11400000, guid: 31c02de9e722c3e4fb35c71153032b45, type: 2}
   lettersToComplete: 5
   spaceshipSeed:

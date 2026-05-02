@@ -10,10 +10,10 @@ namespace DigitalLove.Game.Spaceships
     public class DestinationSelectionState : MonoState
     {
         [SerializeField] private Grabbable grabbable;
-        [SerializeField] private BezierRay bezierRay;
+        [SerializeField] private DestinationSelector destinationSelector;
         [SerializeField] private GhostBehaviour ghost;
+        [SerializeField] private Transform dragZone;
 
-        private PlanetBehaviour destination;
         private string id;
 
         private Action<LoopEventArgs> onLoopCreated;
@@ -24,36 +24,25 @@ namespace DigitalLove.Game.Spaceships
             this.onLoopCreated = onLoopCreated;
         }
 
-        public void SetBasePlanet(PlanetBaseBehaviour basePlanet)
-        {
-            bezierRay.Init(basePlanet, ghost.Body);
-        }
-
         public override void Init(StateMachine parent)
         {
             base.Init(parent);
             ghost.SetActive(false);
-            bezierRay.SetActive(false);
+            destinationSelector.StartLookingForDestination(false);
         }
 
         public override void Enter()
         {
-            bezierRay.planetSelected += OnPlanetFound;
             grabbable.WhenPointerEventRaised += OnPointerEvent;
 
             ghost.SetActive(true);
-            bezierRay.SetActive(true);
+            destinationSelector.StartLookingForDestination(true);
+            dragZone.gameObject.SetActive(true);
         }
 
         public override void Exit()
         {
-            bezierRay.planetSelected -= OnPlanetFound;
             grabbable.WhenPointerEventRaised -= OnPointerEvent;
-        }
-
-        private void OnPlanetFound(PlanetBehaviour planet)
-        {
-            destination = planet;
         }
 
         private void OnPointerEvent(PointerEvent pointer)
@@ -66,7 +55,7 @@ namespace DigitalLove.Game.Spaceships
         private void OnUnselect()
         {
             ghost.SetActive(false);
-            if (destination != null)
+            if (destinationSelector.HasDestinationBeenSelected)
             {
                 OnLoopCreated();
             }
@@ -76,16 +65,22 @@ namespace DigitalLove.Game.Spaceships
             }
         }
 
-        public void OnLoopCreated()
+        private void OnLoopCreated()
         {
             LoopEventArgs args = new()
             {
                 spaceshipId = id,
-                originId = bezierRay.OriginId,
-                destinationId = bezierRay.Destination.Id
+                originId = destinationSelector.BasePlanet.Id,
+                destinationId = destinationSelector.Destination.Id
             };
             onLoopCreated(args);
             parent.SetCurrentState<OnRouteState>();
+        }
+
+        // ! DEBUG
+        public void Debug_OnLoopCreated()
+        {
+            OnLoopCreated();
         }
     }
 }

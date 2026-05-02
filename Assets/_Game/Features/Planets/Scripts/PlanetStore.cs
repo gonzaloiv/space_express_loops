@@ -1,4 +1,5 @@
 using UnityEngine;
+using DigitalLove.Global;
 
 namespace DigitalLove.Game.Planets
 {
@@ -6,6 +7,7 @@ namespace DigitalLove.Game.Planets
     {
         [SerializeField] private LettersPanel lettersPanel;
         [SerializeField] private PlanetBody planetBody;
+        [SerializeField] private FloatValue gameSpeed;
 
         private int lettersPerMinute;
         private int maxLetters;
@@ -46,7 +48,7 @@ namespace DigitalLove.Game.Planets
 
         private void ResetCoundown()
         {
-            countdown = 60f / lettersPerMinute;
+            countdown = 60f / lettersPerMinute / gameSpeed.value;
         }
 
         public void IncreaseLetters(int value)

@@ -39,10 +39,14 @@ namespace DigitalLove.Game
         }
 
         [Button]
-        public void Debug_RemoveRandomLoop()
+        public void Debug_ClickEditionButtons()
         {
-            SpaceshipBehaviour spaceship = spaceships.GetRandom();
-            spaceship.Debug_InvokeOnLoopEditionButtonClicked();
+            List<SpaceshipBehaviour> toClick = spaceships.GetAll();
+            foreach (SpaceshipBehaviour spaceship in toClick)
+            {
+                if (spaceship.HasRoute)
+                    spaceship.Debug_InvokeOnLoopEditionButtonClicked();
+            }
         }
     }
 }

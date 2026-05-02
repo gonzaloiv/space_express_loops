@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: bc5ca5b4c80b0d04dadf959b63f2630a
+guid: c030e1be0b3ae3f41970a87539d5bd2c
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable:
@@ -17,7 +17,7 @@ ModelImporter:
     second: //RootNode
   - first:
       43: 4300000
-    second: SM_Primitive_Cylander_03
+    second: SM_Primitive_Sphere_02
   - first:
       95: 9500000
     second: //RootNode

@@ -8,6 +8,7 @@ namespace DigitalLove.Game.Spaceships
     public class SplineContainerWrapper : MonoBehaviour
     {
         [SerializeField] private int resolution = 50;
+        [SerializeField] private LineRenderer lineRenderer;
 
         private SplineContainer splineContainer;
         private Vector3[] positions;
@@ -50,6 +51,22 @@ namespace DigitalLove.Game.Spaceships
             SplineContainer.SetKnotPosition(2, twoThirdsLeft);
 
             positions = SplineContainer.GetPositions(resolution);
+        }
+
+        public void SetLineRendererActive(bool isVisible)
+        {
+            lineRenderer.enabled = isVisible;
+            if (isVisible && positions != null)
+            {
+
+                lineRenderer.SetSplinePositions(positions);
+                lineRenderer.enabled = true;
+            }
+            else
+            {
+                lineRenderer.positionCount = 0;
+                lineRenderer.enabled = false;
+            }
         }
     }
 }
