@@ -17,7 +17,7 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private SpaceshipPanel spaceshipPanel;
 
         private int pickedLetters;
-        private string id;
+        private SpaceshipData data;
         private Coroutine loopCoroutine;
 
         private Action<LoopCompleteEventArgs> loopComplete;
@@ -25,7 +25,7 @@ namespace DigitalLove.Game.Spaceships
 
         private LoopEventArgs GetLoopEventArgs => new()
         {
-            spaceshipId = id,
+            spaceshipId = data.id,
             originId = destinationSelector.BasePlanet.Id,
             destinationId = destinationSelector.Destination.Id
         };
@@ -41,18 +41,16 @@ namespace DigitalLove.Game.Spaceships
 
         public void SetOnLoopComplete(Action<LoopCompleteEventArgs> loopComplete) => this.loopComplete = loopComplete;
 
-        public void SetOnLoopEditionButtonClicked(string id, Action<LoopEventArgs> onLoopEditionButtonClicked)
+        public void SetOnLoopEditionButtonClicked(Action<LoopEventArgs> onLoopEditionButtonClicked)
         {
-            this.id = id;
             this.onLoopEditionButtonClicked = onLoopEditionButtonClicked;
         }
 
-        public void SetColor(Color color)
+        public void SetSpaceshipData(SpaceshipData data)
         {
-            traveller.SetColor(color);
-            dragZone.GetComponentInChildren<Renderer>().material.color = color;
-            splineContainerWrapper.SetColor(color);
-            spaceshipPanel.SetColor(color);
+            this.data = data;
+            splineContainerWrapper.SetColor(data.color);
+            spaceshipPanel.Init(data, 50);
         }
 
         public override void Enter()
@@ -80,7 +78,6 @@ namespace DigitalLove.Game.Spaceships
         {
             pickedLetters = 0;
             traveller.ShowEmpty();
-
             FollowPath(splineContainerWrapper.GoPositions, OnArrivedToDestination);
         }
 
@@ -91,6 +88,7 @@ namespace DigitalLove.Game.Spaceships
             {
                 if (!hasCompleted)
                 {
+                    loopComplete(new LoopCompleteEventArgs(data.id, pickedLetters));
                     StartPathToDestination();
                 }
                 else

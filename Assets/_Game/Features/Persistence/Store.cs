@@ -6,24 +6,29 @@ namespace DigitalLove.Game.Persistence
     public class Store
     {
         public int letters;
-        public int totalCollectedLetters;
+        public int money;
 
-        public void IncreaseLetters(int value)
+        public void IncreaseLettersAndMoney(int lettersValue, int moneyValue)
         {
-            letters += value;
-            totalCollectedLetters += value;
+            letters += lettersValue;
+            money += moneyValue;
+        }
+
+        public void SpendMoney(int moneyValue)
+        {
+            money -= moneyValue;
         }
 
         public void Reset()
         {
             letters = 0;
-            totalCollectedLetters = 0;
+            money = 0;
         }
 
         public void CopyValues(Store other)
         {
             letters = other.letters;
-            totalCollectedLetters = other.totalCollectedLetters;
+            money = other.money;
         }
     }
 }

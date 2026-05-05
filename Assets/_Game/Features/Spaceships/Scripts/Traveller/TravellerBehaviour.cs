@@ -12,19 +12,13 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private GameObject body;
         [SerializeField] private Renderer rend;
         [SerializeField] private ColorValue defaultColor;
+        [SerializeField] private ColorValue loadedColor;
         [SerializeField] private LayerMask layerMask;
         [SerializeField] private ParticleSystem ps;
-        [SerializeField] private LettersPanel lettersPanel;
-
-        private Color loadedColor;
+        [SerializeField] private ResourcePanel lettersPanel;
 
         private TravellerPathFollower pathFollower;
         private TravellerPathFollower PathFollower => pathFollower ??= GetComponent<TravellerPathFollower>();
-
-        public void SetColor(Color color)
-        {
-            loadedColor = color;
-        }
 
         public void Hide()
         {
@@ -42,7 +36,7 @@ namespace DigitalLove.Game.Spaceships
         public void ShowLoaded(int letters)
         {
             body.SetActive(true);
-            rend.material.color = loadedColor;
+            rend.material.color = loadedColor.value;
             lettersPanel.ShowLetters(letters, 0);
         }
 

@@ -6,7 +6,7 @@ namespace DigitalLove.Game.Planets
 {
     public class PlanetStore : MonoBehaviour
     {
-        [SerializeField] private LettersPanel lettersPanel;
+        [SerializeField] private ResourcePanel lettersPanel;
         [SerializeField] private PlanetBody planetBody;
         [SerializeField] private FloatValue gameSpeed;
 

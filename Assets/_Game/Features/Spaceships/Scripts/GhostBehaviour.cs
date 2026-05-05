@@ -9,18 +9,11 @@ namespace DigitalLove.Game.Spaceships
     {
         [SerializeField] private Grabbable grabbable;
         [SerializeField] private GameObject body;
-        [SerializeField] private Renderer[] rends;
         [SerializeField] private int positionBufferSize = 5;
 
         private Queue<Vector3> positions = new Queue<Vector3>();
 
         public Transform Body => body.transform;
-
-        public void SetColor(Color color)
-        {
-            foreach (Renderer rend in rends)
-                rend.material.color = color;
-        }
 
         public void SetActive(bool isActive)
         {

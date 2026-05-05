@@ -6,6 +6,8 @@ using Reflex.Attributes;
 using UnityEngine;
 using DigitalLove.Game.Persistence;
 using DigitalLove.Game.UI;
+using DigitalLove.Global;
+using UnityEngine.AI;
 
 namespace DigitalLove.Game.Flow
 {
@@ -14,7 +16,10 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private LevelContainer levelContainer;
         [SerializeField] private RoundSelector roundSelector;
         [SerializeField] private MonoState newRoundState;
-        [SerializeField] private LettersPanel lettersPanel;
+        [SerializeField] private StorePanel storePanel;
+        [SerializeField] private IntValue routeEditionCost;
+        [SerializeField] private IntValue moneyPerLetter;
+        [SerializeField] private IntValue brokenSpaceshipCost;
 
         [Header("Debug")]
         [SerializeField] private GameSnapshot gameSnapshot;
@@ -24,7 +29,7 @@ namespace DigitalLove.Game.Flow
         public override void Init(StateMachine parent)
         {
             base.Init(parent);
-            lettersPanel.Hide();
+            storePanel.Hide();
         }
 
         public override void Enter()
@@ -34,7 +39,7 @@ namespace DigitalLove.Game.Flow
             levelContainer.SpaceshipsSpawner.loopEditionButtonClicked += OnLoopEditionButtonClicked;
 
             gameSnapshot = memoryDataClient.Get<GameSnapshot>();
-            lettersPanel.ShowLetters(gameSnapshot.CurrentLetters, roundSelector.TotalLettersToComplete);
+            storePanel.Show(gameSnapshot.CurrentLetters, roundSelector.TotalLettersToComplete, gameSnapshot.store.money);
         }
 
         private void OnLoopCreated(LoopEventArgs args)
@@ -50,21 +55,29 @@ namespace DigitalLove.Game.Flow
 
         private void OnLoopComplete(LoopCompleteEventArgs args)
         {
-            if (args.IsBaseLoop)
+            if (string.IsNullOrEmpty(args.destinationId)) // ? Broken spaceship
             {
-                gameSnapshot.IncreaseLetters(args.value);
-                lettersPanel.ShowLetters(gameSnapshot.CurrentLetters, roundSelector.TotalLettersToComplete);
-                if (roundSelector.IsRoundComplete(gameSnapshot.store))
-                    parent.SetCurrentState(newRoundState.RouteId);
+                gameSnapshot.SpendMoney(brokenSpaceshipCost.value);
             }
             else
             {
-                levelContainer.PlanetsSpawner.GetById(args.originId).PlanetStore.IncreaseLetters(args.value);
+                if (args.IsBaseLoop)
+                {
+                    gameSnapshot.IncreaseLettersAndMoney(args.value, moneyPerLetter.value * args.value);
+                    storePanel.Show(gameSnapshot.CurrentLetters, roundSelector.TotalLettersToComplete, gameSnapshot.store.money);
+                    if (roundSelector.IsRoundComplete(gameSnapshot.store))
+                        parent.SetCurrentState(newRoundState.RouteId);
+                }
+                else
+                {
+                    levelContainer.PlanetsSpawner.GetById(args.originId).PlanetStore.IncreaseLetters(args.value);
+                }
             }
         }
 
         private void OnLoopEditionButtonClicked(LoopEventArgs args)
         {
+            gameSnapshot.SpendMoney(routeEditionCost.value);
             gameSnapshot.RemoveLoopBySpaceshipId(args.spaceshipId);
         }
 

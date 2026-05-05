@@ -32,7 +32,12 @@ namespace DigitalLove.Game.Planets
             this.isDestination = isDestination;
             if (isDestination && !IsDestination)
                 scalePunch.Animate();
-            outline.enabled = !IsDestination;
+            SetOutlineActive(false);
+        }
+
+        public void SetOutlineActive(bool isActive)
+        {
+            outline.enabled = isActive;
         }
 
         public void Spawn(PlanetData planetData)
@@ -41,6 +46,7 @@ namespace DigitalLove.Game.Planets
             planetBody.SetRadius(planetData.radius);
             transform.localPosition = planetData.localPosition.ToVector3();
             gameObject.SetActive(true);
+            SetOutlineActive(false);
 
             planetStore.StartStoring(planetData.lettersPerMinute, planetData.maxLetters);
         }

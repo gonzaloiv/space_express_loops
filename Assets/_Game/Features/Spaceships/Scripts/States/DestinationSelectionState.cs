@@ -29,11 +29,6 @@ namespace DigitalLove.Game.Spaceships
             destinationSelector.StartLookingForDestination(false);
         }
 
-        public void SetColor(Color color)
-        {
-            ghost.SetColor(color);
-        }
-
         public override void Enter()
         {
             grabbable.WhenPointerEventRaised += OnPointerEvent;

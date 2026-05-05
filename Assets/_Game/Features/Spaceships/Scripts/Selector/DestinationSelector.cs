@@ -73,6 +73,7 @@ namespace DigitalLove.Game.Spaceships
             if (destinationPlanet != null)
                 destinationPlanet.SetIsDestination(false);
             destinationPlanet = newDestination;
+            destinationPlanet.SetOutlineActive(true);
             countdown = secsToSelect + initialSecsToSelect;
         }
 

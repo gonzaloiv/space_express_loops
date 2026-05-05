@@ -60,9 +60,15 @@ namespace DigitalLove.Game.Persistence
             onUpdated?.Invoke();
         }
 
-        public void IncreaseLetters(int value)
+        public void IncreaseLettersAndMoney(int lettersValue, int moneyValue)
         {
-            store.IncreaseLetters(value);
+            store.IncreaseLettersAndMoney(lettersValue, moneyValue);
+            onUpdated?.Invoke();
+        }
+
+        public void SpendMoney(int value)
+        {
+            store.SpendMoney(value);
             onUpdated?.Invoke();
         }
 

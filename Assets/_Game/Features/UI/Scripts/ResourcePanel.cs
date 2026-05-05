@@ -5,7 +5,7 @@ using DigitalLove.UI.DesignSystem;
 
 namespace DigitalLove.Game.UI
 {
-    public class LettersPanel : MonoBehaviour
+    public class ResourcePanel : MonoBehaviour
     {
         [SerializeField] private ScalePunch scalePunch;
         [SerializeField] private TextMeshProUGUI lettersLabel;
@@ -22,10 +22,10 @@ namespace DigitalLove.Game.UI
             gameObject.SetActive(false);
         }
 
-        public void ShowLetters(int letters, int maxLetters)
+        public void ShowLetters(int value, int maxValue)
         {
             gameObject.SetActive(true);
-            lettersLabel.text = maxLetters > 0 ? $"{letters} / {maxLetters}" : $"{letters}";
+            lettersLabel.text = maxValue > 0 ? $"{value} / {maxValue}" : $"{value}";
             scalePunch.Animate();
             layoutUpdater.ForceUpdate();
         }
