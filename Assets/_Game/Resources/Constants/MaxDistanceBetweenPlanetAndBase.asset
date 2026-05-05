@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38c8f435fd9b34e94a41ec1ad0bb9a15, type: 3}
-  m_Name: MaxDistanceBetweenPlanets
+  m_Name: MaxDistanceBetweenPlanetAndBase
   m_EditorClassIdentifier: DigitalLove.Global::DigitalLove.Global.FloatValue
   value: 1.78

@@ -9,7 +9,12 @@ namespace DigitalLove.Game.Planets
         [SerializeField] private Material defaultMaterial;
         [SerializeField] private Material materialWithColor;
 
-        public void SetColor(Vector2 offset)
+        public void SetDefaultMaterial()
+        {
+            rend.SetMaterials(new List<Material> { defaultMaterial });
+        }
+
+        public void SetColorMaterial(Vector2 offset)
         {
             rend.SetMaterials(new List<Material> { materialWithColor });
             rend.material.SetTextureOffset("_DetailAlbedoMap", offset);

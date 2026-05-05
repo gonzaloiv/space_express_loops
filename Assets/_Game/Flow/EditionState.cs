@@ -15,10 +15,13 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private LevelContainer levelContainer;
         [SerializeField] private RoundSelector roundSelector;
         [SerializeField] private MonoState newRoundState;
+
+        [Header("Economy")]
         [SerializeField] private StorePanel storePanel;
         [SerializeField] private IntValue routeEditionCost;
         [SerializeField] private IntValue moneyPerLetter;
         [SerializeField] private IntValue brokenSpaceshipCost;
+        [SerializeField] private IntValue planetColorCost;
 
         [Header("Debug")]
         [SerializeField] private GameSnapshot gameSnapshot;
@@ -36,6 +39,7 @@ namespace DigitalLove.Game.Flow
             levelContainer.SpaceshipsSpawner.loopCreated += OnLoopCreated;
             levelContainer.SpaceshipsSpawner.loopComplete += OnLoopComplete;
             levelContainer.SpaceshipsSpawner.loopEditionButtonClicked += OnLoopEditionButtonClicked;
+            levelContainer.PlanetsSpawner.planetSetColorButtonClicked += OnPlanetSetColorButtonClicked;
 
             gameSnapshot = memoryDataClient.Get<GameSnapshot>();
             storePanel.Show(gameSnapshot.CurrentLetters, roundSelector.TotalLettersToComplete, gameSnapshot.store.money);
@@ -80,11 +84,18 @@ namespace DigitalLove.Game.Flow
             gameSnapshot.RemoveLoopBySpaceshipId(args.spaceshipId);
         }
 
+        private void OnPlanetSetColorButtonClicked(string id)
+        {
+            gameSnapshot.SpendMoney(planetColorCost.value);
+            levelContainer.PlanetsSpawner.GetById(id).PlanetBody.SetRandomColor();
+        }
+
         public override void Exit()
         {
             levelContainer.SpaceshipsSpawner.loopCreated -= OnLoopCreated;
             levelContainer.SpaceshipsSpawner.loopComplete -= OnLoopComplete;
             levelContainer.SpaceshipsSpawner.loopEditionButtonClicked -= OnLoopEditionButtonClicked;
+            levelContainer.PlanetsSpawner.planetSetColorButtonClicked -= OnPlanetSetColorButtonClicked;
         }
     }
 }

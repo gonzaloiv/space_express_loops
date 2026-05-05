@@ -1,4 +1,5 @@
 using UnityEngine;
+using DigitalLove.Global;
 
 namespace DigitalLove.Game.Planets
 {
@@ -21,13 +22,22 @@ namespace DigitalLove.Game.Planets
                 for (int i = 0; i < rends.Length; i++)
                 {
                     rends[i].SetActive(i == currentBodyIndex);
+                    if (i == currentBodyIndex)
+                        rends[i].SetDefaultMaterial();
                 }
             }
         }
 
-        public void SetColor(Vector2 offset)
+        public void SetRandomColor()
         {
-            rends[currentBodyIndex].SetColor(offset);
+            Vector2 offset = new Vector2(Random.Range(0f, 1f), Random.Range(0f, 1f));
+            rends[currentBodyIndex].SetColorMaterial(offset);
+        }
+
+        [Button]
+        public void Debug_SetRandomColor()
+        {
+            SetRandomColor();
         }
     }
 }

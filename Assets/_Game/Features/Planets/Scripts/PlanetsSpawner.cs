@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DigitalLove.Global;
@@ -12,6 +13,8 @@ namespace DigitalLove.Game.Planets
         [SerializeField] private LayerMask planetsLayerMask;
 
         private IdCounter idCreator = new();
+
+        public Action<string> planetSetColorButtonClicked = id => { };
 
         public List<PlanetData> GeneratePlanetDataFromPlanetsSeed(PlanetsSeed seed, List<PlanetData> initialPlanets)
         {
@@ -77,9 +80,14 @@ namespace DigitalLove.Game.Planets
                 }
                 else
                 {
-                    planets[i].Spawn(data[i]);
+                    planets[i].Spawn(data[i], OnPlanetSetColorButtonClicked);
                 }
             }
+        }
+
+        private void OnPlanetSetColorButtonClicked(string id)
+        {
+            planetSetColorButtonClicked(id);
         }
 
         private void Instantiate()
@@ -98,7 +106,7 @@ namespace DigitalLove.Game.Planets
         public PlanetBehaviour GetRandom(List<string> excludedIds = null)
         {
             List<PlanetBehaviour> selection = excludedIds != null ? planets.Where(p => !excludedIds.Contains(p.Id)).ToList() : planets;
-            return selection[Random.Range(0, selection.Count)];
+            return selection[UnityEngine.Random.Range(0, selection.Count)];
         }
 
         public PlanetBehaviour GetById(string id)

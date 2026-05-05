@@ -1,6 +1,7 @@
 using DigitalLove.VFX;
 using UnityEngine;
-using DigitalLove.Global;
+using DigitalLove.Game.UI;
+using System;
 
 namespace DigitalLove.Game.Planets
 {
@@ -8,14 +9,19 @@ namespace DigitalLove.Game.Planets
     {
         [SerializeField] private PlanetStore planetStore;
         [SerializeField] private PlanetBaseBehaviour planetBase;
-        [SerializeField] private PlanetBody planetBody;
+
+        [Header("UI")]
+        [SerializeField] private ResourcePanel lettersPanel;
+        [SerializeField] private ButtonPanel setColorButtonPanel;
 
         [Header("Body")]
+        [SerializeField] private PlanetBody planetBody;
         [SerializeField] private Outline outline;
         [SerializeField] private ScalePunch scalePunch;
 
         private string id;
         private bool isDestination;
+        private Action<string> setColorButtonClicked;
 
         public string Id => id;
         public bool IsDestination => isDestination;
@@ -41,26 +47,35 @@ namespace DigitalLove.Game.Planets
             outline.enabled = isActive;
         }
 
-        public void Spawn(PlanetData planetData)
+        public void Spawn(PlanetData planetData, Action<string> setColorButtonClicked)
         {
-            id = planetData.id;
-            planetBody.Init(planetData.radius);
-            transform.localPosition = planetData.localPosition.ToVector3();
             gameObject.SetActive(true);
+
+            id = planetData.id;
+            this.setColorButtonClicked = setColorButtonClicked;
+            transform.localPosition = planetData.localPosition.ToVector3();
+            planetBody.Init(planetData.radius);
             SetOutlineActive(false);
+
+            lettersPanel.Init(transform.position + transform.up * planetBody.RadiusOffset);
+            setColorButtonPanel.SetPosition(transform.position - transform.up * planetBody.RadiusOffset);
 
             planetStore.StartStoring(planetData.lettersPerMinute, planetData.maxLetters);
         }
 
-        public void SetColor(Vector2 offset)
+        private void OnEnable()
         {
-            planetBody.SetColor(offset);
+            setColorButtonPanel.buttonClicked += OnSetColorButtonClicked;
         }
 
-        [Button]
-        public void Debug_SetRandomColor()
+        private void OnSetColorButtonClicked()
         {
-            SetColor(new Vector2(Random.Range(0f, 1f), Random.Range(0f, 1f)));
+            setColorButtonClicked(Id);
+        }
+
+        private void OnDisable()
+        {
+            setColorButtonPanel.buttonClicked -= OnSetColorButtonClicked;
         }
     }
 }
