@@ -12,7 +12,6 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private float rayForwardOffset = 0.1f;
 
         private bool isActive = false;
-        private PlanetBaseBehaviour basePlanet;
 
         [Header("DEBUG")]
         [SerializeField] private PlanetBehaviour candidatePlanet = null;
@@ -27,9 +26,9 @@ namespace DigitalLove.Game.Spaceships
             SetVisible(isActive);
         }
 
-        public void SetBase(PlanetBaseBehaviour basePlanet)
+        public void SetColor(Color color)
         {
-            this.basePlanet = basePlanet;
+            lineRenderer.material.color = color;
         }
 
         public void SetVisible(bool isVisible)

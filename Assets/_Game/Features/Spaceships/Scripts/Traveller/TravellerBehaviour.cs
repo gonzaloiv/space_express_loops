@@ -2,6 +2,7 @@ using UnityEngine;
 using DigitalLove.Global;
 using System;
 using DigitalLove.Game.Planets;
+using DigitalLove.Game.UI;
 
 namespace DigitalLove.Game.Spaceships
 {
@@ -10,13 +11,20 @@ namespace DigitalLove.Game.Spaceships
     {
         [SerializeField] private GameObject body;
         [SerializeField] private Renderer rend;
-        [SerializeField] private ColorValue loadedColor;
         [SerializeField] private ColorValue defaultColor;
         [SerializeField] private LayerMask layerMask;
         [SerializeField] private ParticleSystem ps;
+        [SerializeField] private LettersPanel lettersPanel;
+
+        private Color loadedColor;
 
         private TravellerPathFollower pathFollower;
         private TravellerPathFollower PathFollower => pathFollower ??= GetComponent<TravellerPathFollower>();
+
+        public void SetColor(Color color)
+        {
+            loadedColor = color;
+        }
 
         public void Hide()
         {
@@ -28,12 +36,14 @@ namespace DigitalLove.Game.Spaceships
         {
             body.SetActive(true);
             rend.material.color = defaultColor.value;
+            lettersPanel.Hide();
         }
 
-        public void ShowLoaded()
+        public void ShowLoaded(int letters)
         {
             body.SetActive(true);
-            rend.material.color = loadedColor.value;
+            rend.material.color = loadedColor;
+            lettersPanel.ShowLetters(letters, 0);
         }
 
         public void FollowPath(Vector3[] positions, Action<bool> onPathEnded)

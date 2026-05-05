@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using DigitalLove.UI.DesignSystem;
 
-namespace DigitalLove.Game.Planets
+namespace DigitalLove.Game.UI
 {
     public class LettersPanel : MonoBehaviour
     {

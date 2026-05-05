@@ -1,10 +1,8 @@
 using DigitalLove.FlowControl;
 using UnityEngine;
 using DigitalLove.Global;
-using UnityEngine.UI;
 using System;
 using System.Collections;
-using DigitalLove.Game.Planets;
 using Oculus.Interaction;
 
 namespace DigitalLove.Game.Spaceships
@@ -16,11 +14,7 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private TravellerBehaviour traveller;
         [SerializeField] private SplineContainerWrapper splineContainerWrapper;
         [SerializeField] private Transform dragZone;
-
-        [Header("UI")]
-        [SerializeField] private LettersPanel lettersPanel;
-        [SerializeField] private GameObject editPanel;
-        [SerializeField] private Button editButton;
+        [SerializeField] private SpaceshipPanel spaceshipPanel;
 
         private int pickedLetters;
         private string id;
@@ -29,7 +23,7 @@ namespace DigitalLove.Game.Spaceships
         private Action<LoopCompleteEventArgs> loopComplete;
         private Action<LoopEventArgs> onLoopEditionButtonClicked;
 
-        private LoopEventArgs GetLoopEventArgs() => new()
+        private LoopEventArgs GetLoopEventArgs => new()
         {
             spaceshipId = id,
             originId = destinationSelector.BasePlanet.Id,
@@ -40,8 +34,9 @@ namespace DigitalLove.Game.Spaceships
         {
             base.Init(parent);
             traveller.Hide();
-            editPanel.SetActive(false);
+            spaceshipPanel.Hide();
             splineContainerWrapper.SetLineRendererActive(false);
+            dragZone.gameObject.SetActive(true);
         }
 
         public void SetOnLoopComplete(Action<LoopCompleteEventArgs> loopComplete) => this.loopComplete = loopComplete;
@@ -52,14 +47,22 @@ namespace DigitalLove.Game.Spaceships
             this.onLoopEditionButtonClicked = onLoopEditionButtonClicked;
         }
 
+        public void SetColor(Color color)
+        {
+            traveller.SetColor(color);
+            dragZone.GetComponentInChildren<Renderer>().material.color = color;
+            splineContainerWrapper.SetColor(color);
+            spaceshipPanel.SetColor(color);
+        }
+
         public override void Enter()
         {
-            editButton.onClick.AddListener(OnEditButtonClick);
+            spaceshipPanel.editButtonClicked += OnEditButtonClick;
 
-            editPanel.SetActive(true);
             destinationSelector.StartLookingForDestination(false);
             splineContainerWrapper.CreateLoop(destinationSelector.BasePlanet, destinationSelector.Destination);
             splineContainerWrapper.SetLineRendererActive(true);
+            spaceshipPanel.Show();
 
             dragZone.gameObject.SetActive(false);
             grabbable.SetActive(false);
@@ -69,7 +72,7 @@ namespace DigitalLove.Game.Spaceships
 
         private void OnEditButtonClick()
         {
-            onLoopEditionButtonClicked(GetLoopEventArgs());
+            onLoopEditionButtonClicked(GetLoopEventArgs);
             parent.SetCurrentState<WaitingForRouteState>();
         }
 
@@ -77,7 +80,6 @@ namespace DigitalLove.Game.Spaceships
         {
             pickedLetters = 0;
             traveller.ShowEmpty();
-            lettersPanel.SetActive(false);
 
             FollowPath(splineContainerWrapper.GoPositions, OnArrivedToDestination);
         }
@@ -105,8 +107,7 @@ namespace DigitalLove.Game.Spaceships
                 yield return new WaitForSeconds(1);
                 pickedLetters = destinationSelector.Destination.PlanetStore.PickLetters(SpaceshipBehaviour.MaxLetters);
 
-                traveller.ShowLoaded();
-                lettersPanel.ShowLetters(pickedLetters, 0);
+                traveller.ShowLoaded(pickedLetters);
 
                 FollowPath(splineContainerWrapper.ReturnPositions, OnGotBackToBase);
             }
@@ -118,7 +119,7 @@ namespace DigitalLove.Game.Spaceships
             IEnumerator Stop()
             {
                 yield return new WaitForSeconds(1);
-                loopComplete(new LoopCompleteEventArgs(GetLoopEventArgs(), pickedLetters));
+                loopComplete(new LoopCompleteEventArgs(GetLoopEventArgs, pickedLetters));
                 StartPathToDestination();
             }
             loopCoroutine = StartCoroutine(Stop());
@@ -126,13 +127,14 @@ namespace DigitalLove.Game.Spaceships
 
         public override void Exit()
         {
-            editButton.onClick.RemoveListener(OnEditButtonClick);
+            spaceshipPanel.editButtonClicked -= OnEditButtonClick;
 
             if (loopCoroutine != null)
                 StopCoroutine(loopCoroutine);
             traveller.Hide();
-            editPanel.SetActive(false);
+            spaceshipPanel.Hide();
             splineContainerWrapper.SetLineRendererActive(false);
+            dragZone.gameObject.SetActive(true);
         }
 
         // ! DEBUG

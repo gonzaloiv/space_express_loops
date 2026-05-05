@@ -20,6 +20,11 @@ namespace DigitalLove.Game.Spaceships
 
         private SplineContainer SplineContainer => splineContainer ??= GetComponent<SplineContainer>();
 
+        public void SetColor(Color color)
+        {
+            lineRenderer.material.color = color;
+        }
+
         public void CreateLoop(PlanetBaseBehaviour basePlanet, PlanetBehaviour destinationPlanet)
         {
             Vector3 direction = (destinationPlanet.transform.position - basePlanet.transform.position).normalized;

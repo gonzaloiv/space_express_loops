@@ -17,9 +17,9 @@ namespace DigitalLove.Game.Spaceships
 
         private StateMachine stateMachine;
 
-        private string id;
+        private SpaceshipData data;
 
-        public string Id => id;
+        public string Id => data.id;
         public bool IsActive => gameObject.activeInHierarchy;
         public bool HasRoute => stateMachine.IsCurrentState<OnRouteState>();
 
@@ -31,7 +31,7 @@ namespace DigitalLove.Game.Spaceships
 
         public void SetOnLoopCreated(Action<LoopEventArgs> onLoopCreated)
         {
-            destinationSelectionState.SetOnLoopCreated(id, onLoopCreated);
+            destinationSelectionState.SetOnLoopCreated(Id, onLoopCreated);
         }
 
         public void SetOnLoopComplete(Action<LoopCompleteEventArgs> onLoopComplete)
@@ -41,16 +41,20 @@ namespace DigitalLove.Game.Spaceships
 
         public void SetOnLoopEditionButtonClicked(Action<LoopEventArgs> onLoopEditionButtonClicked)
         {
-            onRouteState.SetOnLoopEditionButtonClicked(id, onLoopEditionButtonClicked);
+            onRouteState.SetOnLoopEditionButtonClicked(Id, onLoopEditionButtonClicked);
         }
 
-        public void Spawn(string id, PlanetBaseBehaviour basePlanet)
+        public void Spawn(SpaceshipData data, PlanetBaseBehaviour basePlanet)
         {
-            this.id = id;
+            this.data = data;
             StationBehaviour station = basePlanet.GetValidStation();
             transform.SetWorldPose(station.WorldPose);
             station.SetIsTaken(true);
-            destinationSelector.SetBase(basePlanet);
+
+            destinationSelector.Init(basePlanet, data.color);
+            onRouteState.SetColor(data.color);
+            destinationSelectionState.SetColor(data.color);
+
             this.SetActive(true);
         }
 

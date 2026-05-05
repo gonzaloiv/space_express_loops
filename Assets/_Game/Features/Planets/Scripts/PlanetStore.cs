@@ -1,5 +1,6 @@
 using UnityEngine;
 using DigitalLove.Global;
+using DigitalLove.Game.UI;
 
 namespace DigitalLove.Game.Planets
 {
@@ -21,6 +22,7 @@ namespace DigitalLove.Game.Planets
             this.lettersPerMinute = lettersPerMinute;
             this.maxLetters = maxLetters;
             lettersPanel.Init(transform.position + transform.up * planetBody.RadiusOffset);
+            letters = Random.Range(0, maxLetters / 2);
             lettersPanel.ShowLetters(letters, maxLetters);
             ResetCoundown();
         }

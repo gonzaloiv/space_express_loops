@@ -5,7 +5,7 @@ using DigitalLove.Game.Spaceships;
 using Reflex.Attributes;
 using UnityEngine;
 using DigitalLove.Game.Persistence;
-using DigitalLove.Game.Planets;
+using DigitalLove.Game.UI;
 
 namespace DigitalLove.Game.Flow
 {

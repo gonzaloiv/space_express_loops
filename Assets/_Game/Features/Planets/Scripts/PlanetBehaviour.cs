@@ -37,10 +37,11 @@ namespace DigitalLove.Game.Planets
 
         public void Spawn(PlanetData planetData)
         {
-            id = planetData != null ? planetData.id : string.Empty;
+            id = planetData.id;
             planetBody.SetRadius(planetData.radius);
             transform.localPosition = planetData.localPosition.ToVector3();
             gameObject.SetActive(true);
+
             planetStore.StartStoring(planetData.lettersPerMinute, planetData.maxLetters);
         }
     }

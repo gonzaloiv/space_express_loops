@@ -4,12 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DigitalLove.Global;
+using UnityEngine.Assertions;
 
 namespace DigitalLove.Game.Spaceships
 {
     public class SpaceshipsSpawner : MonoBehaviour
     {
         [SerializeField] private List<SpaceshipBehaviour> spaceships;
+        [SerializeField] private ColorIsAvailablePair[] colors;
 
         private IdCounter idCounter = new();
 
@@ -25,11 +27,25 @@ namespace DigitalLove.Game.Spaceships
         private SpaceshipBehaviour SpawnSpaceship(string id, PlanetBaseBehaviour basePlanet)
         {
             SpaceshipBehaviour spaceship = GetOrInstantiate();
-            spaceship.Spawn(id, basePlanet);
+            SpaceshipData data = new()
+            {
+                id = id,
+                color = GetRandomAvailableColor()
+            };
+            spaceship.Spawn(data, basePlanet);
             spaceship.SetOnLoopCreated(OnLoopCreated);
             spaceship.SetOnLoopComplete(OnLoopComplete);
             spaceship.SetOnLoopEditionButtonClicked(OnLoopEditionButtonClicked);
             return spaceship;
+        }
+
+        private Color GetRandomAvailableColor()
+        {
+            ColorIsAvailablePair[] availableColors = colors.Where(c => !c.isTaken).ToArray();
+            Assert.AreNotEqual(availableColors.Length, 0);
+            ColorIsAvailablePair selectedColor = availableColors[UnityEngine.Random.Range(0, availableColors.Length)];
+            selectedColor.isTaken = true;
+            return selectedColor.color.value;
         }
 
         private void OnLoopCreated(LoopEventArgs args)
@@ -81,5 +97,12 @@ namespace DigitalLove.Game.Spaceships
         }
 
         public List<SpaceshipBehaviour> GetAll() => spaceships.ToList();
+    }
+
+    [Serializable]
+    public class ColorIsAvailablePair
+    {
+        public ColorValue color;
+        public bool isTaken;
     }
 }

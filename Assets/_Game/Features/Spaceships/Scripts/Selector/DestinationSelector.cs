@@ -1,5 +1,4 @@
 using DigitalLove.Game.Planets;
-using DigitalLove.Global;
 using UnityEngine;
 
 namespace DigitalLove.Game.Spaceships
@@ -7,12 +6,11 @@ namespace DigitalLove.Game.Spaceships
     public class DestinationSelector : MonoBehaviour
     {
         [SerializeField] private RaycastHelper raycastHelper;
+        [SerializeField] private DestinationZone destinationZone;
+
+        [Header("Timing")]
         [SerializeField] private float secsToSelect = 0.5f;
         [SerializeField] private float initialSecsToSelect = 0.2f;
-        [SerializeField] private GameObject destinationZone;
-        [SerializeField] private Renderer zoneRenderer;
-        [SerializeField] private ColorValue insideColor;
-        [SerializeField] private float destinationZoneRadius = 0.5f;
 
         private float countdown;
         private bool isLookingForDestination;
@@ -31,10 +29,11 @@ namespace DigitalLove.Game.Spaceships
             raycastHelper.SetActive(isLookingForDestination);
         }
 
-        public void SetBase(PlanetBaseBehaviour basePlanet)
+        public void Init(PlanetBaseBehaviour basePlanet, Color color)
         {
             this.basePlanet = basePlanet;
-            raycastHelper.SetBase(basePlanet);
+            raycastHelper.SetColor(color);
+            destinationZone.SetColor(color);
         }
 
         private void Update()
@@ -100,33 +99,10 @@ namespace DigitalLove.Game.Spaceships
 
         private void UpdateDestinationZone()
         {
-            if (isLookingForDestination && destinationPlanet != null && countdown <= secsToSelect)
-            {
-                destinationZone.transform.position = destinationPlanet.Position;
-
-                float t = Mathf.Clamp01(1f - (countdown / secsToSelect));
-                float fromScale = 1f;
-                float toScale = 2f;
-                float currentScale = Mathf.Lerp(fromScale, toScale, t);
-                destinationZone.transform.localScale = Vector3.one * currentScale;
-
-                Color outsideColor = Color.white;
-                float zoneRadius = destinationZone.transform.localScale.x * 0.5f * destinationZoneRadius;
-                float distanceToZoneCenter = Vector3.Distance(transform.position, destinationZone.transform.position);
-                if (distanceToZoneCenter <= zoneRadius)
-                {
-                    zoneRenderer.material.color = insideColor.value;
-                }
-                else
-                {
-                    zoneRenderer.material.color = outsideColor;
-                }
-                destinationZone.SetActive(true);
-            }
-            else
-            {
-                destinationZone.SetActive(false);
-            }
+            bool isActive = isLookingForDestination && destinationPlanet != null && countdown <= secsToSelect;
+            if (isActive)
+                destinationZone.DoUpdate(countdown, secsToSelect, destinationPlanet.Position);
+            destinationZone.SetActive(isActive);
         }
 
         // ! DEBUG

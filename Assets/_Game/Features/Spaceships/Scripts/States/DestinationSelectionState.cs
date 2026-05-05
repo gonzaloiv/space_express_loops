@@ -1,6 +1,5 @@
 using System;
 using DigitalLove.FlowControl;
-using DigitalLove.Game.Planets;
 using DigitalLove.Global;
 using Oculus.Interaction;
 using UnityEngine;
@@ -12,7 +11,6 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private Grabbable grabbable;
         [SerializeField] private DestinationSelector destinationSelector;
         [SerializeField] private GhostBehaviour ghost;
-        [SerializeField] private Transform dragZone;
 
         private string id;
 
@@ -31,13 +29,17 @@ namespace DigitalLove.Game.Spaceships
             destinationSelector.StartLookingForDestination(false);
         }
 
+        public void SetColor(Color color)
+        {
+            ghost.SetColor(color);
+        }
+
         public override void Enter()
         {
             grabbable.WhenPointerEventRaised += OnPointerEvent;
 
             ghost.SetActive(true);
             destinationSelector.StartLookingForDestination(true);
-            dragZone.gameObject.SetActive(true);
         }
 
         public override void Exit()

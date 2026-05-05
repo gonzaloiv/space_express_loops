@@ -403,7 +403,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0.521}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3002299111996754419}
@@ -441,7 +441,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 59df35b075b82f34e9d4bfddca81661f, type: 2}
+  - {fileID: 2100000, guid: 17e4fc958a1d4ff4bba1a74c1d255bdf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -624,7 +624,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9568628, g: 0.47058827, b: 0.078431375, a: 1}
+  m_Color: {r: 0.29803923, g: 0.29803923, b: 0.29803923, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -709,7 +709,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0.521}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8680538314369382722}
@@ -780,8 +780,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 819141464603520030}
+  - component: {fileID: 621283724909148468}
   m_Layer: 5
-  m_Name: EditPanel
+  m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -803,6 +804,21 @@ Transform:
   - {fileID: 5911471688880774893}
   m_Father: {fileID: 356686299887657879}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &621283724909148468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2129318450302961712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7868bbd4a96531a4ba50a5e94ffda5a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Spaceships::SpaceshipPanel
+  editButton: {fileID: 4541673302978254465}
+  graphics:
+  - {fileID: 1808126776271405854}
 --- !u!1 &2272165428380812097
 GameObject:
   m_ObjectHideFlags: 0
@@ -1405,12 +1421,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Spaceships::DigitalLove.Game.Spaceships.BezierRay
   raycastHelper: {fileID: 2329535270374835591}
+  destinationZone: {fileID: 6561658413975494025}
   secsToSelect: 0.333
   initialSecsToSelect: 0.2
-  destinationZone: {fileID: 4367513231285137107}
-  zoneRenderer: {fileID: 5190495569368481500}
-  insideColor: {fileID: 11400000, guid: dff8dc489b79d584da97922cb11baafa, type: 2}
-  destinationZoneRadius: 0.5
 --- !u!1818360608 &648981103181637023
 PositionConstraint:
   m_ObjectHideFlags: 0
@@ -1461,6 +1474,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2205628772931742956}
   - component: {fileID: 6346511364776373440}
+  - component: {fileID: 6561658413975494025}
   m_Layer: 11
   m_Name: DragZone - Destination
   m_TagString: Untagged
@@ -1476,14 +1490,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4367513231285137107}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.25, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5872322102636451639}
   m_Father: {fileID: 8897689291980414948}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6346511364776373440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1497,11 +1511,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.VFX.Animation::DigitalLove.VFX.ConstantRotation
   body: {fileID: 2205628772931742956}
-  initialRotation: {x: 0, y: 0.1, z: 0}
-  eulersPerFrame: {x: 0, y: 0, z: 0}
+  initialRotation: {x: 0, y: 0, z: 0}
+  eulersPerFrame: {x: 0, y: 0.2, z: 0}
   isEnabled: 1
   useLocalSpace: 1
   randomInitialRotation: 1
+--- !u!114 &6561658413975494025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4367513231285137107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6535d879484536943a04072f7703685b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Spaceships::DigitalLove.Game.Spaceships.DestinationZone
+  zoneRenderer: {fileID: 5190495569368481500}
+  destinationZoneRadius: 0.5
 --- !u!1 &5375589992671167649
 GameObject:
   m_ObjectHideFlags: 0
@@ -1621,8 +1649,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4163673433802008136}
   m_Father: {fileID: 6822599612100138487}
@@ -1930,9 +1958,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6003218462459294132}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalScale: {x: 0.025, y: 0.025, z: 0.025}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2205628772931742956}
@@ -2216,12 +2244,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.Spaceships::TravellerBehaviour
   body: {fileID: 6811115792836008139}
   rend: {fileID: 6445011914356420911}
-  loadedColor: {fileID: 11400000, guid: dff8dc489b79d584da97922cb11baafa, type: 2}
   defaultColor: {fileID: 11400000, guid: 3added88e14ad544685a37cf8d5fda1c, type: 2}
   layerMask:
     serializedVersion: 2
     m_Bits: 6145
   ps: {fileID: 6925335127305100819}
+  lettersPanel: {fileID: 0}
 --- !u!114 &8234519071625348912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2235,7 +2263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Spaceships::TravellerPathFollower
   gameSpeed: {fileID: 11400000, guid: c3660b33f404c6344ae786218d0e7437, type: 2}
-  followBody: {fileID: 5276640881619765824}
+  followBody: {fileID: 8203435882171827999}
 --- !u!54 &5712848139797050370
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2274,7 +2302,7 @@ GameObject:
   - component: {fileID: 4773145558585985207}
   - component: {fileID: 2451158984396876049}
   m_Layer: 11
-  m_Name: DragZone
+  m_Name: DragZone - Origin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2309,8 +2337,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.VFX.Animation::DigitalLove.VFX.ConstantRotation
   body: {fileID: 2205628772931742956}
-  initialRotation: {x: 0, y: 0.1, z: 0}
-  eulersPerFrame: {x: 0, y: 0, z: 0}
+  initialRotation: {x: 0, y: 0, z: 0}
+  eulersPerFrame: {x: 0, y: 0.2, z: 0}
   isEnabled: 1
   useLocalSpace: 1
   randomInitialRotation: 1
@@ -2650,8 +2678,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 962983198451727578}
   m_Father: {fileID: 6926701403127505097}
@@ -2881,7 +2909,6 @@ MonoBehaviour:
   grabbable: {fileID: 4077278212989867320}
   grabbableBody: {fileID: 3472054948473150079}
   destinationSelector: {fileID: 856102399462632852}
-  dragZone: {fileID: 4773145558585985207}
 --- !u!114 &1456422940689401912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2897,7 +2924,6 @@ MonoBehaviour:
   grabbable: {fileID: 4077278212989867320}
   destinationSelector: {fileID: 856102399462632852}
   ghost: {fileID: 2813554705787707760}
-  dragZone: {fileID: 4773145558585985207}
 --- !u!114 &2655982506403976886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2915,9 +2941,7 @@ MonoBehaviour:
   traveller: {fileID: 6169223543632825317}
   splineContainerWrapper: {fileID: 5613787619958359030}
   dragZone: {fileID: 4773145558585985207}
-  lettersPanel: {fileID: 1597963955494664207}
-  editPanel: {fileID: 2129318450302961712}
-  editButton: {fileID: 4541673302978254465}
+  spaceshipPanel: {fileID: 621283724909148468}
 --- !u!1 &9147069543553562850
 GameObject:
   m_ObjectHideFlags: 0
@@ -2997,8 +3021,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Spaceships::DigitalLove.Game.Spaceships.GhostBehaviour
   grabbable: {fileID: 4077278212989867320}
-  radius: 0.5
   body: {fileID: 6495259586198810825}
+  rends:
+  - {fileID: 2650276854291627963}
+  - {fileID: 5432294157586497603}
   positionBufferSize: 36
 --- !u!1001 &3627903784051921033
 PrefabInstance:
@@ -3082,6 +3108,10 @@ PrefabInstance:
     - target: {fileID: 1166161860708051726, guid: 25891641d4b7a2146a671b4a74d7877c, type: 3}
       propertyPath: m_Name
       value: LoopLine
+      objectReference: {fileID: 0}
+    - target: {fileID: 1607875820922488579, guid: 25891641d4b7a2146a671b4a74d7877c, type: 3}
+      propertyPath: m_Parameters.textureMode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4316131250369591999, guid: 25891641d4b7a2146a671b4a74d7877c, type: 3}
       propertyPath: m_LocalPosition.x
