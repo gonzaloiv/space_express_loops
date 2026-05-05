@@ -7,7 +7,6 @@ using UnityEngine;
 using DigitalLove.Game.Persistence;
 using DigitalLove.Game.UI;
 using DigitalLove.Global;
-using UnityEngine.AI;
 
 namespace DigitalLove.Game.Flow
 {

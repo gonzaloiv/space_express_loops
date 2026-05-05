@@ -7,7 +7,7 @@ namespace DigitalLove.Game.Planets
     public class PlanetSeedData : ScriptableObject
     {
         public MinMaxFloat radius;
-        public MinMaxFloat distanceToBase;
+        public FloatValue maxDistanceBetweenPlanets;
         public MinMaxInt lettersPerMinute;
         public MinMaxInt maxLetters;
     }

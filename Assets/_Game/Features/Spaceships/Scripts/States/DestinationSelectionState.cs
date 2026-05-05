@@ -40,6 +40,8 @@ namespace DigitalLove.Game.Spaceships
         public override void Exit()
         {
             grabbable.WhenPointerEventRaised -= OnPointerEvent;
+            
+            ghost.SetActive(false);
         }
 
         private void OnPointerEvent(PointerEvent pointer)
@@ -51,7 +53,6 @@ namespace DigitalLove.Game.Spaceships
         [Button]
         private void OnUnselect()
         {
-            ghost.SetActive(false);
             if (destinationSelector.HasDestinationBeenSelected)
             {
                 OnLoopCreated();

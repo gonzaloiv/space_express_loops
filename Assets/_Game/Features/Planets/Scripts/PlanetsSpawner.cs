@@ -29,7 +29,7 @@ namespace DigitalLove.Game.Planets
         private PlanetData CreateDataFromSeed(string id, PlanetsSeed seed, List<PlanetData> allPlanets)
         {
             float radius = seed.planetSeed.radius.GetRandomValue();
-            Vector3 localPosition = GetValidPosition(radius, seed.planetSeed.distanceToBase, allPlanets);
+            Vector3 localPosition = GetValidPosition(radius, seed.planetSeed.maxDistanceBetweenPlanets.value, allPlanets);
             PlanetData planetData = new()
             {
                 id = id,
@@ -41,7 +41,7 @@ namespace DigitalLove.Game.Planets
             return planetData;
         }
 
-        private Vector3 GetValidPosition(float radius, MinMaxFloat distanceToBase, List<PlanetData> allPlanets)
+        private Vector3 GetValidPosition(float radius, float maxDistanceBetweenPlanets, List<PlanetData> allPlanets)
         {
             int maxIterations = 333;
             Vector3 result = Vector3.zero;
@@ -51,7 +51,7 @@ namespace DigitalLove.Game.Planets
                 if (candidate.HasValue)
                 {
                     float distance = Vector3.Distance(candidate.Value, transform.position);
-                    if (distance > distanceToBase.min && distance < distanceToBase.max)
+                    if (distance > radius * 3 && distance < maxDistanceBetweenPlanets)
                     {
                         if (allPlanets.Any(p => Vector3.Distance(p.localPosition.ToVector3(), candidate.Value) < radius * 2f))
                             continue;

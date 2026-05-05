@@ -18,8 +18,9 @@ namespace DigitalLove.Game.Spaceships
 
         public Action editButtonClicked = () => { };
 
-        public void Show()
+        public void Show(Vector3 position)
         {
+            transform.position = position;
             gameObject.SetActive(true);
             btnPanel.Show(new Btn().SetText(routeEditionCost.ToString()).SetOnClick(editButtonClicked));
             layoutUpdater.ForceUpdate();

@@ -60,7 +60,9 @@ namespace DigitalLove.Game.Spaceships
             destinationSelector.StartLookingForDestination(false);
             splineContainerWrapper.CreateLoop(destinationSelector.BasePlanet, destinationSelector.Destination);
             splineContainerWrapper.SetLineRendererActive(true);
-            spaceshipPanel.Show();
+
+            Vector3 goPositions = splineContainerWrapper.GoPositions[splineContainerWrapper.GoPositions.Length / 3];
+            spaceshipPanel.Show(goPositions);
 
             dragZone.gameObject.SetActive(false);
             grabbable.SetActive(false);

@@ -1,5 +1,6 @@
 using DigitalLove.VFX;
 using UnityEngine;
+using DigitalLove.Global;
 
 namespace DigitalLove.Game.Planets
 {
@@ -43,12 +44,23 @@ namespace DigitalLove.Game.Planets
         public void Spawn(PlanetData planetData)
         {
             id = planetData.id;
-            planetBody.SetRadius(planetData.radius);
+            planetBody.Init(planetData.radius);
             transform.localPosition = planetData.localPosition.ToVector3();
             gameObject.SetActive(true);
             SetOutlineActive(false);
 
             planetStore.StartStoring(planetData.lettersPerMinute, planetData.maxLetters);
+        }
+
+        public void SetColor(Vector2 offset)
+        {
+            planetBody.SetColor(offset);
+        }
+
+        [Button]
+        public void Debug_SetRandomColor()
+        {
+            SetColor(new Vector2(Random.Range(0f, 1f), Random.Range(0f, 1f)));
         }
     }
 }
