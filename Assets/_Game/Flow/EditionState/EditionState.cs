@@ -7,6 +7,9 @@ using UnityEngine;
 using DigitalLove.Game.Persistence;
 using DigitalLove.Game.UI;
 using DigitalLove.Global;
+using DigitalLove.Casual.Analytics;
+using DigitalLove.Analytics;
+using DigitalLove.Game.TTS;
 
 namespace DigitalLove.Game.Flow
 {
@@ -16,6 +19,11 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private RoundSelector roundSelector;
         [SerializeField] private MonoState newRoundState;
         [SerializeField] private StoreDependentUI storeDependentUI;
+        [SerializeField] private TTSHelper ttsHelper;
+
+        [Header("Analytics")]
+        [SerializeField] private ProgressionEventsHelper progressionEventsHelper;
+        [SerializeField] private SessionEventsHelper sessionEventsHelper;
 
         [Header("Economy")]
         [SerializeField] private StorePanel storePanel;
@@ -44,6 +52,9 @@ namespace DigitalLove.Game.Flow
 
             gameSnapshot = memoryDataClient.Get<GameSnapshot>();
             storePanel.Show(gameSnapshot.CurrentLetters, roundSelector.TotalLettersToComplete, gameSnapshot.store.money);
+            progressionEventsHelper.SendLevelStartedEvent(roundSelector.CurrentRound.id);
+
+            ShowFTUIndicators();
         }
 
         private void OnLoopCreated(LoopEventArgs args)
@@ -55,6 +66,8 @@ namespace DigitalLove.Game.Flow
                 destinationId = args.destinationId
             };
             gameSnapshot.AddLoop(data);
+
+            sessionEventsHelper.Send("loop_created");
         }
 
         private void OnLoopComplete(LoopCompleteEventArgs args)
@@ -89,6 +102,16 @@ namespace DigitalLove.Game.Flow
         {
             gameSnapshot.SpendMoney(planetColorCost.value);
             levelContainer.PlanetsSpawner.GetById(id).PlanetBody.SetRandomColor();
+        }
+
+        private void ShowFTUIndicators()
+        {
+            if (roundSelector.IsFirstRound)
+            {
+                levelContainer.SpaceshipsSpawner.All[0].ShowGrabMePanel();
+                ttsHelper.SayAfter(10, "the_hub_intro", SayHowToCreateARoute);
+                void SayHowToCreateARoute() => ttsHelper.SayAfter(10, "how_to_create_a_route", () => { });
+            }
         }
 
         public override void Exit()

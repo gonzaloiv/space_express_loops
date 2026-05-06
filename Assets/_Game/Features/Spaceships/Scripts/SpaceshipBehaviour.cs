@@ -11,10 +11,11 @@ namespace DigitalLove.Game.Spaceships
     {
         public const int MaxLetters = 5;
 
-        [SerializeField] private MonoState[] states;
-        [SerializeField] private DestinationSelector destinationSelector;
+        [SerializeField] private WaitingForRouteState waitingForRouteState;
         [SerializeField] private DestinationSelectionState destinationSelectionState;
         [SerializeField] private OnRouteState onRouteState;
+        
+        [SerializeField] private DestinationSelector destinationSelector;
         [SerializeField] private RoutePanel routePanel;
 
         private StateMachine stateMachine;
@@ -27,7 +28,7 @@ namespace DigitalLove.Game.Spaceships
 
         private void Awake()
         {
-            stateMachine = StateMachineFactory.Create(states);
+            stateMachine = StateMachineFactory.Create(new MonoState[] { waitingForRouteState, destinationSelectionState, onRouteState });
             stateMachine.SetCurrentState<WaitingForRouteState>();
         }
 
@@ -67,6 +68,11 @@ namespace DigitalLove.Game.Spaceships
             stateMachine.SetCurrentState<DestinationSelectionState>();
             destinationSelector.Debug_SetDestinationPlanet(planet);
             destinationSelectionState.Debug_OnLoopCreated();
+        }
+
+        public void ShowGrabMePanel()
+        {
+            waitingForRouteState.ShowGrabMePanel();
         }
 
         // ! DEBUG

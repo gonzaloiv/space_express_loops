@@ -8,8 +8,8 @@ namespace DigitalLove.Game.Levels
     public class RoundData : Casual.Levels.LevelData
     {
         [Header("RoundData")]
-        public PlanetsSeed planetsSeed;
         public int lettersToComplete;
+        public PlanetsSeed planetsSeed;
         public SpaceshipSeed spaceshipSeed;
     }
 }

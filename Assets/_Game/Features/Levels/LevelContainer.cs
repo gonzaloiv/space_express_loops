@@ -43,7 +43,7 @@ namespace DigitalLove.Game.Levels
 
         private void SpawnSpaceshipFromSeed(SpaceshipSeed spaceshipSeed)
         {
-            if (!spaceshipSeed.ShouldSpawn)
+            if (!spaceshipSeed.shouldSpawn)
                 return;
             if (spaceshipSeed.inBase)
             {

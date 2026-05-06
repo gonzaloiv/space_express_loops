@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b855242730e7946409639cead857ca1c, type: 3}
+  m_Name: VoiceId.Jim
+  m_EditorClassIdentifier: DigitalLove.TTS::DigitalLove.TTS.VoiceId
+  value: Jim
+  avatar: {fileID: 0}
+  expressions:
+  - id: 0
+    texture: {fileID: 2800000, guid: 59806a577bf1098439183a1161752740, type: 3}
+  - id: 0
+    texture: {fileID: 2800000, guid: 8926a1431501d7944bc6dcdca0a0170e, type: 3}
+  - id: 0
+    texture: {fileID: 2800000, guid: 6ed0ff84218a57744b65029ceca95115, type: 3}
+  - id: 1
+    texture: {fileID: 2800000, guid: 1c538afe3516db94890d91f49acd59ae, type: 3}
+  - id: 2
+    texture: {fileID: 2800000, guid: eb301704638e9a24ca8519c7de3d2c72, type: 3}
+  - id: 3
+    texture: {fileID: 2800000, guid: 9b8f1b5f7a669c5499bfa9c6a7f2b14c, type: 3}
+  - id: 4
+    texture: {fileID: 2800000, guid: a0f15be0366b5aa49b9fb375159889b5, type: 3}
+  - id: 5
+    texture: {fileID: 2800000, guid: 7a49e6c9ce1bee844abffd7f7d4eac71, type: 3}
+  - id: 6
+    texture: {fileID: 2800000, guid: 30d7b7f47e2c69c4f8fa15bfcbdb8de4, type: 3}

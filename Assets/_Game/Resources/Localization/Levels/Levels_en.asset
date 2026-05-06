@@ -18,12 +18,123 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 311103770624
-    m_Localized: content
+  - m_Id: 5513208592519168
+    m_Localized: Welcome to our space!
     m_Metadata:
       m_Items: []
-  - m_Id: 311124742144
-    m_Localized: content segundo
+  - m_Id: 5522751938547712
+    m_Localized: "It\u2019s exactly like your room, "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5522751942742017
+    m_Localized: That orange sphere is the Hub.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5522751942742018
+    m_Localized: 'Every letter you pick up from the outer sectors needs to end up
+      right there. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5513208596713493
+    m_Localized: 'See that ship? It''s waiting for a route. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5513208596713495
+    m_Localized: 'The system will handle the math and the return flight automatically. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5513208596713496
+    m_Localized: Keep an eye on that letter counters you see over the planets.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5513208596713491
+    m_Localized: 'Back already? I admire the work ethic. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5522751942742026
+    m_Localized: Either way, the Hub is still orange, the routes are still pulsing,
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5600902383325184
+    m_Localized: 'If a ship clips a planet or a piece of your furniture, it will
+      detonate. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5803178423144448
+    m_Localized: "Ah, you\u2019ve arrived. "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5803178423144449
+    m_Localized: but with 100% more proprietary revenue potential.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5803178423144450
+    m_Localized: "Treat it well\u2014it\u2019s technically a company rental."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5803178423144451
+    m_Localized: 'Grab it, drag a line to an outpost, and let go. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5803178423144452
+    m_Localized: We call that 'Maximum Minimal Effort.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5803178423144453
+    m_Localized: 'Or the lack of a social life. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5803178423144454
+    m_Localized: and the letters are still piling up. Keep those loops tight!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5803178423144455
+    m_Localized: 'Warning: Space Express insurance does not cover ''Mid-Air Collisions.'''
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5803178423144456
+    m_Localized: "We\u2019ll automatically deduct the replacement cost from your
+      earnings."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5803178423144457
+    m_Localized: Careful there, big spender. Editing a route carries a heavy surcharge.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5803178423144458
+    m_Localized: Think of it as a 'Clarity Tax.' Plan your loops before you pull
+      the trigger,
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5803178423144459
+    m_Localized: or you'll be running this logistics empire on a very empty wallet.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5803178423144460
+    m_Localized: 'If it hits the limit, they stop producing. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5803178423144461
+    m_Localized: I call it 'looking for a better offer from the competition.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5803178423144462
+    m_Localized: "We\u2019ve received a memo from the Marketing Department. "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5803178423144463
+    m_Localized: They find the natural colors of these planets 'uninspiring' and
+      'not on-brand.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5803178423144464
+    m_Localized: 'For a small fee, you can apply a proprietary atmospheric tint to
+      any planet. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5803178423144465
+    m_Localized: "It doesn\u2019t make the ships go faster, but it makes our quarterly
+      reports look much more colorful."
     m_Metadata:
       m_Items: []
   references:

@@ -41,7 +41,6 @@ namespace DigitalLove.Game.Persistence
             this.onUpdated = onUpdated;
         }
 
-
         // ? Updates
 
         public void IncreaseRoundIndex()

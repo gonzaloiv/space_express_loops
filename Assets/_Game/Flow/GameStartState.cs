@@ -5,6 +5,7 @@ using DigitalLove.Game.Persistence;
 using Newtonsoft.Json;
 using Reflex.Attributes;
 using UnityEngine;
+using DigitalLove.Game.TTS;
 
 namespace DigitalLove.Game.Flow
 {
@@ -14,6 +15,7 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private RoundSelector roundSelector;
         [SerializeField] private GameSnapshotClient gameSnapshotClient;
         [SerializeField] private MonoState nextState;
+        [SerializeField] private TTSHelper ttsHelper;
 
         [Header("Debug")]
         [SerializeField] private PlayerData playerData;
@@ -43,15 +45,7 @@ namespace DigitalLove.Game.Flow
         private void InitData()
         {
             playerData = memoryDataClient.Get<PlayerData>();
-            if (playerData.HasCookie(GameSnapshot.CookieKey))
-            {
-                string metadata = playerData.GetCookieById(GameSnapshot.CookieKey).metadata;
-                gameSnapshot = JsonConvert.DeserializeObject<GameSnapshot>(metadata);
-            }
-            else
-            {
-                gameSnapshot = new();
-            }
+            gameSnapshot = playerData.HasCookie(GameSnapshot.CookieKey) ? playerData.GetGameSnapshot() : new();
             gameSnapshot.SetOnUpdated(() => gameSnapshotClient.SetHasToUpdate());
             memoryDataClient.Put(gameSnapshot);
             roundSelector.SetCurrentRound(gameSnapshot.roundIndex);
@@ -62,7 +56,7 @@ namespace DigitalLove.Game.Flow
             levelContainer.SetRoomBasedPose(() =>
             {
                 levelContainer.SpawnInitialRound(roundSelector.CurrentRound, gameSnapshot);
-                ToNextState();
+                ttsHelper.SayRoundIntro(roundSelector.CurrentRound, ToNextState);
             });
         }
 
@@ -72,7 +66,7 @@ namespace DigitalLove.Game.Flow
             {
                 roundSelector.SetCurrentRound(gameSnapshot.roundIndex);
                 levelContainer.RespawnFromData(gameSnapshot);
-                ToNextState();
+                ttsHelper.Say("welcome_back_message", ToNextState);
             });
         }
 
@@ -82,9 +76,15 @@ namespace DigitalLove.Game.Flow
                 parent.SetCurrentState(nextState.RouteId);
         }
 
-        public override void Exit()
-        {
+        public override void Exit() { }
+    }
 
+    public static class GameStartStateExtensions
+    {
+        public static GameSnapshot GetGameSnapshot(this PlayerData playerData)
+        {
+            string metadata = playerData.GetCookieById(GameSnapshot.CookieKey).metadata;
+            return JsonConvert.DeserializeObject<GameSnapshot>(metadata);
         }
     }
 }

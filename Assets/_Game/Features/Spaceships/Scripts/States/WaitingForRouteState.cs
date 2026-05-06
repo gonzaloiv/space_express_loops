@@ -10,6 +10,13 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private Grabbable grabbable;
         [SerializeField] private GrabbableBody grabbableBody;
         [SerializeField] private DestinationSelector destinationSelector;
+        [SerializeField] private GameObject grabMePanel;
+
+        public override void Init(StateMachine parent)
+        {
+            base.Init(parent);
+            grabMePanel.SetActive(false);
+        }
 
         public override void Enter()
         {
@@ -37,6 +44,12 @@ namespace DigitalLove.Game.Spaceships
         private void OnSelect()
         {
             parent.SetCurrentState<DestinationSelectionState>();
+            grabMePanel.SetActive(false);
+        }
+
+        public void ShowGrabMePanel()
+        {
+            grabMePanel.SetActive(true);
         }
     }
 }

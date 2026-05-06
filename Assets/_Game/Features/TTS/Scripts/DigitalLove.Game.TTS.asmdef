@@ -1,0 +1,22 @@
+{
+    "name": "DigitalLove.Game.TTS",
+    "rootNamespace": "",
+    "references": [
+        "GUID:4daae39021e444dbfbb4f4cd03e6785f",
+        "GUID:41741fc70e2562e498cc7127cf8aa8b3",
+        "GUID:acb6b1ebdd4e55347b7c3d5e5127d357",
+        "GUID:447181e61705f4d6f954add1124817a5",
+        "GUID:ddca81f93c9e44d2fbf5efa600ddbada",
+        "GUID:4823059b47a7c4abb836b44cc751cbf6",
+        "GUID:1530a967b84cfb44dbdd5e8a1989764f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -24,7 +24,8 @@ namespace DigitalLove.Game.UI
         private void OnEnable()
         {
             gameSnapshot = memoryDataClient.Get<GameSnapshot>();
-            gameSnapshot.store.onUpdated += DoUpdate;
+            if (gameSnapshot != null)
+                gameSnapshot.store.onUpdated += DoUpdate;
         }
 
         public void DoUpdate()
@@ -41,7 +42,8 @@ namespace DigitalLove.Game.UI
 
         private void OnDisable()
         {
-            gameSnapshot.store.onUpdated -= DoUpdate;
+            if (gameSnapshot != null)
+                gameSnapshot.store.onUpdated -= DoUpdate;
         }
     }
 }

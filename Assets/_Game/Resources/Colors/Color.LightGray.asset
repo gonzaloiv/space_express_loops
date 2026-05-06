@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec51a654463684b09b62dc9bd8ed023a, type: 3}
   m_Name: Color.LightGray
   m_EditorClassIdentifier: DigitalLove.Global::DigitalLove.Global.ColorValue
-  value: {r: 0.8415094, g: 0.8415094, b: 0.8415094, a: 1}
+  value: {r: 0.8037735, g: 0.8037735, b: 0.8037735, a: 1}

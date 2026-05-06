@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ff70bb3da5e0bf498ade749f46c0bef, type: 3}
-  m_Name: PlanetColorCost
-  m_EditorClassIdentifier: DigitalLove.Global::DigitalLove.Global.IntValue
-  value: 80
+  m_Script: {fileID: 11500000, guid: 01edda33172f744c69c46cf9cbafcfe7, type: 3}
+  m_Name: TTS.PlanetLettersLimit
+  m_EditorClassIdentifier: DigitalLove.Global::DigitalLove.Global.StringValue
+  value: planet_letters_limit

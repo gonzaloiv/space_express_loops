@@ -11,7 +11,10 @@
         "DigitalLove.Game.Persistence",
         "DigitalLove.DataAccess.Remote",
         "DigitalLove.Global",
-        "DigitalLove.Game.UI"
+        "DigitalLove.Game.UI",
+        "DigitalLove.Casual.Analytics",
+        "DigitalLove.Casual.Levels",
+        "DigitalLove.Game.TTS"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
