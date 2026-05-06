@@ -1471,6 +1471,7 @@ GameObject:
   m_Component:
   - component: {fileID: 250434373}
   - component: {fileID: 250434374}
+  - component: {fileID: 250434375}
   m_Layer: 0
   m_Name: Edition
   m_TagString: Untagged
@@ -1508,6 +1509,7 @@ MonoBehaviour:
   levelContainer: {fileID: 677709495}
   roundSelector: {fileID: 677709496}
   newRoundState: {fileID: 1324782179}
+  storeDependentUI: {fileID: 250434375}
   storePanel: {fileID: 809088436}
   routeEditionCost: {fileID: 11400000, guid: 06b2ca09b7a70054984b55f39a013653, type: 2}
   moneyPerLetter: {fileID: 11400000, guid: 0700f36b046762e40a553bea76f680b2, type: 2}
@@ -1520,6 +1522,22 @@ MonoBehaviour:
     store:
       letters: 0
       money: 0
+--- !u!114 &250434375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250434372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4aba4663f1838c4099e575cd62bb8a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.UI::StoreDependentUI
+  spaceshipsSpawner: {fileID: 933255161}
+  planetsSpawner: {fileID: 1097461040}
+  routeEditionCost: {fileID: 11400000, guid: 06b2ca09b7a70054984b55f39a013653, type: 2}
+  planetColorCost: {fileID: 11400000, guid: c5850771e6ffdfb4d9d39e7d4473ad17, type: 2}
 --- !u!1 &284223190
 GameObject:
   m_ObjectHideFlags: 0
@@ -11212,37 +11230,6 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!1 &1703540738
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1703540739}
-  m_Layer: 0
-  m_Name: Color Icon
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1703540739
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1703540738}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1707529849
 GameObject:
   m_ObjectHideFlags: 0
@@ -12273,10 +12260,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3472054948473150079, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
-      propertyPath: scalePunch
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 5376234129260794813, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -12300,18 +12283,6 @@ PrefabInstance:
     - target: {fileID: 5641075301978520265, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5911471688880774893, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.00015
-      objectReference: {fileID: 0}
-    - target: {fileID: 5911471688880774893, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.00015
-      objectReference: {fileID: 0}
-    - target: {fileID: 5911471688880774893, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 7405305355383689099, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
       propertyPath: m_AnchorMax.y
@@ -14891,4 +14862,3 @@ SceneRoots:
   - {fileID: 1568662588}
   - {fileID: 284223191}
   - {fileID: 677709494}
-  - {fileID: 1703540739}

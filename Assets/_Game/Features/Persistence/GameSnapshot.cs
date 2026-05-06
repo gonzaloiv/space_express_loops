@@ -31,15 +31,23 @@ namespace DigitalLove.Game.Persistence
             store = new();
         }
 
+        public void SetPlanets(List<PlanetData> toSet)
+        {
+            planets = toSet;
+        }
+
+        public void SetOnUpdated(Action onUpdated)
+        {
+            this.onUpdated = onUpdated;
+        }
+
+
+        // ? Updates
+
         public void IncreaseRoundIndex()
         {
             roundIndex++;
             onUpdated?.Invoke();
-        }
-
-        public void SetPlanets(List<PlanetData> toSet)
-        {
-            planets = toSet;
         }
 
         public void AddPlanets(List<PlanetData> toAdd)
@@ -70,11 +78,6 @@ namespace DigitalLove.Game.Persistence
         {
             store.SpendMoney(value);
             onUpdated?.Invoke();
-        }
-
-        public void SetOnUpdated(Action onUpdated)
-        {
-            this.onUpdated = onUpdated;
         }
 
         public void RemoveLoopBySpaceshipId(string spaceshipId)

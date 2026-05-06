@@ -15,6 +15,7 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private LevelContainer levelContainer;
         [SerializeField] private RoundSelector roundSelector;
         [SerializeField] private MonoState newRoundState;
+        [SerializeField] private StoreDependentUI storeDependentUI;
 
         [Header("Economy")]
         [SerializeField] private StorePanel storePanel;

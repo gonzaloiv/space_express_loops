@@ -4,6 +4,7 @@ using DigitalLove.Global;
 using System;
 using System.Collections;
 using Oculus.Interaction;
+using DigitalLove.Game.UI;
 
 namespace DigitalLove.Game.Spaceships
 {
@@ -14,7 +15,7 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private TravellerBehaviour traveller;
         [SerializeField] private SplineContainerWrapper splineContainerWrapper;
         [SerializeField] private Transform dragZone;
-        [SerializeField] private SpaceshipPanel spaceshipPanel;
+        [SerializeField] private RoutePanel routePanel;
 
         private int pickedLetters;
         private SpaceshipData data;
@@ -34,7 +35,7 @@ namespace DigitalLove.Game.Spaceships
         {
             base.Init(parent);
             traveller.Hide();
-            spaceshipPanel.Hide();
+            routePanel.Hide();
             splineContainerWrapper.SetLineRendererActive(false);
             dragZone.gameObject.SetActive(true);
         }
@@ -50,19 +51,19 @@ namespace DigitalLove.Game.Spaceships
         {
             this.data = data;
             splineContainerWrapper.SetColor(data.color);
-            spaceshipPanel.Init(data, 50);
+            routePanel.Init(data.id, data.color, 50);
         }
 
         public override void Enter()
         {
-            spaceshipPanel.editButtonClicked += OnEditButtonClick;
+            routePanel.editButtonClicked += OnEditButtonClick;
 
             destinationSelector.StartLookingForDestination(false);
             splineContainerWrapper.CreateLoop(destinationSelector.BasePlanet, destinationSelector.Destination);
             splineContainerWrapper.SetLineRendererActive(true);
 
             Vector3 goPositions = splineContainerWrapper.GoPositions[splineContainerWrapper.GoPositions.Length / 3];
-            spaceshipPanel.Show(goPositions);
+            routePanel.Show(goPositions);
 
             dragZone.gameObject.SetActive(false);
             grabbable.SetActive(false);
@@ -127,12 +128,12 @@ namespace DigitalLove.Game.Spaceships
 
         public override void Exit()
         {
-            spaceshipPanel.editButtonClicked -= OnEditButtonClick;
+            routePanel.editButtonClicked -= OnEditButtonClick;
 
             if (loopCoroutine != null)
                 StopCoroutine(loopCoroutine);
             traveller.Hide();
-            spaceshipPanel.Hide();
+            routePanel.Hide();
             splineContainerWrapper.SetLineRendererActive(false);
             dragZone.gameObject.SetActive(true);
         }

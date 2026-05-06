@@ -18,7 +18,7 @@ namespace DigitalLove.Game.UI
             transform.position = position;
         }
 
-        public void Show(Vector3 position)
+        public void Show()
         {
             gameObject.SetActive(true);
             btnPanel.Show(new Btn().SetText(cost.ToString()).SetOnClick(buttonClicked));
@@ -28,6 +28,18 @@ namespace DigitalLove.Game.UI
         public void Hide()
         {
             gameObject.SetActive(false);
+        }
+
+        public void SetActive(bool isActive)
+        {
+            if (isActive)
+            {
+                Show();
+            }
+            else
+            {
+                Hide();
+            }
         }
 
         // ! DEBUG

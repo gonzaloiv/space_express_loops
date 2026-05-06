@@ -8,16 +8,7 @@ namespace DigitalLove.Game.Persistence
         public int letters;
         public int money;
 
-        public void IncreaseLettersAndMoney(int lettersValue, int moneyValue)
-        {
-            letters += lettersValue;
-            money += moneyValue;
-        }
-
-        public void SpendMoney(int moneyValue)
-        {
-            money -= moneyValue;
-        }
+        public Action onUpdated = () => { };
 
         public void Reset()
         {
@@ -29,6 +20,21 @@ namespace DigitalLove.Game.Persistence
         {
             letters = other.letters;
             money = other.money;
+        }
+
+        // ? Updates
+
+        public void IncreaseLettersAndMoney(int lettersValue, int moneyValue)
+        {
+            letters += lettersValue;
+            money += moneyValue;
+            onUpdated.Invoke();
+        }
+
+        public void SpendMoney(int moneyValue)
+        {
+            money -= moneyValue;
+            onUpdated.Invoke();
         }
     }
 }

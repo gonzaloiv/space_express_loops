@@ -1,0 +1,25 @@
+{
+    "name": "DigitalLove.Game.Flow.EditionState",
+    "rootNamespace": "",
+    "references": [
+        "DigitalLove.FlowControl",
+        "DigitalLove.Game.Levels",
+        "DigitalLove.Game.Planets",
+        "Reflex",
+        "DigitalLove.DataAccess.Local",
+        "DigitalLove.Game.Spaceships",
+        "DigitalLove.Game.Persistence",
+        "DigitalLove.DataAccess.Remote",
+        "DigitalLove.Global",
+        "DigitalLove.Game.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

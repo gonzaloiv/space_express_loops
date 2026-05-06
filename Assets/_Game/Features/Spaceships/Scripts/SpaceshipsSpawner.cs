@@ -15,6 +15,8 @@ namespace DigitalLove.Game.Spaceships
 
         private IdCounter idCounter = new();
 
+        public List<SpaceshipBehaviour> All => spaceships;
+
         public Action<LoopEventArgs> loopCreated = args => { };
         public Action<LoopEventArgs> loopEditionButtonClicked = args => { };
         public Action<LoopCompleteEventArgs> loopComplete = args => { };
@@ -36,6 +38,18 @@ namespace DigitalLove.Game.Spaceships
             spaceship.SetOnLoopCreated(OnLoopCreated);
             spaceship.SetOnLoopComplete(OnLoopComplete);
             spaceship.SetOnLoopEditionButtonClicked(OnLoopEditionButtonClicked);
+            return spaceship;
+        }
+
+        private SpaceshipBehaviour GetOrInstantiate()
+        {
+            SpaceshipBehaviour spaceship = spaceships.FirstOrDefault(s => !s.IsActive);
+            if (spaceship == null)
+            {
+                spaceship = Instantiate(spaceships[0], transform);
+                spaceship.Hide();
+                spaceships.Add(spaceship);
+            }
             return spaceship;
         }
 
@@ -61,18 +75,6 @@ namespace DigitalLove.Game.Spaceships
         private void OnLoopEditionButtonClicked(LoopEventArgs args)
         {
             loopEditionButtonClicked(args);
-        }
-
-        private SpaceshipBehaviour GetOrInstantiate()
-        {
-            SpaceshipBehaviour spaceship = spaceships.FirstOrDefault(s => !s.IsActive);
-            if (spaceship == null)
-            {
-                spaceship = Instantiate(spaceships[0], transform);
-                spaceship.Hide();
-                spaceships.Add(spaceship);
-            }
-            return spaceship;
         }
 
         public void SpawnFromLoop(string id, PlanetBaseBehaviour basePlanet, PlanetBehaviour destinationPlanet)

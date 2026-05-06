@@ -14,6 +14,8 @@ namespace DigitalLove.Game.Planets
 
         private IdCounter idCreator = new();
 
+        public List<PlanetBehaviour> All => planets;
+
         public Action<string> planetSetColorButtonClicked = id => { };
 
         public List<PlanetData> GeneratePlanetDataFromPlanetsSeed(PlanetsSeed seed, List<PlanetData> initialPlanets)

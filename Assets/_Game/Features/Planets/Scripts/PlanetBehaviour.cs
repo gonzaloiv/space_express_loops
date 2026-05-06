@@ -33,6 +33,7 @@ namespace DigitalLove.Game.Planets
 
         public PlanetBaseBehaviour PlanetBase => planetBase;
         public bool CanBeDestination => PlanetBase != null && planetBase.HasAvailableStations;
+        public ButtonPanel SetColorButtonPanel => setColorButtonPanel;
 
         public void SetIsDestination(bool isDestination)
         {
@@ -59,6 +60,7 @@ namespace DigitalLove.Game.Planets
 
             lettersPanel.Init(transform.position + transform.up * planetBody.RadiusOffset);
             setColorButtonPanel.SetPosition(transform.position - transform.up * planetBody.RadiusOffset);
+            setColorButtonPanel.Hide();
 
             planetStore.StartStoring(planetData.lettersPerMinute, planetData.maxLetters);
         }

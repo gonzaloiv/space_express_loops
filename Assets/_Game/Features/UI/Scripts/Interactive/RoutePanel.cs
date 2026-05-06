@@ -5,9 +5,9 @@ using TMPro;
 using DigitalLove.UI.DesignSystem;
 using DigitalLove.Global;
 
-namespace DigitalLove.Game.Spaceships
+namespace DigitalLove.Game.UI
 {
-    public class SpaceshipPanel : MonoBehaviour
+    public class RoutePanel : MonoBehaviour
     {
         [SerializeField] private Graphic[] graphics;
         [SerializeField] private TextMeshProUGUI idLabel;
@@ -26,17 +26,22 @@ namespace DigitalLove.Game.Spaceships
             layoutUpdater.ForceUpdate();
         }
 
-        public void Init(SpaceshipData data, int routeEditionCost)
+        public void Init(string id, Color color, int routeEditionCost)
         {
             this.routeEditionCost = routeEditionCost;
             foreach (Graphic graphic in graphics)
-                graphic.color = data.color;
-            idLabel.text = data.id.Substring(data.id.Length - 2, 2);
+                graphic.color = color;
+            idLabel.text = id.Substring(id.Length - 2, 2);
         }
 
         public void Hide()
         {
             gameObject.SetActive(false);
+        }
+
+        public void SetEditionButtonActive(bool isActive)
+        {
+            btnPanel.SetActive(isActive);
         }
 
         // ! DEBUG

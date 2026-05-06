@@ -494,7 +494,7 @@ RectTransform:
   m_GameObject: {fileID: 672482870812169545}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0001, y: 0.0001, z: 1}
+  m_LocalScale: {x: 0.00015, y: 0.00015, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3007090343516073934}
@@ -504,7 +504,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.05}
+  m_AnchoredPosition: {x: 0, y: 0.1}
   m_SizeDelta: {x: 666, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &7164634357787657412
@@ -797,7 +797,7 @@ GameObject:
   - component: {fileID: 621283724909148468}
   - component: {fileID: 6673226593190687841}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: RoutePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3301,7 +3301,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Spaceships::DigitalLove.Game.Spaceships.GrabbableBody
   grabbable: {fileID: 4077278212989867320}
-  scalePunch: {fileID: 0}
   grabbableRenderer: {fileID: 7510978636149178925}
 --- !u!135 &7342601479678365427
 SphereCollider:
@@ -3385,6 +3384,7 @@ MonoBehaviour:
   destinationSelector: {fileID: 856102399462632852}
   destinationSelectionState: {fileID: 1456422940689401912}
   onRouteState: {fileID: 2655982506403976886}
+  routePanel: {fileID: 621283724909148468}
 --- !u!114 &6434439280635227958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3432,7 +3432,7 @@ MonoBehaviour:
   traveller: {fileID: 6169223543632825317}
   splineContainerWrapper: {fileID: 5613787619958359030}
   dragZone: {fileID: 4773145558585985207}
-  spaceshipPanel: {fileID: 621283724909148468}
+  routePanel: {fileID: 621283724909148468}
 --- !u!1 &8632958460726182941
 GameObject:
   m_ObjectHideFlags: 0

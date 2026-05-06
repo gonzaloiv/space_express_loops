@@ -3,6 +3,7 @@ using DigitalLove.FlowControl;
 using DigitalLove.Game.Planets;
 using DigitalLove.Global;
 using UnityEngine;
+using DigitalLove.Game.UI;
 
 namespace DigitalLove.Game.Spaceships
 {
@@ -14,14 +15,15 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private DestinationSelector destinationSelector;
         [SerializeField] private DestinationSelectionState destinationSelectionState;
         [SerializeField] private OnRouteState onRouteState;
+        [SerializeField] private RoutePanel routePanel;
 
         private StateMachine stateMachine;
-
         private SpaceshipData data;
 
         public string Id => data.id;
         public bool IsActive => gameObject.activeInHierarchy;
         public bool HasRoute => stateMachine.IsCurrentState<OnRouteState>();
+        public RoutePanel RoutePanel => routePanel;
 
         private void Awake()
         {
@@ -53,6 +55,7 @@ namespace DigitalLove.Game.Spaceships
 
             destinationSelector.Init(basePlanet, data.color);
             onRouteState.SetSpaceshipData(data);
+            routePanel.SetEditionButtonActive(false);
 
             this.SetActive(true);
         }
