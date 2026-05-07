@@ -29,7 +29,7 @@ namespace DigitalLove.Game.Spaceships
             float currentScale = Mathf.Lerp(fromScale, toScale, t);
             transform.localScale = Vector3.one * currentScale;
 
-            float zoneRadius = transform.localScale.x * 0.5f * destinationZoneRadius;
+            float zoneRadius = transform.lossyScale.x * 0.5f * destinationZoneRadius;
             float distanceToZoneCenter = Vector3.Distance(transform.position, transform.position);
             zoneRenderer.material.color = distanceToZoneCenter <= zoneRadius ? insideColor : Color.white;
         }

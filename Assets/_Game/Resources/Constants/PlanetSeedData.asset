@@ -17,8 +17,8 @@ MonoBehaviour:
     max: 0.35
   maxDistanceBetweenPlanets: {fileID: 11400000, guid: bfe15d903063a904189048174b041248, type: 2}
   lettersPerMinute:
-    min: 15
-    max: 30
-  maxLetters:
     min: 5
     max: 10
+  maxLetters:
+    min: 10
+    max: 20

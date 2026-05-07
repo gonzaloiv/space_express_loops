@@ -111,8 +111,8 @@ namespace DigitalLove.Game.Flow
             if (roundSelector.IsFirstRound)
             {
                 levelContainer.SpaceshipsSpawner.All[0].ShowGrabMePanel();
-                ttsHelper.SayAfter(10, "the_hub_intro", SayHowToCreateARoute);
-                void SayHowToCreateARoute() => ttsHelper.SayAfter(10, "how_to_create_a_route", () => { });
+                ttsHelper.SayAfter(4, "the_hub_intro", SayHowToCreateARoute);
+                void SayHowToCreateARoute() => ttsHelper.SayAfter(4, "how_to_create_a_route", () => { });
             }
         }
 

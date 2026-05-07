@@ -21,5 +21,5 @@ MonoBehaviour:
       max: 2
     planetSeed: {fileID: 11400000, guid: 31c02de9e722c3e4fb35c71153032b45, type: 2}
   spaceshipSeed:
-    shouldSpawn: 1
+    shouldSpawn: 0
     inBase: 0
