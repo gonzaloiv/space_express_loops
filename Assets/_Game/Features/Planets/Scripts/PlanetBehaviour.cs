@@ -21,7 +21,6 @@ namespace DigitalLove.Game.Planets
 
         private string id;
         private bool isDestination;
-        private Action<string> setColorButtonClicked;
 
         public string Id => id;
         public bool IsDestination => isDestination;
@@ -34,6 +33,8 @@ namespace DigitalLove.Game.Planets
         public PlanetBaseBehaviour PlanetBase => planetBase;
         public bool CanBeDestination => PlanetBase != null && planetBase.HasAvailableStations;
         public ButtonPanel SetColorButtonPanel => setColorButtonPanel;
+
+        private Action<string> setColorButtonClicked;
 
         public void SetIsDestination(bool isDestination)
         {
@@ -48,7 +49,7 @@ namespace DigitalLove.Game.Planets
             outline.enabled = isActive;
         }
 
-        public void Spawn(PlanetData planetData, Action<string> setColorButtonClicked)
+        public void Spawn(PlanetData planetData, Action<string> setColorButtonClicked, Action<string> planetFull)
         {
             gameObject.SetActive(true);
             this.setColorButtonClicked = setColorButtonClicked;
@@ -56,7 +57,7 @@ namespace DigitalLove.Game.Planets
             SetupFromData(planetData);
             SetupUI();
 
-            planetStore.StartStoring(planetData.lettersPerMinute, planetData.maxLetters);
+            planetStore.StartStoring(planetData.lettersPerMinute, planetData.maxLetters, () => planetFull(Id));
         }
 
         private void SetupFromData(PlanetData planetData)

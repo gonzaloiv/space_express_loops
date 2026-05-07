@@ -11,6 +11,7 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private GrabbableBody grabbableBody;
         [SerializeField] private DestinationSelector destinationSelector;
         [SerializeField] private GameObject grabMePanel;
+        [SerializeField] private AudioSource grabAudioSource;
 
         public override void Init(StateMachine parent)
         {
@@ -45,6 +46,7 @@ namespace DigitalLove.Game.Spaceships
         {
             parent.SetCurrentState<DestinationSelectionState>();
             grabMePanel.SetActive(false);
+            grabAudioSource.Play();
         }
 
         public void ShowGrabMePanel()

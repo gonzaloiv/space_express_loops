@@ -31,7 +31,8 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private IntValue routeEditionCost;
         [SerializeField] private IntValue moneyPerLetter;
         [SerializeField] private IntValue brokenSpaceshipCost;
-        [SerializeField] private IntValue planetColorCost;
+        [SerializeField] private IntValue planetColorChangeCost;
+        [SerializeField] private IntValue planetFullFee;
 
         [Header("Debug")]
         [SerializeField] private GameSnapshot gameSnapshot;
@@ -60,6 +61,23 @@ namespace DigitalLove.Game.Flow
         {
             storePanel.Show(gameSnapshot.CurrentLetters, roundSelector.TotalLettersToComplete, gameSnapshot.store.money);
         }
+
+        private void ShowFTUIndicators()
+        {
+            Debug.LogWarning("FormattedCurrentRoundIndex " + roundSelector.FormattedCurrentRoundIndex);
+            if (roundSelector.IsFirstRound)
+            {
+                levelContainer.SpaceshipsSpawner.All[0].ShowGrabMePanel();
+                ttsHelper.SetInFrontOfCamera(true);
+                ttsHelper.SayAfter(4, "the_hub_intro", SayHowToCreateARoute);
+                void SayHowToCreateARoute()
+                {
+                    ttsHelper.SetInFrontOfCamera(false);
+                    ttsHelper.SayAfter(4, "how_to_create_a_route", () => { });
+                }
+            }
+        }
+
 
         private void OnLoopCreated(LoopEventArgs args)
         {
@@ -114,6 +132,7 @@ namespace DigitalLove.Game.Flow
         private void OnLoopEditionButtonClicked(LoopEventArgs args)
         {
             gameSnapshot.RemoveLoopBySpaceshipId(args.spaceshipId, routeEditionCost.value);
+            RefreshStoreUI();
         }
 
         private void OnPlanetSetColorButtonClicked(string id)
@@ -121,22 +140,13 @@ namespace DigitalLove.Game.Flow
             PlanetBody planetBody = levelContainer.PlanetsSpawner.GetById(id).PlanetBody;
             planetBody.SetRandomTextureOffset();
             SerializableVector2 color = SerializableVector2.FromVector2(planetBody.TextureOffset);
-            gameSnapshot.SetPlanetColor(id, color, planetColorCost.value);
+            gameSnapshot.SetPlanetColor(id, color, planetColorChangeCost.value);
         }
 
-        private void ShowFTUIndicators()
+        private void OnPlanetFull(string id)
         {
-            if (roundSelector.IsFirstRound)
-            {
-                levelContainer.SpaceshipsSpawner.All[0].ShowGrabMePanel();
-                ttsHelper.SetInFrontOfCamera(true);
-                ttsHelper.SayAfter(4, "the_hub_intro", SayHowToCreateARoute);
-                void SayHowToCreateARoute()
-                {
-                    ttsHelper.SetInFrontOfCamera(false);
-                    ttsHelper.SayAfter(4, "how_to_create_a_route", () => { });
-                }
-            }
+            gameSnapshot.SpendMoney(planetFullFee.value);
+            RefreshStoreUI();
         }
 
         public override void Exit()
@@ -151,6 +161,7 @@ namespace DigitalLove.Game.Flow
             levelContainer.SpaceshipsSpawner.loopComplete += OnLoopComplete;
             levelContainer.SpaceshipsSpawner.loopEditionButtonClicked += OnLoopEditionButtonClicked;
             levelContainer.PlanetsSpawner.planetSetColorButtonClicked += OnPlanetSetColorButtonClicked;
+            levelContainer.PlanetsSpawner.planetFull += OnPlanetFull;
         }
 
         private void UnsubscribeEvents()
@@ -159,6 +170,7 @@ namespace DigitalLove.Game.Flow
             levelContainer.SpaceshipsSpawner.loopComplete -= OnLoopComplete;
             levelContainer.SpaceshipsSpawner.loopEditionButtonClicked -= OnLoopEditionButtonClicked;
             levelContainer.PlanetsSpawner.planetSetColorButtonClicked -= OnPlanetSetColorButtonClicked;
+            levelContainer.PlanetsSpawner.planetFull -= OnPlanetFull;
         }
     }
 }

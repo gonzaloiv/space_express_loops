@@ -10,12 +10,17 @@ namespace DigitalLove.Game.Spaceships
     public class TravellerBehaviour : MonoBehaviour
     {
         [SerializeField] private GameObject body;
+        [SerializeField] private ResourcePanel lettersPanel;
+
         [SerializeField] private Renderer rend;
         [SerializeField] private ColorValue defaultColor;
         [SerializeField] private ColorValue loadedColor;
+        [SerializeField] private AudioSource startMoveAudioSource;
+        [SerializeField] private AudioSource loadedAudioSource;
+
         [SerializeField] private LayerMask layerMask;
         [SerializeField] private ParticleSystem ps;
-        [SerializeField] private ResourcePanel lettersPanel;
+        [SerializeField] private AudioSource hitAudioSource;
 
         private TravellerPathFollower pathFollower;
         private TravellerPathFollower PathFollower => pathFollower ??= GetComponent<TravellerPathFollower>();
@@ -31,6 +36,7 @@ namespace DigitalLove.Game.Spaceships
             body.SetActive(true);
             rend.material.color = defaultColor.value;
             lettersPanel.Hide();
+            startMoveAudioSource.Play();
         }
 
         public void ShowLoaded(int letters)
@@ -38,6 +44,8 @@ namespace DigitalLove.Game.Spaceships
             body.SetActive(true);
             rend.material.color = loadedColor.value;
             lettersPanel.ShowLetters(letters, 0);
+            startMoveAudioSource.Play();
+            loadedAudioSource.Play();
         }
 
         public void FollowPath(Vector3[] positions, Action<bool> onPathEnded)
@@ -51,10 +59,12 @@ namespace DigitalLove.Game.Spaceships
             {
                 PlanetBehaviour planet = other.gameObject.GetComponent<PlanetBehaviour>();
                 if (planet != null)
-                    Debug.LogWarning($"Collision with planet: {planet.Id}");
-                pathFollower.EndWithFailure();
-                Hide();
-                ps.Play();
+                {
+                    hitAudioSource.Play();
+                    pathFollower.EndWithFailure();
+                    Hide();
+                    ps.Play();
+                }
             }
         }
     }

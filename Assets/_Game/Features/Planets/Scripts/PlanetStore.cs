@@ -1,6 +1,7 @@
 using UnityEngine;
 using DigitalLove.Global;
 using DigitalLove.Game.UI;
+using System;
 
 namespace DigitalLove.Game.Planets
 {
@@ -8,19 +9,23 @@ namespace DigitalLove.Game.Planets
     {
         [SerializeField] private ResourcePanel lettersPanel;
         [SerializeField] private FloatValue gameSpeed;
+        [SerializeField] private AudioSource fullAudioSource;
+        [SerializeField] private AudioSource newLetterAudioSource;
 
         private int lettersPerMinute;
         private int maxLetters;
         private int letters;
         private float countdown;
 
+        private Action planetFull;
+
         public int Letters => letters;
 
-        public void StartStoring(int lettersPerMinute, int maxLetters)
+        public void StartStoring(int lettersPerMinute, int maxLetters, Action planetFull)
         {
             this.lettersPerMinute = lettersPerMinute;
             this.maxLetters = maxLetters;
-            letters = Random.Range(0, maxLetters / 2);
+            letters = UnityEngine.Random.Range(0, maxLetters / 2);
             lettersPanel.ShowLetters(letters, maxLetters);
             ResetCoundown();
         }
@@ -55,7 +60,15 @@ namespace DigitalLove.Game.Planets
         {
             letters += value;
             if (letters > maxLetters)
+            {
+                fullAudioSource.Play();
+                planetFull?.Invoke();
                 letters = maxLetters;
+            }
+            else
+            {
+                newLetterAudioSource.Play();
+            }
             lettersPanel.ShowLetters(letters, maxLetters);
         }
     }

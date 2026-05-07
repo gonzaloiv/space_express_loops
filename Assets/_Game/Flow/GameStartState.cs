@@ -57,10 +57,7 @@ namespace DigitalLove.Game.Flow
             {
                 levelContainer.SpawnInitialRound(roundSelector.CurrentRound, gameSnapshot);
                 ttsHelper.SetInFrontOfCamera(true);
-                ttsHelper.SayRoundIntro(roundSelector.CurrentRound, () =>
-                {
-                    ttsHelper.SetInFrontOfCamera(false);
-                });
+                ttsHelper.SayRoundIntro(roundSelector.CurrentRound, ToNextState);
             });
         }
 
@@ -71,16 +68,13 @@ namespace DigitalLove.Game.Flow
                 roundSelector.SetCurrentRound(gameSnapshot.roundIndex);
                 levelContainer.RespawnFromData(gameSnapshot);
                 ttsHelper.SetInFrontOfCamera(true);
-                ttsHelper.Say("welcome_back_message", () =>
-                {
-                    ttsHelper.SetInFrontOfCamera(false);
-                    ToNextState();
-                });
+                ttsHelper.Say("welcome_back_message", ToNextState);
             });
         }
 
         private void ToNextState()
         {
+            ttsHelper.SetInFrontOfCamera(false);
             if (nextState != null)
                 parent.SetCurrentState(nextState.RouteId);
         }

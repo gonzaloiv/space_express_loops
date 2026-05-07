@@ -17,6 +17,7 @@ namespace DigitalLove.Game.Planets
         public List<PlanetBehaviour> All => planets;
 
         public Action<string> planetSetColorButtonClicked = id => { };
+        public Action<string> planetFull = id => { };
 
         public List<PlanetData> GeneratePlanetDataFromPlanetsSeed(PlanetsSeed seed, List<PlanetData> initialPlanets)
         {
@@ -83,15 +84,14 @@ namespace DigitalLove.Game.Planets
                 }
                 else
                 {
-                    planets[i].Spawn(data[i], OnPlanetSetColorButtonClicked);
+                    planets[i].Spawn(data[i], OnPlanetSetColorButtonClicked, OnPlanetFull);
                 }
             }
         }
 
-        private void OnPlanetSetColorButtonClicked(string id)
-        {
-            planetSetColorButtonClicked(id);
-        }
+        private void OnPlanetSetColorButtonClicked(string id) => planetSetColorButtonClicked(id);
+
+        private void OnPlanetFull(string id) => planetFull(id);
 
         private void Instantiate()
         {
