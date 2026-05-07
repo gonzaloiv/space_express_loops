@@ -13161,6 +13161,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 49337350abd1c1241987ea1d246eed4e, type: 2}
   - {fileID: 11400000, guid: 11aa93d5775dc8e40bb4d8be96a87ca5, type: 2}
   - {fileID: 11400000, guid: b6451a0d66016b94fa46f526bebdf251, type: 2}
+  - {fileID: 11400000, guid: 9b51bda795d7d5c409dd50673fa67943, type: 2}
   subtitlesLikeFollow: {fileID: 1654487133}
   defaultPoint: {fileID: 1018074135}
 --- !u!114 &1654487133

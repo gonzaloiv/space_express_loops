@@ -36,6 +36,7 @@ namespace DigitalLove.Game.Flow
 
         private void SayRoundIntro()
         {
+            ttsHelper.SetInFrontOfCameraOrDefault(false);
             if (ttsHelper.HasIntro(roundSelector.CurrentRound))
             {
                 ttsHelper.SayRoundIntro(roundSelector.CurrentRound, ToEditionState);

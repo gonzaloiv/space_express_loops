@@ -67,15 +67,17 @@ namespace DigitalLove.Game.TTS
             this.InvokeDelayed(secs, () => Say(key, onComplete));
         }
 
-        public void SetInFrontOfCamera(bool isInFrontOfCamera)
+        public void SetInFrontOfCameraOrDefault(bool isInFrontOfCamera)
         {
             if (isInFrontOfCamera)
             {
                 subtitlesLikeFollow.ShowInCameraView();
+                subtitlesLikeFollow.SetIsFollowing(true);
             }
             else
             {
                 transform.SetWorldPose(defaultPoint.ToWorldPose());
+                subtitlesLikeFollow.SetIsFollowing(false);
             }
         }
     }

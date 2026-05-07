@@ -142,6 +142,28 @@ MonoBehaviour:
       reports look much more colorful."
     m_Metadata:
       m_Items: []
+  - m_Id: 5976301407752192
+    m_Localized: "Space Express isn\u2019t just a delivery service\u2014it\u2019s
+      a philosophy. "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5976301407752193
+    m_Localized: 'We believe that if a letter exists, it belongs somewhere else. '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5976301407752194
+    m_Localized: Preferably somewhere that pays us for the transit.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5977147923156992
+    m_Localized: "I'm Jim. I\u2019ll be managing your quotas and taking credit for
+      your best ideas."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5977147923156993
+    m_Localized: "Now, let\u2019s get those letters moving."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

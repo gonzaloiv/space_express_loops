@@ -68,11 +68,11 @@ namespace DigitalLove.Game.Flow
             if (roundSelector.IsFirstRound)
             {
                 levelContainer.SpaceshipsSpawner.All[0].ShowGrabMePanel();
-                ttsHelper.SetInFrontOfCamera(true);
+                ttsHelper.SetInFrontOfCameraOrDefault(true);
                 ttsHelper.SayAfter(4, "the_hub_intro", SayHowToCreateARoute);
                 void SayHowToCreateARoute()
                 {
-                    ttsHelper.SetInFrontOfCamera(false);
+                    ttsHelper.SetInFrontOfCameraOrDefault(false);
                     ttsHelper.SayAfter(4, "how_to_create_a_route", () => { });
                 }
             }
