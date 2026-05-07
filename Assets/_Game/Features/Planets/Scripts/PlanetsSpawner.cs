@@ -41,7 +41,8 @@ namespace DigitalLove.Game.Planets
                 radius = radius,
                 localPosition = SerializableVector3.FromVector3(localPosition),
                 lettersPerMinute = seed.planetSeed.lettersPerMinute.GetRandomValue(),
-                maxLetters = seed.planetSeed.maxLetters.GetRandomValue()
+                maxLetters = seed.planetSeed.maxLetters.GetRandomValue(),
+                color = SerializableVector2.FromVector2(Vector2.zero)
             };
             return planetData;
         }

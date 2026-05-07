@@ -51,18 +51,29 @@ namespace DigitalLove.Game.Planets
         public void Spawn(PlanetData planetData, Action<string> setColorButtonClicked)
         {
             gameObject.SetActive(true);
-
-            id = planetData.id;
             this.setColorButtonClicked = setColorButtonClicked;
+
+            SetupFromData(planetData);
+            SetupUI();
+
+            planetStore.StartStoring(planetData.lettersPerMinute, planetData.maxLetters);
+        }
+
+        private void SetupFromData(PlanetData planetData)
+        {
+            id = planetData.id;
             transform.localPosition = planetData.localPosition.ToVector3();
             planetBody.Init(planetData.radius);
             SetOutlineActive(false);
+            if (planetData.HasColor)
+                planetBody.SetTextureOffset(planetData.color.ToVector2());
+        }
 
+        private void SetupUI()
+        {
             lettersPanel.Init(transform.position + transform.up * planetBody.RadiusOffset);
             setColorButtonPanel.SetPosition(transform.position - transform.up * planetBody.RadiusOffset);
             setColorButtonPanel.Hide();
-
-            planetStore.StartStoring(planetData.lettersPerMinute, planetData.maxLetters);
         }
 
         private void OnEnable()

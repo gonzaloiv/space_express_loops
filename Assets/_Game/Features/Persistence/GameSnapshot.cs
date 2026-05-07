@@ -4,13 +4,14 @@ using System.Linq;
 using DigitalLove.Game.Planets;
 using DigitalLove.Game.Spaceships;
 using Newtonsoft.Json;
+using DigitalLove.Global;
 
 namespace DigitalLove.Game.Persistence
 {
     [Serializable]
     public class GameSnapshot
     {
-        public static string CookieKey => typeof(GameSnapshot).Name;
+        [JsonIgnore] public static string CookieKey => typeof(GameSnapshot).Name;
 
         public int roundIndex;
         public List<PlanetData> planets;
@@ -79,11 +80,21 @@ namespace DigitalLove.Game.Persistence
             onUpdated?.Invoke();
         }
 
-        public void RemoveLoopBySpaceshipId(string spaceshipId)
+        public void RemoveLoopBySpaceshipId(string spaceshipId, int cost)
         {
             LoopData toRemove = loops.FirstOrDefault(l => string.Equals(l.spaceshipId, spaceshipId));
             if (toRemove != null)
                 loops.Remove(toRemove);
+            store.SpendMoney(cost);
+            onUpdated?.Invoke();
+        }
+
+        public void SetPlanetColor(string planetId, SerializableVector2 color, int cost)
+        {
+            PlanetData planet = planets.FirstOrDefault(p => string.Equals(p.id, planetId));
+            if (planet != null)
+                planet.color = color;
+            store.SpendMoney(cost);
             onUpdated?.Invoke();
         }
     }

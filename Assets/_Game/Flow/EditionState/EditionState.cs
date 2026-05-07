@@ -10,6 +10,7 @@ using DigitalLove.Global;
 using DigitalLove.Casual.Analytics;
 using DigitalLove.Analytics;
 using DigitalLove.Game.TTS;
+using DigitalLove.Game.Planets;
 
 namespace DigitalLove.Game.Flow
 {
@@ -94,14 +95,15 @@ namespace DigitalLove.Game.Flow
 
         private void OnLoopEditionButtonClicked(LoopEventArgs args)
         {
-            gameSnapshot.SpendMoney(routeEditionCost.value);
-            gameSnapshot.RemoveLoopBySpaceshipId(args.spaceshipId);
+            gameSnapshot.RemoveLoopBySpaceshipId(args.spaceshipId, routeEditionCost.value);
         }
 
         private void OnPlanetSetColorButtonClicked(string id)
         {
-            gameSnapshot.SpendMoney(planetColorCost.value);
-            levelContainer.PlanetsSpawner.GetById(id).PlanetBody.SetRandomColor();
+            PlanetBody planetBody = levelContainer.PlanetsSpawner.GetById(id).PlanetBody;
+            planetBody.SetRandomTextureOffset();
+            SerializableVector2 color = SerializableVector2.FromVector2(planetBody.TextureOffset);
+            gameSnapshot.SetPlanetColor(id, color, planetColorCost.value);
         }
 
         private void ShowFTUIndicators()

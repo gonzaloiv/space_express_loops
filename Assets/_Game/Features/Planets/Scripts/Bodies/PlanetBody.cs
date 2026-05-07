@@ -12,6 +12,7 @@ namespace DigitalLove.Game.Planets
 
         public float RadiusOffset => body.lossyScale.x;
         public Vector3 Position => body.position;
+        public Vector2 TextureOffset => rends[currentBodyIndex].TextureOffset;
 
         public void Init(float radius)
         {
@@ -28,16 +29,21 @@ namespace DigitalLove.Game.Planets
             }
         }
 
-        public void SetRandomColor()
+        public void SetRandomTextureOffset()
         {
             Vector2 offset = new Vector2(Random.Range(0f, 1f), Random.Range(0f, 1f));
-            rends[currentBodyIndex].SetColorMaterial(offset);
+            rends[currentBodyIndex].SetTextureOffsetMaterial(offset);
+        }
+
+        public void SetTextureOffset(Vector2 offset)
+        {
+            rends[currentBodyIndex].SetTextureOffsetMaterial(offset);
         }
 
         [Button]
-        public void Debug_SetRandomColor()
+        public void Debug_SetRandomTextureOffset()
         {
-            SetRandomColor();
+            SetRandomTextureOffset();
         }
     }
 }

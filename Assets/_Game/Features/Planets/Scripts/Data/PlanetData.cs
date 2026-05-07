@@ -11,5 +11,8 @@ namespace DigitalLove.Game.Planets
         public SerializableVector3 localPosition;
         public int lettersPerMinute;
         public int maxLetters;
+        public SerializableVector2 color;
+
+        public bool HasColor => color != null && color.IsNotZero;
     }
 }
