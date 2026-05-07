@@ -7,7 +7,7 @@ using DigitalLove.DataAccess;
 using System.Collections.Generic;
 using System.Linq;
 using Reflex.Attributes;
-using System.Collections;
+using DigitalLove.UI.Behaviours;
 
 namespace DigitalLove.Game.TTS
 {
@@ -15,6 +15,8 @@ namespace DigitalLove.Game.TTS
     {
         [SerializeField] private MarkdownTTSVoiceWrapper ttsVoiceWrapper;
         [SerializeField] private StringValue[] tips;
+        [SerializeField] private SubtitlesLikeFollow subtitlesLikeFollow;
+        [SerializeField] private Transform defaultPoint;
 
         [Inject] private MemoryDataClient memoryDataClient;
         [Inject] private UnityPlayerDataClient unityPlayerDataClient;
@@ -63,6 +65,18 @@ namespace DigitalLove.Game.TTS
         public void SayAfter(float secs, string key, Action onComplete)
         {
             this.InvokeDelayed(secs, () => Say(key, onComplete));
+        }
+
+        public void SetInFrontOfCamera(bool isInFrontOfCamera)
+        {
+            if (isInFrontOfCamera)
+            {
+                subtitlesLikeFollow.ShowInCameraView();
+            }
+            else
+            {
+                transform.SetWorldPose(defaultPoint.ToWorldPose());
+            }
         }
     }
 }

@@ -3,8 +3,6 @@ using DigitalLove.Game.Persistence;
 using DigitalLove.Global;
 using DigitalLove.Game.Spaceships;
 using DigitalLove.Game.Planets;
-using Reflex.Attributes;
-using DigitalLove.DataAccess;
 
 namespace DigitalLove.Game.UI
 {
@@ -17,15 +15,12 @@ namespace DigitalLove.Game.UI
         [SerializeField] private IntValue routeEditionCost;
         [SerializeField] private IntValue planetColorCost;
 
-        [Inject] private MemoryDataClient memoryDataClient;
-
         private GameSnapshot gameSnapshot;
 
-        private void OnEnable()
+        public void DoStart(GameSnapshot gameSnapshot)
         {
-            gameSnapshot = memoryDataClient.Get<GameSnapshot>();
-            if (gameSnapshot != null)
-                gameSnapshot.store.onUpdated += DoUpdate;
+            this.gameSnapshot = gameSnapshot;
+            gameSnapshot.store.onUpdated += DoUpdate;
         }
 
         public void DoUpdate()
@@ -40,10 +35,9 @@ namespace DigitalLove.Game.UI
             }
         }
 
-        private void OnDisable()
+        public void DoStop()
         {
-            if (gameSnapshot != null)
-                gameSnapshot.store.onUpdated -= DoUpdate;
+            gameSnapshot.store.onUpdated -= DoUpdate;
         }
     }
 }

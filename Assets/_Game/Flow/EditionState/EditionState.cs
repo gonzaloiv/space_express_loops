@@ -46,16 +46,19 @@ namespace DigitalLove.Game.Flow
 
         public override void Enter()
         {
-            levelContainer.SpaceshipsSpawner.loopCreated += OnLoopCreated;
-            levelContainer.SpaceshipsSpawner.loopComplete += OnLoopComplete;
-            levelContainer.SpaceshipsSpawner.loopEditionButtonClicked += OnLoopEditionButtonClicked;
-            levelContainer.PlanetsSpawner.planetSetColorButtonClicked += OnPlanetSetColorButtonClicked;
+            SubscribeEvents();
 
             gameSnapshot = memoryDataClient.Get<GameSnapshot>();
-            storePanel.Show(gameSnapshot.CurrentLetters, roundSelector.TotalLettersToComplete, gameSnapshot.store.money);
+            RefreshStoreUI();
             progressionEventsHelper.SendLevelStartedEvent(roundSelector.CurrentRound.id);
+            storeDependentUI.DoStart(gameSnapshot);
 
             ShowFTUIndicators();
+        }
+
+        private void RefreshStoreUI()
+        {
+            storePanel.Show(gameSnapshot.CurrentLetters, roundSelector.TotalLettersToComplete, gameSnapshot.store.money);
         }
 
         private void OnLoopCreated(LoopEventArgs args)
@@ -75,22 +78,37 @@ namespace DigitalLove.Game.Flow
         {
             if (string.IsNullOrEmpty(args.destinationId)) // ? Broken spaceship
             {
-                gameSnapshot.SpendMoney(brokenSpaceshipCost.value);
+                HandleBrokenSpaceshipLoop();
+                return;
             }
-            else
+
+            if (args.IsBaseLoop)
             {
-                if (args.IsBaseLoop)
-                {
-                    gameSnapshot.IncreaseLettersAndMoney(args.value, moneyPerLetter.value * args.value);
-                    storePanel.Show(gameSnapshot.CurrentLetters, roundSelector.TotalLettersToComplete, gameSnapshot.store.money);
-                    if (roundSelector.IsRoundComplete(gameSnapshot.store))
-                        parent.SetCurrentState(newRoundState.RouteId);
-                }
-                else
-                {
-                    levelContainer.PlanetsSpawner.GetById(args.originId).PlanetStore.IncreaseLetters(args.value);
-                }
+                HandleBaseLoopCompletion(args.value);
+                return;
             }
+
+            HandlePlanetLoopCompletion(args.originId, args.value);
+        }
+
+        private void HandleBrokenSpaceshipLoop()
+        {
+            gameSnapshot.SpendMoney(brokenSpaceshipCost.value);
+            RefreshStoreUI();
+        }
+
+        private void HandleBaseLoopCompletion(int loopValue)
+        {
+            gameSnapshot.IncreaseLettersAndMoney(loopValue, moneyPerLetter.value * loopValue);
+            RefreshStoreUI();
+
+            if (roundSelector.IsRoundComplete(gameSnapshot.store))
+                parent.SetCurrentState(newRoundState.RouteId);
+        }
+
+        private void HandlePlanetLoopCompletion(string originId, int loopValue)
+        {
+            levelContainer.PlanetsSpawner.GetById(originId).PlanetStore.IncreaseLetters(loopValue);
         }
 
         private void OnLoopEditionButtonClicked(LoopEventArgs args)
@@ -111,12 +129,31 @@ namespace DigitalLove.Game.Flow
             if (roundSelector.IsFirstRound)
             {
                 levelContainer.SpaceshipsSpawner.All[0].ShowGrabMePanel();
+                ttsHelper.SetInFrontOfCamera(true);
                 ttsHelper.SayAfter(4, "the_hub_intro", SayHowToCreateARoute);
-                void SayHowToCreateARoute() => ttsHelper.SayAfter(4, "how_to_create_a_route", () => { });
+                void SayHowToCreateARoute()
+                {
+                    ttsHelper.SetInFrontOfCamera(false);
+                    ttsHelper.SayAfter(4, "how_to_create_a_route", () => { });
+                }
             }
         }
 
         public override void Exit()
+        {
+            UnsubscribeEvents();
+            storeDependentUI.DoStop();
+        }
+
+        private void SubscribeEvents()
+        {
+            levelContainer.SpaceshipsSpawner.loopCreated += OnLoopCreated;
+            levelContainer.SpaceshipsSpawner.loopComplete += OnLoopComplete;
+            levelContainer.SpaceshipsSpawner.loopEditionButtonClicked += OnLoopEditionButtonClicked;
+            levelContainer.PlanetsSpawner.planetSetColorButtonClicked += OnPlanetSetColorButtonClicked;
+        }
+
+        private void UnsubscribeEvents()
         {
             levelContainer.SpaceshipsSpawner.loopCreated -= OnLoopCreated;
             levelContainer.SpaceshipsSpawner.loopComplete -= OnLoopComplete;

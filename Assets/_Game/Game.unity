@@ -562,6 +562,7 @@ Transform:
   - {fileID: 1822272472}
   - {fileID: 1714477654}
   - {fileID: 809088435}
+  - {fileID: 1018074135}
   m_Father: {fileID: 1097461039}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &74164909
@@ -3967,6 +3968,7 @@ GameObject:
   - component: {fileID: 781987398}
   - component: {fileID: 781987392}
   - component: {fileID: 781987399}
+  - component: {fileID: 781987400}
   m_Layer: 5
   m_Name: TTSPanel
   m_TagString: Untagged
@@ -3983,7 +3985,7 @@ RectTransform:
   m_GameObject: {fileID: 781987388}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0003, y: 0.0003, z: 0.029999997}
+  m_LocalScale: {x: 0.00035, y: 0.00035, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 94461206}
@@ -3994,7 +3996,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.15, y: 0}
+  m_AnchoredPosition: {x: 0.01, y: 0}
   m_SizeDelta: {x: 1000, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &781987391
@@ -4172,6 +4174,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bfee54bfbe4243a0abce52d2086a141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.UI.DesignSystem::DigitalLove.UI.DesignSystem.LayoutUpdater
+--- !u!114 &781987400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 781987388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83db5f5589fe34047946e9738dc5e482, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.LookAtCameraOnY
+  offset: 180
 --- !u!1 &809088434
 GameObject:
   m_ObjectHideFlags: 0
@@ -9984,6 +9999,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bcb907778a00234ea4e7aa9cf238631, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1018074134
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1018074135}
+  m_Layer: 11
+  m_Name: TTSPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1018074135
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1018074134}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.18, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 74164907}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1030105458
 GameObject:
   m_ObjectHideFlags: 0
@@ -10775,7 +10821,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 723.08496, y: -50}
-  m_SizeDelta: {x: 0, y: 50}
+  m_SizeDelta: {x: 243.83, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1213392285
 MonoBehaviour:
@@ -12479,7 +12525,7 @@ Transform:
   m_GameObject: {fileID: 1654487128}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -12522,6 +12568,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 49337350abd1c1241987ea1d246eed4e, type: 2}
   - {fileID: 11400000, guid: 11aa93d5775dc8e40bb4d8be96a87ca5, type: 2}
   - {fileID: 11400000, guid: b6451a0d66016b94fa46f526bebdf251, type: 2}
+  subtitlesLikeFollow: {fileID: 1654487133}
+  defaultPoint: {fileID: 1018074135}
 --- !u!114 &1654487133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12534,16 +12582,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fa6cc9c669e5404bbceb9b5dfe306c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.SubtitlesLikeFollow
-  distanceToCamera: 0.6
-  yDistanceFromCenter: 0.3
+  distanceToCamera: 0.66
+  yDistanceFromCenter: 0.33
   content: {fileID: 1654487130}
   tween:
-    secs: 0
+    secs: 1
     ease: 1
   showHide: {fileID: 0}
   cols:
   - {fileID: 515506653}
-  isFollowing: 1
+  isFollowing: 0
   secsToMove: 1
 --- !u!4 &1659655773 stripped
 Transform:

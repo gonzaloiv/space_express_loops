@@ -1,7 +1,7 @@
 using DigitalLove.Global;
-using DigitalLove.UI.Visuals;
 using Oculus.Interaction;
 using UnityEngine;
+using DigitalLove.VFX;
 
 namespace DigitalLove.Game.Spaceships
 {
@@ -9,6 +9,7 @@ namespace DigitalLove.Game.Spaceships
     {
         [SerializeField] private Grabbable grabbable;
         [SerializeField] private Renderer grabbableRenderer;
+        [SerializeField] private ConstantRotation constantRotation;
 
         public void Show()
         {
@@ -16,11 +17,13 @@ namespace DigitalLove.Game.Spaceships
             grabbable.transform.LocalReset();
             grabbableRenderer.gameObject.SetActive(true);
             grabbable.SetActive(true);
+            constantRotation.IsEnabled = true;
         }
 
         public void Hide()
         {
             grabbableRenderer.gameObject.SetActive(false);
+            constantRotation.IsEnabled = false;
         }
     }
 }

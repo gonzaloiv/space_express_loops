@@ -2991,6 +2991,7 @@ GameObject:
   - component: {fileID: 6203626153903937999}
   - component: {fileID: 3472054948473150079}
   - component: {fileID: 1095917720276371694}
+  - component: {fileID: 1479445857031440752}
   m_Layer: 12
   m_Name: Handle
   m_TagString: Untagged
@@ -4019,6 +4020,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.Spaceships::DigitalLove.Game.Spaceships.GrabbableBody
   grabbable: {fileID: 4077278212989867320}
   grabbableRenderer: {fileID: 7510978636149178925}
+  constantRotation: {fileID: 1479445857031440752}
 --- !u!64 &1095917720276371694
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -4041,6 +4043,24 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 6234109638976267567, guid: 82cf42f36cd2aca4c80b1d85139e0427, type: 3}
+--- !u!114 &1479445857031440752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8303695665038877688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0bbbf4ce76ae41c0827ebf46fd109cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.VFX.Animation::DigitalLove.VFX.ConstantRotation
+  body: {fileID: 8680538314369382722}
+  initialRotation: {x: 0, y: 0, z: 0}
+  eulersPerFrame: {x: 0, y: 0.1, z: 0}
+  isEnabled: 1
+  useLocalSpace: 1
+  randomInitialRotation: 1
 --- !u!1 &8415860662031833553
 GameObject:
   m_ObjectHideFlags: 0
