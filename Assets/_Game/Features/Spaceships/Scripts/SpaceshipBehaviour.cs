@@ -14,7 +14,7 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private WaitingForRouteState waitingForRouteState;
         [SerializeField] private DestinationSelectionState destinationSelectionState;
         [SerializeField] private OnRouteState onRouteState;
-        
+
         [SerializeField] private DestinationSelector destinationSelector;
         [SerializeField] private RoutePanel routePanel;
 
@@ -56,7 +56,6 @@ namespace DigitalLove.Game.Spaceships
 
             destinationSelector.Init(basePlanet, data.color);
             onRouteState.SetSpaceshipData(data);
-            routePanel.SetEditionButtonActive(false);
 
             this.SetActive(true);
         }

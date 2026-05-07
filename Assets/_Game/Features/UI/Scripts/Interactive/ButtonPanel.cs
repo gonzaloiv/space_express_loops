@@ -21,7 +21,7 @@ namespace DigitalLove.Game.UI
         public void Show()
         {
             gameObject.SetActive(true);
-            btnPanel.Show(new Btn().SetText(cost.ToString()).SetOnClick(buttonClicked));
+            btnPanel.Show(new Btn().SetText(cost.value.ToString()).SetOnClick(buttonClicked));
             layoutUpdater.ForceUpdate();
         }
 

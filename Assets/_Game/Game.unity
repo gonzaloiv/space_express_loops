@@ -331,7 +331,7 @@ RectTransform:
   m_GameObject: {fileID: 50943834}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.00015, y: 0.00015, z: 1}
+  m_LocalScale: {x: 0.0002, y: 0.0002, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 230473238}
@@ -10506,7 +10506,7 @@ RectTransform:
   m_GameObject: {fileID: 1030105458}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.00015, y: 0.00015, z: 1}
+  m_LocalScale: {x: 0.0002, y: 0.0002, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 658829950}
@@ -11268,7 +11268,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 723.08496, y: -50}
-  m_SizeDelta: {x: 243.83, y: 50}
+  m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1213392285
 MonoBehaviour:
@@ -13176,17 +13176,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fa6cc9c669e5404bbceb9b5dfe306c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.SubtitlesLikeFollow
-  distanceToCamera: 0.66
-  yDistanceFromCenter: 0.33
+  distanceToCamera: 0.4
+  yDistanceFromCenter: 0.15
   content: {fileID: 1654487130}
   tween:
-    secs: 1
+    secs: 0.125
     ease: 1
   showHide: {fileID: 0}
   cols:
   - {fileID: 515506653}
   isFollowing: 0
-  secsToMove: 1
+  secsToMove: 0.66
 --- !u!4 &1659655773 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8702425413754196322, guid: 0a7d2469f24041c4284c66706f84c45e, type: 3}

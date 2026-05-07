@@ -2602,7 +2602,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 1808126776271405854}
+  m_TargetGraphic: {fileID: 6415593990251478502}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -5144,7 +5144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0bbbf4ce76ae41c0827ebf46fd109cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.VFX.Animation::DigitalLove.VFX.ConstantRotation
-  body: {fileID: 8680538314369382722}
+  body: {fileID: 6926701403127505097}
   initialRotation: {x: 0, y: 0, z: 0}
   eulersPerFrame: {x: 0, y: 0.1, z: 0}
   isEnabled: 1

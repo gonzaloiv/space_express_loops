@@ -51,7 +51,7 @@ namespace DigitalLove.Game.Spaceships
         {
             this.data = data;
             splineContainerWrapper.SetColor(data.color);
-            routePanel.Init(data.id, data.color, 50);
+            routePanel.SetData(data.id, data.color, 50);
         }
 
         public override void Enter()
@@ -63,7 +63,7 @@ namespace DigitalLove.Game.Spaceships
             splineContainerWrapper.SetLineRendererActive(true);
 
             Vector3 goPositions = splineContainerWrapper.GoPositions[splineContainerWrapper.GoPositions.Length / 3];
-            routePanel.Show(goPositions);
+            routePanel.SetPosition(goPositions);
 
             dragZone.gameObject.SetActive(false);
             grabbable.SetActive(false);

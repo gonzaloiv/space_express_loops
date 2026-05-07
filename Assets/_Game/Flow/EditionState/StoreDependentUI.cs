@@ -27,7 +27,14 @@ namespace DigitalLove.Game.UI
         {
             foreach (SpaceshipBehaviour spaceship in spaceshipsSpawner.All)
             {
-                spaceship.RoutePanel.SetEditionButtonActive(gameSnapshot.store.money >= routeEditionCost.value);
+                if (gameSnapshot.store.money >= routeEditionCost.value)
+                {
+                    spaceship.RoutePanel.Show();
+                }
+                else
+                {
+                    spaceship.RoutePanel.Hide();
+                }
             }
             foreach (PlanetBehaviour planet in planetsSpawner.All)
             {

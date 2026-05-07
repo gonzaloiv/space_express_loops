@@ -18,15 +18,19 @@ namespace DigitalLove.Game.UI
 
         public Action editButtonClicked = () => { };
 
-        public void Show(Vector3 position)
+        public void SetPosition(Vector3 position)
         {
             transform.position = position;
-            gameObject.SetActive(true);
-            btnPanel.Show(new Btn().SetText(routeEditionCost.ToString()).SetOnClick(editButtonClicked));
-            layoutUpdater.ForceUpdate();
         }
 
-        public void Init(string id, Color color, int routeEditionCost)
+        public void Show()
+        {
+            gameObject.SetActive(true);
+            layoutUpdater.ForceUpdate();
+            btnPanel.Show(new Btn().SetText(routeEditionCost.ToString()).SetOnClick(editButtonClicked));
+        }
+
+        public void SetData(string id, Color color, int routeEditionCost)
         {
             this.routeEditionCost = routeEditionCost;
             foreach (Graphic graphic in graphics)
@@ -37,11 +41,6 @@ namespace DigitalLove.Game.UI
         public void Hide()
         {
             gameObject.SetActive(false);
-        }
-
-        public void SetEditionButtonActive(bool isActive)
-        {
-            btnPanel.SetActive(isActive);
         }
 
         // ! DEBUG
