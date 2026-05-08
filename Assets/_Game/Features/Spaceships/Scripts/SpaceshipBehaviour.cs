@@ -17,6 +17,7 @@ namespace DigitalLove.Game.Spaceships
 
         [SerializeField] private DestinationSelector destinationSelector;
         [SerializeField] private RoutePanel routePanel;
+        [SerializeField] private Renderer originZone;
 
         private StateMachine stateMachine;
         private SpaceshipData data;
@@ -56,6 +57,7 @@ namespace DigitalLove.Game.Spaceships
 
             destinationSelector.Init(basePlanet, data.color);
             onRouteState.SetSpaceshipData(data);
+            originZone.material.color = data.color;
 
             this.SetActive(true);
         }

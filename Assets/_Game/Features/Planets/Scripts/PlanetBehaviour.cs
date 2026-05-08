@@ -49,7 +49,7 @@ namespace DigitalLove.Game.Planets
             outline.enabled = isActive;
         }
 
-        public void Spawn(PlanetData planetData, Action<string> setColorButtonClicked, Action<string> planetFull)
+        public void Spawn(PlanetData planetData, Action<string> setColorButtonClicked, Action planetFull)
         {
             gameObject.SetActive(true);
             this.setColorButtonClicked = setColorButtonClicked;
@@ -57,7 +57,7 @@ namespace DigitalLove.Game.Planets
             SetupFromData(planetData);
             SetupUI();
 
-            planetStore.StartStoring(planetData.lettersPerMinute, planetData.maxLetters, () => planetFull(Id));
+            planetStore.StartStoring(planetData.lettersPerMinute, planetData.maxLetters, planetFull);
         }
 
         private void SetupFromData(PlanetData planetData)

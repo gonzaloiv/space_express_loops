@@ -69,11 +69,11 @@ namespace DigitalLove.Game.Flow
             {
                 levelContainer.SpaceshipsSpawner.All[0].ShowGrabMePanel();
                 ttsHelper.SetInFrontOfCameraOrDefault(true);
-                ttsHelper.SayAfter(4, "the_hub_intro", SayHowToCreateARoute);
+                ttsHelper.SayAfter(2.5f, "the_hub_intro", SayHowToCreateARoute);
                 void SayHowToCreateARoute()
                 {
                     ttsHelper.SetInFrontOfCameraOrDefault(false);
-                    ttsHelper.SayAfter(4, "how_to_create_a_route", () => { });
+                    ttsHelper.SayAfter(2.5f, "how_to_create_a_route", () => { });
                 }
             }
         }
@@ -143,7 +143,7 @@ namespace DigitalLove.Game.Flow
             gameSnapshot.SetPlanetColor(id, color, planetColorChangeCost.value);
         }
 
-        private void OnPlanetFull(string id)
+        private void OnPlanetFull()
         {
             gameSnapshot.SpendMoney(planetFullFee.value);
             RefreshStoreUI();

@@ -13142,7 +13142,7 @@ MonoBehaviour:
   tableName: Levels
   secsToCompleteWithoutEntries: 1
   jumpEntries:
-    value: 0
+    value: 1
 --- !u!114 &1654487132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13176,7 +13176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fa6cc9c669e5404bbceb9b5dfe306c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.SubtitlesLikeFollow
-  distanceToCamera: 0.4
+  distanceToCamera: 0.55
   yDistanceFromCenter: 0.15
   content: {fileID: 1654487130}
   tween:
@@ -16459,7 +16459,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.28235295, g: 0.28235295, b: 0.28235295, a: 1}
+  m_Color: {r: 0.8490566, g: 0.8490566, b: 0.8490566, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

@@ -102,7 +102,7 @@ namespace DigitalLove.Game.Spaceships
         {
             bool isActive = isLookingForDestination && destinationPlanet != null && countdown <= secsToSelect;
             if (isActive)
-                destinationZone.DoUpdate(countdown, secsToSelect, destinationPlanet.Position);
+                destinationZone.DoUpdate(countdown, secsToSelect, transform.position, destinationPlanet);
             destinationZone.SetActive(isActive);
         }
 

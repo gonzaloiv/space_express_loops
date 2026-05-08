@@ -1,11 +1,11 @@
 using UnityEngine;
+using DigitalLove.Game.Planets;
 
 namespace DigitalLove.Game.Spaceships
 {
     public class DestinationZone : MonoBehaviour
     {
         [SerializeField] private Renderer zoneRenderer;
-        [SerializeField] private float destinationZoneRadius = 0.5f;
 
         private Color insideColor;
 
@@ -19,9 +19,9 @@ namespace DigitalLove.Game.Spaceships
             gameObject.SetActive(isActive);
         }
 
-        public void DoUpdate(float countdown, float secsToSelect, Vector3 destinationPosition)
+        public void DoUpdate(float countdown, float secsToSelect, Vector3 originPosition, PlanetBehaviour destinationPlanet)
         {
-            transform.position = destinationPosition;
+            transform.position = destinationPlanet.Position;
 
             float t = Mathf.Clamp01(1f - (countdown / secsToSelect));
             float fromScale = 1f;
@@ -29,8 +29,10 @@ namespace DigitalLove.Game.Spaceships
             float currentScale = Mathf.Lerp(fromScale, toScale, t);
             transform.localScale = Vector3.one * currentScale;
 
-            float zoneRadius = transform.lossyScale.x * 0.5f * destinationZoneRadius;
-            float distanceToZoneCenter = Vector3.Distance(transform.position, transform.position);
+            float zoneRadius = destinationPlanet.PlanetBody.RadiusOffset * 3f;
+            Debug.LogWarning($"zoneRadius: {zoneRadius}");
+            float distanceToZoneCenter = Vector3.Distance(originPosition, transform.position);
+            Debug.LogWarning($"distanceToZoneCenter: {distanceToZoneCenter}");
             zoneRenderer.material.color = distanceToZoneCenter <= zoneRadius ? insideColor : Color.white;
         }
     }

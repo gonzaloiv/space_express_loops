@@ -71,7 +71,6 @@ namespace DigitalLove.Game.Spaceships
             return averageOffset;
         }
 
-
         // ! DEBUG
 
         private void Update()
