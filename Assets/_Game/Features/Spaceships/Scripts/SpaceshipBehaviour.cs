@@ -35,7 +35,7 @@ namespace DigitalLove.Game.Spaceships
 
         public void SetOnLoopCreated(Action<LoopEventArgs> onLoopCreated)
         {
-            destinationSelectionState.SetOnLoopCreated(Id, onLoopCreated);
+            destinationSelectionState.SetOnLoopCreated(Id, data.colorCode, onLoopCreated);
         }
 
         public void SetOnLoopComplete(Action<LoopCompleteEventArgs> onLoopComplete)
@@ -48,7 +48,7 @@ namespace DigitalLove.Game.Spaceships
             onRouteState.SetOnLoopEditionButtonClicked(onLoopEditionButtonClicked);
         }
 
-        public void Spawn(SpaceshipData data, PlanetBaseBehaviour basePlanet)
+        public void Spawn(SpaceshipData data, Color color, PlanetBaseBehaviour basePlanet)
         {
             this.data = data;
 
@@ -56,9 +56,9 @@ namespace DigitalLove.Game.Spaceships
             transform.SetWorldPose(station.WorldPose);
             station.SetIsTaken(true);
 
-            destinationSelector.Init(basePlanet, data.color);
-            onRouteState.SetSpaceshipData(data);
-            originZone.material.color = data.color;
+            destinationSelector.Init(basePlanet, color);
+            onRouteState.SetSpaceshipData(data, color);
+            originZone.material.color = color;
 
             this.SetActive(true);
         }

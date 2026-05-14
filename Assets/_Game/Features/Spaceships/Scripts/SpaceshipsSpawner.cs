@@ -26,19 +26,38 @@ namespace DigitalLove.Game.Spaceships
             SpawnSpaceship(idCounter.NextId, basePlanet);
         }
 
-        private SpaceshipBehaviour SpawnSpaceship(string id, PlanetBaseBehaviour basePlanet)
+        private SpaceshipBehaviour SpawnSpaceship(string id, PlanetBaseBehaviour basePlanet, string colorCode = null)
         {
             SpaceshipBehaviour spaceship = GetOrInstantiate();
+            ColorIsAvailablePair colorPair = ResolveColorPair(colorCode);
+            colorPair.isTaken = true;
             SpaceshipData data = new()
             {
                 id = id,
-                color = GetRandomAvailableColor()
+                colorCode = colorPair.Code
             };
-            spaceship.Spawn(data, basePlanet);
+            spaceship.Spawn(data, colorPair.color.value, basePlanet);
             spaceship.SetOnLoopCreated(OnLoopCreated);
             spaceship.SetOnLoopComplete(OnLoopComplete);
             spaceship.SetOnLoopEditionButtonClicked(OnLoopEditionButtonClicked);
             return spaceship;
+        }
+
+        private ColorIsAvailablePair ResolveColorPair(string colorCode)
+        {
+            if (!string.IsNullOrEmpty(colorCode))
+            {
+                ColorIsAvailablePair savedPair = GetColorPair(colorCode);
+                if (savedPair != null)
+                    return savedPair;
+            }
+
+            return GetRandomAvailableColorPair();
+        }
+
+        private ColorIsAvailablePair GetColorPair(string colorCode)
+        {
+            return colors.FirstOrDefault(c => string.Equals(c.Code, colorCode, StringComparison.OrdinalIgnoreCase));
         }
 
         private SpaceshipBehaviour GetOrInstantiate()
@@ -53,13 +72,11 @@ namespace DigitalLove.Game.Spaceships
             return spaceship;
         }
 
-        private Color GetRandomAvailableColor()
+        private ColorIsAvailablePair GetRandomAvailableColorPair()
         {
             ColorIsAvailablePair[] availableColors = colors.Where(c => !c.isTaken).ToArray();
             Assert.AreNotEqual(availableColors.Length, 0);
-            ColorIsAvailablePair selectedColor = availableColors[UnityEngine.Random.Range(0, availableColors.Length)];
-            selectedColor.isTaken = true;
-            return selectedColor.color.value;
+            return availableColors[UnityEngine.Random.Range(0, availableColors.Length)];
         }
 
         private void OnLoopCreated(LoopEventArgs args)
@@ -77,9 +94,9 @@ namespace DigitalLove.Game.Spaceships
             loopEditionButtonClicked(args);
         }
 
-        public void SpawnFromLoop(string id, PlanetBaseBehaviour basePlanet, PlanetBehaviour destinationPlanet)
+        public void SpawnFromLoop(string id, PlanetBaseBehaviour basePlanet, PlanetBehaviour destinationPlanet, string colorCode)
         {
-            SpaceshipBehaviour spaceship = SpawnSpaceship(id, basePlanet);
+            SpaceshipBehaviour spaceship = SpawnSpaceship(id, basePlanet, colorCode);
             spaceship.SetRoute(destinationPlanet);
         }
 
@@ -106,5 +123,7 @@ namespace DigitalLove.Game.Spaceships
     {
         public ColorValue color;
         public bool isTaken;
+
+        public string Code => color != null ? color.name.Replace("Color.", string.Empty) : string.Empty;
     }
 }

@@ -8,5 +8,6 @@ namespace DigitalLove.Game.Spaceships
         public string spaceshipId;
         public string originId;
         public string destinationId;
+        public string colorCode;
     }
 }

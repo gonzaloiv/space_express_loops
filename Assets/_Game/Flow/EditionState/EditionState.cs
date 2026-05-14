@@ -84,7 +84,8 @@ namespace DigitalLove.Game.Flow
             {
                 spaceshipId = args.spaceshipId,
                 originId = args.originId,
-                destinationId = args.destinationId
+                destinationId = args.destinationId,
+                colorCode = args.colorCode
             };
             gameSnapshot.AddLoop(data);
 

@@ -27,7 +27,8 @@ namespace DigitalLove.Game.Spaceships
         {
             spaceshipId = data.id,
             originId = destinationSelector.BasePlanet.Id,
-            destinationId = destinationSelector.Destination.Id
+            destinationId = destinationSelector.Destination.Id,
+            colorCode = data.colorCode
         };
 
         public override void Init(StateMachine parent)
@@ -51,11 +52,11 @@ namespace DigitalLove.Game.Spaceships
             this.onLoopEditionButtonClicked = onLoopEditionButtonClicked;
         }
 
-        public void SetSpaceshipData(SpaceshipData data)
+        public void SetSpaceshipData(SpaceshipData data, Color color)
         {
             this.data = data;
-            splineContainerWrapper.SetColor(data.color);
-            routePanel.SetData(data.id, data.color, 50);
+            splineContainerWrapper.SetColor(color);
+            routePanel.SetData(data.id, color, 50);
         }
 
         public override void Enter()

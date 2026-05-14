@@ -7,6 +7,6 @@ namespace DigitalLove.Game.Spaceships
     public class SpaceshipData
     {
         public string id;
-        public Color color;
+        public string colorCode;
     }
 }

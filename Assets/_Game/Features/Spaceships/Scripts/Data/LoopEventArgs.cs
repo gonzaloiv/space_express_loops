@@ -8,6 +8,7 @@ namespace DigitalLove.Game.Spaceships
         public string spaceshipId;
         public string originId;
         public string destinationId;
+        public string colorCode;
 
         public bool IsBaseLoop => string.IsNullOrEmpty(originId);
         public bool HasFailed => string.IsNullOrEmpty(destinationId);
@@ -29,6 +30,7 @@ namespace DigitalLove.Game.Spaceships
             originId = args.originId;
             spaceshipId = args.spaceshipId;
             destinationId = args.destinationId;
+            colorCode = args.colorCode;
             this.value = value;
         }
     }

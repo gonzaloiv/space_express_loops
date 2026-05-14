@@ -65,7 +65,7 @@ namespace DigitalLove.Game.Levels
             foreach (LoopData loop in gameSnapshot.loops)
             {
                 PlanetBaseBehaviour planetBase = string.IsNullOrEmpty(loop.originId) ? basePlanet : planetsSpawner.GetById(loop.originId).PlanetBase;
-                spaceshipsSpawner.SpawnFromLoop(loop.spaceshipId, planetBase, planetsSpawner.GetById(loop.destinationId));
+                spaceshipsSpawner.SpawnFromLoop(loop.spaceshipId, planetBase, planetsSpawner.GetById(loop.destinationId), loop.colorCode);
             }
         }
 
