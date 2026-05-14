@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace DigitalLove.Game.Spaceships
 {
-
     public class TravellerPathFollower : MonoBehaviour
     {
         [SerializeField] private FloatValue gameSpeed;
@@ -14,13 +13,28 @@ namespace DigitalLove.Game.Spaceships
         private Tween pathTween;
         private Action<bool> onPathEnded;
 
+        public bool IsFollowingPath => pathTween != null && pathTween.IsActive();
+
         public void FollowPath(Vector3[] positions, Action<bool> onPathEnded)
         {
-            StopFollowing();
+            if (positions == null || positions.Length < 2)
+            {
+                onPathEnded?.Invoke(false);
+                return;
+            }
+
+            float speed = gameSpeed != null ? gameSpeed.value : 0f;
+            if (speed <= 0f)
+            {
+                onPathEnded?.Invoke(false);
+                return;
+            }
+
+            CancelFollowing();
             followBody.position = positions[0];
 
             this.onPathEnded = onPathEnded;
-            float duration = positions.GetTotalDistance() / gameSpeed.value;
+            float duration = positions.GetTotalDistance() / speed;
 
             pathTween = followBody.DOPath(positions, duration, PathType.Linear, PathMode.Full3D)
                 .SetEase(Ease.Linear)
@@ -29,19 +43,29 @@ namespace DigitalLove.Game.Spaceships
                 .OnComplete(OnPathTweenComplete);
         }
 
-        public void StopFollowing()
+        public void CancelFollowing()
         {
-            if (pathTween != null && pathTween.IsActive())
-                pathTween.Kill(false);
-            pathTween = null;
+            KillTween();
             onPathEnded = null;
         }
 
         public void EndWithFailure()
         {
+            KillTween();
+            onPathEnded?.Invoke(false);
+            onPathEnded = null;
+        }
+
+        private void KillTween()
+        {
             if (pathTween != null && pathTween.IsActive())
                 pathTween.Kill(false);
-            OnPathTweenComplete();
+            pathTween = null;
+        }
+
+        private void OnDestroy()
+        {
+            KillTween();
         }
 
         private void OnPathTweenComplete()

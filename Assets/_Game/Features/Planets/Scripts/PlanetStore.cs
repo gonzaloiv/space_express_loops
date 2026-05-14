@@ -26,7 +26,7 @@ namespace DigitalLove.Game.Planets
             this.lettersPerMinute = lettersPerMinute;
             this.maxLetters = maxLetters;
             this.planetFull = planetFull;
-            letters = UnityEngine.Random.Range(0, maxLetters / 2);
+            letters = 0;
             lettersPanel.ShowLetters(letters, maxLetters);
             ResetCoundown();
         }

@@ -95,7 +95,6 @@ namespace DigitalLove.Game.Spaceships
         private void OnDestinationSelected()
         {
             destinationPlanet.SetIsDestination(true);
-            raycastHelper.SetVisible(false);
         }
 
         private void UpdateDestinationZone()

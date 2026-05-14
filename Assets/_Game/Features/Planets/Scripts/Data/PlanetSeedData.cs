@@ -9,6 +9,6 @@ namespace DigitalLove.Game.Planets
         public MinMaxFloat radius;
         public FloatValue maxDistanceBetweenPlanets;
         public MinMaxInt lettersPerMinute;
-        public MinMaxInt maxLetters;
+        public MinMaxFloat maxLettersMultiplier;
     }
 }

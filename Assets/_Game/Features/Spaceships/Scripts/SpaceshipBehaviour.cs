@@ -51,6 +51,7 @@ namespace DigitalLove.Game.Spaceships
         public void Spawn(SpaceshipData data, PlanetBaseBehaviour basePlanet)
         {
             this.data = data;
+
             StationBehaviour station = basePlanet.GetValidStation();
             transform.SetWorldPose(station.WorldPose);
             station.SetIsTaken(true);

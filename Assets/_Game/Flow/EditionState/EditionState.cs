@@ -52,7 +52,7 @@ namespace DigitalLove.Game.Flow
             gameSnapshot = memoryDataClient.Get<GameSnapshot>();
             RefreshStoreUI();
             progressionEventsHelper.SendLevelStartedEvent(roundSelector.CurrentRound.id);
-            storeDependentUI.DoStart(gameSnapshot);
+            storeDependentUI.DoStart(gameSnapshot, planetColorChangeCost);
 
             ShowFTUIndicators();
         }
@@ -136,10 +136,26 @@ namespace DigitalLove.Game.Flow
 
         private void OnPlanetSetColorButtonClicked(string id)
         {
-            PlanetBody planetBody = levelContainer.PlanetsSpawner.GetById(id).PlanetBody;
+            int cost = planetColorChangeCost.value;
+            if (!gameSnapshot.store.CanAfford(cost))
+                return;
+
+            PlanetBehaviour planet = levelContainer.PlanetsSpawner.GetById(id);
+            if (planet == null)
+                return;
+
+            PlanetBody planetBody = planet.PlanetBody;
+            Vector2 previousOffset = planetBody.TextureOffset;
             planetBody.SetRandomTextureOffset();
             SerializableVector2 color = SerializableVector2.FromVector2(planetBody.TextureOffset);
-            gameSnapshot.SetPlanetColor(id, color, planetColorChangeCost.value);
+
+            if (!gameSnapshot.TrySetPlanetColor(id, color, cost))
+            {
+                planetBody.SetTextureOffset(previousOffset);
+                return;
+            }
+
+            RefreshStoreUI();
         }
 
         private void OnPlanetFull()

@@ -1422,7 +1422,7 @@ Transform:
   m_GameObject: {fileID: 3709804518514203679}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.005, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.15}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2942,17 +2942,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d636321fe4508a94dbdc7c9370de559a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Spaceships::TravellerBehaviour
-  body: {fileID: 6811115792836008139}
+  body: {fileID: 4787806067301044474}
   lettersPanel: {fileID: 1597963955494664207}
   rend: {fileID: 6445011914356420911}
-  defaultColor: {fileID: 11400000, guid: 3added88e14ad544685a37cf8d5fda1c, type: 2}
-  loadedColor: {fileID: 11400000, guid: dff8dc489b79d584da97922cb11baafa, type: 2}
   startMoveAudioSource: {fileID: 2105191817831276856}
   loadedAudioSource: {fileID: 7176875651656705815}
   layerMask:
     serializedVersion: 2
     m_Bits: 6145
-  ps: {fileID: 6925335127305100819}
+  detachedParticlePlayer: {fileID: 2097519466889420731}
   hitAudioSource: {fileID: 1226139481176282846}
 --- !u!114 &8234519071625348912
 MonoBehaviour:
@@ -3159,7 +3157,7 @@ PositionConstraint:
   serializedVersion: 2
   m_Weight: 1
   m_TranslationAtRest: {x: 0, y: 0.05, z: 0}
-  m_TranslationOffset: {x: 0, y: 0.048, z: 0}
+  m_TranslationOffset: {x: 0, y: 0.045, z: 0}
   m_AffectTranslationX: 1
   m_AffectTranslationY: 1
   m_AffectTranslationZ: 1
@@ -3377,7 +3375,7 @@ Transform:
   m_GameObject: {fileID: 8033940209510694764}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.005, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.15}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4745,6 +4743,7 @@ MonoBehaviour:
   splineContainerWrapper: {fileID: 5613787619958359030}
   dragZone: {fileID: 4773145558585985207}
   routePanel: {fileID: 621283724909148468}
+  legDelay: 1
 --- !u!1 &8632958460726182941
 GameObject:
   m_ObjectHideFlags: 0
@@ -5683,15 +5682,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 970025017559047009, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.15
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 970025017559047009, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.15
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 970025017559047009, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.15
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 970025017559047009, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5699,7 +5698,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 970025017559047009, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.002
+      value: 0.005
       objectReference: {fileID: 0}
     - target: {fileID: 970025017559047009, guid: 369efdc152c61a1448380208f9b4e491, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5829,6 +5828,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8203435882171827999}
     m_Modifications:
+    - target: {fileID: 481703055033780783, guid: 66e59ca5b9aac8d46b7e4d7d42016f3a, type: 3}
+      propertyPath: moveWithTransform
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 481703055033780783, guid: 66e59ca5b9aac8d46b7e4d7d42016f3a, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 481703055033780783, guid: 66e59ca5b9aac8d46b7e4d7d42016f3a, type: 3}
+      propertyPath: InitialModule.startSize.minScalar
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3645566140046364118, guid: 66e59ca5b9aac8d46b7e4d7d42016f3a, type: 3}
       propertyPath: m_Name
       value: HitPS
@@ -5888,43 +5899,21 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3645566140046364118, guid: 66e59ca5b9aac8d46b7e4d7d42016f3a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6018596494374597358}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 66e59ca5b9aac8d46b7e4d7d42016f3a, type: 3}
+--- !u!114 &2097519466889420731 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8912345678901234567, guid: 66e59ca5b9aac8d46b7e4d7d42016f3a, type: 3}
+  m_PrefabInstance: {fileID: 7400788557692687420}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c4e9a2b1d8f4650a3b5c7d9e1f2a4b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.VFX::DigitalLove.VFX.DetachedParticlePlayer
 --- !u!4 &3494860305555868672 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6211832868369930300, guid: 66e59ca5b9aac8d46b7e4d7d42016f3a, type: 3}
-  m_PrefabInstance: {fileID: 7400788557692687420}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6062767510072826346 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3645566140046364118, guid: 66e59ca5b9aac8d46b7e4d7d42016f3a, type: 3}
-  m_PrefabInstance: {fileID: 7400788557692687420}
-  m_PrefabAsset: {fileID: 0}
---- !u!1818360608 &6018596494374597358
-PositionConstraint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6062767510072826346}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Weight: 1
-  m_TranslationAtRest: {x: 0, y: 0, z: 0}
-  m_TranslationOffset: {x: 0, y: -0.002, z: 0}
-  m_AffectTranslationX: 1
-  m_AffectTranslationY: 1
-  m_AffectTranslationZ: 1
-  m_Active: 1
-  m_IsLocked: 0
-  m_Sources:
-  - sourceTransform: {fileID: 5276640881619765824}
-    weight: 1
---- !u!198 &6925335127305100819 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 481703055033780783, guid: 66e59ca5b9aac8d46b7e4d7d42016f3a, type: 3}
   m_PrefabInstance: {fileID: 7400788557692687420}
   m_PrefabAsset: {fileID: 0}

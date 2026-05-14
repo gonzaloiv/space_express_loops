@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ff70bb3da5e0bf498ade749f46c0bef, type: 3}
   m_Name: FullPlanetFee
   m_EditorClassIdentifier: DigitalLove.Global::DigitalLove.Global.IntValue
-  value: 10
+  value: 0

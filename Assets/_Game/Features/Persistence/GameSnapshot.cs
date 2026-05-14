@@ -89,13 +89,16 @@ namespace DigitalLove.Game.Persistence
             onUpdated?.Invoke();
         }
 
-        public void SetPlanetColor(string planetId, SerializableVector2 color, int cost)
+        public bool TrySetPlanetColor(string planetId, SerializableVector2 color, int cost)
         {
+            if (!store.TrySpendMoney(cost))
+                return false;
+
             PlanetData planet = planets.FirstOrDefault(p => string.Equals(p.id, planetId));
             if (planet != null)
                 planet.color = color;
-            store.SpendMoney(cost);
             onUpdated?.Invoke();
+            return true;
         }
     }
 }

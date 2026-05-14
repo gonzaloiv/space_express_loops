@@ -13,13 +13,14 @@ namespace DigitalLove.Game.UI
 
         [Header("Economy")]
         [SerializeField] private IntValue routeEditionCost;
-        [SerializeField] private IntValue planetColorCost;
 
         private GameSnapshot gameSnapshot;
+        private IntValue planetColorChangeCost;
 
-        public void DoStart(GameSnapshot gameSnapshot)
+        public void DoStart(GameSnapshot gameSnapshot, IntValue planetColorChangeCost)
         {
             this.gameSnapshot = gameSnapshot;
+            this.planetColorChangeCost = planetColorChangeCost;
             gameSnapshot.store.onUpdated += DoUpdate;
         }
 
@@ -36,9 +37,13 @@ namespace DigitalLove.Game.UI
                     spaceship.RoutePanel.Hide();
                 }
             }
+            int colorCost = planetColorChangeCost.value;
             foreach (PlanetBehaviour planet in planetsSpawner.All)
             {
-                planet.SetColorButtonPanel.SetActive(gameSnapshot.store.money >= planetColorCost.value);
+                if (!planet.IsActive)
+                    continue;
+
+                planet.SetColorButtonPanel.SetActive(gameSnapshot.store.CanAfford(colorCost), colorCost);
             }
         }
 

@@ -31,6 +31,18 @@ namespace DigitalLove.Game.Persistence
             onUpdated.Invoke();
         }
 
+        public bool CanAfford(int moneyValue) => money >= moneyValue;
+
+        public bool TrySpendMoney(int moneyValue)
+        {
+            if (!CanAfford(moneyValue))
+                return false;
+
+            money -= moneyValue;
+            onUpdated.Invoke();
+            return true;
+        }
+
         public void SpendMoney(int moneyValue)
         {
             money -= moneyValue;

@@ -3,6 +3,7 @@ using DigitalLove.Global;
 using System;
 using DigitalLove.Game.Planets;
 using DigitalLove.Game.UI;
+using DigitalLove.VFX;
 
 namespace DigitalLove.Game.Spaceships
 {
@@ -13,28 +14,34 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private ResourcePanel lettersPanel;
 
         [SerializeField] private Renderer rend;
-        [SerializeField] private ColorValue defaultColor;
-        [SerializeField] private ColorValue loadedColor;
         [SerializeField] private AudioSource startMoveAudioSource;
         [SerializeField] private AudioSource loadedAudioSource;
 
         [SerializeField] private LayerMask layerMask;
-        [SerializeField] private ParticleSystem ps;
+        [SerializeField] private DetachedParticlePlayer detachedParticlePlayer;
         [SerializeField] private AudioSource hitAudioSource;
 
         private TravellerPathFollower pathFollower;
         private TravellerPathFollower PathFollower => pathFollower ??= GetComponent<TravellerPathFollower>();
+        private bool isCollisionActive;
+
+        public bool IsFollowingPath => PathFollower.IsFollowingPath;
 
         public void Hide()
         {
-            PathFollower.StopFollowing();
-            body.SetActive(false);
+            isCollisionActive = false;
+            body.SetActive(false);  
+        }
+
+        public void HideAndCancelPath()
+        {
+            PathFollower.CancelFollowing();
+            Hide();
         }
 
         public void ShowEmpty()
         {
             body.SetActive(true);
-            rend.material.color = defaultColor.value;
             lettersPanel.Hide();
             startMoveAudioSource.Play();
         }
@@ -42,7 +49,6 @@ namespace DigitalLove.Game.Spaceships
         public void ShowLoaded(int letters)
         {
             body.SetActive(true);
-            rend.material.color = loadedColor.value;
             lettersPanel.ShowLetters(letters, 0);
             startMoveAudioSource.Play();
             loadedAudioSource.Play();
@@ -50,20 +56,30 @@ namespace DigitalLove.Game.Spaceships
 
         public void FollowPath(Vector3[] positions, Action<bool> onPathEnded)
         {
-            pathFollower.FollowPath(positions, onPathEnded);
+            detachedParticlePlayer.ResetToParent();
+            isCollisionActive = true;
+            PathFollower.FollowPath(positions, success =>
+            {
+                isCollisionActive = false;
+                onPathEnded?.Invoke(success);
+            });
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (layerMask.Contains(other.gameObject))
+            if (!isCollisionActive)
+                return;
+
+            if (other.attachedRigidbody != null && layerMask.Contains(other.attachedRigidbody.gameObject))
             {
-                PlanetBehaviour planet = other.gameObject.GetComponent<PlanetBehaviour>();
+                PlanetBehaviour planet = other.attachedRigidbody.GetComponent<PlanetBehaviour>();
                 if (planet != null)
                 {
+                    isCollisionActive = false;
                     hitAudioSource.Play();
-                    pathFollower.EndWithFailure();
+                    detachedParticlePlayer.PlayAt();
                     Hide();
-                    ps.Play();
+                    PathFollower.EndWithFailure();
                 }
             }
         }

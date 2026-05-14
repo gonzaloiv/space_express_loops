@@ -36,13 +36,15 @@ namespace DigitalLove.Game.Planets
         {
             float radius = seed.planetSeed.radius.GetRandomValue();
             Vector3 localPosition = GetValidPosition(radius, seed.planetSeed.maxDistanceBetweenPlanets.value, allPlanets);
+            int lettersPerMinute = seed.planetSeed.lettersPerMinute.GetRandomValue();
+            int maxLetters = (int)(seed.planetSeed.maxLettersMultiplier.GetRandomValue() * lettersPerMinute);
             PlanetData planetData = new()
             {
                 id = id,
                 radius = radius,
                 localPosition = SerializableVector3.FromVector3(localPosition),
-                lettersPerMinute = seed.planetSeed.lettersPerMinute.GetRandomValue(),
-                maxLetters = seed.planetSeed.maxLetters.GetRandomValue(),
+                lettersPerMinute = lettersPerMinute,
+                maxLetters = maxLetters,
                 color = SerializableVector2.FromVector2(Vector2.zero)
             };
             return planetData;
@@ -84,10 +86,12 @@ namespace DigitalLove.Game.Planets
                 }
                 else
                 {
-                    planets[i].Spawn(data[i], OnPlanetSetColorButtonClicked, planetFull.Invoke);
+                    planets[i].Spawn(data[i], OnPlanetSetColorButtonClicked, OnPlanetFull);
                 }
             }
         }
+
+        private void OnPlanetFull() => planetFull.Invoke();
 
         private void OnPlanetSetColorButtonClicked(string id) => planetSetColorButtonClicked(id);
 

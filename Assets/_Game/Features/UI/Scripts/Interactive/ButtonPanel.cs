@@ -9,7 +9,6 @@ namespace DigitalLove.Game.UI
     {
         [SerializeField] private BtnPanel btnPanel;
         [SerializeField] private LayoutUpdater layoutUpdater;
-        [SerializeField] private IntValue cost;
 
         public Action buttonClicked = () => { };
 
@@ -18,10 +17,10 @@ namespace DigitalLove.Game.UI
             transform.position = position;
         }
 
-        public void Show()
+        public void Show(int cost)
         {
             gameObject.SetActive(true);
-            btnPanel.Show(new Btn().SetText(cost.value.ToString()).SetOnClick(buttonClicked));
+            btnPanel.Show(new Btn().SetText(cost.ToString()).SetOnClick(buttonClicked));
             layoutUpdater.ForceUpdate();
         }
 
@@ -30,16 +29,12 @@ namespace DigitalLove.Game.UI
             gameObject.SetActive(false);
         }
 
-        public void SetActive(bool isActive)
+        public void SetActive(bool isActive, int cost)
         {
             if (isActive)
-            {
-                Show();
-            }
+                Show(cost);
             else
-            {
                 Hide();
-            }
         }
 
         // ! DEBUG

@@ -9,6 +9,7 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private LayerMask layerMask;
         [SerializeField] private float rayDistance = 2.5f;
         [SerializeField] private LineRenderer lineRenderer;
+
         [SerializeField] private float rayForwardOffset = 0.1f;
 
         private bool isActive = false;
@@ -33,7 +34,7 @@ namespace DigitalLove.Game.Spaceships
 
         public void SetVisible(bool isVisible)
         {
-            lineRenderer.enabled = isVisible;
+            lineRenderer.gameObject.SetActive(isVisible);
         }
 
         private void Update()

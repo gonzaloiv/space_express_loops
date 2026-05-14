@@ -10,6 +10,7 @@ namespace DigitalLove.Game.Spaceships
         public string destinationId;
 
         public bool IsBaseLoop => string.IsNullOrEmpty(originId);
+        public bool HasFailed => string.IsNullOrEmpty(destinationId);
     }
 
     [Serializable]

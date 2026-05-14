@@ -1,4 +1,4 @@
-using System.Linq;
+using System;
 using DigitalLove.Game.Planets;
 using UnityEngine;
 using UnityEngine.Splines;
@@ -12,10 +12,12 @@ namespace DigitalLove.Game.Spaceships
 
         private SplineContainer splineContainer;
         private Vector3[] positions;
+        private Vector3[] goPositions;
+        private Vector3[] returnPositions;
 
         public Vector3[] Positions => positions;
-        public Vector3[] GoPositions => Positions.Skip(0).Take(resolution / 2).ToArray();
-        public Vector3[] ReturnPositions => Positions.Skip(resolution / 2).Take(resolution / 2).ToArray();
+        public Vector3[] GoPositions => goPositions;
+        public Vector3[] ReturnPositions => returnPositions;
         public Vector3 OriginPosition => positions[0];
 
         private SplineContainer SplineContainer => splineContainer ??= GetComponent<SplineContainer>();
@@ -56,6 +58,16 @@ namespace DigitalLove.Game.Spaceships
             SplineContainer.SetKnotPosition(2, twoThirdsLeft);
 
             positions = SplineContainer.GetPositions(resolution);
+            CacheLegPositions();
+        }
+
+        private void CacheLegPositions()
+        {
+            int legLength = resolution / 2;
+            goPositions = new Vector3[legLength];
+            returnPositions = new Vector3[legLength];
+            Array.Copy(positions, 0, goPositions, 0, legLength);
+            Array.Copy(positions, legLength, returnPositions, 0, legLength);
         }
 
         public void SetLineRendererActive(bool isVisible)
