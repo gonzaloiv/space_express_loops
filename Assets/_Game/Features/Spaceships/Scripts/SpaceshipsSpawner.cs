@@ -21,9 +21,11 @@ namespace DigitalLove.Game.Spaceships
         public Action<LoopEventArgs> loopEditionButtonClicked = args => { };
         public Action<LoopCompleteEventArgs> loopComplete = args => { };
 
-        public void SpawnNew(PlanetBaseBehaviour basePlanet)
+        public void SyncIdsFromSnapshot(IEnumerable<string> existingIds) => idCounter.SyncFromExistingIds(existingIds);
+
+        public SpaceshipBehaviour SpawnNew(PlanetBaseBehaviour basePlanet)
         {
-            SpawnSpaceship(idCounter.NextId, basePlanet);
+            return SpawnSpaceship(idCounter.NextId, basePlanet);
         }
 
         private SpaceshipBehaviour SpawnSpaceship(string id, PlanetBaseBehaviour basePlanet, string colorCode = null)
@@ -92,6 +94,11 @@ namespace DigitalLove.Game.Spaceships
         private void OnLoopEditionButtonClicked(LoopEventArgs args)
         {
             loopEditionButtonClicked(args);
+        }
+
+        public void SpawnIdle(string id, PlanetBaseBehaviour basePlanet, string colorCode)
+        {
+            SpawnSpaceship(id, basePlanet, colorCode);
         }
 
         public void SpawnFromLoop(string id, PlanetBaseBehaviour basePlanet, PlanetBehaviour destinationPlanet, string colorCode)

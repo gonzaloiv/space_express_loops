@@ -23,6 +23,7 @@ namespace DigitalLove.Game.Spaceships
         private SpaceshipData data;
 
         public string Id => data.id;
+        public string ColorCode => data.colorCode;
         public bool IsActive => gameObject.activeInHierarchy;
         public bool HasRoute => stateMachine.IsCurrentState<OnRouteState>();
         public RoutePanel RoutePanel => routePanel;

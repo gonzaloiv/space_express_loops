@@ -58,13 +58,21 @@ namespace DigitalLove.Game.Persistence
 
         public void AddLoop(LoopData toAdd)
         {
-            if (loops.Count > 0)
-            {
-                LoopData toRemove = loops.FirstOrDefault(l => string.Equals(l.spaceshipId, toAdd.spaceshipId));
-                if (toRemove != null)
-                    loops.Remove(toRemove);
-            }
+            LoopData toRemove = loops.FirstOrDefault(l => string.Equals(l.spaceshipId, toAdd.spaceshipId));
+            if (toRemove != null)
+                loops.Remove(toRemove);
             loops.Add(toAdd);
+            onUpdated?.Invoke();
+        }
+
+        public void ClearLoopDestination(string spaceshipId, int cost)
+        {
+            LoopData loop = loops.FirstOrDefault(l => string.Equals(l.spaceshipId, spaceshipId));
+            if (loop == null)
+                return;
+
+            loop.destinationId = null;
+            store.SpendMoney(cost);
             onUpdated?.Invoke();
         }
 

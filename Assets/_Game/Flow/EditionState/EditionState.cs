@@ -131,7 +131,7 @@ namespace DigitalLove.Game.Flow
 
         private void OnLoopEditionButtonClicked(LoopEventArgs args)
         {
-            gameSnapshot.RemoveLoopBySpaceshipId(args.spaceshipId, routeEditionCost.value);
+            gameSnapshot.ClearLoopDestination(args.spaceshipId, routeEditionCost.value);
             RefreshStoreUI();
         }
 

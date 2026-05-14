@@ -56,6 +56,7 @@ namespace DigitalLove.Game.Flow
             gameSnapshot.SetOnUpdated(() => gameSnapshotClient.SetHasToUpdate());
             memoryDataClient.Put(gameSnapshot);
             roundSelector.SetCurrentRound(gameSnapshot.roundIndex);
+            levelContainer.SyncIdCounters(gameSnapshot);
         }
 
         private void SpawnLevelFromInitialRound()

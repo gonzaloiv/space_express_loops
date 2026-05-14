@@ -19,6 +19,8 @@ namespace DigitalLove.Game.Planets
         public Action<string> planetSetColorButtonClicked = id => { };
         public Action planetFull = () => { };
 
+        public void SyncIdsFromSnapshot(IEnumerable<string> existingIds) => idCreator.SyncFromExistingIds(existingIds);
+
         public List<PlanetData> GeneratePlanetDataFromPlanetsSeed(PlanetsSeed seed, List<PlanetData> initialPlanets)
         {
             List<PlanetData> roundPlanets = new();

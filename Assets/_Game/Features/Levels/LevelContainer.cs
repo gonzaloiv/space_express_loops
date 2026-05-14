@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DigitalLove.Game.Planets;
 using DigitalLove.Game.Persistence;
 using DigitalLove.Game.Spaceships;
@@ -20,6 +21,12 @@ namespace DigitalLove.Game.Levels
         public SpaceshipsSpawner SpaceshipsSpawner => spaceshipsSpawner;
         public PlanetBaseBehaviour BasePlanet => basePlanet;
 
+        public void SyncIdCounters(GameSnapshot gameSnapshot)
+        {
+            planetsSpawner.SyncIdsFromSnapshot(gameSnapshot.planets.Select(p => p.id));
+            spaceshipsSpawner.SyncIdsFromSnapshot(gameSnapshot.loops.Select(l => l.spaceshipId));
+        }
+
         public void HideAll()
         {
             planetsSpawner.HideAll();
@@ -38,21 +45,25 @@ namespace DigitalLove.Game.Levels
             List<PlanetData> roundPlanets = planetsSpawner.GeneratePlanetDataFromPlanetsSeed(roundData.planetsSeed, gameSnapshot.planets);
             gameSnapshot.AddPlanets(roundPlanets);
             planetsSpawner.SpawnPlanets(gameSnapshot.planets);
-            SpawnSpaceshipFromSeed(roundData.spaceshipSeed);
+            SpawnSpaceshipFromSeed(roundData.spaceshipSeed, gameSnapshot);
         }
 
-        private void SpawnSpaceshipFromSeed(SpaceshipSeed spaceshipSeed)
+        private void SpawnSpaceshipFromSeed(SpaceshipSeed spaceshipSeed, GameSnapshot gameSnapshot)
         {
             if (!spaceshipSeed.shouldSpawn)
                 return;
-            if (spaceshipSeed.inBase)
+
+            PlanetBaseBehaviour origin = spaceshipSeed.inBase
+                ? basePlanet
+                : planetsSpawner.GetRandom().PlanetBase;
+
+            SpaceshipBehaviour spaceship = spaceshipsSpawner.SpawnNew(origin);
+            gameSnapshot.AddLoop(new LoopData
             {
-                spaceshipsSpawner.SpawnNew(basePlanet);
-            }
-            else
-            {
-                spaceshipsSpawner.SpawnNew(planetsSpawner.GetRandom().PlanetBase);
-            }
+                spaceshipId = spaceship.Id,
+                originId = origin.Id,
+                colorCode = spaceship.ColorCode
+            });
         }
 
         public void RespawnFromData(GameSnapshot gameSnapshot)
@@ -61,18 +72,31 @@ namespace DigitalLove.Game.Levels
 
             planetsSpawner.SpawnPlanets(gameSnapshot.planets);
 
-            UnityEngine.Assertions.Assert.IsTrue(gameSnapshot.HasLoops);
             foreach (LoopData loop in gameSnapshot.loops)
             {
-                PlanetBaseBehaviour planetBase = string.IsNullOrEmpty(loop.originId) ? basePlanet : planetsSpawner.GetById(loop.originId).PlanetBase;
-                spaceshipsSpawner.SpawnFromLoop(loop.spaceshipId, planetBase, planetsSpawner.GetById(loop.destinationId), loop.colorCode);
+                PlanetBaseBehaviour planetBase = string.IsNullOrEmpty(loop.originId)
+                    ? basePlanet
+                    : planetsSpawner.GetById(loop.originId).PlanetBase;
+
+                if (loop.HasDestination)
+                {
+                    spaceshipsSpawner.SpawnFromLoop(
+                        loop.spaceshipId,
+                        planetBase,
+                        planetsSpawner.GetById(loop.destinationId),
+                        loop.colorCode);
+                }
+                else
+                {
+                    spaceshipsSpawner.SpawnIdle(loop.spaceshipId, planetBase, loop.colorCode);
+                }
             }
         }
 
         public void SetRoomBasedPose(Action onComplete)
         {
             MRUKRoom room = MRUK.Instance.GetCurrentRoom();
-            Pose originPose = new Pose
+            Pose originPose = new()
             {
                 position = room.GetRoomBounds().center,
                 rotation = room.transform.rotation
