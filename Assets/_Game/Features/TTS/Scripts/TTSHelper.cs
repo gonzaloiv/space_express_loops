@@ -72,12 +72,10 @@ namespace DigitalLove.Game.TTS
             if (isInFrontOfCamera)
             {
                 subtitlesLikeFollow.ShowInCameraView();
-                subtitlesLikeFollow.SetIsFollowing(true);
             }
             else
             {
                 transform.SetWorldPose(defaultPoint.ToWorldPose());
-                subtitlesLikeFollow.SetIsFollowing(false);
             }
         }
     }

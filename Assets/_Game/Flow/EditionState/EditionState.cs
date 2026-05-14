@@ -68,11 +68,10 @@ namespace DigitalLove.Game.Flow
             if (roundSelector.IsFirstRound)
             {
                 levelContainer.SpaceshipsSpawner.All[0].ShowGrabMePanel();
-                ttsHelper.SetInFrontOfCameraOrDefault(true);
+                ttsHelper.SetInFrontOfCameraOrDefault(false);
                 ttsHelper.SayAfter(2.5f, "the_hub_intro", SayHowToCreateARoute);
                 void SayHowToCreateARoute()
                 {
-                    ttsHelper.SetInFrontOfCameraOrDefault(false);
                     ttsHelper.SayAfter(2.5f, "how_to_create_a_route", () => { });
                 }
             }
@@ -94,9 +93,9 @@ namespace DigitalLove.Game.Flow
 
         private void OnLoopComplete(LoopCompleteEventArgs args)
         {
-            if (string.IsNullOrEmpty(args.destinationId)) // ? Broken spaceship
+            if (args.HasFailed) // ? Broken spaceship
             {
-                HandleBrokenSpaceshipLoop();
+                HandleBrokenSpaceshipLoop(args.value);
                 return;
             }
 
@@ -109,9 +108,9 @@ namespace DigitalLove.Game.Flow
             HandlePlanetLoopCompletion(args.originId, args.value);
         }
 
-        private void HandleBrokenSpaceshipLoop()
+        private void HandleBrokenSpaceshipLoop(int loopValue)
         {
-            gameSnapshot.SpendMoney(brokenSpaceshipCost.value);
+            gameSnapshot.SpendMoney(brokenSpaceshipCost.value + moneyPerLetter.value * loopValue);
             RefreshStoreUI();
         }
 
