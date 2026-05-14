@@ -62,14 +62,16 @@ namespace DigitalLove.Game.Planets
                     float distance = Vector3.Distance(candidate.Value, transform.position);
                     if (distance > radius * 3 && distance < maxDistanceBetweenPlanets)
                     {
-                        if (allPlanets.Any(p => Vector3.Distance(p.localPosition.ToVector3(), candidate.Value) < radius * 2f))
-                            continue;
-                        Debug.LogWarning($"Generated candidate position: {candidate.Value} iteration: {i}");
                         Vector3 localPos = transform.InverseTransformPoint(candidate.Value);
+                        if (allPlanets.Any(p => Vector3.Distance(p.localPosition.ToVector3(), localPos) < radius + p.radius))
+                            continue;
+                        Debug.LogWarning($"Generated candidate position: {localPos} iteration: {i}");
                         result = localPos;
                     }
                 }
             }
+            if (result == Vector3.zero)
+                Debug.LogWarning("Failed to find a valid planet position; defaulting to local origin.");
             return result;
         }
 

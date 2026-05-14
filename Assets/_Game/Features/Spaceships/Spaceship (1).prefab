@@ -5840,6 +5840,18 @@ PrefabInstance:
       propertyPath: InitialModule.startSize.minScalar
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 481703055033780783, guid: 66e59ca5b9aac8d46b7e4d7d42016f3a, type: 3}
+      propertyPath: InitialModule.startColor.minColor.b
+      value: 0.7509433
+      objectReference: {fileID: 0}
+    - target: {fileID: 481703055033780783, guid: 66e59ca5b9aac8d46b7e4d7d42016f3a, type: 3}
+      propertyPath: InitialModule.startColor.minColor.g
+      value: 0.7509433
+      objectReference: {fileID: 0}
+    - target: {fileID: 481703055033780783, guid: 66e59ca5b9aac8d46b7e4d7d42016f3a, type: 3}
+      propertyPath: InitialModule.startColor.minColor.r
+      value: 0.7509433
+      objectReference: {fileID: 0}
     - target: {fileID: 3645566140046364118, guid: 66e59ca5b9aac8d46b7e4d7d42016f3a, type: 3}
       propertyPath: m_Name
       value: HitPS

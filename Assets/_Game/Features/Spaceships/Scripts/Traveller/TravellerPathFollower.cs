@@ -36,6 +36,10 @@ namespace DigitalLove.Game.Spaceships
             this.onPathEnded = onPathEnded;
             float duration = positions.GetTotalDistance() / speed;
 
+            Debug.LogWarning($"Following path with duration: {duration}");
+            Debug.LogWarning($"Origin to destination distance: {Vector3.Distance(positions[0], positions[^1])}");
+            Debug.LogWarning($"Total distance: {positions.GetTotalDistance()}");
+
             pathTween = followBody.DOPath(positions, duration, PathType.Linear, PathMode.Full3D)
                 .SetEase(Ease.Linear)
                 .SetTarget(this)
