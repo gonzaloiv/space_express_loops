@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Reflex.Attributes;
 using UnityEngine;
 using DigitalLove.Game.TTS;
+using DigitalLove.Global;
 
 namespace DigitalLove.Game.Flow
 {
@@ -18,6 +19,10 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private TTSHelper ttsHelper;
 
         [Header("Debug")]
+        [SerializeField] private DebugBool addInitialScore;
+        [SerializeField] private int initialLetters;
+        [SerializeField] private int initialMoney;
+
         [SerializeField] private PlayerData playerData;
         private GameSnapshot gameSnapshot;
 
@@ -32,6 +37,8 @@ namespace DigitalLove.Game.Flow
         public override void Enter()
         {
             InitData();
+            if (addInitialScore.Value)
+                gameSnapshot.IncreaseLettersAndMoney(initialLetters, initialMoney);
             if (!gameSnapshot.HasPlanets)
             {
                 SpawnLevelFromInitialRound();

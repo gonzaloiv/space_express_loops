@@ -5143,6 +5143,10 @@ MonoBehaviour:
   gameSnapshotClient: {fileID: 1302786014}
   nextState: {fileID: 250434374}
   ttsHelper: {fileID: 1654487132}
+  addInitialScore:
+    value: 1
+  initialLetters: 25
+  initialMoney: 1000
   playerData:
     userId: 
     sessionCount: 0
@@ -11297,7 +11301,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 723.08496, y: -50}
-  m_SizeDelta: {x: 0, y: 50}
+  m_SizeDelta: {x: 243.83, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1213392285
 MonoBehaviour:
