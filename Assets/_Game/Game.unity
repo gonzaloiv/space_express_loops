@@ -13196,7 +13196,7 @@ MonoBehaviour:
   tableName: Levels
   secsToCompleteWithoutEntries: 1
   jumpEntries:
-    value: 1
+    value: 0
 --- !u!114 &1654487132
 MonoBehaviour:
   m_ObjectHideFlags: 0

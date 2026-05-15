@@ -9,11 +9,10 @@ namespace DigitalLove.Game.Spaceships
 {
     public class SpaceshipBehaviour : MonoBehaviour
     {
-        public const int MaxLetters = 5;
-
         [SerializeField] private WaitingForRouteState waitingForRouteState;
         [SerializeField] private DestinationSelectionState destinationSelectionState;
         [SerializeField] private OnRouteState onRouteState;
+        [SerializeField] private IntValue maxLetters;
 
         [SerializeField] private DestinationSelector destinationSelector;
         [SerializeField] private RoutePanel routePanel;

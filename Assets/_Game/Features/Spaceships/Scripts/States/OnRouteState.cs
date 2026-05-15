@@ -16,6 +16,7 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private Transform dragZone;
         [SerializeField] private RoutePanel routePanel;
         [SerializeField] private float legDelay = 1f;
+        [SerializeField] private IntValue maxLetters;
 
         private SpaceshipData data;
         private TravellerLoopRunner loopRunner;
@@ -78,7 +79,7 @@ namespace DigitalLove.Game.Spaceships
             loopRunner.StartLoop(
                 splineContainerWrapper,
                 data.id,
-                () => destinationSelector.Destination.PlanetStore.PickLetters(SpaceshipBehaviour.MaxLetters),
+                () => destinationSelector.Destination.PlanetStore.PickLetters(maxLetters.value),
                 () => CurrentLoopEventArgs);
         }
 
