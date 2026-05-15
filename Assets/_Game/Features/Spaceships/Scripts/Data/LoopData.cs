@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace DigitalLove.Game.Spaceships
 {
@@ -10,6 +11,6 @@ namespace DigitalLove.Game.Spaceships
         public string destinationId;
         public string colorCode;
 
-        public bool HasDestination => !string.IsNullOrEmpty(destinationId);
+        [JsonIgnore] public bool HasDestination => !string.IsNullOrEmpty(destinationId);
     }
 }

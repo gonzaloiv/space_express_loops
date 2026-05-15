@@ -18,7 +18,7 @@ namespace DigitalLove.Game.Persistence
         public List<LoopData> loops;
         public Store store;
 
-        private Action onUpdated;
+        [JsonIgnore] private Action onUpdated;
 
         [JsonIgnore] public int CurrentLetters => store.letters;
         [JsonIgnore] public bool HasPlanets => planets != null && planets.Count > 0;

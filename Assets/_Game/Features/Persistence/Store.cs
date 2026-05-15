@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace DigitalLove.Game.Persistence
 {
@@ -8,7 +9,7 @@ namespace DigitalLove.Game.Persistence
         public int letters;
         public int money;
 
-        public Action onUpdated = () => { };
+        [JsonIgnore] public Action onUpdated = () => { };
 
         public void Reset()
         {
@@ -28,7 +29,7 @@ namespace DigitalLove.Game.Persistence
         {
             letters += lettersValue;
             money += moneyValue;
-            onUpdated.Invoke();
+            onUpdated?.Invoke();
         }
 
         public bool CanAfford(int moneyValue) => money >= moneyValue;
@@ -39,14 +40,14 @@ namespace DigitalLove.Game.Persistence
                 return false;
 
             money -= moneyValue;
-            onUpdated.Invoke();
+            onUpdated?.Invoke();
             return true;
         }
 
         public void SpendMoney(int moneyValue)
         {
             money -= moneyValue;
-            onUpdated.Invoke();
+            onUpdated?.Invoke();
         }
     }
 }
