@@ -559,7 +559,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Planets.BasePlanetBehaviour
   spawnAnchor: {fileID: 1727709848}
-  planetBody: {fileID: 1765401196}
+  planetBody: {fileID: 1822272473}
 --- !u!1 &81789712
 GameObject:
   m_ObjectHideFlags: 0
@@ -11002,7 +11002,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 723.08496, y: -50}
-  m_SizeDelta: {x: 0, y: 50}
+  m_SizeDelta: {x: 243.83, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1213392285
 MonoBehaviour:
@@ -11371,6 +11371,7 @@ MonoBehaviour:
   levelContainer: {fileID: 677709495}
   progressionEventsHelper: {fileID: 1210227670}
   ttsHelper: {fileID: 1654487132}
+  gameSpeed: {fileID: 11400000, guid: c3660b33f404c6344ae786218d0e7437, type: 2}
 --- !u!1 &1351310010
 GameObject:
   m_ObjectHideFlags: 0
@@ -13408,32 +13409,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _facing: 0
   _doubleSided: 0
---- !u!1 &1730269642 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7402625994764319391, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
-  m_PrefabInstance: {fileID: 1822272471}
-  m_PrefabAsset: {fileID: 0}
---- !u!135 &1730269646
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1730269642}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5146772
-  m_Center: {x: 0.000000044703484, y: 0.000000029802322, z: 0}
 --- !u!1 &1730347948
 GameObject:
   m_ObjectHideFlags: 0
@@ -14018,16 +13993,24 @@ PrefabInstance:
     - {fileID: 1908391053000386049, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
     - {fileID: 446474339755537282, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7402625994764319391, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1730269646}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
 --- !u!4 &1822272472 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1673654939693186368, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
   m_PrefabInstance: {fileID: 1822272471}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1822272473 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2804679764772829139, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
+  m_PrefabInstance: {fileID: 1822272471}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c856c0391f0c3e840a156c6258c59e03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Planets::PlanetBody
 --- !u!1001 &1846539444
 PrefabInstance:
   m_ObjectHideFlags: 0

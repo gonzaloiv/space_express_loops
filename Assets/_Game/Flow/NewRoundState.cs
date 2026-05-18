@@ -6,6 +6,7 @@ using Reflex.Attributes;
 using DigitalLove.Game.Persistence;
 using DigitalLove.Casual.Analytics;
 using DigitalLove.Game.TTS;
+using DigitalLove.Global;
 
 namespace DigitalLove.Game.Flow
 {
@@ -16,6 +17,7 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private LevelContainer levelContainer;
         [SerializeField] private ProgressionEventsHelper progressionEventsHelper;
         [SerializeField] private TTSHelper ttsHelper;
+        [SerializeField] private FloatValue gameSpeed;
 
         [Inject] private MemoryDataClient memoryDataClient;
 
@@ -26,7 +28,7 @@ namespace DigitalLove.Game.Flow
             gameSnapshot.IncreaseRoundIndex();
             roundSelector.SetCurrentRound(gameSnapshot.roundIndex);
             levelContainer.SpawnRound(roundSelector.CurrentRound, gameSnapshot);
-            gameSnapshot.RecalculateLettersRequiredForRound(roundSelector.CurrentRound.lettersIncreaseMultiplier);
+            gameSnapshot.RecalculateLettersRequiredForRound(roundSelector.CurrentRound.lettersIncreaseMultiplier / gameSpeed.value);
 
             progressionEventsHelper.SendLevelCompleteEvent(roundSelector.CurrentRound.id, score: gameSnapshot.CurrentLetters);
             gameSnapshot.ResetLettersForNewRound();

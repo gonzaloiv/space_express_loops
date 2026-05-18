@@ -46,9 +46,10 @@ namespace DigitalLove.Game.Flow
 
             gameSnapshot = memoryDataClient.Get<GameSnapshot>();
             RefreshStoreUI();
-            PlanetRouteColorSync.SyncPlanetRouteColors(
+            PlanetRouteColorSync.Apply(
                 gameSnapshot,
                 levelContainer.PlanetsSpawner,
+                levelContainer.HubsSpawner,
                 levelContainer.SpaceshipsSpawner);
             progressionEventsHelper.SendLevelStartedEvent(roundSelector.CurrentRound.id);
             ShowFTUIndicators();

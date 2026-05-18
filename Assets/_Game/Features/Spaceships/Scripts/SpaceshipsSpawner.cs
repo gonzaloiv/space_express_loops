@@ -23,6 +23,9 @@ namespace DigitalLove.Game.Spaceships
 
         public void SyncIdsFromSnapshot(IEnumerable<string> existingIds) => idCounter.SyncFromExistingIds(existingIds);
 
+        public SpaceshipBehaviour GetActiveById(string id) =>
+            spaceships.FirstOrDefault(s => s.IsActive && string.Equals(s.Id, id));
+
         public SpaceshipBehaviour SpawnNew(HubBehaviour basePlanet)
         {
             return SpawnSpaceship(idCounter.NextId, basePlanet);

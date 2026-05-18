@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DigitalLove.Game.Spaceships;
 using UnityEngine;
 using DigitalLove.Game.Planets;
@@ -53,19 +54,28 @@ namespace DigitalLove.Game.Persistence
             HubsSpawner hubsSpawner,
             SpaceshipsSpawner spaceshipsSpawner)
         {
+            HashSet<string> hubIdsOnLoops = new();
+
+            if (gameSnapshot.loops != null)
+            {
+                foreach (LoopData loop in gameSnapshot.loops)
+                {
+                    HubBehaviour hub = ResolveHub(loop, hubsSpawner, spaceshipsSpawner);
+                    if (hub == null)
+                        continue;
+
+                    hubIdsOnLoops.Add(hub.Id);
+                    ApplyHubRouteColor(hub, loop.colorCode, spaceshipsSpawner);
+                }
+            }
+
             foreach (HubBehaviour hub in hubsSpawner.All)
             {
-                if (!hub.IsActive)
+                if (!hub.IsActive || hubIdsOnLoops.Contains(hub.Id))
                     continue;
 
                 hub.ResetRouteColor();
             }
-
-            if (gameSnapshot.loops == null)
-                return;
-
-            foreach (LoopData loop in gameSnapshot.loops)
-                ApplyHubRouteColor(hubsSpawner.GetById(loop.hubId), loop.colorCode, spaceshipsSpawner);
         }
 
         public static void ApplyHubRouteColor(HubBehaviour hub, string colorCode, SpaceshipsSpawner spaceshipsSpawner)
@@ -83,6 +93,22 @@ namespace DigitalLove.Game.Persistence
 
             destination.PlanetBody.SetRouteColor(color);
             destination.SetOnRoute(true);
+        }
+
+        private static HubBehaviour ResolveHub(
+            LoopData loop,
+            HubsSpawner hubsSpawner,
+            SpaceshipsSpawner spaceshipsSpawner)
+        {
+            if (!string.IsNullOrEmpty(loop.hubId))
+            {
+                HubBehaviour hub = hubsSpawner.GetById(loop.hubId);
+                if (hub != null)
+                    return hub;
+            }
+
+            SpaceshipBehaviour spaceship = spaceshipsSpawner.GetActiveById(loop.spaceshipId);
+            return spaceship?.Hub;
         }
     }
 }

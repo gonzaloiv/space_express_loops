@@ -41,9 +41,19 @@ namespace DigitalLove.Game.Planets
             activeRenderer = renderers[index];
         }
 
-        public void SetRouteColor(Color color)
+        public void EnsureReadyForRouteColor()
         {
             EnsureActiveRenderer();
+            if (activeRenderer != null)
+                return;
+
+            if (renderers != null && renderers.Count > 0)
+                SetActiveRenderer(0);
+        }
+
+        public void SetRouteColor(Color color)
+        {
+            EnsureReadyForRouteColor();
             if (activeRenderer == null)
                 return;
             Material material = activeRenderer.material;

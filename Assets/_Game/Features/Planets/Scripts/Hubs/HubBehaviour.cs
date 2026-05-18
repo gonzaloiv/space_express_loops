@@ -26,6 +26,7 @@ namespace DigitalLove.Game.Planets
             id = hubId;
             transform.localPosition = localPosition;
             SetActive(true);
+            planetBody?.EnsureReadyForRouteColor();
         }
 
         public void SetRouteColor(Color color)

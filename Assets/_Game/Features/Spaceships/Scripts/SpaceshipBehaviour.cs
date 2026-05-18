@@ -24,6 +24,7 @@ namespace DigitalLove.Game.Spaceships
         public string Id => data.id;
         public string HubId => data.hubId;
         public string ColorCode => data.colorCode;
+        public HubBehaviour Hub => destinationSelector.BasePlanet;
         public bool IsActive => gameObject.activeInHierarchy;
         public bool HasRoute => stateMachine.IsCurrentState<OnRouteState>();
         public RoutePanel RoutePanel => routePanel;
@@ -55,6 +56,7 @@ namespace DigitalLove.Game.Spaceships
 
             transform.SetWorldPose(basePlanet.SpawnPose);
 
+            basePlanet.SetRouteColor(color);
             destinationSelector.Init(basePlanet, color);
             onRouteState.SetSpaceshipData(data, color);
             originZone.material.color = color;

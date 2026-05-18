@@ -51,6 +51,8 @@ namespace DigitalLove.Game.Levels
             PlanetRouteColorSync.SyncPlanetRouteColors(gameSnapshot, planetsSpawner, spaceshipsSpawner);
             if (roundData.shouldSpawnSpaceship)
                 SpawnSpaceship(gameSnapshot);
+            else
+                PlanetRouteColorSync.SyncHubRouteColors(gameSnapshot, hubsSpawner, spaceshipsSpawner);
         }
 
         private void SpawnSpaceship(GameSnapshot gameSnapshot)
@@ -64,7 +66,7 @@ namespace DigitalLove.Game.Levels
                 colorCode = spaceship.ColorCode,
                 hubId = spaceship.HubId
             });
-            PlanetRouteColorSync.ApplyHubRouteColor(hub, spaceship.ColorCode, spaceshipsSpawner);
+            PlanetRouteColorSync.SyncHubRouteColors(gameSnapshot, hubsSpawner, spaceshipsSpawner);
         }
 
         public void RespawnFromData(GameSnapshot gameSnapshot)
@@ -80,7 +82,6 @@ namespace DigitalLove.Game.Levels
             foreach (LoopData loop in gameSnapshot.loops)
             {
                 HubBehaviour hub = ResolveHubForLoop(loop, gameSnapshot);
-                PlanetRouteColorSync.ApplyHubRouteColor(hub, loop.colorCode, spaceshipsSpawner);
 
                 if (loop.HasDestinations)
                 {
@@ -97,6 +98,8 @@ namespace DigitalLove.Game.Levels
                     spaceshipsSpawner.SpawnIdle(loop.spaceshipId, hub, loop.colorCode);
                 }
             }
+
+            PlanetRouteColorSync.SyncHubRouteColors(gameSnapshot, hubsSpawner, spaceshipsSpawner);
         }
 
         private HubBehaviour ResolveHubForLoop(LoopData loop, GameSnapshot gameSnapshot)
