@@ -56,7 +56,9 @@ namespace DigitalLove.Game.Spaceships
             }
             else
             {
-                bool isValidNewDestination = candidatePlanet != destinationPlanet && candidatePlanet.gameObject != basePlanet.gameObject;
+                bool isValidNewDestination = candidatePlanet != destinationPlanet
+                    && candidatePlanet.gameObject != basePlanet.gameObject
+                    && !candidatePlanet.IsOnRoute;
                 if (isValidNewDestination)
                     SelectNewDestination(candidatePlanet);
             }

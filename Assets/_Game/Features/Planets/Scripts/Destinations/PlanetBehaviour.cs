@@ -19,9 +19,11 @@ namespace DigitalLove.Game.Planets
 
         private string id;
         private bool isDestination;
+        private bool isOnRoute;
 
         public string Id => id;
         public bool IsDestination => isDestination;
+        public bool IsOnRoute => isOnRoute;
         public bool IsActive => gameObject.activeInHierarchy;
 
         public PlanetStore PlanetStore => planetStore;
@@ -41,6 +43,11 @@ namespace DigitalLove.Game.Planets
             outline.enabled = isActive;
         }
 
+        public void SetOnRoute(bool onRoute)
+        {
+            isOnRoute = onRoute;
+        }
+
         public void Spawn(PlanetData planetData, Action planetFull)
         {
             gameObject.SetActive(true);
@@ -57,6 +64,7 @@ namespace DigitalLove.Game.Planets
             transform.localPosition = planetData.localPosition.ToVector3();
             planetBody.Init(planetData.radius);
             planetBody.ResetRouteColor();
+            SetOnRoute(false);
             SetOutlineActive(false);
         }
 

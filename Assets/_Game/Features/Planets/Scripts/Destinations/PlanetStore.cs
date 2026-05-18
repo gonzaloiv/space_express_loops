@@ -56,7 +56,7 @@ namespace DigitalLove.Game.Planets
 
         private void ResetCoundown()
         {
-            countdown = 60f / lettersPerMinute / gameSpeed.value;
+            countdown = 60f / lettersPerMinute * gameSpeed.value;
         }
 
         public void IncreaseLetters(int value)

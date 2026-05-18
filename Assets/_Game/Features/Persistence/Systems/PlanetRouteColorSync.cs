@@ -29,6 +29,7 @@ namespace DigitalLove.Game.Persistence
                     continue;
 
                 planet.PlanetBody.ResetRouteColor();
+                planet.SetOnRoute(false);
             }
 
             if (gameSnapshot.loops == null)
@@ -81,6 +82,7 @@ namespace DigitalLove.Game.Persistence
                 return;
 
             destination.PlanetBody.SetRouteColor(color);
+            destination.SetOnRoute(true);
         }
     }
 }
