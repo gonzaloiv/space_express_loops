@@ -5,8 +5,6 @@ namespace DigitalLove.Game.Planets
 {
     public class PlanetBody : MonoBehaviour
     {
-        private const int ColorPaletteSize = 8;
-
         [SerializeField] private Transform body;
         [SerializeField] private PlanetBodyRenderer[] rends;
 
@@ -31,15 +29,6 @@ namespace DigitalLove.Game.Planets
             }
         }
 
-        public void SetRandomTextureOffset()
-        {
-            int cellX = Random.Range(0, ColorPaletteSize);
-            int cellY = Random.Range(0, ColorPaletteSize);
-            float step = 1f / ColorPaletteSize;
-            Vector2 offset = new Vector2((cellX + 0.5f) * step, (cellY + 0.5f) * step);
-            rends[currentBodyIndex].SetTextureOffsetMaterial(offset);
-        }
-
         public void SetTextureOffset(Vector2 offset)
         {
             rends[currentBodyIndex].SetTextureOffsetMaterial(offset);
@@ -48,7 +37,7 @@ namespace DigitalLove.Game.Planets
         [Button]
         public void Debug_SetRandomTextureOffset()
         {
-            SetRandomTextureOffset();
+            rends.SetRandomTextureOffset();
         }
     }
 }
