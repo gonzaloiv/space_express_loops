@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DigitalLove.Global;
 using Meta.XR.MRUtilityKit;
 using UnityEngine;
 
@@ -45,25 +46,29 @@ namespace DigitalLove.Game.Planets
                 foreach (PlanetData planet in planets)
                     Register(planet.localPosition.ToVector3(), planet.radius);
             }
-
-            if (hubs == null)
-                return;
-
-            foreach (HubData hub in hubs)
-                Register(hub.localPosition.ToVector3(), hubPlacementRadius);
+            if (hubs != null)
+            {
+                foreach (HubData hub in hubs)
+                    Register(hub.localPosition.ToVector3(), hubPlacementRadius);
+            }
         }
 
         public Vector3 GetValidLocalPosition(float radius, int maxIterations = DefaultMaxIterations)
         {
-            return FindValidLocalPosition(radius, maxDistanceFromRootWorld: null, maxIterations);
+            return FindValidLocalPosition(radius, maxDistanceFromRootWorld: null, localHeightRange: null, maxIterations);
         }
 
         public Vector3 GetValidLocalPosition(float radius, float maxDistanceFromRootWorld, int maxIterations = DefaultMaxIterations)
         {
-            return FindValidLocalPosition(radius, maxDistanceFromRootWorld, maxIterations);
+            return FindValidLocalPosition(radius, maxDistanceFromRootWorld, localHeightRange: null, maxIterations);
         }
 
-        private Vector3 FindValidLocalPosition(float radius, float? maxDistanceFromRootWorld, int maxIterations)
+        public Vector3 GetValidLocalPosition(float radius, MinMaxFloat localHeightRange, int maxIterations = DefaultMaxIterations)
+        {
+            return FindValidLocalPosition(radius, maxDistanceFromRootWorld: null, localHeightRange, maxIterations);
+        }
+
+        private Vector3 FindValidLocalPosition(float radius, float? maxDistanceFromRootWorld, MinMaxFloat localHeightRange, int maxIterations)
         {
             Vector3 result = Vector3.zero;
             for (int i = 0; i < maxIterations && result == Vector3.zero; i++)
@@ -83,12 +88,23 @@ namespace DigitalLove.Game.Planets
                 if (Overlaps(localPos, radius))
                     continue;
 
+                if (!IsWithinLocalHeightRange(localPos, localHeightRange))
+                    continue;
+
                 result = localPos;
             }
 
             if (result == Vector3.zero)
                 Debug.LogWarning("Failed to find a valid local position; defaulting to local origin.");
             return result;
+        }
+
+        private static bool IsWithinLocalHeightRange(Vector3 localPos, MinMaxFloat localHeightRange)
+        {
+            if (localHeightRange == null || localHeightRange.max <= localHeightRange.min)
+                return true;
+
+            return localPos.y >= localHeightRange.min && localPos.y <= localHeightRange.max;
         }
 
         private bool Overlaps(Vector3 localPos, float radius)

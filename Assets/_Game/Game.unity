@@ -9737,7 +9737,11 @@ MonoBehaviour:
   roomPlacement: {fileID: 677709497}
   hubs:
   - {fileID: 74164910}
-  minDistanceBetweenHubs: {fileID: 11400000, guid: 7c4e8f2a1b9d603548e1729a3b5d6f81, type: 2}
+  minDistanceBetweenHubs: 1
+  localHeightRange:
+    min: 0.5
+    max: 1.5
+  minDistanceToRoomBounds: 0.66
 --- !u!1 &964978560
 GameObject:
   m_ObjectHideFlags: 0
