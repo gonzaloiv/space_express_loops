@@ -8,6 +8,5 @@ namespace DigitalLove.Game.Planets
     {
         public string id;
         public SerializableVector3 localPosition;
-        public float placementRadius;
     }
 }

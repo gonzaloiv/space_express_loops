@@ -74,7 +74,7 @@ namespace DigitalLove.Game.Spaceships
                 {
 
                     float distance = Vector3.Distance(candidatePlanet.transform.position, startPosition);
-                    Vector3 offset = transform.forward * candidatePlanet.PlanetBody.RadiusOffset - transform.forward * rayForwardOffset;
+                    Vector3 offset = transform.forward * candidatePlanet.PlanetBody.Radius - transform.forward * rayForwardOffset;
                     endPosition = startPosition + transform.forward * distance - offset;
                 }
                 lineRenderer.SetPositions(new Vector3[] { startPosition, endPosition });

@@ -13,7 +13,7 @@ namespace DigitalLove.Game.Planets
 
         private Renderer activeRenderer;
 
-        public float RadiusOffset => body.lossyScale.x;
+        public float Radius => body.lossyScale.x;
         public Vector3 Position => body.position;
 
         public void Init(float radius)

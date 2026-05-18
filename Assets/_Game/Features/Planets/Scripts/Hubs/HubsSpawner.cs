@@ -10,7 +10,6 @@ namespace DigitalLove.Game.Planets
     {
         [SerializeField] private MrukRoomLocalPlacement roomPlacement;
         [SerializeField] private List<HubBehaviour> hubs;
-        [SerializeField] private float placementRadius = 0.2f;
         [SerializeField] private FloatValue minDistanceBetweenHubs;
 
         private IdCounter idCounter = new();
@@ -31,8 +30,7 @@ namespace DigitalLove.Game.Planets
             return new HubData
             {
                 id = hub.Id,
-                localPosition = SerializableVector3.FromVector3(hub.LocalPosition),
-                placementRadius = placementRadius
+                localPosition = SerializableVector3.FromVector3(hub.LocalPosition)
             };
         }
 
@@ -67,30 +65,16 @@ namespace DigitalLove.Game.Planets
             foreach (HubBehaviour hub in hubs)
             {
                 if (hub.IsActive)
-                {
-                    HubData hubData = GetHubDataForBehaviour(hub);
-                    roomPlacement.Unregister(hub.LocalPosition, hubData?.placementRadius ?? placementRadius);
-                }
+                    roomPlacement.Unregister(hub.LocalPosition, hubs[0].PlanetBody.Radius);
                 hub.ResetForPool();
             }
         }
 
-        private HubData GetHubDataForBehaviour(HubBehaviour hub)
-        {
-            return new HubData
-            {
-                id = hub.Id,
-                localPosition = SerializableVector3.FromVector3(hub.LocalPosition),
-                placementRadius = placementRadius
-            };
-        }
-
         private void ReactivateHub(HubBehaviour hub, string hubId, HubData hubData)
         {
-            float radius = hubData?.placementRadius ?? placementRadius;
             Vector3 localPosition = ResolveLocalPosition(hubData);
             hub.SpawnAsHub(hubId, localPosition);
-            roomPlacement.Register(localPosition, radius);
+            roomPlacement.Register(localPosition, hubs[0].PlanetBody.Radius);
         }
 
         private HubBehaviour ActivateHub(string id, Vector3 localPosition)
@@ -99,8 +83,7 @@ namespace DigitalLove.Game.Planets
             ReactivateHub(hub, id, new HubData
             {
                 id = id,
-                localPosition = SerializableVector3.FromVector3(localPosition),
-                placementRadius = placementRadius
+                localPosition = SerializableVector3.FromVector3(localPosition)
             });
             return hub;
         }
@@ -110,13 +93,13 @@ namespace DigitalLove.Game.Planets
             float minHubDistance = minDistanceBetweenHubs != null ? minDistanceBetweenHubs.value : 0f;
             for (int i = 0; i < MrukRoomLocalPlacement.DefaultMaxIterations; i++)
             {
-                Vector3 localPosition = roomPlacement.GetValidLocalPosition(placementRadius);
+                Vector3 localPosition = roomPlacement.GetValidLocalPosition(hubs[0].PlanetBody.Radius);
                 if (minHubDistance <= 0f || !IsTooCloseToOtherHubs(localPosition, minHubDistance))
                     return localPosition;
             }
 
             Debug.LogWarning("Failed to find a hub position with minimum hub spacing; using best-effort placement.");
-            return roomPlacement.GetValidLocalPosition(placementRadius);
+            return roomPlacement.GetValidLocalPosition(hubs[0].PlanetBody.Radius);
         }
 
         private bool IsTooCloseToOtherHubs(Vector3 localPosition, float minDistance)

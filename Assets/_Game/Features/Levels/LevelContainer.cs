@@ -70,7 +70,10 @@ namespace DigitalLove.Game.Levels
         public void RespawnFromData(GameSnapshot gameSnapshot)
         {
             gameSnapshot.hubs ??= new();
-            roomPlacement.SyncFromSnapshot(gameSnapshot.planets, gameSnapshot.hubs);
+            roomPlacement.SyncFromSnapshot(
+                gameSnapshot.planets,
+                gameSnapshot.hubs,
+                hubsSpawner.All[0].PlanetBody.Radius);
             planetsSpawner.SpawnPlanets(gameSnapshot.planets);
             PlanetRouteColorSync.SyncPlanetRouteColors(gameSnapshot, planetsSpawner, spaceshipsSpawner);
 

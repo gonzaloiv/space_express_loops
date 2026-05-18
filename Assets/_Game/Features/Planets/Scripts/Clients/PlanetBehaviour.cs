@@ -62,7 +62,7 @@ namespace DigitalLove.Game.Planets
 
         private void SetupUI()
         {
-            lettersPanel.Init(transform.position + transform.up * planetBody.RadiusOffset);
+            lettersPanel.Init(transform.position + transform.up * planetBody.Radius);
         }
     }
 }

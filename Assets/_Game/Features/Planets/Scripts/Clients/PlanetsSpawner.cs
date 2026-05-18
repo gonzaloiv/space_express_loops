@@ -51,7 +51,6 @@ namespace DigitalLove.Game.Planets
 
         public void SpawnPlanets(List<PlanetData> data)
         {
-            Debug.LogWarning($"Spawning {data.Count} planets");
             for (int i = 0; i < data.Count; i++)
             {
                 if (i >= planets.Count)

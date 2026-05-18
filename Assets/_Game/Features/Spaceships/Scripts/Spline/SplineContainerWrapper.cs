@@ -30,12 +30,12 @@ namespace DigitalLove.Game.Spaceships
         public void CreateLoop(HubBehaviour basePlanet, PlanetBehaviour destinationPlanet)
         {
             Vector3 direction = (destinationPlanet.transform.position - basePlanet.transform.position).normalized;
-            float baseRadiusOffset = basePlanet.PlanetBody.RadiusOffset;
+            float baseRadiusOffset = basePlanet.PlanetBody.Radius;
 
             SplineContainer.transform.position = basePlanet.transform.position - direction * baseRadiusOffset * 1.25f;
             SplineContainer.transform.forward = direction;
 
-            Vector3 destinationPosition = destinationPlanet.transform.position + direction * destinationPlanet.PlanetBody.RadiusOffset * 1.25f;
+            Vector3 destinationPosition = destinationPlanet.transform.position + direction * destinationPlanet.PlanetBody.Radius * 1.25f;
             SplineContainer.SetKnotPosition(3, SplineContainer.transform.InverseTransformPoint(destinationPosition));
 
             Vector3 oneThirdPosition = SplineContainer.transform.position + direction * baseRadiusOffset * 1.25f;
@@ -46,7 +46,7 @@ namespace DigitalLove.Game.Spaceships
             Vector3 oneThirdLeft = SplineContainer.transform.InverseTransformPoint(oneThirdPosition - originOffset);
             SplineContainer.SetKnotPosition(5, oneThirdLeft);
 
-            float destinationRadiusOffset = destinationPlanet.PlanetBody.RadiusOffset;
+            float destinationRadiusOffset = destinationPlanet.PlanetBody.Radius;
             Vector3 twoThirdsPosition = destinationPosition - direction * destinationRadiusOffset * 1.25f;
             Vector3 destinationOffset = SplineContainer.transform.right.normalized * destinationRadiusOffset;
 

@@ -37,7 +37,7 @@ namespace DigitalLove.Game.Planets
             }
         }
 
-        public void SyncFromSnapshot(IEnumerable<PlanetData> planets, IEnumerable<HubData> hubs)
+        public void SyncFromSnapshot(IEnumerable<PlanetData> planets, IEnumerable<HubData> hubs, float hubPlacementRadius)
         {
             Clear();
             if (planets != null)
@@ -50,7 +50,7 @@ namespace DigitalLove.Game.Planets
                 return;
 
             foreach (HubData hub in hubs)
-                Register(hub.localPosition.ToVector3(), hub.placementRadius);
+                Register(hub.localPosition.ToVector3(), hubPlacementRadius);
         }
 
         public Vector3 GetValidLocalPosition(float radius, int maxIterations = DefaultMaxIterations)
