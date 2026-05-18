@@ -31,6 +31,8 @@ namespace DigitalLove.Game.Planets
             ResetCoundown();
         }
 
+        public int PickAllLetters() => PickLetters(letters);
+
         public int PickLetters(int value)
         {
             int picked;

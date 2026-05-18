@@ -4690,7 +4690,6 @@ MonoBehaviour:
   waitingForRouteState: {fileID: 6434439280635227958}
   destinationSelectionState: {fileID: 1456422940689401912}
   onRouteState: {fileID: 2655982506403976886}
-  maxLetters: {fileID: 0}
   destinationSelector: {fileID: 856102399462632852}
   routePanel: {fileID: 621283724909148468}
   originZone: {fileID: 6009419749085582317}
@@ -4745,7 +4744,6 @@ MonoBehaviour:
   dragZone: {fileID: 4773145558585985207}
   routePanel: {fileID: 621283724909148468}
   legDelay: 1
-  maxLetters: {fileID: 11400000, guid: 38c31fd8e9bb8c54abc3ebdea6e07984, type: 2}
 --- !u!1 &8632958460726182941
 GameObject:
   m_ObjectHideFlags: 0

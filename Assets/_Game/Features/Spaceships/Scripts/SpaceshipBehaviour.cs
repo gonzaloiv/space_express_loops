@@ -12,7 +12,6 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private WaitingForRouteState waitingForRouteState;
         [SerializeField] private DestinationSelectionState destinationSelectionState;
         [SerializeField] private OnRouteState onRouteState;
-        [SerializeField] private IntValue maxLetters;
 
         [SerializeField] private DestinationSelector destinationSelector;
         [SerializeField] private RoutePanel routePanel;

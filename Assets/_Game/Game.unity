@@ -1946,7 +1946,7 @@ MonoBehaviour:
     sessionCount: 0
     cookies: []
   forceLocalPlayerData:
-    value: 0
+    value: 1
 --- !u!114 &284223193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13193,7 +13193,7 @@ MonoBehaviour:
   tableName: Levels
   secsToCompleteWithoutEntries: 1
   jumpEntries:
-    value: 0
+    value: 1
 --- !u!114 &1654487132
 MonoBehaviour:
   m_ObjectHideFlags: 0
