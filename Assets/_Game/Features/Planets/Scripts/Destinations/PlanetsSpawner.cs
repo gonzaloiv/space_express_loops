@@ -34,7 +34,7 @@ namespace DigitalLove.Game.Planets
         private PlanetData CreateDataFromSeed(string id, PlanetSeedData seed)
         {
             float radius = seed.radius.GetRandomValue();
-            Vector3 localPosition = roomPlacement.GetValidLocalPosition(radius, seed.maxDistanceBetweenPlanets.value);
+            Vector3 localPosition = roomPlacement.GetValidLocalPosition(radius, seed.maxDistanceBetweenPlanets);
             roomPlacement.Register(localPosition, radius);
             int lettersPerMinute = seed.lettersPerMinute.GetRandomValue();
             int maxLetters = (int)(seed.maxLettersMultiplier.GetRandomValue() * lettersPerMinute);

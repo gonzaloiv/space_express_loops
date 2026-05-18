@@ -3186,6 +3186,8 @@ MonoBehaviour:
   scalePunch: {fileID: 1127977403}
   lettersLabel: {fileID: 1990742604}
   layoutUpdater: {fileID: 535771491}
+  maxColorValue: {fileID: 0}
+  backgroundImage: {fileID: 0}
 --- !u!114 &535771493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3581,7 +3583,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 457.91998, y: -135}
-  m_SizeDelta: {x: 395.84, y: 270}
+  m_SizeDelta: {x: 0, y: 270}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &607384708
 MonoBehaviour:
@@ -10755,6 +10757,8 @@ MonoBehaviour:
   scalePunch: {fileID: 50943840}
   lettersLabel: {fileID: 607384708}
   layoutUpdater: {fileID: 1145033696}
+  maxColorValue: {fileID: 11400000, guid: 0394f3e668cbb1540aca36ce2aca80db, type: 2}
+  backgroundImage: {fileID: 230473239}
 --- !u!114 &1145033696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15466,6 +15470,8 @@ MonoBehaviour:
   scalePunch: {fileID: 1127977403}
   lettersLabel: {fileID: 1992881559}
   layoutUpdater: {fileID: 1993821940}
+  maxColorValue: {fileID: 0}
+  backgroundImage: {fileID: 0}
 --- !u!114 &1993821940
 MonoBehaviour:
   m_ObjectHideFlags: 0

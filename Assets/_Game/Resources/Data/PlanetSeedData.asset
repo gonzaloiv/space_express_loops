@@ -15,7 +15,7 @@ MonoBehaviour:
   radius:
     min: 0.15
     max: 0.35
-  maxDistanceBetweenPlanets: {fileID: 11400000, guid: bfe15d903063a904189048174b041248, type: 2}
+  maxDistanceBetweenPlanets: 1.78
   lettersPerMinute:
     min: 15
     max: 20

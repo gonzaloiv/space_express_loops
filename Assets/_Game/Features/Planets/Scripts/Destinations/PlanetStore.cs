@@ -72,7 +72,7 @@ namespace DigitalLove.Game.Planets
             {
                 newLetterAudioSource.Play();
             }
-            lettersPanel.ShowLetters(letters, maxLetters);
+            lettersPanel.ShowLetters(letters, maxLetters, letters == maxLetters);
         }
     }
 }
