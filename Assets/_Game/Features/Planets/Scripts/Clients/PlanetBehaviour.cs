@@ -8,7 +8,6 @@ namespace DigitalLove.Game.Planets
     public class PlanetBehaviour : MonoBehaviour
     {
         [SerializeField] private PlanetStore planetStore;
-        [SerializeField] private PlanetBaseBehaviour planetBase;
 
         [Header("UI")]
         [SerializeField] private ResourcePanel lettersPanel;
@@ -28,9 +27,6 @@ namespace DigitalLove.Game.Planets
         public PlanetStore PlanetStore => planetStore;
         public PlanetBody PlanetBody => planetBody;
         public Vector3 Position => planetBody.Position;
-
-        public PlanetBaseBehaviour PlanetBase => planetBase;
-        public bool CanBeDestination => PlanetBase != null && planetBase.HasAvailableStations;
 
         public void SetIsDestination(bool isDestination)
         {
@@ -60,6 +56,7 @@ namespace DigitalLove.Game.Planets
             id = planetData.id;
             transform.localPosition = planetData.localPosition.ToVector3();
             planetBody.Init(planetData.radius);
+            planetBody.ResetRouteColor();
             SetOutlineActive(false);
         }
 

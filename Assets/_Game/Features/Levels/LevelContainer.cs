@@ -13,75 +13,95 @@ namespace DigitalLove.Game.Levels
     public class LevelContainer : MonoBehaviour
     {
         [SerializeField] private MRUKRoomAnchorsContainer mrukRoomAnchorsContainer;
+        [SerializeField] private MrukRoomLocalPlacement roomPlacement;
         [SerializeField] private PlanetsSpawner planetsSpawner;
         [SerializeField] private SpaceshipsSpawner spaceshipsSpawner;
-        [SerializeField] private PlanetBaseBehaviour basePlanet;
+        [SerializeField] private HubsSpawner hubsSpawner;
 
         public PlanetsSpawner PlanetsSpawner => planetsSpawner;
         public SpaceshipsSpawner SpaceshipsSpawner => spaceshipsSpawner;
-        public PlanetBaseBehaviour BasePlanet => basePlanet;
+        public HubsSpawner HubsSpawner => hubsSpawner;
 
         public void SyncIdCounters(GameSnapshot gameSnapshot)
         {
             planetsSpawner.SyncIdsFromSnapshot(gameSnapshot.planets.Select(p => p.id));
             spaceshipsSpawner.SyncIdsFromSnapshot(gameSnapshot.loops.Select(l => l.spaceshipId));
+            gameSnapshot.hubs ??= new();
+            hubsSpawner.SyncIdsFromSnapshot(gameSnapshot.hubs.Select(h => h.id));
         }
 
         public void HideAll()
         {
             planetsSpawner.HideAll();
             spaceshipsSpawner.HideAll();
-            basePlanet.SetActive(false);
+            hubsSpawner.HideAll();
+            roomPlacement.Clear();
         }
 
         public void SpawnInitialRound(RoundData roundData, GameSnapshot gameSnapshot)
         {
-            basePlanet.SetActive(true);
             SpawnRound(roundData, gameSnapshot);
         }
 
         public void SpawnRound(RoundData roundData, GameSnapshot gameSnapshot)
         {
-            List<PlanetData> roundPlanets = planetsSpawner.GeneratePlanetDataFromPlanetsSeed(roundData.planetsToAdd.GetRandomValue(), roundData.planetSeed, gameSnapshot.planets);
+            List<PlanetData> roundPlanets = planetsSpawner.GeneratePlanetDataFromPlanetsSeed(roundData.planetsToAdd.GetRandomValue(), roundData.planetSeed);
             gameSnapshot.AddPlanets(roundPlanets);
             planetsSpawner.SpawnPlanets(gameSnapshot.planets);
+            PlanetRouteColorSync.SyncPlanetRouteColors(gameSnapshot, planetsSpawner, spaceshipsSpawner);
             if (roundData.shouldSpawnSpaceship)
                 SpawnSpaceship(gameSnapshot);
         }
 
         private void SpawnSpaceship(GameSnapshot gameSnapshot)
         {
-            SpaceshipBehaviour spaceship = spaceshipsSpawner.SpawnNew(basePlanet);
+            HubBehaviour hub = hubsSpawner.SpawnNew();
+            gameSnapshot.AddHub(hubsSpawner.CreateHubData(hub));
+            SpaceshipBehaviour spaceship = spaceshipsSpawner.SpawnNew(hub);
             gameSnapshot.AddLoop(new LoopData
             {
                 spaceshipId = spaceship.Id,
-                colorCode = spaceship.ColorCode
+                colorCode = spaceship.ColorCode,
+                hubId = spaceship.HubId
             });
+            PlanetRouteColorSync.ApplyHubRouteColor(hub, spaceship.ColorCode, spaceshipsSpawner);
         }
 
         public void RespawnFromData(GameSnapshot gameSnapshot)
         {
-            basePlanet.SetActive(true);
-
+            gameSnapshot.hubs ??= new();
+            roomPlacement.SyncFromSnapshot(gameSnapshot.planets, gameSnapshot.hubs);
             planetsSpawner.SpawnPlanets(gameSnapshot.planets);
+            PlanetRouteColorSync.SyncPlanetRouteColors(gameSnapshot, planetsSpawner, spaceshipsSpawner);
 
             foreach (LoopData loop in gameSnapshot.loops)
             {
+                HubBehaviour hub = ResolveHubForLoop(loop, gameSnapshot);
+                PlanetRouteColorSync.ApplyHubRouteColor(hub, loop.colorCode, spaceshipsSpawner);
+
                 if (loop.HasDestination)
                 {
                     PlanetBehaviour destination = planetsSpawner.GetById(loop.destinationId);
                     spaceshipsSpawner.SpawnFromLoop(
                         loop.spaceshipId,
-                        basePlanet,
+                        hub,
                         destination,
                         loop.colorCode);
-                    PlanetRouteColorSync.ApplyDestinationRouteColor(destination, loop.colorCode, spaceshipsSpawner);
                 }
                 else
                 {
-                    spaceshipsSpawner.SpawnIdle(loop.spaceshipId, basePlanet, loop.colorCode);
+                    spaceshipsSpawner.SpawnIdle(loop.spaceshipId, hub, loop.colorCode);
                 }
             }
+        }
+
+        private HubBehaviour ResolveHubForLoop(LoopData loop, GameSnapshot gameSnapshot)
+        {
+            HubData hubData = gameSnapshot.GetHubById(loop.hubId);
+            HubBehaviour hub = hubsSpawner.GetById(loop.hubId);
+            if (hub != null && hub.IsActive)
+                return hub;
+            return hubsSpawner.SpawnWithId(loop.hubId, hubData);
         }
 
         public void SetRoomBasedPose(Action onComplete)

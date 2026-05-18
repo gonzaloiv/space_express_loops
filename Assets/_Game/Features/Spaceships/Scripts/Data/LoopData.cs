@@ -9,6 +9,7 @@ namespace DigitalLove.Game.Spaceships
         public string spaceshipId;
         public string destinationId;
         public string colorCode;
+        public string hubId;
 
         [JsonIgnore] public bool HasDestination => !string.IsNullOrEmpty(destinationId);
     }

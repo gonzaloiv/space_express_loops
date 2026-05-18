@@ -27,7 +27,7 @@ namespace DigitalLove.Game.Spaceships
             lineRenderer.material.color = color;
         }
 
-        public void CreateLoop(PlanetBaseBehaviour basePlanet, PlanetBehaviour destinationPlanet)
+        public void CreateLoop(HubBehaviour basePlanet, PlanetBehaviour destinationPlanet)
         {
             Vector3 direction = (destinationPlanet.transform.position - basePlanet.transform.position).normalized;
             float baseRadiusOffset = basePlanet.PlanetBody.RadiusOffset;

@@ -47,6 +47,10 @@ namespace DigitalLove.Game.Flow
 
             gameSnapshot = memoryDataClient.Get<GameSnapshot>();
             RefreshStoreUI();
+            PlanetRouteColorSync.SyncPlanetRouteColors(
+                gameSnapshot,
+                levelContainer.PlanetsSpawner,
+                levelContainer.SpaceshipsSpawner);
             progressionEventsHelper.SendLevelStartedEvent(roundSelector.CurrentRound.id);
             ShowFTUIndicators();
         }
@@ -71,20 +75,21 @@ namespace DigitalLove.Game.Flow
             }
         }
 
-
         private void OnLoopCreated(LoopEventArgs args)
         {
             LoopData data = new()
             {
                 spaceshipId = args.spaceshipId,
                 destinationId = args.destinationId,
-                colorCode = args.colorCode
+                colorCode = args.colorCode,
+                hubId = args.hubId
             };
             gameSnapshot.AddLoop(data);
 
             PlanetRouteColorSync.Apply(
                 gameSnapshot,
                 levelContainer.PlanetsSpawner,
+                levelContainer.HubsSpawner,
                 levelContainer.SpaceshipsSpawner);
 
             sessionEventsHelper.Send("loop_created");
@@ -123,6 +128,7 @@ namespace DigitalLove.Game.Flow
             PlanetRouteColorSync.Apply(
                 gameSnapshot,
                 levelContainer.PlanetsSpawner,
+                levelContainer.HubsSpawner,
                 levelContainer.SpaceshipsSpawner);
         }
 

@@ -22,13 +22,11 @@ namespace DigitalLove.Game.Flow
         public override void Enter()
         {
             GameSnapshot gameSnapshot = memoryDataClient.Get<GameSnapshot>();
-            if (!roundSelector.IsLastRound)
-            {
-                gameSnapshot.IncreaseRoundIndex();
-                roundSelector.SetCurrentRound(gameSnapshot.roundIndex);
-                levelContainer.SpawnRound(roundSelector.CurrentRound, gameSnapshot);
-                gameSnapshot.RecalculateLettersRequiredForRound(roundSelector.CurrentRound.lettersIncreaseMultiplier);
-            }
+
+            gameSnapshot.IncreaseRoundIndex();
+            roundSelector.SetCurrentRound(gameSnapshot.roundIndex);
+            levelContainer.SpawnRound(roundSelector.CurrentRound, gameSnapshot);
+            gameSnapshot.RecalculateLettersRequiredForRound(roundSelector.CurrentRound.lettersIncreaseMultiplier);
 
             progressionEventsHelper.SendLevelCompleteEvent(roundSelector.CurrentRound.id, score: gameSnapshot.CurrentLetters);
 

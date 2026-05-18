@@ -16,6 +16,10 @@ namespace DigitalLove.Game.Levels
 
         public void SetCurrentRound(int index)
         {
+            if (index < 0)
+                index = 0;
+            if (index >= rounds.Length)
+                index = rounds.Length - 1;
             currentRound = rounds[index];
         }
     }

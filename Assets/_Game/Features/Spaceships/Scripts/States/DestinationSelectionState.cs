@@ -13,13 +13,15 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private GhostBehaviour ghost;
 
         private string id;
+        private string hubId;
         private string colorCode;
 
         private Action<LoopEventArgs> onLoopCreated;
 
-        public void SetOnLoopCreated(string id, string colorCode, Action<LoopEventArgs> onLoopCreated)
+        public void SetOnLoopCreated(string id, string hubId, string colorCode, Action<LoopEventArgs> onLoopCreated)
         {
             this.id = id;
+            this.hubId = hubId;
             this.colorCode = colorCode;
             this.onLoopCreated = onLoopCreated;
         }
@@ -71,7 +73,8 @@ namespace DigitalLove.Game.Spaceships
             {
                 spaceshipId = id,
                 destinationId = destinationSelector.Destination.Id,
-                colorCode = colorCode
+                colorCode = colorCode,
+                hubId = hubId
             };
             onLoopCreated(args);
             parent.SetCurrentState<OnRouteState>();

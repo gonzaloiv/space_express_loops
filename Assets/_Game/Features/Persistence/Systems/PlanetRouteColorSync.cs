@@ -6,7 +6,22 @@ namespace DigitalLove.Game.Persistence
 {
     public static class PlanetRouteColorSync
     {
-        public static void Apply(GameSnapshot gameSnapshot, PlanetsSpawner planetsSpawner, SpaceshipsSpawner spaceshipsSpawner)
+        public static void Apply(GameSnapshot gameSnapshot,
+            PlanetsSpawner planetsSpawner,
+            HubsSpawner hubsSpawner,
+            SpaceshipsSpawner spaceshipsSpawner)
+        {
+            SyncPlanetRouteColors(gameSnapshot, planetsSpawner, spaceshipsSpawner);
+            SyncHubRouteColors(gameSnapshot, hubsSpawner, spaceshipsSpawner);
+        }
+
+        /// <summary>
+        /// Resets every active planet to default, then tints only planets that are a confirmed loop destination.
+        /// </summary>
+        public static void SyncPlanetRouteColors(
+            GameSnapshot gameSnapshot,
+            PlanetsSpawner planetsSpawner,
+            SpaceshipsSpawner spaceshipsSpawner)
         {
             foreach (PlanetBehaviour planet in planetsSpawner.All)
             {
@@ -24,12 +39,37 @@ namespace DigitalLove.Game.Persistence
                 if (!loop.HasDestination)
                     continue;
 
-                if (!spaceshipsSpawner.TryGetRouteColor(loop.colorCode, out Color color))
+                PlanetBehaviour destination = planetsSpawner.GetById(loop.destinationId);
+                ApplyDestinationRouteColor(destination, loop.colorCode, spaceshipsSpawner);
+            }
+        }
+
+        public static void SyncHubRouteColors(
+            GameSnapshot gameSnapshot,
+            HubsSpawner hubsSpawner,
+            SpaceshipsSpawner spaceshipsSpawner)
+        {
+            foreach (HubBehaviour hub in hubsSpawner.All)
+            {
+                if (!hub.IsActive)
                     continue;
 
-                PlanetBehaviour destination = planetsSpawner.GetById(loop.destinationId);
-                destination?.PlanetBody.SetRouteColor(color);
+                hub.ResetRouteColor();
             }
+
+            if (gameSnapshot.loops == null)
+                return;
+
+            foreach (LoopData loop in gameSnapshot.loops)
+                ApplyHubRouteColor(hubsSpawner.GetById(loop.hubId), loop.colorCode, spaceshipsSpawner);
+        }
+
+        public static void ApplyHubRouteColor(HubBehaviour hub, string colorCode, SpaceshipsSpawner spaceshipsSpawner)
+        {
+            if (hub == null || !spaceshipsSpawner.TryGetRouteColor(colorCode, out Color color))
+                return;
+
+            hub.SetRouteColor(color);
         }
 
         public static void ApplyDestinationRouteColor(PlanetBehaviour destination, string colorCode, SpaceshipsSpawner spaceshipsSpawner)

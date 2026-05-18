@@ -27,7 +27,8 @@ namespace DigitalLove.Game.Spaceships
         {
             spaceshipId = data.id,
             destinationId = destinationSelector.Destination.Id,
-            colorCode = data.colorCode
+            colorCode = data.colorCode,
+            hubId = data.hubId
         };
 
         public override void Init(StateMachine parent)

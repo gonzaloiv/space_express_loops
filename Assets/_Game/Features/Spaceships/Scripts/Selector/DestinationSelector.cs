@@ -16,10 +16,10 @@ namespace DigitalLove.Game.Spaceships
         private bool isLookingForDestination;
 
         [Header("DEBUG")]
-        private PlanetBaseBehaviour basePlanet;
+        private HubBehaviour basePlanet;
         private PlanetBehaviour destinationPlanet;
 
-        public PlanetBaseBehaviour BasePlanet => basePlanet;
+        public HubBehaviour BasePlanet => basePlanet;
         public PlanetBehaviour Destination => destinationPlanet;
         public bool HasDestinationBeenSelected => destinationPlanet != null && destinationPlanet.IsDestination;
 
@@ -29,7 +29,7 @@ namespace DigitalLove.Game.Spaceships
             raycastHelper.SetActive(isLookingForDestination);
         }
 
-        public void Init(PlanetBaseBehaviour basePlanet, Color color)
+        public void Init(HubBehaviour basePlanet, Color color)
         {
             this.basePlanet = basePlanet;
             raycastHelper.SetColor(color);
@@ -56,7 +56,7 @@ namespace DigitalLove.Game.Spaceships
             }
             else
             {
-                bool isValidNewDestination = candidatePlanet != destinationPlanet && candidatePlanet.gameObject != basePlanet.gameObject && candidatePlanet.CanBeDestination;
+                bool isValidNewDestination = candidatePlanet != destinationPlanet && candidatePlanet.gameObject != basePlanet.gameObject;
                 if (isValidNewDestination)
                     SelectNewDestination(candidatePlanet);
             }

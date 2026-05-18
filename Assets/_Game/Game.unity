@@ -422,7 +422,6 @@ GameObject:
   - component: {fileID: 64174209}
   - component: {fileID: 64174211}
   - component: {fileID: 64174210}
-  - component: {fileID: 64174212}
   - component: {fileID: 64174213}
   m_Layer: 11
   m_Name: Planet (1)
@@ -445,7 +444,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1188160623745317221}
-  - {fileID: 524722638}
   - {fileID: 1145033694}
   - {fileID: 1070615419}
   - {fileID: 421921810}
@@ -465,7 +463,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Planets.PlanetBehaviour
   planetStore: {fileID: 64174213}
-  planetBase: {fileID: 64174212}
   lettersPanel: {fileID: 1145033695}
   planetBody: {fileID: 1765401196}
   outline: {fileID: 4558485118862268317}
@@ -497,24 +494,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &64174212
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 64174208}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6538fccecb7e5248831ef14e0e0b2cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Planets.PlanetBaseBehaviour
-  stations:
-  - {fileID: 157628112}
-  - {fileID: 594669498}
-  - {fileID: 1225076493}
-  - {fileID: 1724332179}
-  planetBody: {fileID: 1765401196}
 --- !u!114 &64174213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -540,10 +519,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 74164907}
-  - component: {fileID: 74164909}
   - component: {fileID: 74164910}
   m_Layer: 11
-  m_Name: Base
+  m_Name: Hub (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -563,38 +541,11 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1822272472}
-  - {fileID: 1714477654}
+  - {fileID: 1727709848}
   - {fileID: 809088435}
   - {fileID: 1018074135}
-  m_Father: {fileID: 1097461039}
+  m_Father: {fileID: 935971881}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &74164909
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 74164906}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &74164910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -607,11 +558,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6538fccecb7e5248831ef14e0e0b2cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Planets.BasePlanetBehaviour
-  stations:
-  - {fileID: 1836089754}
-  - {fileID: 2103507124}
-  - {fileID: 1213662736}
-  - {fileID: 126764338}
+  spawnAnchor: {fileID: 1727709848}
   planetBody: {fileID: 1765401196}
 --- !u!1 &81789712
 GameObject:
@@ -1467,52 +1414,6 @@ MonoBehaviour:
   _selectSurface: {fileID: 1729663128}
   _movementProvider: {fileID: 0}
   _tiebreakerScore: 0
---- !u!1 &126764336
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 126764337}
-  - component: {fileID: 126764338}
-  m_Layer: 11
-  m_Name: Station (4)
-  m_TagString: Untagged
-  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &126764337
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 126764336}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: -0.25}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 810604295}
-  m_Father: {fileID: 1714477654}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!114 &126764338
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 126764336}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50c1a10b615803b4c8194e663a458f5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Stations.StationBehaviour
-  anchor: {fileID: 810604295}
 --- !u!164 &154653249
 AudioReverbFilter:
   m_ObjectHideFlags: 0
@@ -1571,52 +1472,6 @@ AudioHighPassFilter:
   m_Enabled: 1
   m_CutoffFrequency: 183
   m_HighpassResonanceQ: 1
---- !u!1 &157628110
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 157628111}
-  - component: {fileID: 157628112}
-  m_Layer: 11
-  m_Name: Station (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &157628111
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 157628110}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.25, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1777869198}
-  m_Father: {fileID: 524722638}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!114 &157628112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 157628110}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50c1a10b615803b4c8194e663a458f5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Stations.StationBehaviour
-  anchor: {fileID: 1777869198}
 --- !u!114 &203422341 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1169667551812114882, guid: 0a7d2469f24041c4284c66706f84c45e, type: 3}
@@ -1863,6 +1718,7 @@ MonoBehaviour:
   gameSnapshot:
     roundIndex: 0
     planets: []
+    hubs: []
     loops: []
     store:
       letters: 0
@@ -3294,41 +3150,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &524722637
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 524722638}
-  m_Layer: 11
-  m_Name: Stations
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &524722638
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 524722637}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 157628111}
-  - {fileID: 594669497}
-  - {fileID: 1225076492}
-  - {fileID: 1724332178}
-  m_Father: {fileID: 64174209}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &535771489
 GameObject:
   m_ObjectHideFlags: 0
@@ -3368,7 +3189,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1026.74, y: -135}
+  m_AnchoredPosition: {x: 50, y: -135}
   m_SizeDelta: {x: 0, y: 270}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &535771491
@@ -3592,37 +3413,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!1 &579672530
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 579672531}
-  m_Layer: 11
-  m_Name: Anchor
-  m_TagString: Untagged
-  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &579672531
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 579672530}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1225076492}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &582835179
 GameObject:
   m_ObjectHideFlags: 0
@@ -3729,52 +3519,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1806820788}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &594669496
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 594669497}
-  - component: {fileID: 594669498}
-  m_Layer: 11
-  m_Name: Station (2)
-  m_TagString: Untagged
-  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &594669497
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 594669496}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.25, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2091729677}
-  m_Father: {fileID: 524722638}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
---- !u!114 &594669498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 594669496}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50c1a10b615803b4c8194e663a458f5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Stations.StationBehaviour
-  anchor: {fileID: 2091729677}
 --- !u!1 &599108723
 GameObject:
   m_ObjectHideFlags: 0
@@ -4343,6 +4087,7 @@ GameObject:
   - component: {fileID: 677709494}
   - component: {fileID: 677709495}
   - component: {fileID: 677709496}
+  - component: {fileID: 677709497}
   m_Layer: 0
   m_Name: Level
   m_TagString: Untagged
@@ -4363,6 +4108,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 935971881}
   - {fileID: 1097461039}
   - {fileID: 933255160}
   m_Father: {fileID: 0}
@@ -4380,9 +4126,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Levels::DigitalLove.Game.Levels.LevelContainer
   mrukRoomAnchorsContainer: {fileID: 1302786015}
+  roomPlacement: {fileID: 677709497}
   planetsSpawner: {fileID: 1097461040}
   spaceshipsSpawner: {fileID: 933255161}
-  basePlanet: {fileID: 74164910}
+  hubsSpawner: {fileID: 935971882}
 --- !u!114 &677709496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4398,13 +4145,24 @@ MonoBehaviour:
   rounds:
   - {fileID: 11400000, guid: be0015529e0035e4c8370558a5d0deef, type: 2}
   - {fileID: 11400000, guid: b74d1780d25e12844b65d1d9723cb5be, type: 2}
-  - {fileID: 11400000, guid: 519f3ffcbfdc2bf4689011181495a568, type: 2}
   - {fileID: 11400000, guid: 091278b81c1e85247a8d90f06b0fa035, type: 2}
-  - {fileID: 11400000, guid: 069e8d043ae167c46a6065a62cb43376, type: 2}
-  - {fileID: 11400000, guid: 540803c92e4a93045803fe397fb74282, type: 2}
-  - {fileID: 11400000, guid: 9b36ac9b645f2f242be0fbc64a6edf2d, type: 2}
-  - {fileID: 11400000, guid: 26b0a7d7f7fb8c043ba8c4d710a2ef49, type: 2}
-  - {fileID: 11400000, guid: b17f798d4cfe04341a6998b0d3fb5f42, type: 2}
+  - {fileID: 11400000, guid: 519f3ffcbfdc2bf4689011181495a568, type: 2}
+  - {fileID: 11400000, guid: 778ae4e45325543468054f64fa7675c4, type: 2}
+  - {fileID: 11400000, guid: 2f6005d6b18c56b4eb923f76c41dfa81, type: 2}
+  - {fileID: 11400000, guid: b6ccbc7c21c4cc24f9e9669086b48a29, type: 2}
+  - {fileID: 11400000, guid: 422fb7f9040bebc4b981703069f9bbab, type: 2}
+--- !u!114 &677709497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677709493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7a9e4f12b8d40679a3c5e2f8b1d4a60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Planets.MrukRoomLocalPlacement
 --- !u!1 &781987388
 GameObject:
   m_ObjectHideFlags: 0
@@ -4692,68 +4450,6 @@ MonoBehaviour:
   moneyLabel: {fileID: 535771492}
   increaseMoneyAudioSource: {fileID: 513586619}
   decreaseMoneyAudioSource: {fileID: 1476259373}
---- !u!1 &810604294
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 810604295}
-  m_Layer: 11
-  m_Name: Anchor
-  m_TagString: Untagged
-  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &810604295
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 810604294}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 126764337}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &822962073
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 822962074}
-  m_Layer: 11
-  m_Name: Anchor
-  m_TagString: Untagged
-  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &822962074
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 822962073}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2103507123}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &838860335
 GameObject:
   m_ObjectHideFlags: 0
@@ -10026,6 +9722,56 @@ MonoBehaviour:
     isTaken: 0
   - color: {fileID: 11400000, guid: 395d50b2dbf02d743aa03adc2a5b0301, type: 2}
     isTaken: 0
+--- !u!1 &935971880
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 935971881}
+  - component: {fileID: 935971882}
+  m_Layer: 0
+  m_Name: Hubs
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &935971881
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 935971880}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 74164907}
+  m_Father: {fileID: 677709494}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &935971882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 935971880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd99c93e1eda1434db32f419557fe647, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Planets.HubsSpawner
+  roomPlacement: {fileID: 677709497}
+  hubs:
+  - {fileID: 74164910}
+  placementRadius: 0.5
+  minDistanceBetweenHubs: {fileID: 11400000, guid: 7c4e8f2a1b9d603548e1729a3b5d6f81, type: 2}
 --- !u!1 &964978560
 GameObject:
   m_ObjectHideFlags: 0
@@ -10708,7 +10454,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 74164907}
   - {fileID: 64174209}
   m_Father: {fileID: 677709494}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10724,6 +10469,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 868e0bbf15d9a6c439e9f3217b0c5009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Planets.PlanetsSpawner
+  roomPlacement: {fileID: 677709497}
   planets:
   - {fileID: 64174210}
   planetsLayerMask:
@@ -11282,7 +11028,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 723.08496, y: -50}
-  m_SizeDelta: {x: 243.83, y: 50}
+  m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1213392285
 MonoBehaviour:
@@ -11398,98 +11144,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ContentSizeFitter
   m_HorizontalFit: 2
   m_VerticalFit: 0
---- !u!1 &1213662734
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1213662735}
-  - component: {fileID: 1213662736}
-  m_Layer: 11
-  m_Name: Station (3)
-  m_TagString: Untagged
-  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1213662735
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1213662734}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.25}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2044647785}
-  m_Father: {fileID: 1714477654}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1213662736
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1213662734}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50c1a10b615803b4c8194e663a458f5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Stations.StationBehaviour
-  anchor: {fileID: 2044647785}
---- !u!1 &1225076491
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1225076492}
-  - component: {fileID: 1225076493}
-  m_Layer: 11
-  m_Name: Station (3)
-  m_TagString: Untagged
-  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1225076492
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1225076491}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.25}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 579672531}
-  m_Father: {fileID: 524722638}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1225076493
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1225076491}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50c1a10b615803b4c8194e663a458f5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Stations.StationBehaviour
-  anchor: {fileID: 579672531}
 --- !u!1 &1231620512
 GameObject:
   m_ObjectHideFlags: 0
@@ -11671,6 +11325,7 @@ MonoBehaviour:
   gameSnapshot:
     roundIndex: 0
     planets: []
+    hubs: []
     loops: []
     store:
       letters: 0
@@ -13527,41 +13182,6 @@ Transform:
   - {fileID: 1964749853}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1714477653
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1714477654}
-  m_Layer: 11
-  m_Name: Stations
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1714477654
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1714477653}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1836089753}
-  - {fileID: 2103507123}
-  - {fileID: 1213662735}
-  - {fileID: 126764337}
-  m_Father: {fileID: 74164907}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1718389704
 GameObject:
   m_ObjectHideFlags: 0
@@ -13714,52 +13334,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1718389704}
   m_CullTransparentMesh: 1
---- !u!1 &1724332177
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1724332178}
-  - component: {fileID: 1724332179}
-  m_Layer: 11
-  m_Name: Station (4)
-  m_TagString: Untagged
-  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1724332178
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1724332177}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: -0.25}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1763414224}
-  m_Father: {fileID: 524722638}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!114 &1724332179
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1724332177}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50c1a10b615803b4c8194e663a458f5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Stations.StationBehaviour
-  anchor: {fileID: 1763414224}
 --- !u!1 &1727709847
 GameObject:
   m_ObjectHideFlags: 0
@@ -13770,7 +13344,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1727709848}
   m_Layer: 11
-  m_Name: Anchor
+  m_Name: SpawnAnchor
   m_TagString: Untagged
   m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -13784,12 +13358,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1727709847}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0.25, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1836089753}
+  m_Father: {fileID: 74164907}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1729663123
 GameObject:
@@ -14018,37 +13592,6 @@ MonoBehaviour:
   resetDataPanel: {fileID: 3258995010952126744}
   skip:
     value: 1
---- !u!1 &1763414223
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1763414224}
-  m_Layer: 11
-  m_Name: Anchor
-  m_TagString: Untagged
-  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1763414224
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1763414223}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1724332178}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1765401193 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6297629188174498992, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
@@ -14071,37 +13614,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c856c0391f0c3e840a156c6258c59e03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Planets::PlanetBody
---- !u!1 &1777869197
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1777869198}
-  m_Layer: 11
-  m_Name: Anchor
-  m_TagString: Untagged
-  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1777869198
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1777869197}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 157628111}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1799498462 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
@@ -14510,6 +14022,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2804679764772829139, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
+      propertyPath: renderers.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804679764772829139, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
+      propertyPath: 'renderers.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804679764772829139, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
       propertyPath: 'renderers.Array.data[2]'
       value: 
       objectReference: {fileID: 0}
@@ -14560,52 +14080,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1673654939693186368, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
   m_PrefabInstance: {fileID: 1822272471}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1836089752
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1836089753}
-  - component: {fileID: 1836089754}
-  m_Layer: 11
-  m_Name: Station (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1836089753
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1836089752}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.25, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1727709848}
-  m_Father: {fileID: 1714477654}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!114 &1836089754
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1836089752}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50c1a10b615803b4c8194e663a458f5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Stations.StationBehaviour
-  anchor: {fileID: 1727709848}
 --- !u!1001 &1846539444
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14668,7 +14142,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3303438930430420304, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 395.84
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3303438930430420304, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
       propertyPath: m_SizeDelta.y
@@ -14764,7 +14238,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7871082249663666517, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 108.03
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7871082249663666517, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
       propertyPath: m_SizeDelta.y
@@ -15862,7 +15336,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 457.91998, y: -135}
-  m_SizeDelta: {x: 395.84, y: 270}
+  m_SizeDelta: {x: 0, y: 270}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1992881558
 MonoBehaviour:
@@ -16016,7 +15490,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 402.91998, y: -135}
+  m_AnchoredPosition: {x: 50, y: -135}
   m_SizeDelta: {x: 0, y: 270}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1993821935
@@ -16086,37 +15560,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bfee54bfbe4243a0abce52d2086a141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.UI.DesignSystem::DigitalLove.UI.DesignSystem.LayoutUpdater
---- !u!1 &2044647784
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2044647785}
-  m_Layer: 11
-  m_Name: Anchor
-  m_TagString: Untagged
-  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2044647785
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2044647784}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1213662735}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2065507273
 GameObject:
   m_ObjectHideFlags: 0
@@ -16343,37 +15786,6 @@ MonoBehaviour:
   label: {fileID: 0}
   image: {fileID: 0}
   button: {fileID: 781987398}
---- !u!1 &2091729676
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2091729677}
-  m_Layer: 11
-  m_Name: Anchor
-  m_TagString: Untagged
-  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2091729677
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2091729676}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 594669497}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2096158474
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16456,52 +15868,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4574527821592105548, guid: af3467ecf1a7ab8428e0ef8e746be06a, type: 3}
   m_PrefabInstance: {fileID: 2096158474}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2103507122
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2103507123}
-  - component: {fileID: 2103507124}
-  m_Layer: 11
-  m_Name: Station (2)
-  m_TagString: Untagged
-  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2103507123
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2103507122}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.25, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 822962074}
-  m_Father: {fileID: 1714477654}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
---- !u!114 &2103507124
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2103507122}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50c1a10b615803b4c8194e663a458f5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Stations.StationBehaviour
-  anchor: {fileID: 822962074}
 --- !u!1 &2113923429
 GameObject:
   m_ObjectHideFlags: 0
@@ -17135,6 +16501,18 @@ PrefabInstance:
     - target: {fileID: 1908391053000386049, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804679764772829139, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
+      propertyPath: defaultColor.b
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804679764772829139, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
+      propertyPath: defaultColor.g
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804679764772829139, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
+      propertyPath: defaultColor.r
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 3061310674406793158, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
       propertyPath: m_Name

@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 namespace DigitalLove.Game.Spaceships
 {
@@ -8,5 +7,6 @@ namespace DigitalLove.Game.Spaceships
     {
         public string id;
         public string colorCode;
+        public string hubId;
     }
 }

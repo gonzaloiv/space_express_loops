@@ -23,12 +23,12 @@ namespace DigitalLove.Game.Spaceships
 
         public void SyncIdsFromSnapshot(IEnumerable<string> existingIds) => idCounter.SyncFromExistingIds(existingIds);
 
-        public SpaceshipBehaviour SpawnNew(PlanetBaseBehaviour basePlanet)
+        public SpaceshipBehaviour SpawnNew(HubBehaviour basePlanet)
         {
             return SpawnSpaceship(idCounter.NextId, basePlanet);
         }
 
-        private SpaceshipBehaviour SpawnSpaceship(string id, PlanetBaseBehaviour basePlanet, string colorCode = null)
+        private SpaceshipBehaviour SpawnSpaceship(string id, HubBehaviour basePlanet, string colorCode = null)
         {
             SpaceshipBehaviour spaceship = GetOrInstantiate();
             ColorIsAvailablePair colorPair = ResolveColorPair(colorCode);
@@ -36,7 +36,8 @@ namespace DigitalLove.Game.Spaceships
             SpaceshipData data = new()
             {
                 id = id,
-                colorCode = colorPair.Code
+                colorCode = colorPair.Code,
+                hubId = basePlanet != null ? basePlanet.Id : null
             };
             spaceship.Spawn(data, colorPair.color.value, basePlanet);
             spaceship.SetOnLoopCreated(OnLoopCreated);
@@ -109,12 +110,12 @@ namespace DigitalLove.Game.Spaceships
             loopEditionButtonClicked(args);
         }
 
-        public void SpawnIdle(string id, PlanetBaseBehaviour basePlanet, string colorCode)
+        public void SpawnIdle(string id, HubBehaviour basePlanet, string colorCode)
         {
             SpawnSpaceship(id, basePlanet, colorCode);
         }
 
-        public void SpawnFromLoop(string id, PlanetBaseBehaviour basePlanet, PlanetBehaviour destinationPlanet, string colorCode)
+        public void SpawnFromLoop(string id, HubBehaviour basePlanet, PlanetBehaviour destinationPlanet, string colorCode)
         {
             SpaceshipBehaviour spaceship = SpawnSpaceship(id, basePlanet, colorCode);
             spaceship.SetRoute(destinationPlanet);

@@ -43,6 +43,7 @@ namespace DigitalLove.Game.Planets
 
         public void SetRouteColor(Color color)
         {
+            EnsureActiveRenderer();
             if (activeRenderer == null)
                 return;
             Material material = activeRenderer.material;
@@ -53,6 +54,26 @@ namespace DigitalLove.Game.Planets
         public void ResetRouteColor()
         {
             SetRouteColor(defaultColor);
+        }
+
+        private void EnsureActiveRenderer()
+        {
+            if (activeRenderer != null)
+                return;
+
+            if (renderers == null || renderers.Count == 0)
+                return;
+
+            for (int i = 0; i < renderers.Count; i++)
+            {
+                if (renderers[i] != null && renderers[i].gameObject.activeInHierarchy)
+                {
+                    activeRenderer = renderers[i];
+                    return;
+                }
+            }
+
+            activeRenderer = renderers[0];
         }
     }
 }

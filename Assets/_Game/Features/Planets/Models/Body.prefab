@@ -142,7 +142,7 @@ MonoBehaviour:
   - {fileID: 9059999379901930314}
   - {fileID: -7511558181221131132, guid: 21b5fa2eef896ea4496634eb9d1c3b58, type: 3}
   - {fileID: 106692197431150548}
-  defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  defaultColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
 --- !u!114 &5981771109518632977
 MonoBehaviour:
   m_ObjectHideFlags: 0

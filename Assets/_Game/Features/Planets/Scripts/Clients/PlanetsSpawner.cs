@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DigitalLove.Global;
-using Meta.XR.MRUtilityKit;
 using UnityEngine;
 
 namespace DigitalLove.Game.Planets
 {
     public class PlanetsSpawner : MonoBehaviour
     {
+        [SerializeField] private MrukRoomLocalPlacement roomPlacement;
         [SerializeField] private List<PlanetBehaviour> planets;
         [SerializeField] private LayerMask planetsLayerMask;
 
@@ -20,22 +20,22 @@ namespace DigitalLove.Game.Planets
 
         public void SyncIdsFromSnapshot(IEnumerable<string> existingIds) => idCreator.SyncFromExistingIds(existingIds);
 
-        public List<PlanetData> GeneratePlanetDataFromPlanetsSeed(int planetsToAdd, PlanetSeedData seed, List<PlanetData> initialPlanets)
+        public List<PlanetData> GeneratePlanetDataFromPlanetsSeed(int planetsToAdd, PlanetSeedData seed)
         {
             List<PlanetData> roundPlanets = new();
             for (int i = 0; i < planetsToAdd; i++)
             {
-                List<PlanetData> allPlanets = initialPlanets.Concat(roundPlanets).ToList();
-                PlanetData planetData = CreateDataFromSeed(idCreator.NextId, seed, allPlanets);
+                PlanetData planetData = CreateDataFromSeed(idCreator.NextId, seed);
                 roundPlanets.Add(planetData);
             }
             return roundPlanets;
         }
 
-        private PlanetData CreateDataFromSeed(string id, PlanetSeedData seed, List<PlanetData> allPlanets)
+        private PlanetData CreateDataFromSeed(string id, PlanetSeedData seed)
         {
             float radius = seed.radius.GetRandomValue();
-            Vector3 localPosition = GetValidPosition(radius, seed.maxDistanceBetweenPlanets.value, allPlanets);
+            Vector3 localPosition = roomPlacement.GetValidLocalPosition(radius, seed.maxDistanceBetweenPlanets.value);
+            roomPlacement.Register(localPosition, radius);
             int lettersPerMinute = seed.lettersPerMinute.GetRandomValue();
             int maxLetters = (int)(seed.maxLettersMultiplier.GetRandomValue() * lettersPerMinute);
             PlanetData planetData = new()
@@ -47,31 +47,6 @@ namespace DigitalLove.Game.Planets
                 maxLetters = maxLetters
             };
             return planetData;
-        }
-
-        private Vector3 GetValidPosition(float radius, float maxDistanceBetweenPlanets, List<PlanetData> allPlanets)
-        {
-            int maxIterations = 333;
-            Vector3 result = Vector3.zero;
-            for (int i = 0; i < maxIterations && result == Vector3.zero; i++)
-            {
-                Vector3? candidate = MRUK.Instance.GetCurrentRoom().GenerateRandomPositionInRoom(radius, true);
-                if (candidate.HasValue)
-                {
-                    float distance = Vector3.Distance(candidate.Value, transform.position);
-                    if (distance > radius * 3 && distance < maxDistanceBetweenPlanets)
-                    {
-                        Vector3 localPos = transform.InverseTransformPoint(candidate.Value);
-                        if (allPlanets.Any(p => Vector3.Distance(p.localPosition.ToVector3(), localPos) < radius + p.radius))
-                            continue;
-                        Debug.LogWarning($"Generated candidate position: {localPos} iteration: {i}");
-                        result = localPos;
-                    }
-                }
-            }
-            if (result == Vector3.zero)
-                Debug.LogWarning("Failed to find a valid planet position; defaulting to local origin.");
-            return result;
         }
 
         public void SpawnPlanets(List<PlanetData> data)

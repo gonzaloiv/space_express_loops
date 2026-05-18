@@ -4,7 +4,6 @@ using System.Linq;
 using DigitalLove.Game.Planets;
 using DigitalLove.Game.Spaceships;
 using Newtonsoft.Json;
-using DigitalLove.Global;
 using UnityEngine;
 
 namespace DigitalLove.Game.Persistence
@@ -18,6 +17,7 @@ namespace DigitalLove.Game.Persistence
 
         public int roundIndex;
         public List<PlanetData> planets;
+        public List<HubData> hubs;
         public List<LoopData> loops;
         public Store store;
         public int lettersRequiredForRoundCompletion;
@@ -26,16 +26,15 @@ namespace DigitalLove.Game.Persistence
 
         [JsonIgnore] public int CurrentLetters => store.letters;
         [JsonIgnore] public bool HasPlanets => planets != null && planets.Count > 0;
+        [JsonIgnore] public bool HasHubs => hubs != null && hubs.Count > 0;
         [JsonIgnore] public bool HasLoops => loops != null && loops.Count > 0;
-
-        [JsonIgnore]
-        public bool IsCurrentRoundLetterGoalMet =>
-            store != null && store.letters >= lettersRequiredForRoundCompletion;
+        [JsonIgnore] public bool IsCurrentRoundLetterGoalMet => store != null && store.letters >= lettersRequiredForRoundCompletion;
 
         public GameSnapshot()
         {
             roundIndex = 0;
             planets = new();
+            hubs = new();
             loops = new();
             store = new();
         }
@@ -75,6 +74,23 @@ namespace DigitalLove.Game.Persistence
         {
             planets.AddRange(toAdd);
             onUpdated?.Invoke();
+        }
+
+        public void AddHub(HubData toAdd)
+        {
+            hubs ??= new();
+            HubData existing = hubs.FirstOrDefault(h => string.Equals(h.id, toAdd.id));
+            if (existing != null)
+                hubs.Remove(existing);
+            hubs.Add(toAdd);
+            onUpdated?.Invoke();
+        }
+
+        public HubData GetHubById(string hubId)
+        {
+            if (hubs == null || string.IsNullOrEmpty(hubId))
+                return null;
+            return hubs.FirstOrDefault(h => string.Equals(h.id, hubId));
         }
 
         public void AddLoop(LoopData toAdd)
