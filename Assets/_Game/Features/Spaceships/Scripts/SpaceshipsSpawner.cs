@@ -57,6 +57,19 @@ namespace DigitalLove.Game.Spaceships
             return GetRandomAvailableColorPair();
         }
 
+        public bool TryGetRouteColor(string colorCode, out Color color)
+        {
+            ColorIsAvailablePair pair = GetColorPair(colorCode);
+            if (pair?.color == null)
+            {
+                color = default;
+                return false;
+            }
+
+            color = pair.color.value;
+            return true;
+        }
+
         private ColorIsAvailablePair GetColorPair(string colorCode)
         {
             return colors.FirstOrDefault(c => string.Equals(c.Code, colorCode, StringComparison.OrdinalIgnoreCase));

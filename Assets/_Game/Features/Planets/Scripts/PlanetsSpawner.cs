@@ -16,7 +16,6 @@ namespace DigitalLove.Game.Planets
 
         public List<PlanetBehaviour> All => planets;
 
-        public Action<string> planetSetColorButtonClicked = id => { };
         public Action planetFull = () => { };
 
         public void SyncIdsFromSnapshot(IEnumerable<string> existingIds) => idCreator.SyncFromExistingIds(existingIds);
@@ -46,8 +45,7 @@ namespace DigitalLove.Game.Planets
                 radius = radius,
                 localPosition = SerializableVector3.FromVector3(localPosition),
                 lettersPerMinute = lettersPerMinute,
-                maxLetters = maxLetters,
-                color = SerializableVector2.FromVector2(Vector2.zero)
+                maxLetters = maxLetters
             };
             return planetData;
         }
@@ -90,14 +88,12 @@ namespace DigitalLove.Game.Planets
                 }
                 else
                 {
-                    planets[i].Spawn(data[i], OnPlanetSetColorButtonClicked, OnPlanetFull);
+                    planets[i].Spawn(data[i], OnPlanetFull);
                 }
             }
         }
 
         private void OnPlanetFull() => planetFull.Invoke();
-
-        private void OnPlanetSetColorButtonClicked(string id) => planetSetColorButtonClicked(id);
 
         private void Instantiate()
         {

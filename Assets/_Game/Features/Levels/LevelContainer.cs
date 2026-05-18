@@ -80,11 +80,13 @@ namespace DigitalLove.Game.Levels
 
                 if (loop.HasDestination)
                 {
+                    PlanetBehaviour destination = planetsSpawner.GetById(loop.destinationId);
                     spaceshipsSpawner.SpawnFromLoop(
                         loop.spaceshipId,
                         planetBase,
-                        planetsSpawner.GetById(loop.destinationId),
+                        destination,
                         loop.colorCode);
+                    PlanetRouteColorSync.ApplyDestinationRouteColor(destination, loop.colorCode, spaceshipsSpawner);
                 }
                 else
                 {

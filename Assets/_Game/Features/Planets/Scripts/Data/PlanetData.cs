@@ -1,6 +1,5 @@
 using System;
 using DigitalLove.Global;
-using Newtonsoft.Json;
 
 namespace DigitalLove.Game.Planets
 {
@@ -12,8 +11,5 @@ namespace DigitalLove.Game.Planets
         public SerializableVector3 localPosition;
         public int lettersPerMinute;
         public int maxLetters;
-        public SerializableVector2 color;
-
-        [JsonIgnore] public bool HasColor => color != null && color.IsNotZero();
     }
 }

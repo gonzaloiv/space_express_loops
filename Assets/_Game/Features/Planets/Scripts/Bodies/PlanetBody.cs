@@ -1,43 +1,62 @@
+using System.Collections.Generic;
 using UnityEngine;
-using DigitalLove.Global;
 
 namespace DigitalLove.Game.Planets
 {
     public class PlanetBody : MonoBehaviour
     {
-        [SerializeField] private Transform body;
-        [SerializeField] private PlanetBodyRenderer[] rends;
+        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
 
-        private int currentBodyIndex = 0;
+        [SerializeField] private Transform body;
+        [SerializeField] private List<Renderer> renderers;
+
+        private Renderer activeRenderer;
+        private Color defaultColor;
 
         public float RadiusOffset => body.lossyScale.x;
         public Vector3 Position => body.position;
-        public Vector2 TextureOffset => rends[currentBodyIndex].TextureOffset;
 
         public void Init(float radius)
         {
             body.localScale = new Vector3(radius, radius, radius);
-            if (rends.Length > 1)
+            SetRandomActiveRenderer();
+        }
+
+        private void SetRandomActiveRenderer()
+        {
+            if (renderers == null || renderers.Count == 0)
+                return;
+
+            int index = renderers.Count > 1 ? Random.Range(0, renderers.Count) : 0;
+            SetActiveRenderer(index);
+        }
+
+        private void SetActiveRenderer(int index)
+        {
+            for (int i = 0; i < renderers.Count; i++)
             {
-                currentBodyIndex = Random.Range(0, rends.Length);
-                for (int i = 0; i < rends.Length; i++)
-                {
-                    rends[i].SetActive(i == currentBodyIndex);
-                    if (i == currentBodyIndex)
-                        rends[i].SetDefaultMaterial();
-                }
+                if (renderers[i] != null)
+                    renderers[i].gameObject.SetActive(i == index);
             }
+
+            activeRenderer = renderers[index];
+            if (activeRenderer != null)
+                defaultColor = activeRenderer.material.GetColor(BaseColorId);
         }
 
-        public void SetTextureOffset(Vector2 offset)
+        public void SetRouteColor(Color color)
         {
-            rends[currentBodyIndex].SetTextureOffsetMaterial(offset);
+            if (activeRenderer == null)
+                return;
+
+            Material material = activeRenderer.material;
+            material.SetColor(BaseColorId, color);
+            material.color = color;
         }
 
-        [Button]
-        public void Debug_SetRandomTextureOffset()
+        public void ResetRouteColor()
         {
-            rends.SetRandomTextureOffset();
+            SetRouteColor(defaultColor);
         }
     }
 }

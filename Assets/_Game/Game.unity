@@ -467,7 +467,6 @@ MonoBehaviour:
   planetStore: {fileID: 64174213}
   planetBase: {fileID: 64174212}
   lettersPanel: {fileID: 1145033695}
-  setColorButtonPanel: {fileID: 1070615421}
   planetBody: {fileID: 1765401196}
   outline: {fileID: 4558485118862268317}
   scalePunch: {fileID: 1765401193}
@@ -1863,7 +1862,6 @@ MonoBehaviour:
   routeEditionCost: {fileID: 11400000, guid: 06b2ca09b7a70054984b55f39a013653, type: 2}
   moneyPerLetter: {fileID: 11400000, guid: 0700f36b046762e40a553bea76f680b2, type: 2}
   brokenSpaceshipCost: {fileID: 11400000, guid: 4454ee9f7dade46408c29cb2aab1c786, type: 2}
-  planetColorChangeCost: {fileID: 11400000, guid: c5850771e6ffdfb4d9d39e7d4473ad17, type: 2}
   planetFullFee: {fileID: 11400000, guid: c2b073c19b3d25a4798264fb4a913ba9, type: 2}
   gameSnapshot:
     roundIndex: 0
@@ -1885,7 +1883,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.UI::StoreDependentUI
   spaceshipsSpawner: {fileID: 933255161}
-  planetsSpawner: {fileID: 1097461040}
   routeEditionCost: {fileID: 11400000, guid: 06b2ca09b7a70054984b55f39a013653, type: 2}
 --- !u!1 &284223190
 GameObject:
@@ -14523,6 +14520,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2804679764772829139, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
       propertyPath: 'rends.Array.data[2]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804679764772829139, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
+      propertyPath: 'renderers.Array.data[2]'
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3061310674406793158, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
