@@ -29,6 +29,7 @@ namespace DigitalLove.Game.Flow
             gameSnapshot.RecalculateLettersRequiredForRound(roundSelector.CurrentRound.lettersIncreaseMultiplier);
 
             progressionEventsHelper.SendLevelCompleteEvent(roundSelector.CurrentRound.id, score: gameSnapshot.CurrentLetters);
+            gameSnapshot.ResetLettersForNewRound();
 
             SayRoundIntro();
         }

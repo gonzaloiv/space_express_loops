@@ -17,6 +17,12 @@ namespace DigitalLove.Game.Persistence
             money = 0;
         }
 
+        public void ResetLetters()
+        {
+            letters = 0;
+            onUpdated?.Invoke();
+        }
+
         public void CopyValues(Store other)
         {
             letters = other.letters;

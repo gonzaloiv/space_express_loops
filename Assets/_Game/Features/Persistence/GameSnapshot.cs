@@ -70,6 +70,13 @@ namespace DigitalLove.Game.Persistence
             onUpdated?.Invoke();
         }
 
+        public void ResetLettersForNewRound()
+        {
+            store ??= new Store();
+            store.ResetLetters();
+            onUpdated?.Invoke();
+        }
+
         public void AddPlanets(List<PlanetData> toAdd)
         {
             planets.AddRange(toAdd);
