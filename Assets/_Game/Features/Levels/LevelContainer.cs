@@ -82,13 +82,14 @@ namespace DigitalLove.Game.Levels
                 HubBehaviour hub = ResolveHubForLoop(loop, gameSnapshot);
                 PlanetRouteColorSync.ApplyHubRouteColor(hub, loop.colorCode, spaceshipsSpawner);
 
-                if (loop.HasDestination)
+                if (loop.HasDestinations)
                 {
-                    PlanetBehaviour destination = planetsSpawner.GetById(loop.destinationId);
+                    List<PlanetBehaviour> destinations = loop.destinationIds
+                        .ConvertAll(id => planetsSpawner.GetById(id));
                     spaceshipsSpawner.SpawnFromLoop(
                         loop.spaceshipId,
                         hub,
-                        destination,
+                        destinations,
                         loop.colorCode);
                 }
                 else

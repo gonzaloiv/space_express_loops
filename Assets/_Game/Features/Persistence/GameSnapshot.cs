@@ -102,13 +102,13 @@ namespace DigitalLove.Game.Persistence
             onUpdated?.Invoke();
         }
 
-        public void ClearLoopDestination(string spaceshipId)
+        public void ClearLoopDestinations(string spaceshipId)
         {
             LoopData loop = loops.FirstOrDefault(l => string.Equals(l.spaceshipId, spaceshipId));
             if (loop == null)
                 return;
 
-            loop.destinationId = null;
+            loop.destinationIds?.Clear();
             onUpdated?.Invoke();
         }
 

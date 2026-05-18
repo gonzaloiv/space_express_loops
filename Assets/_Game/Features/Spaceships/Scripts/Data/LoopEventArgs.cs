@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace DigitalLove.Game.Spaceships
 {
@@ -6,11 +7,11 @@ namespace DigitalLove.Game.Spaceships
     public class LoopEventArgs
     {
         public string spaceshipId;
-        public string destinationId;
+        public List<string> destinationIds = new();
         public string colorCode;
         public string hubId;
 
-        public bool HasFailed => string.IsNullOrEmpty(destinationId);
+        public bool HasFailed => destinationIds == null || destinationIds.Count == 0;
     }
 
     [Serializable]
@@ -27,7 +28,7 @@ namespace DigitalLove.Game.Spaceships
         public LoopCompleteEventArgs(LoopEventArgs args, int value) : base()
         {
             spaceshipId = args.spaceshipId;
-            destinationId = args.destinationId;
+            destinationIds = args.destinationIds != null ? new List<string>(args.destinationIds) : new();
             colorCode = args.colorCode;
             hubId = args.hubId;
             this.value = value;

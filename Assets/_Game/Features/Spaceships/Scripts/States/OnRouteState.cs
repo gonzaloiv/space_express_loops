@@ -26,7 +26,7 @@ namespace DigitalLove.Game.Spaceships
         private LoopEventArgs CurrentLoopEventArgs => new()
         {
             spaceshipId = data.id,
-            destinationId = destinationSelector.Destination.Id,
+            destinationIds = new() { destinationSelector.Destination.Id },
             colorCode = data.colorCode,
             hubId = data.hubId
         };

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Planets;
 using DigitalLove.Global;
@@ -63,10 +64,13 @@ namespace DigitalLove.Game.Spaceships
 
         public void Hide() => this.SetActive(false);
 
-        public void SetRoute(PlanetBehaviour planet)
+        public void SetRoute(IReadOnlyList<PlanetBehaviour> destinations)
         {
+            if (destinations == null || destinations.Count == 0)
+                return;
+
             stateMachine.SetCurrentState<DestinationSelectionState>();
-            destinationSelector.Debug_SetDestinationPlanet(planet);
+            destinationSelector.Debug_SetDestinationPlanet(destinations[destinations.Count - 1]);
             destinationSelectionState.Debug_OnLoopCreated();
         }
 

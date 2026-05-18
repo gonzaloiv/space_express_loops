@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace DigitalLove.Game.Spaceships
@@ -7,10 +8,10 @@ namespace DigitalLove.Game.Spaceships
     public class LoopData
     {
         public string spaceshipId;
-        public string destinationId;
+        public List<string> destinationIds = new();
         public string colorCode;
         public string hubId;
 
-        [JsonIgnore] public bool HasDestination => !string.IsNullOrEmpty(destinationId);
+        [JsonIgnore] public bool HasDestinations => destinationIds != null && destinationIds.Count > 0;
     }
 }

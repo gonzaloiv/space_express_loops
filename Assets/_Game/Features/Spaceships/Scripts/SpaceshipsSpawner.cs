@@ -115,10 +115,10 @@ namespace DigitalLove.Game.Spaceships
             SpawnSpaceship(id, basePlanet, colorCode);
         }
 
-        public void SpawnFromLoop(string id, HubBehaviour basePlanet, PlanetBehaviour destinationPlanet, string colorCode)
+        public void SpawnFromLoop(string id, HubBehaviour basePlanet, IReadOnlyList<PlanetBehaviour> destinationPlanets, string colorCode)
         {
             SpaceshipBehaviour spaceship = SpawnSpaceship(id, basePlanet, colorCode);
-            spaceship.SetRoute(destinationPlanet);
+            spaceship.SetRoute(destinationPlanets);
         }
 
         public void HideAll()

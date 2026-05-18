@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DigitalLove.DataAccess;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Levels;
@@ -78,7 +79,7 @@ namespace DigitalLove.Game.Flow
             LoopData data = new()
             {
                 spaceshipId = args.spaceshipId,
-                destinationId = args.destinationId,
+                destinationIds = args.destinationIds != null ? new List<string>(args.destinationIds) : new(),
                 colorCode = args.colorCode,
                 hubId = args.hubId
             };
@@ -112,7 +113,7 @@ namespace DigitalLove.Game.Flow
 
         private void OnLoopEditionButtonClicked(LoopEventArgs args)
         {
-            gameSnapshot.ClearLoopDestination(args.spaceshipId);
+            gameSnapshot.ClearLoopDestinations(args.spaceshipId);
 
             PlanetRouteColorSync.Apply(
                 gameSnapshot,

@@ -36,11 +36,14 @@ namespace DigitalLove.Game.Persistence
 
             foreach (LoopData loop in gameSnapshot.loops)
             {
-                if (!loop.HasDestination)
+                if (!loop.HasDestinations)
                     continue;
 
-                PlanetBehaviour destination = planetsSpawner.GetById(loop.destinationId);
-                ApplyDestinationRouteColor(destination, loop.colorCode, spaceshipsSpawner);
+                foreach (string destinationId in loop.destinationIds)
+                {
+                    PlanetBehaviour destination = planetsSpawner.GetById(destinationId);
+                    ApplyDestinationRouteColor(destination, loop.colorCode, spaceshipsSpawner);
+                }
             }
         }
 

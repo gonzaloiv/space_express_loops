@@ -34,7 +34,7 @@ namespace DigitalLove.Game.UI
             gameObject.SetActive(false);
         }
 
-        public void ShowLetters(int value, int maxValue, bool showMaxValue = true)
+        public void ShowLetters(int value, int maxValue, bool showMaxValue = false)
         {
             gameObject.SetActive(true);
             lettersLabel.text = maxValue > 0 ? $"{value} / {maxValue}" : $"{value}";

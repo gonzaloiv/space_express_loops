@@ -44,7 +44,7 @@ namespace DigitalLove.Game.Spaceships
         public override void Exit()
         {
             grabbable.WhenPointerEventRaised -= OnPointerEvent;
-            
+
             ghost.SetActive(false);
         }
 
@@ -72,7 +72,7 @@ namespace DigitalLove.Game.Spaceships
             LoopEventArgs args = new()
             {
                 spaceshipId = id,
-                destinationId = destinationSelector.Destination.Id,
+                destinationIds = new() { destinationSelector.Destination.Id },
                 colorCode = colorCode,
                 hubId = hubId
             };

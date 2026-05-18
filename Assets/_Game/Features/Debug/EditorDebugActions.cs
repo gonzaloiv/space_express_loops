@@ -35,7 +35,7 @@ namespace DigitalLove.Game
         {
             PlanetBehaviour planet = planets.GetRandom(excludedIds);
             excludedIds.Add(planet.Id);
-            spaceship.SetRoute(planet);
+            spaceship.SetRoute(new[] { planet });
         }
 
         [Button]
@@ -64,7 +64,7 @@ namespace DigitalLove.Game
                 return;
             }
 
-            routeSpaceship.SetRoute(routePlanet);
+            routeSpaceship.SetRoute(new[] { routePlanet });
         }
 
         #endregion
