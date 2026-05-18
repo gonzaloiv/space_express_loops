@@ -1687,8 +1687,6 @@ MonoBehaviour:
   sessionEventsHelper: {fileID: 1210227672}
   storePanel: {fileID: 809088436}
   moneyPerLetter: {fileID: 11400000, guid: 0700f36b046762e40a553bea76f680b2, type: 2}
-  brokenSpaceshipCost: {fileID: 11400000, guid: 4454ee9f7dade46408c29cb2aab1c786, type: 2}
-  planetFullFee: {fileID: 11400000, guid: c2b073c19b3d25a4798264fb4a913ba9, type: 2}
   gameSnapshot:
     roundIndex: 0
     planets: []

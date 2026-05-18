@@ -27,8 +27,6 @@ namespace DigitalLove.Game.Flow
         [Header("Economy")]
         [SerializeField] private StorePanel storePanel;
         [SerializeField] private IntValue moneyPerLetter;
-        [SerializeField] private IntValue brokenSpaceshipCost;
-        [SerializeField] private IntValue planetFullFee;
 
         [Header("Debug")]
         [SerializeField] private GameSnapshot gameSnapshot;
@@ -97,19 +95,10 @@ namespace DigitalLove.Game.Flow
 
         private void OnLoopComplete(LoopCompleteEventArgs args)
         {
-            if (args.HasFailed) // ? Broken spaceship
-            {
-                HandleBrokenSpaceshipLoop(args.value);
+            if (args.HasFailed)
                 return;
-            }
 
             HandleBaseLoopCompletion(args.value);
-        }
-
-        private void HandleBrokenSpaceshipLoop(int loopValue)
-        {
-            gameSnapshot.SpendMoney(brokenSpaceshipCost.value + moneyPerLetter.value * loopValue);
-            RefreshStoreUI();
         }
 
         private void HandleBaseLoopCompletion(int loopValue)
@@ -132,12 +121,6 @@ namespace DigitalLove.Game.Flow
                 levelContainer.SpaceshipsSpawner);
         }
 
-        private void OnPlanetFull()
-        {
-            gameSnapshot.SpendMoney(planetFullFee.value);
-            RefreshStoreUI();
-        }
-
         public override void Exit()
         {
             UnsubscribeEvents();
@@ -148,7 +131,6 @@ namespace DigitalLove.Game.Flow
             levelContainer.SpaceshipsSpawner.loopCreated += OnLoopCreated;
             levelContainer.SpaceshipsSpawner.loopComplete += OnLoopComplete;
             levelContainer.SpaceshipsSpawner.loopEditionButtonClicked += OnLoopEditionButtonClicked;
-            levelContainer.PlanetsSpawner.planetFull += OnPlanetFull;
         }
 
         private void UnsubscribeEvents()
@@ -156,7 +138,6 @@ namespace DigitalLove.Game.Flow
             levelContainer.SpaceshipsSpawner.loopCreated -= OnLoopCreated;
             levelContainer.SpaceshipsSpawner.loopComplete -= OnLoopComplete;
             levelContainer.SpaceshipsSpawner.loopEditionButtonClicked -= OnLoopEditionButtonClicked;
-            levelContainer.PlanetsSpawner.planetFull -= OnPlanetFull;
         }
     }
 }
