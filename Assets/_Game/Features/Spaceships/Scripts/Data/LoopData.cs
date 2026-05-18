@@ -7,7 +7,6 @@ namespace DigitalLove.Game.Spaceships
     public class LoopData
     {
         public string spaceshipId;
-        public string originId;
         public string destinationId;
         public string colorCode;
 

@@ -26,7 +26,6 @@ namespace DigitalLove.Game.Spaceships
         private LoopEventArgs CurrentLoopEventArgs => new()
         {
             spaceshipId = data.id,
-            originId = destinationSelector.BasePlanet.Id,
             destinationId = destinationSelector.Destination.Id,
             colorCode = data.colorCode
         };
@@ -56,7 +55,7 @@ namespace DigitalLove.Game.Spaceships
         {
             this.data = data;
             splineContainerWrapper.SetColor(color);
-            routePanel.SetData(data.id, color, 50);
+            routePanel.SetData(data.id, color);
         }
 
         public override void Enter()
@@ -69,6 +68,7 @@ namespace DigitalLove.Game.Spaceships
 
             Vector3 goPositions = splineContainerWrapper.GoPositions[splineContainerWrapper.GoPositions.Length / 3];
             routePanel.SetPosition(goPositions);
+            routePanel.Show();
 
             dragZone.gameObject.SetActive(false);
             grabbable.SetActive(false);

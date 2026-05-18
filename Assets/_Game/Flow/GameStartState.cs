@@ -64,6 +64,7 @@ namespace DigitalLove.Game.Flow
             levelContainer.SetRoomBasedPose(() =>
             {
                 levelContainer.SpawnInitialRound(roundSelector.CurrentRound, gameSnapshot);
+                gameSnapshot.RecalculateLettersRequiredForRound(roundSelector.CurrentRound.lettersIncreaseMultiplier);
                 ttsHelper.SetInFrontOfCameraOrDefault(true);
                 ttsHelper.SayRoundIntro(roundSelector.CurrentRound, ToNextState);
             });

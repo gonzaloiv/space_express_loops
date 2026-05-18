@@ -6,11 +6,9 @@ namespace DigitalLove.Game.Spaceships
     public class LoopEventArgs
     {
         public string spaceshipId;
-        public string originId;
         public string destinationId;
         public string colorCode;
 
-        public bool IsBaseLoop => string.IsNullOrEmpty(originId);
         public bool HasFailed => string.IsNullOrEmpty(destinationId);
     }
 
@@ -27,7 +25,6 @@ namespace DigitalLove.Game.Spaceships
 
         public LoopCompleteEventArgs(LoopEventArgs args, int value) : base()
         {
-            originId = args.originId;
             spaceshipId = args.spaceshipId;
             destinationId = args.destinationId;
             colorCode = args.colorCode;

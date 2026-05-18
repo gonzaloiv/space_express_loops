@@ -9,9 +9,9 @@ namespace DigitalLove.Game.Planets
 
         [SerializeField] private Transform body;
         [SerializeField] private List<Renderer> renderers;
+        [SerializeField] private Color defaultColor = Color.white;
 
         private Renderer activeRenderer;
-        private Color defaultColor;
 
         public float RadiusOffset => body.lossyScale.x;
         public Vector3 Position => body.position;
@@ -38,17 +38,13 @@ namespace DigitalLove.Game.Planets
                 if (renderers[i] != null)
                     renderers[i].gameObject.SetActive(i == index);
             }
-
             activeRenderer = renderers[index];
-            if (activeRenderer != null)
-                defaultColor = activeRenderer.material.GetColor(BaseColorId);
         }
 
         public void SetRouteColor(Color color)
         {
             if (activeRenderer == null)
                 return;
-
             Material material = activeRenderer.material;
             material.SetColor(BaseColorId, color);
             material.color = color;

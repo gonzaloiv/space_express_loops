@@ -5,24 +5,32 @@ using DigitalLove.Game.Planets;
 using DigitalLove.Game.Spaceships;
 using Newtonsoft.Json;
 using DigitalLove.Global;
+using UnityEngine;
 
 namespace DigitalLove.Game.Persistence
 {
     [Serializable]
     public class GameSnapshot
     {
+        public const int BaseLettersPerRoundCompletion = 15;
+
         [JsonIgnore] public static string CookieKey => typeof(GameSnapshot).Name;
 
         public int roundIndex;
         public List<PlanetData> planets;
         public List<LoopData> loops;
         public Store store;
+        public int lettersRequiredForRoundCompletion;
 
         [JsonIgnore] private Action onUpdated;
 
         [JsonIgnore] public int CurrentLetters => store.letters;
         [JsonIgnore] public bool HasPlanets => planets != null && planets.Count > 0;
         [JsonIgnore] public bool HasLoops => loops != null && loops.Count > 0;
+
+        [JsonIgnore]
+        public bool IsCurrentRoundLetterGoalMet =>
+            store != null && store.letters >= lettersRequiredForRoundCompletion;
 
         public GameSnapshot()
         {
@@ -40,6 +48,19 @@ namespace DigitalLove.Game.Persistence
         public void SetOnUpdated(Action onUpdated)
         {
             this.onUpdated = onUpdated;
+        }
+
+        /// <summary>
+        /// Sets <see cref="lettersRequiredForRoundCompletion"/> from current planet and loop counts.
+        /// Call only when a round begins (first spawn after <c>GameStartState</c>, or after <c>SpawnRound</c> in new-round flow) so the target stays fixed until the next round.
+        /// </summary>
+        public void RecalculateLettersRequiredForRound(float lettersIncreaseMultiplier)
+        {
+            int planetCount = planets?.Count ?? 0;
+            int routeCount = loops?.Count ?? 0;
+            float raw = BaseLettersPerRoundCompletion * planetCount * routeCount * lettersIncreaseMultiplier;
+            lettersRequiredForRoundCompletion = Mathf.Max(1, Mathf.RoundToInt(raw));
+            onUpdated?.Invoke();
         }
 
         // ? Updates
@@ -65,14 +86,13 @@ namespace DigitalLove.Game.Persistence
             onUpdated?.Invoke();
         }
 
-        public void ClearLoopDestination(string spaceshipId, int cost)
+        public void ClearLoopDestination(string spaceshipId)
         {
             LoopData loop = loops.FirstOrDefault(l => string.Equals(l.spaceshipId, spaceshipId));
             if (loop == null)
                 return;
 
             loop.destinationId = null;
-            store.SpendMoney(cost);
             onUpdated?.Invoke();
         }
 

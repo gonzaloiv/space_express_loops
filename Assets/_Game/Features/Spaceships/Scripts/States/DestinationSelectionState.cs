@@ -70,7 +70,6 @@ namespace DigitalLove.Game.Spaceships
             LoopEventArgs args = new()
             {
                 spaceshipId = id,
-                originId = destinationSelector.BasePlanet.Id,
                 destinationId = destinationSelector.Destination.Id,
                 colorCode = colorCode
             };

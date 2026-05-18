@@ -27,6 +27,7 @@ namespace DigitalLove.Game.Flow
                 gameSnapshot.IncreaseRoundIndex();
                 roundSelector.SetCurrentRound(gameSnapshot.roundIndex);
                 levelContainer.SpawnRound(roundSelector.CurrentRound, gameSnapshot);
+                gameSnapshot.RecalculateLettersRequiredForRound(roundSelector.CurrentRound.lettersIncreaseMultiplier);
             }
 
             progressionEventsHelper.SendLevelCompleteEvent(roundSelector.CurrentRound.id, score: gameSnapshot.CurrentLetters);

@@ -18,7 +18,6 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private LevelContainer levelContainer;
         [SerializeField] private RoundSelector roundSelector;
         [SerializeField] private MonoState newRoundState;
-        [SerializeField] private StoreDependentUI storeDependentUI;
         [SerializeField] private TTSHelper ttsHelper;
 
         [Header("Analytics")]
@@ -27,7 +26,6 @@ namespace DigitalLove.Game.Flow
 
         [Header("Economy")]
         [SerializeField] private StorePanel storePanel;
-        [SerializeField] private IntValue routeEditionCost;
         [SerializeField] private IntValue moneyPerLetter;
         [SerializeField] private IntValue brokenSpaceshipCost;
         [SerializeField] private IntValue planetFullFee;
@@ -50,13 +48,12 @@ namespace DigitalLove.Game.Flow
             gameSnapshot = memoryDataClient.Get<GameSnapshot>();
             RefreshStoreUI();
             progressionEventsHelper.SendLevelStartedEvent(roundSelector.CurrentRound.id);
-            storeDependentUI.DoStart(gameSnapshot);
             ShowFTUIndicators();
         }
 
         private void RefreshStoreUI()
         {
-            storePanel.Show(gameSnapshot.CurrentLetters, roundSelector.TotalLettersToComplete, gameSnapshot.store.money);
+            storePanel.Show(gameSnapshot.CurrentLetters, gameSnapshot.lettersRequiredForRoundCompletion, gameSnapshot.store.money);
         }
 
         private void ShowFTUIndicators()
@@ -80,7 +77,6 @@ namespace DigitalLove.Game.Flow
             LoopData data = new()
             {
                 spaceshipId = args.spaceshipId,
-                originId = args.originId,
                 destinationId = args.destinationId,
                 colorCode = args.colorCode
             };
@@ -102,13 +98,7 @@ namespace DigitalLove.Game.Flow
                 return;
             }
 
-            if (args.IsBaseLoop)
-            {
-                HandleBaseLoopCompletion(args.value);
-                return;
-            }
-
-            HandlePlanetLoopCompletion(args.originId, args.value);
+            HandleBaseLoopCompletion(args.value);
         }
 
         private void HandleBrokenSpaceshipLoop(int loopValue)
@@ -122,19 +112,13 @@ namespace DigitalLove.Game.Flow
             gameSnapshot.IncreaseLettersAndMoney(loopValue, moneyPerLetter.value * loopValue);
             RefreshStoreUI();
 
-            if (roundSelector.IsRoundComplete(gameSnapshot.store))
+            if (gameSnapshot.IsCurrentRoundLetterGoalMet)
                 parent.SetCurrentState(newRoundState.RouteId);
-        }
-
-        private void HandlePlanetLoopCompletion(string originId, int loopValue)
-        {
-            levelContainer.PlanetsSpawner.GetById(originId).PlanetStore.IncreaseLetters(loopValue);
         }
 
         private void OnLoopEditionButtonClicked(LoopEventArgs args)
         {
-            gameSnapshot.ClearLoopDestination(args.spaceshipId, routeEditionCost.value);
-            RefreshStoreUI();
+            gameSnapshot.ClearLoopDestination(args.spaceshipId);
 
             PlanetRouteColorSync.Apply(
                 gameSnapshot,
@@ -151,7 +135,6 @@ namespace DigitalLove.Game.Flow
         public override void Exit()
         {
             UnsubscribeEvents();
-            storeDependentUI.DoStop();
         }
 
         private void SubscribeEvents()

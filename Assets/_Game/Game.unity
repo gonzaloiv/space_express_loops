@@ -240,10 +240,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 634142324}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 80, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 221.08499, y: -60}
+  m_SizeDelta: {x: 80, y: 70}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &46888529
 MonoBehaviour:
@@ -1816,7 +1816,6 @@ GameObject:
   m_Component:
   - component: {fileID: 250434373}
   - component: {fileID: 250434374}
-  - component: {fileID: 250434375}
   m_Layer: 0
   m_Name: Edition
   m_TagString: Untagged
@@ -1854,12 +1853,10 @@ MonoBehaviour:
   levelContainer: {fileID: 677709495}
   roundSelector: {fileID: 677709496}
   newRoundState: {fileID: 1324782179}
-  storeDependentUI: {fileID: 250434375}
   ttsHelper: {fileID: 1654487132}
   progressionEventsHelper: {fileID: 1210227670}
   sessionEventsHelper: {fileID: 1210227672}
   storePanel: {fileID: 809088436}
-  routeEditionCost: {fileID: 11400000, guid: 06b2ca09b7a70054984b55f39a013653, type: 2}
   moneyPerLetter: {fileID: 11400000, guid: 0700f36b046762e40a553bea76f680b2, type: 2}
   brokenSpaceshipCost: {fileID: 11400000, guid: 4454ee9f7dade46408c29cb2aab1c786, type: 2}
   planetFullFee: {fileID: 11400000, guid: c2b073c19b3d25a4798264fb4a913ba9, type: 2}
@@ -1870,20 +1867,7 @@ MonoBehaviour:
     store:
       letters: 0
       money: 0
---- !u!114 &250434375
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 250434372}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4aba4663f1838c4099e575cd62bb8a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.UI::StoreDependentUI
-  spaceshipsSpawner: {fileID: 933255161}
-  routeEditionCost: {fileID: 11400000, guid: 06b2ca09b7a70054984b55f39a013653, type: 2}
+    lettersRequiredForRoundCompletion: 0
 --- !u!1 &284223190
 GameObject:
   m_ObjectHideFlags: 0
@@ -3671,9 +3655,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 964978561}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 128.79999, y: -103}
   m_SizeDelta: {x: 120, y: 206}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &582835181
@@ -4041,7 +4025,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 458.19998, y: -103}
-  m_SizeDelta: {x: 0, y: 120}
+  m_SizeDelta: {x: 278, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &634142325
 MonoBehaviour:
@@ -4159,7 +4143,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: -294}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &658829951
 CanvasRenderer:
@@ -10080,10 +10064,10 @@ RectTransform:
   - {fileID: 634142324}
   m_Father: {fileID: 658829950}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 206}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 333, y: -103}
+  m_SizeDelta: {x: 666, y: 206}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &964978562
 MonoBehaviour:
@@ -10651,7 +10635,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1070615419
 Transform:
   m_ObjectHideFlags: 0
@@ -11691,6 +11675,7 @@ MonoBehaviour:
     store:
       letters: 0
       money: 0
+    lettersRequiredForRoundCompletion: 0
   playerData:
     userId: 
     sessionCount: 0
@@ -13523,6 +13508,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.Debug::DigitalLove.Game.Debug.EditorDebugActions
   planets: {fileID: 1097461040}
   spaceships: {fileID: 933255161}
+  routeSpaceship: {fileID: 0}
+  routePlanet: {fileID: 0}
 --- !u!4 &1707529851
 Transform:
   m_ObjectHideFlags: 0
@@ -16162,9 +16149,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 964978561}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 253.99998, y: -203}
   m_SizeDelta: {x: 130.4, y: 200}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &2065507275

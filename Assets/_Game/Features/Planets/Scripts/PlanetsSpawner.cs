@@ -20,11 +20,10 @@ namespace DigitalLove.Game.Planets
 
         public void SyncIdsFromSnapshot(IEnumerable<string> existingIds) => idCreator.SyncFromExistingIds(existingIds);
 
-        public List<PlanetData> GeneratePlanetDataFromPlanetsSeed(PlanetsSeed seed, List<PlanetData> initialPlanets)
+        public List<PlanetData> GeneratePlanetDataFromPlanetsSeed(int planetsToAdd, PlanetSeedData seed, List<PlanetData> initialPlanets)
         {
             List<PlanetData> roundPlanets = new();
-            int count = seed.count.GetRandomValue();
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < planetsToAdd; i++)
             {
                 List<PlanetData> allPlanets = initialPlanets.Concat(roundPlanets).ToList();
                 PlanetData planetData = CreateDataFromSeed(idCreator.NextId, seed, allPlanets);
@@ -33,12 +32,12 @@ namespace DigitalLove.Game.Planets
             return roundPlanets;
         }
 
-        private PlanetData CreateDataFromSeed(string id, PlanetsSeed seed, List<PlanetData> allPlanets)
+        private PlanetData CreateDataFromSeed(string id, PlanetSeedData seed, List<PlanetData> allPlanets)
         {
-            float radius = seed.planetSeed.radius.GetRandomValue();
-            Vector3 localPosition = GetValidPosition(radius, seed.planetSeed.maxDistanceBetweenPlanets.value, allPlanets);
-            int lettersPerMinute = seed.planetSeed.lettersPerMinute.GetRandomValue();
-            int maxLetters = (int)(seed.planetSeed.maxLettersMultiplier.GetRandomValue() * lettersPerMinute);
+            float radius = seed.radius.GetRandomValue();
+            Vector3 localPosition = GetValidPosition(radius, seed.maxDistanceBetweenPlanets.value, allPlanets);
+            int lettersPerMinute = seed.lettersPerMinute.GetRandomValue();
+            int maxLetters = (int)(seed.maxLettersMultiplier.GetRandomValue() * lettersPerMinute);
             PlanetData planetData = new()
             {
                 id = id,

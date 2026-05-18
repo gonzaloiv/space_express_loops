@@ -42,26 +42,19 @@ namespace DigitalLove.Game.Levels
 
         public void SpawnRound(RoundData roundData, GameSnapshot gameSnapshot)
         {
-            List<PlanetData> roundPlanets = planetsSpawner.GeneratePlanetDataFromPlanetsSeed(roundData.planetsSeed, gameSnapshot.planets);
+            List<PlanetData> roundPlanets = planetsSpawner.GeneratePlanetDataFromPlanetsSeed(roundData.planetsToAdd.GetRandomValue(), roundData.planetSeed, gameSnapshot.planets);
             gameSnapshot.AddPlanets(roundPlanets);
             planetsSpawner.SpawnPlanets(gameSnapshot.planets);
-            SpawnSpaceshipFromSeed(roundData.spaceshipSeed, gameSnapshot);
+            if (roundData.shouldSpawnSpaceship)
+                SpawnSpaceship(gameSnapshot);
         }
 
-        private void SpawnSpaceshipFromSeed(SpaceshipSeed spaceshipSeed, GameSnapshot gameSnapshot)
+        private void SpawnSpaceship(GameSnapshot gameSnapshot)
         {
-            if (!spaceshipSeed.shouldSpawn)
-                return;
-
-            PlanetBaseBehaviour origin = spaceshipSeed.inBase
-                ? basePlanet
-                : planetsSpawner.GetRandom().PlanetBase;
-
-            SpaceshipBehaviour spaceship = spaceshipsSpawner.SpawnNew(origin);
+            SpaceshipBehaviour spaceship = spaceshipsSpawner.SpawnNew(basePlanet);
             gameSnapshot.AddLoop(new LoopData
             {
                 spaceshipId = spaceship.Id,
-                originId = origin.Id,
                 colorCode = spaceship.ColorCode
             });
         }
@@ -74,23 +67,19 @@ namespace DigitalLove.Game.Levels
 
             foreach (LoopData loop in gameSnapshot.loops)
             {
-                PlanetBaseBehaviour planetBase = string.IsNullOrEmpty(loop.originId)
-                    ? basePlanet
-                    : planetsSpawner.GetById(loop.originId).PlanetBase;
-
                 if (loop.HasDestination)
                 {
                     PlanetBehaviour destination = planetsSpawner.GetById(loop.destinationId);
                     spaceshipsSpawner.SpawnFromLoop(
                         loop.spaceshipId,
-                        planetBase,
+                        basePlanet,
                         destination,
                         loop.colorCode);
                     PlanetRouteColorSync.ApplyDestinationRouteColor(destination, loop.colorCode, spaceshipsSpawner);
                 }
                 else
                 {
-                    spaceshipsSpawner.SpawnIdle(loop.spaceshipId, planetBase, loop.colorCode);
+                    spaceshipsSpawner.SpawnIdle(loop.spaceshipId, basePlanet, loop.colorCode);
                 }
             }
         }

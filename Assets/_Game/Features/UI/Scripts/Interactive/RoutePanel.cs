@@ -14,8 +14,6 @@ namespace DigitalLove.Game.UI
         [SerializeField] private BtnPanel btnPanel;
         [SerializeField] private LayoutUpdater layoutUpdater;
 
-        private int routeEditionCost;
-
         public Action editButtonClicked = () => { };
 
         public void SetPosition(Vector3 position)
@@ -27,12 +25,11 @@ namespace DigitalLove.Game.UI
         {
             gameObject.SetActive(true);
             layoutUpdater.ForceUpdate();
-            btnPanel.Show(new Btn().SetText(routeEditionCost.ToString()).SetOnClick(editButtonClicked));
+            btnPanel.Show(new Btn().SetOnClick(editButtonClicked));
         }
 
-        public void SetData(string id, Color color, int routeEditionCost)
+        public void SetData(string id, Color color)
         {
-            this.routeEditionCost = routeEditionCost;
             foreach (Graphic graphic in graphics)
                 graphic.color = color;
             idLabel.text = id.Substring(id.Length - 2, 2);

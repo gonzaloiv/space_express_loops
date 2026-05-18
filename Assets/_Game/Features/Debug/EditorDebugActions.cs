@@ -48,5 +48,25 @@ namespace DigitalLove.Game
                     spaceship.Debug_InvokeOnLoopEditionButtonClicked();
             }
         }
+
+        #region Route from references
+
+        [Header("Route from references")]
+        [SerializeField] private SpaceshipBehaviour routeSpaceship;
+        [SerializeField] private PlanetBehaviour routePlanet;
+
+        [Button]
+        public void Debug_CreateRouteFromReferences()
+        {
+            if (routeSpaceship == null || routePlanet == null)
+            {
+                Debug.LogWarning("EditorDebugActions: Assign routeSpaceship and routePlanet.");
+                return;
+            }
+
+            routeSpaceship.SetRoute(routePlanet);
+        }
+
+        #endregion
     }
 }

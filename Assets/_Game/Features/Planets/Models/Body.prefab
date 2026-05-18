@@ -142,6 +142,7 @@ MonoBehaviour:
   - {fileID: 9059999379901930314}
   - {fileID: -7511558181221131132, guid: 21b5fa2eef896ea4496634eb9d1c3b58, type: 3}
   - {fileID: 106692197431150548}
+  defaultColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &5981771109518632977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1681,7 +1682,7 @@ PrefabInstance:
       value: Planet 03
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 823467870048889534}
+    - {fileID: 0}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1694,11 +1695,6 @@ MeshRenderer:
 --- !u!4 &1238532923103083707 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f5a9f053069b88b4a8cd0bfadc05f5fc, type: 3}
-  m_PrefabInstance: {fileID: 1637795536009567056}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1908391053000386049 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: f5a9f053069b88b4a8cd0bfadc05f5fc, type: 3}
   m_PrefabInstance: {fileID: 1637795536009567056}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6020760308530150176
@@ -1778,7 +1774,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 8679410789966740840}
+    - {fileID: 0}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1786,11 +1782,6 @@ PrefabInstance:
 --- !u!4 &6054158294892190923 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 21b5fa2eef896ea4496634eb9d1c3b58, type: 3}
-  m_PrefabInstance: {fileID: 6020760308530150176}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6867813819380975217 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 21b5fa2eef896ea4496634eb9d1c3b58, type: 3}
   m_PrefabInstance: {fileID: 6020760308530150176}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7672445804018321358
@@ -1870,16 +1861,11 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 8257142469940424239}
+    - {fileID: 0}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe6f8fa5e952281469ea1914de5fa209, type: 3}
---- !u!1 &7402625994764319391 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: fe6f8fa5e952281469ea1914de5fa209, type: 3}
-  m_PrefabInstance: {fileID: 7672445804018321358}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7922035925349015589 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fe6f8fa5e952281469ea1914de5fa209, type: 3}
