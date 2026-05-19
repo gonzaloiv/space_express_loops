@@ -24,7 +24,7 @@ namespace DigitalLove.Game.DebugActions
             context.EnsureSpaceshipsReady();
             HubBehaviour hub = context.Hubs.SpawnNew();
             SpaceshipBehaviour ship = context.Spaceships.SpawnNew(hub);
-            EditorDebugContext.WireLoopLoggers(ship);
+            context.Spaceships.WireLoopHandlers(ship);
             Debug.Log($"Spawned idle ship {ship.Id} at hub {hub.Id}.");
         }
     }

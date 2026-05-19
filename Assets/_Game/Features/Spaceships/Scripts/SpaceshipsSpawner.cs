@@ -52,10 +52,15 @@ namespace DigitalLove.Game.Spaceships
                 hubId = basePlanet != null ? basePlanet.Id : null
             };
             spaceship.Spawn(data, colorPair.color.value, basePlanet);
+            WireLoopHandlers(spaceship);
+            return spaceship;
+        }
+
+        public void WireLoopHandlers(SpaceshipBehaviour spaceship)
+        {
             spaceship.SetOnLoopChanged(args => loopChanged(args));
             spaceship.SetOnLoopComplete(args => loopComplete(args));
             spaceship.SetOnLoopEditionButtonClicked(args => loopEditionButtonClicked(args));
-            return spaceship;
         }
 
         private ColorIsAvailablePair ResolveColorPair(string colorCode)

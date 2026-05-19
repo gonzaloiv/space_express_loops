@@ -99,7 +99,7 @@ namespace DigitalLove.Game.Flow
 
         private void OnLoopComplete(LoopCompleteEventArgs args)
         {
-            if (args.HasFailed)
+            if (args.value <= 0)
                 return;
 
             HandleBaseLoopCompletion(args.value);

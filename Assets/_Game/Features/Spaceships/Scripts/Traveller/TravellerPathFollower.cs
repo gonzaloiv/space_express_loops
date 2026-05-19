@@ -9,9 +9,11 @@ namespace DigitalLove.Game.Spaceships
     {
         [SerializeField] private FloatValue gameSpeed;
         [SerializeField] private Transform followBody;
+        [SerializeField] private bool lockRotationToYaw = true;
 
         private Tween pathTween;
         private Action<bool> onPathEnded;
+        private Vector3 lastSampledPosition;
 
         public bool IsFollowingPath => pathTween != null && pathTween.IsActive();
 
@@ -32,19 +34,35 @@ namespace DigitalLove.Game.Spaceships
 
             CancelFollowing();
             followBody.position = positions[0];
+            AlignToDirection(positions[1] - positions[0]);
 
             this.onPathEnded = onPathEnded;
             float duration = positions.GetTotalDistance() / speed;
-
-            Debug.LogWarning($"Following path with duration: {duration}");
-            Debug.LogWarning($"Origin to destination distance: {Vector3.Distance(positions[0], positions[^1])}");
-            Debug.LogWarning($"Total distance: {positions.GetTotalDistance()}");
+            lastSampledPosition = followBody.position;
 
             pathTween = followBody.DOPath(positions, duration, PathType.Linear, PathMode.Full3D)
                 .SetEase(Ease.Linear)
                 .SetTarget(this)
-                .SetLookAt(0.01f)
+                .OnUpdate(UpdateRotationFromMovement)
                 .OnComplete(OnPathTweenComplete);
+        }
+
+        private void UpdateRotationFromMovement()
+        {
+            Vector3 delta = followBody.position - lastSampledPosition;
+            lastSampledPosition = followBody.position;
+            AlignToDirection(delta);
+        }
+
+        private void AlignToDirection(Vector3 direction)
+        {
+            if (lockRotationToYaw)
+                direction.y = 0f;
+
+            if (direction.sqrMagnitude < 0.0001f)
+                return;
+
+            followBody.rotation = Quaternion.LookRotation(direction.normalized, Vector3.up);
         }
 
         public void CancelFollowing()

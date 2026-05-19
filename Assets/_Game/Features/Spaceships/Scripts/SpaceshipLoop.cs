@@ -164,7 +164,7 @@ namespace DigitalLove.Game.Spaceships
             loopRunner.StartLoop(
                 () => splineContainerWrapper.TravellerRoutePlan,
                 spaceshipId,
-                stopIndex => destinations[stopIndex].PlanetStore.PickAllLetters(),
+                PickLettersAtStop,
                 getLoopEventArgs);
         }
 
@@ -176,6 +176,16 @@ namespace DigitalLove.Game.Spaceships
             foreach (PlanetBehaviour planet in destinations)
                 ids.Add(planet.Id);
             return ids;
+        }
+
+        private int PickLettersAtStop(int stopIndex)
+        {
+            TravellerRoutePlan routePlan = splineContainerWrapper.TravellerRoutePlan;
+            if (routePlan?.PickupPlanets == null || stopIndex >= routePlan.PickupPlanets.Count)
+                return 0;
+
+            PlanetBehaviour planet = routePlan.PickupPlanets[stopIndex];
+            return planet != null ? planet.PlanetStore.PickAllLetters() : 0;
         }
     }
 }

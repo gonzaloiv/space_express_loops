@@ -84,7 +84,7 @@ namespace DigitalLove.Game.Planets
             {
                 newLetterAudioSource.Play();
             }
-            bool showMaxValue = LettersBeforeFullToStartWarning - (maxLetters - letters) <= 0;
+            bool showMaxValue = maxLetters - letters <= LettersBeforeFullToStartWarning;
             if (showMaxValue)
                 fullAudioSource.Play();
             lettersPanel.ShowLetters(letters, maxLetters, showMaxValue);

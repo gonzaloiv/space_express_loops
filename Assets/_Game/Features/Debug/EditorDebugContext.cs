@@ -86,17 +86,7 @@ namespace DigitalLove.Game.DebugActions
             EnsureSpaceshipsReady();
             if (!ship.IsInitialized)
                 ship.Initialize();
-            WireLoopLoggers(ship);
-        }
-
-        public static void WireLoopLoggers(SpaceshipBehaviour ship)
-        {
-            ship.SetOnLoopChanged(args =>
-                Debug.Log($"[Loop] {args.spaceshipId} destinations: {string.Join(" → ", args.destinationIds)}"));
-            ship.SetOnLoopComplete(args =>
-                Debug.Log($"[Loop complete] {args.spaceshipId} value={args.value}"));
-            ship.SetOnLoopEditionButtonClicked(args =>
-                Debug.Log($"[Loop edit] {args.spaceshipId} cleared route."));
+            spaceships.WireLoopHandlers(ship);
         }
     }
 }
