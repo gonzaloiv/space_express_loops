@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using DigitalLove.Game.Planets;
 using UnityEngine;
@@ -8,82 +7,152 @@ namespace DigitalLove.Game.Spaceships
 {
     public class SplineContainerWrapper : MonoBehaviour
     {
-        [SerializeField] private int resolution = 50;
+        private const float OutboundEndT = 0.5f;
+        private const float InboundStartT = 0.5f;
+
+        [SerializeField] private int samplesPerHalf = 32;
         [SerializeField] private LineRenderer lineRenderer;
 
         private SplineContainer splineContainer;
-        private Vector3[] positions;
+        private readonly List<RouteLegPath> legs = new();
         private TravellerRoutePlan travellerRoutePlan;
 
-        public Vector3[] Positions => positions;
+        public IReadOnlyList<RouteLegPath> Legs => legs;
         public TravellerRoutePlan TravellerRoutePlan => travellerRoutePlan;
 
         private SplineContainer SplineContainer => splineContainer ??= GetComponent<SplineContainer>();
 
-        public void SetColor(Color color)
+        public void SetColor(Color color) => lineRenderer.material.color = color;
+
+        public Vector3 GetPanelAnchorPosition()
         {
-            lineRenderer.material.color = color;
+            if (legs.Count == 0 || legs[0].Positions == null || legs[0].Positions.Length == 0)
+                return transform.position;
+
+            Vector3[] firstLeg = legs[0].Positions;
+            return firstLeg[firstLeg.Length / 2];
         }
 
         public void BuildLoop(HubBehaviour hub, IReadOnlyList<PlanetBehaviour> destinations)
         {
+            legs.Clear();
+            travellerRoutePlan = null;
+
             if (hub == null || destinations == null || destinations.Count == 0)
-            {
-                positions = null;
-                travellerRoutePlan = null;
                 return;
-            }
 
-            float hubRadius = hub.PlanetBody.Radius;
-            Vector3 hubPosition = hub.transform.position;
-            Vector3 hubForward = hub.transform.forward;
+            if (destinations.Count == 1)
+                BuildSinglePlanetLoop(hub, destinations[0]);
+            else
+                BuildMultiPlanetLoop(hub, destinations);
 
-            List<Vector3> merged = new();
-            List<Vector3[]> segments = new();
-            List<PlanetBehaviour> pickupPlanets = new();
-
-            Vector3 legOriginPosition = hubPosition;
-            float legOriginRadius = hubRadius;
-            Vector3 legOriginForward = hubForward;
-
-            for (int i = 0; i < destinations.Count; i++)
-            {
-                PlanetBehaviour destination = destinations[i];
-                Vector3 destPosition = destination.Position;
-                float destRadius = destination.PlanetBody.Radius;
-
-                Vector3[] leg = SampleLegPositions(
-                    legOriginPosition, legOriginRadius, legOriginForward,
-                    destPosition, destRadius);
-                Vector3[] outbound = GetFirstHalf(leg);
-                AppendPath(merged, outbound);
-                segments.Add(outbound);
-                pickupPlanets.Add(destination);
-
-                legOriginPosition = destPosition;
-                legOriginRadius = destRadius;
-                legOriginForward = destination.transform.forward;
-            }
-
-            PlanetBehaviour last = destinations[destinations.Count - 1];
-            Vector3[] returnLeg = SampleLegPositions(
-                last.Position, last.PlanetBody.Radius, last.transform.forward,
-                hubPosition, hubRadius);
-            Vector3[] inbound = GetSecondHalf(returnLeg);
-            AppendPath(merged, inbound);
-            segments.Add(inbound);
-
-            positions = merged.ToArray();
-            travellerRoutePlan = new TravellerRoutePlan(segments, pickupPlanets);
+            travellerRoutePlan = CreateTravellerPlan();
+            RefreshLineRenderer();
         }
 
         public void SetLineRendererActive(bool isVisible)
         {
             lineRenderer.enabled = isVisible;
-            if (isVisible && positions != null)
-                lineRenderer.SetSplinePositions(positions);
-            else
+            if (!isVisible)
                 lineRenderer.positionCount = 0;
+            else
+                RefreshLineRenderer();
+        }
+
+        private void BuildSinglePlanetLoop(HubBehaviour hub, PlanetBehaviour planet)
+        {
+            SampleLegHalves(
+                hub.transform.position, hub.PlanetBody.Radius, hub.transform.forward,
+                planet.Position, planet.PlanetBody.Radius,
+                out Vector3[] outbound, out Vector3[] inbound);
+
+            legs.Add(new RouteLegPath(outbound, planet));
+            legs.Add(new RouteLegPath(inbound, null));
+        }
+
+        private void BuildMultiPlanetLoop(HubBehaviour hub, IReadOnlyList<PlanetBehaviour> destinations)
+        {
+            PlanetBehaviour first = destinations[0];
+            SampleLegHalves(
+                hub.transform.position, hub.PlanetBody.Radius, hub.transform.forward,
+                first.Position, first.PlanetBody.Radius,
+                out Vector3[] outbound, out _);
+            legs.Add(new RouteLegPath(outbound, first));
+
+            for (int i = 1; i < destinations.Count; i++)
+            {
+                PlanetBehaviour from = destinations[i - 1];
+                PlanetBehaviour to = destinations[i];
+                Vector3[] legToNext = SampleLegHalf(
+                    from.Position, from.PlanetBody.Radius, from.transform.forward,
+                    to.Position, to.PlanetBody.Radius,
+                    tStart: 0f, tEnd: OutboundEndT);
+                legs.Add(new RouteLegPath(legToNext, to));
+            }
+
+            PlanetBehaviour last = destinations[destinations.Count - 1];
+            Vector3[] returnToHub = SampleLegHalf(
+                last.Position, last.PlanetBody.Radius, last.transform.forward,
+                hub.transform.position, hub.PlanetBody.Radius,
+                tStart: InboundStartT, tEnd: 1f);
+            legs.Add(new RouteLegPath(returnToHub, null));
+        }
+
+        private void SampleLegHalves(
+            Vector3 originPosition,
+            float originRadius,
+            Vector3 originForward,
+            Vector3 destinationPosition,
+            float destinationRadius,
+            out Vector3[] outboundHalf,
+            out Vector3[] inboundHalf)
+        {
+            ConfigureSplineForLeg(originPosition, originRadius, originForward, destinationPosition, destinationRadius);
+            outboundHalf = SplineContainer.GetPositions(samplesPerHalf, 0f, OutboundEndT);
+            inboundHalf = SplineContainer.GetPositions(samplesPerHalf, InboundStartT, 1f);
+        }
+
+        private Vector3[] SampleLegHalf(
+            Vector3 originPosition,
+            float originRadius,
+            Vector3 originForward,
+            Vector3 destinationPosition,
+            float destinationRadius,
+            float tStart,
+            float tEnd)
+        {
+            ConfigureSplineForLeg(originPosition, originRadius, originForward, destinationPosition, destinationRadius);
+            return SplineContainer.GetPositions(samplesPerHalf, tStart, tEnd);
+        }
+
+        private TravellerRoutePlan CreateTravellerPlan()
+        {
+            List<Vector3[]> segments = new(legs.Count);
+            List<PlanetBehaviour> pickupPlanets = new();
+
+            foreach (RouteLegPath leg in legs)
+            {
+                segments.Add(leg.Positions);
+                if (leg.PickupPlanet != null)
+                    pickupPlanets.Add(leg.PickupPlanet);
+            }
+
+            return new TravellerRoutePlan(segments, pickupPlanets);
+        }
+
+        private void RefreshLineRenderer()
+        {
+            List<Vector3> merged = new();
+            foreach (RouteLegPath leg in legs)
+                AppendPath(merged, leg.Positions);
+
+            if (merged.Count == 0)
+            {
+                lineRenderer.positionCount = 0;
+                return;
+            }
+
+            lineRenderer.SetSplinePositions(merged.ToArray());
         }
 
         private static void AppendPath(List<Vector3> merged, Vector3[] segment)
@@ -96,7 +165,7 @@ namespace DigitalLove.Game.Spaceships
                 merged.Add(segment[i]);
         }
 
-        private Vector3[] SampleLegPositions(
+        private void ConfigureSplineForLeg(
             Vector3 originPosition,
             float originRadius,
             Vector3 originForward,
@@ -124,24 +193,6 @@ namespace DigitalLove.Game.Spaceships
 
             SplineContainer.SetKnotPosition(4, SplineContainer.transform.InverseTransformPoint(twoThirdsPosition + destinationOffset));
             SplineContainer.SetKnotPosition(2, SplineContainer.transform.InverseTransformPoint(twoThirdsPosition - destinationOffset));
-
-            return SplineContainer.GetPositions(resolution);
-        }
-
-        private static Vector3[] GetFirstHalf(Vector3[] legPositions)
-        {
-            int halfLength = legPositions.Length / 2;
-            Vector3[] half = new Vector3[halfLength];
-            Array.Copy(legPositions, 0, half, 0, halfLength);
-            return half;
-        }
-
-        private static Vector3[] GetSecondHalf(Vector3[] legPositions)
-        {
-            int halfLength = legPositions.Length / 2;
-            Vector3[] half = new Vector3[halfLength];
-            Array.Copy(legPositions, halfLength, half, 0, halfLength);
-            return half;
         }
     }
 }

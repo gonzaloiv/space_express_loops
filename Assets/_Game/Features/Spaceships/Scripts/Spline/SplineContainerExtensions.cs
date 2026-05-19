@@ -15,14 +15,14 @@ namespace DigitalLove.Game.Spaceships
             }
         }
 
-        public static Vector3[] GetPositions(this SplineContainer splineContainer, int resolution)
+        public static Vector3[] GetPositions(this SplineContainer splineContainer, int resolution, float tStart = 0f, float tEnd = 1f)
         {
+            resolution = Mathf.Max(2, resolution);
             Vector3[] results = new Vector3[resolution];
             for (int i = 0; i < resolution; i++)
             {
-                float t = i / (float)(resolution - 1);
-                Vector3 localPos = splineContainer.EvaluatePosition(t);
-                results[i] = localPos;
+                float t = Mathf.Lerp(tStart, tEnd, i / (float)(resolution - 1));
+                results[i] = splineContainer.EvaluatePosition(t);
             }
             return results;
         }

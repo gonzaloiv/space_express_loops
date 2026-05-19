@@ -31,7 +31,7 @@ namespace DigitalLove.Game.Spaceships
         public IReadOnlyList<PlanetBehaviour> Destinations => destinations;
         public bool HasDestinations => destinations.Count > 0;
         public HubBehaviour Hub => destinationSelector.Hub;
-        public Vector3[] RoutePositions => splineContainerWrapper.Positions;
+        public Vector3 RoutePanelAnchor => splineContainerWrapper.GetPanelAnchorPosition();
 
         public SpaceshipLoop(
             MonoBehaviour coroutineHost,

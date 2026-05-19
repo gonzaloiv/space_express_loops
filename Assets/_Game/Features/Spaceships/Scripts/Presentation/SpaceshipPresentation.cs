@@ -42,11 +42,7 @@ namespace DigitalLove.Game.Spaceships
             ghost.SetActive(false);
             destinationSelector.StartLookingForDestination(false);
 
-            Vector3[] positions = loop.RoutePositions;
-            Vector3 panelPosition = positions != null && positions.Length > 0
-                ? positions[positions.Length / 3]
-                : loop.Hub.SpawnPose.position;
-            routePanel.SetPosition(panelPosition);
+            routePanel.SetPosition(loop.RoutePanelAnchor);
             routePanel.Show();
 
             dragZone.gameObject.SetActive(false);
