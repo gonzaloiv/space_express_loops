@@ -24,6 +24,7 @@ namespace DigitalLove.Game.Spaceships
         private TravellerPathFollower pathFollower;
         private TravellerPathFollower PathFollower => pathFollower ??= GetComponent<TravellerPathFollower>();
         private bool isCollisionActive;
+        private PlanetBehaviour arrivalPlanet;
 
         public bool IsFollowingPath => PathFollower.IsFollowingPath;
 
@@ -54,13 +55,15 @@ namespace DigitalLove.Game.Spaceships
             loadedAudioSource.Play();
         }
 
-        public void FollowPath(Vector3[] positions, Action<bool> onPathEnded)
+        public void FollowPath(Vector3[] positions, PlanetBehaviour pickupPlanet, Action<bool> onPathEnded)
         {
             detachedParticlePlayer.ResetToParent();
+            arrivalPlanet = pickupPlanet;
             isCollisionActive = true;
             PathFollower.FollowPath(positions, success =>
             {
                 isCollisionActive = false;
+                arrivalPlanet = null;
                 onPathEnded?.Invoke(success);
             });
         }
@@ -70,18 +73,22 @@ namespace DigitalLove.Game.Spaceships
             if (!isCollisionActive)
                 return;
 
-            if (other.attachedRigidbody != null && layerMask.Contains(other.attachedRigidbody.gameObject))
-            {
-                PlanetBehaviour planet = other.attachedRigidbody.GetComponent<PlanetBehaviour>();
-                if (planet != null)
-                {
-                    isCollisionActive = false;
-                    hitAudioSource.Play();
-                    detachedParticlePlayer.PlayAt();
-                    Hide();
-                    PathFollower.EndWithFailure();
-                }
-            }
+            if (other.attachedRigidbody == null || !layerMask.Contains(other.attachedRigidbody.gameObject))
+                return;
+
+            PlanetBehaviour planet = other.attachedRigidbody.GetComponent<PlanetBehaviour>();
+            if (planet == null)
+                return;
+
+            isCollisionActive = false;
+            hitAudioSource.Play();
+            detachedParticlePlayer.PlayAt();
+            Hide();
+
+            if (arrivalPlanet != null && planet == arrivalPlanet)
+                PathFollower.EndWithSuccess();
+            else
+                PathFollower.EndWithFailure();
         }
     }
 }

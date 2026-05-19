@@ -13,6 +13,7 @@ namespace DigitalLove.Game.Planets
         [SerializeField] private LayerMask planetsLayerMask;
 
         private IdCounter idCreator = new();
+        private bool storesUnlocked;
 
         public List<PlanetBehaviour> All => planets;
 
@@ -77,8 +78,22 @@ namespace DigitalLove.Game.Planets
 
         public void HideAll()
         {
+            storesUnlocked = false;
             foreach (PlanetBehaviour planet in planets)
                 planet.SetActive(false);
+        }
+
+        public void UnlockPlanetStores()
+        {
+            if (storesUnlocked)
+                return;
+
+            storesUnlocked = true;
+            foreach (PlanetBehaviour planet in planets)
+            {
+                if (planet.IsActive)
+                    planet.BeginStoring();
+            }
         }
 
         public PlanetBehaviour GetRandom(List<string> excludedIds = null)

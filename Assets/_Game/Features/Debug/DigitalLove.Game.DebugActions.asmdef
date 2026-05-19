@@ -1,5 +1,5 @@
 {
-    "name": "DigitalLove.Game.Debug",
+    "name": "DigitalLove.Game.DebugActions",
     "rootNamespace": "",
     "references": [
         "GUID:64cc67f4d810af040bbe47679f3f5416",

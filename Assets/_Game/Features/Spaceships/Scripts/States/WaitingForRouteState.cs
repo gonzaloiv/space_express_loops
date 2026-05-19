@@ -7,11 +7,17 @@ namespace DigitalLove.Game.Spaceships
 {
     public class WaitingForRouteState : MonoState
     {
-        [SerializeField] private Grabbable grabbable;
-        [SerializeField] private GrabbableBody grabbableBody;
-        [SerializeField] private DestinationSelector destinationSelector;
         [SerializeField] private GameObject grabMePanel;
         [SerializeField] private AudioSource grabAudioSource;
+
+        private SpaceshipBehaviour spaceship;
+        private SpaceshipPresentation presentation;
+
+        public void Bind(SpaceshipBehaviour spaceship)
+        {
+            this.spaceship = spaceship;
+            presentation = spaceship.Presentation;
+        }
 
         public override void Init(StateMachine parent)
         {
@@ -21,18 +27,14 @@ namespace DigitalLove.Game.Spaceships
 
         public override void Enter()
         {
-            grabbable.WhenPointerEventRaised += OnPointerEvent;
-
-            grabbableBody.Show();
-            destinationSelector.StartLookingForDestination(false);
-            grabbable.SetActive(true);
+            presentation.Grabbable.WhenPointerEventRaised += OnPointerEvent;
+            presentation.ShowHubIdle();
         }
 
         public override void Exit()
         {
-            grabbable.WhenPointerEventRaised -= OnPointerEvent;
-
-            grabbableBody.Hide();
+            presentation.Grabbable.WhenPointerEventRaised -= OnPointerEvent;
+            presentation.HideHubIdle();
         }
 
         private void OnPointerEvent(PointerEvent pointer)
@@ -44,14 +46,11 @@ namespace DigitalLove.Game.Spaceships
         [Button]
         private void OnSelect()
         {
-            parent.SetCurrentState<DestinationSelectionState>();
             grabMePanel.SetActive(false);
             grabAudioSource.Play();
+            spaceship.StartSelectingDestination();
         }
 
-        public void ShowGrabMePanel()
-        {
-            grabMePanel.SetActive(true);
-        }
+        public void ShowGrabMePanel() => grabMePanel.SetActive(true);
     }
 }

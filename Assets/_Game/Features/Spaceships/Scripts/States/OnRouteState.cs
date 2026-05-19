@@ -1,109 +1,144 @@
 using DigitalLove.FlowControl;
-using UnityEngine;
-using System;
-using Oculus.Interaction;
-using DigitalLove.Game.UI;
 using DigitalLove.Global;
+using Oculus.Interaction;
+using UnityEngine;
 
 namespace DigitalLove.Game.Spaceships
 {
     public class OnRouteState : MonoState
     {
-        [SerializeField] private DestinationSelector destinationSelector;
-        [SerializeField] private Grabbable grabbable;
-        [SerializeField] private TravellerBehaviour traveller;
-        [SerializeField] private SplineContainerWrapper splineContainerWrapper;
-        [SerializeField] private Transform dragZone;
-        [SerializeField] private RoutePanel routePanel;
-        [SerializeField] private float legDelay = 1f;
+        private SpaceshipBehaviour spaceship;
+        private SpaceshipLoop loop;
+        private SpaceshipPresentation presentation;
+        private bool enterSelectingOnEnter;
+        private bool isSelectingDestination;
 
-        private SpaceshipData data;
-        private TravellerLoopRunner loopRunner;
-
-        private Action<LoopCompleteEventArgs> loopCompleted;
-        private Action<LoopEventArgs> onLoopEditionButtonClicked;
-
-        private LoopEventArgs CurrentLoopEventArgs => new()
+        public void Bind(SpaceshipBehaviour spaceship)
         {
-            spaceshipId = data.id,
-            destinationIds = new() { destinationSelector.Destination.Id },
-            colorCode = data.colorCode,
-            hubId = data.hubId
-        };
+            this.spaceship = spaceship;
+            loop = spaceship.Loop;
+            presentation = spaceship.Presentation;
+        }
+
+        public void SetEnterSelectingOnEnter(bool value) => enterSelectingOnEnter = value;
 
         public override void Init(StateMachine parent)
         {
             base.Init(parent);
-            loopRunner ??= new TravellerLoopRunner(this, traveller, legDelay);
-            loopRunner.Stop();
-            routePanel.Hide();
-            splineContainerWrapper.SetLineRendererActive(false);
-            dragZone.gameObject.SetActive(true);
-        }
-
-        public void SetOnLoopComplete(Action<LoopCompleteEventArgs> loopCompleted)
-        {
-            this.loopCompleted = loopCompleted;
-            loopRunner?.SetOnLoopIterationComplete(loopCompleted);
-        }
-
-        public void SetOnLoopEditionButtonClicked(Action<LoopEventArgs> onLoopEditionButtonClicked)
-        {
-            this.onLoopEditionButtonClicked = onLoopEditionButtonClicked;
-        }
-
-        public void SetSpaceshipData(SpaceshipData data, Color color)
-        {
-            this.data = data;
-            splineContainerWrapper.SetColor(color);
-            routePanel.SetData(data.id, color);
+            loop.ResetVisuals();
+            presentation.Reset(loop);
         }
 
         public override void Enter()
         {
-            routePanel.editButtonClicked += OnEditButtonClick;
+            presentation.RoutePanel.editButtonClicked += OnEditButtonClick;
+            presentation.Grabbable.WhenPointerEventRaised += OnPointerEvent;
 
-            destinationSelector.StartLookingForDestination(false);
-            splineContainerWrapper.CreateLoop(destinationSelector.BasePlanet, destinationSelector.Destination);
-            splineContainerWrapper.SetLineRendererActive(true);
+            if (enterSelectingOnEnter)
+            {
+                enterSelectingOnEnter = false;
+                BeginSelecting();
+                return;
+            }
 
-            Vector3 goPositions = splineContainerWrapper.GoPositions[splineContainerWrapper.GoPositions.Length / 3];
-            routePanel.SetPosition(goPositions);
-            routePanel.Show();
-
-            dragZone.gameObject.SetActive(false);
-            grabbable.SetActive(false);
-
-            loopRunner ??= new TravellerLoopRunner(this, traveller, legDelay);
-            loopRunner.SetOnLoopIterationComplete(loopCompleted);
-            loopRunner.StartLoop(
-                splineContainerWrapper,
-                data.id,
-                () => destinationSelector.Destination.PlanetStore.PickAllLetters(),
-                () => CurrentLoopEventArgs);
-        }
-
-        private void OnEditButtonClick()
-        {
-            onLoopEditionButtonClicked(CurrentLoopEventArgs);
-            parent.SetCurrentState<WaitingForRouteState>();
+            BeginLoop();
         }
 
         public override void Exit()
         {
-            routePanel.editButtonClicked -= OnEditButtonClick;
+            presentation.RoutePanel.editButtonClicked -= OnEditButtonClick;
+            presentation.Grabbable.WhenPointerEventRaised -= OnPointerEvent;
 
-            loopRunner?.Stop();
-            routePanel.Hide();
-            splineContainerWrapper.SetLineRendererActive(false);
-            dragZone.gameObject.SetActive(true);
+            isSelectingDestination = false;
+            loop.StopTraveller();
+            presentation.Reset(loop);
+        }
+
+        private void BeginLoop()
+        {
+            isSelectingDestination = false;
+            loop.EndSelection();
+            loop.RebuildRoute();
+            presentation.ShowLoopChrome(loop);
+            loop.StartTraveller(spaceship.Id, spaceship.BuildLoopEventArgs);
+        }
+
+        private void BeginSelecting()
+        {
+            isSelectingDestination = true;
+            loop.BeginSelection();
+            presentation.ShowSelectingChrome();
+            presentation.Grabbable.SetActive(true);
+        }
+
+        private void EndSelecting()
+        {
+            isSelectingDestination = false;
+            loop.EndSelection();
+            presentation.HideSelectingChrome();
+        }
+
+        private void OnPointerEvent(PointerEvent pointer)
+        {
+            if (isSelectingDestination)
+            {
+                if (pointer.Type == PointerEventType.Unselect)
+                    OnUnselectWhileSelecting();
+            }
+            else if (pointer.Type == PointerEventType.Select)
+            {
+                BeginSelecting();
+            }
+        }
+
+        private void OnUnselectWhileSelecting()
+        {
+            if (spaceship.DestinationSelector.HasDestinationBeenSelected)
+            {
+                OnDestinationConfirmed();
+                return;
+            }
+
+            EndSelecting();
+
+            if (loop.HasDestinations)
+                presentation.ShowStationGrab(loop);
+            else
+                parent.SetCurrentState<WaitingForRouteState>();
+        }
+
+        private void OnDestinationConfirmed()
+        {
+            SelectionConfirmResult result = loop.ConfirmSelection(
+                spaceship.DestinationSelector.Destination,
+                spaceship.NotifyLoopChanged);
+
+            switch (result)
+            {
+                case SelectionConfirmResult.StartedLoop:
+                    BeginLoop();
+                    break;
+                case SelectionConfirmResult.ExtendedLoop:
+                    EndSelecting();
+                    presentation.ShowStationGrab(loop);
+                    break;
+            }
+        }
+
+        private void OnEditButtonClick()
+        {
+            spaceship.NotifyLoopEditionClicked();
+            parent.SetCurrentState<WaitingForRouteState>();
         }
 
         // ! DEBUG
 
-        public void Debug_InvokeOnLoopEditionButtonClicked()
+        public void Debug_ConfirmDestination()
         {
-            OnEditButtonClick();
+            if (spaceship.DestinationSelector.Destination != null)
+                OnDestinationConfirmed();
         }
+
+        public void Debug_InvokeOnLoopEditionButtonClicked() => OnEditButtonClick();
     }
 }

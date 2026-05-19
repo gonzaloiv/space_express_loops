@@ -17,9 +17,18 @@ namespace DigitalLove.Game.Spaceships
 
         public List<SpaceshipBehaviour> All => spaceships;
 
-        public Action<LoopEventArgs> loopCreated = args => { };
+        public Action<LoopEventArgs> loopChanged = args => { };
         public Action<LoopEventArgs> loopEditionButtonClicked = args => { };
         public Action<LoopCompleteEventArgs> loopComplete = args => { };
+
+        public void InitializePool()
+        {
+            foreach (SpaceshipBehaviour spaceship in spaceships)
+            {
+                if (spaceship != null)
+                    spaceship.Initialize();
+            }
+        }
 
         public void SyncIdsFromSnapshot(IEnumerable<string> existingIds) => idCounter.SyncFromExistingIds(existingIds);
 
@@ -43,9 +52,9 @@ namespace DigitalLove.Game.Spaceships
                 hubId = basePlanet != null ? basePlanet.Id : null
             };
             spaceship.Spawn(data, colorPair.color.value, basePlanet);
-            spaceship.SetOnLoopCreated(OnLoopCreated);
-            spaceship.SetOnLoopComplete(OnLoopComplete);
-            spaceship.SetOnLoopEditionButtonClicked(OnLoopEditionButtonClicked);
+            spaceship.SetOnLoopChanged(args => loopChanged(args));
+            spaceship.SetOnLoopComplete(args => loopComplete(args));
+            spaceship.SetOnLoopEditionButtonClicked(args => loopEditionButtonClicked(args));
             return spaceship;
         }
 
@@ -85,9 +94,11 @@ namespace DigitalLove.Game.Spaceships
             if (spaceship == null)
             {
                 spaceship = Instantiate(spaceships[0], transform);
-                spaceship.Hide();
+                spaceship.Initialize();
                 spaceships.Add(spaceship);
+                spaceship.Hide();
             }
+
             return spaceship;
         }
 
@@ -96,21 +107,6 @@ namespace DigitalLove.Game.Spaceships
             ColorIsAvailablePair[] availableColors = colors.Where(c => !c.isTaken).ToArray();
             Assert.AreNotEqual(availableColors.Length, 0);
             return availableColors[UnityEngine.Random.Range(0, availableColors.Length)];
-        }
-
-        private void OnLoopCreated(LoopEventArgs args)
-        {
-            loopCreated(args);
-        }
-
-        private void OnLoopComplete(LoopCompleteEventArgs args)
-        {
-            loopComplete(args);
-        }
-
-        private void OnLoopEditionButtonClicked(LoopEventArgs args)
-        {
-            loopEditionButtonClicked(args);
         }
 
         public void SpawnIdle(string id, HubBehaviour basePlanet, string colorCode)
@@ -127,16 +123,18 @@ namespace DigitalLove.Game.Spaceships
         public void HideAll()
         {
             foreach (SpaceshipBehaviour spaceship in spaceships)
-            {
                 spaceship.Hide();
-            }
         }
 
         // ! DEBUG
 
-        public SpaceshipBehaviour GetRandom()
+        public SpaceshipBehaviour GetRandomActive()
         {
-            return spaceships[UnityEngine.Random.Range(0, spaceships.Count)];
+            List<SpaceshipBehaviour> active = spaceships.Where(s => s != null && s.IsActive).ToList();
+            if (active.Count == 0)
+                return null;
+
+            return active[UnityEngine.Random.Range(0, active.Count)];
         }
 
         public List<SpaceshipBehaviour> GetAll() => spaceships.ToList();

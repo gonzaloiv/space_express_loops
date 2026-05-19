@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DigitalLove.Game.Planets;
 using UnityEngine;
 
@@ -15,11 +16,12 @@ namespace DigitalLove.Game.Spaceships
         private float countdown;
         private bool isLookingForDestination;
 
-        [Header("DEBUG")]
-        private HubBehaviour basePlanet;
+        private Transform selectionOrigin;
+        private HubBehaviour hub;
+        private readonly HashSet<string> excludedPlanetIds = new();
         private PlanetBehaviour destinationPlanet;
 
-        public HubBehaviour BasePlanet => basePlanet;
+        public HubBehaviour Hub => hub;
         public PlanetBehaviour Destination => destinationPlanet;
         public bool HasDestinationBeenSelected => destinationPlanet != null && destinationPlanet.IsDestination;
 
@@ -29,11 +31,31 @@ namespace DigitalLove.Game.Spaceships
             raycastHelper.SetActive(isLookingForDestination);
         }
 
-        public void Init(HubBehaviour basePlanet, Color color)
+        public void Init(HubBehaviour hub, Color color)
         {
-            this.basePlanet = basePlanet;
+            this.hub = hub;
+            selectionOrigin = hub.transform;
             raycastHelper.SetColor(color);
             destinationZone.SetColor(color);
+            excludedPlanetIds.Clear();
+        }
+
+        public void SetSelectionOrigin(Transform origin)
+        {
+            selectionOrigin = origin;
+        }
+
+        public void SetExcludedPlanetIds(IEnumerable<string> planetIds)
+        {
+            excludedPlanetIds.Clear();
+            if (planetIds == null)
+                return;
+
+            foreach (string id in planetIds)
+            {
+                if (!string.IsNullOrEmpty(id))
+                    excludedPlanetIds.Add(id);
+            }
         }
 
         private void Update()
@@ -57,7 +79,9 @@ namespace DigitalLove.Game.Spaceships
             else
             {
                 bool isValidNewDestination = candidatePlanet != destinationPlanet
-                    && candidatePlanet.gameObject != basePlanet.gameObject
+                    && selectionOrigin != null
+                    && candidatePlanet.transform != selectionOrigin
+                    && !excludedPlanetIds.Contains(candidatePlanet.Id)
                     && !candidatePlanet.IsOnRoute;
                 if (isValidNewDestination)
                     SelectNewDestination(candidatePlanet);

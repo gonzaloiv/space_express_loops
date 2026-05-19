@@ -48,6 +48,7 @@ namespace DigitalLove.Game.Flow
 
             gameSnapshot = memoryDataClient.Get<GameSnapshot>();
             RefreshStoreUI();
+            StartPlanetStoresIfLoopsExist();
             PlanetRouteColorSync.Apply(
                 gameSnapshot,
                 levelContainer.PlanetsSpawner,
@@ -80,24 +81,20 @@ namespace DigitalLove.Game.Flow
             }
         }
 
-        private void OnLoopCreated(LoopEventArgs args)
+        private void OnLoopChanged(LoopEventArgs args)
         {
-            LoopData data = new()
-            {
-                spaceshipId = args.spaceshipId,
-                destinationIds = args.destinationIds != null ? new List<string>(args.destinationIds) : new(),
-                colorCode = args.colorCode,
-                hubId = args.hubId
-            };
-            gameSnapshot.AddLoop(data);
-
-            PlanetRouteColorSync.Apply(
-                gameSnapshot,
-                levelContainer.PlanetsSpawner,
-                levelContainer.HubsSpawner,
-                levelContainer.SpaceshipsSpawner);
-
+            gameSnapshot.SaveLoop(ToLoopData(args));
+            ApplyRouteColors();
+            StartPlanetStoresIfLoopsExist();
             sessionEventsHelper.Send("loop_created");
+        }
+
+        private void StartPlanetStoresIfLoopsExist()
+        {
+            if (!gameSnapshot.HasAnyLoopWithDestinations)
+                return;
+
+            levelContainer.PlanetsSpawner.UnlockPlanetStores();
         }
 
         private void OnLoopComplete(LoopCompleteEventArgs args)
@@ -119,8 +116,20 @@ namespace DigitalLove.Game.Flow
 
         private void OnLoopEditionButtonClicked(LoopEventArgs args)
         {
-            gameSnapshot.ClearLoopDestinations(args.spaceshipId);
+            gameSnapshot.SaveLoop(ToLoopData(args));
+            ApplyRouteColors();
+        }
 
+        private static LoopData ToLoopData(LoopEventArgs args) => new()
+        {
+            spaceshipId = args.spaceshipId,
+            destinationIds = args.destinationIds != null ? new List<string>(args.destinationIds) : new(),
+            colorCode = args.colorCode,
+            hubId = args.hubId
+        };
+
+        private void ApplyRouteColors()
+        {
             PlanetRouteColorSync.Apply(
                 gameSnapshot,
                 levelContainer.PlanetsSpawner,
@@ -140,7 +149,7 @@ namespace DigitalLove.Game.Flow
 
         private void SubscribeEvents()
         {
-            levelContainer.SpaceshipsSpawner.loopCreated += OnLoopCreated;
+            levelContainer.SpaceshipsSpawner.loopChanged += OnLoopChanged;
             levelContainer.SpaceshipsSpawner.loopComplete += OnLoopComplete;
             levelContainer.SpaceshipsSpawner.loopEditionButtonClicked += OnLoopEditionButtonClicked;
             levelContainer.PlanetsSpawner.planetFull += OnPlanetFull;
@@ -148,7 +157,7 @@ namespace DigitalLove.Game.Flow
 
         private void UnsubscribeEvents()
         {
-            levelContainer.SpaceshipsSpawner.loopCreated -= OnLoopCreated;
+            levelContainer.SpaceshipsSpawner.loopChanged -= OnLoopChanged;
             levelContainer.SpaceshipsSpawner.loopComplete -= OnLoopComplete;
             levelContainer.SpaceshipsSpawner.loopEditionButtonClicked -= OnLoopEditionButtonClicked;
             levelContainer.PlanetsSpawner.planetFull -= OnPlanetFull;

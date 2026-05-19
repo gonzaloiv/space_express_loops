@@ -55,8 +55,10 @@ namespace DigitalLove.Game.Planets
             SetupFromData(planetData);
             SetupUI();
 
-            planetStore.StartStoring(planetData.lettersPerMinute, planetData.maxLetters, planetFull);
+            planetStore.PrepareStoring(planetData.lettersPerMinute, planetData.maxLetters, planetFull);
         }
+
+        public void BeginStoring() => planetStore.BeginStoring();
 
         private void SetupFromData(PlanetData planetData)
         {

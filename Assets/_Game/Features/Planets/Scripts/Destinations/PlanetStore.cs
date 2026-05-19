@@ -18,18 +18,29 @@ namespace DigitalLove.Game.Planets
         private int maxLetters;
         private int letters;
         private float countdown;
+        private bool isStoring;
 
         private Action planetFull;
 
         public int Letters => letters;
+        public bool IsStoring => isStoring;
 
-        public void StartStoring(int lettersPerMinute, int maxLetters, Action planetFull)
+        public void PrepareStoring(int lettersPerMinute, int maxLetters, Action planetFull)
         {
             this.lettersPerMinute = lettersPerMinute;
             this.maxLetters = maxLetters;
             this.planetFull = planetFull;
             letters = 0;
+            isStoring = false;
             lettersPanel.ShowLetters(letters, maxLetters);
+        }
+
+        public void BeginStoring()
+        {
+            if (isStoring || lettersPerMinute <= 0)
+                return;
+
+            isStoring = true;
             ResetCoundown();
         }
 
@@ -46,7 +57,7 @@ namespace DigitalLove.Game.Planets
 
         private void Update()
         {
-            if (lettersPerMinute == 0)
+            if (!isStoring || lettersPerMinute == 0)
                 return;
             if (countdown <= 0)
             {

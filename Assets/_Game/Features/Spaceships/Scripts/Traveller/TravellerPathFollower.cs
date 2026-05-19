@@ -60,6 +60,13 @@ namespace DigitalLove.Game.Spaceships
             onPathEnded = null;
         }
 
+        public void EndWithSuccess()
+        {
+            KillTween();
+            onPathEnded?.Invoke(true);
+            onPathEnded = null;
+        }
+
         private void KillTween()
         {
             if (pathTween != null && pathTween.IsActive())

@@ -3,52 +3,102 @@ using System.Collections.Generic;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Planets;
 using DigitalLove.Global;
+using UnityEditor.Presets;
 using UnityEngine;
-using DigitalLove.Game.UI;
 
 namespace DigitalLove.Game.Spaceships
 {
+    [RequireComponent(typeof(SpaceshipPresentation))]
     public class SpaceshipBehaviour : MonoBehaviour
     {
         [SerializeField] private WaitingForRouteState waitingForRouteState;
-        [SerializeField] private DestinationSelectionState destinationSelectionState;
         [SerializeField] private OnRouteState onRouteState;
+        [SerializeField] private SpaceshipPresentation presentation;
 
-        [SerializeField] private DestinationSelector destinationSelector;
-        [SerializeField] private RoutePanel routePanel;
+        [SerializeField] private StationBehaviour station;
+        [SerializeField] private SplineContainerWrapper splineContainerWrapper;
+        [SerializeField] private TravellerBehaviour traveller;
         [SerializeField] private Renderer originZone;
+        [SerializeField] private float legDelay = 1f;
 
         private StateMachine stateMachine;
         private SpaceshipData data;
+        private SpaceshipLoop loop;
+        private bool isInitialized;
+
+        public bool IsInitialized => isInitialized;
+        public SpaceshipLoop Loop => loop;
+        public SpaceshipPresentation Presentation => presentation;
+        public DestinationSelector DestinationSelector => presentation.DestinationSelector;
 
         public string Id => data.id;
         public string HubId => data.hubId;
         public string ColorCode => data.colorCode;
-        public HubBehaviour Hub => destinationSelector.BasePlanet;
+        public HubBehaviour Hub => DestinationSelector.Hub;
         public bool IsActive => gameObject.activeInHierarchy;
-        public bool HasRoute => stateMachine.IsCurrentState<OnRouteState>();
-        public RoutePanel RoutePanel => routePanel;
+        public bool HasRoute =>
+            isInitialized && loop.HasDestinations && stateMachine.IsCurrentState<OnRouteState>();
 
-        private void Awake()
+        public void Initialize()
         {
-            stateMachine = StateMachineFactory.Create(new MonoState[] { waitingForRouteState, destinationSelectionState, onRouteState });
+            if (isInitialized)
+                return;
+
+            isInitialized = true;
+            presentation ??= GetComponent<SpaceshipPresentation>();
+
+            loop = new SpaceshipLoop(
+                this,
+                transform,
+                presentation.DestinationSelector,
+                station,
+                splineContainerWrapper,
+                traveller,
+                legDelay);
+            presentation.Reset(loop);
+
+            waitingForRouteState.Bind(this);
+            onRouteState.Bind(this);
+
+            traveller.Hide();
+
+            stateMachine = StateMachineFactory.Create(new MonoState[] { waitingForRouteState, onRouteState });
             stateMachine.SetCurrentState<WaitingForRouteState>();
         }
 
-        public void SetOnLoopCreated(Action<LoopEventArgs> onLoopCreated)
+        public void StartSelectingDestination()
         {
-            destinationSelectionState.SetOnLoopCreated(Id, data.hubId, data.colorCode, onLoopCreated);
+            onRouteState.SetEnterSelectingOnEnter(true);
+            stateMachine.SetCurrentState<OnRouteState>();
         }
 
-        public void SetOnLoopComplete(Action<LoopCompleteEventArgs> onLoopComplete)
+        public void SetOnLoopChanged(Action<LoopEventArgs> onLoopChanged) => onLoopChangedHandler = onLoopChanged;
+
+        public void SetOnLoopComplete(Action<LoopCompleteEventArgs> onLoopComplete) =>
+            loop.SetOnLoopComplete(onLoopComplete);
+
+        public void SetOnLoopEditionButtonClicked(Action<LoopEventArgs> onLoopEditionButtonClicked) =>
+            onLoopEditionButtonClickedHandler = onLoopEditionButtonClicked;
+
+        private Action<LoopEventArgs> onLoopChangedHandler = _ => { };
+        private Action<LoopEventArgs> onLoopEditionButtonClickedHandler = _ => { };
+
+        public void NotifyLoopChanged() => onLoopChangedHandler(BuildLoopEventArgs());
+
+        public void NotifyLoopEditionClicked()
         {
-            onRouteState.SetOnLoopComplete(onLoopComplete);
+            loop.ClearDestinations();
+            loop.MoveShipToHub();
+            onLoopEditionButtonClickedHandler(BuildLoopEventArgs());
         }
 
-        public void SetOnLoopEditionButtonClicked(Action<LoopEventArgs> onLoopEditionButtonClicked)
+        public LoopEventArgs BuildLoopEventArgs() => new()
         {
-            onRouteState.SetOnLoopEditionButtonClicked(onLoopEditionButtonClicked);
-        }
+            spaceshipId = Id,
+            destinationIds = loop.GetDestinationIds(),
+            colorCode = ColorCode,
+            hubId = HubId
+        };
 
         public void Spawn(SpaceshipData data, Color color, HubBehaviour basePlanet)
         {
@@ -57,35 +107,53 @@ namespace DigitalLove.Game.Spaceships
             transform.SetWorldPose(basePlanet.SpawnPose);
 
             basePlanet.SetRouteColor(color);
-            destinationSelector.Init(basePlanet, color);
-            onRouteState.SetSpaceshipData(data, color);
+            DestinationSelector.Init(basePlanet, color);
+            loop.SetVisuals(data.id, color);
+            loop.SetRoutePanelData(presentation.RoutePanel, data.id, color);
             originZone.material.color = color;
+            loop.ClearDestinations();
+            loop.MoveShipToHub();
 
             this.SetActive(true);
         }
 
-        public void Hide() => this.SetActive(false);
+        public void Hide()
+        {
+            if (!isInitialized)
+            {
+                this.SetActive(false);
+                return;
+            }
+
+            loop.ClearDestinations();
+            this.SetActive(false);
+        }
 
         public void SetRoute(IReadOnlyList<PlanetBehaviour> destinations)
         {
             if (destinations == null || destinations.Count == 0)
                 return;
 
-            stateMachine.SetCurrentState<DestinationSelectionState>();
-            destinationSelector.Debug_SetDestinationPlanet(destinations[destinations.Count - 1]);
-            destinationSelectionState.Debug_OnLoopCreated();
+            if (!isInitialized)
+                Initialize();
+
+            if (Hub == null)
+            {
+                Debug.LogWarning($"{nameof(SpaceshipBehaviour)}: Cannot set route without a hub. Spawn the ship first.");
+                return;
+            }
+
+            onRouteState.SetEnterSelectingOnEnter(false);
+            loop.SetDestinations(destinations);
+            stateMachine.SetCurrentState<OnRouteState>();
         }
 
-        public void ShowGrabMePanel()
-        {
-            waitingForRouteState.ShowGrabMePanel();
-        }
+        public void ShowGrabMePanel() => waitingForRouteState.ShowGrabMePanel();
 
         // ! DEBUG
 
-        public void Debug_InvokeOnLoopEditionButtonClicked()
-        {
-            onRouteState.Debug_InvokeOnLoopEditionButtonClicked();
-        }
+        public void Debug_ConfirmDestination() => onRouteState.Debug_ConfirmDestination();
+
+        public void Debug_InvokeOnLoopEditionButtonClicked() => onRouteState.Debug_InvokeOnLoopEditionButtonClicked();
     }
 }

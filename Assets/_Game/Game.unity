@@ -4138,6 +4138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7a9e4f12b8d40679a3c5e2f8b1d4a60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Planets.MrukRoomLocalPlacement
+  occupants: []
 --- !u!1 &781987388
 GameObject:
   m_ObjectHideFlags: 0
@@ -4797,12 +4798,19 @@ MonoBehaviour:
   nextState: {fileID: 250434374}
   ttsHelper: {fileID: 1654487132}
   highScorePoster: {fileID: 7141206415059494585}
-  initialLetters: 25
-  initialMoney: 1000
   playerData:
     userId: 
     sessionCount: 0
     cookies: []
+  gameSnapshot:
+    roundIndex: 0
+    planets: []
+    hubs: []
+    loops: []
+    store:
+      letters: 0
+      money: 0
+    lettersRequiredForRoundCompletion: 0
 --- !u!1 &924513524
 GameObject:
   m_ObjectHideFlags: 0
@@ -11008,7 +11016,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 723.08496, y: -50}
-  m_SizeDelta: {x: 243.83, y: 50}
+  m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1213392285
 MonoBehaviour:
@@ -11489,7 +11497,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 46.07
+  m_PixelsPerUnitMultiplier: 67.32
 --- !u!222 &1353798678
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -13238,6 +13246,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1707529851}
   - component: {fileID: 1707529850}
+  - component: {fileID: 1707529852}
+  - component: {fileID: 1707529853}
+  - component: {fileID: 1707529854}
+  - component: {fileID: 1707529855}
   m_Layer: 0
   m_Name: ___Debug
   m_TagString: Untagged
@@ -13256,11 +13268,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40b35439c9e258d4cbd510357b66fdf3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Debug::DigitalLove.Game.Debug.EditorDebugActions
+  m_EditorClassIdentifier: DigitalLove.Game.Debug::DigitalLove.Game.Debug.EditorDebugContext
   planets: {fileID: 1097461040}
+  hubs: {fileID: 935971882}
   spaceships: {fileID: 933255161}
-  routeSpaceship: {fileID: 0}
-  routePlanet: {fileID: 0}
+  targetSpaceship: {fileID: 0}
+  destinationPlanet: {fileID: 0}
 --- !u!4 &1707529851
 Transform:
   m_ObjectHideFlags: 0
@@ -13278,6 +13291,54 @@ Transform:
   - {fileID: 1964749853}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1707529852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1707529849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8e4f1a23c5d47e9a1b2c3d4e5f60718, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Debug::DigitalLove.Game.Debug.SpaceshipPoolDebugActions
+--- !u!114 &1707529853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1707529849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9f5a2b34d6e58f0b2c3d4e5f6a71829, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Debug::DigitalLove.Game.Debug.SpaceshipSelectionDebugActions
+--- !u!114 &1707529854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1707529849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0a6b3c45e7f69a1c3d4e5f6a7b82930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Debug::DigitalLove.Game.Debug.SpaceshipRouteDebugActions
+--- !u!114 &1707529855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1707529849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1b7c4d56f8a70b2d4e5f6a7b8c93041, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Debug::DigitalLove.Game.Debug.GameSnapshotDebugActions
 --- !u!1 &1718389704
 GameObject:
   m_ObjectHideFlags: 0
@@ -14226,6 +14287,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 532347420758303840, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
+      propertyPath: _size.x
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 532347420758303840, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
+      propertyPath: _size.y
+      value: 250
+      objectReference: {fileID: 0}
     - target: {fileID: 3007090343516073934, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
@@ -14353,6 +14422,14 @@ PrefabInstance:
     - target: {fileID: 6218811324286286063, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
       propertyPath: m_fontSize
       value: 124.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7051359355672087997, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
+      propertyPath: _size.x
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 7051359355672087997, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
+      propertyPath: _size.y
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 7405305355383689099, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
       propertyPath: m_AnchorMax.y
@@ -16848,7 +16925,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.99607843, g: 0.49019608, b: 0.078431375, a: 0.7058824}
+  m_Color: {r: 0.38431373, g: 0.49803922, b: 0.65882355, a: 0.7058824}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -17187,24 +17264,9 @@ MonoBehaviour:
     DataSource: 4
     RoomIndex: -1
     RoomPrefabs:
-    - {fileID: 1851870975495527198, guid: a3e4ae4647d78db43847a7b35262cb04, type: 3}
-    - {fileID: 5618556046422172173, guid: 029ede24e76b24d0888dc235dd0b96f2, type: 3}
-    - {fileID: 5618556046422172173, guid: caa3755f1f2184eb7a9fd17b7cf1f1d3, type: 3}
     - {fileID: 1766085727792645261, guid: 989283c9dcb36a24aac11a601001dce0, type: 3}
-    - {fileID: 5618556046422172173, guid: b2217186fc11b47638c925d674e7f526, type: 3}
-    - {fileID: 5618556046422172173, guid: 531aeca35d703a64cb0e1fd73a128fc0, type: 3}
-    - {fileID: 5618556046422172173, guid: 1550cf68ffa5a344e881275021bc3ffe, type: 3}
-    - {fileID: 5618556046422172173, guid: 31818101cde292945ab80af5d14bec54, type: 3}
-    - {fileID: 5618556046422172173, guid: c2bd5595e9fe2493a92d4bc0bb264603, type: 3}
     SceneJsons:
     - {fileID: 4900000, guid: e74ccdce0174db947ab8611a1b39d5ba, type: 3}
-    - {fileID: 4900000, guid: a42277f85740284419b7a33b4785317d, type: 3}
-    - {fileID: 4900000, guid: 4619d891bbcb1614e9be606f8faf0de1, type: 3}
-    - {fileID: 4900000, guid: 373694211c1d9ea4ab07bff51169e3c3, type: 3}
-    - {fileID: 4900000, guid: 80a133f3c2e481e429a52841f989fb26, type: 3}
-    - {fileID: 4900000, guid: 5139efde3f8210a4189ba669f8c4c768, type: 3}
-    - {fileID: 4900000, guid: 5c33e7b3e50fc944889c808743559b6f, type: 3}
-    - {fileID: 4900000, guid: 1c73847af159bbe49ab9032ccd89a381, type: 3}
     LoadSceneOnStartup: 1
     EnableHighFidelityScene: 0
     SeatWidth: 0.6

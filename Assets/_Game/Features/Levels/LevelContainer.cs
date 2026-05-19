@@ -32,6 +32,7 @@ namespace DigitalLove.Game.Levels
 
         public void HideAll()
         {
+            spaceshipsSpawner.InitializePool();
             planetsSpawner.HideAll();
             spaceshipsSpawner.HideAll();
             hubsSpawner.HideAll();
@@ -66,7 +67,7 @@ namespace DigitalLove.Game.Levels
             HubBehaviour hub = hubsSpawner.SpawnNew();
             gameSnapshot.AddHub(hubsSpawner.CreateHubData(hub));
             SpaceshipBehaviour spaceship = spaceshipsSpawner.SpawnNew(hub);
-            gameSnapshot.AddLoop(new LoopData
+            gameSnapshot.SaveLoop(new LoopData
             {
                 spaceshipId = spaceship.Id,
                 colorCode = spaceship.ColorCode,

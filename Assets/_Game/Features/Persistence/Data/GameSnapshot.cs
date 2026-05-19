@@ -28,6 +28,8 @@ namespace DigitalLove.Game.Persistence
         [JsonIgnore] public bool HasPlanets => planets != null && planets.Count > 0;
         [JsonIgnore] public bool HasHubs => hubs != null && hubs.Count > 0;
         [JsonIgnore] public bool HasLoops => loops != null && loops.Count > 0;
+        [JsonIgnore] public bool HasAnyLoopWithDestinations =>
+            loops != null && loops.Exists(l => l.HasDestinations);
         [JsonIgnore] public bool IsCurrentRoundLetterGoalMet => store != null && store.letters >= lettersRequiredForRoundCompletion;
 
         public GameSnapshot()
@@ -100,22 +102,31 @@ namespace DigitalLove.Game.Persistence
             return hubs.FirstOrDefault(h => string.Equals(h.id, hubId));
         }
 
-        public void AddLoop(LoopData toAdd)
+        public void SaveLoop(LoopData loopData)
         {
-            LoopData toRemove = loops.FirstOrDefault(l => string.Equals(l.spaceshipId, toAdd.spaceshipId));
-            if (toRemove != null)
-                loops.Remove(toRemove);
-            loops.Add(toAdd);
-            onUpdated?.Invoke();
-        }
+            loops ??= new();
+            LoopData existing = loops.FirstOrDefault(l => string.Equals(l.spaceshipId, loopData.spaceshipId));
+            if (existing != null)
+            {
+                existing.destinationIds = loopData.destinationIds != null
+                    ? new List<string>(loopData.destinationIds)
+                    : new();
+                existing.colorCode = loopData.colorCode;
+                existing.hubId = loopData.hubId;
+            }
+            else
+            {
+                loops.Add(new LoopData
+                {
+                    spaceshipId = loopData.spaceshipId,
+                    destinationIds = loopData.destinationIds != null
+                        ? new List<string>(loopData.destinationIds)
+                        : new(),
+                    colorCode = loopData.colorCode,
+                    hubId = loopData.hubId
+                });
+            }
 
-        public void ClearLoopDestinations(string spaceshipId)
-        {
-            LoopData loop = loops.FirstOrDefault(l => string.Equals(l.spaceshipId, spaceshipId));
-            if (loop == null)
-                return;
-
-            loop.destinationIds?.Clear();
             onUpdated?.Invoke();
         }
 

@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using Reflex.Attributes;
 using UnityEngine;
 using DigitalLove.Game.TTS;
-using DigitalLove.Global;
 using DigitalLove.Casual.Flow;
 using DigitalLove.Game.UI;
 

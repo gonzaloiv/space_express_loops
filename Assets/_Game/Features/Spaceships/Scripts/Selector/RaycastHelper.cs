@@ -39,6 +39,9 @@ namespace DigitalLove.Game.Spaceships
 
         private void Update()
         {
+            if (!isActive)
+                return;
+
             CheckHits();
             ShowLineRenderer();
         }
