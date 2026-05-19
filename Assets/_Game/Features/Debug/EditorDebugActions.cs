@@ -3,6 +3,9 @@ using DigitalLove.Game.Planets;
 using DigitalLove.Game.Spaceships;
 using DigitalLove.Global;
 using UnityEngine;
+using DigitalLove.DataAccess;
+using Reflex.Attributes;
+using DigitalLove.Game.Persistence;
 
 namespace DigitalLove.Game
 {
@@ -12,6 +15,8 @@ namespace DigitalLove.Game
         [SerializeField] private SpaceshipsSpawner spaceships;
 
         private List<string> excludedIds = new();
+
+        [Inject] private MemoryDataClient memoryDataClient;
 
         [Button]
         public void Debug_CreateRandomRoute()
@@ -47,6 +52,13 @@ namespace DigitalLove.Game
                 if (spaceship.HasRoute)
                     spaceship.Debug_InvokeOnLoopEditionButtonClicked();
             }
+        }
+
+        [Button]
+        public void Debug_AddLettersAndMoney()
+        {
+            GameSnapshot gameSnapshot = memoryDataClient.Get<GameSnapshot>();
+            gameSnapshot.IncreaseLettersAndMoney(100, 1000);
         }
 
         #region Route from references

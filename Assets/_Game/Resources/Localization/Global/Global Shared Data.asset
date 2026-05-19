@@ -43,6 +43,14 @@ MonoBehaviour:
     m_Key: reset_data_panel_reset_data_button
     m_Metadata:
       m_Items: []
+  - m_Id: 10179038496346112
+    m_Key: restarting_in_n_seconds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10187555580071936
+    m_Key: high_score_poster_title
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

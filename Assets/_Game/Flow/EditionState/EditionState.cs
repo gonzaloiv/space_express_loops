@@ -11,6 +11,7 @@ using DigitalLove.Global;
 using DigitalLove.Casual.Analytics;
 using DigitalLove.Analytics;
 using DigitalLove.Game.TTS;
+using System;
 
 namespace DigitalLove.Game.Flow
 {
@@ -63,16 +64,19 @@ namespace DigitalLove.Game.Flow
 
         private void ShowFTUIndicators()
         {
-            Debug.LogWarning("FormattedCurrentRoundIndex " + roundSelector.FormattedCurrentRoundIndex);
+            ttsHelper.SetInFrontOfCameraOrDefault(false);
+            void SayRoundIntro(Action onComplete) => ttsHelper.SayRoundIntro(roundSelector.CurrentRound, onComplete);
             if (roundSelector.IsFirstRound)
             {
                 levelContainer.SpaceshipsSpawner.All[0].ShowGrabMePanel();
-                ttsHelper.SetInFrontOfCameraOrDefault(false);
-                ttsHelper.SayAfter(2.5f, "the_hub_intro", SayHowToCreateARoute);
-                void SayHowToCreateARoute()
+                SayRoundIntro(() =>
                 {
                     ttsHelper.SayAfter(2.5f, "how_to_create_a_route", () => { });
-                }
+                });
+            }
+            else
+            {
+                SayRoundIntro(() => { });
             }
         }
 

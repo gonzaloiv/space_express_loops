@@ -8,6 +8,7 @@ using UnityEngine;
 using DigitalLove.Game.TTS;
 using DigitalLove.Global;
 using DigitalLove.Casual.Flow;
+using DigitalLove.Game.UI;
 
 namespace DigitalLove.Game.Flow
 {
@@ -18,14 +19,11 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private GameSnapshotClient gameSnapshotClient;
         [SerializeField] private MonoState nextState;
         [SerializeField] private TTSHelper ttsHelper;
+        [SerializeField] private HighScorePosterBehaviour highScorePoster;
 
         [Header("Debug")]
-        [SerializeField] private DebugBool addInitialScore;
-        [SerializeField] private int initialLetters;
-        [SerializeField] private int initialMoney;
-
         [SerializeField] private PlayerData playerData;
-        private GameSnapshot gameSnapshot;
+        [SerializeField] private GameSnapshot gameSnapshot;
 
         [Inject] private MemoryDataClient memoryDataClient;
 
@@ -33,13 +31,14 @@ namespace DigitalLove.Game.Flow
         {
             base.Init(parent);
             levelContainer.HideAll();
+            highScorePoster.Hide();
         }
 
         public override void Enter()
         {
             InitData();
-            if (addInitialScore.Value)
-                gameSnapshot.IncreaseLettersAndMoney(initialLetters, initialMoney);
+            highScorePoster.Show();
+
             if (!gameSnapshot.HasPlanets)
             {
                 SpawnLevelFromInitialRound();
@@ -72,17 +71,12 @@ namespace DigitalLove.Game.Flow
 
         private void SayIntro()
         {
-            void SayRoundIntro() => ttsHelper.SayRoundIntro(roundSelector.CurrentRound, ToNextState);
             bool isFirstTry = memoryDataClient.Get<Play>().IsFirstTry;
             ttsHelper.SetInFrontOfCameraOrDefault(true);
             if (isFirstTry)
-            {
-                ttsHelper.Say("welcome_message", SayRoundIntro);
-            }
+                ttsHelper.Say("welcome_message", ToNextState);
             else
-            {
-                SayRoundIntro();
-            }
+                ToNextState();
         }
 
         private void RespawnFromData()

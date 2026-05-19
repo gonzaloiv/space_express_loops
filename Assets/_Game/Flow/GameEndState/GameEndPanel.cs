@@ -6,7 +6,7 @@ using DigitalLove.UI.DesignSystem;
 using TMPro;
 using UnityEngine;
 
-namespace DigitalLove.Game.Flow
+namespace DigitalLove.Game.UI
 {
     public class GameEndPanel : MonoBehaviour
     {
@@ -30,7 +30,7 @@ namespace DigitalLove.Game.Flow
             Show();
             newHighScorePanel.SetActive(true);
             newHighScoreLabel.text = LocalizationUtil.GetValue("new_high_score");
-            scoreLabel.text = score.ToString();
+            scoreLabel.text = $"{score:N0}";
             newHighScoreAudioSource.Play();
         }
 

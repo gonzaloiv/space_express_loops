@@ -35,7 +35,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 2611552355799040
-    m_Localized: Continue where you left off or reset your data?
+    m_Localized: Continue where you left off or restart from zero?
     m_Metadata:
       m_Items: []
   - m_Id: 2611552385159168
@@ -43,7 +43,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 2611552385159169
-    m_Localized: Reset data
+    m_Localized: Restart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10179038496346112
+    m_Localized: Restarting in {0} seconds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10187555580071936
+    m_Localized: Streak of the Month
     m_Metadata:
       m_Items: []
   references:

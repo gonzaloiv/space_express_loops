@@ -7,7 +7,8 @@ using Newtonsoft.Json;
 using Reflex.Attributes;
 using UnityEngine;
 using DigitalLove.Casual.Flow;
-
+using DigitalLove.Game.UI;
+using UnityEngine.PlayerLoop;
 
 namespace DigitalLove.Game.Flow
 {
@@ -21,6 +22,12 @@ namespace DigitalLove.Game.Flow
 
         [Inject] private MemoryDataClient memoryDataClient;
         [Inject] private UnityPlayerDataClient unityPlayerDataClient;
+
+        public override void Init(StateMachine parent)
+        {
+            base.Init(parent);
+            gameEndPanel.Hide();
+        }
 
         public override void Enter()
         {

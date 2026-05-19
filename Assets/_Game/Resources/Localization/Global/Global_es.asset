@@ -37,7 +37,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 2611552355799040
-    m_Localized: "\xBFContinuar donde lo dejaste o restablecer tus datos?"
+    m_Localized: "\xBFContinuar donde lo dejaste o empezar de cero?"
     m_Metadata:
       m_Items: []
   - m_Id: 2611552385159168
@@ -45,7 +45,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 2611552385159169
-    m_Localized: Restablecer datos
+    m_Localized: Reanudar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10179038496346112
+    m_Localized: Reiniciando en {0} segundos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10187555580071936
+    m_Localized: Streak of the Month
     m_Metadata:
       m_Items: []
   references:

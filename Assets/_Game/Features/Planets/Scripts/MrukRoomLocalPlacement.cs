@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using DigitalLove.Global;
 using Meta.XR.MRUtilityKit;
 using UnityEngine;
+using System;
 
 namespace DigitalLove.Game.Planets
 {
@@ -9,13 +10,14 @@ namespace DigitalLove.Game.Planets
     {
         public const int DefaultMaxIterations = 333;
 
-        private struct Occupant
+        [Serializable]
+        public class Occupant
         {
             public Vector3 localPosition;
             public float radius;
         }
 
-        private readonly List<Occupant> occupants = new();
+        [SerializeField] private List<Occupant> occupants;
 
         public void Clear() => occupants.Clear();
 

@@ -1,0 +1,31 @@
+{
+    "name": "DigitalLove.Game.Flow.GameStartState",
+    "rootNamespace": "",
+    "references": [
+        "DigitalLove.FlowControl",
+        "DigitalLove.Game.Levels",
+        "DigitalLove.Game.Planets",
+        "Reflex",
+        "DigitalLove.DataAccess.Local",
+        "DigitalLove.Game.Spaceships",
+        "DigitalLove.Game.Persistence",
+        "DigitalLove.DataAccess.Remote",
+        "DigitalLove.Global",
+        "DigitalLove.Game.UI",
+        "DigitalLove.Casual.Analytics",
+        "DigitalLove.Casual.Levels",
+        "DigitalLove.Game.TTS",
+        "DigitalLove.Casual.Flow",
+        "DigitalLove.XR.MRUK",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
