@@ -139,6 +139,5 @@ namespace DigitalLove.Game.Persistence
             store.SpendMoney(cost);
             onUpdated?.Invoke();
         }
-
     }
 }

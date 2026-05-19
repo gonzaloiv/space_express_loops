@@ -7,6 +7,8 @@ namespace DigitalLove.Game.Planets
 {
     public class PlanetStore : MonoBehaviour
     {
+        public const int LettersBeforeFullToStartWarning = 3;
+
         [SerializeField] private ResourcePanel lettersPanel;
         [SerializeField] private FloatValue gameSpeed;
         [SerializeField] private AudioSource fullAudioSource;
@@ -62,9 +64,8 @@ namespace DigitalLove.Game.Planets
         public void IncreaseLetters(int value)
         {
             letters += value;
-            if (letters > maxLetters)
+            if (letters >= maxLetters)
             {
-                fullAudioSource.Play();
                 planetFull?.Invoke();
                 letters = maxLetters;
             }
@@ -72,7 +73,10 @@ namespace DigitalLove.Game.Planets
             {
                 newLetterAudioSource.Play();
             }
-            lettersPanel.ShowLetters(letters, maxLetters, letters == maxLetters);
+            bool showMaxValue = LettersBeforeFullToStartWarning - (maxLetters - letters) <= 0;
+            if (showMaxValue)
+                fullAudioSource.Play();
+            lettersPanel.ShowLetters(letters, maxLetters, showMaxValue);
         }
     }
 }

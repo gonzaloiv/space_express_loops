@@ -19,6 +19,7 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private LevelContainer levelContainer;
         [SerializeField] private RoundSelector roundSelector;
         [SerializeField] private MonoState newRoundState;
+        [SerializeField] private MonoState gameEndState;
         [SerializeField] private TTSHelper ttsHelper;
 
         [Header("Analytics")]
@@ -123,6 +124,11 @@ namespace DigitalLove.Game.Flow
                 levelContainer.SpaceshipsSpawner);
         }
 
+        private void OnPlanetFull()
+        {
+            parent.SetCurrentState(gameEndState.RouteId);
+        }
+
         public override void Exit()
         {
             UnsubscribeEvents();
@@ -133,6 +139,7 @@ namespace DigitalLove.Game.Flow
             levelContainer.SpaceshipsSpawner.loopCreated += OnLoopCreated;
             levelContainer.SpaceshipsSpawner.loopComplete += OnLoopComplete;
             levelContainer.SpaceshipsSpawner.loopEditionButtonClicked += OnLoopEditionButtonClicked;
+            levelContainer.PlanetsSpawner.planetFull += OnPlanetFull;
         }
 
         private void UnsubscribeEvents()
@@ -140,6 +147,10 @@ namespace DigitalLove.Game.Flow
             levelContainer.SpaceshipsSpawner.loopCreated -= OnLoopCreated;
             levelContainer.SpaceshipsSpawner.loopComplete -= OnLoopComplete;
             levelContainer.SpaceshipsSpawner.loopEditionButtonClicked -= OnLoopEditionButtonClicked;
+            levelContainer.PlanetsSpawner.planetFull -= OnPlanetFull;
         }
+
+        [Button]
+        public void Debug_Restart() => OnPlanetFull();
     }
 }

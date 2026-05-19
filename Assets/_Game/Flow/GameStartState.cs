@@ -7,6 +7,7 @@ using Reflex.Attributes;
 using UnityEngine;
 using DigitalLove.Game.TTS;
 using DigitalLove.Global;
+using DigitalLove.Casual.Flow;
 
 namespace DigitalLove.Game.Flow
 {
@@ -65,9 +66,23 @@ namespace DigitalLove.Game.Flow
             {
                 levelContainer.SpawnInitialRound(roundSelector.CurrentRound, gameSnapshot);
                 gameSnapshot.RecalculateLettersRequiredForRound(roundSelector.CurrentRound.lettersIncreaseMultiplier);
-                ttsHelper.SetInFrontOfCameraOrDefault(true);
-                ttsHelper.SayRoundIntro(roundSelector.CurrentRound, ToNextState);
+                SayIntro();
             });
+        }
+
+        private void SayIntro()
+        {
+            void SayRoundIntro() => ttsHelper.SayRoundIntro(roundSelector.CurrentRound, ToNextState);
+            bool isFirstTry = memoryDataClient.Get<Play>().IsFirstTry;
+            ttsHelper.SetInFrontOfCameraOrDefault(true);
+            if (isFirstTry)
+            {
+                ttsHelper.Say("welcome_message", SayRoundIntro);
+            }
+            else
+            {
+                SayRoundIntro();
+            }
         }
 
         private void RespawnFromData()

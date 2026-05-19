@@ -38,6 +38,12 @@ namespace DigitalLove.Game.Levels
             roomPlacement.Clear();
         }
 
+        public void ResetForRestart()
+        {
+            HideAll();
+            mrukRoomAnchorsContainer.ClearEntityAnchors();
+        }
+
         public void SpawnInitialRound(RoundData roundData, GameSnapshot gameSnapshot)
         {
             SpawnRound(roundData, gameSnapshot);
