@@ -7,13 +7,14 @@ namespace DigitalLove.Game.Spaceships
 {
     public class TravellerPathFollower : MonoBehaviour
     {
+        private const float PathLookAhead = 0.01f;
+
         [SerializeField] private FloatValue gameSpeed;
         [SerializeField] private Transform followBody;
-        [SerializeField] private bool lockRotationToYaw = true;
 
         private Tween pathTween;
+
         private Action<bool> onPathEnded;
-        private Vector3 lastSampledPosition;
 
         public bool IsFollowingPath => pathTween != null && pathTween.IsActive();
 
@@ -33,36 +34,33 @@ namespace DigitalLove.Game.Spaceships
             }
 
             CancelFollowing();
-            followBody.position = positions[0];
+            SetPosition(positions[0]);
             AlignToDirection(positions[1] - positions[0]);
 
             this.onPathEnded = onPathEnded;
             float duration = positions.GetTotalDistance() / speed;
-            lastSampledPosition = followBody.position;
+            pathTween = CreatePathTween(positions, duration);
+        }
 
-            pathTween = followBody.DOPath(positions, duration, PathType.Linear, PathMode.Full3D)
+        private Tween CreatePathTween(Vector3[] positions, float duration)
+        {
+            return followBody
+                .DOPath(positions, duration, PathType.Linear, PathMode.Full3D)
+                .SetLookAt(PathLookAhead, true)
                 .SetEase(Ease.Linear)
                 .SetTarget(this)
-                .OnUpdate(UpdateRotationFromMovement)
                 .OnComplete(OnPathTweenComplete);
         }
 
-        private void UpdateRotationFromMovement()
+        private void SetPosition(Vector3 position)
         {
-            Vector3 delta = followBody.position - lastSampledPosition;
-            lastSampledPosition = followBody.position;
-            AlignToDirection(delta);
+            followBody.position = position;
         }
 
         private void AlignToDirection(Vector3 direction)
         {
-            if (lockRotationToYaw)
-                direction.y = 0f;
-
-            if (direction.sqrMagnitude < 0.0001f)
-                return;
-
-            followBody.rotation = Quaternion.LookRotation(direction.normalized, Vector3.up);
+            Quaternion rotation = Quaternion.LookRotation(direction.normalized, Vector3.up);
+            followBody.rotation = rotation;
         }
 
         public void CancelFollowing()

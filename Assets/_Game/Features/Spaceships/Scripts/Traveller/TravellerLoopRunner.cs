@@ -9,18 +9,23 @@ namespace DigitalLove.Game.Spaceships
     public class TravellerLoopRunner
     {
         private readonly MonoBehaviour host;
+        private readonly RouteContainer route;
         private readonly TravellerBehaviour traveller;
         private readonly float legDelay;
 
         private Coroutine loopCoroutine;
         private Action<LoopCompleteEventArgs> onLoopIterationComplete;
-        private Func<IReadOnlyList<RouteLegPath>> getLegs;
 
         public bool IsRunning => loopCoroutine != null;
 
-        public TravellerLoopRunner(MonoBehaviour host, TravellerBehaviour traveller, float legDelay = 1f)
+        public TravellerLoopRunner(
+            MonoBehaviour host,
+            RouteContainer route,
+            TravellerBehaviour traveller,
+            float legDelay = 1f)
         {
             this.host = host;
+            this.route = route;
             this.traveller = traveller;
             this.legDelay = legDelay;
         }
@@ -30,17 +35,12 @@ namespace DigitalLove.Game.Spaceships
             this.onLoopIterationComplete = onLoopIterationComplete;
         }
 
-        public void StartLoop(
-            Func<IReadOnlyList<RouteLegPath>> getLegs,
-            string spaceshipId,
-            Func<int, int> pickLettersAtStop,
-            Func<LoopEventArgs> getCurrentLoopEventArgs)
+        public void StartLoop(string spaceshipId, Func<LoopEventArgs> getCurrentLoopEventArgs)
         {
-            this.getLegs = getLegs;
             if (IsRunning)
                 Stop();
 
-            loopCoroutine = host.StartCoroutine(RunLoop(spaceshipId, pickLettersAtStop, getCurrentLoopEventArgs));
+            loopCoroutine = host.StartCoroutine(RunLoop(spaceshipId, getCurrentLoopEventArgs));
         }
 
         public void Stop()
@@ -51,19 +51,15 @@ namespace DigitalLove.Game.Spaceships
                 loopCoroutine = null;
             }
 
-            getLegs = null;
             traveller.HideAndCancelPath();
         }
 
-        private IEnumerator RunLoop(
-            string spaceshipId,
-            Func<int, int> pickLettersAtStop,
-            Func<LoopEventArgs> getCurrentLoopEventArgs)
+        private IEnumerator RunLoop(string spaceshipId, Func<LoopEventArgs> getCurrentLoopEventArgs)
         {
             while (true)
             {
-                IReadOnlyList<RouteLegPath> legs = getLegs?.Invoke();
-                if (legs == null || legs.Count == 0)
+                IReadOnlyList<RouteLeg> legs = route.Legs;
+                if (legs.Count == 0)
                 {
                     yield return null;
                     continue;
@@ -75,13 +71,11 @@ namespace DigitalLove.Game.Spaceships
 
                 for (int stopIndex = 0; stopIndex < legs.Count; stopIndex++)
                 {
-                    legs = getLegs?.Invoke();
-                    if (legs == null || stopIndex >= legs.Count)
-                        break;
+                    RouteLeg leg = legs[stopIndex];
+                    route.ShowLeg(stopIndex);
 
-                    RouteLegPath leg = legs[stopIndex];
                     bool legSucceeded = false;
-                    yield return FollowPathLeg(leg.Positions, leg.PickupPlanet, success => legSucceeded = success);
+                    yield return FollowPathLeg(leg.positions, leg.pickupPlanet, success => legSucceeded = success);
                     if (!legSucceeded)
                     {
                         iterationFailed = true;
@@ -90,11 +84,9 @@ namespace DigitalLove.Game.Spaceships
 
                     yield return new WaitForSeconds(legDelay);
 
-                    legs = getLegs?.Invoke();
-                    if (legs != null && stopIndex < legs.Count && legs[stopIndex].PickupPlanet != null)
+                    if (leg.pickupPlanet != null)
                     {
-                        int pickedAtStop = pickLettersAtStop(stopIndex);
-                        totalPickedLetters += pickedAtStop;
+                        totalPickedLetters += leg.pickupPlanet.PlanetStore.PickAllLetters();
                         traveller.ShowLoaded(totalPickedLetters);
                     }
                 }

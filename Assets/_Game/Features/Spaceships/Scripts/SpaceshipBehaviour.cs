@@ -16,7 +16,7 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private SpaceshipPresentation presentation;
 
         [SerializeField] private StationBehaviour station;
-        [SerializeField] private SplineContainerWrapper splineContainerWrapper;
+        [SerializeField] private RouteContainer splineContainerWrapper;
         [SerializeField] private TravellerBehaviour traveller;
         [SerializeField] private Renderer originZone;
         [SerializeField] private float legDelay = 1f;

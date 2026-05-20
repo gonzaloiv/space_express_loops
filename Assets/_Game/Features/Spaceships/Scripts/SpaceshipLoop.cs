@@ -20,7 +20,7 @@ namespace DigitalLove.Game.Spaceships
         private readonly Transform shipTransform;
         private readonly DestinationSelector destinationSelector;
         private readonly StationBehaviour station;
-        private readonly SplineContainerWrapper splineContainerWrapper;
+        private readonly RouteContainer route;
         private readonly TravellerBehaviour traveller;
         private readonly float legDelay;
 
@@ -31,14 +31,14 @@ namespace DigitalLove.Game.Spaceships
         public IReadOnlyList<PlanetBehaviour> Destinations => destinations;
         public bool HasDestinations => destinations.Count > 0;
         public HubBehaviour Hub => destinationSelector.Hub;
-        public Vector3 RoutePanelAnchor => splineContainerWrapper.GetPanelAnchorPosition();
+        public Vector3 RoutePanelAnchor => route.GetPanelAnchorPosition();
 
         public SpaceshipLoop(
             MonoBehaviour coroutineHost,
             Transform shipTransform,
             DestinationSelector destinationSelector,
             StationBehaviour station,
-            SplineContainerWrapper splineContainerWrapper,
+            RouteContainer route,
             TravellerBehaviour traveller,
             float legDelay)
         {
@@ -46,14 +46,14 @@ namespace DigitalLove.Game.Spaceships
             this.shipTransform = shipTransform;
             this.destinationSelector = destinationSelector;
             this.station = station;
-            this.splineContainerWrapper = splineContainerWrapper;
+            this.route = route;
             this.traveller = traveller;
             this.legDelay = legDelay;
         }
 
         public void SetVisuals(string spaceshipId, Color color)
         {
-            splineContainerWrapper.SetColor(color);
+            route.SetColor(color);
         }
 
         public void SetRoutePanelData(RoutePanel routePanel, string spaceshipId, Color color)
@@ -145,27 +145,23 @@ namespace DigitalLove.Game.Spaceships
 
         public void RebuildRoute()
         {
-            splineContainerWrapper.BuildLoop(Hub, destinations);
-            splineContainerWrapper.SetLineRendererActive(destinations.Count > 0);
+            route.Build(Hub, destinations);
+            route.SetLineRendererActive(destinations.Count > 0);
         }
 
-        public void SetLineRendererActive(bool active) => splineContainerWrapper.SetLineRendererActive(active);
+        public void SetLineRendererActive(bool active) => route.SetLineRendererActive(active);
 
         public void ResetVisuals()
         {
             StopTraveller();
-            splineContainerWrapper.SetLineRendererActive(false);
+            route.SetLineRendererActive(false);
         }
 
         public void StartTraveller(string spaceshipId, Func<LoopEventArgs> getLoopEventArgs)
         {
-            loopRunner ??= new TravellerLoopRunner(coroutineHost, traveller, legDelay);
+            loopRunner ??= new TravellerLoopRunner(coroutineHost, route, traveller, legDelay);
             loopRunner.SetOnLoopIterationComplete(onLoopComplete);
-            loopRunner.StartLoop(
-                () => splineContainerWrapper.Legs,
-                spaceshipId,
-                PickLettersAtStop,
-                getLoopEventArgs);
+            loopRunner.StartLoop(spaceshipId, getLoopEventArgs);
         }
 
         public void StopTraveller() => loopRunner?.Stop();
@@ -178,14 +174,5 @@ namespace DigitalLove.Game.Spaceships
             return ids;
         }
 
-        private int PickLettersAtStop(int stopIndex)
-        {
-            IReadOnlyList<RouteLegPath> legs = splineContainerWrapper.Legs;
-            if (legs == null || stopIndex >= legs.Count)
-                return 0;
-
-            PlanetBehaviour planet = legs[stopIndex].PickupPlanet;
-            return planet != null ? planet.PlanetStore.PickAllLetters() : 0;
-        }
     }
 }

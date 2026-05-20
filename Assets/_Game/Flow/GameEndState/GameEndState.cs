@@ -8,7 +8,6 @@ using Reflex.Attributes;
 using UnityEngine;
 using DigitalLove.Casual.Flow;
 using DigitalLove.Game.UI;
-using UnityEngine.PlayerLoop;
 
 namespace DigitalLove.Game.Flow
 {
@@ -19,6 +18,9 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private GameSnapshotClient gameSnapshotClient;
         [SerializeField] private StringValue highScoreCookieKey;
         [SerializeField] private GameEndPanel gameEndPanel;
+
+        [Header("DEBUG")]
+        [SerializeField] private DebugBool jumpCountdown;
 
         [Inject] private MemoryDataClient memoryDataClient;
         [Inject] private UnityPlayerDataClient unityPlayerDataClient;
@@ -46,11 +48,23 @@ namespace DigitalLove.Game.Flow
                 playerData.SetHighScoreMoney(highScoreCookieKey, gameSnapshot.CurrentLetters);
                 memoryDataClient.Put(playerData);
                 PersistPlayerData(playerData);
-                gameEndPanel.ShowWithNewHighScore(gameSnapshot.CurrentLetters);
+                ShowGameEndPanel(gameSnapshot.CurrentLetters);
             }
             else
             {
                 gameEndPanel.Show();
+            }
+        }
+
+        private void ShowGameEndPanel(int currentLetters)
+        {
+            if (jumpCountdown.Value)
+            {
+                gameEndPanel.ShowWithNewHighScore(currentLetters);
+            }
+            else
+            {
+                Restart();
             }
         }
 
