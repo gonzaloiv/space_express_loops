@@ -162,7 +162,7 @@ namespace DigitalLove.Game.Spaceships
             loopRunner ??= new TravellerLoopRunner(coroutineHost, traveller, legDelay);
             loopRunner.SetOnLoopIterationComplete(onLoopComplete);
             loopRunner.StartLoop(
-                () => splineContainerWrapper.TravellerRoutePlan,
+                () => splineContainerWrapper.Legs,
                 spaceshipId,
                 PickLettersAtStop,
                 getLoopEventArgs);
@@ -180,11 +180,11 @@ namespace DigitalLove.Game.Spaceships
 
         private int PickLettersAtStop(int stopIndex)
         {
-            TravellerRoutePlan routePlan = splineContainerWrapper.TravellerRoutePlan;
-            if (routePlan?.PickupPlanets == null || stopIndex >= routePlan.PickupPlanets.Count)
+            IReadOnlyList<RouteLegPath> legs = splineContainerWrapper.Legs;
+            if (legs == null || stopIndex >= legs.Count)
                 return 0;
 
-            PlanetBehaviour planet = routePlan.PickupPlanets[stopIndex];
+            PlanetBehaviour planet = legs[stopIndex].PickupPlanet;
             return planet != null ? planet.PlanetStore.PickAllLetters() : 0;
         }
     }

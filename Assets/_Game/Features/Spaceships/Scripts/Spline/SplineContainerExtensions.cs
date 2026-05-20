@@ -33,12 +33,5 @@ namespace DigitalLove.Game.Spaceships
             knot.Position = position;
             splineContainer.Spline.SetKnot(index, knot);
         }
-
-        public static void SetKnotRotation(this SplineContainer splineContainer, int index, Vector3 rotation)
-        {
-            BezierKnot knot = splineContainer.Spline[index];
-            knot.Rotation = quaternion.Euler(rotation);
-            splineContainer.Spline.SetKnot(index, knot);
-        }
     }
 }

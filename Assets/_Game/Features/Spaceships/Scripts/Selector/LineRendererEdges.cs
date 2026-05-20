@@ -15,7 +15,6 @@ namespace DigitalLove.Game.Spaceships
                 origin.material.color = lineRenderer.material.color;
                 destination.transform.position = lineRenderer.GetPosition(lineRenderer.positionCount - 1);
                 destination.material.color = lineRenderer.material.color;
-
             }
         }
     }

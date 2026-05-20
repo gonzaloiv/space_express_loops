@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using DigitalLove.Game.Planets;
 
@@ -13,7 +14,7 @@ namespace DigitalLove.Game.Spaceships
 
         private Coroutine loopCoroutine;
         private Action<LoopCompleteEventArgs> onLoopIterationComplete;
-        private Func<TravellerRoutePlan> getRoutePlan;
+        private Func<IReadOnlyList<RouteLegPath>> getLegs;
 
         public bool IsRunning => loopCoroutine != null;
 
@@ -30,12 +31,12 @@ namespace DigitalLove.Game.Spaceships
         }
 
         public void StartLoop(
-            Func<TravellerRoutePlan> getRoutePlan,
+            Func<IReadOnlyList<RouteLegPath>> getLegs,
             string spaceshipId,
             Func<int, int> pickLettersAtStop,
             Func<LoopEventArgs> getCurrentLoopEventArgs)
         {
-            this.getRoutePlan = getRoutePlan;
+            this.getLegs = getLegs;
             if (IsRunning)
                 Stop();
 
@@ -50,7 +51,7 @@ namespace DigitalLove.Game.Spaceships
                 loopCoroutine = null;
             }
 
-            getRoutePlan = null;
+            getLegs = null;
             traveller.HideAndCancelPath();
         }
 
@@ -61,8 +62,8 @@ namespace DigitalLove.Game.Spaceships
         {
             while (true)
             {
-                TravellerRoutePlan routePlan = getRoutePlan?.Invoke();
-                if (routePlan == null || routePlan.Segments == null || routePlan.Segments.Count == 0)
+                IReadOnlyList<RouteLegPath> legs = getLegs?.Invoke();
+                if (legs == null || legs.Count == 0)
                 {
                     yield return null;
                     continue;
@@ -72,17 +73,15 @@ namespace DigitalLove.Game.Spaceships
                 traveller.ShowEmpty();
                 bool iterationFailed = false;
 
-                for (int stopIndex = 0; stopIndex < routePlan.Segments.Count; stopIndex++)
+                for (int stopIndex = 0; stopIndex < legs.Count; stopIndex++)
                 {
-                    routePlan = getRoutePlan?.Invoke();
-                    if (routePlan == null || stopIndex >= routePlan.Segments.Count)
+                    legs = getLegs?.Invoke();
+                    if (legs == null || stopIndex >= legs.Count)
                         break;
 
-                    Vector3[] segment = routePlan.Segments[stopIndex];
-                    bool isPickupStop = stopIndex < routePlan.PickupPlanets.Count;
-                    PlanetBehaviour pickupPlanet = isPickupStop ? routePlan.PickupPlanets[stopIndex] : null;
+                    RouteLegPath leg = legs[stopIndex];
                     bool legSucceeded = false;
-                    yield return FollowPathLeg(segment, pickupPlanet, success => legSucceeded = success);
+                    yield return FollowPathLeg(leg.Positions, leg.PickupPlanet, success => legSucceeded = success);
                     if (!legSucceeded)
                     {
                         iterationFailed = true;
@@ -91,8 +90,8 @@ namespace DigitalLove.Game.Spaceships
 
                     yield return new WaitForSeconds(legDelay);
 
-                    routePlan = getRoutePlan?.Invoke();
-                    if (routePlan != null && stopIndex < routePlan.PickupPlanets.Count)
+                    legs = getLegs?.Invoke();
+                    if (legs != null && stopIndex < legs.Count && legs[stopIndex].PickupPlanet != null)
                     {
                         int pickedAtStop = pickLettersAtStop(stopIndex);
                         totalPickedLetters += pickedAtStop;
