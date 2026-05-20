@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Planets;
 using DigitalLove.Global;
-using UnityEditor.Presets;
 using UnityEngine;
+using Oculus.Interaction;
 
 namespace DigitalLove.Game.Spaceships
 {
@@ -15,7 +15,7 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private OnRouteState onRouteState;
         [SerializeField] private SpaceshipPresentation presentation;
 
-        [SerializeField] private StationBehaviour station;
+        [SerializeField] private Grabbable grabbable;
         [SerializeField] private RouteContainer splineContainerWrapper;
         [SerializeField] private TravellerBehaviour traveller;
         [SerializeField] private Renderer originZone;
@@ -36,8 +36,7 @@ namespace DigitalLove.Game.Spaceships
         public string ColorCode => data.colorCode;
         public HubBehaviour Hub => DestinationSelector.Hub;
         public bool IsActive => gameObject.activeInHierarchy;
-        public bool HasRoute =>
-            isInitialized && loop.HasDestinations && stateMachine.IsCurrentState<OnRouteState>();
+        public bool HasRoute => isInitialized && loop.HasDestinations && stateMachine.IsCurrentState<OnRouteState>();
 
         public void Initialize()
         {
@@ -49,9 +48,8 @@ namespace DigitalLove.Game.Spaceships
 
             loop = new SpaceshipLoop(
                 this,
-                transform,
+                grabbable,
                 presentation.DestinationSelector,
-                station,
                 splineContainerWrapper,
                 traveller,
                 legDelay);
@@ -88,8 +86,13 @@ namespace DigitalLove.Game.Spaceships
         public void NotifyLoopEditionClicked()
         {
             loop.ClearDestinations();
-            loop.MoveShipToHub();
+            MoveToHub();
             onLoopEditionButtonClickedHandler(BuildLoopEventArgs());
+        }
+
+        public void MoveToHub()
+        {
+            grabbable.transform.position = Hub.transform.position;
         }
 
         public LoopEventArgs BuildLoopEventArgs() => new()
@@ -108,11 +111,11 @@ namespace DigitalLove.Game.Spaceships
 
             basePlanet.SetRouteColor(color);
             DestinationSelector.Init(basePlanet, color);
-            loop.SetVisuals(data.id, color);
+            loop.SetVisuals(color);
             loop.SetRoutePanelData(presentation.RoutePanel, data.id, color);
             originZone.material.color = color;
             loop.ClearDestinations();
-            loop.MoveShipToHub();
+            MoveToHub();
 
             this.SetActive(true);
         }
@@ -131,17 +134,8 @@ namespace DigitalLove.Game.Spaceships
 
         public void SetRoute(IReadOnlyList<PlanetBehaviour> destinations)
         {
-            if (destinations == null || destinations.Count == 0)
-                return;
-
             if (!isInitialized)
                 Initialize();
-
-            if (Hub == null)
-            {
-                Debug.LogWarning($"{nameof(SpaceshipBehaviour)}: Cannot set route without a hub. Spawn the ship first.");
-                return;
-            }
 
             onRouteState.SetEnterSelectingOnEnter(false);
             loop.SetDestinations(destinations);

@@ -1,7 +1,6 @@
 using DigitalLove.FlowControl;
 using DigitalLove.Global;
 using Oculus.Interaction;
-using UnityEngine;
 
 namespace DigitalLove.Game.Spaceships
 {

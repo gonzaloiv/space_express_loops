@@ -19,9 +19,13 @@ namespace DigitalLove.Game.Spaceships
         public void Build(HubBehaviour hub, IReadOnlyList<PlanetBehaviour> destinations, IList<RouteLeg> legs)
         {
             if (destinations.Count == 1)
+            {
                 GetSingleDestinationLeg(hub, destinations[0], legs);
+            }
             else
+            {
                 CreateMultipleLegs(hub, destinations, legs);
+            }
         }
 
         private void CreateMultipleLegs(HubBehaviour hub, IReadOnlyList<PlanetBehaviour> destinations, IList<RouteLeg> legs)
@@ -48,10 +52,12 @@ namespace DigitalLove.Game.Spaceships
         private void GetSingleDestinationLeg(HubBehaviour hub, PlanetBehaviour destination, IList<RouteLeg> legs)
         {
             ConfigureSplineForLeg(hub.PlanetBody, destination.PlanetBody);
-            legs.Add(new RouteLeg(splineContainer.GetPositions(resolution), destination));
+            legs.Add(GetTruncatedLeg(splineContainer.GetPositions(resolution), destination));
+            ConfigureSplineForLeg(destination.PlanetBody, hub.PlanetBody, true);
+            legs.Add(GetTruncatedLeg(splineContainer.GetPositions(resolution), null));
         }
 
-        private void ConfigureSplineForLeg(PlanetBody origin, PlanetBody destination)
+        private void ConfigureSplineForLeg(PlanetBody origin, PlanetBody destination, bool inverse = false)
         {
             Vector3 direction = (destination.Position - origin.Position).normalized;
             splineContainer.transform.forward = direction;
@@ -64,6 +70,8 @@ namespace DigitalLove.Game.Spaceships
             splineContainer.SetKnotPosition(3, splineContainer.transform.InverseTransformPoint(destinationPosition));
 
             Vector3 lateralAxis = splineContainer.transform.right.normalized;
+            if (inverse)
+                lateralAxis = -lateralAxis;
             Vector3 originLateralOffset = lateralAxis * origin.Radius * 1.25f;
             Vector3 destinationLateralOffset = lateralAxis * destination.Radius * 1.25f;
             Vector3 oneThirdPosition = originPosition + direction * origin.Radius * 1.25f;

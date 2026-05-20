@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using DigitalLove.Game.Planets;
 using DigitalLove.Game.UI;
-using DigitalLove.Global;
+using Oculus.Interaction;
 using UnityEngine;
 
 namespace DigitalLove.Game.Spaceships
@@ -17,9 +17,8 @@ namespace DigitalLove.Game.Spaceships
     public class SpaceshipLoop
     {
         private readonly MonoBehaviour coroutineHost;
-        private readonly Transform shipTransform;
+        private readonly Grabbable grabbable;
         private readonly DestinationSelector destinationSelector;
-        private readonly StationBehaviour station;
         private readonly RouteContainer route;
         private readonly TravellerBehaviour traveller;
         private readonly float legDelay;
@@ -31,27 +30,24 @@ namespace DigitalLove.Game.Spaceships
         public IReadOnlyList<PlanetBehaviour> Destinations => destinations;
         public bool HasDestinations => destinations.Count > 0;
         public HubBehaviour Hub => destinationSelector.Hub;
-        public Vector3 RoutePanelAnchor => route.GetPanelAnchorPosition();
 
         public SpaceshipLoop(
             MonoBehaviour coroutineHost,
-            Transform shipTransform,
+            Grabbable grabbable,
             DestinationSelector destinationSelector,
-            StationBehaviour station,
             RouteContainer route,
             TravellerBehaviour traveller,
             float legDelay)
         {
             this.coroutineHost = coroutineHost;
-            this.shipTransform = shipTransform;
+            this.grabbable = grabbable;
             this.destinationSelector = destinationSelector;
-            this.station = station;
             this.route = route;
             this.traveller = traveller;
             this.legDelay = legDelay;
         }
 
-        public void SetVisuals(string spaceshipId, Color color)
+        public void SetVisuals(Color color)
         {
             route.SetColor(color);
         }
@@ -67,11 +63,6 @@ namespace DigitalLove.Game.Spaceships
             loopRunner?.SetOnLoopIterationComplete(onLoopComplete);
         }
 
-        public Transform GetSelectionOriginTransform()
-        {
-            return station != null && station.IsActive ? station.transform : Hub.transform;
-        }
-
         public IEnumerable<string> GetExcludedPlanetIds()
         {
             foreach (PlanetBehaviour planet in destinations)
@@ -80,7 +71,7 @@ namespace DigitalLove.Game.Spaceships
 
         public void BeginSelection()
         {
-            destinationSelector.SetSelectionOrigin(GetSelectionOriginTransform());
+            destinationSelector.SetSelectionOrigin(grabbable.transform);
             destinationSelector.SetExcludedPlanetIds(GetExcludedPlanetIds());
             destinationSelector.StartLookingForDestination(true);
         }
@@ -109,7 +100,6 @@ namespace DigitalLove.Game.Spaceships
                 return false;
 
             destinations.Add(planet);
-            station.RepositionAt(planet);
             return true;
         }
 
@@ -121,26 +111,14 @@ namespace DigitalLove.Game.Spaceships
 
             foreach (PlanetBehaviour planet in planets)
                 destinations.Add(planet);
-
-            station.RepositionAt(planets[planets.Count - 1]);
         }
 
-        public void ClearDestinations()
-        {
-            destinations.Clear();
-            station.Hide();
-        }
+        public void ClearDestinations() => destinations.Clear();
 
         public void MoveShipToActiveStation()
         {
-            if (station.IsActive)
-                shipTransform.SetWorldPose(station.SpawnPose);
-        }
-
-        public void MoveShipToHub()
-        {
-            if (Hub != null)
-                shipTransform.SetWorldPose(Hub.SpawnPose);
+            grabbable.gameObject.SetActive(true);
+            grabbable.transform.position = Destinations.Count > 1 ? route.LastLegEndPosition : route.FirstLegEndPosition;
         }
 
         public void RebuildRoute()

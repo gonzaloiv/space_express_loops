@@ -20,25 +20,11 @@ namespace DigitalLove.Game.Spaceships
 
         public void FollowPath(Vector3[] positions, Action<bool> onPathEnded)
         {
-            if (positions == null || positions.Length < 2)
-            {
-                onPathEnded?.Invoke(false);
-                return;
-            }
-
-            float speed = gameSpeed != null ? gameSpeed.value : 0f;
-            if (speed <= 0f)
-            {
-                onPathEnded?.Invoke(false);
-                return;
-            }
-
             CancelFollowing();
             SetPosition(positions[0]);
-            AlignToDirection(positions[1] - positions[0]);
 
             this.onPathEnded = onPathEnded;
-            float duration = positions.GetTotalDistance() / speed;
+            float duration = positions.GetTotalDistance() / gameSpeed.value;
             pathTween = CreatePathTween(positions, duration);
         }
 
@@ -46,7 +32,7 @@ namespace DigitalLove.Game.Spaceships
         {
             return followBody
                 .DOPath(positions, duration, PathType.Linear, PathMode.Full3D)
-                .SetLookAt(PathLookAhead, true)
+                .SetLookAt(PathLookAhead)
                 .SetEase(Ease.Linear)
                 .SetTarget(this)
                 .OnComplete(OnPathTweenComplete);
@@ -55,12 +41,6 @@ namespace DigitalLove.Game.Spaceships
         private void SetPosition(Vector3 position)
         {
             followBody.position = position;
-        }
-
-        private void AlignToDirection(Vector3 direction)
-        {
-            Quaternion rotation = Quaternion.LookRotation(direction.normalized, Vector3.up);
-            followBody.rotation = rotation;
         }
 
         public void CancelFollowing()

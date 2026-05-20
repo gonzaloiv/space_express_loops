@@ -10,7 +10,6 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private Grabbable grabbable;
         [SerializeField] private GrabbableBody grabbableBody;
         [SerializeField] private GhostBehaviour ghost;
-        [SerializeField] private Transform dragZone;
         [SerializeField] private RoutePanel routePanel;
         [SerializeField] private DestinationSelector destinationSelector;
 
@@ -24,7 +23,6 @@ namespace DigitalLove.Game.Spaceships
             grabbableBody.Hide();
             routePanel.Hide();
             loop.SetLineRendererActive(false);
-            dragZone.gameObject.SetActive(true);
             destinationSelector.StartLookingForDestination(false);
         }
 
@@ -42,10 +40,9 @@ namespace DigitalLove.Game.Spaceships
             ghost.SetActive(false);
             destinationSelector.StartLookingForDestination(false);
 
-            routePanel.SetPosition(loop.RoutePanelAnchor);
+            routePanel.SetPosition(loop.Hub.transform.position);
             routePanel.Show();
 
-            dragZone.gameObject.SetActive(false);
             grabbableBody.Show();
             grabbable.SetActive(true);
             loop.MoveShipToActiveStation();

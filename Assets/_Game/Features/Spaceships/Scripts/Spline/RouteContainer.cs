@@ -8,6 +8,9 @@ namespace DigitalLove.Game.Spaceships
     public class RouteContainer : MonoBehaviour
     {
         [SerializeField] private LineRenderer lineRenderer;
+        [SerializeField] private GameObject startPoint;
+        [SerializeField] private GameObject endPoint;
+
         [SerializeField] private int resolution = 64;
 
         private SplineContainer splineContainer;
@@ -18,9 +21,18 @@ namespace DigitalLove.Game.Spaceships
 
         public IReadOnlyList<RouteLeg> Legs => legs;
 
+        public Vector3 LastLegEndPosition => LastLeg.positions[^1];
+        public Vector3 FirstLegEndPosition => legs[0].positions[^1];
+        public RouteLeg LastLeg => legs[legs.Count - 1];
+
         private SplineContainer SplineContainer => splineContainer ??= GetComponent<SplineContainer>();
 
-        public void SetColor(Color color) => lineRenderer.material.color = color;
+        public void SetColor(Color color)
+        {
+            lineRenderer.material.color = color;
+            startPoint.GetComponentInChildren<Renderer>().material.color = color;
+            endPoint.GetComponentInChildren<Renderer>().material.color = color;
+        }
 
         public Vector3 GetPanelAnchorPosition()
         {
@@ -54,6 +66,8 @@ namespace DigitalLove.Game.Spaceships
         public void SetLineRendererActive(bool isVisible)
         {
             lineRenderer.enabled = isVisible;
+            startPoint.SetActive(isVisible);
+            endPoint.SetActive(isVisible);
             if (!isVisible)
                 lineRenderer.positionCount = 0;
             else
@@ -75,8 +89,14 @@ namespace DigitalLove.Game.Spaceships
             if (!TryGetCurrentLegPositions(out Vector3[] positions))
             {
                 lineRenderer.positionCount = 0;
+                startPoint.SetActive(false);
+                endPoint.SetActive(false);
                 return;
             }
+            startPoint.SetActive(true);
+            endPoint.SetActive(true);
+            startPoint.transform.position = positions[0];
+            endPoint.transform.position = positions[^1];
 
             lineRenderer.SetSplinePositions(positions);
         }
