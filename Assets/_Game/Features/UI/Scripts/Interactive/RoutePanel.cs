@@ -21,18 +21,22 @@ namespace DigitalLove.Game.UI
             transform.position = position;
         }
 
-        public void Show()
+        public void Show(string id, Color color)
         {
             gameObject.SetActive(true);
             layoutUpdater.ForceUpdate();
-            btnPanel.Show(new Btn().SetOnClick(editButtonClicked));
-        }
-
-        public void SetData(string id, Color color)
-        {
+            SetButtonActive(false);
             foreach (Graphic graphic in graphics)
                 graphic.color = color;
             idLabel.text = $"ROUTE {id.Substring(id.Length - 2, 2)}";
+        }
+
+        public void SetButtonActive(bool isActive)
+        {
+            if (isActive)
+                btnPanel.Show(new Btn().SetOnClick(editButtonClicked));
+            else
+                btnPanel.Hide();
         }
 
         public void Hide()

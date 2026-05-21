@@ -13,7 +13,6 @@ namespace DigitalLove.Game.Planets
         [SerializeField] private LayerMask planetsLayerMask;
 
         private IdCounter idCreator = new();
-        private bool storesUnlocked;
 
         public List<PlanetBehaviour> All => planets;
 
@@ -36,7 +35,6 @@ namespace DigitalLove.Game.Planets
         {
             float radius = seed.radius.GetRandomValue();
             float maxDistanceToOtherPlanet = seed.maxDistanceToOtherPlanet.value * distanceBetweenPlanetsMultiplier;
-            Debug.LogWarning($"maxDistanceToOtherPlanet: {maxDistanceToOtherPlanet}");
             Vector3 localPosition = roomPlacement.GetValidLocalPosition(radius, maxDistanceToOtherPlanet);
             roomPlacement.Register(localPosition, radius);
             int lettersPerMinute = seed.lettersPerMinute.GetRandomValue();
@@ -80,7 +78,6 @@ namespace DigitalLove.Game.Planets
 
         public void HideAll()
         {
-            storesUnlocked = false;
             foreach (PlanetBehaviour planet in planets)
                 planet.SetActive(false);
         }

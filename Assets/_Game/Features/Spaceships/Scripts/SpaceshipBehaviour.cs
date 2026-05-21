@@ -97,7 +97,7 @@ namespace DigitalLove.Game.Spaceships
             basePlanet.SetRouteColor(color);
             destinationSelector.Init(basePlanet, color);
             onRouteState.SetRouteColor(color);
-            routePanel.SetData(data.id, color);
+            routePanel.Show(Id, color);
             originZone.material.color = color;
             onRouteState.ClearDestinations();
             MoveToHub();

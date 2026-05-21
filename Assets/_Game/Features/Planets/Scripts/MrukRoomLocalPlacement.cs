@@ -19,6 +19,7 @@ namespace DigitalLove.Game.Planets
         [SerializeField] private List<Occupant> occupants;
         [SerializeField] private float floorMargin = 0.5f;
         [SerializeField] private float ceilingMargin = 0.5f;
+        [SerializeField] private float minDistanceRadiusMultiplier = 1.5f;
 
         public void Clear() => occupants.Clear();
 
@@ -153,10 +154,10 @@ namespace DigitalLove.Game.Planets
         {
             foreach (Occupant occupant in occupants)
             {
-                if (Vector3.Distance(occupant.localPosition, localPos) < radius + occupant.radius)
+                float minDistance = (radius + occupant.radius) * minDistanceRadiusMultiplier;
+                if (Vector3.Distance(occupant.localPosition, localPos) < minDistance)
                     return true;
             }
-
             return false;
         }
     }

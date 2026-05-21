@@ -200,7 +200,7 @@ namespace DigitalLove.Game.Spaceships
             destinationSelector.StartLookingForDestination(false);
 
             routePanel.SetPosition(route.Hub.transform.position);
-            routePanel.Show();
+            routePanel.SetButtonActive(true);
 
             grabbableWrapper.Show();
             MoveShipToActiveStation();
