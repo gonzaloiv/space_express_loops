@@ -75,6 +75,8 @@ namespace DigitalLove.Game.Flow
 
         public void Restart()
         {
+            gameEndPanel.Hide();
+
             levelContainer.ResetForRestart();
 
             PlayerData playerData = memoryDataClient.Get<PlayerData>();
