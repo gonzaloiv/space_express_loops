@@ -22,3 +22,4 @@ MonoBehaviour:
   shouldSpawnSpaceship: 1
   hasLoseCondition: 0
   resetsLetters: 0
+  distanceBetweenPlanetsMultiplier: 0.66

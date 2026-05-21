@@ -52,7 +52,11 @@ namespace DigitalLove.Game.Levels
 
         public void SpawnRound(RoundData roundData, GameSnapshot gameSnapshot)
         {
-            List<PlanetData> roundPlanets = planetsSpawner.GeneratePlanetDataFromPlanetsSeed(roundData.planetsToAdd.GetRandomValue(), roundData.planetSeed);
+            List<PlanetData> roundPlanets = planetsSpawner.GeneratePlanetDataFromPlanetsSeed(
+                roundData.planetsToAdd.GetRandomValue(),
+                roundData.planetSeed,
+                roundData.distanceBetweenPlanetsMultiplier
+            );
             gameSnapshot.AddPlanets(roundPlanets);
             planetsSpawner.SpawnPlanets(gameSnapshot.planets);
             PlanetRouteColorSync.SyncPlanetRouteColors(gameSnapshot, planetsSpawner, spaceshipsSpawner);

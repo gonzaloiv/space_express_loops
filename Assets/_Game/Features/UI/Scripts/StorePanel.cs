@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 namespace DigitalLove.Game.UI
 {
@@ -8,8 +9,14 @@ namespace DigitalLove.Game.UI
         [SerializeField] private ResourcePanel moneyLabel;
         [SerializeField] private AudioSource increaseMoneyAudioSource;
         [SerializeField] private AudioSource decreaseMoneyAudioSource;
+        [SerializeField] private TextMeshProUGUI roundLabel;
 
         private int previousMoney;
+
+        public void ShowRound(int round)
+        {
+            roundLabel.text = $"Round {round}";
+        }
 
         public void Show(int letters, int maxLetters, int money)
         {

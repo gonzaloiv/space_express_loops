@@ -32,7 +32,7 @@ namespace DigitalLove.Game.UI
         {
             foreach (Graphic graphic in graphics)
                 graphic.color = color;
-            idLabel.text = id.Substring(id.Length - 2, 2);
+            idLabel.text = $"ROUTE {id.Substring(id.Length - 2, 2)}";
         }
 
         public void Hide()

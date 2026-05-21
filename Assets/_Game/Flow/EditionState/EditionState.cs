@@ -46,6 +46,7 @@ namespace DigitalLove.Game.Flow
         {
             SubscribeEvents();
 
+            storePanel.ShowRound(roundSelector.FormattedCurrentRoundIndex);
             gameSnapshot = memoryDataClient.Get<GameSnapshot>();
             RefreshStoreUI();
             StartPlanetStoresIfLoopsExist();

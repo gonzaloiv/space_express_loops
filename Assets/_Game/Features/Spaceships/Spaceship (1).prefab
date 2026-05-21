@@ -177,7 +177,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _position: {x: 0, y: 0, z: 0}
-  _size: {x: 500, y: 250, z: 0.01}
+  _size: {x: 600, y: 250, z: 0.01}
 --- !u!114 &635242449559537461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,7 +226,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 130}
+  m_SizeDelta: {x: 200, y: 111.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1010428565916803935
 CanvasRenderer:
@@ -441,7 +441,7 @@ RectTransform:
   m_GameObject: {fileID: 431847117557832026}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.000075, y: 0.000075, z: 1}
+  m_LocalScale: {x: 0.0001, y: 0.0001, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5641075301978520265}
@@ -550,7 +550,7 @@ RectTransform:
   m_GameObject: {fileID: 672482870812169545}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.00015, y: 0.00015, z: 1}
+  m_LocalScale: {x: 0.0002, y: 0.0002, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3007090343516073934}
@@ -561,7 +561,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0.25}
-  m_SizeDelta: {x: 500, y: 250}
+  m_SizeDelta: {x: 600, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &7164634357787657412
 Canvas:
@@ -657,7 +657,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1440008329520807342}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1157,7 +1157,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2848506131577647798}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1698,7 +1698,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 151.42}
+  m_SizeDelta: {x: 339.2, y: 151.42}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &8843577617911722584
 CanvasRenderer:
@@ -1728,7 +1728,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 02
+  m_text: ROUTE 02
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3493030a55420d84fa5b372e04afd05c, type: 2}
   m_sharedMaterial: {fileID: 4583863751478713665, guid: 3493030a55420d84fa5b372e04afd05c, type: 2}
@@ -1755,8 +1755,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 124.2
-  m_fontSizeBase: 205.1
+  m_fontSize: 63.95
+  m_fontSizeBase: 53.3
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
@@ -2834,8 +2834,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.HorizontalLayoutGroup
   m_Padding:
-    m_Left: 0
-    m_Right: 0
+    m_Left: 50
+    m_Right: 50
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
@@ -3134,9 +3134,9 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 2048
-  rayDistance: 2.5
   lineRenderer: {fileID: 2596525087632103306}
   lineRendererEdges: {fileID: 1369844282367366630}
+  rayDistance: {fileID: 11400000, guid: 6fc493b84a80f3b4e89f9f0f51e73f85, type: 2}
   rayForwardOffset: 0.1
 --- !u!1 &7198065008415384296
 GameObject:
@@ -3335,7 +3335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _position: {x: 0, y: 0, z: 0}
-  _size: {x: 500, y: 250, z: 0.01}
+  _size: {x: 600, y: 250, z: 0.01}
 --- !u!114 &3874071777030577952
 MonoBehaviour:
   m_ObjectHideFlags: 0

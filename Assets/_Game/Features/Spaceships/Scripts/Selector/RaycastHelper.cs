@@ -1,15 +1,16 @@
 using UnityEngine;
 using DigitalLove.Game.Planets;
 using System.Linq;
+using DigitalLove.Global;
 
 namespace DigitalLove.Game.Spaceships
 {
     public class RaycastHelper : MonoBehaviour
     {
         [SerializeField] private LayerMask layerMask;
-        [SerializeField] private float rayDistance = 2.5f;
         [SerializeField] private LineRenderer lineRenderer;
         [SerializeField] private LineRendererEdges lineRendererEdges;
+        [SerializeField] private FloatValue rayDistance;
 
         [SerializeField] private float rayForwardOffset = 0.1f;
 
@@ -17,6 +18,7 @@ namespace DigitalLove.Game.Spaceships
         private PlanetBehaviour candidatePlanet;
 
         public PlanetBehaviour CandidatePlanet => candidatePlanet;
+        public float RayDistance => rayDistance.value * 1.1f;
 
         public void SetActive(bool isActive)
         {
@@ -48,7 +50,7 @@ namespace DigitalLove.Game.Spaceships
 
         private void CheckHits()
         {
-            RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward, rayDistance, layerMask);
+            RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward, RayDistance, layerMask);
             RaycastHit[] planetHits = hits.Where(hit => hit.rigidbody != null && hit.rigidbody.GetComponent<PlanetBehaviour>() != null).ToArray();
             if (planetHits.Length > 0)
             {
@@ -73,7 +75,7 @@ namespace DigitalLove.Game.Spaceships
             {
                 lineRenderer.positionCount = 2;
                 Vector3 startPosition = transform.parent.parent.position + transform.forward * rayForwardOffset;
-                Vector3 endPosition = startPosition + transform.forward * rayDistance;
+                Vector3 endPosition = startPosition + transform.forward * RayDistance;
                 if (candidatePlanet != null)
                 {
 

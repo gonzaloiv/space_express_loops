@@ -21,21 +21,23 @@ namespace DigitalLove.Game.Planets
 
         public void SyncIdsFromSnapshot(IEnumerable<string> existingIds) => idCreator.SyncFromExistingIds(existingIds);
 
-        public List<PlanetData> GeneratePlanetDataFromPlanetsSeed(int planetsToAdd, PlanetSeedData seed)
+        public List<PlanetData> GeneratePlanetDataFromPlanetsSeed(int planetsToAdd, PlanetSeedData seed, float distanceBetweenPlanetsMultiplier)
         {
             List<PlanetData> roundPlanets = new();
             for (int i = 0; i < planetsToAdd; i++)
             {
-                PlanetData planetData = CreateDataFromSeed(idCreator.NextId, seed);
+                PlanetData planetData = CreateDataFromSeed(idCreator.NextId, seed, distanceBetweenPlanetsMultiplier);
                 roundPlanets.Add(planetData);
             }
             return roundPlanets;
         }
 
-        private PlanetData CreateDataFromSeed(string id, PlanetSeedData seed)
+        private PlanetData CreateDataFromSeed(string id, PlanetSeedData seed, float distanceBetweenPlanetsMultiplier)
         {
             float radius = seed.radius.GetRandomValue();
-            Vector3 localPosition = roomPlacement.GetValidLocalPosition(radius, seed.maxDistanceToOtherPlanet);
+            float maxDistanceToOtherPlanet = seed.maxDistanceToOtherPlanet.value * distanceBetweenPlanetsMultiplier;
+            Debug.LogWarning($"maxDistanceToOtherPlanet: {maxDistanceToOtherPlanet}");
+            Vector3 localPosition = roomPlacement.GetValidLocalPosition(radius, maxDistanceToOtherPlanet);
             roomPlacement.Register(localPosition, radius);
             int lettersPerMinute = seed.lettersPerMinute.GetRandomValue();
             int maxLetters = (int)(seed.maxLettersMultiplier.GetRandomValue() * lettersPerMinute);
