@@ -1,8 +1,8 @@
+using System;
 using System.Collections.Generic;
 using DigitalLove.Global;
 using Meta.XR.MRUtilityKit;
 using UnityEngine;
-using System;
 
 namespace DigitalLove.Game.Planets
 {
@@ -18,6 +18,8 @@ namespace DigitalLove.Game.Planets
         }
 
         [SerializeField] private List<Occupant> occupants;
+        [SerializeField] private float floorMargin = 0.5f;
+        [SerializeField] private float ceilingMargin = 0.5f;
 
         public void Clear() => occupants.Clear();
 
@@ -57,25 +59,32 @@ namespace DigitalLove.Game.Planets
 
         public Vector3 GetValidLocalPosition(float radius, int maxIterations = DefaultMaxIterations)
         {
-            return FindValidLocalPosition(radius, maxDistanceFromRootWorld: null, localHeightRange: null, maxIterations);
+            return FindValidLocalPosition(radius, maxDistanceFromRootWorld: null, additionalHeightRange: null, maxIterations);
         }
 
         public Vector3 GetValidLocalPosition(float radius, float maxDistanceFromRootWorld, int maxIterations = DefaultMaxIterations)
         {
-            return FindValidLocalPosition(radius, maxDistanceFromRootWorld, localHeightRange: null, maxIterations);
+            return FindValidLocalPosition(radius, maxDistanceFromRootWorld, additionalHeightRange: null, maxIterations);
         }
 
-        public Vector3 GetValidLocalPosition(float radius, MinMaxFloat localHeightRange, int maxIterations = DefaultMaxIterations)
+        public Vector3 GetValidLocalPosition(float radius, MinMaxFloat additionalHeightRange, int maxIterations = DefaultMaxIterations)
         {
-            return FindValidLocalPosition(radius, maxDistanceFromRootWorld: null, localHeightRange, maxIterations);
+            return FindValidLocalPosition(radius, maxDistanceFromRootWorld: null, additionalHeightRange, maxIterations);
         }
 
-        private Vector3 FindValidLocalPosition(float radius, float? maxDistanceFromRootWorld, MinMaxFloat localHeightRange, int maxIterations)
+        private Vector3 FindValidLocalPosition(float radius, float? maxDistanceFromRootWorld, MinMaxFloat additionalHeightRange, int maxIterations)
         {
+            MRUKRoom room = MRUK.Instance != null ? MRUK.Instance.GetCurrentRoom() : null;
+            if (room == null)
+            {
+                Debug.LogWarning("No MRUK room available for placement.");
+                return Vector3.zero;
+            }
+
             Vector3 result = Vector3.zero;
             for (int i = 0; i < maxIterations && result == Vector3.zero; i++)
             {
-                Vector3? candidate = MRUK.Instance.GetCurrentRoom().GenerateRandomPositionInRoom(radius, true);
+                Vector3? candidate = room.GenerateRandomPositionInRoom(radius, true);
                 if (!candidate.HasValue)
                     continue;
 
@@ -90,7 +99,7 @@ namespace DigitalLove.Game.Planets
                 if (Overlaps(localPos, radius))
                     continue;
 
-                if (!IsWithinLocalHeightRange(localPos, localHeightRange))
+                if (!IsWithinLocalHeightRange(localPos, radius, additionalHeightRange))
                     continue;
 
                 result = localPos;
@@ -101,12 +110,56 @@ namespace DigitalLove.Game.Planets
             return result;
         }
 
-        private static bool IsWithinLocalHeightRange(Vector3 localPos, MinMaxFloat localHeightRange)
+        private bool IsWithinLocalHeightRange(Vector3 localPos, float radius, MinMaxFloat additionalHeightRange)
         {
-            if (localHeightRange == null || localHeightRange.max <= localHeightRange.min)
-                return true;
+            if (!TryGetAllowedLocalHeightRange(radius, additionalHeightRange, out float minY, out float maxY))
+                return false;
 
-            return localPos.y >= localHeightRange.min && localPos.y <= localHeightRange.max;
+            return localPos.y >= minY && localPos.y <= maxY;
+        }
+
+        private bool TryGetAllowedLocalHeightRange(float radius, MinMaxFloat additionalHeightRange, out float minY, out float maxY)
+        {
+            minY = float.NegativeInfinity;
+            maxY = float.PositiveInfinity;
+
+            MRUKRoom room = MRUK.Instance != null ? MRUK.Instance.GetCurrentRoom() : null;
+            if (room != null)
+            {
+                Bounds bounds = room.GetRoomBounds();
+                if (bounds.size.sqrMagnitude > 0f)
+                {
+                    GetLocalYRangeFromBounds(bounds, out float roomMinY, out float roomMaxY);
+                    minY = roomMinY + floorMargin + radius;
+                    maxY = roomMaxY - ceilingMargin - radius;
+                }
+            }
+
+            if (additionalHeightRange != null && additionalHeightRange.max > additionalHeightRange.min)
+            {
+                minY = Mathf.Max(minY, additionalHeightRange.min);
+                maxY = Mathf.Min(maxY, additionalHeightRange.max);
+            }
+
+            return maxY > minY;
+        }
+
+        private void GetLocalYRangeFromBounds(Bounds bounds, out float minLocalY, out float maxLocalY)
+        {
+            minLocalY = float.PositiveInfinity;
+            maxLocalY = float.NegativeInfinity;
+            Vector3 center = bounds.center;
+            Vector3 extents = bounds.extents;
+
+            for (int sx = -1; sx <= 1; sx += 2)
+                for (int sy = -1; sy <= 1; sy += 2)
+                    for (int sz = -1; sz <= 1; sz += 2)
+                    {
+                        Vector3 corner = center + Vector3.Scale(extents, new Vector3(sx, sy, sz));
+                        float localY = transform.InverseTransformPoint(corner).y;
+                        minLocalY = Mathf.Min(minLocalY, localY);
+                        maxLocalY = Mathf.Max(maxLocalY, localY);
+                    }
         }
 
         private bool Overlaps(Vector3 localPos, float radius)
