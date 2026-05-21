@@ -1,10 +1,10 @@
-using System;
 using System.Collections.Generic;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Planets;
 using DigitalLove.Game.UI;
 using DigitalLove.Global;
 using UnityEngine;
+
 namespace DigitalLove.Game.Spaceships
 {
     public class SpaceshipBehaviour : MonoBehaviour
@@ -20,6 +20,7 @@ namespace DigitalLove.Game.Spaceships
         private StateMachine stateMachine;
         private SpaceshipData data;
         private bool isInitialized;
+        private LoopHandlers handlers;
 
         public bool IsInitialized => isInitialized;
         public DestinationSelector DestinationSelector => destinationSelector;
@@ -39,15 +40,16 @@ namespace DigitalLove.Game.Spaceships
             isInitialized = true;
 
             waitingForRouteState.Bind(StartSelectingDestination);
-
-            onRouteState.Bind(
-                () => Id,
-                BuildLoopEventArgs,
-                NotifyLoopChanged,
-                NotifyLoopEditionClicked);
+            onRouteState.Bind(this);
 
             stateMachine = StateMachineFactory.Create(new MonoState[] { waitingForRouteState, onRouteState });
             stateMachine.SetCurrentState<WaitingForRouteState>();
+        }
+
+        public void Configure(LoopHandlers loopHandlers)
+        {
+            handlers = loopHandlers;
+            onRouteState.SetOnLoopComplete(loopHandlers.Complete);
         }
 
         public void StartSelectingDestination()
@@ -56,24 +58,12 @@ namespace DigitalLove.Game.Spaceships
             stateMachine.SetCurrentState<OnRouteState>();
         }
 
-        public void SetOnLoopChanged(Action<LoopEventArgs> onLoopChanged) => onLoopChangedHandler = onLoopChanged;
-
-        public void SetOnLoopComplete(Action<LoopCompleteEventArgs> onLoopComplete) =>
-            onRouteState.SetOnLoopComplete(onLoopComplete);
-
-        public void SetOnLoopEditionButtonClicked(Action<LoopEventArgs> onLoopEditionButtonClicked) =>
-            onLoopEditionButtonClickedHandler = onLoopEditionButtonClicked;
-
-        private Action<LoopEventArgs> onLoopChangedHandler = _ => { };
-        private Action<LoopEventArgs> onLoopEditionButtonClickedHandler = _ => { };
-
-        public void NotifyLoopChanged() => onLoopChangedHandler(BuildLoopEventArgs());
+        public void NotifyLoopChanged() => handlers.Changed?.Invoke(BuildLoopEventArgs());
 
         public void NotifyLoopEditionClicked()
         {
-            onRouteState.ClearDestinations();
             MoveToHub();
-            onLoopEditionButtonClickedHandler(BuildLoopEventArgs());
+            handlers.EditionClicked?.Invoke(BuildLoopEventArgs());
         }
 
         public void MoveToHub()
@@ -89,20 +79,21 @@ namespace DigitalLove.Game.Spaceships
             hubId = HubId
         };
 
-        public void Spawn(SpaceshipData data, Color color, HubBehaviour basePlanet)
+        public void Spawn(SpaceshipData data, Color color, HubBehaviour hub)
         {
             this.data = data;
 
-            grabbableWrapper.SetWorldPosition(basePlanet.SpawnPose.position);
-            basePlanet.SetRouteColor(color);
-            destinationSelector.Init(basePlanet, color);
+            grabbableWrapper.SetWorldPosition(hub.SpawnPose.position);
+            hub.SetRouteColor(color);
+            destinationSelector.Init(hub, color);
             onRouteState.SetRouteColor(color);
-            routePanel.Show(Id, color);
             originZone.material.color = color;
             onRouteState.ClearDestinations();
+
             MoveToHub();
 
             this.SetActive(true);
+            routePanel.Show(Id, color, hub.transform.position);
         }
 
         public void Hide()

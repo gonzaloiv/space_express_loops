@@ -14,12 +14,29 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private ColorIsAvailablePair[] colors;
 
         private IdCounter idCounter = new();
+        private LoopHandlers handlers;
 
         public List<SpaceshipBehaviour> All => spaceships;
 
-        public Action<LoopEventArgs> loopChanged = args => { };
-        public Action<LoopEventArgs> loopEditionButtonClicked = args => { };
-        public Action<LoopCompleteEventArgs> loopComplete = args => { };
+        public void SetHandlers(LoopHandlers handlers)
+        {
+            this.handlers = handlers;
+            foreach (SpaceshipBehaviour spaceship in spaceships)
+            {
+                if (spaceship != null)
+                    WireLoopHandlers(spaceship);
+            }
+        }
+
+        public void ClearHandlers()
+        {
+            handlers = default;
+            foreach (SpaceshipBehaviour spaceship in spaceships)
+            {
+                if (spaceship != null)
+                    WireLoopHandlers(spaceship);
+            }
+        }
 
         public void InitializePool()
         {
@@ -56,12 +73,7 @@ namespace DigitalLove.Game.Spaceships
             return spaceship;
         }
 
-        public void WireLoopHandlers(SpaceshipBehaviour spaceship)
-        {
-            spaceship.SetOnLoopChanged(args => loopChanged(args));
-            spaceship.SetOnLoopComplete(args => loopComplete(args));
-            spaceship.SetOnLoopEditionButtonClicked(args => loopEditionButtonClicked(args));
-        }
+        public void WireLoopHandlers(SpaceshipBehaviour spaceship) => spaceship.Configure(handlers);
 
         private ColorIsAvailablePair ResolveColorPair(string colorCode)
         {

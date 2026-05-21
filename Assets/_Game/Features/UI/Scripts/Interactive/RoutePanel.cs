@@ -16,19 +16,17 @@ namespace DigitalLove.Game.UI
 
         public Action editButtonClicked = () => { };
 
-        public void SetPosition(Vector3 position)
+        public void Show(string id, Color color, Vector3 position)
         {
             transform.position = position;
-        }
-
-        public void Show(string id, Color color)
-        {
-            gameObject.SetActive(true);
-            layoutUpdater.ForceUpdate();
+            idLabel.text = $"ROUTE {id.Substring(id.Length - 2, 2)}";
             SetButtonActive(false);
             foreach (Graphic graphic in graphics)
                 graphic.color = color;
-            idLabel.text = $"ROUTE {id.Substring(id.Length - 2, 2)}";
+
+            gameObject.SetActive(true);
+
+            layoutUpdater.ForceUpdate();
         }
 
         public void SetButtonActive(bool isActive)

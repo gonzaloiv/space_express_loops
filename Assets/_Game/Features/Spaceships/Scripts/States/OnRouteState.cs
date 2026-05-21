@@ -18,12 +18,8 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private float legDelay = 1f;
 
         private SpaceshipRoute route;
-        private LoopDestinationSelection destinationSelection;
         private TravellerLoopRunner travellerLoop;
-        private Func<string> getSpaceshipId;
-        private Func<LoopEventArgs> buildLoopEventArgs;
-        private Action onLoopChanged;
-        private Action onLoopEditionClicked;
+        private SpaceshipBehaviour ship;
 
         private bool enterSelectingOnEnter;
 
@@ -34,25 +30,14 @@ namespace DigitalLove.Game.Spaceships
         {
             base.Init(parent);
             route = new SpaceshipRoute(splineContainerWrapper, () => destinationSelector.Hub);
-            destinationSelection = new LoopDestinationSelection(destinationSelector, route);
             travellerLoop = new TravellerLoopRunner(this, splineContainerWrapper, traveller, legDelay);
             traveller.Hide();
             travellerLoop.Stop();
             route.SetLineRendererActive(false);
-            ResetRouteChrome();
+            HideVisuals();
         }
 
-        public void Bind(
-            Func<string> getSpaceshipId,
-            Func<LoopEventArgs> buildLoopEventArgs,
-            Action onLoopChanged,
-            Action onLoopEditionClicked)
-        {
-            this.getSpaceshipId = getSpaceshipId;
-            this.buildLoopEventArgs = buildLoopEventArgs;
-            this.onLoopChanged = onLoopChanged;
-            this.onLoopEditionClicked = onLoopEditionClicked;
-        }
+        public void Bind(SpaceshipBehaviour spaceship) => ship = spaceship;
 
         public void SetOnLoopComplete(Action<LoopCompleteEventArgs> onLoopComplete)
         {
@@ -68,7 +53,6 @@ namespace DigitalLove.Game.Spaceships
         {
             if (route == null)
                 return;
-
             route.ClearDestinations();
         }
 
@@ -108,28 +92,22 @@ namespace DigitalLove.Game.Spaceships
             grabbableWrapper.released -= OnRelease;
 
             travellerLoop.Stop();
-            ResetRouteChrome();
+            HideVisuals();
         }
 
         private void BeginLoop()
         {
-            destinationSelection.End();
             route.RebuildRoute();
-            ShowLoopChrome();
-            travellerLoop.StartLoop(getSpaceshipId(), buildLoopEventArgs);
+            ShowGrabbable();
+            travellerLoop.StartLoop(ship.Id, ship.BuildLoopEventArgs);
         }
 
         private void BeginSelecting()
         {
-            destinationSelection.Begin();
             ghost.SetActive(true);
             grabbableWrapper.SetInteractionActive(true);
-        }
-
-        private void EndSelecting()
-        {
-            destinationSelection.End();
-            ghost.SetActive(false);
+            destinationSelector.SetExcludedPlanetIds(route.GetExcludedPlanetIds());
+            destinationSelector.StartLookingForDestination(true);
         }
 
         private void OnSelect()
@@ -141,51 +119,29 @@ namespace DigitalLove.Game.Spaceships
         private void OnRelease()
         {
             if (destinationSelector.IsLookingForDestination)
-                OnUnselectWhileSelecting();
+                OnDestinationSelection();
         }
 
-        private void OnUnselectWhileSelecting()
+        private void OnDestinationSelection()
         {
-            if (destinationSelector.HasDestinationBeenSelected)
+            bool hasAppended = route.TryAppendDestination(destinationSelector.Destination);
+            if (hasAppended)
             {
-                OnDestinationConfirmed();
-                return;
+                route.RebuildRoute();
+                travellerLoop.StartLoop(ship.Id, ship.BuildLoopEventArgs);
+                ship.NotifyLoopChanged();
             }
-
-            EndSelecting();
-
-            if (route.HasDestinations)
-                ShowStationGrab();
-            else
-                parent.SetCurrentState<WaitingForRouteState>();
-        }
-
-        private void OnDestinationConfirmed()
-        {
-            SelectionConfirmResult result = destinationSelection.Confirm(
-                destinationSelector.Destination,
-                onLoopChanged);
-
-            switch (result)
-            {
-                case SelectionConfirmResult.StartedLoop:
-                    BeginLoop();
-                    break;
-                case SelectionConfirmResult.ExtendedLoop:
-                    route.RebuildRoute();
-                    EndSelecting();
-                    ShowStationGrab();
-                    break;
-            }
+            ShowGrabbable();
         }
 
         private void OnEditButtonClick()
         {
-            onLoopEditionClicked();
+            route.ClearDestinations();
+            ship.NotifyLoopEditionClicked();
             parent.SetCurrentState<WaitingForRouteState>();
         }
 
-        private void ResetRouteChrome()
+        private void HideVisuals()
         {
             ghost.SetActive(false);
             grabbableWrapper.Hide();
@@ -194,20 +150,11 @@ namespace DigitalLove.Game.Spaceships
             destinationSelector.StartLookingForDestination(false);
         }
 
-        private void ShowLoopChrome()
+        private void ShowGrabbable()
         {
             ghost.SetActive(false);
             destinationSelector.StartLookingForDestination(false);
-
-            routePanel.SetPosition(route.Hub.transform.position);
             routePanel.SetButtonActive(true);
-
-            grabbableWrapper.Show();
-            MoveShipToActiveStation();
-        }
-
-        private void ShowStationGrab()
-        {
             grabbableWrapper.Show();
             MoveShipToActiveStation();
         }
@@ -233,11 +180,7 @@ namespace DigitalLove.Game.Spaceships
 
         public void Debug_SimulateGrabRelease() => OnRelease();
 
-        public void Debug_ConfirmDestination()
-        {
-            if (destinationSelector.Destination != null)
-                OnDestinationConfirmed();
-        }
+        public void Debug_ConfirmDestination() => OnDestinationSelection();
 
         public void Debug_InvokeOnLoopEditionButtonClicked() => OnEditButtonClick();
 

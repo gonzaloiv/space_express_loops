@@ -14,8 +14,7 @@ namespace DigitalLove.Game.Spaceships
 
         private Action startSelectingDestination;
 
-        public void Bind(Action startSelectingDestination) =>
-            this.startSelectingDestination = startSelectingDestination;
+        public void Bind(Action startSelectingDestination) => this.startSelectingDestination = startSelectingDestination;
 
         public override void Init(StateMachine parent)
         {

@@ -39,7 +39,6 @@ namespace DigitalLove.Game.Spaceships
         {
             if (IsRunning)
                 Stop();
-
             loopCoroutine = host.StartCoroutine(RunLoop(spaceshipId, getCurrentLoopEventArgs));
         }
 
@@ -50,7 +49,6 @@ namespace DigitalLove.Game.Spaceships
                 host.StopCoroutine(loopCoroutine);
                 loopCoroutine = null;
             }
-
             traveller.HideAndCancelPath();
         }
 

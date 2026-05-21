@@ -44,7 +44,11 @@ namespace DigitalLove.Game.Flow
 
         public override void Enter()
         {
-            SubscribeEvents();
+            levelContainer.SpaceshipsSpawner.SetHandlers(new LoopHandlers(
+                changed: OnLoopChanged,
+                editionClicked: OnLoopEditionButtonClicked,
+                complete: OnLoopComplete));
+            levelContainer.PlanetsSpawner.planetFull += OnPlanetFull;
 
             storePanel.ShowRound(roundSelector.FormattedCurrentRoundIndex);
             gameSnapshot = memoryDataClient.Get<GameSnapshot>();
@@ -147,22 +151,7 @@ namespace DigitalLove.Game.Flow
 
         public override void Exit()
         {
-            UnsubscribeEvents();
-        }
-
-        private void SubscribeEvents()
-        {
-            levelContainer.SpaceshipsSpawner.loopChanged += OnLoopChanged;
-            levelContainer.SpaceshipsSpawner.loopComplete += OnLoopComplete;
-            levelContainer.SpaceshipsSpawner.loopEditionButtonClicked += OnLoopEditionButtonClicked;
-            levelContainer.PlanetsSpawner.planetFull += OnPlanetFull;
-        }
-
-        private void UnsubscribeEvents()
-        {
-            levelContainer.SpaceshipsSpawner.loopChanged -= OnLoopChanged;
-            levelContainer.SpaceshipsSpawner.loopComplete -= OnLoopComplete;
-            levelContainer.SpaceshipsSpawner.loopEditionButtonClicked -= OnLoopEditionButtonClicked;
+            levelContainer.SpaceshipsSpawner.ClearHandlers();
             levelContainer.PlanetsSpawner.planetFull -= OnPlanetFull;
         }
 
