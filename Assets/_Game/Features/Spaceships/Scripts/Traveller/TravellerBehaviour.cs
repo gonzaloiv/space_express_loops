@@ -31,7 +31,8 @@ namespace DigitalLove.Game.Spaceships
         public void Hide()
         {
             isCollisionActive = false;
-            body.SetActive(false);  
+            body.SetActive(false);
+            lettersPanel.Hide();
         }
 
         public void HideAndCancelPath()
