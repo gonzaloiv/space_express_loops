@@ -79,6 +79,25 @@ namespace DigitalLove.Game.DebugActions
         }
 
         [Button]
+        public void Debug_AddDestination()
+        {
+            SpaceshipBehaviour ship = context.ResolveShipForRoute();
+            if (ship == null)
+                return;
+
+            PlanetBehaviour planet = context.ResolveDestinationPlanet(ship);
+            if (planet == null)
+                return;
+
+            context.PrepareShipForRoute(ship);
+            ship.Debug_SimulateGrabSelect();
+            ship.DestinationSelector.Debug_SetDestinationPlanet(planet);
+            ship.Debug_ConfirmDestination();
+            context.Planets.UnlockPlanetStores();
+            Debug.Log($"Ship {ship.Id}: added destination {planet.Id}.");
+        }
+
+        [Button]
         public void Debug_ClickEditionButtons()
         {
             foreach (SpaceshipBehaviour spaceship in context.Spaceships.GetAll())

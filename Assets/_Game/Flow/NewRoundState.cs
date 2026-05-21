@@ -28,9 +28,11 @@ namespace DigitalLove.Game.Flow
             gameSnapshot.IncreaseRoundIndex();
             roundSelector.SetCurrentRound(gameSnapshot.roundIndex);
             levelContainer.SpawnRound(roundSelector.CurrentRound, gameSnapshot);
+            levelContainer.PlanetsSpawner.UnlockPlanetStores();
+            
             gameSnapshot.RecalculateLettersRequiredForRound(roundSelector.CurrentRound.lettersIncreaseMultiplier / gameSpeed.value);
 
-            if(roundSelector.CurrentRound.resetsLetters)
+            if (roundSelector.CurrentRound.resetsLetters)
                 levelContainer.ResetLetters();
 
             progressionEventsHelper.SendLevelCompleteEvent(roundSelector.CurrentRound.id, score: gameSnapshot.CurrentLetters);

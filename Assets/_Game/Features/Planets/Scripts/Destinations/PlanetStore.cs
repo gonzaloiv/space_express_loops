@@ -23,7 +23,6 @@ namespace DigitalLove.Game.Planets
         private Action planetFull;
 
         public int Letters => letters;
-        public bool IsStoring => isStoring;
 
         public void PrepareStoring(int lettersPerMinute, int maxLetters, Action planetFull)
         {

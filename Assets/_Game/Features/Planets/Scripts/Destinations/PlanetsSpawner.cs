@@ -87,10 +87,6 @@ namespace DigitalLove.Game.Planets
 
         public void UnlockPlanetStores()
         {
-            if (storesUnlocked)
-                return;
-
-            storesUnlocked = true;
             foreach (PlanetBehaviour planet in planets)
             {
                 if (planet.IsActive)
