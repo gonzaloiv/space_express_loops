@@ -11,7 +11,6 @@ namespace DigitalLove.Game.Planets
         [SerializeField] private MrukRoomLocalPlacement roomPlacement;
         [SerializeField] private List<HubBehaviour> hubs;
         [SerializeField] private float minDistanceBetweenHubs;
-        [SerializeField] private MinMaxFloat localHeightRange;
         [SerializeField] private float minDistanceToRoomBounds;
 
         private IdCounter idCounter = new();
@@ -94,13 +93,13 @@ namespace DigitalLove.Game.Planets
         {
             for (int i = 0; i < MrukRoomLocalPlacement.DefaultMaxIterations; i++)
             {
-                Vector3 localPosition = roomPlacement.GetValidLocalPosition(minDistanceToRoomBounds, localHeightRange);
+                Vector3 localPosition = roomPlacement.GetValidLocalPosition(minDistanceToRoomBounds);
                 if (minDistanceBetweenHubs <= 0f || !IsTooCloseToOtherHubs(localPosition, minDistanceBetweenHubs))
                     return localPosition;
             }
 
             Debug.LogWarning("Failed to find a hub position with minimum hub spacing; using best-effort placement.");
-            return roomPlacement.GetValidLocalPosition(minDistanceToRoomBounds, localHeightRange);
+            return roomPlacement.GetValidLocalPosition(minDistanceToRoomBounds);
         }
 
         private bool IsTooCloseToOtherHubs(Vector3 localPosition, float minDistance)

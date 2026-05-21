@@ -37,9 +37,11 @@ namespace DigitalLove.Game.Spaceships
             grabbableWrapper.Hide();
         }
 
-        private void OnPointerEvent(PointerEvent pointer)
+        private void OnPointerEvent(PointerEvent pointer) => HandlePointerEvent(pointer.Type);
+
+        private void HandlePointerEvent(PointerEventType type)
         {
-            if (pointer.Type == PointerEventType.Select)
+            if (type == PointerEventType.Select)
                 OnSelect();
         }
 
@@ -52,5 +54,11 @@ namespace DigitalLove.Game.Spaceships
         }
 
         public void ShowGrabMePanel() => grabMePanel.SetActive(true);
+
+        #region Debug
+
+        public void Debug_SimulateGrabSelect() => HandlePointerEvent(PointerEventType.Select);
+
+        #endregion
     }
 }

@@ -12,10 +12,12 @@ namespace DigitalLove.Game.Spaceships
 
         public IReadOnlyList<PlanetBehaviour> Destinations => destinations;
         public bool HasDestinations => destinations.Count > 0;
+        public bool HasMoreThanOneDestination => destinations.Count > 1;
         public HubBehaviour Hub => getHub();
 
         public Vector3 LastLegEndPosition => routeContainer.LastLegEndPosition;
         public Vector3 FirstLegEndPosition => routeContainer.FirstLegEndPosition;
+        public bool IsLastLegToHub => routeContainer.LastLeg.pickupPlanet == null;
 
         public SpaceshipRoute(RouteContainer routeContainer, System.Func<HubBehaviour> getHub)
         {

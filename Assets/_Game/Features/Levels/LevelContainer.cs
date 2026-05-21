@@ -134,5 +134,10 @@ namespace DigitalLove.Game.Levels
                 onComplete();
             });
         }
+
+        public void ResetLetters()
+        {
+            planetsSpawner.All.ForEach(planet => planet.PlanetStore.ResetLetters());
+        }
     }
 }

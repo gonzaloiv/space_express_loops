@@ -7,7 +7,7 @@ namespace DigitalLove.Game.Spaceships
 {
     public class GhostBehaviour : MonoBehaviour
     {
-        [SerializeField] private GrabbableWrapper grabbableWrapper;
+        [SerializeField] private Grabbable grabbable;
         [SerializeField] private GameObject body;
         [SerializeField] private int positionBufferSize = 5;
 
@@ -31,12 +31,12 @@ namespace DigitalLove.Game.Spaceships
 
         private void OnEnable()
         {
-            grabbableWrapper.SubscribePointerEvents(OnPointerEvent);
+            grabbable.WhenPointerEventRaised += OnPointerEvent;
         }
 
         private void OnDisable()
         {
-            grabbableWrapper.UnsubscribePointerEvents(OnPointerEvent);
+            grabbable.WhenPointerEventRaised -= OnPointerEvent;
         }
 
         private void OnPointerEvent(PointerEvent pointer)
@@ -47,7 +47,7 @@ namespace DigitalLove.Game.Spaceships
 
         private void OnMove()
         {
-            Vector3 offset = grabbableWrapper.Transform.position - transform.position;
+            Vector3 offset = grabbable.Transform.position - transform.position;
             Vector3 averageOffset = GetAverageOffset(offset);
             Vector3 position = transform.position + averageOffset;
             body.transform.position = position;
@@ -70,12 +70,14 @@ namespace DigitalLove.Game.Spaceships
             return averageOffset;
         }
 
-        // ! DEBUG
+        #region Debug
 
         private void Update()
         {
             if (Application.isEditor)
                 OnMove();
         }
+
+        #endregion
     }
 }

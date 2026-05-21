@@ -89,5 +89,12 @@ namespace DigitalLove.Game.Planets
                 fullAudioSource.Play();
             lettersPanel.ShowLetters(letters, maxLetters, showMaxValue);
         }
+
+        public void ResetLetters()
+        {
+            letters = 0;
+            lettersPanel.ShowLetters(letters, maxLetters);
+            ResetCoundown();
+        }
     }
 }

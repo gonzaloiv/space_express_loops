@@ -11,11 +11,15 @@ namespace DigitalLove.Game.DebugActions
     {
         [Inject] private MemoryDataClient memoryDataClient;
 
+        #region Debug
+
         [Button]
         public void Debug_AddLettersAndMoney()
         {
             GameSnapshot gameSnapshot = memoryDataClient.Get<GameSnapshot>();
             gameSnapshot.IncreaseLettersAndMoney(100, 1000);
         }
+
+        #endregion
     }
 }

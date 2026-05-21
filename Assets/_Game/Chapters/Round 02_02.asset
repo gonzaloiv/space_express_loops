@@ -20,3 +20,5 @@ MonoBehaviour:
     max: 3
   planetSeed: {fileID: 11400000, guid: 31c02de9e722c3e4fb35c71153032b45, type: 2}
   shouldSpawnSpaceship: 0
+  hasLoseCondition: 1
+  resetsLetters: 1

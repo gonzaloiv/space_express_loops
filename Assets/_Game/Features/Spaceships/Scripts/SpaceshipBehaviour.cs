@@ -78,7 +78,7 @@ namespace DigitalLove.Game.Spaceships
 
         public void MoveToHub()
         {
-            grabbableWrapper.SetWorldPosition(Hub.transform.position);
+            grabbableWrapper.SetWorldPosition(Hub.SpawnPose.position);
         }
 
         public LoopEventArgs BuildLoopEventArgs() => new()
@@ -93,8 +93,7 @@ namespace DigitalLove.Game.Spaceships
         {
             this.data = data;
 
-            transform.SetWorldPose(basePlanet.SpawnPose);
-
+            grabbableWrapper.SetWorldPosition(basePlanet.SpawnPose.position);
             basePlanet.SetRouteColor(color);
             destinationSelector.Init(basePlanet, color);
             onRouteState.SetRouteColor(color);
@@ -130,12 +129,38 @@ namespace DigitalLove.Game.Spaceships
 
         public void ShowGrabMePanel() => waitingForRouteState.ShowGrabMePanel();
 
-        // ! DEBUG
+        #region Debug
+
+        public void Debug_SimulateGrabSelect()
+        {
+            if (!isInitialized)
+                Initialize();
+
+            if (stateMachine.IsCurrentState<WaitingForRouteState>())
+                waitingForRouteState.Debug_SimulateGrabSelect();
+            else if (stateMachine.IsCurrentState<OnRouteState>())
+                onRouteState.Debug_SimulateGrabSelect();
+            else
+                Debug.LogWarning($"EditorDebug: Grab select ignored in state {stateMachine.CurrentRoute}.");
+        }
+
+        public void Debug_SimulateGrabRelease()
+        {
+            if (!isInitialized)
+                return;
+
+            if (stateMachine.IsCurrentState<OnRouteState>())
+                onRouteState.Debug_SimulateGrabRelease();
+            else
+                Debug.LogWarning($"EditorDebug: Grab release ignored in state {stateMachine.CurrentRoute}.");
+        }
 
         public void Debug_ConfirmDestination() => onRouteState.Debug_ConfirmDestination();
 
         public void Debug_InvokeOnLoopEditionButtonClicked() => onRouteState.Debug_InvokeOnLoopEditionButtonClicked();
 
         public SpaceshipRoute Debug_Route => onRouteState.Route;
+
+        #endregion
     }
 }

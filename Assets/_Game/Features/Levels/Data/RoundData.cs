@@ -12,5 +12,7 @@ namespace DigitalLove.Game.Levels
         public MinMaxInt planetsToAdd;
         public PlanetSeedData planetSeed;
         public bool shouldSpawnSpaceship;
+        public bool hasLoseCondition;
+        public bool resetsLetters;
     }
 }

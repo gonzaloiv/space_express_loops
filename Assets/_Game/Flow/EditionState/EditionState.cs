@@ -139,6 +139,8 @@ namespace DigitalLove.Game.Flow
 
         private void OnPlanetFull()
         {
+            if (!roundSelector.CurrentRound.hasLoseCondition)
+                return;
             parent.SetCurrentState(gameEndState.RouteId);
         }
 

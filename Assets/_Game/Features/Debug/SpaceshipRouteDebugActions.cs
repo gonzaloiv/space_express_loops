@@ -14,6 +14,24 @@ namespace DigitalLove.Game.DebugActions
 
         private void Awake() => context = GetComponent<EditorDebugContext>();
 
+        private void FillRoute(SpaceshipBehaviour spaceship)
+        {
+            if (spaceship == null)
+                return;
+
+            PlanetBehaviour planet = context.GetRandomPlanetExcludingIds(excludedIds);
+            if (planet == null)
+                return;
+
+            excludedIds.Add(planet.Id);
+            context.PrepareShipForRoute(spaceship);
+            spaceship.SetRoute(new[] { planet });
+            spaceship.NotifyLoopChanged();
+            context.Planets.UnlockPlanetStores();
+        }
+
+        #region Debug
+
         [Button]
         public void Debug_CreateRandomRoute()
         {
@@ -70,20 +88,6 @@ namespace DigitalLove.Game.DebugActions
             }
         }
 
-        private void FillRoute(SpaceshipBehaviour spaceship)
-        {
-            if (spaceship == null)
-                return;
-
-            PlanetBehaviour planet = context.GetRandomPlanetExcludingIds(excludedIds);
-            if (planet == null)
-                return;
-
-            excludedIds.Add(planet.Id);
-            context.PrepareShipForRoute(spaceship);
-            spaceship.SetRoute(new[] { planet });
-            spaceship.NotifyLoopChanged();
-            context.Planets.UnlockPlanetStores();
-        }
+        #endregion
     }
 }

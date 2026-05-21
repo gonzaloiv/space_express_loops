@@ -16,7 +16,6 @@ namespace DigitalLove.Game.Spaceships
         private float countdown;
         private bool isLookingForDestination;
 
-        private Transform selectionOrigin;
         private HubBehaviour hub;
         private readonly HashSet<string> excludedPlanetIds = new();
         private PlanetBehaviour destinationPlanet;
@@ -34,15 +33,9 @@ namespace DigitalLove.Game.Spaceships
         public void Init(HubBehaviour hub, Color color)
         {
             this.hub = hub;
-            selectionOrigin = hub.transform;
             raycastHelper.SetColor(color);
             destinationZone.SetColor(color);
             excludedPlanetIds.Clear();
-        }
-
-        public void SetSelectionOrigin(Transform origin)
-        {
-            selectionOrigin = origin;
         }
 
         public void SetExcludedPlanetIds(IEnumerable<string> planetIds)
@@ -79,8 +72,7 @@ namespace DigitalLove.Game.Spaceships
             else
             {
                 bool isValidNewDestination = candidatePlanet != destinationPlanet
-                    && selectionOrigin != null
-                    && candidatePlanet.transform != selectionOrigin
+                    && candidatePlanet.transform != Hub.transform
                     && !excludedPlanetIds.Contains(candidatePlanet.Id)
                     && !candidatePlanet.IsOnRoute;
                 if (isValidNewDestination)
@@ -131,7 +123,7 @@ namespace DigitalLove.Game.Spaceships
             destinationZone.SetActive(isActive);
         }
 
-        // ! DEBUG
+        #region Debug
 
         public void Debug_SetDestinationPlanet(PlanetBehaviour toSet)
         {
@@ -139,5 +131,7 @@ namespace DigitalLove.Game.Spaceships
             SelectNewDestination(toSet);
             OnDestinationSelected();
         }
+
+        #endregion
     }
 }

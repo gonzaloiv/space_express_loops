@@ -131,7 +131,7 @@ namespace DigitalLove.Game.Spaceships
                 spaceship.Hide();
         }
 
-        // ! DEBUG
+        #region Debug
 
         public SpaceshipBehaviour GetRandomActive()
         {
@@ -143,6 +143,8 @@ namespace DigitalLove.Game.Spaceships
         }
 
         public List<SpaceshipBehaviour> GetAll() => spaceships.ToList();
+
+        #endregion
     }
 
     [Serializable]

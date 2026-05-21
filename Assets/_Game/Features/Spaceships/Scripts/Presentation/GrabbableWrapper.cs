@@ -11,6 +11,7 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private Grabbable grabbable;
         [SerializeField] private Renderer grabbableRenderer;
         [SerializeField] private ConstantRotation constantRotation;
+        [SerializeField] private Transform grabZone;
 
         public Transform Transform => grabbable.transform;
 
@@ -22,9 +23,10 @@ namespace DigitalLove.Game.Spaceships
 
         public void SetInteractionActive(bool active) => grabbable.SetActive(active);
 
-        public void SetWorldPosition(Vector3 position) => grabbable.transform.position = position;
-
-        public void ActivateGameObject() => grabbable.gameObject.SetActive(true);
+        public void SetWorldPosition(Vector3 position)
+        {
+            transform.position = position;
+        }
 
         public void Show()
         {
@@ -33,12 +35,14 @@ namespace DigitalLove.Game.Spaceships
             grabbableRenderer.gameObject.SetActive(true);
             grabbable.SetActive(true);
             constantRotation.IsEnabled = true;
+            grabZone.gameObject.SetActive(true);
         }
 
         public void Hide()
         {
             grabbableRenderer.gameObject.SetActive(false);
             constantRotation.IsEnabled = false;
+            grabZone.gameObject.SetActive(false);
         }
     }
 }

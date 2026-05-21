@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Planets;
 using DigitalLove.Game.UI;
-using DigitalLove.Global;
 using Oculus.Interaction;
 using UnityEngine;
 
@@ -33,13 +32,24 @@ namespace DigitalLove.Game.Spaceships
         public bool HasDestinations => route.HasDestinations;
         public SpaceshipRoute Route => route;
 
+        public override void Init(StateMachine parent)
+        {
+            base.Init(parent);
+            route = new SpaceshipRoute(splineContainerWrapper, () => destinationSelector.Hub);
+            destinationSelection = new LoopDestinationSelection(destinationSelector, route);
+            travellerLoop = new TravellerLoopRunner(this, splineContainerWrapper, traveller, legDelay);
+            traveller.Hide();
+            travellerLoop.Stop();
+            route.SetLineRendererActive(false);
+            ResetRouteChrome();
+        }
+
         public void Bind(
             Func<string> getSpaceshipId,
             Func<LoopEventArgs> buildLoopEventArgs,
             Action onLoopChanged,
             Action onLoopEditionClicked)
         {
-            EnsureRouteSystems();
             this.getSpaceshipId = getSpaceshipId;
             this.buildLoopEventArgs = buildLoopEventArgs;
             this.onLoopChanged = onLoopChanged;
@@ -48,13 +58,11 @@ namespace DigitalLove.Game.Spaceships
 
         public void SetOnLoopComplete(Action<LoopCompleteEventArgs> onLoopComplete)
         {
-            EnsureRouteSystems();
             travellerLoop.SetOnLoopIterationComplete(onLoopComplete);
         }
 
         public void SetDestinations(IReadOnlyList<PlanetBehaviour> destinations)
         {
-            EnsureRouteSystems();
             route.SetDestinations(destinations);
         }
 
@@ -68,26 +76,15 @@ namespace DigitalLove.Game.Spaceships
 
         public void SetRouteColor(Color color)
         {
-            EnsureRouteSystems();
             route.SetColor(color);
         }
 
         public List<string> GetDestinationIds()
         {
-            EnsureRouteSystems();
             return route.GetDestinationIds();
         }
 
         public void SetEnterSelectingOnEnter(bool value) => enterSelectingOnEnter = value;
-
-        public override void Init(StateMachine parent)
-        {
-            base.Init(parent);
-            EnsureRouteSystems();
-            travellerLoop.Stop();
-            route.SetLineRendererActive(false);
-            ResetRouteChrome();
-        }
 
         public override void Enter()
         {
@@ -114,17 +111,6 @@ namespace DigitalLove.Game.Spaceships
             ResetRouteChrome();
         }
 
-        private void EnsureRouteSystems()
-        {
-            if (route != null)
-                return;
-
-            route = new SpaceshipRoute(splineContainerWrapper, () => destinationSelector.Hub);
-            destinationSelection = new LoopDestinationSelection(grabbableWrapper, destinationSelector, route);
-            travellerLoop = new TravellerLoopRunner(this, splineContainerWrapper, traveller, legDelay);
-            traveller.Hide();
-        }
-
         private void BeginLoop()
         {
             isSelectingDestination = false;
@@ -149,14 +135,16 @@ namespace DigitalLove.Game.Spaceships
             ghost.SetActive(false);
         }
 
-        private void OnPointerEvent(PointerEvent pointer)
+        private void OnPointerEvent(PointerEvent pointer) => HandlePointerEvent(pointer.Type);
+
+        private void HandlePointerEvent(PointerEventType type)
         {
             if (isSelectingDestination)
             {
-                if (pointer.Type == PointerEventType.Unselect)
+                if (type == PointerEventType.Unselect)
                     OnUnselectWhileSelecting();
             }
-            else if (pointer.Type == PointerEventType.Select)
+            else if (type == PointerEventType.Select)
             {
                 BeginSelecting();
             }
@@ -190,6 +178,7 @@ namespace DigitalLove.Game.Spaceships
                     BeginLoop();
                     break;
                 case SelectionConfirmResult.ExtendedLoop:
+                    route.RebuildRoute();
                     EndSelecting();
                     ShowStationGrab();
                     break;
@@ -231,13 +220,24 @@ namespace DigitalLove.Game.Spaceships
 
         private void MoveShipToActiveStation()
         {
-            grabbableWrapper.ActivateGameObject();
-            grabbableWrapper.SetWorldPosition(route.HasDestinations && route.Destinations.Count > 1
-                ? route.LastLegEndPosition
-                : route.FirstLegEndPosition);
+            if (route.IsLastLegToHub && route.HasMoreThanOneDestination)
+            {
+                grabbableWrapper.Hide();
+            }
+            else
+            {
+                grabbableWrapper.Show();
+                grabbableWrapper.SetWorldPosition(route.HasDestinations && route.Destinations.Count > 1
+                    ? route.LastLegEndPosition
+                    : route.FirstLegEndPosition);
+            }
         }
 
-        // ! DEBUG
+        #region Debug
+
+        public void Debug_SimulateGrabSelect() => HandlePointerEvent(PointerEventType.Select);
+
+        public void Debug_SimulateGrabRelease() => HandlePointerEvent(PointerEventType.Unselect);
 
         public void Debug_ConfirmDestination()
         {
@@ -246,5 +246,7 @@ namespace DigitalLove.Game.Spaceships
         }
 
         public void Debug_InvokeOnLoopEditionButtonClicked() => OnEditButtonClick();
+
+        #endregion
     }
 }

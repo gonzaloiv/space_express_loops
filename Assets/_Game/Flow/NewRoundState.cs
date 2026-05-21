@@ -30,6 +30,9 @@ namespace DigitalLove.Game.Flow
             levelContainer.SpawnRound(roundSelector.CurrentRound, gameSnapshot);
             gameSnapshot.RecalculateLettersRequiredForRound(roundSelector.CurrentRound.lettersIncreaseMultiplier / gameSpeed.value);
 
+            if(roundSelector.CurrentRound.resetsLetters)
+                levelContainer.ResetLetters();
+
             progressionEventsHelper.SendLevelCompleteEvent(roundSelector.CurrentRound.id, score: gameSnapshot.CurrentLetters);
             gameSnapshot.ResetLettersForNewRound();
 

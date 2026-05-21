@@ -14,7 +14,7 @@ namespace DigitalLove.Game.Planets
         public bool IsActive => gameObject.activeInHierarchy;
         public string Id => id;
         public Vector3 LocalPosition => transform.localPosition;
-        public Pose SpawnPose => (spawnAnchor != null ? spawnAnchor : transform).ToWorldPose();
+        public Pose SpawnPose => spawnAnchor.ToWorldPose();
 
         public void SetActive(bool isActive)
         {

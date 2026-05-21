@@ -9,13 +9,12 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private LayerMask layerMask;
         [SerializeField] private float rayDistance = 2.5f;
         [SerializeField] private LineRenderer lineRenderer;
+        [SerializeField] private LineRendererEdges lineRendererEdges;
 
         [SerializeField] private float rayForwardOffset = 0.1f;
 
         private bool isActive = false;
-
-        [Header("DEBUG")]
-        [SerializeField] private PlanetBehaviour candidatePlanet = null;
+        private PlanetBehaviour candidatePlanet;
 
         public PlanetBehaviour CandidatePlanet => candidatePlanet;
 
@@ -35,6 +34,7 @@ namespace DigitalLove.Game.Spaceships
         public void SetVisible(bool isVisible)
         {
             lineRenderer.gameObject.SetActive(isVisible);
+            lineRendererEdges.SetVisible(isVisible);
         }
 
         private void Update()
@@ -67,6 +67,7 @@ namespace DigitalLove.Game.Spaceships
             {
                 lineRenderer.positionCount = 0;
                 lineRenderer.enabled = false;
+                lineRendererEdges.SetVisible(false);
             }
             else
             {
@@ -82,6 +83,7 @@ namespace DigitalLove.Game.Spaceships
                 }
                 lineRenderer.SetPositions(new Vector3[] { startPosition, endPosition });
                 lineRenderer.enabled = true;
+                lineRendererEdges.SetVisible(true);
             }
         }
     }
