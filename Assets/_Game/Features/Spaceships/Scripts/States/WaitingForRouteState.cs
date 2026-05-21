@@ -1,7 +1,6 @@
 using System;
 using DigitalLove.FlowControl;
 using DigitalLove.Global;
-using Oculus.Interaction;
 using UnityEngine;
 
 namespace DigitalLove.Game.Spaceships
@@ -26,23 +25,16 @@ namespace DigitalLove.Game.Spaceships
 
         public override void Enter()
         {
-            grabbableWrapper.SubscribePointerEvents(OnPointerEvent);
+            grabbableWrapper.EnablePointerHandling();
+            grabbableWrapper.selected += OnSelect;
             grabbableWrapper.Show();
             destinationSelector.StartLookingForDestination(false);
         }
 
         public override void Exit()
         {
-            grabbableWrapper.UnsubscribePointerEvents(OnPointerEvent);
+            grabbableWrapper.selected -= OnSelect;
             grabbableWrapper.Hide();
-        }
-
-        private void OnPointerEvent(PointerEvent pointer) => HandlePointerEvent(pointer.Type);
-
-        private void HandlePointerEvent(PointerEventType type)
-        {
-            if (type == PointerEventType.Select)
-                OnSelect();
         }
 
         [Button]
@@ -57,7 +49,7 @@ namespace DigitalLove.Game.Spaceships
 
         #region Debug
 
-        public void Debug_SimulateGrabSelect() => HandlePointerEvent(PointerEventType.Select);
+        public void Debug_SimulateGrabSelect() => OnSelect();
 
         #endregion
     }

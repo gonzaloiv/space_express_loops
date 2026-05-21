@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Planets;
 using DigitalLove.Game.UI;
-using Oculus.Interaction;
 using UnityEngine;
 
 namespace DigitalLove.Game.Spaceships
@@ -27,7 +26,6 @@ namespace DigitalLove.Game.Spaceships
         private Action onLoopEditionClicked;
 
         private bool enterSelectingOnEnter;
-        private bool isSelectingDestination;
 
         public bool HasDestinations => route.HasDestinations;
         public SpaceshipRoute Route => route;
@@ -89,7 +87,9 @@ namespace DigitalLove.Game.Spaceships
         public override void Enter()
         {
             routePanel.editButtonClicked += OnEditButtonClick;
-            grabbableWrapper.SubscribePointerEvents(OnPointerEvent);
+            grabbableWrapper.EnablePointerHandling();
+            grabbableWrapper.selected += OnSelect;
+            grabbableWrapper.released += OnRelease;
 
             if (enterSelectingOnEnter)
             {
@@ -104,16 +104,15 @@ namespace DigitalLove.Game.Spaceships
         public override void Exit()
         {
             routePanel.editButtonClicked -= OnEditButtonClick;
-            grabbableWrapper.UnsubscribePointerEvents(OnPointerEvent);
+            grabbableWrapper.selected -= OnSelect;
+            grabbableWrapper.released -= OnRelease;
 
-            isSelectingDestination = false;
             travellerLoop.Stop();
             ResetRouteChrome();
         }
 
         private void BeginLoop()
         {
-            isSelectingDestination = false;
             destinationSelection.End();
             route.RebuildRoute();
             ShowLoopChrome();
@@ -122,7 +121,6 @@ namespace DigitalLove.Game.Spaceships
 
         private void BeginSelecting()
         {
-            isSelectingDestination = true;
             destinationSelection.Begin();
             ghost.SetActive(true);
             grabbableWrapper.SetInteractionActive(true);
@@ -130,24 +128,20 @@ namespace DigitalLove.Game.Spaceships
 
         private void EndSelecting()
         {
-            isSelectingDestination = false;
             destinationSelection.End();
             ghost.SetActive(false);
         }
 
-        private void OnPointerEvent(PointerEvent pointer) => HandlePointerEvent(pointer.Type);
-
-        private void HandlePointerEvent(PointerEventType type)
+        private void OnSelect()
         {
-            if (isSelectingDestination)
-            {
-                if (type == PointerEventType.Unselect)
-                    OnUnselectWhileSelecting();
-            }
-            else if (type == PointerEventType.Select)
-            {
+            if (!destinationSelector.IsLookingForDestination)
                 BeginSelecting();
-            }
+        }
+
+        private void OnRelease()
+        {
+            if (destinationSelector.IsLookingForDestination)
+                OnUnselectWhileSelecting();
         }
 
         private void OnUnselectWhileSelecting()
@@ -235,9 +229,9 @@ namespace DigitalLove.Game.Spaceships
 
         #region Debug
 
-        public void Debug_SimulateGrabSelect() => HandlePointerEvent(PointerEventType.Select);
+        public void Debug_SimulateGrabSelect() => OnSelect();
 
-        public void Debug_SimulateGrabRelease() => HandlePointerEvent(PointerEventType.Unselect);
+        public void Debug_SimulateGrabRelease() => OnRelease();
 
         public void Debug_ConfirmDestination()
         {

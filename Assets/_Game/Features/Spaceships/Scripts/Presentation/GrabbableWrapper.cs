@@ -13,13 +13,12 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private ConstantRotation constantRotation;
         [SerializeField] private Transform grabZone;
 
+        private bool isPointerHandlingEnabled;
+
+        public Action selected;
+        public Action released;
+
         public Transform Transform => grabbable.transform;
-
-        public void SubscribePointerEvents(Action<PointerEvent> handler) =>
-            grabbable.WhenPointerEventRaised += handler;
-
-        public void UnsubscribePointerEvents(Action<PointerEvent> handler) =>
-            grabbable.WhenPointerEventRaised -= handler;
 
         public void SetInteractionActive(bool active) => grabbable.SetActive(active);
 
@@ -28,21 +27,64 @@ namespace DigitalLove.Game.Spaceships
             transform.position = position;
         }
 
+        public void EnablePointerHandling()
+        {
+            if (isPointerHandlingEnabled)
+                return;
+
+            isPointerHandlingEnabled = true;
+            grabbable.WhenPointerEventRaised += OnPointerEvent;
+        }
+
+        public void DisablePointerHandling()
+        {
+            if (!isPointerHandlingEnabled)
+                return;
+
+            isPointerHandlingEnabled = false;
+            grabbable.WhenPointerEventRaised -= OnPointerEvent;
+        }
+
         public void Show()
         {
-            grabbable.SetActive(false);
-            grabbable.transform.LocalReset();
-            grabbableRenderer.gameObject.SetActive(true);
+            EnablePointerHandling();
             grabbable.SetActive(true);
+            grabbable.transform.LocalReset();
             constantRotation.IsEnabled = true;
             grabZone.gameObject.SetActive(true);
+            SetGrabbableRendererVisible(true);
         }
 
         public void Hide()
         {
-            grabbableRenderer.gameObject.SetActive(false);
+            DisablePointerHandling();
+            SetGrabbableRendererVisible(false);
             constantRotation.IsEnabled = false;
             grabZone.gameObject.SetActive(false);
+        }
+
+        private void OnPointerEvent(PointerEvent pointer)
+        {
+            if (!isPointerHandlingEnabled)
+                return;
+
+            switch (pointer.Type)
+            {
+                case PointerEventType.Select:
+                    SetGrabbableRendererVisible(false);
+                    selected?.Invoke();
+                    break;
+                case PointerEventType.Unselect:
+                case PointerEventType.Cancel:
+                    SetGrabbableRendererVisible(true);
+                    released?.Invoke();
+                    break;
+            }
+        }
+
+        private void SetGrabbableRendererVisible(bool visible)
+        {
+            grabbableRenderer.gameObject.SetActive(visible);
         }
     }
 }

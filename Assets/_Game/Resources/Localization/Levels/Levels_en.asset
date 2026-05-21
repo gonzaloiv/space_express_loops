@@ -18,150 +18,208 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 5939725889884186
-    m_Localized: They find the natural colors of these planets 'uninspiring' and
-      'not on-brand.'
+  - m_Id: 10940126708027392
+    m_Localized: That colored sphere is the Hub.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884185
-    m_Localized: "We\u2019ve received a memo from the Marketing Department. "
+  - m_Id: 10940126712221696
+    m_Localized: Bring letters back here to turn them into revenue.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884183
-    m_Localized: 'In this office, if you aren''t gaining, you''re losing. '
+  - m_Id: 10940126712221697
+    m_Localized: "Treat it well\u2014it\u2019s technically a rental."
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884182
-    m_Localized: When a planet hits its limit, it stops producing and starts leaking
-      'Opportunity Credits.'
+  - m_Id: 10940126712221698
+    m_Localized: See that ship?
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884180
-    m_Localized: or you'll be running this logistics empire on a very empty wallet.
+  - m_Id: 10940126712221699
+    m_Localized: Grab it, drag a line to an outpost, and loop it back to the Hub.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884178
-    m_Localized: Careful there, big spender. Editing a route carries a heavy surcharge.
+  - m_Id: 10940126712221700
+    m_Localized: Once the circuit is closed, the ship repeats the route forever.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884166
-    m_Localized: "It\u2019s exactly like your room, "
+  - m_Id: 10940126712221701
+    m_Localized: Automated shipping at its finest.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884176
-    m_Localized: 'If a ship clips a planet or a piece of your furniture, it will
-      detonate. '
-    m_Metadata:
-      m_Items: []
-  - m_Id: 5939725889884174
+  - m_Id: 10940126712221702
     m_Localized: We call that 'Maximum Minimal Effort.'
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884171
-    m_Localized: 'See that ship? It''s waiting for a route. '
+  - m_Id: 10940126712221703
+    m_Localized: Want to squeeze more profit out of a single ship?
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884187
-    m_Localized: 'For a small fee, you can apply a proprietary atmospheric tint to
-      any planet. '
+  - m_Id: 10940126712221704
+    m_Localized: Grab the ghost ship at the end of your line.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884184
-    m_Localized: Clear the backlog before your potential profit hits zero.
+  - m_Id: 10940126712221705
+    m_Localized: Drag it to another planet instead of heading straight home.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884181
-    m_Localized: 'Watch those counters! '
+  - m_Id: 10940126712221706
+    m_Localized: The goal is to hit every outpost in the sector before looping back.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884179
-    m_Localized: Think of it as a 'Clarity Tax.' Plan your loops before you pull
-      the trigger,
+  - m_Id: 10940126712221707
+    m_Localized: More planets on the line means maximum efficiency.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884177
-    m_Localized: "We\u2019ll automatically deduct the replacement cost from your
-      earnings."
+  - m_Id: 10940126712221708
+    m_Localized: Let's turn this room into a multi-stop goldmine.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884175
-    m_Localized: 'Warning: Space Express insurance does not cover ''Mid-Air Collisions.'''
+  - m_Id: 10940126712221709
+    m_Localized: Messed up your lines?
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884173
-    m_Localized: 'The system will handle the math and the return flight automatically. '
+  - m_Id: 10940126712221710
+    m_Localized: Hit the Route Edit button to wipe the path and start fresh.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884172
-    m_Localized: 'Grab it, drag a line to an outpost, and let go. '
+  - m_Id: 10940126712221711
+    m_Localized: Think of it as a quick corporate restructuring.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884170
-    m_Localized: "Treat it well\u2014it\u2019s technically a company rental."
+  - m_Id: 10940126712221712
+    m_Localized: No penalties, just a clean slate.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884169
-    m_Localized: 'Every letter you pick up from the outer sectors needs to end up
-      right there. '
+  - m_Id: 10940126712221713
+    m_Localized: Think of it as a quick corporate restructuring.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884168
-    m_Localized: That orange sphere is the Hub.
+  - m_Id: 10940126712221714
+    m_Localized: Now, draw a better loop and fix those margins.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884167
-    m_Localized: but with 100% more proprietary revenue potential.
+  - m_Id: 10940126712221715
+    m_Localized: Welcome to a new sector.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884165
-    m_Localized: Welcome to our space!
+  - m_Id: 10940126712221716
+    m_Localized: New Hub color, new revenue stream.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884164
-    m_Localized: "Ah, you\u2019ve arrived. "
+  - m_Id: 10940126712221717
+    m_Localized: You've got a fresh ship ready to go.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884163
-    m_Localized: and the letters are still piling up. Keep those loops tight!
+  - m_Id: 10940126712221718
+    m_Localized: Loop it through the new outposts and lock it in.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884162
-    m_Localized: Either way, the Hub is still orange, the routes are still pulsing,
+  - m_Id: 10940126712221719
+    m_Localized: Let's see how you handle multitasking.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884161
-    m_Localized: 'Or the lack of a social life. '
+  - m_Id: 10940126712221720
+    m_Localized: Watch those letter counters on the planets!
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884160
-    m_Localized: 'Back already? I admire the work ethic. '
+  - m_Id: 10940126712221721
+    m_Localized: If any outpost hits its maximum limit, you lose.
     m_Metadata:
       m_Items: []
-  - m_Id: 5939725889884188
-    m_Localized: "It doesn\u2019t make the ships go faster, but it makes our quarterly
-      reports look much more colorful."
+  - m_Id: 10940126712221722
+    m_Localized: A full planet means a choked supply chain, and corporate doesn't
+      tolerate bottlenecks.
     m_Metadata:
       m_Items: []
-  - m_Id: 5976301407752192
-    m_Localized: "Space Express isn\u2019t just a delivery service\u2014it\u2019s
-      a philosophy. "
+  - m_Id: 10940126712221723
+    m_Localized: Clear the backlog before a single planet shuts us down.
     m_Metadata:
       m_Items: []
-  - m_Id: 5976301407752193
-    m_Localized: 'We believe that if a letter exists, it belongs somewhere else. '
+  - m_Id: 10940126712221724
+    m_Localized: "Keep those ships moving\u2014your employment depends on it."
     m_Metadata:
       m_Items: []
-  - m_Id: 5976301407752194
-    m_Localized: Preferably somewhere that pays us for the transit.
+  - m_Id: 10940126712221725
+    m_Localized: New planets detected in the sector.
     m_Metadata:
       m_Items: []
-  - m_Id: 5977147923156992
-    m_Localized: "I'm Jim. I\u2019ll be managing your quotas and taking credit for
-      your best ideas."
+  - m_Id: 10940126712221726
+    m_Localized: The market is expanding right in your room.
     m_Metadata:
       m_Items: []
-  - m_Id: 5977147923156993
-    m_Localized: "Now, let\u2019s get those letters moving."
+  - m_Id: 10940126712221727
+    m_Localized: Get ready to adjust your loops for more revenue.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10940126712221728
+    m_Localized: "Sector three is live\u2014time to manage a third Hub color."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10940126712221729
+    m_Localized: Don't panic, just cross your loops and triple the profits.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10940126712221730
+    m_Localized: You're free now.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10940126712221731
+    m_Localized: Try to beat your highest score.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10940126712221732
+    m_Localized: "Ah, you\u2019ve arrived. Welcome to your workspace!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10940126712221733
+    m_Localized: "It\u2019s exactly like your room, but with 100% more proprietary
+      revenue potential."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10940126712221734
+    m_Localized: "m Jim\u2014I\u2019ll be managing your quotas and taking credit
+      for your best ideas."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10940126712221735
+    m_Localized: "Space Express isn\u2019t just a delivery service, it\u2019s an
+      optimization puzzle."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10940126712221736
+    m_Localized: You make money by drawing a loop that picks up letters from the
+      planets.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10940126712221737
+    m_Localized: Be careful to route your ship through every outpost to collect all
+      the mail.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10940126712221738
+    m_Localized: Once your route is locked, the ship automatically flies it to cash
+      in.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10940126712221739
+    m_Localized: Now, let's get those letters moving.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10940126712221740
+    m_Localized: Back already?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10940126712221741
+    m_Localized: I admire the work ethic.Or the lack of a social life.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10940126712221742
+    m_Localized: Either way, the Hubs are glowing, the routes are pulsing, and letters
+      are piling up.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10940126712221743
+    m_Localized: Keep those loops tight!
     m_Metadata:
       m_Items: []
   references:

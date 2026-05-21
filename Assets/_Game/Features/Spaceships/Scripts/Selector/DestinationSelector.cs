@@ -23,6 +23,7 @@ namespace DigitalLove.Game.Spaceships
         public HubBehaviour Hub => hub;
         public PlanetBehaviour Destination => destinationPlanet;
         public bool HasDestinationBeenSelected => destinationPlanet != null && destinationPlanet.IsDestination;
+        public bool IsLookingForDestination => isLookingForDestination;
 
         public void StartLookingForDestination(bool isLookingForDestination)
         {
