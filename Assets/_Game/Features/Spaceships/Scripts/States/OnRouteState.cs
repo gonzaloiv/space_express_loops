@@ -1,22 +1,81 @@
+using System;
+using System.Collections.Generic;
 using DigitalLove.FlowControl;
+using DigitalLove.Game.Planets;
+using DigitalLove.Game.UI;
 using DigitalLove.Global;
 using Oculus.Interaction;
+using UnityEngine;
 
 namespace DigitalLove.Game.Spaceships
 {
     public class OnRouteState : MonoState
     {
-        private SpaceshipBehaviour spaceship;
-        private SpaceshipLoop loop;
-        private SpaceshipPresentation presentation;
+        [SerializeField] private GrabbableWrapper grabbableWrapper;
+        [SerializeField] private GhostBehaviour ghost;
+        [SerializeField] private RoutePanel routePanel;
+        [SerializeField] private DestinationSelector destinationSelector;
+        [SerializeField] private RouteContainer splineContainerWrapper;
+        [SerializeField] private TravellerBehaviour traveller;
+        [SerializeField] private float legDelay = 1f;
+
+        private SpaceshipRoute route;
+        private LoopDestinationSelection destinationSelection;
+        private TravellerLoopRunner travellerLoop;
+        private Func<string> getSpaceshipId;
+        private Func<LoopEventArgs> buildLoopEventArgs;
+        private Action onLoopChanged;
+        private Action onLoopEditionClicked;
+
         private bool enterSelectingOnEnter;
         private bool isSelectingDestination;
 
-        public void Bind(SpaceshipBehaviour spaceship)
+        public bool HasDestinations => route.HasDestinations;
+        public SpaceshipRoute Route => route;
+
+        public void Bind(
+            Func<string> getSpaceshipId,
+            Func<LoopEventArgs> buildLoopEventArgs,
+            Action onLoopChanged,
+            Action onLoopEditionClicked)
         {
-            this.spaceship = spaceship;
-            loop = spaceship.Loop;
-            presentation = spaceship.Presentation;
+            EnsureRouteSystems();
+            this.getSpaceshipId = getSpaceshipId;
+            this.buildLoopEventArgs = buildLoopEventArgs;
+            this.onLoopChanged = onLoopChanged;
+            this.onLoopEditionClicked = onLoopEditionClicked;
+        }
+
+        public void SetOnLoopComplete(Action<LoopCompleteEventArgs> onLoopComplete)
+        {
+            EnsureRouteSystems();
+            travellerLoop.SetOnLoopIterationComplete(onLoopComplete);
+        }
+
+        public void SetDestinations(IReadOnlyList<PlanetBehaviour> destinations)
+        {
+            EnsureRouteSystems();
+            route.SetDestinations(destinations);
+        }
+
+        public void ClearDestinations()
+        {
+            if (route == null)
+                return;
+
+            route.ClearDestinations();
+        }
+
+        public void SetRouteColor(Color color)
+        {
+            EnsureRouteSystems();
+            route.SetColor(color);
+        }
+
+        public List<string> GetDestinationIds()
+        {
+            EnsureRouteSystems();
+            return route.GetDestinationIds();
         }
 
         public void SetEnterSelectingOnEnter(bool value) => enterSelectingOnEnter = value;
@@ -24,14 +83,16 @@ namespace DigitalLove.Game.Spaceships
         public override void Init(StateMachine parent)
         {
             base.Init(parent);
-            loop.ResetVisuals();
-            presentation.Reset(loop);
+            EnsureRouteSystems();
+            travellerLoop.Stop();
+            route.SetLineRendererActive(false);
+            ResetRouteChrome();
         }
 
         public override void Enter()
         {
-            presentation.RoutePanel.editButtonClicked += OnEditButtonClick;
-            presentation.Grabbable.WhenPointerEventRaised += OnPointerEvent;
+            routePanel.editButtonClicked += OnEditButtonClick;
+            grabbableWrapper.SubscribePointerEvents(OnPointerEvent);
 
             if (enterSelectingOnEnter)
             {
@@ -45,36 +106,47 @@ namespace DigitalLove.Game.Spaceships
 
         public override void Exit()
         {
-            presentation.RoutePanel.editButtonClicked -= OnEditButtonClick;
-            presentation.Grabbable.WhenPointerEventRaised -= OnPointerEvent;
+            routePanel.editButtonClicked -= OnEditButtonClick;
+            grabbableWrapper.UnsubscribePointerEvents(OnPointerEvent);
 
             isSelectingDestination = false;
-            loop.StopTraveller();
-            presentation.Reset(loop);
+            travellerLoop.Stop();
+            ResetRouteChrome();
+        }
+
+        private void EnsureRouteSystems()
+        {
+            if (route != null)
+                return;
+
+            route = new SpaceshipRoute(splineContainerWrapper, () => destinationSelector.Hub);
+            destinationSelection = new LoopDestinationSelection(grabbableWrapper, destinationSelector, route);
+            travellerLoop = new TravellerLoopRunner(this, splineContainerWrapper, traveller, legDelay);
+            traveller.Hide();
         }
 
         private void BeginLoop()
         {
             isSelectingDestination = false;
-            loop.EndSelection();
-            loop.RebuildRoute();
-            presentation.ShowLoopChrome(loop);
-            loop.StartTraveller(spaceship.Id, spaceship.BuildLoopEventArgs);
+            destinationSelection.End();
+            route.RebuildRoute();
+            ShowLoopChrome();
+            travellerLoop.StartLoop(getSpaceshipId(), buildLoopEventArgs);
         }
 
         private void BeginSelecting()
         {
             isSelectingDestination = true;
-            loop.BeginSelection();
-            presentation.ShowSelectingChrome();
-            presentation.Grabbable.SetActive(true);
+            destinationSelection.Begin();
+            ghost.SetActive(true);
+            grabbableWrapper.SetInteractionActive(true);
         }
 
         private void EndSelecting()
         {
             isSelectingDestination = false;
-            loop.EndSelection();
-            presentation.HideSelectingChrome();
+            destinationSelection.End();
+            ghost.SetActive(false);
         }
 
         private void OnPointerEvent(PointerEvent pointer)
@@ -92,7 +164,7 @@ namespace DigitalLove.Game.Spaceships
 
         private void OnUnselectWhileSelecting()
         {
-            if (spaceship.DestinationSelector.HasDestinationBeenSelected)
+            if (destinationSelector.HasDestinationBeenSelected)
             {
                 OnDestinationConfirmed();
                 return;
@@ -100,17 +172,17 @@ namespace DigitalLove.Game.Spaceships
 
             EndSelecting();
 
-            if (loop.HasDestinations)
-                presentation.ShowStationGrab(loop);
+            if (route.HasDestinations)
+                ShowStationGrab();
             else
                 parent.SetCurrentState<WaitingForRouteState>();
         }
 
         private void OnDestinationConfirmed()
         {
-            SelectionConfirmResult result = loop.ConfirmSelection(
-                spaceship.DestinationSelector.Destination,
-                spaceship.NotifyLoopChanged);
+            SelectionConfirmResult result = destinationSelection.Confirm(
+                destinationSelector.Destination,
+                onLoopChanged);
 
             switch (result)
             {
@@ -119,22 +191,57 @@ namespace DigitalLove.Game.Spaceships
                     break;
                 case SelectionConfirmResult.ExtendedLoop:
                     EndSelecting();
-                    presentation.ShowStationGrab(loop);
+                    ShowStationGrab();
                     break;
             }
         }
 
         private void OnEditButtonClick()
         {
-            spaceship.NotifyLoopEditionClicked();
+            onLoopEditionClicked();
             parent.SetCurrentState<WaitingForRouteState>();
+        }
+
+        private void ResetRouteChrome()
+        {
+            ghost.SetActive(false);
+            grabbableWrapper.Hide();
+            routePanel.Hide();
+            route.SetLineRendererActive(false);
+            destinationSelector.StartLookingForDestination(false);
+        }
+
+        private void ShowLoopChrome()
+        {
+            ghost.SetActive(false);
+            destinationSelector.StartLookingForDestination(false);
+
+            routePanel.SetPosition(route.Hub.transform.position);
+            routePanel.Show();
+
+            grabbableWrapper.Show();
+            MoveShipToActiveStation();
+        }
+
+        private void ShowStationGrab()
+        {
+            grabbableWrapper.Show();
+            MoveShipToActiveStation();
+        }
+
+        private void MoveShipToActiveStation()
+        {
+            grabbableWrapper.ActivateGameObject();
+            grabbableWrapper.SetWorldPosition(route.HasDestinations && route.Destinations.Count > 1
+                ? route.LastLegEndPosition
+                : route.FirstLegEndPosition);
         }
 
         // ! DEBUG
 
         public void Debug_ConfirmDestination()
         {
-            if (spaceship.DestinationSelector.Destination != null)
+            if (destinationSelector.Destination != null)
                 OnDestinationConfirmed();
         }
 

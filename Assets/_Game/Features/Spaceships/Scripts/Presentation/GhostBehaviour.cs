@@ -7,11 +7,11 @@ namespace DigitalLove.Game.Spaceships
 {
     public class GhostBehaviour : MonoBehaviour
     {
-        [SerializeField] private Grabbable grabbable;
+        [SerializeField] private GrabbableWrapper grabbableWrapper;
         [SerializeField] private GameObject body;
         [SerializeField] private int positionBufferSize = 5;
 
-        private Queue<Vector3> positions = new Queue<Vector3>();
+        private Queue<Vector3> positions = new();
 
         public Transform Body => body.transform;
 
@@ -31,12 +31,12 @@ namespace DigitalLove.Game.Spaceships
 
         private void OnEnable()
         {
-            grabbable.WhenPointerEventRaised += OnPointerEvent;
+            grabbableWrapper.SubscribePointerEvents(OnPointerEvent);
         }
 
         private void OnDisable()
         {
-            grabbable.WhenPointerEventRaised -= OnPointerEvent;
+            grabbableWrapper.UnsubscribePointerEvents(OnPointerEvent);
         }
 
         private void OnPointerEvent(PointerEvent pointer)
@@ -47,12 +47,12 @@ namespace DigitalLove.Game.Spaceships
 
         private void OnMove()
         {
-            Vector3 offset = grabbable.transform.position - transform.position;
+            Vector3 offset = grabbableWrapper.Transform.position - transform.position;
             Vector3 averageOffset = GetAverageOffset(offset);
             Vector3 position = transform.position + averageOffset;
             body.transform.position = position;
 
-            Vector3 lookDir = position - transform.position; // ? From center to position
+            Vector3 lookDir = position - transform.position;
             Quaternion targetRot = Quaternion.LookRotation(lookDir);
             body.transform.rotation = targetRot;
         }
@@ -64,9 +64,8 @@ namespace DigitalLove.Game.Spaceships
                 positions.Dequeue();
             Vector3 averageOffset = Vector3.zero;
             foreach (Vector3 pos in positions)
-            {
                 averageOffset += pos;
-            }
+
             averageOffset /= positions.Count;
             return averageOffset;
         }

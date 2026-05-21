@@ -1,3 +1,4 @@
+using System;
 using DigitalLove.Global;
 using Oculus.Interaction;
 using UnityEngine;
@@ -5,11 +6,25 @@ using DigitalLove.VFX;
 
 namespace DigitalLove.Game.Spaceships
 {
-    public class GrabbableBody : MonoBehaviour
+    public class GrabbableWrapper : MonoBehaviour
     {
         [SerializeField] private Grabbable grabbable;
         [SerializeField] private Renderer grabbableRenderer;
         [SerializeField] private ConstantRotation constantRotation;
+
+        public Transform Transform => grabbable.transform;
+
+        public void SubscribePointerEvents(Action<PointerEvent> handler) =>
+            grabbable.WhenPointerEventRaised += handler;
+
+        public void UnsubscribePointerEvents(Action<PointerEvent> handler) =>
+            grabbable.WhenPointerEventRaised -= handler;
+
+        public void SetInteractionActive(bool active) => grabbable.SetActive(active);
+
+        public void SetWorldPosition(Vector3 position) => grabbable.transform.position = position;
+
+        public void ActivateGameObject() => grabbable.gameObject.SetActive(true);
 
         public void Show()
         {

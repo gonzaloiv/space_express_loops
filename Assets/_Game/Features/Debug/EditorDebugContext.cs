@@ -48,9 +48,8 @@ namespace DigitalLove.Game.DebugActions
 
         public PlanetBehaviour GetRandomPlanetExcludingShip(SpaceshipBehaviour ship)
         {
-            List<string> excluded = ship.Loop.GetDestinationIds();
-            if (ship.Hub != null)
-                excluded.Add(ship.Hub.Id);
+            List<string> excluded = ship.Debug_Route.GetDestinationIds();
+            excluded.Add(ship.Hub.Id);
             return GetRandomPlanetExcludingIds(excluded);
         }
 

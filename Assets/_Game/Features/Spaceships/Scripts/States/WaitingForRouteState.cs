@@ -1,3 +1,4 @@
+using System;
 using DigitalLove.FlowControl;
 using DigitalLove.Global;
 using Oculus.Interaction;
@@ -9,15 +10,13 @@ namespace DigitalLove.Game.Spaceships
     {
         [SerializeField] private GameObject grabMePanel;
         [SerializeField] private AudioSource grabAudioSource;
+        [SerializeField] private GrabbableWrapper grabbableWrapper;
+        [SerializeField] private DestinationSelector destinationSelector;
 
-        private SpaceshipBehaviour spaceship;
-        private SpaceshipPresentation presentation;
+        private Action startSelectingDestination;
 
-        public void Bind(SpaceshipBehaviour spaceship)
-        {
-            this.spaceship = spaceship;
-            presentation = spaceship.Presentation;
-        }
+        public void Bind(Action startSelectingDestination) =>
+            this.startSelectingDestination = startSelectingDestination;
 
         public override void Init(StateMachine parent)
         {
@@ -27,14 +26,15 @@ namespace DigitalLove.Game.Spaceships
 
         public override void Enter()
         {
-            presentation.Grabbable.WhenPointerEventRaised += OnPointerEvent;
-            presentation.ShowHubIdle();
+            grabbableWrapper.SubscribePointerEvents(OnPointerEvent);
+            grabbableWrapper.Show();
+            destinationSelector.StartLookingForDestination(false);
         }
 
         public override void Exit()
         {
-            presentation.Grabbable.WhenPointerEventRaised -= OnPointerEvent;
-            presentation.HideHubIdle();
+            grabbableWrapper.UnsubscribePointerEvents(OnPointerEvent);
+            grabbableWrapper.Hide();
         }
 
         private void OnPointerEvent(PointerEvent pointer)
@@ -48,7 +48,7 @@ namespace DigitalLove.Game.Spaceships
         {
             grabMePanel.SetActive(false);
             grabAudioSource.Play();
-            spaceship.StartSelectingDestination();
+            startSelectingDestination();
         }
 
         public void ShowGrabMePanel() => grabMePanel.SetActive(true);
