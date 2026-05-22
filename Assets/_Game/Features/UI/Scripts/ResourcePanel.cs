@@ -23,6 +23,12 @@ namespace DigitalLove.Game.UI
                 initialColor = backgroundImage.color;
         }
 
+        private void OnEnable()
+        {
+            if (backgroundImage != null)
+                backgroundImage.color = maxColorValue.value;
+        }
+
         public void Init(Vector3 position)
         {
             transform.position = position;

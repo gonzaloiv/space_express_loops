@@ -542,7 +542,6 @@ Transform:
   m_Children:
   - {fileID: 1822272472}
   - {fileID: 1727709848}
-  - {fileID: 809088435}
   - {fileID: 1018074135}
   m_Father: {fileID: 935971881}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4531,6 +4530,7 @@ GameObject:
   m_Component:
   - component: {fileID: 809088435}
   - component: {fileID: 809088436}
+  - component: {fileID: 809088437}
   m_Layer: 5
   m_Name: Panel - Store
   m_TagString: Untagged
@@ -4554,7 +4554,7 @@ Transform:
   - {fileID: 1127977402}
   - {fileID: 513586617}
   - {fileID: 1476259371}
-  m_Father: {fileID: 74164907}
+  m_Father: {fileID: 935971881}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &809088436
 MonoBehaviour:
@@ -4573,6 +4573,26 @@ MonoBehaviour:
   increaseMoneyAudioSource: {fileID: 513586619}
   decreaseMoneyAudioSource: {fileID: 1476259373}
   roundLabel: {fileID: 1804733496}
+--- !u!1818360608 &809088437
+PositionConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 809088434}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_TranslationAtRest: {x: 0, y: 0.5, z: 0}
+  m_TranslationOffset: {x: 0, y: 0.5, z: 0}
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_Active: 1
+  m_IsLocked: 0
+  m_Sources:
+  - sourceTransform: {fileID: 74164907}
+    weight: 1
 --- !u!1 &838860335
 GameObject:
   m_ObjectHideFlags: 0
@@ -9882,6 +9902,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 809088435}
   - {fileID: 74164907}
   m_Father: {fileID: 677709494}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

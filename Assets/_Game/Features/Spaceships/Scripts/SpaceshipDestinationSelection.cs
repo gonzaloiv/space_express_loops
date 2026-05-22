@@ -21,7 +21,7 @@ namespace DigitalLove.Game.Spaceships
             refs.ghost.SetActive(true);
             refs.grabbableWrapper.BeginDestinationSelection();
             refs.grabbableWrapper.SetInteractionActive(true);
-            refs.destinationSelector.SetExcludedPlanetIds(session.GetExcludedPlanetIds());
+            refs.destinationSelector.SetExcludedPlanetIds(session.GetDestinationIds());
             refs.destinationSelector.StartLookingForDestination(true);
         }
 
@@ -34,7 +34,6 @@ namespace DigitalLove.Game.Spaceships
         public void ShowAtStation()
         {
             StopPicking();
-            refs.grabbableWrapper.Show();
             MoveToActiveStation();
         }
 
@@ -43,22 +42,22 @@ namespace DigitalLove.Game.Spaceships
 
         public void MoveToActiveStation()
         {
-            refs.destinationSelector.SetExcludedPlanetIds(session.GetExcludedPlanetIds());
+            refs.destinationSelector.SetExcludedPlanetIds(session.GetDestinationIds());
 
-            if (session.IsLastLegToHub && ShouldHideGrabbableAtStation())
+            if (IsRouteCompleteAtHub())
             {
                 refs.grabbableWrapper.Hide();
                 return;
             }
 
             refs.grabbableWrapper.Show();
-            refs.grabbableWrapper.SetWorldPosition(
-                session.HasDestinations && session.Destinations.Count > 1
-                    ? session.LastLegEndPosition
-                    : session.FirstLegEndPosition);
-            refs.grabZone.LookAtStationCenter(session.GetStationCenter());
+            refs.grabbableWrapper.SetWorldPosition(session.GetGrabbableStationPosition());
+            refs.grabZone.PointAt(session.GetGrabbableLookTarget());
         }
 
-        private bool ShouldHideGrabbableAtStation() => !hasSelectablePlanetsOffRoute();
+        private bool IsRouteCompleteAtHub() =>
+            session.HasDestinations
+            && session.IsLastLegToHub
+            && !hasSelectablePlanetsOffRoute();
     }
 }

@@ -15,8 +15,6 @@ namespace DigitalLove.Game.Spaceships
         public IReadOnlyList<PlanetBehaviour> Destinations => destinations;
         public bool HasDestinations => destinations.Count > 0;
 
-        public Vector3 LastLegEndPosition => routeContainer.LastLegEndPosition;
-        public Vector3 FirstLegEndPosition => routeContainer.FirstLegEndPosition;
         public bool IsLastLegToHub =>
             routeContainer.HasLegs && routeContainer.LastLeg.pickupPlanet == null;
 
@@ -45,12 +43,6 @@ namespace DigitalLove.Game.Spaceships
         public void SetRouteColor(Color color) => routeContainer.SetColor(color);
 
         public void SetLineRendererActive(bool active) => routeContainer.SetLineRendererActive(active);
-
-        public IEnumerable<string> GetExcludedPlanetIds()
-        {
-            foreach (PlanetBehaviour planet in destinations)
-                yield return planet.Id;
-        }
 
         public bool TryAppendDestination(PlanetBehaviour planet)
         {
@@ -84,15 +76,19 @@ namespace DigitalLove.Game.Spaceships
             return ids;
         }
 
-        public Vector3 GetStationCenter()
+        public Vector3 GetGrabbableStationPosition() =>
+            HasDestinations ? GetLastDestinationApproachPosition() : Hub.SpawnPose.position;
+
+        public Vector3 GetGrabbableLookTarget() =>
+            HasDestinations ? destinations[^1].Position : Hub.Position;
+
+        private Vector3 GetLastDestinationApproachPosition()
         {
-            if (!HasDestinations)
-                return Hub.Position;
+            PlanetBehaviour last = destinations[^1];
+            if (routeContainer.TryGetApproachEndPosition(last, out Vector3 position))
+                return position;
 
-            if (Destinations.Count == 1)
-                return Destinations[0].Position;
-
-            return IsLastLegToHub ? Hub.Position : Destinations[^1].Position;
+            return last.Position;
         }
     }
 }

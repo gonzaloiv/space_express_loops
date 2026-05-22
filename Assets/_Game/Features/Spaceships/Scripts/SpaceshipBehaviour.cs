@@ -94,14 +94,10 @@ namespace DigitalLove.Game.Spaceships
 
         public void NotifyLoopEditionClicked()
         {
-            MoveToHub();
-            handlers.EditionClicked?.Invoke(BuildLoopEventArgs());
-        }
+            if (isInitialized)
+                destinationSelection.MoveToActiveStation();
 
-        public void MoveToHub()
-        {
-            refs.grabbableWrapper.SetWorldPosition(Hub.SpawnPose.position);
-            refs.grabZone.LookAtStationCenter(Hub.Position);
+            handlers.EditionClicked?.Invoke(BuildLoopEventArgs());
         }
 
         public LoopEventArgs BuildLoopEventArgs() => new()
@@ -116,14 +112,13 @@ namespace DigitalLove.Game.Spaceships
         {
             this.data = data;
 
-            refs.grabbableWrapper.SetWorldPosition(hub.SpawnPose.position);
             hub.ApplyRouteColor(color);
             refs.destinationSelector.Init(hub, color);
             session.SetRouteColor(color);
             refs.grabZone.SetColor(color);
             session.ClearDestinations();
 
-            MoveToHub();
+            destinationSelection.MoveToActiveStation();
 
             this.SetActive(true);
             refs.routePanel.Show(Id, color, hub.transform.position);

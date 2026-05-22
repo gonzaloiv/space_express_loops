@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.Levels::DigitalLove.Game.Levels.RoundData
   id: 01_03
   prefab: {fileID: 0}
-  lettersIncreaseMultiplier: 0.5
+  lettersIncreaseMultiplier: 1.25
   planetsToAdd:
     min: 2
     max: 2

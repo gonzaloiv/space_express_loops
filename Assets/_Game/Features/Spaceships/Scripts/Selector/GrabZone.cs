@@ -14,11 +14,11 @@ namespace DigitalLove.Game.Spaceships
                 renderer.material.color = color;
         }
 
-        public void LookAtStationCenter(Vector3 hostCenter)
+        public void PointAt(Vector3 center)
         {
             lineToHost.SetPosition(0, lineToHost.transform.position);
             lineToHost.SetPosition(1, lineToHost.transform.position - new Vector3(0, verticalOffset, 0));
-            lineToHost.SetPosition(2, hostCenter);
+            lineToHost.SetPosition(2, center);
             lineToHost.enabled = true;
         }
 

@@ -21,9 +21,28 @@ namespace DigitalLove.Game.Spaceships
         public IReadOnlyList<RouteLeg> Legs => legs;
         public bool HasLegs => legs.Count > 0;
 
-        public Vector3 LastLegEndPosition => LastLeg.positions[^1];
-        public Vector3 FirstLegEndPosition => legs[0].positions[^1];
         public RouteLeg LastLeg => legs[legs.Count - 1];
+
+        public bool TryGetApproachEndPosition(PlanetBehaviour destination, out Vector3 position)
+        {
+            position = default;
+            if (destination == null)
+                return false;
+
+            foreach (RouteLeg leg in legs)
+            {
+                if (leg.pickupPlanet != destination)
+                    continue;
+
+                if (leg.positions == null || leg.positions.Length == 0)
+                    return false;
+
+                position = leg.positions[^1];
+                return true;
+            }
+
+            return false;
+        }
 
         private SplineContainer SplineContainer => splineContainer ??= GetComponent<SplineContainer>();
 
