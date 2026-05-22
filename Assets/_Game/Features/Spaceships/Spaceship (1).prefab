@@ -3222,8 +3222,8 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 2048
-  lineRenderer: {fileID: 2596525087632103306}
-  lineRendererEdges: {fileID: 1369844282367366630}
+  lineRendererWithEdges: {fileID: 1369844282367366630}
+  lineOrigin: {fileID: 4365562700572477615}
   rayDistance: {fileID: 11400000, guid: 6fc493b84a80f3b4e89f9f0f51e73f85, type: 2}
   rayForwardOffset: 0.1
 --- !u!1 &7198065008415384296
@@ -4842,7 +4842,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b843b6802929f6049bdd40a6a7dc35b5, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Spaceships::DigitalLove.Game.Spaceships.LineRendererEdges
+  m_EditorClassIdentifier: DigitalLove.Game.Spaceships::DigitalLove.Game.Spaceships.LineRendererWithEdges
   lineRenderer: {fileID: 2596525087632103306}
   origin: {fileID: 1602194804826120613}
   destination: {fileID: 2412428802246269159}
