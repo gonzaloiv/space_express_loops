@@ -49,6 +49,20 @@ namespace DigitalLove.Game.Nodes
 
     public static class HubBehaviourPoolExtensions
     {
+        public static bool IsAnyActive(this IEnumerable<HubBehaviour> hubs)
+        {
+            if (hubs == null)
+                return false;
+
+            foreach (HubBehaviour hub in hubs)
+            {
+                if (hub != null && hub.IsActive)
+                    return true;
+            }
+
+            return false;
+        }
+
         public static void ForEachInPool(this IList<HubBehaviour> pool, Action<HubBehaviour> action)
         {
             for (int i = 0; i < pool.Count; i++)

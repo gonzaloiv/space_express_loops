@@ -23,6 +23,18 @@ namespace DigitalLove.Game.Nodes
 
         private readonly RoomLocalYRangeCache yRangeCache = new();
 
+        public Vector3 RoomCenterLocalPosition
+        {
+            get
+            {
+                MRUKRoom room = GetCurrentRoom();
+                if (room == null)
+                    return Vector3.zero;
+
+                return transform.InverseTransformPoint(room.Center());
+            }
+        }
+
         public void Clear()
         {
             occupants.Clear();
@@ -62,6 +74,24 @@ namespace DigitalLove.Game.Nodes
 
         public Vector3 GetValidLocalPosition(float radius, float maxDistanceFromOccupants, int maxIterations = DefaultMaxIterations) =>
             FindValidLocalPosition(radius, maxDistanceFromOccupants, maxIterations);
+
+        public Vector3 GetRoomCenterLocalPosition(float radius)
+        {
+            MRUKRoom room = GetCurrentRoom();
+            if (room == null)
+            {
+                Debug.LogWarning("No MRUK room available for placement.");
+                return Vector3.zero;
+            }
+
+            Vector3 localPosition = ClampToValidHeight(RoomCenterLocalPosition, radius, room);
+
+            if (!OverlapsOccupant(localPosition, radius))
+                return localPosition;
+
+            Debug.LogWarning("Room center overlaps an occupant; using random placement.");
+            return GetValidLocalPosition(radius);
+        }
 
         private Vector3 FindValidLocalPosition(float radius, float? maxDistanceFromOccupants, int maxIterations)
         {
@@ -136,5 +166,24 @@ namespace DigitalLove.Game.Nodes
             float highest = maxY - ceilingMargin - radius;
             return highest > lowest && localPosition.y >= lowest && localPosition.y <= highest;
         }
+
+        private Vector3 ClampToValidHeight(Vector3 localPosition, float radius, MRUKRoom room)
+        {
+            if (!yRangeCache.TryGet(room, transform, out float minY, out float maxY))
+                return localPosition;
+
+            float lowest = minY + floorMargin + radius;
+            float highest = maxY - ceilingMargin - radius;
+            if (highest <= lowest)
+                return localPosition;
+
+            localPosition.y = Mathf.Clamp(localPosition.y, lowest, highest);
+            return localPosition;
+        }
+    }
+
+    public static class MRUKRoomExtensions
+    {
+        public static Vector3 Center(this MRUKRoom room) => room.GetRoomBounds().center;
     }
 }

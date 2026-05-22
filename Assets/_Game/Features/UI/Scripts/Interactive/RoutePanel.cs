@@ -32,10 +32,12 @@ namespace DigitalLove.Game.UI
         public void SetButtonActive(bool isActive)
         {
             if (isActive)
-                btnPanel.Show(new Btn().SetOnClick(editButtonClicked));
+                btnPanel.Show(new Btn().SetOnClick(InvokeEditButtonClicked));
             else
                 btnPanel.Hide();
         }
+
+        private void InvokeEditButtonClicked() => editButtonClicked.Invoke();
 
         public void Hide()
         {

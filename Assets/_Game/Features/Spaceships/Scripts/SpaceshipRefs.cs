@@ -1,4 +1,5 @@
 using DigitalLove.Game.UI;
+using DigitalLove.Global;
 using UnityEngine;
 
 namespace DigitalLove.Game.Spaceships
@@ -19,5 +20,8 @@ namespace DigitalLove.Game.Spaceships
         public SplineContainerWrapper splineContainerWrapper;
         public TravellerBehaviour traveller;
         public float legDelay = 1f;
+        public FloatValue gameSpeed;
+
+        public float LegDelay => legDelay / gameSpeed.value;
     }
 }

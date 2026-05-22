@@ -124,7 +124,7 @@ namespace DigitalLove.Game.Levels
             MRUKRoom room = MRUK.Instance.GetCurrentRoom();
             Pose originPose = new()
             {
-                position = room.GetRoomBounds().center,
+                position = room.Center(),
                 rotation = room.transform.rotation
             };
             mrukRoomAnchorsContainer.InitAndLoadRoomAnchors("UniqueRoomName", originPose, anchors =>

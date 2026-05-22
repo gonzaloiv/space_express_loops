@@ -25,9 +25,8 @@ namespace DigitalLove.Game.Spaceships
 
         public void BeginDestinationSelection()
         {
-            EnablePointerHandling();
-            grabbable.SetActive(true);
-            grabZone.SetActive(true);
+            Show();
+            SetInteractionActive(true);
         }
 
         public void Show()

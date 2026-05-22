@@ -26,8 +26,8 @@ namespace DigitalLove.Game.Spaceships
 
         public override void Enter()
         {
-            refs.routePanel.SetButtonActive(true);
             refs.routePanel.editButtonClicked += OnEditButtonClick;
+            refs.routePanel.SetButtonActive(true);
             refs.grabbableWrapper.EnablePointerHandling();
             refs.grabbableWrapper.selected += OnSelect;
             refs.grabbableWrapper.released += OnRelease;

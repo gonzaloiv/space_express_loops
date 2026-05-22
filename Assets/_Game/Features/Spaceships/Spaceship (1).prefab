@@ -631,7 +631,7 @@ TrailRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Time: 0.1
+  m_Time: 0.15
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -943,7 +943,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1440008329520807342}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1441,7 +1441,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2848506131577647798}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2552,8 +2552,8 @@ Transform:
   m_GameObject: {fileID: 4641477547882929254}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.0644, z: 0}
-  m_LocalScale: {x: 0.0030000003, y: 0.05965904, z: 1}
+  m_LocalPosition: {x: 0, y: -0.0487, z: 0}
+  m_LocalScale: {x: 0.0030000003, y: 0.033138037, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4962182428924292}
@@ -2693,13 +2693,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4851046595564990003}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0.06880002, y: -0.0926, z: 0}
-  m_LocalScale: {x: 0.003, y: 0.13913551, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7372774, w: 0.67559016}
+  m_LocalPosition: {x: 0.0492, y: -0.0683, z: 0}
+  m_LocalScale: {x: 0.003, y: 0.10140578, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4962182428924292}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -95}
 --- !u!212 &7936912237821300001
 SpriteRenderer:
   serializedVersion: 2
@@ -5587,6 +5587,7 @@ MonoBehaviour:
   splineContainerWrapper: {fileID: 5613787619958359030}
   traveller: {fileID: 6169223543632825317}
   legDelay: 1
+  gameSpeed: {fileID: 11400000, guid: c3660b33f404c6344ae786218d0e7437, type: 2}
 --- !u!1 &8632958460726182941
 GameObject:
   m_ObjectHideFlags: 0

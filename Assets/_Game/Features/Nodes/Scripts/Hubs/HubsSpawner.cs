@@ -93,6 +93,10 @@ namespace DigitalLove.Game.Nodes
         private Vector3 GetValidHubLocalPosition()
         {
             float placementRadius = HubPlacementRadius;
+
+            if (!hubs.IsAnyActive())
+                return roomPlacement.GetRoomCenterLocalPosition(placementRadius);
+
             for (int i = 0; i < MrukRoomLocalPlacement.DefaultMaxIterations; i++)
             {
                 Vector3 localPosition = roomPlacement.GetValidLocalPosition(placementRadius);
