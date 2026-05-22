@@ -7,17 +7,20 @@ namespace DigitalLove.Game.Spaceships
         private readonly StateMachine machine;
         private readonly SpaceshipRefs refs;
         private readonly SpaceshipRouteSession session;
+        private readonly SpaceshipDestinationFlow destinationFlow;
         private readonly ISpaceshipHost host;
 
         public SpaceshipRunningState(
             StateMachine machine,
             SpaceshipRefs refs,
             SpaceshipRouteSession session,
+            SpaceshipDestinationFlow destinationFlow,
             ISpaceshipHost host)
         {
             this.machine = machine;
             this.refs = refs;
             this.session = session;
+            this.destinationFlow = destinationFlow;
             this.host = host;
         }
 
@@ -42,7 +45,7 @@ namespace DigitalLove.Game.Spaceships
         private void BeginLoop()
         {
             session.Route.RebuildRoute();
-            ShowGrabbable();
+            destinationFlow.ShowAtStation();
             session.TravellerLoop.StartLoop(host.Id, host.BuildLoopEventArgs);
         }
 
@@ -54,21 +57,17 @@ namespace DigitalLove.Game.Spaceships
 
         private void OnRelease()
         {
-            if (refs.destinationSelector.IsLookingForDestination)
-                OnDestinationSelection();
-        }
+            if (!refs.destinationSelector.IsLookingForDestination)
+                return;
 
-        private void OnDestinationSelection()
-        {
-            bool hasAppended = session.Route.TryAppendDestination(refs.destinationSelector.Destination);
-            if (hasAppended)
+            if (destinationFlow.TryAppendSelectedDestination())
             {
                 session.Route.RebuildRoute();
                 session.TravellerLoop.StartLoop(host.Id, host.BuildLoopEventArgs);
                 host.NotifyLoopChanged();
             }
 
-            ShowGrabbable();
+            destinationFlow.ShowAtStation();
         }
 
         private void OnEditButtonClick()
@@ -86,34 +85,11 @@ namespace DigitalLove.Game.Spaceships
             refs.destinationSelector.StartLookingForDestination(false);
         }
 
-        private void ShowGrabbable()
-        {
-            refs.destinationSelector.StartLookingForDestination(false);
-            refs.routePanel.SetButtonActive(true);
-            refs.grabbableWrapper.Show();
-            MoveShipToActiveStation();
-        }
-
-        private void MoveShipToActiveStation()
-        {
-            if (session.Route.IsLastLegToHub && session.Route.HasMoreThanOneDestination)
-            {
-                refs.grabbableWrapper.Hide();
-                return;
-            }
-
-            refs.grabbableWrapper.Show();
-            refs.grabbableWrapper.SetWorldPosition(
-                session.Route.HasDestinations && session.Route.Destinations.Count > 1
-                    ? session.Route.LastLegEndPosition
-                    : session.Route.FirstLegEndPosition);
-        }
-
         public void Debug_SimulateGrabSelect() => OnSelect();
 
         public void Debug_SimulateGrabRelease() => OnRelease();
 
-        public void Debug_ConfirmDestination() => OnDestinationSelection();
+        public void Debug_ConfirmDestination() => OnRelease();
 
         public void Debug_InvokeOnLoopEditionButtonClicked() => OnEditButtonClick();
     }

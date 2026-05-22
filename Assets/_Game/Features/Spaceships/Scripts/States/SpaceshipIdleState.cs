@@ -36,7 +36,7 @@ namespace DigitalLove.Game.Spaceships
         public override void Exit()
         {
             refs.grabbableWrapper.selected -= OnSelect;
-            refs.grabbableWrapper.Hide();
+            refs.grabbableWrapper.DisablePointerHandling();
         }
 
         private void OnSelect()

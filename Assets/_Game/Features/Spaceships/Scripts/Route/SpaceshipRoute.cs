@@ -6,7 +6,7 @@ namespace DigitalLove.Game.Spaceships
 {
     public class SpaceshipRoute
     {
-        private readonly RouteContainer routeContainer;
+        private readonly SplineContainerWrapper routeContainer;
         private readonly System.Func<HubBehaviour> getHub;
         private readonly List<PlanetBehaviour> destinations = new();
 
@@ -19,7 +19,7 @@ namespace DigitalLove.Game.Spaceships
         public Vector3 FirstLegEndPosition => routeContainer.FirstLegEndPosition;
         public bool IsLastLegToHub => routeContainer.LastLeg.pickupPlanet == null;
 
-        public SpaceshipRoute(RouteContainer routeContainer, System.Func<HubBehaviour> getHub)
+        public SpaceshipRoute(SplineContainerWrapper routeContainer, System.Func<HubBehaviour> getHub)
         {
             this.routeContainer = routeContainer;
             this.getHub = getHub;

@@ -14,7 +14,7 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private Transform grabZone;
         [SerializeField] private AudioSource grabAudioSource;
 
-        private bool isPointerHandlingEnabled;
+        private bool isListeningForPointerEvents;
 
         public Action selected;
         public Action released;
@@ -23,27 +23,13 @@ namespace DigitalLove.Game.Spaceships
 
         public void SetInteractionActive(bool active) => grabbable.SetActive(active);
 
-        public void SetWorldPosition(Vector3 position)
+        public void SetWorldPosition(Vector3 position) => transform.position = position;
+
+        public void BeginDestinationSelection()
         {
-            transform.position = position;
-        }
-
-        public void EnablePointerHandling()
-        {
-            if (isPointerHandlingEnabled)
-                return;
-
-            isPointerHandlingEnabled = true;
-            grabbable.WhenPointerEventRaised += OnPointerEvent;
-        }
-
-        public void DisablePointerHandling()
-        {
-            if (!isPointerHandlingEnabled)
-                return;
-
-            isPointerHandlingEnabled = false;
-            grabbable.WhenPointerEventRaised -= OnPointerEvent;
+            EnablePointerHandling();
+            grabbable.SetActive(true);
+            grabZone.gameObject.SetActive(true);
         }
 
         public void Show()
@@ -53,40 +39,54 @@ namespace DigitalLove.Game.Spaceships
             grabbable.transform.LocalReset();
             constantRotation.IsEnabled = true;
             grabZone.gameObject.SetActive(true);
-            SetGrabbableRendererVisible(true);
+            grabbableRenderer.gameObject.SetActive(true);
         }
 
         public void Hide()
         {
             DisablePointerHandling();
-            SetGrabbableRendererVisible(false);
             constantRotation.IsEnabled = false;
             grabZone.gameObject.SetActive(false);
+            grabbableRenderer.gameObject.SetActive(false);
+        }
+
+        public void EnablePointerHandling()
+        {
+            if (isListeningForPointerEvents)
+                return;
+
+            isListeningForPointerEvents = true;
+            grabbable.WhenPointerEventRaised += OnPointerEvent;
+        }
+
+        public void DisablePointerHandling()
+        {
+            if (!isListeningForPointerEvents)
+                return;
+
+            isListeningForPointerEvents = false;
+            grabbable.WhenPointerEventRaised -= OnPointerEvent;
         }
 
         private void OnPointerEvent(PointerEvent pointer)
         {
-            if (!isPointerHandlingEnabled)
+            if (!isListeningForPointerEvents)
                 return;
 
             switch (pointer.Type)
             {
                 case PointerEventType.Select:
-                    SetGrabbableRendererVisible(false);
+                    grabbableRenderer.gameObject.SetActive(false);
                     selected?.Invoke();
                     grabAudioSource.Play();
                     break;
                 case PointerEventType.Unselect:
                 case PointerEventType.Cancel:
-                    SetGrabbableRendererVisible(true);
+                    if (grabZone.gameObject.activeSelf)
+                        grabbableRenderer.gameObject.SetActive(true);
                     released?.Invoke();
                     break;
             }
-        }
-
-        private void SetGrabbableRendererVisible(bool visible)
-        {
-            grabbableRenderer.gameObject.SetActive(visible);
         }
     }
 }

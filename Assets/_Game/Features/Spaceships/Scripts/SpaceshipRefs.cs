@@ -16,7 +16,7 @@ namespace DigitalLove.Game.Spaceships
 
         [Header("Route")]
         public GhostBehaviour ghost;
-        public RouteContainer splineContainerWrapper;
+        public SplineContainerWrapper splineContainerWrapper;
         public TravellerBehaviour traveller;
         public float legDelay = 1f;
     }

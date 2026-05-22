@@ -8,14 +8,14 @@ namespace DigitalLove.Game.Spaceships
     public class SpaceshipRouteSession
     {
         public SpaceshipRoute Route { get; }
-        public TravellerLoopRunner TravellerLoop { get; }
+        public TravellerRouteRunner TravellerLoop { get; }
 
         public bool HasDestinations => Route.HasDestinations;
 
         public SpaceshipRouteSession(SpaceshipRefs refs, MonoBehaviour coroutineHost)
         {
             Route = new SpaceshipRoute(refs.splineContainerWrapper, () => refs.destinationSelector.Hub);
-            TravellerLoop = new TravellerLoopRunner(
+            TravellerLoop = new TravellerRouteRunner(
                 coroutineHost,
                 refs.splineContainerWrapper,
                 refs.traveller,

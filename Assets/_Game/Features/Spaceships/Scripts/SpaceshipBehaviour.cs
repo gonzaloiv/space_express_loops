@@ -51,10 +51,11 @@ namespace DigitalLove.Game.Spaceships
             session.ResetVisuals();
 
             stateMachine = new StateMachine();
+            SpaceshipDestinationFlow destinationFlow = new SpaceshipDestinationFlow(refs, session);
             idleState = new SpaceshipIdleState(stateMachine, refs);
-            selectingState = new SpaceshipSelectingState(stateMachine, refs, session, this);
+            selectingState = new SpaceshipSelectingState(stateMachine, refs, destinationFlow, this);
             selectingState.Init();
-            runningState = new SpaceshipRunningState(stateMachine, refs, session, this);
+            runningState = new SpaceshipRunningState(stateMachine, refs, session, destinationFlow, this);
             stateMachine.Register(new IState[] { idleState, selectingState, runningState });
             stateMachine.SetCurrentState<SpaceshipIdleState>();
             ApplyLoopHandlers();

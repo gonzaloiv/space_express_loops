@@ -6,10 +6,10 @@ using DigitalLove.Game.Nodes;
 
 namespace DigitalLove.Game.Spaceships
 {
-    public class TravellerLoopRunner
+    public class TravellerRouteRunner
     {
         private readonly MonoBehaviour host;
-        private readonly RouteContainer route;
+        private readonly SplineContainerWrapper route;
         private readonly TravellerBehaviour traveller;
         private readonly float legDelay;
 
@@ -18,9 +18,9 @@ namespace DigitalLove.Game.Spaceships
 
         public bool IsRunning => loopCoroutine != null;
 
-        public TravellerLoopRunner(
+        public TravellerRouteRunner(
             MonoBehaviour host,
-            RouteContainer route,
+            SplineContainerWrapper route,
             TravellerBehaviour traveller,
             float legDelay = 1f)
         {
