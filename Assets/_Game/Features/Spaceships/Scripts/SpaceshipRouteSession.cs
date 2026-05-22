@@ -7,17 +7,27 @@ namespace DigitalLove.Game.Spaceships
 {
     public class SpaceshipRouteSession
     {
-        public SpaceshipRoute Route { get; }
-        public TravellerRouteRunner TravellerLoop { get; }
+        private readonly SplineContainerWrapper routeContainer;
+        private readonly DestinationSelector destinationSelector;
+        private readonly List<PlanetBehaviour> destinations = new();
 
-        public bool HasDestinations => Route.HasDestinations;
+        public TravellerRouteRunner TravellerLoop { get; }
+        public IReadOnlyList<PlanetBehaviour> Destinations => destinations;
+        public bool HasDestinations => destinations.Count > 0;
+
+        public Vector3 LastLegEndPosition => routeContainer.LastLegEndPosition;
+        public Vector3 FirstLegEndPosition => routeContainer.FirstLegEndPosition;
+        public bool IsLastLegToHub => routeContainer.LastLeg.pickupPlanet == null;
+
+        public HubBehaviour Hub => destinationSelector.Hub;
 
         public SpaceshipRouteSession(SpaceshipRefs refs, MonoBehaviour coroutineHost)
         {
-            Route = new SpaceshipRoute(refs.splineContainerWrapper, () => refs.destinationSelector.Hub);
+            routeContainer = refs.splineContainerWrapper;
+            destinationSelector = refs.destinationSelector;
             TravellerLoop = new TravellerRouteRunner(
                 coroutineHost,
-                refs.splineContainerWrapper,
+                routeContainer,
                 refs.traveller,
                 refs.legDelay);
         }
@@ -25,19 +35,63 @@ namespace DigitalLove.Game.Spaceships
         public void ResetVisuals()
         {
             TravellerLoop.Stop();
-            Route.SetLineRendererActive(false);
+            SetLineRendererActive(false);
         }
 
         public void SetOnLoopComplete(Action<LoopCompleteEventArgs> onLoopComplete) =>
             TravellerLoop.SetOnLoopIterationComplete(onLoopComplete);
 
-        public void SetDestinations(IReadOnlyList<PlanetBehaviour> destinations) =>
-            Route.SetDestinations(destinations);
+        public void SetRouteColor(Color color) => routeContainer.SetColor(color);
 
-        public void ClearDestinations() => Route.ClearDestinations();
+        public void SetLineRendererActive(bool active) => routeContainer.SetLineRendererActive(active);
 
-        public void SetRouteColor(Color color) => Route.SetColor(color);
+        public IEnumerable<string> GetExcludedPlanetIds()
+        {
+            foreach (PlanetBehaviour planet in destinations)
+                yield return planet.Id;
+        }
 
-        public List<string> GetDestinationIds() => Route.GetDestinationIds();
+        public bool TryAppendDestination(PlanetBehaviour planet)
+        {
+            if (planet == null || destinations.Contains(planet))
+                return false;
+
+            destinations.Add(planet);
+            return true;
+        }
+
+        public void SetDestinations(IReadOnlyList<PlanetBehaviour> planets)
+        {
+            destinations.Clear();
+            if (planets != null && planets.Count > 0)
+                destinations.AddRange(planets);
+        }
+
+        public void ClearDestinations() => destinations.Clear();
+
+        public void RebuildRoute()
+        {
+            routeContainer.Build(destinationSelector.Hub, destinations);
+            SetLineRendererActive(HasDestinations);
+        }
+
+        public List<string> GetDestinationIds()
+        {
+            List<string> ids = new(destinations.Count);
+            foreach (PlanetBehaviour planet in destinations)
+                ids.Add(planet.Id);
+            return ids;
+        }
+
+        public Vector3 GetStationCenter()
+        {
+            if (!HasDestinations)
+                return Hub.Position;
+
+            if (Destinations.Count == 1)
+                return Destinations[0].Position;
+
+            return IsLastLegToHub ? Hub.Position : Destinations[^1].Position;
+        }
     }
 }

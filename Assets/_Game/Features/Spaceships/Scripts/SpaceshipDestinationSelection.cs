@@ -1,11 +1,11 @@
 namespace DigitalLove.Game.Spaceships
 {
-    public class SpaceshipDestinationFlow
+    public class SpaceshipDestinationSelection
     {
         private readonly SpaceshipRefs refs;
         private readonly SpaceshipRouteSession session;
 
-        public SpaceshipDestinationFlow(SpaceshipRefs refs, SpaceshipRouteSession session)
+        public SpaceshipDestinationSelection(SpaceshipRefs refs, SpaceshipRouteSession session)
         {
             this.refs = refs;
             this.session = session;
@@ -16,7 +16,7 @@ namespace DigitalLove.Game.Spaceships
             refs.ghost.SetActive(true);
             refs.grabbableWrapper.BeginDestinationSelection();
             refs.grabbableWrapper.SetInteractionActive(true);
-            refs.destinationSelector.SetExcludedPlanetIds(session.Route.GetExcludedPlanetIds());
+            refs.destinationSelector.SetExcludedPlanetIds(session.GetExcludedPlanetIds());
             refs.destinationSelector.StartLookingForDestination(true);
         }
 
@@ -29,17 +29,16 @@ namespace DigitalLove.Game.Spaceships
         public void ShowAtStation()
         {
             StopPicking();
-            refs.routePanel.SetButtonActive(true);
             refs.grabbableWrapper.Show();
             MoveToActiveStation();
         }
 
         public bool TryAppendSelectedDestination() =>
-            session.Route.TryAppendDestination(refs.destinationSelector.Destination);
+            session.TryAppendDestination(refs.destinationSelector.Destination);
 
         public void MoveToActiveStation()
         {
-            if (session.Route.IsLastLegToHub && session.Route.HasMoreThanOneDestination)
+            if (session.IsLastLegToHub && session.Destinations.Count > 1)
             {
                 refs.grabbableWrapper.Hide();
                 return;
@@ -47,9 +46,10 @@ namespace DigitalLove.Game.Spaceships
 
             refs.grabbableWrapper.Show();
             refs.grabbableWrapper.SetWorldPosition(
-                session.Route.HasDestinations && session.Route.Destinations.Count > 1
-                    ? session.Route.LastLegEndPosition
-                    : session.Route.FirstLegEndPosition);
+                session.HasDestinations && session.Destinations.Count > 1
+                    ? session.LastLegEndPosition
+                    : session.FirstLegEndPosition);
+            refs.grabZone.LookAtStationCenter(session.GetStationCenter());
         }
     }
 }

@@ -6,18 +6,18 @@ namespace DigitalLove.Game.Spaceships
     {
         private readonly StateMachine machine;
         private readonly SpaceshipRefs refs;
-        private readonly SpaceshipDestinationFlow destinationFlow;
+        private readonly SpaceshipDestinationSelection destinationSelection;
         private readonly ISpaceshipHost host;
 
         public SpaceshipSelectingState(
             StateMachine machine,
             SpaceshipRefs refs,
-            SpaceshipDestinationFlow destinationFlow,
+            SpaceshipDestinationSelection destinationSelection,
             ISpaceshipHost host)
         {
             this.machine = machine;
             this.refs = refs;
-            this.destinationFlow = destinationFlow;
+            this.destinationSelection = destinationSelection;
             this.host = host;
         }
 
@@ -27,20 +27,20 @@ namespace DigitalLove.Game.Spaceships
         {
             refs.grabbableWrapper.selected += OnSelect;
             refs.grabbableWrapper.released += OnRelease;
-            destinationFlow.StartPicking();
+            destinationSelection.StartPicking();
         }
 
         public override void Exit()
         {
             refs.grabbableWrapper.selected -= OnSelect;
             refs.grabbableWrapper.released -= OnRelease;
-            destinationFlow.StopPicking();
+            destinationSelection.StopPicking();
         }
 
         private void OnSelect()
         {
             if (!refs.destinationSelector.IsLookingForDestination)
-                destinationFlow.StartPicking();
+                destinationSelection.StartPicking();
         }
 
         private void OnRelease()
@@ -48,14 +48,14 @@ namespace DigitalLove.Game.Spaceships
             if (!refs.destinationSelector.IsLookingForDestination)
                 return;
 
-            if (destinationFlow.TryAppendSelectedDestination())
+            if (destinationSelection.TryAppendSelectedDestination())
             {
                 host.NotifyLoopChanged();
                 machine.SetCurrentState<SpaceshipRunningState>();
                 return;
             }
 
-            destinationFlow.ShowAtStation();
+            destinationSelection.ShowAtStation();
         }
 
         public void Debug_SimulateGrabSelect() => OnSelect();

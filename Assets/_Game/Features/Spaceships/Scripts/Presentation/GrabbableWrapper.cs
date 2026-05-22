@@ -11,15 +11,13 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private Grabbable grabbable;
         [SerializeField] private Renderer grabbableRenderer;
         [SerializeField] private ConstantRotation constantRotation;
-        [SerializeField] private Transform grabZone;
+        [SerializeField] private GrabZone grabZone;
         [SerializeField] private AudioSource grabAudioSource;
 
         private bool isListeningForPointerEvents;
 
         public Action selected;
         public Action released;
-
-        public Transform Transform => grabbable.transform;
 
         public void SetInteractionActive(bool active) => grabbable.SetActive(active);
 
@@ -29,7 +27,7 @@ namespace DigitalLove.Game.Spaceships
         {
             EnablePointerHandling();
             grabbable.SetActive(true);
-            grabZone.gameObject.SetActive(true);
+            grabZone.SetActive(true);
         }
 
         public void Show()
@@ -38,7 +36,7 @@ namespace DigitalLove.Game.Spaceships
             grabbable.SetActive(true);
             grabbable.transform.LocalReset();
             constantRotation.IsEnabled = true;
-            grabZone.gameObject.SetActive(true);
+            grabZone.SetActive(true);
             grabbableRenderer.gameObject.SetActive(true);
         }
 
@@ -46,7 +44,7 @@ namespace DigitalLove.Game.Spaceships
         {
             DisablePointerHandling();
             constantRotation.IsEnabled = false;
-            grabZone.gameObject.SetActive(false);
+            grabZone.SetActive(false);
             grabbableRenderer.gameObject.SetActive(false);
         }
 

@@ -12,7 +12,7 @@ namespace DigitalLove.Game.Spaceships
         public GrabbableWrapper grabbableWrapper;
         public RoutePanel routePanel;
         public DestinationSelector destinationSelector;
-        public Renderer originZone;
+        public GrabZone grabZone;
 
         [Header("Route")]
         public GhostBehaviour ghost;

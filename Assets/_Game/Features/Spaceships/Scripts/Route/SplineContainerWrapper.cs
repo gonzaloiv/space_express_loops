@@ -58,7 +58,10 @@ namespace DigitalLove.Game.Spaceships
         {
             currentLegIndex = legIndex;
             if (isLineVisible)
+            {
                 RefreshGoLine();
+                RefreshReturnLine();
+            }
         }
 
         public void SetLineRendererActive(bool isVisible)
@@ -89,21 +92,17 @@ namespace DigitalLove.Game.Spaceships
         private bool TryGetReturnLegPositions(out Vector3[] positions)
         {
             positions = null;
-            if (legs.Count == 0)
+            if (legs.Count < 2 || currentLegIndex < 0)
                 return false;
 
-            RouteLeg returnLeg = legs[legs.Count - 1];
-            if (returnLeg.pickupPlanet != null)
-                return false;
-
-            positions = returnLeg.positions;
+            int returnLegIndex = (currentLegIndex + 1) % legs.Count;
+            positions = legs[returnLegIndex].positions;
             return positions != null && positions.Length > 0;
         }
 
         private void RefreshGoLine()
         {
-            if (!TryGetCurrentLegPositions(out Vector3[] positions)
-                || legs[currentLegIndex].pickupPlanet == null)
+            if (!TryGetCurrentLegPositions(out Vector3[] positions))
             {
                 goLine.Clear();
                 return;

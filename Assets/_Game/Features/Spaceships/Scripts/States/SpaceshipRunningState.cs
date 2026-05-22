@@ -7,25 +7,26 @@ namespace DigitalLove.Game.Spaceships
         private readonly StateMachine machine;
         private readonly SpaceshipRefs refs;
         private readonly SpaceshipRouteSession session;
-        private readonly SpaceshipDestinationFlow destinationFlow;
+        private readonly SpaceshipDestinationSelection destinationSelection;
         private readonly ISpaceshipHost host;
 
         public SpaceshipRunningState(
             StateMachine machine,
             SpaceshipRefs refs,
             SpaceshipRouteSession session,
-            SpaceshipDestinationFlow destinationFlow,
+            SpaceshipDestinationSelection destinationSelection,
             ISpaceshipHost host)
         {
             this.machine = machine;
             this.refs = refs;
             this.session = session;
-            this.destinationFlow = destinationFlow;
+            this.destinationSelection = destinationSelection;
             this.host = host;
         }
 
         public override void Enter()
         {
+            refs.routePanel.SetButtonActive(true);
             refs.routePanel.editButtonClicked += OnEditButtonClick;
             refs.grabbableWrapper.EnablePointerHandling();
             refs.grabbableWrapper.selected += OnSelect;
@@ -35,6 +36,7 @@ namespace DigitalLove.Game.Spaceships
 
         public override void Exit()
         {
+            refs.routePanel.SetButtonActive(false);
             refs.routePanel.editButtonClicked -= OnEditButtonClick;
             refs.grabbableWrapper.selected -= OnSelect;
             refs.grabbableWrapper.released -= OnRelease;
@@ -44,8 +46,8 @@ namespace DigitalLove.Game.Spaceships
 
         private void BeginLoop()
         {
-            session.Route.RebuildRoute();
-            destinationFlow.ShowAtStation();
+            session.RebuildRoute();
+            destinationSelection.ShowAtStation();
             session.TravellerLoop.StartLoop(host.Id, host.BuildLoopEventArgs);
         }
 
@@ -60,19 +62,19 @@ namespace DigitalLove.Game.Spaceships
             if (!refs.destinationSelector.IsLookingForDestination)
                 return;
 
-            if (destinationFlow.TryAppendSelectedDestination())
+            if (destinationSelection.TryAppendSelectedDestination())
             {
-                session.Route.RebuildRoute();
+                session.RebuildRoute();
                 session.TravellerLoop.StartLoop(host.Id, host.BuildLoopEventArgs);
                 host.NotifyLoopChanged();
             }
 
-            destinationFlow.ShowAtStation();
+            destinationSelection.ShowAtStation();
         }
 
         private void OnEditButtonClick()
         {
-            session.Route.ClearDestinations();
+            session.ClearDestinations();
             host.NotifyLoopEditionClicked();
             machine.SetCurrentState<SpaceshipIdleState>();
         }
@@ -80,8 +82,7 @@ namespace DigitalLove.Game.Spaceships
         private void HideVisuals()
         {
             refs.grabbableWrapper.Hide();
-            refs.routePanel.Hide();
-            session.Route.SetLineRendererActive(false);
+            session.SetLineRendererActive(false);
             refs.destinationSelector.StartLookingForDestination(false);
         }
 

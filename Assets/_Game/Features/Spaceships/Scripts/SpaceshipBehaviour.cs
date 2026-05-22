@@ -29,11 +29,8 @@ namespace DigitalLove.Game.Spaceships
         public string ColorCode => data.colorCode;
         public HubBehaviour Hub => refs.destinationSelector.Hub;
         public bool IsActive => gameObject.activeInHierarchy;
-        public bool HasRoute =>
-            isInitialized
-            && session.HasDestinations
-            && (stateMachine.IsCurrentState<SpaceshipRunningState>()
-                || stateMachine.IsCurrentState<SpaceshipSelectingState>());
+        public bool HasRoute => isInitialized && session.HasDestinations &&
+            (stateMachine.IsCurrentState<SpaceshipRunningState>() || stateMachine.IsCurrentState<SpaceshipSelectingState>());
 
         private void Awake()
         {
@@ -51,11 +48,11 @@ namespace DigitalLove.Game.Spaceships
             session.ResetVisuals();
 
             stateMachine = new StateMachine();
-            SpaceshipDestinationFlow destinationFlow = new SpaceshipDestinationFlow(refs, session);
+            SpaceshipDestinationSelection destinationSelection = new SpaceshipDestinationSelection(refs, session);
             idleState = new SpaceshipIdleState(stateMachine, refs);
-            selectingState = new SpaceshipSelectingState(stateMachine, refs, destinationFlow, this);
+            selectingState = new SpaceshipSelectingState(stateMachine, refs, destinationSelection, this);
             selectingState.Init();
-            runningState = new SpaceshipRunningState(stateMachine, refs, session, destinationFlow, this);
+            runningState = new SpaceshipRunningState(stateMachine, refs, session, destinationSelection, this);
             stateMachine.Register(new IState[] { idleState, selectingState, runningState });
             stateMachine.SetCurrentState<SpaceshipIdleState>();
             ApplyLoopHandlers();
@@ -83,7 +80,11 @@ namespace DigitalLove.Game.Spaceships
             handlers.EditionClicked?.Invoke(BuildLoopEventArgs());
         }
 
-        public void MoveToHub() => refs.grabbableWrapper.SetWorldPosition(Hub.SpawnPose.position);
+        public void MoveToHub()
+        {
+            refs.grabbableWrapper.SetWorldPosition(Hub.SpawnPose.position);
+            refs.grabZone.LookAtStationCenter(Hub.Position);
+        }
 
         public LoopEventArgs BuildLoopEventArgs() => new()
         {
@@ -101,7 +102,7 @@ namespace DigitalLove.Game.Spaceships
             hub.ApplyRouteColor(color);
             refs.destinationSelector.Init(hub, color);
             session.SetRouteColor(color);
-            refs.originZone.material.color = color;
+            refs.grabZone.SetColor(color);
             session.ClearDestinations();
 
             MoveToHub();
@@ -119,6 +120,7 @@ namespace DigitalLove.Game.Spaceships
             }
 
             session.ClearDestinations();
+            refs.routePanel.Hide();
             this.SetActive(false);
         }
 
@@ -171,7 +173,7 @@ namespace DigitalLove.Game.Spaceships
 
         public void Debug_InvokeOnLoopEditionButtonClicked() => runningState.Debug_InvokeOnLoopEditionButtonClicked();
 
-        public SpaceshipRoute Debug_Route => session.Route;
+        public List<string> Debug_GetDestinationIds() => session.GetDestinationIds();
 
         #endregion
     }
