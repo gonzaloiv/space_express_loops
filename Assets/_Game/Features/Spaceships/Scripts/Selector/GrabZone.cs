@@ -5,7 +5,8 @@ namespace DigitalLove.Game.Spaceships
     public class GrabZone : MonoBehaviour
     {
         [SerializeField] private Renderer[] renderers;
-        [SerializeField] private Transform link;
+        [SerializeField] private LineRenderer lineToHost;
+        [SerializeField] private float verticalOffset = 0.02f;
 
         public void SetColor(Color color)
         {
@@ -13,17 +14,12 @@ namespace DigitalLove.Game.Spaceships
                 renderer.material.color = color;
         }
 
-        public void LookAtStationCenter(Vector3 stationCenter)
+        public void LookAtStationCenter(Vector3 hostCenter)
         {
-            if (link == null)
-                return;
-
-            Vector3 toCenter = stationCenter - link.position;
-            toCenter.y = 0f;
-            if (toCenter.sqrMagnitude < 0.0001f)
-                return;
-
-            link.rotation = Quaternion.LookRotation(toCenter.normalized, Vector3.up);
+            lineToHost.SetPosition(0, lineToHost.transform.position);
+            lineToHost.SetPosition(1, lineToHost.transform.position - new Vector3(0, verticalOffset, 0));
+            lineToHost.SetPosition(2, hostCenter);
+            lineToHost.enabled = true;
         }
 
         public void SetActive(bool active)

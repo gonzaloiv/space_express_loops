@@ -45,10 +45,14 @@ namespace DigitalLove.Game.Flow
 
         public override void Enter()
         {
-            levelContainer.SpaceshipsSpawner.SetHandlers(new LoopHandlers(
-                changed: OnLoopChanged,
-                editionClicked: OnLoopEditionButtonClicked,
-                complete: OnLoopComplete));
+            levelContainer.SpaceshipsSpawner.SetHandlers(
+                new LoopHandlers(
+                    changed: OnLoopChanged,
+                    editionClicked: OnLoopEditionButtonClicked,
+                    complete: OnLoopComplete),
+                new LevelLoopPlanetAvailability(
+                    levelContainer.PlanetsSpawner,
+                    levelContainer.HubsSpawner));
             levelContainer.PlanetsSpawner.SetHandlers(new PlanetHandlers(onPlanetFull: OnPlanetFull));
 
             storePanel.ShowRound(roundSelector.FormattedCurrentRoundIndex);

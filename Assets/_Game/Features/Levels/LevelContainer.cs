@@ -56,6 +56,7 @@ namespace DigitalLove.Game.Levels
 
             SpawnPlanets(gameSnapshot, roundData);
             PlanetRouteColorSync.Apply(gameSnapshot, planetsSpawner, hubsSpawner, spaceshipsSpawner);
+            spaceshipsSpawner.RefreshGrabbablesAtStation();
         }
 
         private void SpawnSpaceship(GameSnapshot gameSnapshot)

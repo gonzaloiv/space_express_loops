@@ -72,14 +72,13 @@ namespace DigitalLove.Game.Spaceships
             }
             else
             {
-                bool isValidNewDestination = candidatePlanet != destinationPlanet
-                    && candidatePlanet.transform != Hub.transform
-                    && !excludedPlanetIds.Contains(candidatePlanet.Id)
-                    && !candidatePlanet.IsOnRoute;
-                if (isValidNewDestination)
+                if (candidatePlanet != destinationPlanet && IsSelectableOffRoute(candidatePlanet))
                     SelectNewDestination(candidatePlanet);
             }
         }
+
+        private bool IsSelectableOffRoute(PlanetBehaviour planet) =>
+            PlanetSelectionRules.IsSelectable(planet, hub, excludedPlanetIds);
 
         private void DeselectCurrent()
         {

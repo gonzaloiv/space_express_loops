@@ -2,7 +2,6 @@ using System;
 using DigitalLove.Global;
 using Oculus.Interaction;
 using UnityEngine;
-using DigitalLove.VFX;
 
 namespace DigitalLove.Game.Spaceships
 {
@@ -10,11 +9,11 @@ namespace DigitalLove.Game.Spaceships
     {
         [SerializeField] private Grabbable grabbable;
         [SerializeField] private Renderer grabbableRenderer;
-        [SerializeField] private ConstantRotation constantRotation;
         [SerializeField] private GrabZone grabZone;
         [SerializeField] private AudioSource grabAudioSource;
 
         private bool isListeningForPointerEvents;
+        private bool isGrabbed;
 
         public Action selected;
         public Action released;
@@ -34,17 +33,16 @@ namespace DigitalLove.Game.Spaceships
             EnablePointerHandling();
             grabbable.SetActive(true);
             grabbable.transform.LocalReset();
-            constantRotation.IsEnabled = true;
             grabZone.SetActive(true);
-            grabbableRenderer.gameObject.SetActive(true);
+            SetGrabbableBodyVisible(!isGrabbed);
         }
 
         public void Hide()
         {
             DisablePointerHandling();
-            constantRotation.IsEnabled = false;
+            isGrabbed = false;
             grabZone.SetActive(false);
-            grabbableRenderer.gameObject.SetActive(false);
+            SetGrabbableBodyVisible(false);
         }
 
         public void EnablePointerHandling()
@@ -73,17 +71,22 @@ namespace DigitalLove.Game.Spaceships
             switch (pointer.Type)
             {
                 case PointerEventType.Select:
-                    grabbableRenderer.gameObject.SetActive(false);
+                    isGrabbed = true;
+                    SetGrabbableBodyVisible(false);
                     selected?.Invoke();
                     grabAudioSource.Play();
                     break;
                 case PointerEventType.Unselect:
                 case PointerEventType.Cancel:
+                    isGrabbed = false;
                     if (grabZone.gameObject.activeSelf)
-                        grabbableRenderer.gameObject.SetActive(true);
+                        SetGrabbableBodyVisible(true);
                     released?.Invoke();
                     break;
             }
         }
+
+        private void SetGrabbableBodyVisible(bool visible) =>
+            grabbableRenderer.gameObject.SetActive(visible);
     }
 }

@@ -15,26 +15,29 @@ namespace DigitalLove.Game.Spaceships
 
         private IdCounter idCounter = new();
         private LoopHandlers handlers;
+        private ILoopPlanetAvailability planetAvailability;
 
         public List<SpaceshipBehaviour> All => spaceships;
 
-        public void SetHandlers(LoopHandlers handlers)
+        public void SetHandlers(LoopHandlers handlers, ILoopPlanetAvailability planetAvailability = null)
         {
             this.handlers = handlers;
+            this.planetAvailability = planetAvailability;
             foreach (SpaceshipBehaviour spaceship in spaceships)
             {
                 if (spaceship != null)
-                    WireLoopHandlers(spaceship);
+                    WireHandlers(spaceship);
             }
         }
 
         public void ClearHandlers()
         {
             handlers = default;
+            planetAvailability = null;
             foreach (SpaceshipBehaviour spaceship in spaceships)
             {
                 if (spaceship != null)
-                    WireLoopHandlers(spaceship);
+                    WireHandlers(spaceship);
             }
         }
 
@@ -75,11 +78,14 @@ namespace DigitalLove.Game.Spaceships
                 hubId = basePlanet != null ? basePlanet.Id : null
             };
             spaceship.Spawn(data, colorPair.color.value, basePlanet);
-            WireLoopHandlers(spaceship);
+            WireHandlers(spaceship);
             return spaceship;
         }
 
-        public void WireLoopHandlers(SpaceshipBehaviour spaceship) => spaceship.Configure(handlers);
+        public void WireLoopHandlers(SpaceshipBehaviour spaceship) => WireHandlers(spaceship);
+
+        private void WireHandlers(SpaceshipBehaviour spaceship) =>
+            spaceship.Configure(handlers, planetAvailability);
 
         private ColorIsAvailablePair ResolveColorPair(string colorCode)
         {
@@ -147,6 +153,15 @@ namespace DigitalLove.Game.Spaceships
         {
             foreach (SpaceshipBehaviour spaceship in spaceships)
                 spaceship.Hide();
+        }
+
+        public void RefreshGrabbablesAtStation()
+        {
+            foreach (SpaceshipBehaviour spaceship in spaceships)
+            {
+                if (spaceship != null)
+                    spaceship.RefreshGrabbableAtStation();
+            }
         }
 
         #region Debug

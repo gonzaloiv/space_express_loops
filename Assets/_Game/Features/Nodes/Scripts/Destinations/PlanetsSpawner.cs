@@ -86,6 +86,21 @@ namespace DigitalLove.Game.Nodes
         public PlanetBehaviour GetById(string id) =>
             planets.FirstOrDefault(p => string.Equals(p.Id, id));
 
+        public bool HasAnySelectableForHub(HubBehaviour hub, IEnumerable<string> excludedPlanetIds)
+        {
+            if (hub == null)
+                return false;
+
+            HashSet<string> excluded = PlanetSelectionRules.ToExcludedSet(excludedPlanetIds);
+            foreach (PlanetBehaviour planet in planets)
+            {
+                if (PlanetSelectionRules.IsSelectable(planet, hub, excluded))
+                    return true;
+            }
+
+            return false;
+        }
+
         private void ApplyHandlersToAll() =>
             planets.ForEachInPool(planet => planet.Configure(handlers));
 

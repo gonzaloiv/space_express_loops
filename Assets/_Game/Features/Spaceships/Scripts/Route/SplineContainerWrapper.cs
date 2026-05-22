@@ -19,6 +19,7 @@ namespace DigitalLove.Game.Spaceships
         private int currentLegIndex = -1;
 
         public IReadOnlyList<RouteLeg> Legs => legs;
+        public bool HasLegs => legs.Count > 0;
 
         public Vector3 LastLegEndPosition => LastLeg.positions[^1];
         public Vector3 FirstLegEndPosition => legs[0].positions[^1];

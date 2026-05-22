@@ -13063,7 +13063,7 @@ MonoBehaviour:
   tableName: Levels
   secsToCompleteWithoutEntries: 1
   jumpEntries:
-    value: 0
+    value: 1
 --- !u!114 &1654487132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14539,10 +14539,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 415742224261158574, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
-      propertyPath: m_Sources.Array.data[0].sourceTransform
-      value: 
-      objectReference: {fileID: 933255160}
     - target: {fileID: 450057017088160231, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -14563,10 +14559,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1504394797764037912, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
-      propertyPath: m_Sources.Array.data[0].sourceTransform
-      value: 
-      objectReference: {fileID: 933255160}
     - target: {fileID: 3007090343516073934, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0

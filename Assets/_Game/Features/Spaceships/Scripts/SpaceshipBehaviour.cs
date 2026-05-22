@@ -13,6 +13,7 @@ namespace DigitalLove.Game.Spaceships
 
         private StateMachine stateMachine;
         private SpaceshipRouteSession session;
+        private SpaceshipDestinationSelection destinationSelection;
         private SpaceshipIdleState idleState;
         private SpaceshipSelectingState selectingState;
         private SpaceshipRunningState runningState;
@@ -20,6 +21,7 @@ namespace DigitalLove.Game.Spaceships
         private SpaceshipData data;
         private bool isInitialized;
         private LoopHandlers handlers;
+        private ILoopPlanetAvailability planetAvailability;
 
         public bool IsInitialized => isInitialized;
         public DestinationSelector DestinationSelector => refs.destinationSelector;
@@ -48,7 +50,10 @@ namespace DigitalLove.Game.Spaceships
             session.ResetVisuals();
 
             stateMachine = new StateMachine();
-            SpaceshipDestinationSelection destinationSelection = new SpaceshipDestinationSelection(refs, session);
+            destinationSelection = new SpaceshipDestinationSelection(
+                refs,
+                session,
+                QueryHasSelectablePlanetsOffRoute);
             idleState = new SpaceshipIdleState(stateMachine, refs);
             selectingState = new SpaceshipSelectingState(stateMachine, refs, destinationSelection, this);
             selectingState.Init();
@@ -58,9 +63,10 @@ namespace DigitalLove.Game.Spaceships
             ApplyLoopHandlers();
         }
 
-        public void Configure(LoopHandlers loopHandlers)
+        public void Configure(LoopHandlers loopHandlers, ILoopPlanetAvailability availability = null)
         {
             handlers = loopHandlers;
+            planetAvailability = availability;
             ApplyLoopHandlers();
         }
 
@@ -68,6 +74,18 @@ namespace DigitalLove.Game.Spaceships
         {
             if (session != null)
                 session.SetOnLoopComplete(handlers.Complete);
+        }
+
+        private bool QueryHasSelectablePlanetsOffRoute() =>
+            planetAvailability?.HasSelectableOffRoute(HubId, session.GetDestinationIds()) ?? true;
+
+        public void RefreshGrabbableAtStation()
+        {
+            if (!isInitialized || !IsActive)
+                return;
+
+            if (stateMachine.IsCurrentState<SpaceshipRunningState>())
+                destinationSelection.MoveToActiveStation();
         }
 
         public void StartSelectingDestination() => stateMachine.SetCurrentState<SpaceshipSelectingState>();

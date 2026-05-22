@@ -4,11 +4,16 @@ namespace DigitalLove.Game.Spaceships
     {
         private readonly SpaceshipRefs refs;
         private readonly SpaceshipRouteSession session;
+        private readonly System.Func<bool> hasSelectablePlanetsOffRoute;
 
-        public SpaceshipDestinationSelection(SpaceshipRefs refs, SpaceshipRouteSession session)
+        public SpaceshipDestinationSelection(
+            SpaceshipRefs refs,
+            SpaceshipRouteSession session,
+            System.Func<bool> hasSelectablePlanetsOffRoute)
         {
             this.refs = refs;
             this.session = session;
+            this.hasSelectablePlanetsOffRoute = hasSelectablePlanetsOffRoute;
         }
 
         public void StartPicking()
@@ -38,7 +43,9 @@ namespace DigitalLove.Game.Spaceships
 
         public void MoveToActiveStation()
         {
-            if (session.IsLastLegToHub && session.Destinations.Count > 1)
+            refs.destinationSelector.SetExcludedPlanetIds(session.GetExcludedPlanetIds());
+
+            if (session.IsLastLegToHub && ShouldHideGrabbableAtStation())
             {
                 refs.grabbableWrapper.Hide();
                 return;
@@ -51,5 +58,7 @@ namespace DigitalLove.Game.Spaceships
                     : session.FirstLegEndPosition);
             refs.grabZone.LookAtStationCenter(session.GetStationCenter());
         }
+
+        private bool ShouldHideGrabbableAtStation() => !hasSelectablePlanetsOffRoute();
     }
 }

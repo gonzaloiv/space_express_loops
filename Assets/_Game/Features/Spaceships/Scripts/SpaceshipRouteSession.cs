@@ -17,7 +17,8 @@ namespace DigitalLove.Game.Spaceships
 
         public Vector3 LastLegEndPosition => routeContainer.LastLegEndPosition;
         public Vector3 FirstLegEndPosition => routeContainer.FirstLegEndPosition;
-        public bool IsLastLegToHub => routeContainer.LastLeg.pickupPlanet == null;
+        public bool IsLastLegToHub =>
+            routeContainer.HasLegs && routeContainer.LastLeg.pickupPlanet == null;
 
         public HubBehaviour Hub => destinationSelector.Hub;
 
