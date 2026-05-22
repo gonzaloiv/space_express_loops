@@ -51,18 +51,11 @@ namespace DigitalLove.Game.Levels
 
         public void SpawnRound(RoundData roundData, GameSnapshot gameSnapshot)
         {
-            List<PlanetData> roundPlanets = planetsSpawner.GeneratePlanetDataFromPlanetsSeed(
-                roundData.planetsToAdd.GetRandomValue(),
-                roundData.planetSeed,
-                roundData.distanceBetweenPlanetsMultiplier
-            );
-            gameSnapshot.AddPlanets(roundPlanets);
-            planetsSpawner.SpawnPlanets(gameSnapshot.planets);
-            PlanetRouteColorSync.SyncPlanetRouteColors(gameSnapshot, planetsSpawner, spaceshipsSpawner);
             if (roundData.shouldSpawnSpaceship)
                 SpawnSpaceship(gameSnapshot);
-            else
-                PlanetRouteColorSync.SyncHubRouteColors(gameSnapshot, hubsSpawner, spaceshipsSpawner);
+
+            SpawnPlanets(gameSnapshot, roundData);
+            PlanetRouteColorSync.Apply(gameSnapshot, planetsSpawner, hubsSpawner, spaceshipsSpawner);
         }
 
         private void SpawnSpaceship(GameSnapshot gameSnapshot)
@@ -76,16 +69,27 @@ namespace DigitalLove.Game.Levels
                 colorCode = spaceship.ColorCode,
                 hubId = spaceship.HubId
             });
-            PlanetRouteColorSync.SyncHubRouteColors(gameSnapshot, hubsSpawner, spaceshipsSpawner);
+        }
+
+        private void SpawnPlanets(GameSnapshot gameSnapshot, RoundData roundData)
+        {
+            List<PlanetData> roundPlanets = planetsSpawner.GeneratePlanetDataFromPlanetsSeed(
+                roundData.planetsToAdd.GetRandomValue(),
+                roundData.planetSeed,
+                roundData.distanceBetweenPlanetsMultiplier
+            );
+            gameSnapshot.AddPlanets(roundPlanets);
+            planetsSpawner.SpawnPlanets(gameSnapshot.planets);
         }
 
         public void RespawnFromData(GameSnapshot gameSnapshot)
         {
             gameSnapshot.hubs ??= new();
             roomPlacement.SyncFromSnapshot(
-                gameSnapshot.planets,
                 gameSnapshot.hubs,
-                hubsSpawner.All[0].NodeBody.Radius);
+                gameSnapshot.planets,
+                hubsSpawner.HubPlacementRadius);
+            hubsSpawner.SpawnHubs(gameSnapshot.hubs);
             planetsSpawner.SpawnPlanets(gameSnapshot.planets);
             PlanetRouteColorSync.SyncPlanetRouteColors(gameSnapshot, planetsSpawner, spaceshipsSpawner);
 
@@ -113,7 +117,7 @@ namespace DigitalLove.Game.Levels
         }
 
         private HubBehaviour ResolveHubForLoop(LoopData loop, GameSnapshot gameSnapshot) =>
-            hubsSpawner.GetOrSpawn(loop.hubId, gameSnapshot.GetHubById(loop.hubId));
+            hubsSpawner.GetById(loop.hubId) ?? hubsSpawner.GetOrSpawn(loop.hubId, gameSnapshot.GetHubById(loop.hubId));
 
         public void SetRoomBasedPose(Action onComplete)
         {

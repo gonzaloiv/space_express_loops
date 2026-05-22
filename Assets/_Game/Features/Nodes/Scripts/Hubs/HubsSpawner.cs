@@ -17,6 +17,8 @@ namespace DigitalLove.Game.Nodes
 
         public IReadOnlyList<HubBehaviour> All => hubs;
 
+        public float HubPlacementRadius => hubs[0].NodeBody.Radius;
+
         public void SyncIdsFromSnapshot(IEnumerable<string> existingIds) =>
             idCounter.SyncFromExistingIds(existingIds);
 
@@ -53,12 +55,21 @@ namespace DigitalLove.Game.Nodes
             return hubs.FirstOrDefault(h => string.Equals(h.Id, id, StringComparison.Ordinal));
         }
 
+        public void SpawnHubs(IEnumerable<HubData> hubDataList)
+        {
+            if (hubDataList == null)
+                return;
+
+            foreach (HubData hubData in hubDataList)
+                GetOrSpawn(hubData.id, hubData);
+        }
+
         public void HideAll()
         {
             hubs.ForEachInPool(hub =>
             {
                 if (hub.IsActive)
-                    roomPlacement.Unregister(hub.LocalPosition, minDistanceToRoomBounds);
+                    roomPlacement.Unregister(hub.LocalPosition, hub.NodeBody.Radius);
                 hub.Hide();
             });
         }
@@ -74,21 +85,23 @@ namespace DigitalLove.Game.Nodes
                 ? hubData.localPosition.ToVector3()
                 : GetValidHubLocalPosition();
             hub.Spawn(hubId, localPosition);
-            roomPlacement.Register(localPosition, minDistanceToRoomBounds);
+            if (hubData == null)
+                roomPlacement.Register(localPosition, hub.NodeBody.Radius);
             return hub;
         }
 
         private Vector3 GetValidHubLocalPosition()
         {
+            float placementRadius = HubPlacementRadius;
             for (int i = 0; i < MrukRoomLocalPlacement.DefaultMaxIterations; i++)
             {
-                Vector3 localPosition = roomPlacement.GetValidLocalPosition(minDistanceToRoomBounds);
+                Vector3 localPosition = roomPlacement.GetValidLocalPosition(placementRadius);
                 if (minDistanceBetweenHubs <= 0f || !IsTooCloseToOtherHubs(localPosition, minDistanceBetweenHubs))
                     return localPosition;
             }
 
             Debug.LogWarning("Failed to find a hub position with minimum hub spacing; using best-effort placement.");
-            return roomPlacement.GetValidLocalPosition(minDistanceToRoomBounds);
+            return roomPlacement.GetValidLocalPosition(placementRadius);
         }
 
         private bool IsTooCloseToOtherHubs(Vector3 localPosition, float minDistance)

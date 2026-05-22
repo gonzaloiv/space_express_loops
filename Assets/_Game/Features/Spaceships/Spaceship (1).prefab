@@ -1869,7 +1869,7 @@ GameObject:
   - component: {fileID: 8885995343630426544}
   - component: {fileID: 9218913414590271189}
   m_Layer: 12
-  m_Name: Destination
+  m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2718,7 +2718,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1ef569d575b7b974cbae29d5fe69d8b1, type: 2}
+  - {fileID: 2100000, guid: 4075ff2d5d99dfb47ad68f34af8e2a47, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3907,7 +3907,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1ef569d575b7b974cbae29d5fe69d8b1, type: 2}
+  - {fileID: 2100000, guid: 4075ff2d5d99dfb47ad68f34af8e2a47, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3943,7 +3943,7 @@ GameObject:
   - component: {fileID: 8444208599725082709}
   - component: {fileID: 6246127711616667970}
   m_Layer: 12
-  m_Name: Origin
+  m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

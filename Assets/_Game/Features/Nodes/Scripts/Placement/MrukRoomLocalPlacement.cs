@@ -41,19 +41,19 @@ namespace DigitalLove.Game.Nodes
                 occupants.RemoveAt(index);
         }
 
-        public void SyncFromSnapshot(IEnumerable<PlanetData> planets, IEnumerable<HubData> hubs, float hubPlacementRadius)
+        public void SyncFromSnapshot(IEnumerable<HubData> hubs, IEnumerable<PlanetData> planets, float hubPlacementRadius)
         {
             Clear();
-            if (planets != null)
-            {
-                foreach (PlanetData planet in planets)
-                    Register(planet.localPosition.ToVector3(), planet.radius);
-            }
-
             if (hubs != null)
             {
                 foreach (HubData hub in hubs)
                     Register(hub.localPosition.ToVector3(), hubPlacementRadius);
+            }
+
+            if (planets != null)
+            {
+                foreach (PlanetData planet in planets)
+                    Register(planet.localPosition.ToVector3(), planet.radius);
             }
         }
 
