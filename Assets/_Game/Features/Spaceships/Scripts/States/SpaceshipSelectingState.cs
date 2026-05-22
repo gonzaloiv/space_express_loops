@@ -1,5 +1,4 @@
 using DigitalLove.FlowControl;
-using DigitalLove.Global;
 
 namespace DigitalLove.Game.Spaceships
 {
@@ -21,6 +20,8 @@ namespace DigitalLove.Game.Spaceships
             this.session = session;
             this.host = host;
         }
+
+        public void Init() => refs.ghost.SetActive(false);
 
         public override void Enter()
         {

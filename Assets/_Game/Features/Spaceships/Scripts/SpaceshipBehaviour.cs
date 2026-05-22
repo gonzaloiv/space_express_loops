@@ -53,6 +53,7 @@ namespace DigitalLove.Game.Spaceships
             stateMachine = new StateMachine();
             idleState = new SpaceshipIdleState(stateMachine, refs);
             selectingState = new SpaceshipSelectingState(stateMachine, refs, session, this);
+            selectingState.Init();
             runningState = new SpaceshipRunningState(stateMachine, refs, session, this);
             stateMachine.Register(new IState[] { idleState, selectingState, runningState });
             stateMachine.SetCurrentState<SpaceshipIdleState>();

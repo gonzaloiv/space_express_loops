@@ -106,6 +106,7 @@ namespace DigitalLove.Game.Nodes
             if (occupants.Count == 0)
                 return true;
 
+            Debug.LogWarning($"maxDistance: {maxDistance}");
             float closest = float.MaxValue;
             foreach (Occupant occupant in occupants)
                 closest = Mathf.Min(closest, Vector3.Distance(localPosition, occupant.localPosition));
@@ -118,6 +119,7 @@ namespace DigitalLove.Game.Nodes
             foreach (Occupant occupant in occupants)
             {
                 float minSeparation = (radius + occupant.radius) * minDistanceRadiusMultiplier;
+                Debug.LogWarning($"minSeparation: {minSeparation}");
                 if ((occupant.localPosition - localPosition).sqrMagnitude < minSeparation * minSeparation)
                     return true;
             }

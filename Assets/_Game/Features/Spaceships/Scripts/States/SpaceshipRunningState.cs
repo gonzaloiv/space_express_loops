@@ -1,5 +1,4 @@
 using DigitalLove.FlowControl;
-using DigitalLove.Global;
 
 namespace DigitalLove.Game.Spaceships
 {
@@ -81,7 +80,6 @@ namespace DigitalLove.Game.Spaceships
 
         private void HideVisuals()
         {
-            refs.ghost.SetActive(false);
             refs.grabbableWrapper.Hide();
             refs.routePanel.Hide();
             session.Route.SetLineRendererActive(false);
@@ -90,7 +88,6 @@ namespace DigitalLove.Game.Spaceships
 
         private void ShowGrabbable()
         {
-            refs.ghost.SetActive(false);
             refs.destinationSelector.StartLookingForDestination(false);
             refs.routePanel.SetButtonActive(true);
             refs.grabbableWrapper.Show();

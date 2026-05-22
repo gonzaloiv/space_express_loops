@@ -7,14 +7,12 @@ namespace DigitalLove.Game.Spaceships
 {
     public class RouteContainer : MonoBehaviour
     {
-        [SerializeField] private LineRenderer lineRenderer;
-        [SerializeField] private GameObject startPoint;
-        [SerializeField] private GameObject endPoint;
-
+        [SerializeField] private LineRendererWithEdges routeLine;
         [SerializeField] private int resolution = 64;
 
         private SplineContainer splineContainer;
         private SplineLegSampler sampler;
+        private bool isLineVisible;
 
         private readonly List<RouteLeg> legs = new();
         private int currentLegIndex = -1;
@@ -27,12 +25,7 @@ namespace DigitalLove.Game.Spaceships
 
         private SplineContainer SplineContainer => splineContainer ??= GetComponent<SplineContainer>();
 
-        public void SetColor(Color color)
-        {
-            lineRenderer.material.color = color;
-            startPoint.GetComponentInChildren<Renderer>().material.color = color;
-            endPoint.GetComponentInChildren<Renderer>().material.color = color;
-        }
+        public void SetColor(Color color) => routeLine.SetColor(color);
 
         public Vector3 GetPanelAnchorPosition()
         {
@@ -59,19 +52,16 @@ namespace DigitalLove.Game.Spaceships
         public void ShowLeg(int legIndex)
         {
             currentLegIndex = legIndex;
-            if (lineRenderer.enabled)
-                RefreshLineRenderer();
+            if (isLineVisible)
+                RefreshLine();
         }
 
         public void SetLineRendererActive(bool isVisible)
         {
-            lineRenderer.enabled = isVisible;
-            startPoint.SetActive(isVisible);
-            endPoint.SetActive(isVisible);
-            if (!isVisible)
-                lineRenderer.positionCount = 0;
-            else
-                RefreshLineRenderer();
+            isLineVisible = isVisible;
+            routeLine.SetVisible(isVisible);
+            if (isVisible)
+                RefreshLine();
         }
 
         private bool TryGetCurrentLegPositions(out Vector3[] positions)
@@ -84,21 +74,15 @@ namespace DigitalLove.Game.Spaceships
             return positions != null && positions.Length > 0;
         }
 
-        private void RefreshLineRenderer()
+        private void RefreshLine()
         {
             if (!TryGetCurrentLegPositions(out Vector3[] positions))
             {
-                lineRenderer.positionCount = 0;
-                startPoint.SetActive(false);
-                endPoint.SetActive(false);
+                routeLine.Clear();
                 return;
             }
-            startPoint.SetActive(true);
-            endPoint.SetActive(true);
-            startPoint.transform.position = positions[0];
-            endPoint.transform.position = positions[^1];
 
-            lineRenderer.SetSplinePositions(positions);
+            routeLine.SetPositions(positions);
         }
     }
 }
