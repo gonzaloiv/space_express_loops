@@ -61,7 +61,7 @@ namespace DigitalLove.Game.Flow
                 levelContainer.HubsSpawner,
                 levelContainer.SpaceshipsSpawner);
             progressionEventsHelper.SendLevelStartedEvent(roundSelector.CurrentRound.id);
-            ShowFTUIndicators();
+            SayRoundIntro();
         }
 
         private void RefreshStoreUI()
@@ -69,21 +69,10 @@ namespace DigitalLove.Game.Flow
             storePanel.Show(gameSnapshot.CurrentLetters, gameSnapshot.lettersRequiredForRoundCompletion, gameSnapshot.store.money);
         }
 
-        private void ShowFTUIndicators()
+        private void SayRoundIntro()
         {
             ttsHelper.SetInFrontOfCameraOrDefault(false);
-            void SayRoundIntro(Action onComplete) => ttsHelper.SayRoundIntro(roundSelector.CurrentRound, onComplete);
-            if (roundSelector.IsFirstRound)
-            {
-                SayRoundIntro(() =>
-                {
-                    ttsHelper.SayAfter(2.5f, "how_to_create_a_route", () => { });
-                });
-            }
-            else
-            {
-                SayRoundIntro(() => { });
-            }
+            ttsHelper.SayRoundIntro(roundSelector.CurrentRound, () => { });
         }
 
         private void OnLoopChanged(LoopEventArgs args)

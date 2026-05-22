@@ -53,7 +53,21 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 10187555580071936
-    m_Localized: Streak of the Month
+    m_Localized: Racha del mes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11382832529854464
+    m_Localized: "\xBFPuedes echar una mano?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11382832575991808
+    m_Localized: "Soy Gonzalo, el desarrollador independiente de Space Express Loops.
+      \xA1Tus rese\xF1as mantienen vivo este proyecto! \xBFTienes 10 segundos para
+      dejar una valoraci\xF3n?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11382832575991809
+    m_Localized: Seleccione para revisar
     m_Metadata:
       m_Items: []
   references:

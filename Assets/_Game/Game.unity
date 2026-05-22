@@ -3054,7 +3054,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 89f2500900d2caa4d91616a5641384a6, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.6
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -13063,7 +13063,7 @@ MonoBehaviour:
   tableName: Levels
   secsToCompleteWithoutEntries: 1
   jumpEntries:
-    value: 1
+    value: 0
 --- !u!114 &1654487132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13631,7 +13631,7 @@ Transform:
   m_GameObject: {fileID: 1727709847}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.25, y: 0, z: 0}
+  m_LocalPosition: {x: 0.25, y: 0.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13837,7 +13837,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.States.Setup::DigitalLove.Casual.Flow.Setup.PlayerDataChecker
   resetDataPanel: {fileID: 3258995010952126744}
   skip:
-    value: 1
+    value: 0
 --- !u!114 &1765401193 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6297629188174498992, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
@@ -16746,7 +16746,7 @@ RectTransform:
   m_GameObject: {fileID: 3977067961795316207}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.00025, y: 0.00025, z: 1}
+  m_LocalScale: {x: 0.0003, y: 0.0003, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4292389830011477048}

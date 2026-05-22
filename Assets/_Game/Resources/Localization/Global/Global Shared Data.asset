@@ -51,6 +51,18 @@ MonoBehaviour:
     m_Key: high_score_poster_title
     m_Metadata:
       m_Items: []
+  - m_Id: 11382832529854464
+    m_Key: review_panel_title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11382832575991808
+    m_Key: review_panel_body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11382832575991809
+    m_Key: review_panel_button
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -37,7 +37,6 @@ namespace DigitalLove.Game.Flow
         {
             InitData();
             highScorePoster.Show();
-
             if (!gameSnapshot.HasPlanets)
             {
                 SpawnLevelFromInitialRound();
@@ -64,18 +63,9 @@ namespace DigitalLove.Game.Flow
             {
                 levelContainer.SpawnInitialRound(roundSelector.CurrentRound, gameSnapshot);
                 gameSnapshot.RecalculateLettersRequiredForRound(roundSelector.CurrentRound.lettersIncreaseMultiplier);
-                SayIntro();
-            });
-        }
-
-        private void SayIntro()
-        {
-            bool isFirstTry = memoryDataClient.Get<Play>().IsFirstTry;
-            ttsHelper.SetInFrontOfCameraOrDefault(true);
-            if (isFirstTry)
+                ttsHelper.SetInFrontOfCameraOrDefault(true);
                 ttsHelper.Say("welcome_message", ToNextState);
-            else
-                ToNextState();
+            });
         }
 
         private void RespawnFromData()

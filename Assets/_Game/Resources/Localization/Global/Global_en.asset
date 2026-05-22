@@ -54,6 +54,19 @@ MonoBehaviour:
     m_Localized: Streak of the Month
     m_Metadata:
       m_Items: []
+  - m_Id: 11382832529854464
+    m_Localized: Can you lend a hand?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11382832575991808
+    m_Localized: "I\u2019m Gonzalo, the solo dev behind Space Express Loops. Your
+      reviews keep this project alive! Got 10 seconds to leave a rating?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11382832575991809
+    m_Localized: Select to Review
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

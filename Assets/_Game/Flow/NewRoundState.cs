@@ -29,7 +29,7 @@ namespace DigitalLove.Game.Flow
             roundSelector.SetCurrentRound(gameSnapshot.roundIndex);
             levelContainer.SpawnRound(roundSelector.CurrentRound, gameSnapshot);
             levelContainer.PlanetsSpawner.UnlockPlanetStores();
-            
+
             gameSnapshot.RecalculateLettersRequiredForRound(roundSelector.CurrentRound.lettersIncreaseMultiplier / gameSpeed.value);
 
             if (roundSelector.CurrentRound.resetsLetters)
@@ -38,24 +38,6 @@ namespace DigitalLove.Game.Flow
             progressionEventsHelper.SendLevelCompleteEvent(roundSelector.CurrentRound.id, score: gameSnapshot.CurrentLetters);
             gameSnapshot.ResetLettersForNewRound();
 
-            SayRoundIntro();
-        }
-
-        private void SayRoundIntro()
-        {
-            ttsHelper.SetInFrontOfCameraOrDefault(false);
-            if (ttsHelper.HasIntro(roundSelector.CurrentRound))
-            {
-                ttsHelper.SayRoundIntro(roundSelector.CurrentRound, ToEditionState);
-            }
-            else
-            {
-                ttsHelper.SayRandomTipIfAvailable(ToEditionState);
-            }
-        }
-
-        private void ToEditionState()
-        {
             parent.SetCurrentState(editionState.RouteId);
         }
 
