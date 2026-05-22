@@ -1,5 +1,5 @@
 using UnityEngine;
-using DigitalLove.Game.Planets;
+using DigitalLove.Game.Nodes;
 
 namespace DigitalLove.Game.Spaceships
 {
@@ -29,7 +29,7 @@ namespace DigitalLove.Game.Spaceships
             float currentScale = Mathf.Lerp(fromScale, toScale, t);
             transform.localScale = Vector3.one * currentScale;
 
-            float zoneRadius = destinationPlanet.PlanetBody.Radius * 3f;
+            float zoneRadius = destinationPlanet.NodeBody.Radius * 3f;
             Debug.LogWarning($"zoneRadius: {zoneRadius}");
             float distanceToZoneCenter = Vector3.Distance(originPosition, transform.position);
             Debug.LogWarning($"distanceToZoneCenter: {distanceToZoneCenter}");

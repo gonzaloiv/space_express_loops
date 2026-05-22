@@ -1,4 +1,4 @@
-using DigitalLove.Game.Planets;
+using DigitalLove.Game.Nodes;
 using UnityEngine;
 using DigitalLove.Global;
 

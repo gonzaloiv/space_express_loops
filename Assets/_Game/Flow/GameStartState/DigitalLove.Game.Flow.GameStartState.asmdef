@@ -4,7 +4,7 @@
     "references": [
         "DigitalLove.FlowControl",
         "DigitalLove.Game.Levels",
-        "DigitalLove.Game.Planets",
+        "DigitalLove.Game.Nodes",
         "Reflex",
         "DigitalLove.DataAccess.Local",
         "DigitalLove.Game.Spaceships",

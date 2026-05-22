@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.Splines;
-using DigitalLove.Game.Planets;
+using DigitalLove.Game.Nodes;
 using System.Collections.Generic;
 
 namespace DigitalLove.Game.Spaceships
@@ -30,16 +30,16 @@ namespace DigitalLove.Game.Spaceships
 
         private void CreateMultipleLegs(HubBehaviour hub, IReadOnlyList<PlanetBehaviour> destinations, IList<RouteLeg> legs)
         {
-            ConfigureSplineForLeg(hub.PlanetBody, destinations[0].PlanetBody);
+            ConfigureSplineForLeg(hub.NodeBody, destinations[0].NodeBody);
             legs.Add(GetTruncatedLeg(splineContainer.GetPositions(resolution), destinations[0]));
 
             for (int i = 1; i < destinations.Count; i++)
             {
-                ConfigureSplineForLeg(destinations[i - 1].PlanetBody, destinations[i].PlanetBody);
+                ConfigureSplineForLeg(destinations[i - 1].NodeBody, destinations[i].NodeBody);
                 legs.Add(GetTruncatedLeg(splineContainer.GetPositions(resolution), destinations[i]));
             }
 
-            ConfigureSplineForLeg(destinations[destinations.Count - 1].PlanetBody, hub.PlanetBody);
+            ConfigureSplineForLeg(destinations[destinations.Count - 1].NodeBody, hub.NodeBody);
             legs.Add(GetTruncatedLeg(splineContainer.GetPositions(resolution), null));
         }
 
@@ -51,13 +51,13 @@ namespace DigitalLove.Game.Spaceships
 
         private void GetSingleDestinationLeg(HubBehaviour hub, PlanetBehaviour destination, IList<RouteLeg> legs)
         {
-            ConfigureSplineForLeg(hub.PlanetBody, destination.PlanetBody);
+            ConfigureSplineForLeg(hub.NodeBody, destination.NodeBody);
             legs.Add(GetTruncatedLeg(splineContainer.GetPositions(resolution), destination));
-            ConfigureSplineForLeg(destination.PlanetBody, hub.PlanetBody, true);
+            ConfigureSplineForLeg(destination.NodeBody, hub.NodeBody, true);
             legs.Add(GetTruncatedLeg(splineContainer.GetPositions(resolution), null));
         }
 
-        private void ConfigureSplineForLeg(PlanetBody origin, PlanetBody destination, bool inverse = false)
+        private void ConfigureSplineForLeg(NodeBody origin, NodeBody destination, bool inverse = false)
         {
             Vector3 direction = (destination.Position - origin.Position).normalized;
             splineContainer.transform.forward = direction;

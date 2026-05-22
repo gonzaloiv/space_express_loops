@@ -1,4 +1,4 @@
-using DigitalLove.Game.Planets;
+using DigitalLove.Game.Nodes;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
@@ -36,6 +36,12 @@ namespace DigitalLove.Game.Spaceships
                 if (spaceship != null)
                     WireLoopHandlers(spaceship);
             }
+        }
+
+        public void ResetPool()
+        {
+            InitializePool();
+            HideAll();
         }
 
         public void InitializePool()

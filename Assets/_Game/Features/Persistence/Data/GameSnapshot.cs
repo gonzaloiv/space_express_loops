@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DigitalLove.Game.Planets;
+using DigitalLove.Game.Nodes;
 using DigitalLove.Game.Spaceships;
 using Newtonsoft.Json;
 using UnityEngine;

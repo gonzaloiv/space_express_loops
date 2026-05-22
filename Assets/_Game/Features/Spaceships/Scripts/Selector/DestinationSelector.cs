@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DigitalLove.Game.Planets;
+using DigitalLove.Game.Nodes;
 using UnityEngine;
 
 namespace DigitalLove.Game.Spaceships
@@ -83,16 +83,16 @@ namespace DigitalLove.Game.Spaceships
 
         private void DeselectCurrent()
         {
-            destinationPlanet.SetIsDestination(false);
+            destinationPlanet.ApplyRouteVisual(RouteVisualState.Default);
             destinationPlanet = null;
         }
 
         private void SelectNewDestination(PlanetBehaviour newDestination)
         {
             if (destinationPlanet != null)
-                destinationPlanet.SetIsDestination(false);
+                destinationPlanet.ApplyRouteVisual(RouteVisualState.Default);
             destinationPlanet = newDestination;
-            destinationPlanet.SetOutlineActive(true);
+            destinationPlanet.ApplyRouteVisual(RouteVisualState.SelectingCandidate);
             countdown = secsToSelect + initialSecsToSelect;
         }
 
@@ -113,7 +113,7 @@ namespace DigitalLove.Game.Spaceships
 
         private void OnDestinationSelected()
         {
-            destinationPlanet.SetIsDestination(true);
+            destinationPlanet.ApplyRouteVisual(RouteVisualState.ConfirmedDestination);
         }
 
         private void UpdateDestinationZone()

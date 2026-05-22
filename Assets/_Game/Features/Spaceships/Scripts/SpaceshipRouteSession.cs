@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DigitalLove.Game.Planets;
+using DigitalLove.Game.Nodes;
 using UnityEngine;
 
 namespace DigitalLove.Game.Spaceships

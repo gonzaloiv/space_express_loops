@@ -33,7 +33,7 @@
   <Project Path="DigitalLove.HomeMenu.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="DigitalLove.Theming.csproj" />
-  <Project Path="DigitalLove.Game.Planets.csproj" />
+  <Project Path="DigitalLove.Game.Nodes.csproj" />
   <Project Path="DigitalLove.DataAccess.Local.csproj" />
   <Project Path="DigitalLove.Timeline.Integrations.csproj" />
   <Project Path="DigitalLove.Analytics.GameAnalytics.csproj" />

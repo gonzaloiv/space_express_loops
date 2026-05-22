@@ -3272,7 +3272,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c34863d50c88f4b4389a131beed1350a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Planets::DigitalLove.Game.Planets.PlanetPanel
+  m_EditorClassIdentifier: DigitalLove.Game.Nodes::DigitalLove.Game.Nodes.PlanetPanel
   scalePunch: {fileID: 3292421933743203956}
   lettersLabel: {fileID: 7194246063489764194}
   layoutUpdater: {fileID: 4201779968097309476}

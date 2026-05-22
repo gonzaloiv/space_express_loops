@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using DigitalLove.FlowControl;
-using DigitalLove.Game.Planets;
+using DigitalLove.Game.Nodes;
 using DigitalLove.Global;
 using UnityEngine;
 
@@ -96,7 +96,7 @@ namespace DigitalLove.Game.Spaceships
             this.data = data;
 
             refs.grabbableWrapper.SetWorldPosition(hub.SpawnPose.position);
-            hub.SetRouteColor(color);
+            hub.ApplyRouteColor(color);
             refs.destinationSelector.Init(hub, color);
             session.SetRouteColor(color);
             refs.originZone.material.color = color;

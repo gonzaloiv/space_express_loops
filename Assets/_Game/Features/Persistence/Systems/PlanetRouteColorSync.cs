@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using DigitalLove.Game.Spaceships;
 using UnityEngine;
-using DigitalLove.Game.Planets;
+using DigitalLove.Game.Nodes;
 
 namespace DigitalLove.Game.Persistence
 {
@@ -16,9 +16,6 @@ namespace DigitalLove.Game.Persistence
             SyncHubRouteColors(gameSnapshot, hubsSpawner, spaceshipsSpawner);
         }
 
-        /// <summary>
-        /// Resets every active planet to default, then tints only planets that are a confirmed loop destination.
-        /// </summary>
         public static void SyncPlanetRouteColors(
             GameSnapshot gameSnapshot,
             PlanetsSpawner planetsSpawner,
@@ -29,8 +26,7 @@ namespace DigitalLove.Game.Persistence
                 if (!planet.IsActive)
                     continue;
 
-                planet.PlanetBody.ResetRouteColor();
-                planet.SetOnRoute(false);
+                planet.ResetRouteColor();
             }
 
             if (gameSnapshot.loops == null)
@@ -44,7 +40,7 @@ namespace DigitalLove.Game.Persistence
                 foreach (string destinationId in loop.destinationIds)
                 {
                     PlanetBehaviour destination = planetsSpawner.GetById(destinationId);
-                    ApplyDestinationRouteColor(destination, loop.colorCode, spaceshipsSpawner);
+                    ApplyRouteColor(destination, loop.colorCode, spaceshipsSpawner);
                 }
             }
         }
@@ -60,12 +56,12 @@ namespace DigitalLove.Game.Persistence
             {
                 foreach (LoopData loop in gameSnapshot.loops)
                 {
-                    HubBehaviour hub = ResolveHub(loop, hubsSpawner, spaceshipsSpawner);
+                    IRouteWorldNode hub = ResolveHub(loop, hubsSpawner, spaceshipsSpawner);
                     if (hub == null)
                         continue;
 
                     hubIdsOnLoops.Add(hub.Id);
-                    ApplyHubRouteColor(hub, loop.colorCode, spaceshipsSpawner);
+                    ApplyRouteColor(hub, loop.colorCode, spaceshipsSpawner);
                 }
             }
 
@@ -78,24 +74,18 @@ namespace DigitalLove.Game.Persistence
             }
         }
 
-        public static void ApplyHubRouteColor(HubBehaviour hub, string colorCode, SpaceshipsSpawner spaceshipsSpawner)
+        private static void ApplyRouteColor(
+            IRouteWorldNode node,
+            string colorCode,
+            SpaceshipsSpawner spaceshipsSpawner)
         {
-            if (hub == null || !spaceshipsSpawner.TryGetRouteColor(colorCode, out Color color))
+            if (node == null || !spaceshipsSpawner.TryGetRouteColor(colorCode, out Color color))
                 return;
 
-            hub.SetRouteColor(color);
+            node.ApplyRouteColor(color);
         }
 
-        public static void ApplyDestinationRouteColor(PlanetBehaviour destination, string colorCode, SpaceshipsSpawner spaceshipsSpawner)
-        {
-            if (destination == null || !spaceshipsSpawner.TryGetRouteColor(colorCode, out Color color))
-                return;
-
-            destination.PlanetBody.SetRouteColor(color);
-            destination.SetOnRoute(true);
-        }
-
-        private static HubBehaviour ResolveHub(
+        private static IRouteWorldNode ResolveHub(
             LoopData loop,
             HubsSpawner hubsSpawner,
             SpaceshipsSpawner spaceshipsSpawner)

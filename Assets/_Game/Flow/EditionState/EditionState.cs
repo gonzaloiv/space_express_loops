@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using DigitalLove.DataAccess;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Levels;
+using DigitalLove.Game.Nodes;
 using DigitalLove.Game.Spaceships;
 using Reflex.Attributes;
 using UnityEngine;
@@ -48,7 +49,7 @@ namespace DigitalLove.Game.Flow
                 changed: OnLoopChanged,
                 editionClicked: OnLoopEditionButtonClicked,
                 complete: OnLoopComplete));
-            levelContainer.PlanetsSpawner.planetFull += OnPlanetFull;
+            levelContainer.PlanetsSpawner.SetHandlers(new PlanetHandlers(onPlanetFull: OnPlanetFull));
 
             storePanel.ShowRound(roundSelector.FormattedCurrentRoundIndex);
             gameSnapshot = memoryDataClient.Get<GameSnapshot>();
@@ -151,7 +152,7 @@ namespace DigitalLove.Game.Flow
         public override void Exit()
         {
             levelContainer.SpaceshipsSpawner.ClearHandlers();
-            levelContainer.PlanetsSpawner.planetFull -= OnPlanetFull;
+            levelContainer.PlanetsSpawner.ClearHandlers();
         }
 
         [Button]

@@ -2,7 +2,7 @@
     "name": "DigitalLove.Game.Levels",
     "rootNamespace": "",
     "references": [
-        "DigitalLove.Game.Planets",
+        "DigitalLove.Game.Nodes",
         "DigitalLove.Casual.Levels",
         "DigitalLove.Game.Spaceships",
         "meta.xr.mrutilitykit",

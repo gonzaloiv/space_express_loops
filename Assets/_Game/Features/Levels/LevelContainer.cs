@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DigitalLove.Game.Planets;
+using DigitalLove.Game.Nodes;
 using DigitalLove.Game.Persistence;
 using DigitalLove.Game.Spaceships;
 using DigitalLove.XR.MRUtilityKit;
@@ -32,10 +32,9 @@ namespace DigitalLove.Game.Levels
 
         public void HideAll()
         {
-            spaceshipsSpawner.InitializePool();
-            planetsSpawner.HideAll();
-            spaceshipsSpawner.HideAll();
-            hubsSpawner.HideAll();
+            planetsSpawner.ResetPool();
+            spaceshipsSpawner.ResetPool();
+            hubsSpawner.ResetPool();
             roomPlacement.Clear();
         }
 
@@ -86,7 +85,7 @@ namespace DigitalLove.Game.Levels
             roomPlacement.SyncFromSnapshot(
                 gameSnapshot.planets,
                 gameSnapshot.hubs,
-                hubsSpawner.All[0].PlanetBody.Radius);
+                hubsSpawner.All[0].NodeBody.Radius);
             planetsSpawner.SpawnPlanets(gameSnapshot.planets);
             PlanetRouteColorSync.SyncPlanetRouteColors(gameSnapshot, planetsSpawner, spaceshipsSpawner);
 
@@ -113,14 +112,8 @@ namespace DigitalLove.Game.Levels
             PlanetRouteColorSync.SyncHubRouteColors(gameSnapshot, hubsSpawner, spaceshipsSpawner);
         }
 
-        private HubBehaviour ResolveHubForLoop(LoopData loop, GameSnapshot gameSnapshot)
-        {
-            HubData hubData = gameSnapshot.GetHubById(loop.hubId);
-            HubBehaviour hub = hubsSpawner.GetById(loop.hubId);
-            if (hub != null && hub.IsActive)
-                return hub;
-            return hubsSpawner.SpawnWithId(loop.hubId, hubData);
-        }
+        private HubBehaviour ResolveHubForLoop(LoopData loop, GameSnapshot gameSnapshot) =>
+            hubsSpawner.GetOrSpawn(loop.hubId, gameSnapshot.GetHubById(loop.hubId));
 
         public void SetRoomBasedPose(Action onComplete)
         {

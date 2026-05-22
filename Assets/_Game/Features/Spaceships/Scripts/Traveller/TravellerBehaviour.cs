@@ -1,7 +1,7 @@
 using UnityEngine;
 using DigitalLove.Global;
 using System;
-using DigitalLove.Game.Planets;
+using DigitalLove.Game.Nodes;
 using DigitalLove.Game.UI;
 using DigitalLove.VFX;
 
