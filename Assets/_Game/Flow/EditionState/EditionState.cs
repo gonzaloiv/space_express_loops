@@ -74,7 +74,6 @@ namespace DigitalLove.Game.Flow
             void SayRoundIntro(Action onComplete) => ttsHelper.SayRoundIntro(roundSelector.CurrentRound, onComplete);
             if (roundSelector.IsFirstRound)
             {
-                levelContainer.SpaceshipsSpawner.All[0].ShowGrabMePanel();
                 SayRoundIntro(() =>
                 {
                     ttsHelper.SayAfter(2.5f, "how_to_create_a_route", () => { });

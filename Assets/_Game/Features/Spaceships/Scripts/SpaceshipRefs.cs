@@ -1,0 +1,23 @@
+using DigitalLove.Game.UI;
+using UnityEngine;
+
+namespace DigitalLove.Game.Spaceships
+{
+    public class SpaceshipRefs : MonoBehaviour
+    {
+        [Header("Idle")]
+        public GameObject grabMePanel;
+
+        [Header("Shared")]
+        public GrabbableWrapper grabbableWrapper;
+        public RoutePanel routePanel;
+        public DestinationSelector destinationSelector;
+        public Renderer originZone;
+
+        [Header("Route")]
+        public GhostBehaviour ghost;
+        public RouteContainer splineContainerWrapper;
+        public TravellerBehaviour traveller;
+        public float legDelay = 1f;
+    }
+}

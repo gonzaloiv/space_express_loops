@@ -2386,6 +2386,7 @@ MonoBehaviour:
   grabbableRenderer: {fileID: 7510978636149178925}
   constantRotation: {fileID: 2839213482688434750}
   grabZone: {fileID: 4773145558585985207}
+  grabAudioSource: {fileID: 2264927090237520867}
 --- !u!1 &4915907243476787735
 GameObject:
   m_ObjectHideFlags: 0
@@ -4855,8 +4856,7 @@ GameObject:
   m_Component:
   - component: {fileID: 356686299887657879}
   - component: {fileID: 7263954683960120533}
-  - component: {fileID: 6434439280635227958}
-  - component: {fileID: 2655982506403976886}
+  - component: {fileID: 1147788990011223344}
   m_Layer: 12
   m_Name: Spaceship (1)
   m_TagString: Untagged
@@ -4895,44 +4895,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cc82f6dea6231c43b54b643e1f53a98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Spaceships::DigitalLove.Game.Spaceships.SpaceshipBehaviour
-  waitingForRouteState: {fileID: 6434439280635227958}
-  onRouteState: {fileID: 2655982506403976886}
+  refs: {fileID: 1147788990011223344}
+--- !u!114 &1147788990011223344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8415860662031833553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f8e9d0c1b2a394857463524130291ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Spaceships::DigitalLove.Game.Spaceships.SpaceshipRefs
+  grabMePanel: {fileID: 5290860388909687223}
   grabbableWrapper: {fileID: 9061488611667895148}
   routePanel: {fileID: 621283724909148468}
   destinationSelector: {fileID: 856102399462632852}
   originZone: {fileID: 6009419749085582317}
---- !u!114 &6434439280635227958
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8415860662031833553}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ead15799c75659b4e983184969865e88, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Spaceships::DigitalLove.Game.Spaceships.WaitingForRouteState
-  grabMePanel: {fileID: 5290860388909687223}
-  grabAudioSource: {fileID: 2264927090237520867}
-  grabbableWrapper: {fileID: 9061488611667895148}
-  destinationSelector: {fileID: 856102399462632852}
---- !u!114 &2655982506403976886
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8415860662031833553}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a6984b953739d54d9e6861098ed065f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Spaceships::DigitalLove.Game.Spaceships.OnRouteState
-  grabbableWrapper: {fileID: 9061488611667895148}
   ghost: {fileID: 2813554705787707760}
-  routePanel: {fileID: 621283724909148468}
-  destinationSelector: {fileID: 856102399462632852}
   splineContainerWrapper: {fileID: 5613787619958359030}
   traveller: {fileID: 6169223543632825317}
   legDelay: 1

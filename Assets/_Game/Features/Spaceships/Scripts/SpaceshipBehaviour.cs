@@ -1,36 +1,45 @@
 using System.Collections.Generic;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Planets;
-using DigitalLove.Game.UI;
 using DigitalLove.Global;
 using UnityEngine;
 
 namespace DigitalLove.Game.Spaceships
 {
-    public class SpaceshipBehaviour : MonoBehaviour
+    [RequireComponent(typeof(SpaceshipRefs))]
+    public class SpaceshipBehaviour : MonoBehaviour, ISpaceshipHost
     {
-        [SerializeField] private WaitingForRouteState waitingForRouteState;
-        [SerializeField] private OnRouteState onRouteState;
-
-        [SerializeField] private GrabbableWrapper grabbableWrapper;
-        [SerializeField] private RoutePanel routePanel;
-        [SerializeField] private DestinationSelector destinationSelector;
-        [SerializeField] private Renderer originZone;
+        [SerializeField] private SpaceshipRefs refs;
 
         private StateMachine stateMachine;
+        private SpaceshipRouteSession session;
+        private SpaceshipIdleState idleState;
+        private SpaceshipSelectingState selectingState;
+        private SpaceshipRunningState runningState;
+
         private SpaceshipData data;
         private bool isInitialized;
         private LoopHandlers handlers;
 
         public bool IsInitialized => isInitialized;
-        public DestinationSelector DestinationSelector => destinationSelector;
+        public DestinationSelector DestinationSelector => refs.destinationSelector;
 
         public string Id => data.id;
         public string HubId => data.hubId;
         public string ColorCode => data.colorCode;
-        public HubBehaviour Hub => destinationSelector.Hub;
+        public HubBehaviour Hub => refs.destinationSelector.Hub;
         public bool IsActive => gameObject.activeInHierarchy;
-        public bool HasRoute => isInitialized && onRouteState.HasDestinations && stateMachine.IsCurrentState<OnRouteState>();
+        public bool HasRoute =>
+            isInitialized
+            && session.HasDestinations
+            && (stateMachine.IsCurrentState<SpaceshipRunningState>()
+                || stateMachine.IsCurrentState<SpaceshipSelectingState>());
+
+        private void Awake()
+        {
+            if (refs == null)
+                refs = GetComponent<SpaceshipRefs>();
+        }
 
         public void Initialize()
         {
@@ -38,25 +47,31 @@ namespace DigitalLove.Game.Spaceships
                 return;
 
             isInitialized = true;
+            session = new SpaceshipRouteSession(refs, this);
+            session.ResetVisuals();
 
-            waitingForRouteState.Bind(StartSelectingDestination);
-            onRouteState.Bind(this);
-
-            stateMachine = StateMachineFactory.Create(new MonoState[] { waitingForRouteState, onRouteState });
-            stateMachine.SetCurrentState<WaitingForRouteState>();
+            stateMachine = new StateMachine();
+            idleState = new SpaceshipIdleState(stateMachine, refs);
+            selectingState = new SpaceshipSelectingState(stateMachine, refs, session, this);
+            runningState = new SpaceshipRunningState(stateMachine, refs, session, this);
+            stateMachine.Register(new IState[] { idleState, selectingState, runningState });
+            stateMachine.SetCurrentState<SpaceshipIdleState>();
+            ApplyLoopHandlers();
         }
 
         public void Configure(LoopHandlers loopHandlers)
         {
             handlers = loopHandlers;
-            onRouteState.SetOnLoopComplete(loopHandlers.Complete);
+            ApplyLoopHandlers();
         }
 
-        public void StartSelectingDestination()
+        private void ApplyLoopHandlers()
         {
-            onRouteState.SetEnterSelectingOnEnter(true);
-            stateMachine.SetCurrentState<OnRouteState>();
+            if (session != null)
+                session.SetOnLoopComplete(handlers.Complete);
         }
+
+        public void StartSelectingDestination() => stateMachine.SetCurrentState<SpaceshipSelectingState>();
 
         public void NotifyLoopChanged() => handlers.Changed?.Invoke(BuildLoopEventArgs());
 
@@ -66,15 +81,12 @@ namespace DigitalLove.Game.Spaceships
             handlers.EditionClicked?.Invoke(BuildLoopEventArgs());
         }
 
-        public void MoveToHub()
-        {
-            grabbableWrapper.SetWorldPosition(Hub.SpawnPose.position);
-        }
+        public void MoveToHub() => refs.grabbableWrapper.SetWorldPosition(Hub.SpawnPose.position);
 
         public LoopEventArgs BuildLoopEventArgs() => new()
         {
             spaceshipId = Id,
-            destinationIds = onRouteState.GetDestinationIds(),
+            destinationIds = session.GetDestinationIds(),
             colorCode = ColorCode,
             hubId = HubId
         };
@@ -83,17 +95,17 @@ namespace DigitalLove.Game.Spaceships
         {
             this.data = data;
 
-            grabbableWrapper.SetWorldPosition(hub.SpawnPose.position);
+            refs.grabbableWrapper.SetWorldPosition(hub.SpawnPose.position);
             hub.SetRouteColor(color);
-            destinationSelector.Init(hub, color);
-            onRouteState.SetRouteColor(color);
-            originZone.material.color = color;
-            onRouteState.ClearDestinations();
+            refs.destinationSelector.Init(hub, color);
+            session.SetRouteColor(color);
+            refs.originZone.material.color = color;
+            session.ClearDestinations();
 
             MoveToHub();
 
             this.SetActive(true);
-            routePanel.Show(Id, color, hub.transform.position);
+            refs.routePanel.Show(Id, color, hub.transform.position);
         }
 
         public void Hide()
@@ -104,7 +116,7 @@ namespace DigitalLove.Game.Spaceships
                 return;
             }
 
-            onRouteState.ClearDestinations();
+            session.ClearDestinations();
             this.SetActive(false);
         }
 
@@ -113,12 +125,9 @@ namespace DigitalLove.Game.Spaceships
             if (!isInitialized)
                 Initialize();
 
-            onRouteState.SetEnterSelectingOnEnter(false);
-            onRouteState.SetDestinations(destinations);
-            stateMachine.SetCurrentState<OnRouteState>();
+            session.SetDestinations(destinations);
+            stateMachine.SetCurrentState<SpaceshipRunningState>();
         }
-
-        public void ShowGrabMePanel() => waitingForRouteState.ShowGrabMePanel();
 
         #region Debug
 
@@ -127,10 +136,12 @@ namespace DigitalLove.Game.Spaceships
             if (!isInitialized)
                 Initialize();
 
-            if (stateMachine.IsCurrentState<WaitingForRouteState>())
-                waitingForRouteState.Debug_SimulateGrabSelect();
-            else if (stateMachine.IsCurrentState<OnRouteState>())
-                onRouteState.Debug_SimulateGrabSelect();
+            if (stateMachine.IsCurrentState<SpaceshipIdleState>())
+                idleState.Debug_SimulateGrabSelect();
+            else if (stateMachine.IsCurrentState<SpaceshipSelectingState>())
+                selectingState.Debug_SimulateGrabSelect();
+            else if (stateMachine.IsCurrentState<SpaceshipRunningState>())
+                runningState.Debug_SimulateGrabSelect();
             else
                 Debug.LogWarning($"EditorDebug: Grab select ignored in state {stateMachine.CurrentRoute}.");
         }
@@ -140,17 +151,25 @@ namespace DigitalLove.Game.Spaceships
             if (!isInitialized)
                 return;
 
-            if (stateMachine.IsCurrentState<OnRouteState>())
-                onRouteState.Debug_SimulateGrabRelease();
+            if (stateMachine.IsCurrentState<SpaceshipSelectingState>())
+                selectingState.Debug_SimulateGrabRelease();
+            else if (stateMachine.IsCurrentState<SpaceshipRunningState>())
+                runningState.Debug_SimulateGrabRelease();
             else
                 Debug.LogWarning($"EditorDebug: Grab release ignored in state {stateMachine.CurrentRoute}.");
         }
 
-        public void Debug_ConfirmDestination() => onRouteState.Debug_ConfirmDestination();
+        public void Debug_ConfirmDestination()
+        {
+            if (stateMachine.IsCurrentState<SpaceshipSelectingState>())
+                selectingState.Debug_ConfirmDestination();
+            else if (stateMachine.IsCurrentState<SpaceshipRunningState>())
+                runningState.Debug_ConfirmDestination();
+        }
 
-        public void Debug_InvokeOnLoopEditionButtonClicked() => onRouteState.Debug_InvokeOnLoopEditionButtonClicked();
+        public void Debug_InvokeOnLoopEditionButtonClicked() => runningState.Debug_InvokeOnLoopEditionButtonClicked();
 
-        public SpaceshipRoute Debug_Route => onRouteState.Route;
+        public SpaceshipRoute Debug_Route => session.Route;
 
         #endregion
     }

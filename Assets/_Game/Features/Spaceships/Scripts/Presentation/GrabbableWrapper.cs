@@ -12,6 +12,7 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private Renderer grabbableRenderer;
         [SerializeField] private ConstantRotation constantRotation;
         [SerializeField] private Transform grabZone;
+        [SerializeField] private AudioSource grabAudioSource;
 
         private bool isPointerHandlingEnabled;
 
@@ -73,6 +74,7 @@ namespace DigitalLove.Game.Spaceships
                 case PointerEventType.Select:
                     SetGrabbableRendererVisible(false);
                     selected?.Invoke();
+                    grabAudioSource.Play();
                     break;
                 case PointerEventType.Unselect:
                 case PointerEventType.Cancel:
