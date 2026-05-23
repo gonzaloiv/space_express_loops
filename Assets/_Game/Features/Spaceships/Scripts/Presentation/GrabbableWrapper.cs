@@ -12,8 +12,9 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private GrabZone grabZone;
         [SerializeField] private AudioSource grabAudioSource;
 
-        private bool isListeningForPointerEvents;
+        private bool pointerHandlingEnabled;
         private bool isGrabbed;
+        private bool isPickingDestination;
 
         public Action selected;
         public Action released;
@@ -22,71 +23,59 @@ namespace DigitalLove.Game.Spaceships
 
         public void SetWorldPosition(Vector3 position) => transform.position = position;
 
-        public void BeginDestinationSelection()
+        public void Show(bool pickingDestination = false)
         {
-            Show();
-            SetInteractionActive(true);
-        }
-
-        public void Show()
-        {
-            EnablePointerHandling();
+            isPickingDestination = pickingDestination;
+            pointerHandlingEnabled = true;
             grabbable.SetActive(true);
             grabbable.transform.LocalReset();
             grabZone.SetActive(true);
-            SetGrabbableBodyVisible(!isGrabbed);
+            RefreshBodyVisibility();
         }
 
         public void Hide()
         {
-            DisablePointerHandling();
+            pointerHandlingEnabled = false;
             isGrabbed = false;
+            isPickingDestination = false;
             grabZone.SetActive(false);
-            SetGrabbableBodyVisible(false);
+            RefreshBodyVisibility();
         }
 
-        public void EnablePointerHandling()
-        {
-            if (isListeningForPointerEvents)
-                return;
+        public void EnablePointerHandling() => pointerHandlingEnabled = true;
 
-            isListeningForPointerEvents = true;
-            grabbable.WhenPointerEventRaised += OnPointerEvent;
-        }
+        public void DisablePointerHandling() => pointerHandlingEnabled = false;
 
-        public void DisablePointerHandling()
-        {
-            if (!isListeningForPointerEvents)
-                return;
+        private void OnEnable() => grabbable.WhenPointerEventRaised += OnPointerEvent;
 
-            isListeningForPointerEvents = false;
-            grabbable.WhenPointerEventRaised -= OnPointerEvent;
-        }
+        private void OnDisable() => grabbable.WhenPointerEventRaised -= OnPointerEvent;
 
         private void OnPointerEvent(PointerEvent pointer)
         {
-            if (!isListeningForPointerEvents)
+            if (!pointerHandlingEnabled)
                 return;
 
             switch (pointer.Type)
             {
                 case PointerEventType.Select:
                     isGrabbed = true;
-                    SetGrabbableBodyVisible(false);
+                    RefreshBodyVisibility();
                     selected?.Invoke();
                     grabAudioSource.Play();
                     break;
                 case PointerEventType.Unselect:
                 case PointerEventType.Cancel:
                     isGrabbed = false;
-                    if (grabZone.gameObject.activeSelf)
-                        SetGrabbableBodyVisible(true);
+                    RefreshBodyVisibility();
                     released?.Invoke();
                     break;
             }
         }
 
-        private void SetGrabbableBodyVisible(bool visible) =>
+        private void RefreshBodyVisibility()
+        {
+            bool visible = grabZone.gameObject.activeSelf && !isGrabbed && !isPickingDestination;
             grabbableRenderer.gameObject.SetActive(visible);
+        }
     }
 }

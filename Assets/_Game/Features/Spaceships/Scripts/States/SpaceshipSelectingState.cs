@@ -45,17 +45,17 @@ namespace DigitalLove.Game.Spaceships
 
         private void OnRelease()
         {
-            if (!refs.destinationSelector.IsLookingForDestination)
-                return;
-
-            if (destinationSelection.TryAppendSelectedDestination())
+            switch (destinationSelection.TryConfirmOnRelease(host, restartTravellerLoop: false))
             {
-                host.NotifyLoopChanged();
-                machine.SetCurrentState<SpaceshipRunningState>();
-                return;
+                case SelectionReleaseResult.Ignored:
+                    return;
+                case SelectionReleaseResult.Committed:
+                    machine.SetCurrentState<SpaceshipRunningState>();
+                    return;
+                case SelectionReleaseResult.StayAtStation:
+                    destinationSelection.ShowAtStation();
+                    break;
             }
-
-            destinationSelection.ShowAtStation();
         }
 
         public void Debug_SimulateGrabSelect() => OnSelect();

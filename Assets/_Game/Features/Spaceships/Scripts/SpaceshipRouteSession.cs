@@ -12,7 +12,6 @@ namespace DigitalLove.Game.Spaceships
         private readonly List<PlanetBehaviour> destinations = new();
 
         public TravellerRouteRunner TravellerLoop { get; }
-        public IReadOnlyList<PlanetBehaviour> Destinations => destinations;
         public bool HasDestinations => destinations.Count > 0;
 
         public bool IsLastLegToHub =>
@@ -50,6 +49,19 @@ namespace DigitalLove.Game.Spaceships
                 return false;
 
             destinations.Add(planet);
+            return true;
+        }
+
+        public bool TryCommitDestination(PlanetBehaviour planet, ISpaceshipHost host, bool restartTravellerLoop)
+        {
+            if (!TryAppendDestination(planet))
+                return false;
+
+            if (!restartTravellerLoop)
+                return true;
+
+            RebuildRoute();
+            TravellerLoop.StartLoop(host.Id, host.BuildLoopEventArgs);
             return true;
         }
 

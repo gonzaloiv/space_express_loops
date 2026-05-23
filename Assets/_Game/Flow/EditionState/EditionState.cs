@@ -75,6 +75,8 @@ namespace DigitalLove.Game.Flow
 
         private void SayRoundIntro()
         {
+            if (gameSnapshot.CurrentLetters > 0)
+                return;
             ttsHelper.SetInFrontOfCameraOrDefault(false);
             ttsHelper.SayRoundIntro(roundSelector.CurrentRound, () => { });
         }

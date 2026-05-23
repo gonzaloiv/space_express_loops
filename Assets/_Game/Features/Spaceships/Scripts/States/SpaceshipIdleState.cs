@@ -17,7 +17,6 @@ namespace DigitalLove.Game.Spaceships
         public override void Enter()
         {
             refs.grabMePanel.SetActive(false);
-            refs.grabbableWrapper.EnablePointerHandling();
             refs.grabbableWrapper.selected += OnSelect;
             refs.grabbableWrapper.Show();
             refs.destinationSelector.StartLookingForDestination(false);

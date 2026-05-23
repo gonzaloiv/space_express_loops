@@ -28,7 +28,6 @@ namespace DigitalLove.Game.Spaceships
         {
             refs.routePanel.editButtonClicked += OnEditButtonClick;
             refs.routePanel.SetButtonActive(true);
-            refs.grabbableWrapper.EnablePointerHandling();
             refs.grabbableWrapper.selected += OnSelect;
             refs.grabbableWrapper.released += OnRelease;
             BeginLoop();
@@ -59,15 +58,8 @@ namespace DigitalLove.Game.Spaceships
 
         private void OnRelease()
         {
-            if (!refs.destinationSelector.IsLookingForDestination)
+            if (destinationSelection.TryConfirmOnRelease(host, restartTravellerLoop: true) == SelectionReleaseResult.Ignored)
                 return;
-
-            if (destinationSelection.TryAppendSelectedDestination())
-            {
-                session.RebuildRoute();
-                session.TravellerLoop.StartLoop(host.Id, host.BuildLoopEventArgs);
-                host.NotifyLoopChanged();
-            }
 
             destinationSelection.ShowAtStation();
         }
