@@ -71,7 +71,9 @@ namespace DigitalLove.Game.Spaceships
 
         public SpaceshipBehaviour SpawnNew(HubBehaviour basePlanet)
         {
-            return SpawnSpaceship(idCounter.NextId, basePlanet);
+            SpaceshipBehaviour spaceship = SpawnSpaceship(idCounter.NextId, basePlanet);
+            spaceship.BeginIdle();
+            return spaceship;
         }
 
         private SpaceshipBehaviour SpawnSpaceship(string id, HubBehaviour basePlanet, string colorCode = null)
@@ -148,7 +150,8 @@ namespace DigitalLove.Game.Spaceships
 
         public void SpawnIdle(string id, HubBehaviour basePlanet, string colorCode)
         {
-            SpawnSpaceship(id, basePlanet, colorCode);
+            SpaceshipBehaviour spaceship = SpawnSpaceship(id, basePlanet, colorCode);
+            spaceship.BeginIdle();
         }
 
         public void SpawnFromLoop(string id, HubBehaviour basePlanet, IReadOnlyList<PlanetBehaviour> destinationPlanets, string colorCode)

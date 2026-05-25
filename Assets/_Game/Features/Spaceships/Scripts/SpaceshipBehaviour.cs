@@ -59,8 +59,15 @@ namespace DigitalLove.Game.Spaceships
             selectingState.Init();
             runningState = new SpaceshipRunningState(stateMachine, refs, session, destinationSelection, this);
             stateMachine.Register(new IState[] { idleState, selectingState, runningState });
-            stateMachine.SetCurrentState<SpaceshipIdleState>();
             ApplyLoopHandlers();
+        }
+
+        public void BeginIdle()
+        {
+            if (!isInitialized)
+                Initialize();
+
+            stateMachine.SetCurrentState<SpaceshipIdleState>();
         }
 
         public void Configure(LoopHandlers loopHandlers, ILoopPlanetAvailability availability = null)
@@ -72,8 +79,7 @@ namespace DigitalLove.Game.Spaceships
 
         private void ApplyLoopHandlers()
         {
-            if (session != null)
-                session.SetOnLoopComplete(handlers.Complete);
+            session?.SetOnLoopComplete(handlers.Complete);
         }
 
         private bool QueryHasSelectablePlanetsOffRoute() =>

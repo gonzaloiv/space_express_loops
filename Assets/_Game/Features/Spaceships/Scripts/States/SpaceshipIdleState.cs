@@ -12,6 +12,8 @@ namespace DigitalLove.Game.Spaceships
         {
             this.machine = machine;
             this.refs = refs;
+
+            refs.grabMePanel.SetActive(false);
         }
 
         public override void Enter()
