@@ -49,10 +49,7 @@ namespace DigitalLove.Game.Flow
                 new LoopHandlers(
                     changed: OnLoopChanged,
                     editionClicked: OnLoopEditionButtonClicked,
-                    complete: OnLoopComplete),
-                new LevelLoopPlanetAvailability(
-                    levelContainer.PlanetsSpawner,
-                    levelContainer.HubsSpawner));
+                    complete: OnLoopComplete));
             levelContainer.PlanetsSpawner.SetHandlers(new PlanetHandlers(onPlanetFull: OnPlanetFull));
 
             storePanel.ShowRound(roundSelector.FormattedCurrentRoundIndex);

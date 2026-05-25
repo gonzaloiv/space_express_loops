@@ -19,10 +19,19 @@ namespace DigitalLove.Game.Spaceships
 
         public List<SpaceshipBehaviour> All => spaceships;
 
-        public void SetHandlers(LoopHandlers handlers, ILoopPlanetAvailability planetAvailability = null)
+        public void SetPlanetAvailability(ILoopPlanetAvailability availability)
+        {
+            planetAvailability = availability;
+            foreach (SpaceshipBehaviour spaceship in spaceships)
+            {
+                if (spaceship != null)
+                    WireHandlers(spaceship);
+            }
+        }
+
+        public void SetHandlers(LoopHandlers handlers)
         {
             this.handlers = handlers;
-            this.planetAvailability = planetAvailability;
             foreach (SpaceshipBehaviour spaceship in spaceships)
             {
                 if (spaceship != null)
@@ -33,7 +42,6 @@ namespace DigitalLove.Game.Spaceships
         public void ClearHandlers()
         {
             handlers = default;
-            planetAvailability = null;
             foreach (SpaceshipBehaviour spaceship in spaceships)
             {
                 if (spaceship != null)

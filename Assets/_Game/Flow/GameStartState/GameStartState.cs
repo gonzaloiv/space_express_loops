@@ -29,7 +29,7 @@ namespace DigitalLove.Game.Flow
         public override void Init(StateMachine parent)
         {
             base.Init(parent);
-            levelContainer.HideAll();
+            levelContainer.Init();
             highScorePoster.Hide();
         }
 

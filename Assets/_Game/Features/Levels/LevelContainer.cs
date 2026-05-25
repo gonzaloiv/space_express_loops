@@ -22,6 +22,12 @@ namespace DigitalLove.Game.Levels
         public SpaceshipsSpawner SpaceshipsSpawner => spaceshipsSpawner;
         public HubsSpawner HubsSpawner => hubsSpawner;
 
+        public void Init()
+        {
+            spaceshipsSpawner.SetPlanetAvailability(new LevelLoopPlanetAvailability(planetsSpawner, hubsSpawner));
+            HideAll();
+        }
+
         public void SyncIdCounters(GameSnapshot gameSnapshot)
         {
             planetsSpawner.SyncIdsFromSnapshot(gameSnapshot.planets.Select(p => p.id));
