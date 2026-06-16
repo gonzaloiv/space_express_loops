@@ -124,7 +124,6 @@ namespace DigitalLove.Game.Levels
 
         public void StartFresh(Action onComplete)
         {
-            RoomDataClient.ClearSaved();
             mrukRoomAnchorsContainer.Clear();
             SetRoomBasedPose(onComplete);
         }

@@ -6,6 +6,7 @@ using Reflex.Attributes;
 using UnityEngine;
 using DigitalLove.Game.TTS;
 using DigitalLove.Game.UI;
+using DigitalLove.Casual.UI;
 
 namespace DigitalLove.Game.Flow
 {
@@ -15,8 +16,11 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private RoundSelector roundSelector;
         [SerializeField] private GameSnapshotClient gameSnapshotClient;
         [SerializeField] private MonoState nextState;
+
+        [Header("UI")]
         [SerializeField] private TTSHelper ttsHelper;
         [SerializeField] private HighScorePosterBehaviour highScorePoster;
+        [SerializeField] private ReviewPanel reviewPanel;
 
         [Header("Debug")]
         [SerializeField] private PlayerData playerData;
@@ -30,12 +34,14 @@ namespace DigitalLove.Game.Flow
             base.Init(parent);
             levelContainer.Init();
             highScorePoster.Hide();
+            reviewPanel.Hide();
         }
 
         public override void Enter()
         {
             InitData();
             highScorePoster.Show();
+            reviewPanel.Show();
 
             if (gameSnapshot.HasPlanets)
                 ResumeLevel();

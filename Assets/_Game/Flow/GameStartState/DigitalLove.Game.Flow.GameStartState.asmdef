@@ -17,7 +17,8 @@
         "DigitalLove.Game.TTS",
         "DigitalLove.Casual.Flow",
         "DigitalLove.XR.MRUK",
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "DigitalLove.Casual.UI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
