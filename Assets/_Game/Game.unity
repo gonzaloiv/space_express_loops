@@ -2780,11 +2780,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 293537579609928605, guid: e303eb4a8c70159448a8141112e9be94, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.00026
+      value: 0.0003
       objectReference: {fileID: 0}
     - target: {fileID: 293537579609928605, guid: e303eb4a8c70159448a8141112e9be94, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.00026
+      value: 0.0003
       objectReference: {fileID: 0}
     - target: {fileID: 939283433641555046, guid: e303eb4a8c70159448a8141112e9be94, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2856,12 +2856,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1066275072159543074, guid: e303eb4a8c70159448a8141112e9be94, type: 3}
       propertyPath: forceShow.value
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1066275072159543074, guid: e303eb4a8c70159448a8141112e9be94, type: 3}
       propertyPath: ovrSessionEventsHelper
       value: 
       objectReference: {fileID: 1210227668}
+    - target: {fileID: 1066275072159543074, guid: e303eb4a8c70159448a8141112e9be94, type: 3}
+      propertyPath: firstSessionToShowCount
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1074655838932017617, guid: e303eb4a8c70159448a8141112e9be94, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -11536,7 +11540,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 723.08496, y: -50}
-  m_SizeDelta: {x: 243.83, y: 50}
+  m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1213392285
 MonoBehaviour:

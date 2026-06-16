@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DigitalLove.Game.Nodes;
@@ -130,20 +131,24 @@ namespace DigitalLove.Game.Levels
 
         public void SetRoomBasedPose(Action onComplete)
         {
-            MRUKRoom room = MRUK.Instance.GetCurrentRoom();
-            if (room == null)
-            {
-                Debug.LogWarning("[LevelContainer] No MRUK room available; skipping room-based pose setup.");
-                onComplete();
-                return;
-            }
+            StartCoroutine(SetRoomBasedPoseRoutine(onComplete));
+        }
 
+        private IEnumerator SetRoomBasedPoseRoutine(Action onComplete)
+        {
+            while (MRUK.Instance == null || !MRUK.Instance.IsInitialized || MRUK.Instance.GetCurrentRoom() == null || Camera.main == null)
+                yield return null;
+
+            yield return null;
+
+            MRUKRoom room = MRUK.Instance.GetCurrentRoom();
             Pose originPose = new()
             {
                 position = room.Center(),
                 rotation = room.transform.rotation
             };
-            mrukRoomAnchorsContainer.InitAndLoadRoomAnchors("UniqueRoomName", originPose, anchors =>
+
+            mrukRoomAnchorsContainer.InitAndLoadRoomAnchors(originPose, _ =>
             {
                 if (!mrukRoomAnchorsContainer.TryGetOVRAnchorPose(out Pose toSet))
                 {
@@ -153,7 +158,7 @@ namespace DigitalLove.Game.Levels
 
                 transform.position = toSet.position;
                 transform.rotation = toSet.rotation;
-                onComplete();
+                onComplete?.Invoke();
             });
         }
 
