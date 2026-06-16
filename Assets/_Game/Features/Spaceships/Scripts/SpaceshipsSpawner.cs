@@ -148,16 +148,13 @@ namespace DigitalLove.Game.Spaceships
             return availableColors[UnityEngine.Random.Range(0, availableColors.Length)];
         }
 
-        public void SpawnIdle(string id, HubBehaviour basePlanet, string colorCode)
+        public void SpawnRestored(string id, HubBehaviour hub, IReadOnlyList<PlanetBehaviour> destinations, string colorCode)
         {
-            SpaceshipBehaviour spaceship = SpawnSpaceship(id, basePlanet, colorCode);
-            spaceship.BeginIdle();
-        }
-
-        public void SpawnFromLoop(string id, HubBehaviour basePlanet, IReadOnlyList<PlanetBehaviour> destinationPlanets, string colorCode)
-        {
-            SpaceshipBehaviour spaceship = SpawnSpaceship(id, basePlanet, colorCode);
-            spaceship.SetRoute(destinationPlanets);
+            SpaceshipBehaviour spaceship = SpawnSpaceship(id, hub, colorCode);
+            if (destinations is { Count: > 0 })
+                spaceship.SetRoute(destinations);
+            else
+                spaceship.BeginIdle();
         }
 
         public void HideAll()

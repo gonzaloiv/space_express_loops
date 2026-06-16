@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using DigitalLove.Game.Nodes;
 using DigitalLove.Game.Spaceships;
 using Newtonsoft.Json;
@@ -28,28 +29,43 @@ namespace DigitalLove.Game.Persistence
         [JsonIgnore] public bool HasPlanets => planets != null && planets.Count > 0;
         [JsonIgnore] public bool HasHubs => hubs != null && hubs.Count > 0;
         [JsonIgnore] public bool HasLoops => loops != null && loops.Count > 0;
-        [JsonIgnore] public bool HasAnyLoopWithDestinations =>
-            loops != null && loops.Exists(l => l.HasDestinations);
+        [JsonIgnore] public bool HasAnyLoopWithDestinations => loops != null && loops.Exists(l => l.HasDestinations);
         [JsonIgnore] public bool IsCurrentRoundLetterGoalMet => store != null && store.letters >= lettersRequiredForRoundCompletion;
 
         public GameSnapshot()
         {
             roundIndex = 0;
-            planets = new();
-            hubs = new();
-            loops = new();
-            store = new();
+            EnsureInitialized();
         }
 
-        public void SetPlanets(List<PlanetData> toSet)
+        [OnDeserialized]
+        internal void OnDeserialized(StreamingContext context) => EnsureInitialized();
+
+        private void EnsureInitialized()
         {
-            planets = toSet;
+            planets ??= new();
+            hubs ??= new();
+            loops ??= new();
+            store ??= new();
+
+            foreach (LoopData loop in loops)
+                loop.destinationIds ??= new();
         }
 
-        public void SetOnUpdated(Action onUpdated)
+        public static GameSnapshot FromCookieMetadata(string metadata) =>
+            string.IsNullOrEmpty(metadata)
+                ? new GameSnapshot()
+                : JsonConvert.DeserializeObject<GameSnapshot>(metadata) ?? new GameSnapshot();
+
+        public void EnsureLettersRequiredForRound(float lettersIncreaseMultiplier)
         {
-            this.onUpdated = onUpdated;
+            if (lettersRequiredForRoundCompletion <= 0)
+                RecalculateLettersRequiredForRound(lettersIncreaseMultiplier);
         }
+
+        public void SetOnUpdated(Action onUpdated) => this.onUpdated = onUpdated;
+
+        private void NotifyUpdated() => onUpdated?.Invoke();
 
         /// <summary>
         /// Sets <see cref="lettersRequiredForRoundCompletion"/> from current planet and loop counts.
@@ -57,89 +73,62 @@ namespace DigitalLove.Game.Persistence
         /// </summary>
         public void RecalculateLettersRequiredForRound(float lettersIncreaseMultiplier)
         {
-            int planetCount = planets?.Count ?? 0;
-            int routeCount = loops?.Count ?? 0;
-            float raw = BaseLettersPerRoundCompletion * planetCount * routeCount * lettersIncreaseMultiplier;
+            float raw = BaseLettersPerRoundCompletion * planets.Count * loops.Count * lettersIncreaseMultiplier;
             lettersRequiredForRoundCompletion = Mathf.Max(1, Mathf.RoundToInt(raw));
-            onUpdated?.Invoke();
+            NotifyUpdated();
         }
-
-        // ? Updates
 
         public void IncreaseRoundIndex()
         {
             roundIndex++;
-            onUpdated?.Invoke();
+            NotifyUpdated();
         }
 
         public void ResetLettersForNewRound()
         {
-            store ??= new Store();
             store.ResetLetters();
-            onUpdated?.Invoke();
+            NotifyUpdated();
         }
 
         public void AddPlanets(List<PlanetData> toAdd)
         {
             planets.AddRange(toAdd);
-            onUpdated?.Invoke();
+            NotifyUpdated();
         }
 
         public void AddHub(HubData toAdd)
         {
-            hubs ??= new();
             HubData existing = hubs.FirstOrDefault(h => string.Equals(h.id, toAdd.id));
             if (existing != null)
                 hubs.Remove(existing);
             hubs.Add(toAdd);
-            onUpdated?.Invoke();
+            NotifyUpdated();
         }
 
-        public HubData GetHubById(string hubId)
-        {
-            if (hubs == null || string.IsNullOrEmpty(hubId))
-                return null;
-            return hubs.FirstOrDefault(h => string.Equals(h.id, hubId));
-        }
+        public HubData GetHubById(string hubId) =>
+            string.IsNullOrEmpty(hubId) ? null : hubs.FirstOrDefault(h => string.Equals(h.id, hubId));
 
         public void SaveLoop(LoopData loopData)
         {
-            loops ??= new();
             LoopData existing = loops.FirstOrDefault(l => string.Equals(l.spaceshipId, loopData.spaceshipId));
             if (existing != null)
-            {
-                existing.destinationIds = loopData.destinationIds != null
-                    ? new List<string>(loopData.destinationIds)
-                    : new();
-                existing.colorCode = loopData.colorCode;
-                existing.hubId = loopData.hubId;
-            }
+                existing.CopyFrom(loopData);
             else
-            {
-                loops.Add(new LoopData
-                {
-                    spaceshipId = loopData.spaceshipId,
-                    destinationIds = loopData.destinationIds != null
-                        ? new List<string>(loopData.destinationIds)
-                        : new(),
-                    colorCode = loopData.colorCode,
-                    hubId = loopData.hubId
-                });
-            }
+                loops.Add(LoopData.From(loopData));
 
-            onUpdated?.Invoke();
+            NotifyUpdated();
         }
 
         public void IncreaseLettersAndMoney(int lettersValue, int moneyValue)
         {
             store.IncreaseLettersAndMoney(lettersValue, moneyValue);
-            onUpdated?.Invoke();
+            NotifyUpdated();
         }
 
         public void SpendMoney(int value)
         {
             store.SpendMoney(value);
-            onUpdated?.Invoke();
+            NotifyUpdated();
         }
 
         public void RemoveLoopBySpaceshipId(string spaceshipId, int cost)
@@ -148,7 +137,7 @@ namespace DigitalLove.Game.Persistence
             if (toRemove != null)
                 loops.Remove(toRemove);
             store.SpendMoney(cost);
-            onUpdated?.Invoke();
+            NotifyUpdated();
         }
     }
 }

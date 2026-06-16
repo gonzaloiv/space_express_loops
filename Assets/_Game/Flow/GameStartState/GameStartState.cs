@@ -2,11 +2,9 @@ using DigitalLove.DataAccess;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Levels;
 using DigitalLove.Game.Persistence;
-using Newtonsoft.Json;
 using Reflex.Attributes;
 using UnityEngine;
 using DigitalLove.Game.TTS;
-using DigitalLove.Casual.Flow;
 using DigitalLove.Game.UI;
 
 namespace DigitalLove.Game.Flow
@@ -25,6 +23,7 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private GameSnapshot gameSnapshot;
 
         [Inject] private MemoryDataClient memoryDataClient;
+        [Inject] private UnityPlayerDataClient unityPlayerDataClient;
 
         public override void Init(StateMachine parent)
         {
@@ -37,46 +36,53 @@ namespace DigitalLove.Game.Flow
         {
             InitData();
             highScorePoster.Show();
-            if (!gameSnapshot.HasPlanets)
-            {
-                SpawnLevelFromInitialRound();
-            }
+
+            if (gameSnapshot.HasPlanets)
+                ResumeLevel();
             else
-            {
-                RespawnFromData();
-            }
+                BeginFreshLevel();
         }
 
         private void InitData()
         {
             playerData = memoryDataClient.Get<PlayerData>();
-            gameSnapshot = playerData.HasCookie(GameSnapshot.CookieKey) ? playerData.GetGameSnapshot() : new();
+            gameSnapshot = playerData.HasCookie(GameSnapshot.CookieKey)
+                ? GameSnapshot.FromCookieMetadata(playerData.GetCookieById(GameSnapshot.CookieKey).metadata)
+                : new();
             gameSnapshot.SetOnUpdated(() => gameSnapshotClient.SetHasToUpdate());
             memoryDataClient.Put(gameSnapshot);
             roundSelector.SetCurrentRound(gameSnapshot.roundIndex);
             levelContainer.SyncIdCounters(gameSnapshot);
         }
 
-        private void SpawnLevelFromInitialRound()
+        private void BeginFreshLevel()
         {
-            levelContainer.SetRoomBasedPose(() =>
+            PersistPlayerDataThenStartFresh();
+        }
+
+        private async void PersistPlayerDataThenStartFresh()
+        {
+            if (unityPlayerDataClient.IsReady)
+                await unityPlayerDataClient.Put(playerData);
+
+            levelContainer.StartFresh(() =>
             {
-                levelContainer.SpawnInitialRound(roundSelector.CurrentRound, gameSnapshot);
+                levelContainer.SpawnRound(roundSelector.CurrentRound, gameSnapshot);
                 gameSnapshot.RecalculateLettersRequiredForRound(roundSelector.CurrentRound.lettersIncreaseMultiplier);
-                ttsHelper.SetInFrontOfCameraOrDefault(true);
-                ttsHelper.Say("welcome_message", ToNextState);
+                FinishStart("welcome_message");
             });
         }
 
-        private void RespawnFromData()
+        private void ResumeLevel()
         {
-            levelContainer.SetRoomBasedPose(() =>
-            {
-                roundSelector.SetCurrentRound(gameSnapshot.roundIndex);
-                levelContainer.RespawnFromData(gameSnapshot);
-                ttsHelper.SetInFrontOfCameraOrDefault(true);
-                ttsHelper.Say("welcome_back_message", ToNextState);
-            });
+            gameSnapshot.EnsureLettersRequiredForRound(roundSelector.CurrentRound.lettersIncreaseMultiplier);
+            levelContainer.RestoreFromSnapshot(gameSnapshot, () => FinishStart("welcome_back_message"));
+        }
+
+        private void FinishStart(string messageKey)
+        {
+            ttsHelper.SetInFrontOfCameraOrDefault(true);
+            ttsHelper.Say(messageKey, ToNextState);
         }
 
         private void ToNextState()
@@ -86,14 +92,5 @@ namespace DigitalLove.Game.Flow
         }
 
         public override void Exit() { }
-    }
-
-    public static class GameStartStateExtensions
-    {
-        public static GameSnapshot GetGameSnapshot(this PlayerData playerData)
-        {
-            string metadata = playerData.GetCookieById(GameSnapshot.CookieKey).metadata;
-            return JsonConvert.DeserializeObject<GameSnapshot>(metadata);
-        }
     }
 }
