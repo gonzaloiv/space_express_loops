@@ -1844,6 +1844,7 @@ MonoBehaviour:
   initialState: {fileID: 1730347950}
   locale: {fileID: 11400000, guid: ef5f93a95eb7b214c98395886e20e196, type: 2}
   analyticsProviderInstaller: {fileID: 1210227671}
+  playerControllerInstaller: {fileID: 0}
   playerData:
     userId: 
     sessionCount: 0
@@ -10374,6 +10375,7 @@ MonoBehaviour:
   label: {fileID: 116636217}
   image: {fileID: 0}
   button: {fileID: 964978566}
+  audioSource: {fileID: 0}
 --- !u!114 &964978563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11540,7 +11542,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 723.08496, y: -50}
-  m_SizeDelta: {x: 0, y: 50}
+  m_SizeDelta: {x: 243.83, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1213392285
 MonoBehaviour:
@@ -12107,6 +12109,7 @@ MonoBehaviour:
   - {fileID: 1260132456}
   isFollowing: 1
   secsToMove: 0.33
+  updateCheckSecs: 1
 --- !u!114 &1363334525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12761,6 +12764,7 @@ MonoBehaviour:
   label: {fileID: 1891980505}
   image: {fileID: 0}
   button: {fileID: 1488466821}
+  audioSource: {fileID: 0}
 --- !u!114 &1488466823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13275,6 +13279,7 @@ MonoBehaviour:
   label: {fileID: 435364277}
   image: {fileID: 0}
   button: {fileID: 1634309641}
+  audioSource: {fileID: 0}
 --- !u!114 &1634309639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13507,6 +13512,7 @@ MonoBehaviour:
   - {fileID: 515506653}
   isFollowing: 0
   secsToMove: 0.66
+  updateCheckSecs: 1
 --- !u!4 &1659655773 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8702425413754196322, guid: 0a7d2469f24041c4284c66706f84c45e, type: 3}
@@ -13851,8 +13857,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3f8c2d14e5b7091a4c6d8e2f0b93746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.DebugActions::DigitalLove.Game.DebugActions.RoundDebugActions
-  editionState: {fileID: 250434374}
-  newRoundState: {fileID: 1324782179}
+  editionState: {fileID: 0}
+  newRoundState: {fileID: 0}
 --- !u!1 &1718389704
 GameObject:
   m_ObjectHideFlags: 0
@@ -14182,7 +14188,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.App.States.Setup::DigitalLove.Casual.Flow.Setup.SetupState
   nextState: {fileID: 883682824}
   setupFunnelHelper: {fileID: 1210227667}
-  ovrSessionEventsHelper: {fileID: 1210227668}
   internetChecker: {fileID: 1730347952}
   deviceNotSupportedPanel: {fileID: 3258995010952126743}
   forceDeviceNotSupportedPanel:
@@ -14203,10 +14208,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.App.Setup::DigitalLove.App.ScenefulOriginSetup
   spaceSetupRequiredPanel: {fileID: 3258995010952126741}
-  forceSceneSetupPanel:
-    value: 0
   launchFunnelHelper: {fileID: 1210227667}
   mrukUtil: {fileID: 1569995676}
+  mrukRoot: {fileID: 0}
+  forceSceneSetupPanel:
+    value: 0
+  skipMRUK:
+    value: 0
 --- !u!114 &1730347952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16484,6 +16492,7 @@ MonoBehaviour:
   label: {fileID: 0}
   image: {fileID: 0}
   button: {fileID: 781987398}
+  audioSource: {fileID: 0}
 --- !u!1001 &2096158474
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17510,6 +17519,7 @@ MonoBehaviour:
   - {fileID: 4737829908927659249}
   isFollowing: 1
   secsToMove: 1
+  updateCheckSecs: 1
 --- !u!114 &3258995010952126741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17596,6 +17606,7 @@ MonoBehaviour:
   - {fileID: 951237333116177123}
   isFollowing: 1
   secsToMove: 0.33
+  updateCheckSecs: 1
 --- !u!222 &3569697545815346046
 CanvasRenderer:
   m_ObjectHideFlags: 0
