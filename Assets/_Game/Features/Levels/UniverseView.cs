@@ -34,6 +34,8 @@ namespace DigitalLove.Game.Levels
         public bool IsTransitioning => isTransitioning;
         public bool HasRoomAnchor => hasRoomAnchor;
         public float Scale => transform.localScale.x;
+        public float ContentRadius => contentRadius;
+        public float MiniScale => Mathf.Clamp(miniBubbleRadius / contentRadius, minMiniScale, 1f);
         public Transform ContentRoot => transform;
 
         private void Awake()

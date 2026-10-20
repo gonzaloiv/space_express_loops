@@ -2,7 +2,9 @@
 
 **Status:** follow-up after the [two views](universe-two-views.md) are working.
 
-**Related:** [Two views](universe-two-views.md)
+**Related:** [Two views](universe-two-views.md) · [Interaction unification](interaction-unification.md)
+
+**Wiring rule:** ghost, handles, proxies, and coordinator references are authored in the scene/prefabs. No runtime `AddComponent`, injection, or disabled unused components., [Galaxies and level/round creation](universe-galaxies.md)
 
 ## 1. Goal
 
@@ -104,7 +106,7 @@ Idle
 
 ### 5.3 Coordinator
 
-`UniverseGrabCoordinator`:
+`UniverseGhostController`:
 
 - requires two distinct planets and two distinct hands/interactors;
 - rejects the same planet twice and the same hand twice;
@@ -189,7 +191,7 @@ Physics triggers are not the arrival test; route completion is animation-based, 
 | `UniverseGhostView` | Boundary ghost; extends from scale to yaw/translation preview. | Two views A2 / B0 |
 | `UniverseGhostSession` | Start pose, hand distance, dead zone, clamp/rebase. | Two views A2 |
 | `PlanetUniverseHandle` | Per-planet pinch handle; no planet movement. | Two views A2 |
-| `UniverseGrabCoordinator` | Two-hand acquisition, validation, session lifecycle. | Two views A2 |
+| `UniverseGhostController` | Two-hand acquisition, validation, ghost preview, session lifecycle, commit. | Two views A2 |
 | `UniverseTransformGate` | Pauses routes during an active transform and resumes after commit. | B0 |
 | `UniverseSimilaritySolver` | Pure two-pose similarity math and tests. | Option B |
 | `TwoHandUniverseSession` | Continuous session state, smoothing, limits. | Option B |

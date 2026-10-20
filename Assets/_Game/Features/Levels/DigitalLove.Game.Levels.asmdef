@@ -8,7 +8,8 @@
         "meta.xr.mrutilitykit",
         "DigitalLove.Global",
         "DigitalLove.XR.MRUK",
-        "DigitalLove.Game.Persistence"
+        "DigitalLove.Game.Persistence",
+        "Oculus.Interaction"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

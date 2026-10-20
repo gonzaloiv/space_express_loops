@@ -2,7 +2,9 @@
 
 **Status:** first implementation step. Scale only; no rotation or translation.
 
-**Related:** [Transforming the universe](universe-transform.md)
+**Related:** [Transforming the universe](universe-transform.md) · [Interaction unification](interaction-unification.md)
+
+**Wiring rule:** components, references, and the ghost are authored in the scene/prefabs. Do not use runtime `AddComponent`, injection, or disabling of unused components. The current runtime auto-add/creation is provisional and will be removed., [Galaxies and level/round creation](universe-galaxies.md)
 
 ## 1. Goal
 
@@ -226,7 +228,7 @@ A wireframe/translucent sphere is enough for this step. Do not build a content g
 
 ## 7. Component map
 
-Prototype note: `UniverseView` currently lives in `DigitalLove.Game.Levels` so the two-view foundation can share the existing Level assembly. Move it to a dedicated `DigitalLove.Game.Universe` asmdef when the planet handles and scale coordinator arrive in Phase A2.
+Prototype note: `UniverseView` currently lives in `DigitalLove.Game.Levels` so the two-view foundation can share the existing Level assembly. Move it to a dedicated `DigitalLove.Game.Universe` asmdef when the planet handles and scale coordinator arrive in Phase A2. It must be authored on the `Level` scene object; runtime auto-add is temporary and will be removed.
 
 New under `Assets/_Game/Features/Universe/` with asmdef `DigitalLove.Game.Universe`:
 
@@ -237,9 +239,8 @@ New under `Assets/_Game/Features/Universe/` with asmdef `DigitalLove.Game.Univer
 | `UniverseBubbleView` | Boundary ghost visual and fade. |
 | `UniverseBubblePlacement` | Computes the bubble pose **always in front of the current player**. |
 | `PlanetUniverseHandle` | Per-planet pinch handle for the two-hand scale gesture; does not move the planet. |
-| `UniverseGrabCoordinator` | One-hand/two-hand state machine, distinct-planet validation, scale session lifecycle. |
-| `UniverseScaleSession` | Start hand distance, gearing, dead zone, clamp/rebase, ghost scale. |
-| `UniverseGhostView` | Boundary ghost scaling and threshold events. |
+| `UniverseGhostController` | Owns the one-hand/two-hand state machine, scale session, ghost preview, thresholds, route pause, and commit. References `UniverseView` and the ghost visual through serialized fields. |
+| `UniverseGhostView` | Pure authored ghost visual: three LineRenderers in the scene/prefab; show/hide, position, scale, width. No runtime creation. |
 | `UniverseViewDebug` | Optional `[Button]`/temporary toggle for development. |
 
 Modified:
@@ -268,6 +269,7 @@ Modified:
 ### Phase A1 — View poses and transition
 
 - Implement `UniverseView` with `D_room`, `D_mini`, and the animated transition.
+- Add `UniverseView` to the `Level` object in `Game.unity` and serialize its references; remove the runtime auto-add.
 - Wire `LevelContainer.SetRoomBasedPose` to `UniverseView.SetRoomAnchor`.
 - Gate all view math on MRUK room bounds/anchor readiness.
 - Add an optional debug toggle to validate the poses before the gesture exists.
@@ -278,9 +280,10 @@ Modified:
 
 ### Phase A2 — Two-hand scale gesture and ghost commit
 
-- Add `PlanetUniverseHandle` to the planet template with a scale-friendly collider on a dedicated handle layer, excluded from the destination ray mask.
-- Implement `UniverseGrabCoordinator` and the one-hand/two-hand state machine.
-- Implement `UniverseScaleSession` and `UniverseGhostView`.
+- Add a preconfigured `PlanetUniverseHandle` child to the planet template with a scale-friendly collider on a dedicated handle layer, excluded from the destination ray mask.
+- Add the shared `Grabbable` proxy and the `UniverseGhostView` hierarchy to the scene.
+- Add `UniverseGhostController` to `Level` in the scene with serialized references to `UniverseView`, the ghost visual, planets/spaceships spawners, and both hands; remove runtime creation.
+- Implement the one-hand/two-hand state machine and scale session inside the controller.
 - Scale the boundary ghost in real time from hand separation, centered on the hand midpoint.
 - Commit to Room/Bubble at the thresholds with hysteresis and the A1 transition.
 - Gate the gesture while spawning and until two planets exist.

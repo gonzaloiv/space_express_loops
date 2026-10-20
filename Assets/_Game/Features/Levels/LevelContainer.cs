@@ -25,19 +25,8 @@ namespace DigitalLove.Game.Levels
         public HubsSpawner HubsSpawner => hubsSpawner;
         public UniverseView UniverseView => universeView;
 
-        private void Awake()
-        {
-            if (universeView == null)
-                universeView = GetComponent<UniverseView>();
-            if (universeView == null)
-                universeView = gameObject.AddComponent<UniverseView>();
-        }
-
         private void OnDisable()
         {
-            if (universeView == null)
-                return;
-
             universeView.TransitionStarted -= OnViewTransitionStarted;
             universeView.TransitionCompleted -= OnViewTransitionCompleted;
         }
@@ -194,15 +183,7 @@ namespace DigitalLove.Game.Levels
                     toSet = originPose;
                 }
 
-                if (universeView != null)
-                {
-                    universeView.SetRoomAnchor(toSet, roomBounds);
-                }
-                else
-                {
-                    transform.position = toSet.position;
-                    transform.rotation = toSet.rotation;
-                }
+                universeView.SetRoomAnchor(toSet, roomBounds);
                 onComplete?.Invoke();
             });
         }
