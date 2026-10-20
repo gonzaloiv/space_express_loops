@@ -5,7 +5,7 @@ using UnityEngine.Profiling;
 
 // /////////////////////////////////////////////////////////////////////////////////////////
 //                              More Effective Coroutines
-//                                        v3.17.0
+//                                        v3.18.0
 // 
 // This is an improved implementation of coroutines that boasts zero per-frame memory allocations,
 // runs about twice as fast as Unity's built in coroutines and has a range of extra features.
@@ -58,6 +58,11 @@ namespace MEC
         /// </summary>
         [Tooltip("A count of the number of SlowUpdate coroutines that are currently running.")]
         public int SlowUpdateCoroutines;
+        /// <summary>
+        /// The number of coroutines that are being run in the RealtimeUpdate segment.
+        /// </summary>
+        [Tooltip("A count of the number of RealtimeUpdate coroutines that are currently running.")]
+        public int RealtimeUpdateCoroutines;
         /// <summary>
         /// The time in seconds that the current segment has been running.
         /// </summary>
@@ -117,18 +122,22 @@ namespace MEC
         private int _currentUpdateFrame;
         private int _currentLateUpdateFrame;
         private int _currentSlowUpdateFrame;
+        private int _currentRealtimeUpdateFrame;
         private int _nextUpdateProcessSlot;
         private int _nextLateUpdateProcessSlot;
         private int _nextFixedUpdateProcessSlot;
         private int _nextSlowUpdateProcessSlot;
+        private int _nextRealtimeUpdateProcessSlot;
         private int _lastUpdateProcessSlot;
         private int _lastLateUpdateProcessSlot;
         private int _lastFixedUpdateProcessSlot;
         private int _lastSlowUpdateProcessSlot;
+        private int _lastRealtimeUpdateProcessSlot;
         private float _lastUpdateTime;
         private float _lastLateUpdateTime;
         private float _lastFixedUpdateTime;
         private float _lastSlowUpdateTime;
+        private float _lastRealtimeUpdateTime;
         private float _lastSlowUpdateDeltaTime;
         private ushort _framesSinceUpdate;
         private ushort _expansions = 1;
@@ -149,15 +158,18 @@ namespace MEC
         private IEnumerator<float>[] LateUpdateProcesses = new IEnumerator<float>[InitialBufferSizeSmall];
         private IEnumerator<float>[] FixedUpdateProcesses = new IEnumerator<float>[InitialBufferSizeMedium];
         private IEnumerator<float>[] SlowUpdateProcesses = new IEnumerator<float>[InitialBufferSizeMedium];
+        private IEnumerator<float>[] RealtimeUpdateProcesses = new IEnumerator<float>[InitialBufferSizeSmall];
 
         private bool[] UpdatePaused = new bool[InitialBufferSizeLarge];
         private bool[] LateUpdatePaused = new bool[InitialBufferSizeSmall];
         private bool[] FixedUpdatePaused = new bool[InitialBufferSizeMedium];
         private bool[] SlowUpdatePaused = new bool[InitialBufferSizeMedium];
+        private bool[] RealtimeUpdatePaused = new bool[InitialBufferSizeSmall];
         private bool[] UpdateHeld = new bool[InitialBufferSizeLarge];
         private bool[] LateUpdateHeld = new bool[InitialBufferSizeSmall];
         private bool[] FixedUpdateHeld = new bool[InitialBufferSizeMedium];
         private bool[] SlowUpdateHeld = new bool[InitialBufferSizeMedium];
+        private bool[] RealtimeUpdateHeld = new bool[InitialBufferSizeSmall];
 
         private const ushort FramesUntilMaintenance = 64;
         private const int ProcessArrayChunkSize = 64;
@@ -403,6 +415,159 @@ namespace MEC
                         if (ex is MissingReferenceException)
                             Debug.LogError("This exception can probably be fixed by adding \"CancelWith(gameObject)\" when you run the coroutine.\n"
                                 + "Example: Timing.RunCoroutine(_foo().CancelWith(gameObject), Segment.SlowUpdate);");
+                    }
+                }
+            }
+
+            if (_nextRealtimeUpdateProcessSlot > 0)
+            {
+                ProcessIndex coindex = new ProcessIndex { seg = Segment.RealtimeUpdate };
+                if (UpdateTimeValues(coindex.seg))
+                    _lastRealtimeUpdateProcessSlot = _nextRealtimeUpdateProcessSlot;
+
+                for (coindex.i = 0; coindex.i < _lastRealtimeUpdateProcessSlot; coindex.i++)
+                {
+                    try
+                    {
+                        if (!RealtimeUpdatePaused[coindex.i] && !RealtimeUpdateHeld[coindex.i] && RealtimeUpdateProcesses[coindex.i] != null && !(localTime < RealtimeUpdateProcesses[coindex.i].Current))
+                        {
+                            currentCoroutine = _indexToHandle[coindex];
+
+                            if (ProfilerDebugAmount != DebugInfoType.None)
+                            {
+                                Profiler.BeginSample(ProfilerDebugAmount == DebugInfoType.SeparateTags ? ("Processing Coroutine (Realtime Update)" +
+                                        (_processTags.ContainsKey(_indexToHandle[coindex]) ? ", tag " + _processTags[_indexToHandle[coindex]] : ", no tag"))
+                                        : "Processing Coroutine (Realtime Update)");
+                            }
+
+                            if (!RealtimeUpdateProcesses[coindex.i].MoveNext())
+                            {
+                                if (_indexToHandle.ContainsKey(coindex))
+                                {
+                                    CoroutineHandle finishedHandle = _indexToHandle[coindex];
+                                    KillCoroutinesOnInstance(finishedHandle);
+
+                                    if (_pendingResume.ContainsKey(finishedHandle))
+                                    {
+                                        var waiters = _pendingResume[finishedHandle];
+                                        var waiterEnum = waiters.GetEnumerator();
+                                        while (waiterEnum.MoveNext())
+                                        {
+                                            if (_handleToIndex.ContainsKey(waiterEnum.Current))
+                                            {
+                                                ProcessIndex waiterIndex = _handleToIndex[waiterEnum.Current];
+                                                if (waiterIndex.seg == Segment.RealtimeUpdate && waiterIndex.i < coindex.i)
+                                                {
+                                                    if (_resumeCount == _resumeBuffer.Length)
+                                                    {
+                                                        int[] newBuffer = new int[_resumeBuffer.Length * 2];
+                                                        for (int j = 0; j < _resumeBuffer.Length; j++)
+                                                            newBuffer[j] = _resumeBuffer[j];
+                                                        _resumeBuffer = newBuffer;
+                                                    }
+                                                    _resumeBuffer[_resumeCount++] = waiterIndex.i;
+                                                }
+                                            }
+                                        }
+                                        _pendingResume.Remove(finishedHandle);
+                                    }
+                                }
+                            }
+                            else if (RealtimeUpdateProcesses[coindex.i] != null && float.IsNaN(RealtimeUpdateProcesses[coindex.i].Current))
+                            {
+                                if (ReplacementFunction != null)
+                                {
+                                    RealtimeUpdateProcesses[coindex.i] = ReplacementFunction(RealtimeUpdateProcesses[coindex.i], _indexToHandle[coindex]);
+                                    ReplacementFunction = null;
+                                }
+                                coindex.i--;
+                            }
+
+                            if (ProfilerDebugAmount != DebugInfoType.None)
+                                Profiler.EndSample();
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Debug.LogException(ex);
+
+                        if (ex is MissingReferenceException)
+                            Debug.LogError("This exception can probably be fixed by adding \"CancelWith(gameObject)\" when you run the coroutine.\n"
+                                + "Example: Timing.RunCoroutine(_foo().CancelWith(gameObject), Segment.RealtimeUpdate);");
+                    }
+                }
+
+                while (_resumeCount > 0)
+                {
+                    coindex.i = _resumeBuffer[--_resumeCount];
+
+                    try
+                    {
+                        if (!RealtimeUpdatePaused[coindex.i] && !RealtimeUpdateHeld[coindex.i] && RealtimeUpdateProcesses[coindex.i] != null && !(localTime < RealtimeUpdateProcesses[coindex.i].Current))
+                        {
+                            currentCoroutine = _indexToHandle[coindex];
+
+                            if (ProfilerDebugAmount != DebugInfoType.None)
+                            {
+                                Profiler.BeginSample(ProfilerDebugAmount == DebugInfoType.SeparateTags ? ("Processing Coroutine (Realtime Update)" +
+                                        (_processTags.ContainsKey(_indexToHandle[coindex]) ? ", tag " + _processTags[_indexToHandle[coindex]] : ", no tag"))
+                                        : "Processing Coroutine (Realtime Update)");
+                            }
+
+                            if (!RealtimeUpdateProcesses[coindex.i].MoveNext())
+                            {
+                                if (_indexToHandle.ContainsKey(coindex))
+                                {
+                                    CoroutineHandle finishedHandle = _indexToHandle[coindex];
+                                    KillCoroutinesOnInstance(finishedHandle);
+
+                                    if (_pendingResume.ContainsKey(finishedHandle))
+                                    {
+                                        var waiters = _pendingResume[finishedHandle];
+                                        var waiterEnum = waiters.GetEnumerator();
+                                        while (waiterEnum.MoveNext())
+                                        {
+                                            if (_handleToIndex.ContainsKey(waiterEnum.Current))
+                                            {
+                                                ProcessIndex waiterIndex = _handleToIndex[waiterEnum.Current];
+                                                if (waiterIndex.seg == Segment.RealtimeUpdate)
+                                                {
+                                                    if (_resumeCount == _resumeBuffer.Length)
+                                                    {
+                                                        int[] newBuffer = new int[_resumeBuffer.Length * 2];
+                                                        for (int j = 0; j < _resumeBuffer.Length; j++)
+                                                            newBuffer[j] = _resumeBuffer[j];
+                                                        _resumeBuffer = newBuffer;
+                                                    }
+                                                    _resumeBuffer[_resumeCount++] = waiterIndex.i;
+                                                }
+                                            }
+                                        }
+                                        _pendingResume.Remove(finishedHandle);
+                                    }
+                                }
+                            }
+                            else if (RealtimeUpdateProcesses[coindex.i] != null && float.IsNaN(RealtimeUpdateProcesses[coindex.i].Current))
+                            {
+                                if (ReplacementFunction != null)
+                                {
+                                    RealtimeUpdateProcesses[coindex.i] = ReplacementFunction(RealtimeUpdateProcesses[coindex.i], _indexToHandle[coindex]);
+                                    ReplacementFunction = null;
+                                }
+                                _resumeBuffer[_resumeCount++] = coindex.i;
+                            }
+
+                            if (ProfilerDebugAmount != DebugInfoType.None)
+                                Profiler.EndSample();
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Debug.LogException(ex);
+
+                        if (ex is MissingReferenceException)
+                            Debug.LogError("This exception can probably be fixed by adding \"CancelWith(gameObject)\" when you run the coroutine.\n"
+                                + "Example: Timing.RunCoroutine(_foo().CancelWith(gameObject), Segment.RealtimeUpdate);");
                     }
                 }
             }
@@ -916,6 +1081,16 @@ namespace MEC
                 }
             }
 
+            var pendingEnum = _pendingResume.GetEnumerator();
+            while (pendingEnum.MoveNext())
+            {
+                if (!_handleToIndex.ContainsKey(pendingEnum.Current.Key) || CoindexIsNull(_handleToIndex[pendingEnum.Current.Key]))
+                {
+                    _pendingResume.Remove(pendingEnum.Current.Key);
+                    pendingEnum = _pendingResume.GetEnumerator();
+                }
+            }
+
             ProcessIndex outer, inner;
             outer.seg = inner.seg = Segment.Update;
 
@@ -1089,6 +1264,49 @@ namespace MEC
 
             _lastSlowUpdateProcessSlot -= _nextSlowUpdateProcessSlot - inner.i;
             SlowUpdateCoroutines = _nextSlowUpdateProcessSlot = inner.i;
+
+            outer.seg = inner.seg = Segment.RealtimeUpdate;
+            for (outer.i = inner.i = 0; outer.i < _nextRealtimeUpdateProcessSlot; outer.i++)
+            {
+                if (RealtimeUpdateProcesses[outer.i] != null)
+                {
+                    if (outer.i != inner.i)
+                    {
+                        RealtimeUpdateProcesses[inner.i] = RealtimeUpdateProcesses[outer.i];
+                        RealtimeUpdatePaused[inner.i] = RealtimeUpdatePaused[outer.i];
+                        RealtimeUpdateHeld[inner.i] = RealtimeUpdateHeld[outer.i];
+
+                        if (_indexToHandle.ContainsKey(inner))
+                        {
+                            RemoveTag(_indexToHandle[inner]);
+                            _handleToIndex.Remove(_indexToHandle[inner]);
+                            _indexToHandle.Remove(inner);
+                        }
+
+                        _handleToIndex[_indexToHandle[outer]] = inner;
+                        _indexToHandle.Add(inner, _indexToHandle[outer]);
+                        _indexToHandle.Remove(outer);
+                    }
+                    inner.i++;
+                }
+            }
+            for (outer.i = inner.i; outer.i < _nextRealtimeUpdateProcessSlot; outer.i++)
+            {
+                RealtimeUpdateProcesses[outer.i] = null;
+                RealtimeUpdatePaused[outer.i] = false;
+                RealtimeUpdateHeld[outer.i] = false;
+
+                if (_indexToHandle.ContainsKey(outer))
+                {
+                    RemoveTag(_indexToHandle[outer]);
+
+                    _handleToIndex.Remove(_indexToHandle[outer]);
+                    _indexToHandle.Remove(outer);
+                }
+            }
+
+            _lastRealtimeUpdateProcessSlot -= _nextRealtimeUpdateProcessSlot - inner.i;
+            RealtimeUpdateCoroutines = _nextRealtimeUpdateProcessSlot = inner.i;
         }
 
         /// <summary>
@@ -1489,6 +1707,77 @@ namespace MEC
 
                     break;
 
+                case Segment.RealtimeUpdate:
+
+                    if (_nextRealtimeUpdateProcessSlot >= RealtimeUpdateProcesses.Length)
+                    {
+                        IEnumerator<float>[] oldProcArray = RealtimeUpdateProcesses;
+                        bool[] oldPausedArray = RealtimeUpdatePaused;
+                        bool[] oldHeldArray = RealtimeUpdateHeld;
+
+                        RealtimeUpdateProcesses = new IEnumerator<float>[RealtimeUpdateProcesses.Length + (ProcessArrayChunkSize * _expansions++)];
+                        RealtimeUpdatePaused = new bool[RealtimeUpdateProcesses.Length];
+                        RealtimeUpdateHeld = new bool[RealtimeUpdateProcesses.Length];
+
+                        for (int i = 0; i < oldProcArray.Length; i++)
+                        {
+                            RealtimeUpdateProcesses[i] = oldProcArray[i];
+                            RealtimeUpdatePaused[i] = oldPausedArray[i];
+                            RealtimeUpdateHeld[i] = oldHeldArray[i];
+                        }
+                    }
+
+                    if (UpdateTimeValues(slot.seg))
+                        _lastRealtimeUpdateProcessSlot = _nextRealtimeUpdateProcessSlot;
+
+                    slot.i = _nextRealtimeUpdateProcessSlot++;
+                    RealtimeUpdateProcesses[slot.i] = coroutine;
+
+                    if (tag != null)
+                        AddTag(tag, handle);
+
+                    _indexToHandle.Add(slot, handle);
+                    _handleToIndex.Add(handle, slot);
+
+                    while (prewarm)
+                    {
+                        try
+                        {
+                            if (!RealtimeUpdateProcesses[slot.i].MoveNext())
+                            {
+                                if (_indexToHandle.ContainsKey(slot))
+                                    KillCoroutinesOnInstance(_indexToHandle[slot]);
+
+                                prewarm = false;
+                            }
+                            else if (RealtimeUpdateProcesses[slot.i] != null && float.IsNaN(RealtimeUpdateProcesses[slot.i].Current))
+                            {
+                                if (ReplacementFunction != null)
+                                {
+                                    RealtimeUpdateProcesses[slot.i] = ReplacementFunction(RealtimeUpdateProcesses[slot.i], _indexToHandle[slot]);
+                                    ReplacementFunction = null;
+                                }
+                                prewarm = !RealtimeUpdatePaused[slot.i] && !RealtimeUpdateHeld[slot.i];
+                            }
+                            else
+                            {
+                                prewarm = false;
+                            }
+                        }
+                        catch (System.Exception ex)
+                        {
+                            Debug.LogException(ex);
+
+                            if (ex is MissingReferenceException)
+                                Debug.LogError("This exception can probably be fixed by adding \"CancelWith(gameObject)\" when you run the coroutine.\n"
+                                    + "Example: Timing.RunCoroutine(_foo().CancelWith(gameObject), Segment.RealtimeUpdate);");
+
+                            prewarm = false;
+                        }
+                    }
+
+                    break;
+
                 default:
                     handle = new CoroutineHandle();
                     break;
@@ -1522,7 +1811,8 @@ namespace MEC
         /// <returns>The number of coroutines that were killed.</returns>
         public int KillCoroutinesOnInstance()
         {
-            int retVal = _nextUpdateProcessSlot + _nextLateUpdateProcessSlot + _nextFixedUpdateProcessSlot + _nextSlowUpdateProcessSlot;
+            int retVal = _nextUpdateProcessSlot + _nextLateUpdateProcessSlot + _nextFixedUpdateProcessSlot + _nextSlowUpdateProcessSlot
+                + _nextRealtimeUpdateProcessSlot;
 
             UpdateProcesses = new IEnumerator<float>[InitialBufferSizeLarge];
             UpdatePaused = new bool[InitialBufferSizeLarge];
@@ -1547,6 +1837,12 @@ namespace MEC
             SlowUpdateHeld = new bool[InitialBufferSizeMedium];
             SlowUpdateCoroutines = 0;
             _nextSlowUpdateProcessSlot = 0;
+
+            RealtimeUpdateProcesses = new IEnumerator<float>[InitialBufferSizeSmall];
+            RealtimeUpdatePaused = new bool[InitialBufferSizeSmall];
+            RealtimeUpdateHeld = new bool[InitialBufferSizeSmall];
+            RealtimeUpdateCoroutines = 0;
+            _nextRealtimeUpdateProcessSlot = 0;
 
             _processTags.Clear();
             _taggedProcesses.Clear();
@@ -1705,6 +2001,19 @@ namespace MEC
                 }
             }
 
+            for (i = 0; i < _nextRealtimeUpdateProcessSlot; i++)
+            {
+                if (!RealtimeUpdatePaused[i] && RealtimeUpdateProcesses[i] != null)
+                {
+                    count++;
+                    RealtimeUpdatePaused[i] = true;
+
+                    if (RealtimeUpdateProcesses[i].Current > GetSegmentTime(Segment.RealtimeUpdate))
+                        RealtimeUpdateProcesses[i] = _InjectDelay(RealtimeUpdateProcesses[i],
+                            RealtimeUpdateProcesses[i].Current - GetSegmentTime(Segment.RealtimeUpdate));
+                }
+            }
+
             return count;
         }
 
@@ -1808,6 +2117,15 @@ namespace MEC
                 if (SlowUpdatePaused[coindex.i] && SlowUpdateProcesses[coindex.i] != null)
                 {
                     SlowUpdatePaused[coindex.i] = false;
+                    count++;
+                }
+            }
+
+            for (coindex.i = 0, coindex.seg = Segment.RealtimeUpdate; coindex.i < _nextRealtimeUpdateProcessSlot; coindex.i++)
+            {
+                if (RealtimeUpdatePaused[coindex.i] && RealtimeUpdateProcesses[coindex.i] != null)
+                {
+                    RealtimeUpdatePaused[coindex.i] = false;
                     count++;
                 }
             }
@@ -1929,6 +2247,21 @@ namespace MEC
                         localTime = _lastSlowUpdateTime;
                         return false;
                     }
+                case Segment.RealtimeUpdate:
+                    if (_currentRealtimeUpdateFrame != Time.frameCount)
+                    {
+                        deltaTime = Time.unscaledDeltaTime;
+                        _lastRealtimeUpdateTime += deltaTime;
+                        localTime = _lastRealtimeUpdateTime;
+                        _currentRealtimeUpdateFrame = Time.frameCount;
+                        return true;
+                    }
+                    else
+                    {
+                        deltaTime = Time.unscaledDeltaTime;
+                        localTime = _lastRealtimeUpdateTime;
+                        return false;
+                    }
             }
             return true;
         }
@@ -1951,6 +2284,11 @@ namespace MEC
                     return Time.fixedTime;
                 case Segment.SlowUpdate:
                     return Time.realtimeSinceStartup;
+                case Segment.RealtimeUpdate:
+                    if (_currentRealtimeUpdateFrame == Time.frameCount)
+                        return _lastRealtimeUpdateTime;
+                    else
+                        return _lastRealtimeUpdateTime + Time.unscaledDeltaTime;
                 default:
                     return 0f;
             }
@@ -2014,6 +2352,10 @@ namespace MEC
                     retVal = SlowUpdateProcesses[coindex.i] != null;
                     SlowUpdateProcesses[coindex.i] = null;
                     return retVal;
+                case Segment.RealtimeUpdate:
+                    retVal = RealtimeUpdateProcesses[coindex.i] != null;
+                    RealtimeUpdateProcesses[coindex.i] = null;
+                    return retVal;
                 default:
                     return false;
             }
@@ -2041,6 +2383,10 @@ namespace MEC
                     retVal = SlowUpdateProcesses[coindex.i];
                     SlowUpdateProcesses[coindex.i] = null;
                     return retVal;
+                case Segment.RealtimeUpdate:
+                    retVal = RealtimeUpdateProcesses[coindex.i];
+                    RealtimeUpdateProcesses[coindex.i] = null;
+                    return retVal;
                 default:
                     return null;
             }
@@ -2058,6 +2404,8 @@ namespace MEC
                     return LateUpdateProcesses[coindex.i];
                 case Segment.SlowUpdate:
                     return SlowUpdateProcesses[coindex.i];
+                case Segment.RealtimeUpdate:
+                    return RealtimeUpdateProcesses[coindex.i];
                 default:
                     return null;
             }
@@ -2075,6 +2423,8 @@ namespace MEC
                     return LateUpdateProcesses[coindex.i] == null;
                 case Segment.SlowUpdate:
                     return SlowUpdateProcesses[coindex.i] == null;
+                case Segment.RealtimeUpdate:
+                    return RealtimeUpdateProcesses[coindex.i] == null;
                 default:
                     return true;
             }
@@ -2123,6 +2473,15 @@ namespace MEC
                     if (newPausedState && SlowUpdateProcesses[coindex.i].Current > GetSegmentTime(coindex.seg))
                         SlowUpdateProcesses[coindex.i] = _InjectDelay(SlowUpdateProcesses[coindex.i],
                             SlowUpdateProcesses[coindex.i].Current - GetSegmentTime(coindex.seg));
+
+                    return isPaused;
+                case Segment.RealtimeUpdate:
+                    isPaused = RealtimeUpdatePaused[coindex.i];
+                    RealtimeUpdatePaused[coindex.i] = newPausedState;
+
+                    if (newPausedState && RealtimeUpdateProcesses[coindex.i].Current > GetSegmentTime(coindex.seg))
+                        RealtimeUpdateProcesses[coindex.i] = _InjectDelay(RealtimeUpdateProcesses[coindex.i],
+                            RealtimeUpdateProcesses[coindex.i].Current - GetSegmentTime(coindex.seg));
 
                     return isPaused;
                 default:
@@ -2175,6 +2534,15 @@ namespace MEC
                             SlowUpdateProcesses[coindex.i].Current - GetSegmentTime(coindex.seg));
 
                     return isHeld;
+                case Segment.RealtimeUpdate:
+                    isHeld = RealtimeUpdateHeld[coindex.i];
+                    RealtimeUpdateHeld[coindex.i] = newHeldState;
+
+                    if (newHeldState && RealtimeUpdateProcesses[coindex.i].Current > GetSegmentTime(coindex.seg))
+                        RealtimeUpdateProcesses[coindex.i] = _InjectDelay(RealtimeUpdateProcesses[coindex.i],
+                            RealtimeUpdateProcesses[coindex.i].Current - GetSegmentTime(coindex.seg));
+
+                    return isHeld;
                 default:
                     return false;
             }
@@ -2201,6 +2569,8 @@ namespace MEC
                     return LateUpdatePaused[coindex.i];
                 case Segment.SlowUpdate:
                     return SlowUpdatePaused[coindex.i];
+                case Segment.RealtimeUpdate:
+                    return RealtimeUpdatePaused[coindex.i];
                 default:
                     return false;
             }
@@ -2218,6 +2588,8 @@ namespace MEC
                     return LateUpdateHeld[coindex.i];
                 case Segment.SlowUpdate:
                     return SlowUpdateHeld[coindex.i];
+                case Segment.RealtimeUpdate:
+                    return RealtimeUpdateHeld[coindex.i];
                 default:
                     return false;
             }
@@ -2238,6 +2610,9 @@ namespace MEC
                     return;
                 case Segment.SlowUpdate:
                     SlowUpdateProcesses[coindex.i] = replacement;
+                    return;
+                case Segment.RealtimeUpdate:
+                    RealtimeUpdateProcesses[coindex.i] = replacement;
                     return;
             }
         }
@@ -3006,7 +3381,11 @@ namespace MEC
         /// <summary>
         /// This executes, by default, about as quickly as the eye can detect changes in a text field
         /// </summary>
-        SlowUpdate
+        SlowUpdate,
+        /// <summary>
+        /// This is the same as update, but it ignores Unity's timescale
+        /// </summary>
+        RealtimeUpdate
     }
 
     /// <summary>

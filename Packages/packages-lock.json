@@ -1,27 +1,18 @@
 {
   "dependencies": {
-    "com.boxqkrtm.ide.cursor": {
-      "version": "https://github.com/boxqkrtm/com.unity.ide.cursor.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.unity.test-framework": "1.1.9"
-      },
-      "hash": "fd8ff1fb700caf062eb5cce364c1d0a85f99ebe6"
-    },
     "com.gustavopsantos.reflex": {
-      "version": "14.3.1",
+      "version": "14.4.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://package.openupm.com"
     },
     "com.meta.xr.mrutilitykit": {
-      "version": "205.0.0",
+      "version": "207.0.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.meta.xr.sdk.core": "205.0.0",
+        "com.meta.xr.sdk.core": "207.0.1",
         "com.unity.textmeshpro": "3.0.6",
         "com.unity.ai.navigation": "1.1.4",
         "com.unity.nuget.newtonsoft-json": "3.0.2"
@@ -36,7 +27,7 @@
       "url": "https://packages.unity.com"
     },
     "com.meta.xr.sdk.core": {
-      "version": "205.0.0",
+      "version": "207.0.1",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -51,7 +42,7 @@
       "url": "https://packages.unity.com"
     },
     "com.meta.xr.sdk.interaction": {
-      "version": "205.0.0",
+      "version": "207.0.1",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -61,17 +52,17 @@
       "url": "https://packages.unity.com"
     },
     "com.meta.xr.sdk.interaction.ovr": {
-      "version": "205.0.0",
+      "version": "207.0.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.meta.xr.sdk.core": "205.0.0",
-        "com.meta.xr.sdk.interaction": "205.0.0"
+        "com.meta.xr.sdk.core": "207.0.1",
+        "com.meta.xr.sdk.interaction": "207.0.1"
       },
       "url": "https://packages.unity.com"
     },
     "com.meta.xr.sdk.platform": {
-      "version": "205.0.0",
+      "version": "207.0.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -80,6 +71,13 @@
         "com.unity.nuget.newtonsoft-json": "3.2.1"
       },
       "url": "https://packages.unity.com"
+    },
+    "com.rorygames.vhacd": {
+      "version": "https://github.com/rorygames/VHACD.git?path=/com.rorygames.vhacd",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f4f20c91e7257ae98ea58b7c2fe59fcb98bac85d"
     },
     "com.rsg.promise": {
       "version": "3.0.1",
@@ -111,7 +109,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ai.navigation": {
-      "version": "2.0.14",
+      "version": "2.0.15",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -164,7 +162,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.inputsystem": {
-      "version": "1.20.0",
+      "version": "1.20.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -173,7 +171,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.localization": {
-      "version": "1.5.12",
+      "version": "1.5.13",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -298,7 +296,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.services.authentication": {
-      "version": "3.7.4",
+      "version": "3.8.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -310,7 +308,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.services.cloudsave": {
-      "version": "3.4.1",
+      "version": "3.4.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -343,12 +341,12 @@
       "source": "builtin",
       "dependencies": {
         "com.unity.render-pipelines.core": "17.6.0",
-        "com.unity.searcher": "4.9.3",
+        "com.unity.searcher": "4.9.5",
         "com.unity.graph-authoring": "1.0.0"
       }
     },
     "com.unity.splines": {
-      "version": "2.9.0",
+      "version": "2.9.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -427,7 +425,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.compositionlayers": {
-      "version": "2.5.0",
+      "version": "2.6.0",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -461,7 +459,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.interaction.toolkit": {
-      "version": "3.6.0",
+      "version": "3.6.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {

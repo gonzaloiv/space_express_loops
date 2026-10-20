@@ -150,7 +150,7 @@ namespace DigitalLove.Game.Levels
 
             mrukRoomAnchorsContainer.InitAndLoadRoomAnchors(originPose, _ =>
             {
-                if (!mrukRoomAnchorsContainer.TryGetOVRAnchorPose(out Pose toSet))
+                if (!mrukRoomAnchorsContainer.TryGetAnchorPose(out Pose toSet))
                 {
                     Debug.LogWarning("[LevelContainer] Failed to load room anchor; falling back to room center.");
                     toSet = originPose;
