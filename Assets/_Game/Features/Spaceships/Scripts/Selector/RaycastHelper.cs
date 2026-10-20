@@ -10,6 +10,7 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private LineRendererWithEdges lineRendererWithEdges;
         [SerializeField] private Transform lineOrigin;
         [SerializeField] private FloatValue rayDistance;
+        [SerializeField] private Transform contentRoot;
 
         [SerializeField] private float rayForwardOffset = 0.1f;
 
@@ -17,7 +18,15 @@ namespace DigitalLove.Game.Spaceships
         private PlanetBehaviour candidatePlanet;
 
         public PlanetBehaviour CandidatePlanet => candidatePlanet;
-        public float RayDistance => rayDistance.value * 1.1f;
+        public float RayDistance => rayDistance.value * 1.1f * ContentScale;
+
+        private float ContentScale => contentRoot != null ? contentRoot.lossyScale.x : 1f;
+
+        private void Awake()
+        {
+            if (contentRoot == null)
+                contentRoot = transform.root;
+        }
 
         public void SetActive(bool active)
         {
@@ -74,11 +83,12 @@ namespace DigitalLove.Game.Spaceships
             if (candidatePlanet != null)
             {
                 float distance = Vector3.Distance(candidatePlanet.transform.position, start);
-                Vector3 offset = forward * (candidatePlanet.NodeBody.Radius - rayForwardOffset);
+                float radius = candidatePlanet.NodeBody.Radius * ContentScale;
+                Vector3 offset = forward * (radius - rayForwardOffset);
                 end = start + forward * distance - offset;
             }
 
-            lineRendererWithEdges.SetTwoPositions(start, end);
+            lineRendererWithEdges.SetWorldTwoPositions(start, end);
         }
     }
 }

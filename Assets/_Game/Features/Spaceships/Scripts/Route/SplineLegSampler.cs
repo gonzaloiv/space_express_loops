@@ -9,11 +9,13 @@ namespace DigitalLove.Game.Spaceships
     {
         private readonly SplineContainer splineContainer;
         private readonly int resolution;
+        private readonly Transform contentRoot;
 
-        public SplineLegSampler(SplineContainer splineContainer, int resolution = 32)
+        public SplineLegSampler(SplineContainer splineContainer, int resolution = 32, Transform contentRoot = null)
         {
             this.splineContainer = splineContainer;
             this.resolution = resolution;
+            this.contentRoot = contentRoot;
         }
 
         public void Build(HubBehaviour hub, IReadOnlyList<PlanetBehaviour> destinations, IList<RouteLeg> legs)
@@ -31,16 +33,16 @@ namespace DigitalLove.Game.Spaceships
         private void CreateMultipleLegs(HubBehaviour hub, IReadOnlyList<PlanetBehaviour> destinations, IList<RouteLeg> legs)
         {
             ConfigureSplineForLeg(hub.NodeBody, destinations[0].NodeBody);
-            legs.Add(GetTruncatedLeg(splineContainer.GetPositions(resolution), destinations[0]));
+            legs.Add(GetTruncatedLeg(splineContainer.GetPositions(resolution, contentRoot), destinations[0]));
 
             for (int i = 1; i < destinations.Count; i++)
             {
                 ConfigureSplineForLeg(destinations[i - 1].NodeBody, destinations[i].NodeBody);
-                legs.Add(GetTruncatedLeg(splineContainer.GetPositions(resolution), destinations[i]));
+                legs.Add(GetTruncatedLeg(splineContainer.GetPositions(resolution, contentRoot), destinations[i]));
             }
 
             ConfigureSplineForLeg(destinations[destinations.Count - 1].NodeBody, hub.NodeBody);
-            legs.Add(GetTruncatedLeg(splineContainer.GetPositions(resolution), null));
+            legs.Add(GetTruncatedLeg(splineContainer.GetPositions(resolution, contentRoot), null));
         }
 
         private RouteLeg GetTruncatedLeg(List<Vector3> positions, PlanetBehaviour pickupPlanet)
@@ -52,9 +54,9 @@ namespace DigitalLove.Game.Spaceships
         private void GetSingleDestinationLeg(HubBehaviour hub, PlanetBehaviour destination, IList<RouteLeg> legs)
         {
             ConfigureSplineForLeg(hub.NodeBody, destination.NodeBody);
-            legs.Add(GetTruncatedLeg(splineContainer.GetPositions(resolution), destination));
+            legs.Add(GetTruncatedLeg(splineContainer.GetPositions(resolution, contentRoot), destination));
             ConfigureSplineForLeg(destination.NodeBody, hub.NodeBody, true);
-            legs.Add(GetTruncatedLeg(splineContainer.GetPositions(resolution), null));
+            legs.Add(GetTruncatedLeg(splineContainer.GetPositions(resolution, contentRoot), null));
         }
 
         private void ConfigureSplineForLeg(NodeBody origin, NodeBody destination, bool inverse = false)

@@ -167,8 +167,20 @@ namespace DigitalLove.Game.Spaceships
         {
             foreach (SpaceshipBehaviour spaceship in spaceships)
             {
-                if (spaceship != null)
-                    spaceship.RefreshGrabbableAtStation();
+                if (spaceship == null)
+                    continue;
+
+                spaceship.RefreshGrabbableAtStation();
+                spaceship.RefreshGrabZoneTarget();
+            }
+        }
+
+        public void SetViewTransition(bool isTransitioning)
+        {
+            foreach (SpaceshipBehaviour spaceship in spaceships)
+            {
+                if (spaceship != null && spaceship.IsActive)
+                    spaceship.SetViewTransition(isTransitioning);
             }
         }
 

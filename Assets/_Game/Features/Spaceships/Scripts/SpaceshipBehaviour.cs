@@ -94,6 +94,25 @@ namespace DigitalLove.Game.Spaceships
                 destinationSelection.MoveToActiveStation();
         }
 
+        public void SetViewTransition(bool isTransitioning)
+        {
+            if (!isInitialized)
+                return;
+
+            if (isTransitioning)
+                session.TravellerLoop.Pause();
+            else
+                session.TravellerLoop.Resume();
+        }
+
+        public void RefreshGrabZoneTarget()
+        {
+            if (!isInitialized || !IsActive || refs.grabZone == null)
+                return;
+            if (refs.grabZone.gameObject.activeInHierarchy)
+                refs.grabZone.PointAt(session.GetGrabbableLookTarget());
+        }
+
         public void StartSelectingDestination() => stateMachine.SetCurrentState<SpaceshipSelectingState>();
 
         public void NotifyLoopChanged() => handlers.Changed?.Invoke(BuildLoopEventArgs());

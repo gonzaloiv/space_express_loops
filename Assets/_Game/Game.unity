@@ -1560,7 +1560,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4346171729916644252, guid: f4055528478203d42b8d39b330c3e393, type: 3}
   m_PrefabInstance: {fileID: 194917956}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &194917958 stripped
+--- !u!114 &194917959 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8723824393723348227, guid: f4055528478203d42b8d39b330c3e393, type: 3}
   m_PrefabInstance: {fileID: 194917956}
@@ -1931,7 +1931,7 @@ MonoBehaviour:
   initialState: {fileID: 1730347950}
   locale: {fileID: 11400000, guid: ef5f93a95eb7b214c98395886e20e196, type: 2}
   analyticsProviderInstaller: {fileID: 1210227671}
-  playerControllerInstaller: {fileID: 194917958}
+  playerControllerInstaller: {fileID: 194917959}
   playerData:
     userId: 
     sessionCount: 0
@@ -2958,6 +2958,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 1873830089, guid: 8c662fe9fd52dbd42a1216ab3845328f, type: 3}
+    - target: {fileID: 2712458874244561232, guid: e303eb4a8c70159448a8141112e9be94, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2917396151165767351, guid: e303eb4a8c70159448a8141112e9be94, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
@@ -4676,6 +4680,7 @@ GameObject:
   - component: {fileID: 677709495}
   - component: {fileID: 677709496}
   - component: {fileID: 677709497}
+  - component: {fileID: 677709498}
   m_Layer: 0
   m_Name: Level
   m_TagString: Untagged
@@ -4718,6 +4723,7 @@ MonoBehaviour:
   planetsSpawner: {fileID: 1097461040}
   spaceshipsSpawner: {fileID: 933255161}
   hubsSpawner: {fileID: 935971882}
+  universeView: {fileID: 677709498}
 --- !u!114 &677709496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4755,6 +4761,25 @@ MonoBehaviour:
   floorMargin: 0.5
   ceilingMargin: 0.5
   minDistanceRadiusMultiplier: 1
+--- !u!114 &677709498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677709493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e6301be3842ff74e86a6b3a494f5dbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Levels::DigitalLove.Game.Levels.UniverseView
+  miniBubbleRadius: 0.22
+  bubbleDistance: 0.45
+  bubbleHeightOffset: -0.1
+  minMiniScale: 0.02
+  transitionSecs: 0.3
+  transitionEase: 4
+  logTransitions: 0
 --- !u!1 &781987388
 GameObject:
   m_ObjectHideFlags: 0
@@ -11057,7 +11082,7 @@ MonoBehaviour:
   tableName: Levels
   secsToCompleteWithoutEntries: 1
   jumpEntries:
-    value: 0
+    value: 1
 --- !u!114 &1654487132
 MonoBehaviour:
   m_ObjectHideFlags: 0

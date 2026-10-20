@@ -18,15 +18,47 @@ namespace DigitalLove.Game.Levels
         [SerializeField] private PlanetsSpawner planetsSpawner;
         [SerializeField] private SpaceshipsSpawner spaceshipsSpawner;
         [SerializeField] private HubsSpawner hubsSpawner;
+        [SerializeField] private UniverseView universeView;
 
         public PlanetsSpawner PlanetsSpawner => planetsSpawner;
         public SpaceshipsSpawner SpaceshipsSpawner => spaceshipsSpawner;
         public HubsSpawner HubsSpawner => hubsSpawner;
+        public UniverseView UniverseView => universeView;
+
+        private void Awake()
+        {
+            if (universeView == null)
+                universeView = GetComponent<UniverseView>();
+            if (universeView == null)
+                universeView = gameObject.AddComponent<UniverseView>();
+        }
+
+        private void OnDisable()
+        {
+            if (universeView == null)
+                return;
+
+            universeView.TransitionStarted -= OnViewTransitionStarted;
+            universeView.TransitionCompleted -= OnViewTransitionCompleted;
+        }
 
         public void Init()
         {
             spaceshipsSpawner.SetPlanetAvailability(new LevelLoopPlanetAvailability(planetsSpawner, hubsSpawner));
+            universeView.TransitionStarted -= OnViewTransitionStarted;
+            universeView.TransitionStarted += OnViewTransitionStarted;
+            universeView.TransitionCompleted -= OnViewTransitionCompleted;
+            universeView.TransitionCompleted += OnViewTransitionCompleted;
             HideAll();
+        }
+
+        private void OnViewTransitionStarted(bool _) =>
+            spaceshipsSpawner.SetViewTransition(true);
+
+        private void OnViewTransitionCompleted(bool _)
+        {
+            spaceshipsSpawner.SetViewTransition(false);
+            spaceshipsSpawner.RefreshGrabbablesAtStation();
         }
 
         public void SyncIdCounters(GameSnapshot gameSnapshot)
@@ -52,6 +84,11 @@ namespace DigitalLove.Game.Levels
 
         public void SpawnRound(RoundData roundData, GameSnapshot gameSnapshot)
         {
+            universeView.WithRoomPose(() => SpawnRoundInternal(roundData, gameSnapshot));
+        }
+
+        private void SpawnRoundInternal(RoundData roundData, GameSnapshot gameSnapshot)
+        {
             SyncIdCounters(gameSnapshot);
 
             if (roundData.shouldSpawnSpaceship)
@@ -63,11 +100,11 @@ namespace DigitalLove.Game.Levels
 
         public void RestoreFromSnapshot(GameSnapshot gameSnapshot, Action onComplete)
         {
-            SetRoomBasedPose(() =>
+            SetRoomBasedPose(() => universeView.WithRoomPose(() =>
             {
                 RespawnFromData(gameSnapshot);
                 onComplete?.Invoke();
-            });
+            }));
         }
 
         private void SpawnSpaceship(GameSnapshot gameSnapshot)
@@ -142,6 +179,7 @@ namespace DigitalLove.Game.Levels
             yield return null;
 
             MRUKRoom room = MRUK.Instance.GetCurrentRoom();
+            Bounds roomBounds = room.GetRoomBounds();
             Pose originPose = new()
             {
                 position = room.Center(),
@@ -156,8 +194,15 @@ namespace DigitalLove.Game.Levels
                     toSet = originPose;
                 }
 
-                transform.position = toSet.position;
-                transform.rotation = toSet.rotation;
+                if (universeView != null)
+                {
+                    universeView.SetRoomAnchor(toSet, roomBounds);
+                }
+                else
+                {
+                    transform.position = toSet.position;
+                    transform.rotation = toSet.rotation;
+                }
                 onComplete?.Invoke();
             });
         }

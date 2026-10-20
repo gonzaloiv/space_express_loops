@@ -97,8 +97,12 @@ namespace DigitalLove.Game.Spaceships
         private Vector3 GetLastDestinationApproachPosition()
         {
             PlanetBehaviour last = destinations[^1];
-            if (routeContainer.TryGetApproachEndPosition(last, out Vector3 position))
-                return position;
+            if (routeContainer.TryGetApproachEndPosition(last, out Vector3 localPosition))
+            {
+                return routeContainer.ContentRoot != null
+                    ? routeContainer.ContentRoot.TransformPoint(localPosition)
+                    : localPosition;
+            }
 
             return last.Position;
         }

@@ -28,6 +28,10 @@ namespace DigitalLove.Game.Spaceships
 
         public bool IsFollowingPath => PathFollower.IsFollowingPath;
 
+        public void PauseFollowing() => PathFollower.PauseFollowing();
+
+        public void ResumeFollowing() => PathFollower.ResumeFollowing();
+
         public void Hide()
         {
             isCollisionActive = false;

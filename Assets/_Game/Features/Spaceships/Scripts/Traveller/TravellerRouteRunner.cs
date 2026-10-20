@@ -15,6 +15,7 @@ namespace DigitalLove.Game.Spaceships
 
         private Coroutine loopCoroutine;
         private Action<LoopCompleteEventArgs> onLoopIterationComplete;
+        private bool isPaused;
 
         public bool IsRunning => loopCoroutine != null;
 
@@ -49,7 +50,20 @@ namespace DigitalLove.Game.Spaceships
                 host.StopCoroutine(loopCoroutine);
                 loopCoroutine = null;
             }
+            isPaused = false;
             traveller.HideAndCancelPath();
+        }
+
+        public void Pause()
+        {
+            isPaused = true;
+            traveller.PauseFollowing();
+        }
+
+        public void Resume()
+        {
+            isPaused = false;
+            traveller.ResumeFollowing();
         }
 
         private IEnumerator RunLoop(string spaceshipId, Func<LoopEventArgs> getCurrentLoopEventArgs)
@@ -69,6 +83,9 @@ namespace DigitalLove.Game.Spaceships
 
                 for (int stopIndex = 0; stopIndex < legs.Count; stopIndex++)
                 {
+                    while (isPaused)
+                        yield return null;
+
                     RouteLeg leg = legs[stopIndex];
                     route.ShowLeg(stopIndex);
 
@@ -80,7 +97,7 @@ namespace DigitalLove.Game.Spaceships
                         break;
                     }
 
-                    yield return new WaitForSeconds(legDelay);
+                    yield return WaitForLegDelay();
 
                     if (leg.pickupPlanet != null)
                     {
@@ -95,8 +112,24 @@ namespace DigitalLove.Game.Spaceships
                     continue;
                 }
 
-                yield return new WaitForSeconds(legDelay);
+                yield return WaitForLegDelay();
                 onLoopIterationComplete?.Invoke(new LoopCompleteEventArgs(getCurrentLoopEventArgs(), totalPickedLetters));
+            }
+        }
+
+        private IEnumerator WaitForLegDelay()
+        {
+            float elapsed = 0f;
+            while (elapsed < legDelay)
+            {
+                if (isPaused)
+                {
+                    yield return null;
+                    continue;
+                }
+
+                elapsed += Time.deltaTime;
+                yield return null;
             }
         }
 

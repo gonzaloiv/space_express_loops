@@ -15,13 +15,16 @@ namespace DigitalLove.Game.Spaceships
             }
         }
 
-        public static List<Vector3> GetPositions(this SplineContainer splineContainer, int resolution)
+        public static List<Vector3> GetPositions(this SplineContainer splineContainer, int resolution, Transform contentRoot = null)
         {
             List<Vector3> results = new List<Vector3>(resolution);
             for (int i = 0; i < resolution; i++)
             {
                 float t = i / (float)(resolution - 1);
-                results.Add(splineContainer.EvaluatePosition(t));
+                Vector3 position = splineContainer.EvaluatePosition(t);
+                if (contentRoot != null)
+                    position = contentRoot.InverseTransformPoint(position);
+                results.Add(position);
             }
             return results;
         }

@@ -10,10 +10,19 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private LineRendererWithEdges goLine;
         [SerializeField] private LineRendererWithEdges returnLine;
         [SerializeField] private int resolution = 64;
+        [SerializeField] private Transform contentRoot;
 
         private SplineContainer splineContainer;
         private SplineLegSampler sampler;
         private bool isLineVisible;
+
+        public Transform ContentRoot => contentRoot;
+
+        private void Awake()
+        {
+            if (contentRoot == null)
+                contentRoot = transform.root;
+        }
 
         private readonly List<RouteLeg> legs = new();
         private int currentLegIndex = -1;
@@ -67,7 +76,7 @@ namespace DigitalLove.Game.Spaceships
                 return;
             }
 
-            sampler ??= new SplineLegSampler(SplineContainer, resolution);
+            sampler ??= new SplineLegSampler(SplineContainer, resolution, contentRoot);
             sampler.Build(hub, destinations, legs);
 
             ShowLeg(0);

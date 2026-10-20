@@ -7,10 +7,35 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private LineRenderer lineRenderer;
         [SerializeField] private Transform origin;
         [SerializeField] private Transform destination;
+        [SerializeField] private Transform contentRoot;
 
         private bool visibleRequested;
         private Renderer originRenderer;
         private Renderer destinationRenderer;
+        private float baseWidthMultiplier = 1f;
+
+        private void Awake()
+        {
+            if (contentRoot == null)
+                contentRoot = transform.root;
+            if (lineRenderer != null)
+            {
+                lineRenderer.useWorldSpace = false;
+                baseWidthMultiplier = lineRenderer.widthMultiplier;
+            }
+        }
+
+        private void LateUpdate()
+        {
+            if (lineRenderer == null)
+                return;
+
+            float scale = contentRoot != null ? contentRoot.lossyScale.x : 1f;
+            lineRenderer.widthMultiplier = baseWidthMultiplier * scale;
+
+            if (visibleRequested && lineRenderer.enabled)
+                RefreshEdgeMarkers();
+        }
 
         public void SetColor(Color color)
         {
@@ -33,28 +58,35 @@ namespace DigitalLove.Game.Spaceships
                 RefreshEdgeMarkers();
         }
 
-        public void SetTwoPositions(Vector3 start, Vector3 end) => ApplyPositions(start, end);
+        public void SetWorldTwoPositions(Vector3 start, Vector3 end) => ApplyWorldPositions(start, end);
 
-        public void SetPositions(Vector3[] positions)
+        public void SetPositions(Vector3[] contentLocalPositions)
         {
-            if (positions == null || positions.Length == 0)
+            if (contentLocalPositions == null || contentLocalPositions.Length == 0)
             {
                 Clear();
                 return;
             }
 
-            if (positions.Length == 2)
+            if (contentLocalPositions.Length == 2)
             {
-                ApplyPositions(positions[0], positions[1]);
+                ApplyWorldPositions(
+                    contentRoot != null ? contentRoot.TransformPoint(contentLocalPositions[0]) : contentLocalPositions[0],
+                    contentRoot != null ? contentRoot.TransformPoint(contentLocalPositions[1]) : contentLocalPositions[1]);
                 return;
             }
 
             if (lineRenderer == null)
                 return;
 
-            lineRenderer.positionCount = positions.Length;
-            for (int i = 0; i < positions.Length; i++)
-                lineRenderer.SetPosition(i, positions[i]);
+            lineRenderer.positionCount = contentLocalPositions.Length;
+            for (int i = 0; i < contentLocalPositions.Length; i++)
+            {
+                Vector3 world = contentRoot != null
+                    ? contentRoot.TransformPoint(contentLocalPositions[i])
+                    : contentLocalPositions[i];
+                lineRenderer.SetPosition(i, lineRenderer.transform.InverseTransformPoint(world));
+            }
 
             lineRenderer.enabled = true;
             RefreshEdgeMarkers();
@@ -70,14 +102,14 @@ namespace DigitalLove.Game.Spaceships
             RefreshEdgeMarkers();
         }
 
-        private void ApplyPositions(Vector3 start, Vector3 end)
+        private void ApplyWorldPositions(Vector3 start, Vector3 end)
         {
             if (lineRenderer == null)
                 return;
 
             lineRenderer.positionCount = 2;
-            lineRenderer.SetPosition(0, start);
-            lineRenderer.SetPosition(1, end);
+            lineRenderer.SetPosition(0, lineRenderer.transform.InverseTransformPoint(start));
+            lineRenderer.SetPosition(1, lineRenderer.transform.InverseTransformPoint(end));
             lineRenderer.enabled = true;
             RefreshEdgeMarkers();
         }
@@ -99,8 +131,10 @@ namespace DigitalLove.Game.Spaceships
                 return;
 
             Color color = lineRenderer.material.color;
-            SyncMarker(origin, ref originRenderer, lineRenderer.GetPosition(0), color);
-            SyncMarker(destination, ref destinationRenderer, lineRenderer.GetPosition(lineRenderer.positionCount - 1), color);
+            Vector3 start = lineRenderer.transform.TransformPoint(lineRenderer.GetPosition(0));
+            Vector3 end = lineRenderer.transform.TransformPoint(lineRenderer.GetPosition(lineRenderer.positionCount - 1));
+            SyncMarker(origin, ref originRenderer, start, color);
+            SyncMarker(destination, ref destinationRenderer, end, color);
         }
 
         private static void SyncMarker(Transform marker, ref Renderer cachedRenderer, Vector3 position, Color color)
