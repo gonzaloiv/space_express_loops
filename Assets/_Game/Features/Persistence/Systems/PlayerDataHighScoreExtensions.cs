@@ -1,7 +1,7 @@
 using DigitalLove.DataAccess;
 using DigitalLove.Global;
 
-namespace DigitalLove.Game.Flow
+namespace DigitalLove.Game.Persistence
 {
     public static class PlayerDataHighScoreExtensions
     {
@@ -14,14 +14,9 @@ namespace DigitalLove.Game.Flow
             return int.TryParse(cookie?.metadata, out int score) ? score : 0;
         }
 
-        public static bool IsHighScoreMoney(this PlayerData playerData, StringValue cookieKey, int totalMoney)
-        {
-            return totalMoney > playerData.GetHighScoreMoney(cookieKey);
-        }
-
         public static bool TrySaveHighScoreMoney(this PlayerData playerData, StringValue cookieKey, int totalMoney)
         {
-            if (!playerData.IsHighScoreMoney(cookieKey, totalMoney))
+            if (totalMoney <= playerData.GetHighScoreMoney(cookieKey))
                 return false;
 
             playerData.SetHighScoreMoney(cookieKey, totalMoney);

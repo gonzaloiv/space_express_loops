@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using DigitalLove.Global;
 using UnityEngine;
 
@@ -52,7 +51,15 @@ namespace DigitalLove.Game.Nodes
         {
             if (string.IsNullOrEmpty(id))
                 return null;
-            return hubs.FirstOrDefault(h => string.Equals(h.Id, id, StringComparison.Ordinal));
+
+            for (int i = 0; i < hubs.Count; i++)
+            {
+                HubBehaviour hub = hubs[i];
+                if (hub != null && string.Equals(hub.Id, id, StringComparison.Ordinal))
+                    return hub;
+            }
+
+            return null;
         }
 
         public void SpawnHubs(IEnumerable<HubData> hubDataList)
@@ -76,11 +83,7 @@ namespace DigitalLove.Game.Nodes
 
         private HubBehaviour Spawn(string hubId, HubData hubData = null)
         {
-            HubBehaviour hub = hubs.AcquireInactive(hubs[0], transform, h =>
-            {
-                h.Initialize();
-                h.Hide();
-            });
+            HubBehaviour hub = hubs.AcquireInactive(hubs[0], transform, CreatePooledHub);
             Vector3 localPosition = hubData?.localPosition != null
                 ? hubData.localPosition.ToVector3()
                 : GetValidHubLocalPosition();
@@ -88,6 +91,12 @@ namespace DigitalLove.Game.Nodes
             if (hubData == null)
                 roomPlacement.Register(localPosition, hub.NodeBody.Radius);
             return hub;
+        }
+
+        private static void CreatePooledHub(HubBehaviour hub)
+        {
+            hub.Initialize();
+            hub.Hide();
         }
 
         private Vector3 GetValidHubLocalPosition()

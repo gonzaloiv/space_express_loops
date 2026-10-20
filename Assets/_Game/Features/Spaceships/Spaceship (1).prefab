@@ -1425,6 +1425,8 @@ MonoBehaviour:
   goLine: {fileID: 6052074352809316531}
   returnLine: {fileID: 8812345678901234503}
   resolution: 64
+  contentRoot: {fileID: 356686299887657879}
+  splineContainer: {fileID: 6927892894118482799}
 --- !u!1 &2848506131577647798
 GameObject:
   m_ObjectHideFlags: 0
@@ -2143,6 +2145,7 @@ MonoBehaviour:
   lineRenderer: {fileID: 2596525087632103306}
   origin: {fileID: 1602194804826120613}
   destination: {fileID: 2412428802246269159}
+  contentRoot: {fileID: 356686299887657879}
 --- !u!1 &4081878103462323910
 GameObject:
   m_ObjectHideFlags: 0
@@ -2922,6 +2925,7 @@ MonoBehaviour:
   lineRenderer: {fileID: 2661330549731563782}
   origin: {fileID: 397025322796660976}
   destination: {fileID: 7477515404415189090}
+  contentRoot: {fileID: 356686299887657879}
 --- !u!1 &5830576935945958406
 GameObject:
   m_ObjectHideFlags: 0
@@ -3442,7 +3446,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.Spaceships::TravellerBehaviour
   body: {fileID: 4787806067301044474}
   lettersPanel: {fileID: 1597963955494664207}
-  rend: {fileID: 6445011914356420911}
+  pathFollower: {fileID: 8234519071625348912}
   startMoveAudioSource: {fileID: 2105191817831276856}
   loadedAudioSource: {fileID: 7176875651656705815}
   layerMask:
@@ -3464,6 +3468,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.Spaceships::TravellerPathFollower
   gameSpeed: {fileID: 11400000, guid: c3660b33f404c6344ae786218d0e7437, type: 2}
   followBody: {fileID: 8203435882171827999}
+  contentRoot: {fileID: 356686299887657879}
+  pathSpace: {fileID: 356686299887657879}
 --- !u!54 &5712848139797050370
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3542,6 +3548,7 @@ MonoBehaviour:
   - {fileID: 6370034562828466066}
   - {fileID: 8042608348004117413}
   lineToHost: {fileID: 8042608348004117413}
+  contentRoot: {fileID: 356686299887657879}
   verticalOffset: 0.02
 --- !u!1 &7065971297672464610
 GameObject:
@@ -3593,6 +3600,7 @@ MonoBehaviour:
     m_Bits: 2048
   lineRendererWithEdges: {fileID: 4655143769148396244}
   lineOrigin: {fileID: 4365562700572477615}
+  contentRoot: {fileID: 356686299887657879}
   rayDistance: {fileID: 11400000, guid: 6fc493b84a80f3b4e89f9f0f51e73f85, type: 2}
   rayForwardOffset: 0.1
 --- !u!1 &7198065008415384296
@@ -5484,7 +5492,7 @@ MonoBehaviour:
   ghost: {fileID: 2813554705787707760}
   splineContainerWrapper: {fileID: 5613787619958359030}
   traveller: {fileID: 6169223543632825317}
-  legDelay: 1
+  legDelaySecs: 1
   gameSpeed: {fileID: 11400000, guid: c3660b33f404c6344ae786218d0e7437, type: 2}
 --- !u!1 &8632958460726182941
 GameObject:
@@ -5958,6 +5966,7 @@ MonoBehaviour:
   lineRenderer: {fileID: 7790083033421122637}
   origin: {fileID: 8812345678901234505}
   destination: {fileID: 8812345678901234508}
+  contentRoot: {fileID: 356686299887657879}
 --- !u!1 &8812345678901234504
 GameObject:
   m_ObjectHideFlags: 0

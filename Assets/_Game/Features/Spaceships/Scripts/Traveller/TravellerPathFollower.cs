@@ -20,16 +20,6 @@ namespace DigitalLove.Game.Spaceships
 
         public bool IsFollowingPath => pathTween != null && pathTween.IsActive();
 
-        private void Awake()
-        {
-            if (contentRoot == null)
-                contentRoot = transform.root;
-            if (pathSpace == null && followBody != null)
-                pathSpace = followBody.parent;
-            if (pathSpace == null)
-                pathSpace = transform;
-        }
-
         public void FollowPath(Vector3[] contentLocalPositions, Action<bool> onPathEnded)
         {
             CancelFollowing();
@@ -46,9 +36,7 @@ namespace DigitalLove.Game.Spaceships
             Vector3[] pathLocal = new Vector3[contentLocalPositions.Length];
             for (int i = 0; i < contentLocalPositions.Length; i++)
             {
-                Vector3 world = contentRoot != null
-                    ? contentRoot.TransformPoint(contentLocalPositions[i])
-                    : contentLocalPositions[i];
+                Vector3 world = contentRoot.TransformPoint(contentLocalPositions[i]);
                 pathLocal[i] = pathSpace.InverseTransformPoint(world);
             }
 
@@ -88,17 +76,10 @@ namespace DigitalLove.Game.Spaceships
             onPathEnded = null;
         }
 
-        public void EndWithFailure()
+        public void EndFollowing(bool success)
         {
             KillTween();
-            onPathEnded?.Invoke(false);
-            onPathEnded = null;
-        }
-
-        public void EndWithSuccess()
-        {
-            KillTween();
-            onPathEnded?.Invoke(true);
+            onPathEnded?.Invoke(success);
             onPathEnded = null;
         }
 
@@ -109,7 +90,7 @@ namespace DigitalLove.Game.Spaceships
             pathTween = null;
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             KillTween();
         }

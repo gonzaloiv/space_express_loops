@@ -11,18 +11,12 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private LineRendererWithEdges returnLine;
         [SerializeField] private int resolution = 64;
         [SerializeField] private Transform contentRoot;
+        [SerializeField] private SplineContainer splineContainer;
 
-        private SplineContainer splineContainer;
         private SplineLegSampler sampler;
         private bool isLineVisible;
 
         public Transform ContentRoot => contentRoot;
-
-        private void Awake()
-        {
-            if (contentRoot == null)
-                contentRoot = transform.root;
-        }
 
         private readonly List<RouteLeg> legs = new();
         private int currentLegIndex = -1;
@@ -53,16 +47,10 @@ namespace DigitalLove.Game.Spaceships
             return false;
         }
 
-        private SplineContainer SplineContainer => splineContainer ??= GetComponent<SplineContainer>();
-
-        public void SetColor(Color color) => goLine.SetColor(color);
-
-        public Vector3 GetPanelAnchorPosition()
+        public void SetColor(Color color)
         {
-            if (!TryGetCurrentLegPositions(out Vector3[] positions))
-                return transform.position;
-
-            return positions[positions.Length / 2];
+            goLine.SetColor(color);
+            returnLine.SetColor(color);
         }
 
         public void Build(HubBehaviour hub, IReadOnlyList<PlanetBehaviour> destinations)
@@ -76,7 +64,7 @@ namespace DigitalLove.Game.Spaceships
                 return;
             }
 
-            sampler ??= new SplineLegSampler(SplineContainer, resolution, contentRoot);
+            sampler ??= new SplineLegSampler(splineContainer, resolution, contentRoot);
             sampler.Build(hub, destinations, legs);
 
             ShowLeg(0);
@@ -104,8 +92,6 @@ namespace DigitalLove.Game.Spaceships
                 RefreshGoLine();
                 RefreshReturnLine();
             }
-            else
-                ClearLines();
         }
 
         private bool TryGetCurrentLegPositions(out Vector3[] positions)

@@ -436,6 +436,7 @@ Transform:
   - {fileID: 1070615419}
   - {fileID: 421921810}
   - {fileID: 569753070}
+  - {fileID: 782341900000000002}
   m_Father: {fileID: 1097461039}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &64174210
@@ -451,6 +452,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Nodes::DigitalLove.Game.Nodes.PlanetBehaviour
   refs: {fileID: 64174214}
+  universeHandle: {fileID: 782341900000000008}
 --- !u!54 &64174211
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -544,6 +546,7 @@ Transform:
   - {fileID: 1822272472}
   - {fileID: 1727709848}
   - {fileID: 1018074135}
+  - {fileID: 782341900000000031}
   m_Father: {fileID: 935971881}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &74164910
@@ -559,6 +562,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Nodes::DigitalLove.Game.Nodes.HubBehaviour
   refs: {fileID: 74164911}
+  universeHandle: {fileID: 782341900000000037}
 --- !u!114 &74164911
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -573,6 +577,215 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.Nodes::DigitalLove.Game.Nodes.HubRefs
   spawnAnchor: {fileID: 1727709848}
   nodeBody: {fileID: 1822272473}
+--- !u!1 &782341900000000030
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 782341900000000031}
+  - component: {fileID: 782341900000000032}
+  - component: {fileID: 782341900000000033}
+  - component: {fileID: 782341900000000034}
+  - component: {fileID: 782341900000000035}
+  - component: {fileID: 782341900000000036}
+  - component: {fileID: 782341900000000037}
+  - component: {fileID: 782341900000000039}
+  m_Layer: 13
+  m_Name: UniverseHandle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &782341900000000031
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000030}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 74164907}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &782341900000000032
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000030}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.05
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &782341900000000033
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000030}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &782341900000000034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43f86b14a27b52f4f9298c33015b5c26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Oculus.Interaction::Oculus.Interaction.Grabbable
+  _transferOnSecondSelection: 1
+  _addNewPointsToFront: 0
+  _forwardElement: {fileID: 0}
+  _oneGrabTransformer: {fileID: 782341900000000035}
+  _twoGrabTransformer: {fileID: 782341900000000035}
+  _targetTransform: {fileID: 0}
+  _maxGrabPoints: -1
+  _rigidbody: {fileID: 782341900000000033}
+  _kinematicWhileSelected: 1
+  _throwWhenUnselected: 0
+  _forceKinematicDisabled: 1
+--- !u!114 &782341900000000035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb7085c111fcb44493d57d4e336d3fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Oculus.Interaction::Oculus.Interaction.GrabFreeTransformer
+  _resetScaleResponsivenessOnConstraintOvershoot: 0
+--- !u!114 &782341900000000036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9a7676b01585ce43908639a27765dfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Oculus.Interaction::Oculus.Interaction.HandGrab.HandGrabInteractable
+  _interactorFilters: []
+  _maxInteractors: 1
+  _maxSelectingInteractors: 1
+  _data: {fileID: 0}
+  _pointableElement: {fileID: 782341900000000034}
+  _rigidbody: {fileID: 782341900000000033}
+  _physicsGrabbable: {fileID: 0}
+  _resetGrabOnGrabsUpdated: 1
+  _scoringModifier:
+    _positionRotationWeight: 0.8
+  _slippiness: 0
+  _supportedGrabTypes: 1
+  _pinchGrabRules:
+    _thumbRequirement: 2
+    _indexRequirement: 2
+    _middleRequirement: 0
+    _ringRequirement: 0
+    _pinkyRequirement: 0
+    _unselectMode: 1
+  _palmGrabRules:
+    _thumbRequirement: 0
+    _indexRequirement: 0
+    _middleRequirement: 0
+    _ringRequirement: 0
+    _pinkyRequirement: 0
+    _unselectMode: 0
+  _movementProvider: {fileID: 0}
+  _handAligment: 1
+  _handGrabPoses: []
+--- !u!114 &782341900000000037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60cda54eb72d6564a86424face679cf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Nodes::DigitalLove.Game.Nodes.UniverseNodeHandle
+  nodeBehaviour: {fileID: 74164910}
+  grabbable: {fileID: 782341900000000034}
+  handleCollider: {fileID: 782341900000000032}
+  minWorldRadius: 0.022
+  releaseGraceSecs: 0.2
+--- !u!114 &782341900000000039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8f4e2a19b3d4e6f8a0c1d2e3f4a5b6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Interactables.OculusInteractionSDK::DigitalLove.Interactables.OculusInteractionSDK.GrabbablePointerEventTypeOutline
+  idle: {r: 0.2, g: 0.8, b: 1, a: 1}
+  hovered: {r: 0.2, g: 0.8, b: 1, a: 1}
+  selected: {r: 1, g: 0.75, b: 0.1, a: 1}
+  alert: {r: 1, g: 0.1, b: 0.1, a: 1}
+  grabbable: {fileID: 782341900000000034}
+  outline: {fileID: 782341900000000038}
+--- !u!114 &782341900000000038 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5981771109518632977, guid: cd99cd70a0caf0747a89346d1112113e, type: 3}
+  m_PrefabInstance: {fileID: 1822272471}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ChrisNolet.QuickOutline::Outline
 --- !u!1 &81789712
 GameObject:
   m_ObjectHideFlags: 0
@@ -1499,6 +1712,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1568662588}
     m_Modifications:
+    - target: {fileID: 2226325603897888593, guid: f4055528478203d42b8d39b330c3e393, type: 3}
+      propertyPath: near clip plane
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 2968948018543188193, guid: f4055528478203d42b8d39b330c3e393, type: 3}
       propertyPath: m_Name
       value: PlayerControllerInstaller
@@ -1734,6 +1951,59 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ContentSizeFitter
   m_HorizontalFit: 2
   m_VerticalFit: 0
+--- !u!1 &242500897
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 242500898}
+  - component: {fileID: 242500899}
+  - component: {fileID: 782341900000000017}
+  m_Layer: 0
+  m_Name: Universe
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &242500898
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242500897}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 782341900000000011}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &242500899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242500897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e6301be3842ff74e86a6b3a494f5dbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Levels::DigitalLove.Game.Levels.UniverseView
+  contentRoot: {fileID: 677709494}
+  miniBubbleRadius: 0.22
+  bubbleDistance: 0.45
+  bubbleHeightOffset: -0.1
+  minMiniScale: 0.02
+  transitionSecs: 0.3
+  transitionEase: 4
 --- !u!1 &250434372
 GameObject:
   m_ObjectHideFlags: 0
@@ -1925,7 +2195,6 @@ MonoBehaviour:
   - {fileID: 1730347950}
   - {fileID: 883682824}
   - {fileID: 250434374}
-  - {fileID: 1324782179}
   - {fileID: 1324782179}
   - {fileID: 1544695983}
   initialState: {fileID: 1730347950}
@@ -4680,7 +4949,6 @@ GameObject:
   - component: {fileID: 677709495}
   - component: {fileID: 677709496}
   - component: {fileID: 677709497}
-  - component: {fileID: 677709498}
   m_Layer: 0
   m_Name: Level
   m_TagString: Untagged
@@ -4723,7 +4991,7 @@ MonoBehaviour:
   planetsSpawner: {fileID: 1097461040}
   spaceshipsSpawner: {fileID: 933255161}
   hubsSpawner: {fileID: 935971882}
-  universeView: {fileID: 677709498}
+  universeView: {fileID: 242500899}
 --- !u!114 &677709496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4761,25 +5029,6 @@ MonoBehaviour:
   floorMargin: 0.5
   ceilingMargin: 0.5
   minDistanceRadiusMultiplier: 1
---- !u!114 &677709498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 677709493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e6301be3842ff74e86a6b3a494f5dbf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Levels::DigitalLove.Game.Levels.UniverseView
-  miniBubbleRadius: 0.22
-  bubbleDistance: 0.45
-  bubbleHeightOffset: -0.1
-  minMiniScale: 0.02
-  transitionSecs: 0.3
-  transitionEase: 4
-  logTransitions: 0
 --- !u!1 &781987388
 GameObject:
   m_ObjectHideFlags: 0
@@ -5464,19 +5713,6 @@ MonoBehaviour:
   ttsHelper: {fileID: 1654487132}
   highScorePoster: {fileID: 7141206415059494585}
   reviewPanel: {fileID: 2085512488}
-  playerData:
-    userId: 
-    sessionCount: 0
-    cookies: []
-  gameSnapshot:
-    roundIndex: 0
-    planets: []
-    hubs: []
-    loops: []
-    store:
-      letters: 0
-      money: 0
-    lettersRequiredForRoundCompletion: 0
 --- !u!1 &924513524
 GameObject:
   m_ObjectHideFlags: 0
@@ -8485,7 +8721,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1070615419}
   - component: {fileID: 1070615420}
-  - component: {fileID: 1070615421}
   m_Layer: 5
   m_Name: Panel - Color
   m_TagString: Untagged
@@ -8521,20 +8756,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bfee54bfbe4243a0abce52d2086a141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.UI.DesignSystem::DigitalLove.UI.DesignSystem.LayoutUpdater
---- !u!114 &1070615421
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1070615418}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f321e24d6e37d5b42958f25cd1223c01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.UI::DigitalLove.Game.UI.ButtonPanel
-  btnPanel: {fileID: 964978562}
-  layoutUpdater: {fileID: 1070615420}
 --- !u!1 &1097461038
 GameObject:
   m_ObjectHideFlags: 0
@@ -9434,19 +9655,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Persistence::DigitalLove.Game.Persistence.GameSnapshotClient
   updateIntervalSecs: 5
-  gameSnapshot:
-    roundIndex: 0
-    planets: []
-    hubs: []
-    loops: []
-    store:
-      letters: 0
-      money: 0
-    lettersRequiredForRoundCompletion: 0
-  playerData:
-    userId: 
-    sessionCount: 0
-    cookies: []
 --- !u!114 &1302786015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9510,7 +9718,6 @@ MonoBehaviour:
   roundSelector: {fileID: 677709496}
   levelContainer: {fileID: 677709495}
   progressionEventsHelper: {fileID: 1210227670}
-  ttsHelper: {fileID: 1654487132}
   gameSpeed: {fileID: 11400000, guid: c3660b33f404c6344ae786218d0e7437, type: 2}
 --- !u!1 &1351310010
 GameObject:
@@ -11408,11 +11615,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40b35439c9e258d4cbd510357b66fdf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Debug::DigitalLove.Game.Debug.EditorDebugContext
-  planets: {fileID: 1097461040}
-  hubs: {fileID: 935971882}
-  spaceships: {fileID: 933255161}
-  targetSpaceship: {fileID: 0}
-  destinationPlanet: {fileID: 0}
 --- !u!4 &1707529851
 Transform:
   m_ObjectHideFlags: 0
@@ -11466,8 +11668,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3f8c2d14e5b7091a4c6d8e2f0b93746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.DebugActions::DigitalLove.Game.DebugActions.RoundDebugActions
-  editionState: {fileID: 0}
-  newRoundState: {fileID: 0}
 --- !u!1 &1718389704
 GameObject:
   m_ObjectHideFlags: 0
@@ -14484,6 +14684,460 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &782341900000000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 782341900000000002}
+  - component: {fileID: 782341900000000003}
+  - component: {fileID: 782341900000000004}
+  - component: {fileID: 782341900000000005}
+  - component: {fileID: 782341900000000006}
+  - component: {fileID: 782341900000000007}
+  - component: {fileID: 782341900000000008}
+  - component: {fileID: 782341900000000009}
+  m_Layer: 13
+  m_Name: UniverseHandle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &782341900000000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 64174209}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &782341900000000003
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000001}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.05
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &782341900000000004
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000001}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &782341900000000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43f86b14a27b52f4f9298c33015b5c26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Oculus.Interaction::Oculus.Interaction.Grabbable
+  _transferOnSecondSelection: 1
+  _addNewPointsToFront: 0
+  _forwardElement: {fileID: 0}
+  _oneGrabTransformer: {fileID: 782341900000000006}
+  _twoGrabTransformer: {fileID: 782341900000000006}
+  _targetTransform: {fileID: 0}
+  _maxGrabPoints: -1
+  _rigidbody: {fileID: 782341900000000004}
+  _kinematicWhileSelected: 1
+  _throwWhenUnselected: 0
+  _forceKinematicDisabled: 1
+--- !u!114 &782341900000000006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb7085c111fcb44493d57d4e336d3fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Oculus.Interaction::Oculus.Interaction.GrabFreeTransformer
+  _positionConstraints:
+    ConstraintsAreRelative: 0
+    XAxis:
+      ConstrainAxis: 0
+      AxisRange:
+        Min: 0
+        Max: 0
+    YAxis:
+      ConstrainAxis: 0
+      AxisRange:
+        Min: 0
+        Max: 0
+    ZAxis:
+      ConstrainAxis: 0
+      AxisRange:
+        Min: 0
+        Max: 0
+  _rotationConstraints:
+    XAxis:
+      ConstrainAxis: 0
+      AxisRange:
+        Min: 0
+        Max: 0
+    YAxis:
+      ConstrainAxis: 0
+      AxisRange:
+        Min: 0
+        Max: 0
+    ZAxis:
+      ConstrainAxis: 0
+      AxisRange:
+        Min: 0
+        Max: 0
+  _scaleConstraints:
+    ConstraintsAreRelative: 1
+    XAxis:
+      ConstrainAxis: 1
+      AxisRange:
+        Min: 1
+        Max: 1
+    YAxis:
+      ConstrainAxis: 1
+      AxisRange:
+        Min: 1
+        Max: 1
+    ZAxis:
+      ConstrainAxis: 1
+      AxisRange:
+        Min: 1
+        Max: 1
+  _resetScaleResponsivenessOnConstraintOvershoot: 0
+--- !u!114 &782341900000000007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9a7676b01585ce43908639a27765dfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Oculus.Interaction::Oculus.Interaction.HandGrab.HandGrabInteractable
+  _interactorFilters: []
+  _maxInteractors: 1
+  _maxSelectingInteractors: 1
+  _data: {fileID: 0}
+  _pointableElement: {fileID: 782341900000000005}
+  _rigidbody: {fileID: 782341900000000004}
+  _resetGrabOnGrabsUpdated: 1
+  _scoringModifier:
+    _positionRotationWeight: 0.8
+  _slippiness: 0
+  _supportedGrabTypes: 1
+  _pinchGrabRules:
+    _thumbRequirement: 2
+    _indexRequirement: 2
+    _middleRequirement: 0
+    _ringRequirement: 0
+    _pinkyRequirement: 0
+    _unselectMode: 1
+  _palmGrabRules:
+    _thumbRequirement: 0
+    _indexRequirement: 0
+    _middleRequirement: 0
+    _ringRequirement: 0
+    _pinkyRequirement: 0
+    _unselectMode: 0
+  _movementProvider: {fileID: 0}
+  _handAligment: 1
+  _handGrabPoses: []
+--- !u!114 &782341900000000008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60cda54eb72d6564a86424face679cf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Nodes::DigitalLove.Game.Nodes.UniverseNodeHandle
+  nodeBehaviour: {fileID: 64174210}
+  grabbable: {fileID: 782341900000000005}
+  handleCollider: {fileID: 782341900000000003}
+  minWorldRadius: 0.022
+--- !u!114 &782341900000000009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8f4e2a19b3d4e6f8a0c1d2e3f4a5b6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Interactables.OculusInteractionSDK::DigitalLove.Interactables.OculusInteractionSDK.GrabbablePointerEventTypeOutline
+  idle: {r: 0.2, g: 0.8, b: 1, a: 1}
+  hovered: {r: 0.2, g: 0.8, b: 1, a: 1}
+  selected: {r: 1, g: 0.75, b: 0.1, a: 1}
+  alert: {r: 1, g: 0.1, b: 0.1, a: 1}
+  grabbable: {fileID: 782341900000000005}
+  outline: {fileID: 4558485118862268317}
+--- !u!1 &782341900000000010
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 782341900000000011}
+  - component: {fileID: 782341900000000012}
+  m_Layer: 0
+  m_Name: Ghost
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &782341900000000011
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000010}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 782341900000000022}
+  m_Father: {fileID: 242500898}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &782341900000000012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1032cba50a2652f4fbb9e8409ee382c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Levels::DigitalLove.Game.Levels.UniverseGhostView
+  handLine: {fileID: 782341900000000023}
+--- !u!1 &782341900000000021
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 782341900000000022}
+  - component: {fileID: 782341900000000023}
+  m_Layer: 0
+  m_Name: HandLine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &782341900000000022
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000021}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 782341900000000011}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!120 &782341900000000023
+LineRenderer:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782341900000000021}
+  m_Enabled: 0
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: b1cab3eef5497554283ec2305e0178b6, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_Positions: []
+  m_Parameters:
+    serializedVersion: 3
+    widthMultiplier: 1
+    widthCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0.006
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    colorGradient:
+      serializedVersion: 2
+      key0: {r: 0.2, g: 0.8, b: 1, a: 1}
+      key1: {r: 0.2, g: 0.8, b: 1, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 0
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_ColorSpace: -1
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    numCornerVertices: 0
+    numCapVertices: 0
+    alignment: 0
+    textureMode: 0
+    textureScale: {x: 1, y: 1}
+    shadowBias: 0.5
+    generateLightingData: 0
+  m_UseWorldSpace: 1
+  m_Loop: 0
+  m_ApplyActiveColorSpace: 1
+--- !u!114 &782341900000000017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242500897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f6390944b8a2a1489867fc422fae318, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Levels::DigitalLove.Game.Levels.UniverseGhostController
+  universeView: {fileID: 242500899}
+  ghostView: {fileID: 782341900000000012}
+  planetsSpawner: {fileID: 1097461040}
+  hubsSpawner: {fileID: 935971882}
+  spaceshipsSpawner: {fileID: 933255161}
+  minHandSeparation: 0.06
+  scaleGain: 2.5
+  enterRoomScale: 0.6
+  exitRoomScale: 0.45
+  logEvents: 1
 --- !u!222 &797675841606255178
 CanvasRenderer:
   m_ObjectHideFlags: 0

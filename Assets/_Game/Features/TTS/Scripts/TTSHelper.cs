@@ -2,6 +2,7 @@ using UnityEngine;
 using DigitalLove.TTS;
 using System;
 using DigitalLove.Game.Levels;
+using DigitalLove.Game.Persistence;
 using DigitalLove.Global;
 using DigitalLove.DataAccess;
 using Reflex.Attributes;
@@ -32,9 +33,8 @@ namespace DigitalLove.Game.TTS
         private async void SaveCookie(string key)
         {
             PlayerData playerData = memoryDataClient.Get<PlayerData>();
-            Cookie cookie = playerData.GetOrCreateCookie(key);
-            playerData.AddCookie(cookie);
-            await unityPlayerDataClient.Put(playerData);
+            playerData.GetOrCreateCookie(key);
+            await GameSnapshotStore.SavePlayerDataAsync(playerData, unityPlayerDataClient);
         }
 
         public void SetInFrontOfCameraOrDefault(bool isInFrontOfCamera)

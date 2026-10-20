@@ -12,8 +12,8 @@ namespace DigitalLove.Game.Spaceships
     {
         [SerializeField] private GameObject body;
         [SerializeField] private ResourcePanel lettersPanel;
+        [SerializeField] private TravellerPathFollower pathFollower;
 
-        [SerializeField] private Renderer rend;
         [SerializeField] private AudioSource startMoveAudioSource;
         [SerializeField] private AudioSource loadedAudioSource;
 
@@ -21,8 +21,7 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private DetachedParticlePlayer detachedParticlePlayer;
         [SerializeField] private AudioSource hitAudioSource;
 
-        private TravellerPathFollower pathFollower;
-        private TravellerPathFollower PathFollower => pathFollower ??= GetComponent<TravellerPathFollower>();
+        private TravellerPathFollower PathFollower => pathFollower;
         private bool isCollisionActive;
         private PlanetBehaviour arrivalPlanet;
 
@@ -90,10 +89,8 @@ namespace DigitalLove.Game.Spaceships
             detachedParticlePlayer.PlayAt();
             Hide();
 
-            if (arrivalPlanet != null && planet == arrivalPlanet)
-                PathFollower.EndWithSuccess();
-            else
-                PathFollower.EndWithFailure();
+            bool reachedArrivalPlanet = arrivalPlanet != null && planet == arrivalPlanet;
+            PathFollower.EndFollowing(reachedArrivalPlanet);
         }
     }
 }

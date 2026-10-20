@@ -1,11 +1,12 @@
 using DigitalLove.DataAccess;
+using DigitalLove.Game.Persistence;
 using DigitalLove.Global;
 using DigitalLove.XR.MRUtilityKit;
 using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
 
-namespace DigitalLove.Game.UI
+namespace DigitalLove.Game.Flow
 {
     public class HighScorePosterBehaviour : MonoBehaviour
     {
@@ -34,18 +35,8 @@ namespace DigitalLove.Game.UI
         private bool HasHighestScore(out int score)
         {
             PlayerData playerData = memoryDataClient.Get<PlayerData>();
-            Cookie current = playerData.GetCookieById(highScoreKey.value);
-            if (current == null)
-            {
-                score = 0;
-                return false;
-            }
-            else
-            {
-                int value = int.Parse(current.metadata);
-                score = value;
-                return score <= 0 ? false : true;
-            }
+            score = playerData.GetHighScoreMoney(highScoreKey);
+            return score > 0;
         }
 
         public void Hide()

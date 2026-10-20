@@ -15,14 +15,7 @@ namespace DigitalLove.Game.DebugActions
         private SpaceshipBehaviour ResolveShip()
         {
             SpaceshipBehaviour ship = context.ResolveTargetShip();
-            if (ship == null)
-                return null;
-
-            context.EnsureSpaceshipsReady();
-            if (!ship.IsInitialized)
-                ship.Initialize();
-
-            context.Spaceships.WireLoopHandlers(ship);
+            context.PrepareShipForRoute(ship);
             return ship;
         }
 

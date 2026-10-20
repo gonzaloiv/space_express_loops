@@ -4,14 +4,8 @@ using System.Collections.Generic;
 namespace DigitalLove.Game.Spaceships
 {
     [Serializable]
-    public class LoopEventArgs
+    public class LoopEventArgs : LoopData
     {
-        public string spaceshipId;
-        public List<string> destinationIds = new();
-        public string colorCode;
-        public string hubId;
-
-        public bool HasRoute => destinationIds != null && destinationIds.Count > 0;
     }
 
     [Serializable]

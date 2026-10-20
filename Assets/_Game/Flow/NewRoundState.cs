@@ -5,7 +5,6 @@ using DigitalLove.Game.Levels;
 using Reflex.Attributes;
 using DigitalLove.Game.Persistence;
 using DigitalLove.Casual.Analytics;
-using DigitalLove.Game.TTS;
 using DigitalLove.Global;
 
 namespace DigitalLove.Game.Flow
@@ -16,7 +15,6 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private RoundSelector roundSelector;
         [SerializeField] private LevelContainer levelContainer;
         [SerializeField] private ProgressionEventsHelper progressionEventsHelper;
-        [SerializeField] private TTSHelper ttsHelper;
         [SerializeField] private FloatValue gameSpeed;
 
         [Inject] private MemoryDataClient memoryDataClient;
@@ -30,7 +28,7 @@ namespace DigitalLove.Game.Flow
             levelContainer.SpawnRound(roundSelector.CurrentRound, gameSnapshot);
             levelContainer.PlanetsSpawner.UnlockPlanetStores();
 
-            gameSnapshot.RecalculateLettersRequiredForRound(roundSelector.CurrentRound.lettersIncreaseMultiplier / gameSpeed.value);
+            gameSnapshot.RecalculateLettersRequiredForRound(roundSelector.CurrentRound.lettersIncreaseMultiplier * gameSpeed.value);
 
             if (roundSelector.CurrentRound.resetsLetters)
                 levelContainer.ResetLetters();

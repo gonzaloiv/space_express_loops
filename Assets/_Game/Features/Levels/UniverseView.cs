@@ -7,6 +7,9 @@ namespace DigitalLove.Game.Levels
 {
     public class UniverseView : MonoBehaviour
     {
+        [Header("References")]
+        [SerializeField] private Transform contentRoot;
+
         [Header("Bubble")]
         [SerializeField] private float miniBubbleRadius = 0.22f;
         [SerializeField] private float bubbleDistance = 0.45f;
@@ -16,8 +19,6 @@ namespace DigitalLove.Game.Levels
         [Header("Transition")]
         [SerializeField] private float transitionSecs = 0.6f;
         [SerializeField] private Ease transitionEase = Ease.InOutSine;
-
-        [Header("Debug")]
 
         private UniversePose roomPose;
         private Vector3 contentCenter;
@@ -33,14 +34,13 @@ namespace DigitalLove.Game.Levels
         public bool IsMini => isMini;
         public bool IsTransitioning => isTransitioning;
         public bool HasRoomAnchor => hasRoomAnchor;
-        public float Scale => transform.localScale.x;
+        public float Scale => contentRoot.localScale.x;
         public float ContentRadius => contentRadius;
         public float MiniScale => Mathf.Clamp(miniBubbleRadius / contentRadius, minMiniScale, 1f);
-        public Transform ContentRoot => transform;
 
         private void Awake()
         {
-            roomPose = UniversePose.FromTransform(transform);
+            roomPose = UniversePose.FromTransform(contentRoot);
         }
 
         public void SetRoomAnchor(Pose pose, Bounds roomBounds)
@@ -70,7 +70,7 @@ namespace DigitalLove.Game.Levels
             if (instant || transitionSecs <= 0f)
             {
                 ApplyPose(target);
-                SetMiniState(bubble);
+                isMini = bubble;
                 TransitionCompleted?.Invoke(bubble);
                 return;
             }
@@ -101,17 +101,17 @@ namespace DigitalLove.Game.Levels
             }
         }
 
-        public UniversePose CurrentPose => new(transform.position, transform.rotation, transform.localScale.x);
+        public UniversePose CurrentPose => new(contentRoot.position, contentRoot.rotation, contentRoot.localScale.x);
 
         private UniversePose BuildMiniPose()
         {
             Camera camera = Camera.main;
             Quaternion rotation = YawOnly(roomPose.rotation);
-            float scale = Mathf.Clamp(miniBubbleRadius / contentRadius, minMiniScale, 1f);
+            float scale = MiniScale;
             Vector3 anchor = camera != null
                 ? camera.transform.position + camera.transform.forward * bubbleDistance
                     + camera.transform.up * bubbleHeightOffset
-                : transform.position + Vector3.forward * bubbleDistance;
+                : contentRoot.position + Vector3.forward * bubbleDistance;
             Vector3 position = anchor - rotation * (scale * contentCenter);
             return new UniversePose(position, rotation, scale);
         }
@@ -123,9 +123,9 @@ namespace DigitalLove.Game.Levels
             TransitionStarted?.Invoke(toMini);
 
             Sequence sequence = DOTween.Sequence();
-            sequence.Join(transform.DOMove(target.position, transitionSecs).SetEase(transitionEase));
-            sequence.Join(transform.DORotateQuaternion(target.rotation, transitionSecs).SetEase(transitionEase));
-            sequence.Join(transform.DOScale(Vector3.one * target.scale, transitionSecs).SetEase(transitionEase));
+            sequence.Join(contentRoot.DOMove(target.position, transitionSecs).SetEase(transitionEase));
+            sequence.Join(contentRoot.DORotateQuaternion(target.rotation, transitionSecs).SetEase(transitionEase));
+            sequence.Join(contentRoot.DOScale(Vector3.one * target.scale, transitionSecs).SetEase(transitionEase));
             sequence.OnComplete(() => CompleteTransition(target, toMini));
             sequence.SetTarget(this);
             transition = sequence;
@@ -136,23 +136,15 @@ namespace DigitalLove.Game.Levels
             ApplyPose(target);
             transition = null;
             isTransitioning = false;
-            SetMiniState(toMini);
+            isMini = toMini;
             TransitionCompleted?.Invoke(toMini);
-        }
-
-        private void SetMiniState(bool mini)
-        {
-            if (isMini == mini)
-                return;
-
-            isMini = mini;
         }
 
         private void ApplyPose(UniversePose pose)
         {
-            transform.position = pose.position;
-            transform.rotation = pose.rotation;
-            transform.localScale = Vector3.one * pose.scale;
+            contentRoot.position = pose.position;
+            contentRoot.rotation = pose.rotation;
+            contentRoot.localScale = Vector3.one * pose.scale;
         }
 
         private static Quaternion YawOnly(Quaternion rotation)
@@ -166,9 +158,12 @@ namespace DigitalLove.Game.Levels
 
         private void OnDisable()
         {
+            bool wasTransitioning = isTransitioning;
             transition?.Kill();
             transition = null;
             isTransitioning = false;
+            if (wasTransitioning)
+                TransitionCompleted?.Invoke(isMini);
         }
 
         private void OnValidate()

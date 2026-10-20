@@ -27,8 +27,16 @@ namespace DigitalLove.Game.Nodes
             if (renderers == null || renderers.Count == 0)
                 return;
 
-            int index = renderers.Count > 1 ? Random.Range(0, renderers.Count) : 0;
-            SetActiveRenderer(index);
+            int startIndex = Random.Range(0, renderers.Count);
+            for (int i = 0; i < renderers.Count; i++)
+            {
+                int index = (startIndex + i) % renderers.Count;
+                if (renderers[index] == null)
+                    continue;
+
+                SetActiveRenderer(index);
+                return;
+            }
         }
 
         private void SetActiveRenderer(int index)
@@ -43,12 +51,17 @@ namespace DigitalLove.Game.Nodes
 
         public void EnsureReadyForRouteColor()
         {
-            EnsureActiveRenderer();
-            if (activeRenderer != null)
+            if (activeRenderer != null || renderers == null || renderers.Count == 0)
                 return;
 
-            if (renderers != null && renderers.Count > 0)
-                SetActiveRenderer(0);
+            for (int i = 0; i < renderers.Count; i++)
+            {
+                if (renderers[i] == null)
+                    continue;
+
+                SetActiveRenderer(i);
+                return;
+            }
         }
 
         public void SetRouteColor(Color color)
@@ -66,24 +79,5 @@ namespace DigitalLove.Game.Nodes
             SetRouteColor(defaultColor);
         }
 
-        private void EnsureActiveRenderer()
-        {
-            if (activeRenderer != null)
-                return;
-
-            if (renderers == null || renderers.Count == 0)
-                return;
-
-            for (int i = 0; i < renderers.Count; i++)
-            {
-                if (renderers[i] != null && renderers[i].gameObject.activeInHierarchy)
-                {
-                    activeRenderer = renderers[i];
-                    return;
-                }
-            }
-
-            activeRenderer = renderers[0];
-        }
     }
 }

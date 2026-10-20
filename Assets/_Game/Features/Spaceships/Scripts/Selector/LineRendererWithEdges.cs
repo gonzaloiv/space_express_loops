@@ -16,22 +16,13 @@ namespace DigitalLove.Game.Spaceships
 
         private void Awake()
         {
-            if (contentRoot == null)
-                contentRoot = transform.root;
-            if (lineRenderer != null)
-            {
-                lineRenderer.useWorldSpace = false;
-                baseWidthMultiplier = lineRenderer.widthMultiplier;
-            }
+            lineRenderer.useWorldSpace = false;
+            baseWidthMultiplier = lineRenderer.widthMultiplier;
         }
 
         private void LateUpdate()
         {
-            if (lineRenderer == null)
-                return;
-
-            float scale = contentRoot != null ? contentRoot.lossyScale.x : 1f;
-            lineRenderer.widthMultiplier = baseWidthMultiplier * scale;
+            lineRenderer.widthMultiplier = baseWidthMultiplier * contentRoot.lossyScale.x;
 
             if (visibleRequested && lineRenderer.enabled)
                 RefreshEdgeMarkers();
@@ -39,9 +30,6 @@ namespace DigitalLove.Game.Spaceships
 
         public void SetColor(Color color)
         {
-            if (lineRenderer == null)
-                return;
-
             lineRenderer.material.color = color;
             RefreshEdgeMarkers();
         }
@@ -49,8 +37,7 @@ namespace DigitalLove.Game.Spaceships
         public void SetVisible(bool visible)
         {
             visibleRequested = visible;
-            if (lineRenderer != null)
-                lineRenderer.gameObject.SetActive(visible);
+            lineRenderer.gameObject.SetActive(visible);
 
             if (!visible)
                 Clear();
@@ -70,33 +57,31 @@ namespace DigitalLove.Game.Spaceships
 
             if (contentLocalPositions.Length == 2)
             {
-                ApplyWorldPositions(
-                    contentRoot != null ? contentRoot.TransformPoint(contentLocalPositions[0]) : contentLocalPositions[0],
-                    contentRoot != null ? contentRoot.TransformPoint(contentLocalPositions[1]) : contentLocalPositions[1]);
+                ApplyTwoPointPositions(contentLocalPositions[0], contentLocalPositions[1]);
                 return;
             }
 
-            if (lineRenderer == null)
-                return;
+            ApplyPolylinePositions(contentLocalPositions);
+        }
 
+        private void ApplyTwoPointPositions(Vector3 start, Vector3 end) =>
+            ApplyWorldPositions(ToWorld(start), ToWorld(end));
+
+        private void ApplyPolylinePositions(Vector3[] contentLocalPositions)
+        {
             lineRenderer.positionCount = contentLocalPositions.Length;
             for (int i = 0; i < contentLocalPositions.Length; i++)
-            {
-                Vector3 world = contentRoot != null
-                    ? contentRoot.TransformPoint(contentLocalPositions[i])
-                    : contentLocalPositions[i];
-                lineRenderer.SetPosition(i, lineRenderer.transform.InverseTransformPoint(world));
-            }
+                lineRenderer.SetPosition(i, lineRenderer.transform.InverseTransformPoint(ToWorld(contentLocalPositions[i])));
 
             lineRenderer.enabled = true;
             RefreshEdgeMarkers();
         }
 
+        private Vector3 ToWorld(Vector3 contentLocalPosition) =>
+            contentRoot.TransformPoint(contentLocalPosition);
+
         public void Clear()
         {
-            if (lineRenderer == null)
-                return;
-
             lineRenderer.positionCount = 0;
             lineRenderer.enabled = false;
             RefreshEdgeMarkers();
@@ -104,9 +89,6 @@ namespace DigitalLove.Game.Spaceships
 
         private void ApplyWorldPositions(Vector3 start, Vector3 end)
         {
-            if (lineRenderer == null)
-                return;
-
             lineRenderer.positionCount = 2;
             lineRenderer.SetPosition(0, lineRenderer.transform.InverseTransformPoint(start));
             lineRenderer.SetPosition(1, lineRenderer.transform.InverseTransformPoint(end));
@@ -116,9 +98,6 @@ namespace DigitalLove.Game.Spaceships
 
         private void RefreshEdgeMarkers()
         {
-            if (origin == null || destination == null || lineRenderer == null)
-                return;
-
             bool showMarkers = visibleRequested
                 && lineRenderer.gameObject.activeInHierarchy
                 && lineRenderer.enabled

@@ -21,13 +21,13 @@ namespace DigitalLove.Game.Spaceships
 
         public SpaceshipRouteSession(SpaceshipRefs refs, MonoBehaviour coroutineHost)
         {
-            routeContainer = refs.splineContainerWrapper;
-            destinationSelector = refs.destinationSelector;
+            routeContainer = refs.SplineContainerWrapper;
+            destinationSelector = refs.DestinationSelector;
             TravellerLoop = new TravellerRouteRunner(
                 coroutineHost,
                 routeContainer,
-                refs.traveller,
-                refs.legDelay);
+                refs.Traveller,
+                refs.LegDelay);
         }
 
         public void ResetVisuals()
@@ -98,11 +98,7 @@ namespace DigitalLove.Game.Spaceships
         {
             PlanetBehaviour last = destinations[^1];
             if (routeContainer.TryGetApproachEndPosition(last, out Vector3 localPosition))
-            {
-                return routeContainer.ContentRoot != null
-                    ? routeContainer.ContentRoot.TransformPoint(localPosition)
-                    : localPosition;
-            }
+                return routeContainer.ContentRoot.TransformPoint(localPosition);
 
             return last.Position;
         }

@@ -16,10 +16,8 @@ namespace DigitalLove.Game.Spaceships
         private bool isGrabbed;
         private bool isPickingDestination;
 
-        public Action selected;
-        public Action released;
-
-        public void SetInteractionActive(bool active) => grabbable.SetActive(active);
+        public event Action selected;
+        public event Action released;
 
         public void SetWorldPosition(Vector3 position) => transform.position = position;
 
@@ -41,8 +39,6 @@ namespace DigitalLove.Game.Spaceships
             grabZone.SetActive(false);
             RefreshBodyVisibility();
         }
-
-        public void EnablePointerHandling() => pointerHandlingEnabled = true;
 
         public void DisablePointerHandling() => pointerHandlingEnabled = false;
 

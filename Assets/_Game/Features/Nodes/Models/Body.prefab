@@ -103,7 +103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: ChrisNolet.QuickOutline::Outline
   outlineMode: 0
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 4
+  outlineWidth: 0.08
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 2959467708922500008, guid: fe6f8fa5e952281469ea1914de5fa209, type: 3}

@@ -15,22 +15,13 @@ namespace DigitalLove.Game.Spaceships
 
         private void Awake()
         {
-            if (contentRoot == null)
-                contentRoot = transform.root;
-            if (lineToHost != null)
-            {
-                lineToHost.useWorldSpace = false;
-                baseWidthMultiplier = lineToHost.widthMultiplier;
-            }
+            lineToHost.useWorldSpace = false;
+            baseWidthMultiplier = lineToHost.widthMultiplier;
         }
 
         private void LateUpdate()
         {
-            if (lineToHost == null)
-                return;
-
-            float scale = contentRoot != null ? contentRoot.lossyScale.x : 1f;
-            lineToHost.widthMultiplier = baseWidthMultiplier * scale;
+            lineToHost.widthMultiplier = baseWidthMultiplier * contentRoot.lossyScale.x;
 
             if (hasTarget)
                 Refresh();
@@ -56,10 +47,7 @@ namespace DigitalLove.Game.Spaceships
 
         private void Refresh()
         {
-            if (lineToHost == null)
-                return;
-
-            float scale = contentRoot != null ? contentRoot.lossyScale.x : 1f;
+            float scale = contentRoot.lossyScale.x;
             lineToHost.widthMultiplier = baseWidthMultiplier * scale;
 
             Vector3 start = lineToHost.transform.position;

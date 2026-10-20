@@ -2,9 +2,7 @@ using DigitalLove.Game.Nodes;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using DigitalLove.Global;
-using UnityEngine.Assertions;
 
 namespace DigitalLove.Game.Spaceships
 {
@@ -51,8 +49,21 @@ namespace DigitalLove.Game.Spaceships
 
         public void ResetPool()
         {
+            ResetColors();
             InitializePool();
             HideAll();
+        }
+
+        private void ResetColors()
+        {
+            if (colors == null)
+                return;
+
+            for (int i = 0; i < colors.Length; i++)
+            {
+                if (colors[i] != null)
+                    colors[i].isTaken = false;
+            }
         }
 
         public void InitializePool()
@@ -66,8 +77,17 @@ namespace DigitalLove.Game.Spaceships
 
         public void SyncIdsFromSnapshot(IEnumerable<string> existingIds) => idCounter.SyncFromExistingIds(existingIds);
 
-        public SpaceshipBehaviour GetActiveById(string id) =>
-            spaceships.FirstOrDefault(s => s.IsActive && string.Equals(s.Id, id));
+        public SpaceshipBehaviour GetActiveById(string id)
+        {
+            for (int i = 0; i < spaceships.Count; i++)
+            {
+                SpaceshipBehaviour spaceship = spaceships[i];
+                if (spaceship != null && spaceship.IsActive && string.Equals(spaceship.Id, id))
+                    return spaceship;
+            }
+
+            return null;
+        }
 
         public SpaceshipBehaviour SpawnNew(HubBehaviour basePlanet)
         {
@@ -124,28 +144,54 @@ namespace DigitalLove.Game.Spaceships
 
         private ColorIsAvailablePair GetColorPair(string colorCode)
         {
-            return colors.FirstOrDefault(c => string.Equals(c.Code, colorCode, StringComparison.OrdinalIgnoreCase));
+            if (colors == null)
+                return null;
+
+            for (int i = 0; i < colors.Length; i++)
+            {
+                ColorIsAvailablePair pair = colors[i];
+                if (pair != null && string.Equals(pair.Code, colorCode, StringComparison.OrdinalIgnoreCase))
+                    return pair;
+            }
+
+            return null;
         }
 
         private SpaceshipBehaviour GetOrInstantiate()
         {
-            SpaceshipBehaviour spaceship = spaceships.FirstOrDefault(s => !s.IsActive);
-            if (spaceship == null)
+            for (int i = 0; i < spaceships.Count; i++)
             {
-                spaceship = Instantiate(spaceships[0], transform);
-                spaceship.Initialize();
-                spaceships.Add(spaceship);
-                spaceship.Hide();
+                SpaceshipBehaviour pooled = spaceships[i];
+                if (pooled != null && !pooled.IsActive)
+                    return pooled;
             }
 
+            SpaceshipBehaviour spaceship = Instantiate(spaceships[0], transform);
+            spaceship.Initialize();
+            spaceships.Add(spaceship);
+            spaceship.Hide();
             return spaceship;
         }
 
         private ColorIsAvailablePair GetRandomAvailableColorPair()
         {
-            ColorIsAvailablePair[] availableColors = colors.Where(c => !c.isTaken).ToArray();
-            Assert.AreNotEqual(availableColors.Length, 0);
-            return availableColors[UnityEngine.Random.Range(0, availableColors.Length)];
+            if (colors == null || colors.Length == 0)
+                throw new InvalidOperationException("SpaceshipsSpawner has no color pairs configured.");
+
+            List<ColorIsAvailablePair> availableColors = new(colors.Length);
+            for (int i = 0; i < colors.Length; i++)
+            {
+                if (colors[i] != null && !colors[i].isTaken)
+                    availableColors.Add(colors[i]);
+            }
+
+            if (availableColors.Count == 0)
+            {
+                Debug.LogError("[SpaceshipsSpawner] No available spaceship colors; reusing the first pair.");
+                return colors[0];
+            }
+
+            return availableColors[UnityEngine.Random.Range(0, availableColors.Count)];
         }
 
         public void SpawnRestored(string id, HubBehaviour hub, IReadOnlyList<PlanetBehaviour> destinations, string colorCode)
@@ -159,8 +205,23 @@ namespace DigitalLove.Game.Spaceships
 
         public void HideAll()
         {
-            foreach (SpaceshipBehaviour spaceship in spaceships)
+            for (int i = 0; i < spaceships.Count; i++)
+            {
+                SpaceshipBehaviour spaceship = spaceships[i];
+                if (spaceship == null)
+                    continue;
+
+                if (spaceship.HasData)
+                    ReleaseColor(spaceship.ColorCode);
                 spaceship.Hide();
+            }
+        }
+
+        private void ReleaseColor(string colorCode)
+        {
+            ColorIsAvailablePair pair = GetColorPair(colorCode);
+            if (pair != null)
+                pair.isTaken = false;
         }
 
         public void RefreshGrabbablesAtStation()
@@ -188,14 +249,23 @@ namespace DigitalLove.Game.Spaceships
 
         public SpaceshipBehaviour GetRandomActive()
         {
-            List<SpaceshipBehaviour> active = spaceships.Where(s => s != null && s.IsActive).ToList();
-            if (active.Count == 0)
-                return null;
+            SpaceshipBehaviour selected = null;
+            int activeCount = 0;
+            for (int i = 0; i < spaceships.Count; i++)
+            {
+                SpaceshipBehaviour spaceship = spaceships[i];
+                if (spaceship == null || !spaceship.IsActive)
+                    continue;
 
-            return active[UnityEngine.Random.Range(0, active.Count)];
+                activeCount++;
+                if (UnityEngine.Random.Range(0, activeCount) == 0)
+                    selected = spaceship;
+            }
+
+            return selected;
         }
 
-        public List<SpaceshipBehaviour> GetAll() => spaceships.ToList();
+        public List<SpaceshipBehaviour> GetAll() => spaceships;
 
         #endregion
     }

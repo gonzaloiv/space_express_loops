@@ -24,24 +24,32 @@ namespace DigitalLove.Game.Nodes
                 return false;
             }
 
-            if (isValid
-                && cachedBounds == bounds
-                && cachedPosition == localSpace.position
-                && cachedRotation == localSpace.rotation)
-            {
-                minY = cachedMinY;
-                maxY = cachedMaxY;
+            if (TryReadCache(bounds, localSpace, out minY, out maxY))
                 return true;
-            }
 
             Compute(bounds, localSpace, out minY, out maxY);
+            UpdateCache(bounds, localSpace, minY, maxY);
+            return true;
+        }
+
+        private bool TryReadCache(Bounds bounds, Transform localSpace, out float minY, out float maxY)
+        {
+            minY = cachedMinY;
+            maxY = cachedMaxY;
+            return isValid
+                && cachedBounds == bounds
+                && cachedPosition == localSpace.position
+                && cachedRotation == localSpace.rotation;
+        }
+
+        private void UpdateCache(Bounds bounds, Transform localSpace, float minY, float maxY)
+        {
             cachedMinY = minY;
             cachedMaxY = maxY;
             cachedBounds = bounds;
             cachedPosition = localSpace.position;
             cachedRotation = localSpace.rotation;
             isValid = true;
-            return true;
         }
 
         private static void Compute(Bounds bounds, Transform localSpace, out float minY, out float maxY)

@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace DigitalLove.Game.DebugActions
 {
-    [RequireComponent(typeof(EditorDebugContext))]
     public class GameSnapshotDebugActions : MonoBehaviour
     {
         [Inject] private MemoryDataClient memoryDataClient;

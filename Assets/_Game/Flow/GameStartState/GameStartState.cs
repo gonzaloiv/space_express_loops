@@ -22,9 +22,8 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private HighScorePosterBehaviour highScorePoster;
         [SerializeField] private ReviewPanel reviewPanel;
 
-        [Header("Debug")]
-        [SerializeField] private PlayerData playerData;
-        [SerializeField] private GameSnapshot gameSnapshot;
+        private PlayerData playerData;
+        private GameSnapshot gameSnapshot;
 
         [Inject] private MemoryDataClient memoryDataClient;
         [Inject] private UnityPlayerDataClient unityPlayerDataClient;
@@ -46,30 +45,22 @@ namespace DigitalLove.Game.Flow
             if (gameSnapshot.HasPlanets)
                 ResumeLevel();
             else
-                BeginFreshLevel();
+                PersistPlayerDataThenStartFresh();
         }
 
         private void InitData()
         {
             playerData = memoryDataClient.Get<PlayerData>();
-            gameSnapshot = playerData.HasCookie(GameSnapshot.CookieKey)
-                ? GameSnapshot.FromCookieMetadata(playerData.GetCookieById(GameSnapshot.CookieKey).metadata)
-                : new();
+            gameSnapshot = GameSnapshotStore.Load(memoryDataClient);
             gameSnapshot.SetOnUpdated(() => gameSnapshotClient.SetHasToUpdate());
             memoryDataClient.Put(gameSnapshot);
             roundSelector.SetCurrentRound(gameSnapshot.roundIndex);
             levelContainer.SyncIdCounters(gameSnapshot);
         }
 
-        private void BeginFreshLevel()
-        {
-            PersistPlayerDataThenStartFresh();
-        }
-
         private async void PersistPlayerDataThenStartFresh()
         {
-            if (unityPlayerDataClient.IsReady)
-                await unityPlayerDataClient.Put(playerData);
+            await GameSnapshotStore.SavePlayerDataAsync(playerData, unityPlayerDataClient);
 
             levelContainer.StartFresh(() =>
             {
@@ -91,11 +82,7 @@ namespace DigitalLove.Game.Flow
             ttsHelper.Say(messageKey, ToNextState);
         }
 
-        private void ToNextState()
-        {
-            if (nextState != null)
-                parent.SetCurrentState(nextState.RouteId);
-        }
+        private void ToNextState() => parent.SetCurrentState(nextState.RouteId);
 
         public override void Exit() { }
     }

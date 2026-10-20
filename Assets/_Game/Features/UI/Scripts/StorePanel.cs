@@ -28,20 +28,21 @@ namespace DigitalLove.Game.UI
 
         private void PlayMoneyAudio(int money)
         {
+            if (money == previousMoney)
+                return;
+
             if (money > previousMoney)
-            {
                 increaseMoneyAudioSource.Play();
-            }
             else
-            {
                 decreaseMoneyAudioSource.Play();
-            }
+
             previousMoney = money;
         }
 
         public void Hide()
         {
             gameObject.SetActive(false);
+            previousMoney = 0;
         }
     }
 }

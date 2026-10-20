@@ -26,19 +26,19 @@ namespace DigitalLove.Game.Spaceships
 
         public override void Enter()
         {
-            refs.routePanel.editButtonClicked += OnEditButtonClick;
-            refs.routePanel.SetButtonActive(true);
-            refs.grabbableWrapper.selected += OnSelect;
-            refs.grabbableWrapper.released += OnRelease;
+            refs.RoutePanel.editButtonClicked += OnEditButtonClick;
+            refs.RoutePanel.SetButtonActive(true);
+            refs.GrabbableWrapper.selected += OnSelect;
+            refs.GrabbableWrapper.released += OnRelease;
             BeginLoop();
         }
 
         public override void Exit()
         {
-            refs.routePanel.SetButtonActive(false);
-            refs.routePanel.editButtonClicked -= OnEditButtonClick;
-            refs.grabbableWrapper.selected -= OnSelect;
-            refs.grabbableWrapper.released -= OnRelease;
+            refs.RoutePanel.SetButtonActive(false);
+            refs.RoutePanel.editButtonClicked -= OnEditButtonClick;
+            refs.GrabbableWrapper.selected -= OnSelect;
+            refs.GrabbableWrapper.released -= OnRelease;
             session.TravellerLoop.Stop();
             HideVisuals();
         }
@@ -52,7 +52,7 @@ namespace DigitalLove.Game.Spaceships
 
         private void OnSelect()
         {
-            if (!refs.destinationSelector.IsLookingForDestination)
+            if (!refs.DestinationSelector.IsLookingForDestination)
                 machine.SetCurrentState<SpaceshipSelectingState>();
         }
 
@@ -73,16 +73,14 @@ namespace DigitalLove.Game.Spaceships
 
         private void HideVisuals()
         {
-            refs.grabbableWrapper.Hide();
+            refs.GrabbableWrapper.Hide();
             session.SetLineRendererActive(false);
-            refs.destinationSelector.StartLookingForDestination(false);
+            refs.DestinationSelector.StartLookingForDestination(false);
         }
 
         public void Debug_SimulateGrabSelect() => OnSelect();
 
         public void Debug_SimulateGrabRelease() => OnRelease();
-
-        public void Debug_ConfirmDestination() => OnRelease();
 
         public void Debug_InvokeOnLoopEditionButtonClicked() => OnEditButtonClick();
     }

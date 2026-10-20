@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace DigitalLove.Game.Nodes
 {
     [RequireComponent(typeof(PlanetRefs))]
-    public class PlanetBehaviour : MonoBehaviour, IRouteWorldNode
+    public class PlanetBehaviour : MonoBehaviour, IRouteWorldNode, IPoolableNode
     {
         [SerializeField] private PlanetRefs refs;
-        [SerializeField] private PlanetUniverseHandle universeHandle;
+        [SerializeField] private UniverseNodeHandle universeHandle;
 
         private PlanetRoutePresentation presentation;
         private PlanetHandlers handlers;
@@ -19,16 +17,10 @@ namespace DigitalLove.Game.Nodes
         public bool IsOnRoute => presentation != null && presentation.IsOnRoute;
         public bool IsActive => gameObject.activeInHierarchy;
 
-        public PlanetStore PlanetStore => refs.planetStore;
-        public NodeBody NodeBody => refs.nodeBody;
-        public PlanetUniverseHandle UniverseHandle => universeHandle;
-        public Vector3 Position => refs.nodeBody.Position;
-
-        private void Awake()
-        {
-            if (refs == null)
-                refs = GetComponent<PlanetRefs>();
-        }
+        public PlanetStore PlanetStore => refs.PlanetStore;
+        public NodeBody NodeBody => refs.NodeBody;
+        public UniverseNodeHandle UniverseHandle => universeHandle;
+        public Vector3 Position => refs.NodeBody.Position;
 
         public void Initialize()
         {
@@ -65,11 +57,11 @@ namespace DigitalLove.Game.Nodes
             gameObject.SetActive(true);
             SetupFromData(planetData);
             SetupUI();
-            refs.planetStore.PrepareStoring(
-                refs.lettersPanel,
+            refs.PlanetStore.PrepareStoring(
+                refs.LettersPanel,
                 planetData.lettersPerMinute,
                 planetData.maxLetters,
-                handlers.OnPlanetFull);
+                () => handlers.OnPlanetFull?.Invoke());
         }
 
         public void Hide()
@@ -79,47 +71,19 @@ namespace DigitalLove.Game.Nodes
             gameObject.SetActive(false);
         }
 
-        public void BeginStoring() => refs.planetStore.BeginStoring();
+        public void BeginStoring() => refs.PlanetStore.BeginStoring();
 
         private void SetupFromData(PlanetData planetData)
         {
             id = planetData.id;
             transform.localPosition = planetData.localPosition.ToVector3();
-            refs.nodeBody.Init(planetData.radius);
+            refs.NodeBody.Init(planetData.radius);
             presentation.ResetToDefault();
         }
 
         private void SetupUI()
         {
-            refs.lettersPanel.Init(transform.position + transform.up * refs.nodeBody.Radius);
-        }
-    }
-
-    public static class PlanetBehaviourPoolExtensions
-    {
-        public static void ForEachInPool(this IList<PlanetBehaviour> pool, Action<PlanetBehaviour> action)
-        {
-            for (int i = 0; i < pool.Count; i++)
-            {
-                if (pool[i] != null)
-                    action(pool[i]);
-            }
-        }
-
-        public static PlanetBehaviour EnsureSlot(this List<PlanetBehaviour> pool, int index, Transform parent)
-        {
-            while (index >= pool.Count)
-                pool.GrowPoolEntry(parent);
-
-            return pool[index];
-        }
-
-        private static void GrowPoolEntry(this List<PlanetBehaviour> pool, Transform parent)
-        {
-            PlanetBehaviour planet = UnityEngine.Object.Instantiate(pool[0], parent);
-            planet.Initialize();
-            planet.Hide();
-            pool.Add(planet);
+            refs.LettersPanel.Init(transform.position + transform.up * refs.NodeBody.Radius);
         }
     }
 }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using DigitalLove.Game.Nodes;
 using DigitalLove.Game.Spaceships;
 using UnityEngine;
@@ -30,9 +29,12 @@ namespace DigitalLove.Game.DebugActions
             if (targetSpaceship != null && targetSpaceship.IsActive)
                 return targetSpaceship;
 
-            SpaceshipBehaviour active = spaceships.All.FirstOrDefault(s => s.IsActive);
-            if (active != null)
-                return active;
+            for (int i = 0; i < spaceships.All.Count; i++)
+            {
+                SpaceshipBehaviour spaceship = spaceships.All[i];
+                if (spaceship != null && spaceship.IsActive)
+                    return spaceship;
+            }
 
             Debug.LogWarning("EditorDebug: No active spaceship. Spawn one or assign targetSpaceship.");
             return null;
@@ -55,9 +57,17 @@ namespace DigitalLove.Game.DebugActions
 
         public PlanetBehaviour GetRandomPlanetExcludingIds(IReadOnlyList<string> excluded)
         {
-            List<PlanetBehaviour> available = planets.All
-                .Where(p => p != null && p.IsActive && (excluded == null || !excluded.Contains(p.Id)))
-                .ToList();
+            List<PlanetBehaviour> available = new();
+            for (int i = 0; i < planets.All.Count; i++)
+            {
+                PlanetBehaviour planet = planets.All[i];
+                if (planet == null || !planet.IsActive)
+                    continue;
+                if (excluded != null && Contains(excluded, planet.Id))
+                    continue;
+
+                available.Add(planet);
+            }
 
             if (available.Count == 0)
             {
@@ -68,14 +78,19 @@ namespace DigitalLove.Game.DebugActions
             return available[Random.Range(0, available.Count)];
         }
 
-        public SpaceshipBehaviour ResolveShipForRoute()
+        private static bool Contains(IReadOnlyList<string> ids, string id)
         {
-            SpaceshipBehaviour ship = ResolveTargetShip() ?? Spaceships.GetRandomActive();
-            if (ship == null)
-                Debug.LogWarning("EditorDebug: No active spaceship. Spawn one or assign targetSpaceship.");
+            for (int i = 0; i < ids.Count; i++)
+            {
+                if (string.Equals(ids[i], id))
+                    return true;
+            }
 
-            return ship;
+            return false;
         }
+
+        public SpaceshipBehaviour ResolveShipForRoute() =>
+            ResolveTargetShip() ?? Spaceships.GetRandomActive();
 
         public void PrepareShipForRoute(SpaceshipBehaviour ship)
         {

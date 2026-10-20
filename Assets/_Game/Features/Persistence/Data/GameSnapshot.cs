@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using DigitalLove.Game.Nodes;
 using DigitalLove.Game.Spaceships;
@@ -27,8 +26,6 @@ namespace DigitalLove.Game.Persistence
 
         [JsonIgnore] public int CurrentLetters => store.letters;
         [JsonIgnore] public bool HasPlanets => planets != null && planets.Count > 0;
-        [JsonIgnore] public bool HasHubs => hubs != null && hubs.Count > 0;
-        [JsonIgnore] public bool HasLoops => loops != null && loops.Count > 0;
         [JsonIgnore] public bool HasAnyLoopWithDestinations => loops != null && loops.Exists(l => l.HasDestinations);
         [JsonIgnore] public bool IsCurrentRoundLetterGoalMet => store != null && store.letters >= lettersRequiredForRoundCompletion;
 
@@ -98,7 +95,7 @@ namespace DigitalLove.Game.Persistence
 
         public void AddHub(HubData toAdd)
         {
-            HubData existing = hubs.FirstOrDefault(h => string.Equals(h.id, toAdd.id));
+            HubData existing = hubs.Find(h => string.Equals(h.id, toAdd.id));
             if (existing != null)
                 hubs.Remove(existing);
             hubs.Add(toAdd);
@@ -106,11 +103,11 @@ namespace DigitalLove.Game.Persistence
         }
 
         public HubData GetHubById(string hubId) =>
-            string.IsNullOrEmpty(hubId) ? null : hubs.FirstOrDefault(h => string.Equals(h.id, hubId));
+            string.IsNullOrEmpty(hubId) ? null : hubs.Find(h => string.Equals(h.id, hubId));
 
         public void SaveLoop(LoopData loopData)
         {
-            LoopData existing = loops.FirstOrDefault(l => string.Equals(l.spaceshipId, loopData.spaceshipId));
+            LoopData existing = loops.Find(l => string.Equals(l.spaceshipId, loopData.spaceshipId));
             if (existing != null)
                 existing.CopyFrom(loopData);
             else
@@ -125,19 +122,5 @@ namespace DigitalLove.Game.Persistence
             NotifyUpdated();
         }
 
-        public void SpendMoney(int value)
-        {
-            store.SpendMoney(value);
-            NotifyUpdated();
-        }
-
-        public void RemoveLoopBySpaceshipId(string spaceshipId, int cost)
-        {
-            LoopData toRemove = loops.FirstOrDefault(l => string.Equals(l.spaceshipId, spaceshipId));
-            if (toRemove != null)
-                loops.Remove(toRemove);
-            store.SpendMoney(cost);
-            NotifyUpdated();
-        }
     }
 }

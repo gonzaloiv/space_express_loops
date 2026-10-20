@@ -17,12 +17,10 @@ namespace DigitalLove.Game.Nodes
         private int lettersPerMinute;
         private int maxLetters;
         private int letters;
-        private float countdown;
+        private float countdownSecs;
         private bool isStoring;
 
         private Action onPlanetFull;
-
-        public int Letters => letters;
 
         public void PrepareStoring(
             ResourcePanel lettersPanel,
@@ -45,15 +43,14 @@ namespace DigitalLove.Game.Nodes
                 return;
 
             isStoring = true;
-            ResetCoundown();
+            ResetCountdown();
         }
 
         public int PickAllLetters() => PickLetters(letters);
 
         public int PickLetters(int value)
         {
-            int picked;
-            picked = value > letters ? letters : value;
+            int picked = value > letters ? letters : value;
             letters -= picked;
             lettersPanel.ShowLetters(letters, maxLetters);
             return picked;
@@ -61,44 +58,66 @@ namespace DigitalLove.Game.Nodes
 
         private void Update()
         {
-            if (!isStoring || lettersPerMinute == 0)
+            if (!isStoring || lettersPerMinute <= 0)
                 return;
-            if (countdown <= 0)
+
+            if (letters >= maxLetters)
+            {
+                isStoring = false;
+                return;
+            }
+
+            if (countdownSecs <= 0)
             {
                 IncreaseLetters(1);
-                ResetCoundown();
+                if (isStoring)
+                    ResetCountdown();
             }
-            countdown -= Time.deltaTime;
+
+            countdownSecs -= Time.deltaTime;
         }
 
-        private void ResetCoundown()
+        private void ResetCountdown()
         {
-            countdown = 60f / (lettersPerMinute * gameSpeed.value);
+            float speed = gameSpeed.value;
+            countdownSecs = lettersPerMinute > 0 && speed > 0f
+                ? 60f / (lettersPerMinute * speed)
+                : float.PositiveInfinity;
         }
 
         public void IncreaseLetters(int value)
         {
-            letters += value;
             if (letters >= maxLetters)
+                return;
+
+            int previousLetters = letters;
+            letters = Mathf.Min(letters + value, maxLetters);
+            bool becameFull = letters >= maxLetters;
+            bool enteredWarning = maxLetters - letters <= LettersBeforeFullToStartWarning
+                && maxLetters - previousLetters > LettersBeforeFullToStartWarning;
+
+            if (becameFull)
             {
+                isStoring = false;
                 onPlanetFull?.Invoke();
-                letters = maxLetters;
             }
             else
             {
                 newLetterAudioSource.Play();
             }
-            bool showMaxValue = maxLetters - letters <= LettersBeforeFullToStartWarning;
-            if (showMaxValue)
+
+            if (becameFull || enteredWarning)
                 fullAudioSource.Play();
+
+            bool showMaxValue = maxLetters - letters <= LettersBeforeFullToStartWarning;
             lettersPanel.ShowLetters(letters, maxLetters, showMaxValue);
         }
 
         public void ResetLetters()
         {
             letters = 0;
-            lettersPanel?.ShowLetters(letters, maxLetters);
-            ResetCoundown();
+            lettersPanel.ShowLetters(letters, maxLetters);
+            ResetCountdown();
         }
     }
 }

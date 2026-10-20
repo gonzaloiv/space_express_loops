@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using DigitalLove.Game.Nodes;
 using DigitalLove.Game.Persistence;
 using DigitalLove.Game.Spaceships;
@@ -25,20 +24,29 @@ namespace DigitalLove.Game.Levels
         public HubsSpawner HubsSpawner => hubsSpawner;
         public UniverseView UniverseView => universeView;
 
-        private void OnDisable()
-        {
-            universeView.TransitionStarted -= OnViewTransitionStarted;
-            universeView.TransitionCompleted -= OnViewTransitionCompleted;
-        }
+        private void OnEnable() => Subscribe();
+
+        private void OnDisable() => Unsubscribe();
 
         public void Init()
         {
             spaceshipsSpawner.SetPlanetAvailability(new LevelLoopPlanetAvailability(planetsSpawner, hubsSpawner));
+            Subscribe();
+            HideAll();
+        }
+
+        private void Subscribe()
+        {
             universeView.TransitionStarted -= OnViewTransitionStarted;
             universeView.TransitionStarted += OnViewTransitionStarted;
             universeView.TransitionCompleted -= OnViewTransitionCompleted;
             universeView.TransitionCompleted += OnViewTransitionCompleted;
-            HideAll();
+        }
+
+        private void Unsubscribe()
+        {
+            universeView.TransitionStarted -= OnViewTransitionStarted;
+            universeView.TransitionCompleted -= OnViewTransitionCompleted;
         }
 
         private void OnViewTransitionStarted(bool _) =>
@@ -52,9 +60,20 @@ namespace DigitalLove.Game.Levels
 
         public void SyncIdCounters(GameSnapshot gameSnapshot)
         {
-            planetsSpawner.SyncIdsFromSnapshot(gameSnapshot.planets.Select(p => p.id));
-            spaceshipsSpawner.SyncIdsFromSnapshot(gameSnapshot.loops.Select(l => l.spaceshipId));
-            hubsSpawner.SyncIdsFromSnapshot(gameSnapshot.hubs.Select(h => h.id));
+            List<string> planetIds = new(gameSnapshot.planets.Count);
+            foreach (PlanetData planet in gameSnapshot.planets)
+                planetIds.Add(planet.id);
+            planetsSpawner.SyncIdsFromSnapshot(planetIds);
+
+            List<string> spaceshipIds = new(gameSnapshot.loops.Count);
+            foreach (LoopData loop in gameSnapshot.loops)
+                spaceshipIds.Add(loop.spaceshipId);
+            spaceshipsSpawner.SyncIdsFromSnapshot(spaceshipIds);
+
+            List<string> hubIds = new(gameSnapshot.hubs.Count);
+            foreach (HubData hub in gameSnapshot.hubs)
+                hubIds.Add(hub.id);
+            hubsSpawner.SyncIdsFromSnapshot(hubIds);
         }
 
         public void HideAll()
@@ -162,10 +181,7 @@ namespace DigitalLove.Game.Levels
 
         private IEnumerator SetRoomBasedPoseRoutine(Action onComplete)
         {
-            while (MRUK.Instance == null || !MRUK.Instance.IsInitialized || MRUK.Instance.GetCurrentRoom() == null || Camera.main == null)
-                yield return null;
-
-            yield return null;
+            yield return WaitForRoomReady();
 
             MRUKRoom room = MRUK.Instance.GetCurrentRoom();
             Bounds roomBounds = room.GetRoomBounds();
@@ -188,9 +204,27 @@ namespace DigitalLove.Game.Levels
             });
         }
 
+        private static IEnumerator WaitForRoomReady()
+        {
+            while (MRUK.Instance == null
+                || !MRUK.Instance.IsInitialized
+                || MRUK.Instance.GetCurrentRoom() == null
+                || Camera.main == null)
+            {
+                yield return null;
+            }
+
+            yield return null;
+        }
+
         public void ResetLetters()
         {
-            planetsSpawner.All.ForEach(planet => planet.PlanetStore.ResetLetters());
+            for (int i = 0; i < planetsSpawner.All.Count; i++)
+            {
+                PlanetBehaviour planet = planetsSpawner.All[i];
+                if (planet != null && planet.IsActive)
+                    planet.PlanetStore.ResetLetters();
+            }
         }
     }
 }

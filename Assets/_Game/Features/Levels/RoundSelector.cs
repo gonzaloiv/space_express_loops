@@ -11,8 +11,6 @@ namespace DigitalLove.Game.Levels
 
         public RoundData CurrentRound => currentRound;
         public int FormattedCurrentRoundIndex => Array.IndexOf(rounds, currentRound) + 1;
-        public bool IsLastRound => rounds.Length == FormattedCurrentRoundIndex;
-        public bool IsFirstRound => FormattedCurrentRoundIndex == 1;
 
         public void SetCurrentRound(int index)
         {

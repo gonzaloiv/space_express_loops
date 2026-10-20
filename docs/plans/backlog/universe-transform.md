@@ -1,10 +1,10 @@
 # Universe — Transform Plan
 
-**Status:** follow-up after the [two views](universe-two-views.md) are working.
+**Status:** backlog - follow-up after the [two views](../in-progress/universe-two-views.md) are working.
 
-**Related:** [Two views](universe-two-views.md) · [Interaction unification](interaction-unification.md)
+**Related:** [Two views](../in-progress/universe-two-views.md) · [Interaction unification](../in-progress/interaction-unification.md)
 
-**Wiring rule:** ghost, handles, proxies, and coordinator references are authored in the scene/prefabs. No runtime `AddComponent`, injection, or disabled unused components., [Galaxies and level/round creation](universe-galaxies.md)
+**Wiring rule:** ghost, handles, proxies, and coordinator references are authored in the scene/prefabs. No runtime `AddComponent`, injection, or disabled unused components.
 
 ## 1. Goal
 

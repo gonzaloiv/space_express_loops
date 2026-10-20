@@ -27,7 +27,6 @@ namespace DigitalLove.Game.DebugActions
             context.PrepareShipForRoute(spaceship);
             spaceship.SetRoute(new[] { planet });
             spaceship.NotifyLoopChanged();
-            context.Planets.UnlockPlanetStores();
         }
 
         #region Debug
@@ -66,7 +65,6 @@ namespace DigitalLove.Game.DebugActions
             context.PrepareShipForRoute(ship);
             ship.SetRoute(stops);
             ship.NotifyLoopChanged();
-            context.Planets.UnlockPlanetStores();
             Debug.Log($"Ship {ship.Id}: {stops.Count}-stop route.");
         }
 
@@ -93,7 +91,6 @@ namespace DigitalLove.Game.DebugActions
             ship.Debug_SimulateGrabSelect();
             ship.DestinationSelector.Debug_SetDestinationPlanet(planet);
             ship.Debug_ConfirmDestination();
-            context.Planets.UnlockPlanetStores();
             Debug.Log($"Ship {ship.Id}: added destination {planet.Id}.");
         }
 

@@ -6,15 +6,16 @@ namespace DigitalLove.Game.Nodes
 {
     public class PlanetRefs : MonoBehaviour
     {
-        [Header("Store")]
-        public PlanetStore planetStore;
+        [SerializeField] private PlanetStore planetStore;
+        [SerializeField] private ResourcePanel lettersPanel;
+        [SerializeField] private NodeBody nodeBody;
+        [SerializeField] private Outline outline;
+        [SerializeField] private ScalePunch scalePunch;
 
-        [Header("UI")]
-        public ResourcePanel lettersPanel;
-
-        [Header("Body")]
-        public NodeBody nodeBody;
-        public Outline outline;
-        public ScalePunch scalePunch;
+        public PlanetStore PlanetStore => planetStore;
+        public ResourcePanel LettersPanel => lettersPanel;
+        public NodeBody NodeBody => nodeBody;
+        public Outline Outline => outline;
+        public ScalePunch ScalePunch => scalePunch;
     }
 }

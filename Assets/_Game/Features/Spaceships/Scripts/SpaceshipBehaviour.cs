@@ -24,21 +24,16 @@ namespace DigitalLove.Game.Spaceships
         private ILoopPlanetAvailability planetAvailability;
 
         public bool IsInitialized => isInitialized;
-        public DestinationSelector DestinationSelector => refs.destinationSelector;
+        public bool HasData => data != null;
+        public DestinationSelector DestinationSelector => refs.DestinationSelector;
 
         public string Id => data.id;
         public string HubId => data.hubId;
         public string ColorCode => data.colorCode;
-        public HubBehaviour Hub => refs.destinationSelector.Hub;
+        public HubBehaviour Hub => refs.DestinationSelector.Hub;
         public bool IsActive => gameObject.activeInHierarchy;
         public bool HasRoute => isInitialized && session.HasDestinations &&
             (stateMachine.IsCurrentState<SpaceshipRunningState>() || stateMachine.IsCurrentState<SpaceshipSelectingState>());
-
-        private void Awake()
-        {
-            if (refs == null)
-                refs = GetComponent<SpaceshipRefs>();
-        }
 
         public void Initialize()
         {
@@ -107,13 +102,11 @@ namespace DigitalLove.Game.Spaceships
 
         public void RefreshGrabZoneTarget()
         {
-            if (!isInitialized || !IsActive || refs.grabZone == null)
+            if (!isInitialized || !IsActive)
                 return;
-            if (refs.grabZone.gameObject.activeInHierarchy)
-                refs.grabZone.PointAt(session.GetGrabbableLookTarget());
+            if (refs.GrabZone.gameObject.activeInHierarchy)
+                refs.GrabZone.PointAt(session.GetGrabbableLookTarget());
         }
-
-        public void StartSelectingDestination() => stateMachine.SetCurrentState<SpaceshipSelectingState>();
 
         public void NotifyLoopChanged() => handlers.Changed?.Invoke(BuildLoopEventArgs());
 
@@ -138,15 +131,15 @@ namespace DigitalLove.Game.Spaceships
             this.data = data;
 
             hub.ApplyRouteColor(color);
-            refs.destinationSelector.Init(hub, color);
+            refs.DestinationSelector.Init(hub, color);
             session.SetRouteColor(color);
-            refs.grabZone.SetColor(color);
+            refs.GrabZone.SetColor(color);
             session.ClearDestinations();
 
             destinationSelection.MoveToActiveStation();
 
             this.SetActive(true);
-            refs.routePanel.Show(Id, color, hub.transform.position);
+            refs.RoutePanel.Show(Id, color, hub.transform.position);
         }
 
         public void Hide()
@@ -157,8 +150,9 @@ namespace DigitalLove.Game.Spaceships
                 return;
             }
 
+            session.TravellerLoop.Stop();
             session.ClearDestinations();
-            refs.routePanel.Hide();
+            refs.RoutePanel.Hide();
             this.SetActive(false);
         }
 
@@ -201,17 +195,16 @@ namespace DigitalLove.Game.Spaceships
                 Debug.LogWarning($"EditorDebug: Grab release ignored in state {stateMachine.CurrentRoute}.");
         }
 
-        public void Debug_ConfirmDestination()
+        public void Debug_ConfirmDestination() => Debug_SimulateGrabRelease();
+
+        public void Debug_InvokeOnLoopEditionButtonClicked()
         {
-            if (stateMachine.IsCurrentState<SpaceshipSelectingState>())
-                selectingState.Debug_ConfirmDestination();
-            else if (stateMachine.IsCurrentState<SpaceshipRunningState>())
-                runningState.Debug_ConfirmDestination();
+            if (isInitialized)
+                runningState.Debug_InvokeOnLoopEditionButtonClicked();
         }
 
-        public void Debug_InvokeOnLoopEditionButtonClicked() => runningState.Debug_InvokeOnLoopEditionButtonClicked();
-
-        public List<string> Debug_GetDestinationIds() => session.GetDestinationIds();
+        public List<string> Debug_GetDestinationIds() =>
+            isInitialized ? session.GetDestinationIds() : new List<string>();
 
         #endregion
     }

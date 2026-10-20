@@ -13,15 +13,15 @@ namespace DigitalLove.Game.Spaceships
             this.machine = machine;
             this.refs = refs;
 
-            refs.grabMePanel.SetActive(false);
+            refs.GrabMePanel.SetActive(false);
         }
 
         public override void Enter()
         {
-            refs.grabMePanel.SetActive(false);
-            refs.grabbableWrapper.selected += OnSelect;
-            refs.grabbableWrapper.Show();
-            refs.destinationSelector.StartLookingForDestination(false);
+            refs.GrabMePanel.SetActive(false);
+            refs.GrabbableWrapper.selected += OnSelect;
+            refs.GrabbableWrapper.Show();
+            refs.DestinationSelector.StartLookingForDestination(false);
             ShowGrabMePanel();
         }
 
@@ -30,19 +30,19 @@ namespace DigitalLove.Game.Spaceships
             if (hasBeenGrabMePanelShown)
                 return;
 
-            refs.grabMePanel.SetActive(true);
+            refs.GrabMePanel.SetActive(true);
             hasBeenGrabMePanelShown = true;
         }
 
         public override void Exit()
         {
-            refs.grabbableWrapper.selected -= OnSelect;
-            refs.grabbableWrapper.DisablePointerHandling();
+            refs.GrabbableWrapper.selected -= OnSelect;
+            refs.GrabbableWrapper.DisablePointerHandling();
         }
 
         private void OnSelect()
         {
-            refs.grabMePanel.SetActive(false);
+            refs.GrabMePanel.SetActive(false);
             machine.SetCurrentState<SpaceshipSelectingState>();
         }
 

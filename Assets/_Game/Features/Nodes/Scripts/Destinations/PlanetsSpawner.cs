@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using DigitalLove.Global;
 using UnityEngine;
 
@@ -55,7 +53,7 @@ namespace DigitalLove.Game.Nodes
         {
             for (int i = 0; i < data.Count; i++)
             {
-                PlanetBehaviour planet = planets.EnsureSlot(i, transform);
+                PlanetBehaviour planet = planets.EnsureSlot(i, transform, CreatePooledPlanet);
                 if (IsAlreadySpawned(planet, data[i]))
                     continue;
 
@@ -74,17 +72,23 @@ namespace DigitalLove.Game.Nodes
                     planet.BeginStoring();
             });
 
-        public PlanetBehaviour GetRandom(List<string> excludedIds = null)
+        public PlanetBehaviour GetById(string id)
         {
-            IEnumerable<PlanetBehaviour> selection = excludedIds != null
-                ? planets.Where(p => !excludedIds.Contains(p.Id))
-                : planets;
-            List<PlanetBehaviour> list = selection.ToList();
-            return list[UnityEngine.Random.Range(0, list.Count)];
+            for (int i = 0; i < planets.Count; i++)
+            {
+                PlanetBehaviour planet = planets[i];
+                if (planet != null && string.Equals(planet.Id, id))
+                    return planet;
+            }
+
+            return null;
         }
 
-        public PlanetBehaviour GetById(string id) =>
-            planets.FirstOrDefault(p => string.Equals(p.Id, id));
+        private static void CreatePooledPlanet(PlanetBehaviour planet)
+        {
+            planet.Initialize();
+            planet.Hide();
+        }
 
         public bool HasAnySelectableForHub(HubBehaviour hub, IEnumerable<string> excludedPlanetIds)
         {

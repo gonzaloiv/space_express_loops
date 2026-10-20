@@ -11,7 +11,7 @@ namespace DigitalLove.Game.Spaceships
         private readonly MonoBehaviour host;
         private readonly SplineContainerWrapper route;
         private readonly TravellerBehaviour traveller;
-        private readonly float legDelay;
+        private readonly float legDelaySecs;
 
         private Coroutine loopCoroutine;
         private Action<LoopCompleteEventArgs> onLoopIterationComplete;
@@ -23,12 +23,12 @@ namespace DigitalLove.Game.Spaceships
             MonoBehaviour host,
             SplineContainerWrapper route,
             TravellerBehaviour traveller,
-            float legDelay = 1f)
+            float legDelaySecs = 1f)
         {
             this.host = host;
             this.route = route;
             this.traveller = traveller;
-            this.legDelay = legDelay;
+            this.legDelaySecs = legDelaySecs;
         }
 
         public void SetOnLoopIterationComplete(Action<LoopCompleteEventArgs> onLoopIterationComplete)
@@ -66,61 +66,83 @@ namespace DigitalLove.Game.Spaceships
             traveller.ResumeFollowing();
         }
 
+        private sealed class LoopIteration
+        {
+            public int PickedLetters;
+            public bool Failed;
+        }
+
         private IEnumerator RunLoop(string spaceshipId, Func<LoopEventArgs> getCurrentLoopEventArgs)
         {
             while (true)
             {
-                IReadOnlyList<RouteLeg> legs = route.Legs;
-                if (legs.Count == 0)
+                if (route.Legs.Count == 0)
                 {
                     yield return null;
                     continue;
                 }
 
-                int totalPickedLetters = 0;
-                traveller.ShowEmpty();
-                bool iterationFailed = false;
-
-                for (int stopIndex = 0; stopIndex < legs.Count; stopIndex++)
-                {
-                    while (isPaused)
-                        yield return null;
-
-                    RouteLeg leg = legs[stopIndex];
-                    route.ShowLeg(stopIndex);
-
-                    bool legSucceeded = false;
-                    yield return FollowPathLeg(leg.positions, leg.pickupPlanet, success => legSucceeded = success);
-                    if (!legSucceeded)
-                    {
-                        iterationFailed = true;
-                        break;
-                    }
-
-                    yield return WaitForLegDelay();
-
-                    if (leg.pickupPlanet != null)
-                    {
-                        totalPickedLetters += leg.pickupPlanet.PlanetStore.PickAllLetters();
-                        traveller.ShowLoaded(totalPickedLetters);
-                    }
-                }
-
-                if (iterationFailed)
-                {
-                    onLoopIterationComplete?.Invoke(new LoopCompleteEventArgs(spaceshipId, totalPickedLetters));
-                    continue;
-                }
-
-                yield return WaitForLegDelay();
-                onLoopIterationComplete?.Invoke(new LoopCompleteEventArgs(getCurrentLoopEventArgs(), totalPickedLetters));
+                yield return RunIteration(spaceshipId, getCurrentLoopEventArgs, new LoopIteration());
             }
+        }
+
+        private IEnumerator RunIteration(
+            string spaceshipId,
+            Func<LoopEventArgs> getCurrentLoopEventArgs,
+            LoopIteration iteration)
+        {
+            traveller.ShowEmpty();
+            yield return RunLegs(iteration);
+
+            if (iteration.Failed)
+            {
+                onLoopIterationComplete?.Invoke(new LoopCompleteEventArgs(spaceshipId, iteration.PickedLetters));
+                yield break;
+            }
+
+            yield return WaitForLegDelay();
+            onLoopIterationComplete?.Invoke(new LoopCompleteEventArgs(getCurrentLoopEventArgs(), iteration.PickedLetters));
+        }
+
+        private IEnumerator RunLegs(LoopIteration iteration)
+        {
+            IReadOnlyList<RouteLeg> legs = route.Legs;
+            for (int stopIndex = 0; stopIndex < legs.Count; stopIndex++)
+            {
+                while (isPaused)
+                    yield return null;
+
+                yield return RunLeg(legs[stopIndex], stopIndex, iteration);
+                if (iteration.Failed)
+                    yield break;
+            }
+        }
+
+        private IEnumerator RunLeg(RouteLeg leg, int stopIndex, LoopIteration iteration)
+        {
+            route.ShowLeg(stopIndex);
+
+            bool legSucceeded = false;
+            yield return FollowPathLeg(leg.positions, leg.pickupPlanet, success => legSucceeded = success);
+            if (!legSucceeded)
+            {
+                iteration.Failed = true;
+                yield break;
+            }
+
+            yield return WaitForLegDelay();
+
+            if (leg.pickupPlanet == null)
+                yield break;
+
+            iteration.PickedLetters += leg.pickupPlanet.PlanetStore.PickAllLetters();
+            traveller.ShowLoaded(iteration.PickedLetters);
         }
 
         private IEnumerator WaitForLegDelay()
         {
             float elapsed = 0f;
-            while (elapsed < legDelay)
+            while (elapsed < legDelaySecs)
             {
                 if (isPaused)
                 {

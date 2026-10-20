@@ -20,13 +20,7 @@ namespace DigitalLove.Game.Spaceships
         public PlanetBehaviour CandidatePlanet => candidatePlanet;
         public float RayDistance => rayDistance.value * 1.1f * ContentScale;
 
-        private float ContentScale => contentRoot != null ? contentRoot.lossyScale.x : 1f;
-
-        private void Awake()
-        {
-            if (contentRoot == null)
-                contentRoot = transform.root;
-        }
+        private float ContentScale => contentRoot.lossyScale.x;
 
         public void SetActive(bool active)
         {
@@ -38,7 +32,7 @@ namespace DigitalLove.Game.Spaceships
 
         public void SetColor(Color color) => lineRendererWithEdges.SetColor(color);
 
-        private void Update()
+        public void Poll()
         {
             if (!isActive)
                 return;
@@ -73,9 +67,6 @@ namespace DigitalLove.Game.Spaceships
 
         private void UpdateLine()
         {
-            if (lineOrigin == null)
-                return;
-
             Vector3 forward = transform.forward;
             Vector3 start = lineOrigin.position + forward * rayForwardOffset;
             Vector3 end = start + forward * RayDistance;

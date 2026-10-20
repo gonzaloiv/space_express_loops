@@ -6,21 +6,16 @@ namespace DigitalLove.Game.Spaceships
 {
     public static class SplineContainerExtensions
     {
-        public static void SetSplinePositions(this LineRenderer lineRenderer, Vector3[] positions)
-        {
-            lineRenderer.positionCount = positions.Length;
-            for (int i = 0; i < positions.Length; i++)
-            {
-                lineRenderer.SetPosition(i, positions[i]);
-            }
-        }
-
-        public static List<Vector3> GetPositions(this SplineContainer splineContainer, int resolution, Transform contentRoot = null)
+        public static List<Vector3> GetPositions(
+            this SplineContainer splineContainer,
+            int resolution,
+            Transform contentRoot = null,
+            float tMax = 1f)
         {
             List<Vector3> results = new List<Vector3>(resolution);
             for (int i = 0; i < resolution; i++)
             {
-                float t = i / (float)(resolution - 1);
+                float t = tMax * i / (resolution - 1);
                 Vector3 position = splineContainer.EvaluatePosition(t);
                 if (contentRoot != null)
                     position = contentRoot.InverseTransformPoint(position);

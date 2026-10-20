@@ -17,7 +17,7 @@ namespace DigitalLove.Game.Spaceships
         private bool isLookingForDestination;
 
         private HubBehaviour hub;
-        private readonly HashSet<string> excludedPlanetIds = new();
+        private HashSet<string> excludedPlanetIds = new();
         private PlanetBehaviour destinationPlanet;
 
         public HubBehaviour Hub => hub;
@@ -41,21 +41,14 @@ namespace DigitalLove.Game.Spaceships
 
         public void SetExcludedPlanetIds(IEnumerable<string> planetIds)
         {
-            excludedPlanetIds.Clear();
-            if (planetIds == null)
-                return;
-
-            foreach (string id in planetIds)
-            {
-                if (!string.IsNullOrEmpty(id))
-                    excludedPlanetIds.Add(id);
-            }
+            excludedPlanetIds = PlanetSelectionRules.ToExcludedSet(planetIds);
         }
 
         private void Update()
         {
             if (isLookingForDestination)
             {
+                raycastHelper.Poll();
                 CheckHits();
                 UpdateDestinationCandidate();
             }

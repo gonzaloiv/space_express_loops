@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using DigitalLove.DataAccess;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Levels;
@@ -12,7 +11,6 @@ using DigitalLove.Global;
 using DigitalLove.Casual.Analytics;
 using DigitalLove.Analytics;
 using DigitalLove.Game.TTS;
-using System;
 
 namespace DigitalLove.Game.Flow
 {
@@ -80,7 +78,7 @@ namespace DigitalLove.Game.Flow
 
         private void OnLoopChanged(LoopEventArgs args)
         {
-            gameSnapshot.SaveLoop(ToLoopData(args));
+            gameSnapshot.SaveLoop(args);
             ApplyRouteColors();
             StartPlanetStoresIfLoopsExist();
             sessionEventsHelper.Send("loop_created");
@@ -96,7 +94,7 @@ namespace DigitalLove.Game.Flow
 
         private void OnLoopComplete(LoopCompleteEventArgs args)
         {
-            if (args.value <= 0)
+            if (args.IterationFailed || args.value <= 0)
                 return;
 
             HandleBaseLoopCompletion(args.value);
@@ -113,17 +111,9 @@ namespace DigitalLove.Game.Flow
 
         private void OnLoopEditionButtonClicked(LoopEventArgs args)
         {
-            gameSnapshot.SaveLoop(ToLoopData(args));
+            gameSnapshot.SaveLoop(args);
             ApplyRouteColors();
         }
-
-        private static LoopData ToLoopData(LoopEventArgs args) => new()
-        {
-            spaceshipId = args.spaceshipId,
-            destinationIds = args.destinationIds != null ? new List<string>(args.destinationIds) : new(),
-            colorCode = args.colorCode,
-            hubId = args.hubId
-        };
 
         private void ApplyRouteColors()
         {

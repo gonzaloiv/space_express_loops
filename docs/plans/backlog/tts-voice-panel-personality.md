@@ -1,8 +1,8 @@
 # TTS Voice Panel - Camera Operator Companion
 
-**Status:** design only. No runtime code is changed in this step.
+**Status:** backlog - design only. No runtime code is changed in this step.
 
-**Related:** [`universe-two-views.md`](universe-two-views.md), [`universe-transform.md`](universe-transform.md)
+**Related:** [`universe-two-views.md`](../in-progress/universe-two-views.md), [`universe-transform.md`](universe-transform.md)
 
 ## 1. Goal
 

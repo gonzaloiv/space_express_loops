@@ -25,19 +25,19 @@ namespace DigitalLove.Game.Nodes
                     break;
                 case RouteVisualState.OnRoute:
                     if (routeColor.HasValue)
-                        refs.nodeBody.SetRouteColor(routeColor.Value);
+                        refs.NodeBody.SetRouteColor(routeColor.Value);
                     isOnRoute = true;
                     isDestination = false;
-                    refs.outline.enabled = false;
+                    refs.Outline.enabled = false;
                     break;
                 case RouteVisualState.SelectingCandidate:
                     isOnRoute = false;
                     SetIsDestination(false);
-                    refs.outline.enabled = true;
+                    refs.Outline.enabled = true;
                     break;
                 case RouteVisualState.ConfirmedDestination:
                     SetIsDestination(true);
-                    refs.outline.enabled = false;
+                    refs.Outline.enabled = false;
                     break;
             }
         }
@@ -46,8 +46,8 @@ namespace DigitalLove.Game.Nodes
         {
             isOnRoute = false;
             SetIsDestination(false);
-            refs.nodeBody.ResetRouteColor();
-            refs.outline.enabled = false;
+            refs.NodeBody.ResetRouteColor();
+            refs.Outline.enabled = false;
         }
 
         private void SetIsDestination(bool value)
@@ -55,7 +55,7 @@ namespace DigitalLove.Game.Nodes
             bool wasDestination = isDestination;
             isDestination = value;
             if (value && !wasDestination)
-                refs.scalePunch.Animate();
+                refs.ScalePunch.Animate();
         }
     }
 }

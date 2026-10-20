@@ -7,6 +7,7 @@ namespace DigitalLove.Game.Nodes
         string Id { get; }
         Vector3 Position { get; }
         NodeBody NodeBody { get; }
+        UniverseNodeHandle UniverseHandle { get; }
         bool IsActive { get; }
         void ApplyRouteColor(Color color);
         void ResetRouteColor();

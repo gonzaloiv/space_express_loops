@@ -13,8 +13,6 @@ namespace DigitalLove.Game.Spaceships
 
         private Queue<Vector3> positions = new();
 
-        public Transform Body => body.transform;
-
         public void SetActive(bool isActive)
         {
             if (isActive)
@@ -53,8 +51,8 @@ namespace DigitalLove.Game.Spaceships
             body.transform.position = position;
 
             Vector3 lookDir = position - transform.position;
-            Quaternion targetRot = Quaternion.LookRotation(lookDir);
-            body.transform.rotation = targetRot;
+            if (lookDir.sqrMagnitude > 0.000001f)
+                body.transform.rotation = Quaternion.LookRotation(lookDir);
         }
 
         private Vector3 GetAverageOffset(Vector3 offset)
@@ -70,14 +68,9 @@ namespace DigitalLove.Game.Spaceships
             return averageOffset;
         }
 
-        #region Debug
-
-        private void Update()
+        private void OnValidate()
         {
-            if (Application.isEditor)
-                OnMove();
+            positionBufferSize = Mathf.Max(1, positionBufferSize);
         }
-
-        #endregion
     }
 }

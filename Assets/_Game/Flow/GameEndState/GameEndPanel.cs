@@ -1,12 +1,10 @@
-using System;
-using System.Collections;
 using DigitalLove.Localization;
 using DigitalLove.UI.Behaviours;
 using DigitalLove.UI.DesignSystem;
 using TMPro;
 using UnityEngine;
 
-namespace DigitalLove.Game.UI
+namespace DigitalLove.Game.Flow
 {
     public class GameEndPanel : MonoBehaviour
     {
@@ -23,7 +21,7 @@ namespace DigitalLove.Game.UI
         [SerializeField] private TextMeshProUGUI scoreLabel;
         [SerializeField] private AudioSource newHighScoreAudioSource;
 
-        public Action countdownComplete = () => { };
+        public int SecsToBackToTrackSelection => secsToBackToTrackSelection;
 
         public void ShowWithNewHighScore(int score)
         {
@@ -37,31 +35,22 @@ namespace DigitalLove.Game.UI
         public void Show()
         {
             gameObject.SetActive(true);
+            newHighScorePanel.SetActive(false);
             subtitlesLikeFollow.ShowInCameraView();
-            ShowBackToTrackSelectionPanel();
         }
 
-        private void ShowBackToTrackSelectionPanel()
+        public void ShowCountdown(int secondsRemaining)
         {
-            int countdown = secsToBackToTrackSelection;
-            IEnumerator CountdownRoutine()
-            {
-                while (countdown > 0)
-                {
-                    countdownAudioSource.Play();
-                    backToTrackSelectionPanel.Show(new Text(title: LocalizationUtil.GetValue("restarting_in_n_seconds", countdown)));
-                    yield return new WaitForSeconds(1);
-                    countdown--;
-                }
-                countdownComplete.Invoke();
-            }
-            StartCoroutine(CountdownRoutine());
+            backToTrackSelectionPanel.Show(
+                new Text(title: LocalizationUtil.GetValue("restarting_in_n_seconds", secondsRemaining)));
         }
+
+        public void PlayCountdownTick() => countdownAudioSource.Play();
 
         public void Hide()
         {
             gameObject.SetActive(false);
-            newHighScorePanel.gameObject.SetActive(false);
+            newHighScorePanel.SetActive(false);
         }
     }
 }

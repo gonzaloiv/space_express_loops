@@ -4,30 +4,21 @@ namespace DigitalLove.Game.Levels
 {
     public class UniverseGhostView : MonoBehaviour
     {
-        [SerializeField] private LineRenderer[] circles;
-        [SerializeField] private float lineWidthWorld = 0.004f;
+        [SerializeField] private LineRenderer handLine;
 
-        public void Show(Vector3 center, float radius)
+        public void ShowHandLine(Vector3 first, Vector3 second)
         {
             gameObject.SetActive(true);
-
-            float safeRadius = Mathf.Max(radius, 0.01f);
-            transform.position = center;
-            transform.localScale = Vector3.one * safeRadius;
-
-            float width = lineWidthWorld / safeRadius;
-            for (int i = 0; i < circles.Length; i++)
-                circles[i].widthMultiplier = width;
+            handLine.useWorldSpace = true;
+            handLine.positionCount = 2;
+            handLine.SetPosition(0, first);
+            handLine.SetPosition(1, second);
+            handLine.enabled = true;
         }
 
         public void Hide()
         {
             gameObject.SetActive(false);
-        }
-
-        private void OnValidate()
-        {
-            lineWidthWorld = Mathf.Max(0.0001f, lineWidthWorld);
         }
     }
 }

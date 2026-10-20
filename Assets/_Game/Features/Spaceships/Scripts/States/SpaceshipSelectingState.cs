@@ -21,25 +21,25 @@ namespace DigitalLove.Game.Spaceships
             this.host = host;
         }
 
-        public void Init() => refs.ghost.SetActive(false);
+        public void Init() => refs.Ghost.SetActive(false);
 
         public override void Enter()
         {
-            refs.grabbableWrapper.selected += OnSelect;
-            refs.grabbableWrapper.released += OnRelease;
+            refs.GrabbableWrapper.selected += OnSelect;
+            refs.GrabbableWrapper.released += OnRelease;
             destinationSelection.StartPicking();
         }
 
         public override void Exit()
         {
-            refs.grabbableWrapper.selected -= OnSelect;
-            refs.grabbableWrapper.released -= OnRelease;
+            refs.GrabbableWrapper.selected -= OnSelect;
+            refs.GrabbableWrapper.released -= OnRelease;
             destinationSelection.StopPicking();
         }
 
         private void OnSelect()
         {
-            if (!refs.destinationSelector.IsLookingForDestination)
+            if (!refs.DestinationSelector.IsLookingForDestination)
                 destinationSelection.StartPicking();
         }
 
@@ -61,7 +61,5 @@ namespace DigitalLove.Game.Spaceships
         public void Debug_SimulateGrabSelect() => OnSelect();
 
         public void Debug_SimulateGrabRelease() => OnRelease();
-
-        public void Debug_ConfirmDestination() => OnRelease();
     }
 }

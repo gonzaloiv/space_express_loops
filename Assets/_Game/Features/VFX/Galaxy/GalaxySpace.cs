@@ -16,6 +16,12 @@ namespace DigitalLove.Game.VFX
             MRUK.Instance.SceneLoadedEvent.AddListener(OnSceneLoaded);
         }
 
+        private void OnDestroy()
+        {
+            if (MRUK.Instance != null)
+                MRUK.Instance.SceneLoadedEvent.RemoveListener(OnSceneLoaded);
+        }
+
         private void OnSceneLoaded()
         {
             SetupMaterial();
@@ -35,12 +41,9 @@ namespace DigitalLove.Game.VFX
                 {
                     MeshRenderer spawned = Instantiate(rend, transform);
                     spawned.transform.SetWorldPose(rend.transform.ToWorldPose());
-                    if (spawned != null)
-                    {
-                        spawned.material = material;
-                        MeshFilter filter = spawned.GetComponent<MeshFilter>();
-                        spawned.material.mainTextureScale = new Vector2(filter.mesh.bounds.size.x, filter.mesh.bounds.size.y);
-                    }
+                    spawned.material = material;
+                    MeshFilter filter = spawned.GetComponent<MeshFilter>();
+                    spawned.material.mainTextureScale = new Vector2(filter.mesh.bounds.size.x, filter.mesh.bounds.size.y);
                 }
             }
         }

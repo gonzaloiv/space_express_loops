@@ -1,13 +1,12 @@
+using System.Collections;
+using DigitalLove.Casual.Flow;
 using DigitalLove.DataAccess;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Levels;
 using DigitalLove.Game.Persistence;
 using DigitalLove.Global;
-using Newtonsoft.Json;
 using Reflex.Attributes;
 using UnityEngine;
-using DigitalLove.Casual.Flow;
-using DigitalLove.Game.UI;
 
 namespace DigitalLove.Game.Flow
 {
@@ -25,6 +24,8 @@ namespace DigitalLove.Game.Flow
         [Inject] private MemoryDataClient memoryDataClient;
         [Inject] private UnityPlayerDataClient unityPlayerDataClient;
 
+        private Coroutine countdownRoutine;
+
         public override void Init(StateMachine parent)
         {
             base.Init(parent);
@@ -33,8 +34,6 @@ namespace DigitalLove.Game.Flow
 
         public override void Enter()
         {
-            gameEndPanel.countdownComplete += Restart;
-
             SaveHighScore();
         }
 
@@ -42,10 +41,8 @@ namespace DigitalLove.Game.Flow
         {
             GameSnapshot gameSnapshot = memoryDataClient.Get<GameSnapshot>();
             PlayerData playerData = memoryDataClient.Get<PlayerData>();
-            int highScore = playerData.GetHighScoreMoney(highScoreCookieKey);
-            if (highScore < gameSnapshot.CurrentLetters)
+            if (playerData.TrySaveHighScoreMoney(highScoreCookieKey, gameSnapshot.CurrentLetters))
             {
-                playerData.SetHighScoreMoney(highScoreCookieKey, gameSnapshot.CurrentLetters);
                 memoryDataClient.Put(playerData);
                 PersistPlayerData(playerData);
                 ShowGameEndPanel(gameSnapshot.CurrentLetters);
@@ -53,28 +50,66 @@ namespace DigitalLove.Game.Flow
             else
             {
                 gameEndPanel.Show();
+                StartCountdown();
             }
         }
 
         private void ShowGameEndPanel(int currentLetters)
         {
-            if (jumpCountdown.Value)
+            if (!jumpCountdown.Value)
             {
-                gameEndPanel.ShowWithNewHighScore(currentLetters);
+                StopCountdown();
+                countdownRoutine = StartCoroutine(RestartAfterFrame());
+                return;
             }
-            else
+
+            gameEndPanel.ShowWithNewHighScore(currentLetters);
+            StartCountdown();
+        }
+
+        private IEnumerator RestartAfterFrame()
+        {
+            yield return null;
+            countdownRoutine = null;
+            Restart();
+        }
+
+        private void StartCountdown()
+        {
+            StopCountdown();
+            countdownRoutine = StartCoroutine(RunCountdown());
+        }
+
+        private IEnumerator RunCountdown()
+        {
+            for (int seconds = gameEndPanel.SecsToBackToTrackSelection; seconds > 0; seconds--)
             {
-                Restart();
+                gameEndPanel.PlayCountdownTick();
+                gameEndPanel.ShowCountdown(seconds);
+                yield return new WaitForSeconds(1f);
             }
+
+            countdownRoutine = null;
+            Restart();
+        }
+
+        private void StopCountdown()
+        {
+            if (countdownRoutine == null)
+                return;
+
+            StopCoroutine(countdownRoutine);
+            countdownRoutine = null;
         }
 
         public override void Exit()
         {
-            gameEndPanel.countdownComplete -= Restart;
+            StopCountdown();
         }
 
         public void Restart()
         {
+            StopCountdown();
             gameEndPanel.Hide();
 
             levelContainer.ResetForRestart();
@@ -82,12 +117,9 @@ namespace DigitalLove.Game.Flow
             PlayerData playerData = memoryDataClient.Get<PlayerData>();
             GameSnapshot gameSnapshot = new();
             gameSnapshot.SetOnUpdated(() => gameSnapshotClient.SetHasToUpdate());
-            Cookie cookie = playerData.GetOrCreateCookie(GameSnapshot.CookieKey);
-            cookie.metadata = JsonConvert.SerializeObject(gameSnapshot);
             memoryDataClient.Get<Play>().IncreaseTries();
 
-            memoryDataClient.Put(gameSnapshot);
-            memoryDataClient.Put(playerData);
+            GameSnapshotStore.Save(gameSnapshot, playerData, memoryDataClient);
             PersistPlayerData(playerData);
 
             parent.SetCurrentState(nextState.RouteId);
@@ -95,7 +127,7 @@ namespace DigitalLove.Game.Flow
 
         private async void PersistPlayerData(PlayerData playerData)
         {
-            await unityPlayerDataClient.Put(playerData);
+            await GameSnapshotStore.SavePlayerDataAsync(playerData, unityPlayerDataClient);
         }
     }
 }

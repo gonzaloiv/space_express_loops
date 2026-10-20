@@ -69,10 +69,10 @@ namespace DigitalLove.Game.Nodes
             }
         }
 
-        public Vector3 GetValidLocalPosition(float radius, int maxIterations = DefaultMaxIterations) =>
-            FindValidLocalPosition(radius, maxDistanceFromOccupants: null, maxIterations);
-
-        public Vector3 GetValidLocalPosition(float radius, float maxDistanceFromOccupants, int maxIterations = DefaultMaxIterations) =>
+        public Vector3 GetValidLocalPosition(
+            float radius,
+            float? maxDistanceFromOccupants = null,
+            int maxIterations = DefaultMaxIterations) =>
             FindValidLocalPosition(radius, maxDistanceFromOccupants, maxIterations);
 
         public Vector3 GetRoomCenterLocalPosition(float radius)
@@ -136,7 +136,6 @@ namespace DigitalLove.Game.Nodes
             if (occupants.Count == 0)
                 return true;
 
-            Debug.LogWarning($"maxDistance: {maxDistance}");
             float closest = float.MaxValue;
             foreach (Occupant occupant in occupants)
                 closest = Mathf.Min(closest, Vector3.Distance(localPosition, occupant.localPosition));
@@ -149,7 +148,6 @@ namespace DigitalLove.Game.Nodes
             foreach (Occupant occupant in occupants)
             {
                 float minSeparation = (radius + occupant.radius) * minDistanceRadiusMultiplier;
-                Debug.LogWarning($"minSeparation: {minSeparation}");
                 if ((occupant.localPosition - localPosition).sqrMagnitude < minSeparation * minSeparation)
                     return true;
             }
@@ -157,28 +155,30 @@ namespace DigitalLove.Game.Nodes
             return false;
         }
 
-        private bool IsWithinHeightRange(Vector3 localPosition, float radius, MRUKRoom room)
-        {
-            if (!yRangeCache.TryGet(room, transform, out float minY, out float maxY))
-                return true;
-
-            float lowest = minY + floorMargin + radius;
-            float highest = maxY - ceilingMargin - radius;
-            return highest > lowest && localPosition.y >= lowest && localPosition.y <= highest;
-        }
+        private bool IsWithinHeightRange(Vector3 localPosition, float radius, MRUKRoom room) =>
+            TryGetHeightRange(room, radius, out float lowest, out float highest)
+            && localPosition.y >= lowest
+            && localPosition.y <= highest;
 
         private Vector3 ClampToValidHeight(Vector3 localPosition, float radius, MRUKRoom room)
         {
-            if (!yRangeCache.TryGet(room, transform, out float minY, out float maxY))
-                return localPosition;
-
-            float lowest = minY + floorMargin + radius;
-            float highest = maxY - ceilingMargin - radius;
-            if (highest <= lowest)
+            if (!TryGetHeightRange(room, radius, out float lowest, out float highest))
                 return localPosition;
 
             localPosition.y = Mathf.Clamp(localPosition.y, lowest, highest);
             return localPosition;
+        }
+
+        private bool TryGetHeightRange(MRUKRoom room, float radius, out float lowest, out float highest)
+        {
+            lowest = 0f;
+            highest = 0f;
+            if (!yRangeCache.TryGet(room, transform, out float minY, out float maxY))
+                return false;
+
+            lowest = minY + floorMargin + radius;
+            highest = maxY - ceilingMargin - radius;
+            return highest > lowest;
         }
     }
 

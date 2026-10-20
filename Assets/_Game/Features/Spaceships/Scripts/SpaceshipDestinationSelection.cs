@@ -25,16 +25,16 @@ namespace DigitalLove.Game.Spaceships
 
         public void StartPicking()
         {
-            refs.ghost.SetActive(true);
-            refs.grabbableWrapper.Show(pickingDestination: true);
-            refs.destinationSelector.SetExcludedPlanetIds(session.GetDestinationIds());
-            refs.destinationSelector.StartLookingForDestination(true);
+            refs.Ghost.SetActive(true);
+            refs.GrabbableWrapper.Show(pickingDestination: true);
+            refs.DestinationSelector.SetExcludedPlanetIds(session.GetDestinationIds());
+            refs.DestinationSelector.StartLookingForDestination(true);
         }
 
         public void StopPicking()
         {
-            refs.ghost.SetActive(false);
-            refs.destinationSelector.StartLookingForDestination(false);
+            refs.Ghost.SetActive(false);
+            refs.DestinationSelector.StartLookingForDestination(false);
         }
 
         public void ShowAtStation()
@@ -45,10 +45,10 @@ namespace DigitalLove.Game.Spaceships
 
         public SelectionReleaseResult TryConfirmOnRelease(ISpaceshipHost host, bool restartTravellerLoop)
         {
-            if (!refs.destinationSelector.IsLookingForDestination)
+            if (!refs.DestinationSelector.IsLookingForDestination)
                 return SelectionReleaseResult.Ignored;
 
-            if (!session.TryCommitDestination(refs.destinationSelector.Destination, host, restartTravellerLoop))
+            if (!session.TryCommitDestination(refs.DestinationSelector.Destination, host, restartTravellerLoop))
                 return SelectionReleaseResult.StayAtStation;
 
             host.NotifyLoopChanged();
@@ -57,17 +57,17 @@ namespace DigitalLove.Game.Spaceships
 
         public void MoveToActiveStation()
         {
-            refs.destinationSelector.SetExcludedPlanetIds(session.GetDestinationIds());
+            refs.DestinationSelector.SetExcludedPlanetIds(session.GetDestinationIds());
 
             if (IsRouteCompleteAtHub())
             {
-                refs.grabbableWrapper.Hide();
+                refs.GrabbableWrapper.Hide();
                 return;
             }
 
-            refs.grabbableWrapper.Show();
-            refs.grabbableWrapper.SetWorldPosition(session.GetGrabbableStationPosition());
-            refs.grabZone.PointAt(session.GetGrabbableLookTarget());
+            refs.GrabbableWrapper.Show();
+            refs.GrabbableWrapper.SetWorldPosition(session.GetGrabbableStationPosition());
+            refs.GrabZone.PointAt(session.GetGrabbableLookTarget());
         }
 
         private bool IsRouteCompleteAtHub() =>

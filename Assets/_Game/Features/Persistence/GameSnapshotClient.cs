@@ -1,5 +1,4 @@
 using DigitalLove.DataAccess;
-using Newtonsoft.Json;
 using Reflex.Attributes;
 using UnityEngine;
 
@@ -8,10 +7,6 @@ namespace DigitalLove.Game.Persistence
     public class GameSnapshotClient : MonoBehaviour
     {
         [SerializeField] private float updateIntervalSecs = 5;
-
-        [Header("Debug")]
-        [SerializeField] private GameSnapshot gameSnapshot;
-        [SerializeField] private PlayerData playerData;
 
         [Inject] private MemoryDataClient memoryDataClient;
         [Inject] private UnityPlayerDataClient unityPlayerDataClient;
@@ -43,13 +38,11 @@ namespace DigitalLove.Game.Persistence
 
         private async void SavePlayerData()
         {
-            gameSnapshot = memoryDataClient.Get<GameSnapshot>();
-            playerData = memoryDataClient.Get<PlayerData>();
-            Cookie cookie = playerData.GetOrCreateCookie(GameSnapshot.CookieKey);
-            cookie.metadata = JsonConvert.SerializeObject(gameSnapshot);
-            await unityPlayerDataClient.Put(playerData);
+            GameSnapshot gameSnapshot = memoryDataClient.Get<GameSnapshot>();
+            PlayerData playerData = memoryDataClient.Get<PlayerData>();
+            GameSnapshotStore.Save(gameSnapshot, playerData, memoryDataClient);
+            await GameSnapshotStore.SavePlayerDataAsync(playerData, unityPlayerDataClient);
             countdown = updateIntervalSecs;
-            Debug.LogWarning("Player data updated!");
         }
     }
 }

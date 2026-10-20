@@ -14,7 +14,7 @@ namespace DigitalLove.Game.UI
         [SerializeField] private BtnPanel btnPanel;
         [SerializeField] private LayoutUpdater layoutUpdater;
 
-        public Action editButtonClicked = () => { };
+        public event Action editButtonClicked;
 
         public void Show(string id, Color color, Vector3 position)
         {
@@ -37,7 +37,7 @@ namespace DigitalLove.Game.UI
                 btnPanel.Hide();
         }
 
-        private void InvokeEditButtonClicked() => editButtonClicked.Invoke();
+        private void InvokeEditButtonClicked() => editButtonClicked?.Invoke();
 
         public void Hide()
         {
@@ -49,7 +49,7 @@ namespace DigitalLove.Game.UI
         [Button]
         private void Debug_InvokeEditButtonClicked()
         {
-            editButtonClicked();
+            editButtonClicked?.Invoke();
         }
     }
 }
