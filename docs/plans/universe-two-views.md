@@ -280,10 +280,11 @@ Modified:
 
 ### Phase A2 — Two-hand scale gesture and ghost commit
 
-- Add a preconfigured `PlanetUniverseHandle` child to the planet template with a scale-friendly collider on a dedicated handle layer, excluded from the destination ray mask.
-- Add the shared `Grabbable` proxy and the `UniverseGhostView` hierarchy to the scene.
-- Add `UniverseGhostController` to `Level` in the scene with serialized references to `UniverseView`, the ghost visual, planets/spaceships spawners, and both hands; remove runtime creation.
-- Implement the one-hand/two-hand state machine and scale session inside the controller.
+- Add a preconfigured `UniverseHandle` proxy child to the planet template: kinematic Rigidbody, scale-friendly collider on the `UniverseHandles` layer, `Grabbable`, pre-added `GrabFreeTransformer`, pinch-only `HandGrabInteractable`, and `PlanetUniverseHandle`.
+- Wire `PlanetBehaviour.universeHandle` to the proxy.
+- Add the `UniverseGhostView` hierarchy to the scene; serialize it on the controller.
+- Add `UniverseGhostController` to `Level` in the scene with serialized references to `UniverseView`, the ghost visual, and planets/spaceships spawners.
+- Implement the one-hand/two-hand state machine and scale session inside the controller using handle selection, not `HandRef` polling.
 - Scale the boundary ghost in real time from hand separation, centered on the hand midpoint.
 - Commit to Room/Bubble at the thresholds with hysteresis and the A1 transition.
 - Gate the gesture while spawning and until two planets exist.

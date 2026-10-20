@@ -8,6 +8,7 @@ namespace DigitalLove.Game.Nodes
     public class PlanetBehaviour : MonoBehaviour, IRouteWorldNode
     {
         [SerializeField] private PlanetRefs refs;
+        [SerializeField] private PlanetUniverseHandle universeHandle;
 
         private PlanetRoutePresentation presentation;
         private PlanetHandlers handlers;
@@ -20,6 +21,7 @@ namespace DigitalLove.Game.Nodes
 
         public PlanetStore PlanetStore => refs.planetStore;
         public NodeBody NodeBody => refs.nodeBody;
+        public PlanetUniverseHandle UniverseHandle => universeHandle;
         public Vector3 Position => refs.nodeBody.Position;
 
         private void Awake()

@@ -83,8 +83,7 @@ namespace DigitalLove.Game.Spaceships
             if (candidatePlanet != null)
             {
                 float distance = Vector3.Distance(candidatePlanet.transform.position, start);
-                float radius = candidatePlanet.NodeBody.Radius * ContentScale;
-                Vector3 offset = forward * (radius - rayForwardOffset);
+                Vector3 offset = forward * (candidatePlanet.NodeBody.Radius - rayForwardOffset);
                 end = start + forward * distance - offset;
             }
 

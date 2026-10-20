@@ -7,7 +7,8 @@
         "GUID:447181e61705f4d6f954add1124817a5",
         "GUID:8d1a0410b0c159b49879a29ad02b2fbb",
         "GUID:6055be8ebefd69e48b49212b09b47b2f",
-        "GUID:1fad3ef53db4844a79bb95d8f18d033d"
+        "GUID:1fad3ef53db4844a79bb95d8f18d033d",
+        "Oculus.Interaction"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

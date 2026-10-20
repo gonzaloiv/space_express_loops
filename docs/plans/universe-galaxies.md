@@ -89,7 +89,7 @@ Level (UniverseView D)
   Galaxies
     Galaxy (local position, yaw, uniform scale)
       GalaxyView          visual nebula/ring, no gameplay
-      GalaxyGrabHandle    ring/cage with two grab points
+      GalaxyGrabHandle    grabbable ring around the elements
       Hub
       Planet
       Planet
@@ -143,7 +143,7 @@ migration is covered in §5.4. New galaxies set `transformable = true` and
 
 Membership is fixed once a round is spawned. Nodes are not reparented while a
 round is running. Galaxy positions are not immutable: neighbors can be displaced by
-layout propagation (§8.5).
+layout propagation (§8.3).
 
 ### 4.4 Galaxy bounds
 
@@ -158,7 +158,7 @@ The stored `GalaxyData.radius` is the seed radius used before members exist; aft
 spawn, the runtime bounds take over when they are larger. Bounds are used by:
 
 - the ghost ring and proxy placement;
-- the room-fit scale limit;
+- the room-fit and layout-fit scale limits;
 - the level content bounds if the bubble radius needs to include galaxies.
 
 ## 5. Level and round creation
@@ -232,7 +232,9 @@ order, not scene iteration order.
 
 After all members for the round have spawned, recompute galaxy bounds and room-fit
 limits. A galaxy that gained distant members may need its current scale clamped
-down; do this once at the end of `SpawnRound`, not per node.
+down and its neighbors pushed out; run the layout solver once at the end of
+`SpawnRound`, not per node. This keeps the spawn-time universe coherent with the
+same rules used during the gesture.
 
 ### 5.3 Placement
 
@@ -249,24 +251,24 @@ down; do this once at the end of `SpawnRound`, not per node.
 - A hub is placed near the galaxy center or on a seeded offset so it is always
   reachable and does not overlap planets. The exact offset is a tuning knob.
 - Galaxy local positions are constrained so the galaxy bounds fit inside the room
-  in Room state; the room-fit scale limit is computed at spawn and after an MRUK
-  anchor relocation.
+  in Room state; the room/layout-fit scale limit is computed at spawn and after an
+  MRUK anchor relocation.
 - After members spawn, recompute the galaxy bounds. If the runtime radius exceeds
   the seed radius registered with `MrukRoomLocalPlacement`, update the occupant
   radius (unregister/register) so later galaxies do not overlap it.
 - Cap new galaxies at the room capacity (`galaxyMaxPerRoom`). If a requested galaxy
   cannot be placed, do not leave orphan planets: clamp the count and assign the
   extra planets to existing galaxies.
-- Validate that the room-fit maximum scale is at least `minScale` at the chosen
-  position. If not, try another position, reduce the seed radius, or skip the new
-  galaxy and assign its planets to existing galaxies. Never create a galaxy that is
-  clamped below its own minimum on the first frame.
+- Validate that the effective maximum scale (room, layout, and handle reach) is at
+  least `minScale` at the chosen position. If not, try another position, reduce the
+  seed radius, or skip the new galaxy and assign its planets to existing galaxies.
+  Never create a galaxy that is clamped below its own minimum on the first frame.
 - Validate the spawn layout with the same layout solver used by the gesture
-  (§8.5): galaxies must be able to coexist at `minScale` without overlap and inside
+  (§8.3): galaxies must be able to coexist at `minScale` without overlap and inside
   the room. Prefer another position over silently accepting an impossible layout.
-- Keep the registered room occupancy in sync with the committed galaxy scale
-  (`radius * localScale`), so later rounds place new galaxies against the actual
-  footprint.
+- Keep the registered room occupancy in sync with every committed galaxy scale and
+  position (`radius * localScale`), so later rounds place new galaxies against the
+  actual footprint.
 - `MrukRoomLocalPlacement.SyncFromSnapshot` must register galaxy volumes as the
   room occupants. Per-node positions are registered only for the migrated legacy
   root galaxy, never for new galaxy-local nodes. Registering the legacy root's full
@@ -326,10 +328,10 @@ provide enough hand separation for a usable scale gesture.
   galaxy;
 - has a dedicated `GalaxyHandle` layer excluded from the ship destination and UI ray
   masks; the ring is grabbed directly, not through a UI ray;
-- keeps a **world-space** ring radius clamped between a minimum (usable in Bubble
-  and at small galaxy scales) and a maximum (reachable in Room at large galaxy
-  scales), compensating the handle's local scale from the combined
-  `D.scale * G.scale`;
+- keeps the ring radius at `max(member world bounds + margin, minimum world grab
+  radius)`, compensating the handle's local scale from the combined
+  `D.scale * G.scale`. The ring always encloses the elements; if it would grow
+  beyond comfortable reach, the galaxy's maximum scale is limited instead (§8.2);
 - does not move the grabbed galaxy. It only reports pointer events and hand poses.
 
 At small scales the interaction ring may be larger than the galaxy itself. Keep it
@@ -402,43 +404,59 @@ Reject the session when `d0 < minHandSeparation` or the two hands are not distin
 Per frame:
 
 ```text
-v1     = projectToYawPlane(b1 - a1)
-d1     = |v1|
-raw    = d1 / max(d0, epsilon)
-scale  = clamp(scale0 * pow(raw, scaleGain), minScale, maxScale)
-yaw    = yaw0 + DeltaAngle(startHandYaw, currentHandYaw)
+v1        = projectToYawPlane(b1 - a1)
+d1        = |v1|
+raw       = d1 / max(d0, epsilon)
+scale     = clamp(scale0 * pow(raw, scaleGain), minScale, maxScale)
+yawTarget = yaw0 + clamp(
+                DeltaAngle(startHandYaw, currentHandYaw) * rotationGain,
+                -maxYawDelta, +maxYawDelta)
+yaw       = MoveTowardsAngle(lastYaw, yawTarget, maxYawRateDegPerSec * dt)
 ```
 
 Rules:
 
 - `projectToYawPlane` drops Y and keeps the horizontal hand vector; if the
   horizontal length is below a small epsilon, keep the last yaw.
-- The galaxy **position stays fixed**. The hand midpoint is not a translation
-  target. Only hand separation (scale) and hand-line yaw (rotation) matter.
+- The grabbed galaxy **position stays fixed**. The hand midpoint is not a
+  translation target. Only hand separation (scale) and hand-line yaw (rotation)
+  matter. Neighbors move by layout propagation (§8.3).
 - Scale and yaw are relative to the start pose, so the gesture is stable if the
   player moves around the room.
 - Apply a dead zone to scale ratio and yaw delta.
+- Rotation is deliberately slow: `rotationGain < 1`, a maximum angular rate, and a
+  short smoothing time. The ghost should follow the hands with a visible lag, not
+  snap.
+- Limit the yaw delta per gesture (`maxYawDelta`). At the limit the ghost holds;
+  release and re-grab to continue past it. Do not silently wrap around.
 - Rebase `d0`, `scale0`, `yaw0`, and the reference hand yaw when a limit is hit so
   reversing responds immediately.
 - Preserve pointer-to-hand identity. If the projected hand vector reverses by more
   than 90 degrees in one frame (hands crossing or tracking jitter), ignore that
   frame and rebase the yaw reference instead of snapping the galaxy 180 degrees.
-- Clamp to `minScale`/`maxScale`. In Room, also clamp to the galaxy's room-fit
-  maximum from §8.
+- Clamp scale to `minScale`/`maxScale`, the room fit, and the layout fit (§8). The
+  effective maximum may be lower when growing the galaxy would push a neighbor into
+  a wall.
 
 ### 6.4 Ghost preview
 
 `GalaxyGhostSession` owns the math. `GalaxyGhostView` renders:
 
 - a translucent proxy sphere for each member planet and hub (sphere only, no UI/VFX);
-- a bounds ring/cage at the ghost scale;
+- a bounds ring at the ghost scale;
 - a yaw tick or meridian so the rotation is visible;
 - a subtle limit color/feedback when clamped.
 
-The ghost root lives under `Level` (so it inherits `D`), at the galaxy's fixed
-local position, with the ghost yaw and scale. The real galaxy stays at its current
-transform. Proxy positions are galaxy-local member positions. Compensate the ring
-line width for `D.scale * ghostScale` so the ghost stays visible in Bubble.
+The ghost root lives under `Level` (so it inherits `D`), at the grabbed galaxy's
+fixed local position, with the ghost yaw and scale. The grabbed galaxy stays at its
+current transform. Proxy positions are galaxy-local member positions. Compensate the
+ring line width for `D.scale * ghostScale` so the ghost stays visible in Bubble.
+
+Neighbor layout is previewed live by default: the real neighboring galaxies follow
+their layout targets while the grabbed galaxy stays a ghost. On cancel they return
+to their start positions; on commit they settle at the target. If live neighbor
+movement is too noisy, switch to ghost rings for the neighbors and move them only on
+commit.
 
 Do not duplicate full planet content. Do not show letters, route panels, ships, or
 particles in the ghost.
@@ -446,15 +464,20 @@ particles in the ghost.
 ### 6.5 Commit and cancel
 
 - **Release** commits the current ghost pose.
-- **Tracking loss / state switch / disable** cancels and restores the previous pose.
+- **Tracking loss / state switch / disable** cancels and restores the previous
+  grabbed pose and the previous neighbor layout.
 - If one hand releases while the other still holds, commit the current ghost; the
   remaining hand is released from the session.
 - A commit with no meaningful change (inside the dead zone) is skipped.
-- During the commit tween, ignore new transform input and keep routes paused.
-- Tween only `localRotation` and `localScale`; position is unchanged.
-- After the tween: write `GalaxyData`, save the snapshot, rebuild routes, resume
-  routes, and re-enable interaction.
-- Cancel resumes routes without a rebuild.
+- During the commit tween and neighbor settle, ignore new transform input and keep
+  routes paused.
+- The grabbed galaxy tweens only `localRotation` and `localScale`; its position is
+  unchanged. Neighbor galaxies tween to their layout targets.
+- After the tween: write `GalaxyData` for the grabbed galaxy **and every moved
+  neighbor**, save the snapshot, rebuild routes, refresh stations, resume routes,
+  and re-enable interaction.
+- Cancel resumes routes without a rebuild; neighbor galaxies animate back to their
+  start positions.
 
 ## 7. Routes during a galaxy transform
 
@@ -470,7 +493,10 @@ runner state, not just the path tween:
 - `TravellerRouteRunner.Pause()` already stops the loop between legs and pauses the
   current path tween; delays do not advance while paused;
 - route lines stay hidden or frozen while the gesture is active, so they do not
-  visibly detach from the transforming galaxy.
+  visibly detach from the transforming galaxy;
+- ship bodies and travellers are hidden or held at their station while neighbors
+  move live. They are not part of the layout preview and must not be left floating
+  at an old hub position.
 
 Ship grab and destination picking are disabled for the whole session.
 
@@ -486,8 +512,9 @@ for each active ship:
     resume
 ```
 
-Rebuild all active routes, not only routes whose endpoints are in the transformed
-galaxy. A route may cross galaxies, and the route container is `Level`-level.
+Rebuild all active routes, not only routes whose endpoints are in the grabbed
+galaxy. A route may cross galaxies, and layout propagation can move several
+galaxies, so every active route is potentially stale.
 
 ### 7.3 Current leg and picked letters
 
@@ -544,7 +571,8 @@ available.
 ### 7.6 Station-anchored visuals
 
 A route rebuild is not enough for ships that are not running. After a galaxy
-commits, call a ship-level refresh that covers every state:
+commit, call a ship-level refresh for **every galaxy moved by the layout**, covering
+every state:
 
 - **Running** - rebuild the route and restart at the current leg (§7.2).
 - **Idle** - move the grabbable, grab ghost, grab zone, and station panel to the
@@ -552,7 +580,11 @@ commits, call a ship-level refresh that covers every state:
 - **Selecting** - do the same for the station anchors and cancel/refresh any
   in-progress destination candidate; the player should not confirm a stale target.
 - The ship body and traveller keep `Level` scale; only their positions are
-  refreshed. See the ship-scale risk in §16.
+  refreshed. This is a deliberate rule, not a temporary limitation.
+
+This behavior should adapt now, but station/selection UX is expected to change in
+later iterations. Keep the refresh in one ship-level method so the future redesign
+has a single integration point.
 
 `SpaceshipsSpawner.RefreshGrabbablesAtStation` currently only handles the running
 state. Replace or extend it with `RefreshAfterContentTransform` so idle and
@@ -574,57 +606,119 @@ Galaxy member bounds must be included when the bubble radius is computed if a
 galaxy can extend beyond the room content bounds; with the room-fit limit below,
 this is normally a no-op.
 
-### 8.2 Room-fit limit
+### 8.2 Room fit and layout fit
 
-The galaxy position is fixed, so a room-fit maximum scale can be computed once:
+The grabbed galaxy still needs an individual room fit, but the effective limit is
+the whole layout, not the galaxy alone:
 
 ```text
-roomMaxScale = min over room bounds axes of available half-extent / galaxy radius
-maxScale = min(globalMaxScale, roomMaxScale)
+roomMaxScale   = largest scale that keeps the grabbed galaxy inside the room
+layoutMaxScale = largest scale for which the layout solver can place every galaxy
+                 inside the room without overlap
+handleMaxScale = largest scale whose ring stays within comfortable hand reach
+maxScale       = min(globalMaxScale, roomMaxScale, layoutMaxScale, handleMaxScale)
 ```
 
 Compute the fit in `Level` space, using the room bounds transformed into that
 space, and include floor/ceiling margins. Do not mix a world-space AABB with a
-`Level`-local galaxy position. Apply the same `maxScale` in both Room and Bubble so
-preserving transforms cannot make a galaxy overflow the room when returning to
-Room. Recompute the limit whenever a round adds members to a galaxy, and skip the
-clamp for the migrated legacy root galaxy (`roomFitEnabled = false`). If the MRUK
-anchor relocates, recompute the limit and clamp affected galaxies with a short
-animation.
+`Level`-local galaxy position. Solve for `layoutMaxScale` at the requested ghost
+scale; if the layout is invalid, reduce the scale and solve again until it fits or
+reaches `minScale`. The galaxy count is small (a handful per room), so a bounded
+loop is enough. `handleMaxScale` is a scale ceiling, not a ring shrink: the ring
+must continue to enclose the elements.
 
-If a future feature allows galaxy translation, this static limit must become a
-per-pose constraint.
+**Why this can be infeasible:** imagine a galaxy center 10 cm from a wall and a
+minimum scale at which its radius is 15 cm. No legal scale fits at that position;
+the galaxy would leave the room even at its smallest allowed size. The spawner must
+reject that position, reduce the galaxy radius, or lower `minScale` for that
+galaxy. The same problem can appear when growing: the grabbed galaxy may fit, but
+pushing a neighbor outward puts the neighbor into a wall, so the effective maximum
+is lower.
 
-### 8.3 Bedrock constraints
+Apply the same limit in both Room and Bubble so preserving transforms cannot make
+a galaxy overflow the room when returning to Room. Recompute the limit whenever a
+round adds members to a galaxy, and skip the clamp for the migrated legacy root
+galaxy (`roomFitEnabled = false`). If the MRUK anchor relocates, recompute the
+limit and clamp affected galaxies with a short animation.
+
+### 8.3 Layout propagation
+
+Scaling a galaxy is a universe-layout edit, not just a local transform. Shrinking
+pulls nearby galaxies closer; growing pushes them farther away. The grabbed galaxy
+stays fixed; its neighbors move.
+
+Capture the layout at session start:
+
+```text
+A        = grabbed galaxy
+rA0      = A.radius * scale0
+rA       = A.radius * ghostScale
+```
+
+For each other transformable galaxy `B` inside `layoutInfluenceRadius`:
+
+```text
+offset   = B.startPosition - A.position
+distance = |offset|
+weight   = smoothstep(1, 0, distance / layoutInfluenceRadius)
+push     = (rA - rA0) * layoutGain * weight
+B.target = B.startPosition + normalize(offset) * clamp(push, -maxPush, +maxPush)
+```
+
+This gives the requested behavior:
+
+- `rA < rA0` (shrinking) -> `push` is negative -> neighbors move toward `A`;
+- `rA > rA0` (growing) -> `push` is positive -> neighbors move away from `A`;
+- far galaxies are unaffected because `weight` reaches zero at the influence
+  radius.
+
+After the radial push, run a small relaxation pass over all active galaxies:
+
+```text
+repeat layoutIterations:
+    for each pair (i, j), including pairs with A:
+        desired = ri + rj + galaxyGap
+        if |pi - pj| < desired:
+            if one of the pair is A:
+                move the other galaxy away along the center line
+            else:
+                move both galaxies apart by half the correction each
+    clamp every non-A position to the room bounds
+```
+
+The relaxation resolves chain reactions (a neighbor pushed into another galaxy),
+keeps gaps, and handles the case where several galaxies are close. `A` is fixed; only
+non-A galaxies move.
+
+The migrated legacy root galaxy is excluded from layout movement. It is not
+transformable and acts as a fixed anchor; new galaxies move around it.
+
+If the relaxed layout cannot fit inside the room at the requested scale, reduce
+`ghostScale` and solve again (§8.2). If it still cannot fit at `minScale`, clamp to
+`minScale` and log a warning; do not let the gesture leave the room.
+
+Preview behavior:
+
+- the grabbed galaxy is a ghost;
+- neighboring galaxies follow their layout targets live by default, so the player
+  sees the universe make room;
+- on cancel they return to their start positions;
+- on commit they settle at the final targets and all moved positions are saved.
+
+Rotation does not change a bounding-sphere layout, so yaw never pushes neighbors.
+If oriented boxes are used later, the layout pass must run per ghost yaw.
+
+### 8.4 Bedrock constraints
 
 - No pitch/roll.
-- No translation.
+- The grabbed galaxy does not translate. Neighbor galaxies do move by layout
+  propagation.
 - Uniform scale only.
 - Ghost scale is clamped before commit; the real galaxy never exceeds the limit.
+- Layout positions are clamped to the room before commit.
 - Do not allow a galaxy transform during a view transition, a round spawn, or a
   ship route commit. Gate on `UniverseView.IsTransitioning`, `IsSpawning`, and the
   transform gate.
-
-### 8.4 Galaxy-to-galaxy overlap
-
-Room fit only keeps a galaxy inside the room; it does not keep it away from another
-galaxy. Scaling one up can overlap another, mix their planet colliders, and make
-destination picking ambiguous.
-
-Decide and implement one of:
-
-- **Prevent overlap (recommended):** include a neighbor term in `maxScale`, using
-  galaxy bounding spheres and a small margin. If the resulting max is below
-  `minScale`, allow the minimum scale with a warning rather than blocking the
-  gesture.
-- **Allow overlap:** simpler, but accept collider/ray ambiguity and visual
-  interpenetration.
-
-The recommended approach also needs spawn-time validation: place galaxies far
-enough apart that both can exist at `minScale` without overlapping.
-
-Note that rotation does not change a bounding-sphere overlap test. If an oriented
-box is used later, the constraint must run per ghost yaw.
 
 ## 9. Persistence and reset
 
@@ -639,19 +733,24 @@ List<GalaxyData> galaxies
 
 `PlanetData` and `HubData` gain `galaxyId`.
 
-On commit, update the `GalaxyData` current pose and call the existing
-`GameSnapshot` update notification; do not write every frame. Do not persist a
-ghost session.
+On commit, update the `GalaxyData` current pose for the grabbed galaxy **and every
+neighbor moved by the layout**, then call the existing `GameSnapshot` update
+notification; do not write every frame. Do not persist a ghost session.
 
 ### 9.2 Reset
 
-`GalaxyBehaviour.ResetPose(bool instant)` restores `defaultLocalPosition`,
-`defaultLocalYaw`, and `defaultLocalScale`. Position is normally unchanged, but
-the reset API keeps it for completeness.
+Galaxy positions are coupled by layout propagation, so reset has two scopes:
 
-`GalaxiesSpawner.ResetAll(bool instant)` resets every galaxy. Expose a debug
-`[Button]` / debug action first; a player-facing reset control is a later UI task.
-Reset must also rebuild routes and resave the snapshot.
+- `GalaxiesSpawner.ResetAll(bool instant)` restores every galaxy's
+  `defaultLocalPosition`, `defaultLocalYaw`, and `defaultLocalScale`. This is the
+  primary reset because it guarantees a coherent layout.
+- A per-galaxy reset restores that galaxy's default pose and then runs the layout
+  solver from the current neighbor positions. Neighbors may not return to their
+  defaults. Expose it as debug only until the reset UX is designed.
+
+Both reset paths must rebuild routes, refresh stations for every moved galaxy, and
+resave the snapshot. Expose a debug `[Button]` / debug action first; a
+player-facing reset control is a later UI task.
 
 ### 9.3 New level
 
@@ -670,11 +769,12 @@ New:
 | `GalaxyBehaviour` | Galaxy root, members, bounds, apply/reset pose. | `DigitalLove.Game.Nodes` |
 | `GalaxyRefs` | Serialized view/handle/bounds references. | `DigitalLove.Game.Nodes` |
 | `GalaxyPlacement` | Seeded galaxy-local planet/hub placement. | `DigitalLove.Game.Nodes` |
-| `GalaxiesSpawner` | Round planning, galaxy pool, placement, reset, room fit. | `DigitalLove.Game.Levels` |
-| `GalaxyGrabHandle` | Two-hand ring/cage handle; pointer events; no transform. | `DigitalLove.Game.Universe` |
-| `GalaxyGhostSession` | Start pose, hand separation/yaw, dead zone, clamp/rebase. | `DigitalLove.Game.Universe` |
+| `GalaxiesSpawner` | Round planning, galaxy pool, placement, reset, layout validation. | `DigitalLove.Game.Levels` |
+| `GalaxyGrabHandle` | Two-hand ring around member elements; pointer events; no transform. | `DigitalLove.Game.Universe` |
+| `GalaxyGhostSession` | Start pose, hand separation/yaw, rotation limits, clamp/rebase. | `DigitalLove.Game.Universe` |
 | `GalaxyGhostView` | Proxy spheres, bounds ring, yaw indicator, limit feedback. | `DigitalLove.Game.Universe` |
-| `GalaxyRoomConstraint` | Room-fit max scale and anchor-relocation refit. | `DigitalLove.Game.Universe` |
+| `GalaxyLayoutSolver` | Radial neighbor push, overlap relaxation, room clamp, layout preview targets. | `DigitalLove.Game.Universe` |
+| `GalaxyLayoutConstraint` | Room-fit and layout-fit max scale; anchor-relocation refit. | `DigitalLove.Game.Universe` |
 
 Modified:
 
@@ -690,7 +790,7 @@ Modified:
 | `MrukRoomLocalPlacement` | Register galaxy volumes; keep legacy fallback. |
 | `UniverseGrabCoordinator` | Add galaxy scope and first-grab reservation. |
 | `UniverseTransformGate` | Extend the existing route/input gate to cover galaxy sessions as well as universe sessions. |
-| `SpaceshipsSpawner` / `SpaceshipBehaviour` | Pause all routes; disable interaction; rebuild after transform. |
+| `SpaceshipsSpawner` / `SpaceshipBehaviour` | Pause all routes; disable interaction; rebuild routes and refresh stations for every moved galaxy. |
 | `SpaceshipRouteSession` | Transform-aware rebuild. |
 | `SplineContainerWrapper` | Preserve current leg index on rebuild. |
 | `TravellerRouteRunner` | `RestartAtLeg`, persistent leg/picked-letter state. |
@@ -722,29 +822,33 @@ routes work without any galaxy gesture.
 
 ### Phase C1 — Galaxy handle, ghost, and commit
 
-- Add `GalaxyGrabHandle` with a ring/cage or two grab points; validate multi-hand
-  selection.
+- Add `GalaxyGrabHandle` as a ring around the member elements with two grab nubs;
+  validate two-hand selection on the unified grabbable.
 - Extend `UniverseGrabCoordinator` with the galaxy scope and first-grab reservation.
 - Add `GalaxyGhostSession` and `GalaxyGhostView`.
-- Add commit/cancel, dead zone, clamps, rebase, and input gating.
+- Add commit/cancel, dead zone, rotation limits/rate, scale clamps, rebase, and
+  input gating.
+- Add `GalaxyLayoutSolver` and `GalaxyLayoutConstraint`: radial push, relaxation,
+  room fit, and live neighbor preview.
 - Extend `UniverseTransformGate` to pause routes and disable ship/destination
   interaction for galaxy sessions.
 - Add transform-aware route rebuild and `RestartAtLeg`.
-- Add station refresh for idle/selecting ships and route panels.
-- Add room-fit and neighbor-overlap scale limits.
+- Add station refresh for idle/selecting ships and route panels for every moved
+  galaxy.
 
-**Exit:** two hands on a galaxy handle preview yaw and scale, release commits,
-routes resume at the current leg, and the universe gesture cannot run at the same
-time.
+**Exit:** two hands on a galaxy ring preview yaw and scale, nearby galaxies move
+inward/outward with the layout, release commits, routes resume at the current leg,
+and the universe gesture cannot run at the same time.
 
 ### Phase C2 — Persistence, reset, and polish
 
-- Save committed galaxy poses; add per-galaxy reset and a debug reset-all.
+- Save committed poses for the grabbed galaxy and every moved neighbor; add reset
+  scopes and a debug reset-all.
 - Refit galaxies after an MRUK anchor relocation.
-- Tune ring size, minimum world grab size, ghost proxies, commit time, gearing, and
-  dead zones.
+- Tune ring size, minimum world grab size, ghost proxies, commit time, gearing,
+  rotation speed/range, layout push, falloff, iterations, and dead zones.
 - Tune labels/panels and limit feedback. Add a reset UI later if needed.
-- Add automated tests for the pure math and snapshot migration.
+- Add automated tests for the pure math, layout solver, and snapshot migration.
 
 **Exit:** the transform is stable across Room/Bubble, room boundaries, restarts,
 and resets; gesture feedback is readable; tests cover the solver and data model.
@@ -775,28 +879,54 @@ and resets; gesture feedback is readable; tests cover the solver and data model.
 13. Same hand twice and mismatched planet/galaxy grabs are rejected.
 14. Universe planet-pair gesture and galaxy gesture cannot run simultaneously.
 15. Crossing hands does not flip the galaxy 180 degrees.
+16. Rotation is rate-limited and capped by `maxYawDelta`; the ghost does not snap.
+17. The grabbed galaxy's position never changes; only its yaw/scale do.
+
+### Neighbor layout
+
+18. Shrinking the grabbed galaxy pulls nearby galaxies closer.
+19. Growing it pushes nearby galaxies farther away.
+20. The effect falls off with distance; galaxies outside the influence radius do not
+    move.
+21. A moved neighbor does not overlap a third galaxy; the relaxation pass resolves
+    chain reactions.
+22. Neighbors pushed toward a wall stop at the room bound, and the grabbed galaxy's
+    maximum scale is reduced so the layout fits.
+23. Cancel restores every neighbor to its start position; commit saves every moved
+    position.
+24. Routes and station anchors refresh for every moved galaxy, not only the grabbed
+    one.
+25. A round that grows a galaxy runs the same layout solve after spawn; neighbors
+    move out and no overlap remains.
+
+Preview check: ships, travellers, and route lines are hidden or frozen during live
+neighbor movement, not left at old positions.
 
 ### Routes and views
 
-16. Routes pause during the gesture and resume after commit.
-17. Rebuilt routes start at the current leg and do not double-pick letters.
-18. Routes spanning two galaxies stay attached after one galaxy transforms.
-19. Idle and selecting ships move their grabbable, ghost, grab zone, and panel to
+26. Routes pause during the gesture and resume after commit.
+27. Rebuilt routes start at the current leg and do not double-pick letters.
+28. Routes spanning two galaxies stay attached after one galaxy transforms.
+29. Idle and selecting ships move their grabbable, ghost, grab zone, and panel to
     the new hub pose after a galaxy commit.
-20. Bubble -> Room preserves galaxy yaw/scale and never exceeds the room-fit limit.
-21. Ship grab and destination picking are disabled during the gesture; UI remains
+30. Bubble -> Room preserves galaxy yaw/scale and never exceeds the room/layout
+    fit limit.
+31. Ship grab and destination picking are disabled during the gesture; UI remains
     available.
-22. Planet labels/panels follow and scale with their galaxy; ship route panels stay
+32. Ships do not scale with a galaxy; only their station anchors move.
+33. Planet labels/panels follow and scale with their galaxy; ship route panels stay
     at ship level.
 
 ### Automated
 
-- Ghost solve: scale ratio, yaw delta, dead zone, clamps, rebase, no translation,
-  hand-crossing guard.
-- Galaxy bounds, room-fit max scale, and neighbor-overlap max scale.
+- Ghost solve: scale ratio, yaw delta, rotation gain/rate/limit, dead zone, clamps,
+  rebase, no grabbed-galaxy translation, hand-crossing guard.
+- Layout solver: radial push sign and falloff, chain relaxation, room clamp, layout
+  fit, and cancel/commit target sets.
+- Galaxy bounds, room-fit max scale, and layout-fit max scale.
 - Galaxy assignment: every node assigned; capacity/overflow behavior; new-round
   distribution stable.
-- Snapshot round-trip and legacy migration.
+- Snapshot round-trip and legacy migration, including moved neighbor positions.
 - Route rebuild: leg index and picked-letter count preserved.
 - No per-frame allocations and no LINQ in the new code.
 
@@ -807,21 +937,24 @@ and resets; gesture feedback is readable; tests cover the solver and data model.
 | Galaxy membership | Created by level/round spawning, not authored as a fixed scene group. Membership is fixed after spawn. |
 | Node position semantics | New `PlanetData`/`HubData` positions are galaxy-local; legacy snapshots migrate to one identity galaxy. |
 | Legacy root galaxy | The migrated root is not transformable and bypasses room-fit, staying at scale 1; it exists only to preserve old snapshots. |
-| Two-hand handle | Use a ring/cage or two opposed grab points; a tiny core sphere cannot provide enough hand separation. Validate multi-hand selection; fallback to two child grab colliders. |
-| Handle world size | Clamp the grab radius between a minimum world-space size (Bubble/small scales) and a maximum reachable size (Room/large scales). |
+| Two-hand handle | Use a ring around the member elements with two opposed grab nubs; a tiny core sphere cannot provide enough hand separation. Validate two-hand selection on the unified grabbable; fallback to two child grab colliders. |
+| Handle world size | Keep the ring around the elements with a minimum world-space radius; limit the galaxy's maximum scale instead of shrinking the ring inside its elements. |
 | Ghost fidelity | Proxy spheres plus a bounds ring and yaw indicator; no full content ghost. |
 | Commit trigger | Commit on release; cancel on tracking loss. No threshold auto-commit. |
-| Translation | Galaxies do not translate during the gesture. Position is spawn-authored. |
+| Grabbed galaxy position | The grabbed galaxy does not translate. Its position is spawn-authored. |
+| Neighbor layout | Scaling pushes/pulls nearby galaxies; positions are coupled and saved. See §8.3. |
+| Ships | Ships are not part of the scalable galaxy content. They stay at `Level` scale; only station anchors and routes adapt. |
+| Rotation | Yaw is gear-limited, rate-limited, smoothed, and capped per gesture. It never snaps with hand crossings. |
 | Routes | Pause all routes during the gesture; rebuild all active routes after commit; restart at the current leg. |
 | Route snap | A rebuilt route snaps the traveller to the new current leg start. Accepted; do not try to preserve a normalized path position across a length change. |
-| Room constraint | Compute a per-galaxy room-fit max scale at spawn and apply it in both Room and Bubble; refit after anchor relocation. |
+| Room/layout constraint | Apply the individual room fit and the whole-layout fit in both Room and Bubble; refit after anchor relocation. |
 | Preserve transforms | Galaxy local yaw/scale survives Room/Bubble switches; the universe transform composes above it. |
 | Labels | Planet labels/panels scale with the galaxy. Readability is accepted as a risk for now. |
 | Art | `GalaxySpace` is a room shell, not a galaxy. A placeholder galaxy visual is required for C0. |
 | UI scope | Ship route panels stay at ship level and are not children of a galaxy. |
-| Persistence | Save on commit and reset only; no per-frame writes; no ghost persistence. |
+| Persistence | Save the grabbed galaxy and every moved neighbor on commit/reset only; no per-frame writes; no ghost persistence. |
 | One active transform | Only one galaxy or universe transform session at a time. First-grab reservation prevents ambiguous pairs. |
-| Content bounds | Galaxy member bounds are included in content/bubble bounds when needed; room-fit prevents overflow in normal play. |
+| Content bounds | Galaxy member bounds, including moved neighbors, are included in content/bubble bounds when needed; room/layout fit prevents overflow in normal play. |
 | Performance | Ghost uses shared proxy meshes/materials; no per-frame allocations; no LINQ. |
 
 Additional second-order risks and defaults are in §16.
@@ -841,44 +974,64 @@ Additional second-order risks and defaults are in §16.
 | `galaxyScaleGain` | `2.0` |
 | `galaxyScaleDeadZone` | `0.04` |
 | `galaxyYawDeadZoneDegrees` | `2.0` |
+| `galaxyRotationGain` | `0.75` |
+| `galaxyRotationSmoothTau` | `0.12 s` |
+| `galaxyMaxYawRateDegPerSec` | `60` |
+| `galaxyMaxYawDeltaDegrees` | `120` per gesture |
 | `galaxyCommitSecs` | `0.25 s` |
 | `minHandSeparation` | `0.08 m` |
+| `galaxyLayoutGain` | `1.0` |
+| `galaxyLayoutInfluenceRadius` | `2.0 m` |
+| `galaxyLayoutFalloff` | smoothstep to zero at the influence radius |
+| `galaxyGap` | `0.02 m` |
+| `galaxyLayoutIterations` | `4` |
+| `galaxyLayoutSmoothTau` | `0.12 s` |
+| `galaxyLayoutMaxPush` | `0.75 m` per gesture |
 | `galaxyHandleMinWorldRadius` | `0.10 m` |
-| `galaxyHandleMaxWorldRadius` | `0.35 m` |
+| `galaxyHandleMaxWorldRadius` | `0.60 m` (reach cap; becomes a scale limit) |
 | `galaxyRoomMargin` | `0.05 m` |
 | `galaxyMaxPerRoom` | `4` |
 | `routeRebuildSecs` | `0 s` (rebuild after the commit tween) |
 
-## 15. Assumptions to confirm before C1
+## 15. Decisions confirmed in review
 
-The second design round was not answered; these defaults are recorded so the plan
-is executable, but should be confirmed before gesture implementation:
+- Ships are not part of the scalable galaxy content. They stay at `Level` scale.
+- Station-anchored visuals should adapt after a galaxy transform, but station and
+  selection behavior will change in later iterations.
+- Scaling a galaxy changes the universe layout: shrinking pulls nearby galaxies
+  closer, growing pushes them farther. See §8.3.
+- The galaxy handle is a ring around the member elements, not a core sphere.
+- Galaxy VFX must use local simulation space.
+- Rotation is limited and slow: gain, rate limit, smoothing, and a per-gesture yaw
+  cap.
+- The project is unifying grabbables; the plan targets that abstraction. Verify that
+  it can expose two simultaneous hand poses.
+
+Still recorded as defaults rather than gameplay decisions:
 
 - Commit on release rather than at a scale/yaw threshold.
 - Ghost uses proxy spheres and a ring, not bounds only or full content.
 - Routes resume at the current leg, not the whole loop or after waiting for idle.
-- The dedicated handle is a ring/cage with two grab points, not a small core
-  sphere. This is a functional requirement of the scale gesture.
 
-If any of these changes, update §6, §7, and §13 before starting C1.
+If any of these changes, update §6, §7, §8, and §13 before starting C1.
 
-## 16. Additional decisions to settle
+## 16. Second-order risks and defaults
 
-These are second-order decisions that do not block C0 but will cause visible
-problems or rework if left implicit.
+These do not block C0 but will cause visible problems or rework if left implicit.
 
 | Area | Risk / decision | Recommended default |
 |---|---|---|
 | Galaxy capacity | Unbounded planets per galaxy grow its bounds, shrink the room-fit scale, and bloat the ghost proxy count. | Fixed capacity (`maxPlanetsPerGalaxy = 6`, `maxHubsPerGalaxy = 2`); add a galaxy when full if room allows; otherwise overflow the least-full galaxy with a warning. |
-| Ship visual scale | Ships stay at `Level` scale while a galaxy scales, so they can look oversized or tiny beside its planets; route line width is also `Level`-scale. | Keep ships and route lines at `Level` scale for C1. If it reads badly, add a visual-only ship scale presenter later; do not scale path or collider data per galaxy. |
-| Station refresh | Idle/selecting ships, grab ghosts, grab zones, and route panels stay at the old hub pose after a galaxy commit. | Add `RefreshAfterContentTransform` covering running, idle, and selecting states. Cancel or refresh a stale destination candidate. |
-| Galaxy overlap | Scaling one galaxy can overlap a neighbor, mixing colliders and making destination rays ambiguous. | Include a neighbor term in `maxScale`; if the result is below `minScale`, clamp to `minScale` and warn. Validate at spawn that neighbors can coexist at minimum scale. |
-| Handle priority | A large ring can steal planet grabs or block UI rays. | Put two nubs outside planet paths; disable the ring collider during a planet first grab or universe session; exclude the handle layer from ship and UI ray masks. |
+| Ship visual scale | Ships are not part of the galaxy's scalable content. They stay at `Level` scale; route line width is also `Level`-scale. | Fixed rule: do not scale ships or route lines with a galaxy. Only station anchors and routes adapt. |
+| Station refresh | Idle/selecting ships, grab ghosts, grab zones, and route panels stay at the old hub pose after a galaxy commit. | Add `RefreshAfterContentTransform` covering running, idle, and selecting states for every moved galaxy. Cancel or refresh a stale destination candidate. |
+| Neighbor layout | Scaling one galaxy changes the gaps around it; a pure overlap clamp would make the universe feel rigid and local. | Use the radial push plus relaxation solver in §8.3. Shrinking pulls neighbors in, growing pushes them out. Preview neighbors live; save all moved positions. |
+| Live layout preview | Moving real neighbor galaxies can leave ships, travellers, and route lines detached at old positions. | Hide ships/travellers and route lines during the gesture; refresh every station on commit/cancel. Planet labels follow their galaxy and scale with it. |
+| Handle priority | A large ring can steal planet grabs or block UI rays. | Ring around the member elements with two nubs outside planet paths; disable the ring collider during a planet first grab or universe session; exclude the handle layer from ship and UI ray masks. |
 | VFX simulation | World-space particles/trails do not rotate or scale with the galaxy root. | Use local simulation space and local-space lines/trails for galaxy visuals. Never put a world-space trail under a galaxy. |
-| Hand crossing | Hands crossing can flip the yaw reference by 180 degrees. | Ignore a projected-vector reversal greater than 90 degrees in one frame and rebase the yaw reference. |
-| Room-fit feasibility | A galaxy placed near a wall can have `roomMaxScale < minScale`. | Validate at placement; try another position, reduce the seed radius, or skip the new galaxy. Never create a galaxy that is below its own minimum. |
+| Rotation feel | Mapping hand yaw 1:1 is too fast and can snap when hands cross. | Use `rotationGain < 1`, a maximum angular rate, smoothing, and a per-gesture yaw cap. Ignore projected-vector reversals greater than 90 degrees in one frame. |
+| Room-fit feasibility | A galaxy placed near a wall can have `roomMaxScale < minScale`; growing it can also push a neighbor into a wall. | Validate individual and whole-layout fit at placement and during the gesture. Try another position, reduce the seed radius, skip the new galaxy, or lower the ghost scale. Never commit a layout that leaves the room. |
 | Scene naming | The scene already has a room VFX object named `Galaxy`; new content adds `Galaxies` and `GalaxyBehaviour`. | Rename the existing VFX object to `GalaxyBackdrop` before wiring the content root. |
-| Pointer pose source | A multi-select `Grabbable` may not expose two distinct hand poses. | Spike before C1. Fall back to interactor/hand transforms or two child grab colliders. |
+| Pointer pose source | The unified grabbable may not expose two distinct hand poses for one ring. | Verify before C1. Fall back to the unified interactor/hand transform or two child grab colliders. |
 | Failure VFX | Ship failure triggers can miss at extreme galaxy scales. | Accept for now; route arrival is animation-based. Tune only if the miss is visible. |
 | Haptics and audio | There is no feedback for first grab, second grab, limit, or commit. | Add haptic/audio cues in C2. |
 

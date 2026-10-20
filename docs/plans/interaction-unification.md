@@ -1,6 +1,6 @@
 # Interaction Unification — Plan Insert
 
-**Status:** design insert between the two-views work and the transform work.
+**Status:** U0 ship prefab updated; U1 code added; planet/scene wiring still required.
 
 **Related:** [Two views](universe-two-views.md) · [Transforming the universe](universe-transform.md)
 
@@ -73,15 +73,15 @@ No runtime profile/injection component is needed. The same serialized configurat
 
 ### 3.3 Planet handles
 
-Preferred model:
+Chosen model for U1:
 
-- One shared `Grabbable` proxy in the scene for the universe-scale gesture.
-- Each planet template has a preconfigured `HandGrabInteractable` child whose pointable element is the shared proxy.
-- The proxy target is a dummy transform (or a no-op transformer); it never moves the planet.
-- Two hands selecting two planet interactables produce two pointer events on the shared proxy.
-- `UniverseGhostController` holds serialized references to the shared proxy and listens to pointer events instead of polling `HandRef`.
+- Each planet template has an authored `UniverseHandle` proxy child with its own kinematic Rigidbody, handle collider, `Grabbable`, pre-added `GrabFreeTransformer`, pinch-only `HandGrabInteractable`, and `PlanetUniverseHandle`.
+- The proxy moves with the hand; the planet visual does not move.
+- `HandGrabInteractable` allows only one selecting interactor per planet, so two hands must use two planets.
+- `PlanetUniverseHandle` reports `IsSelected`, `InteractorId`, and `GrabPose` from the proxy transform.
+- `UniverseGhostController` reads the selected handles from the planet pool; no `HandRef` polling.
 
-Per-planet `Grabbable` objects with a no-op transformer are an acceptable fallback, but a shared proxy is simpler for the two-hand case. Either way, the components are authored in the planet template/prefab, not added at runtime.
+A shared `Grabbable` proxy remains a possible later optimization, but the per-planet proxy is simpler to validate and keeps each planet’s selection state explicit. All components are authored in the planet template, not added at runtime.
 
 ### 3.4 Interaction arbitration
 
@@ -117,8 +117,8 @@ Use pointer-event identifiers to distinguish hands/interactors rather than polli
 | Asset | Change |
 |---|---|
 | `Spaceship (1).prefab` | Remove `TouchHandGrabInteractable`; configure `HandGrabInteractable` for pinch only; keep the `Grabbable` and `GrabbableWrapper` references. |
-| `Game.unity` / planet template | Add a preconfigured `PlanetUniverseHandle` child with a handle collider, a `HandGrabInteractable`, and a reference to the shared `Grabbable` proxy. |
-| `Game.unity` | Add the shared `Grabbable` proxy and the `UniverseGhostView` hierarchy; serialize them on `UniverseGhostController`. |
+| `Game.unity` / planet template | Add a preconfigured `UniverseHandle` proxy child under the planet: kinematic Rigidbody, handle `SphereCollider` on the `UniverseHandles` layer, `Grabbable`, pre-added `GrabFreeTransformer`, pinch-only `HandGrabInteractable`, and `PlanetUniverseHandle`. Wire `PlanetBehaviour.universeHandle` to it. |
+| `Game.unity` | Add the authored `UniverseGhostView` hierarchy; serialize it on `UniverseGhostController`. |
 | `Game.unity` / `Level` | Add `UniverseView` and `UniverseGhostController` to the scene object; remove runtime auto-add. |
 | Layers | Add the `UniverseHandles` layer and exclude it from the ship destination ray mask. |
 | Input | Keep the hand-ray/poke path for UI; ensure pinch wins on ship/planet interaction layers. |
@@ -136,11 +136,12 @@ Use pointer-event identifiers to distinguish hands/interactors rather than polli
 
 ### Phase U1 — Planet handles through the same component (prefab/scene edit)
 
-- Add the shared `Grabbable` proxy to the scene.
-- Add a preconfigured `HandGrabInteractable` child to the planet template, wired to the shared proxy.
-- Add the handle collider and its layer in the template.
-- Give `UniverseGhostController` serialized references to the proxy and ghost.
-- Replace `HandRef` polling with pointer events.
+- Add an `UniverseHandle` proxy child to the planet template with its own kinematic Rigidbody.
+- Add the handle collider on the `UniverseHandles` layer.
+- Add `Grabbable`, a pre-added `GrabFreeTransformer`, a pinch-only `HandGrabInteractable`, and `PlanetUniverseHandle` to the proxy.
+- Wire `PlanetBehaviour.universeHandle` to the proxy handle.
+- Give `UniverseGhostController` serialized references to the planet spawner, spaceship spawner, ghost, and view.
+- Replace `HandRef` polling with the proxy selection state.
 - Remove any now-unused runtime setup code.
 
 **Exit:** the two-planet scale gesture uses the same pinch component and pointer-event flow as ships, with all wiring authored in prefabs/scene.
@@ -157,10 +158,11 @@ Use pointer-event identifiers to distinguish hands/interactors rather than polli
 | Risk | Mitigation |
 |---|---|
 | Prefab wiring drift / missing references | Keep references serialized and validate in the scene; no runtime discovery or injection. |
+| SDK auto-adds `GrabFreeTransformer` to the proxy | Pre-add the transformer in the prefab and wire it to the `Grabbable` so the SDK does not add it at runtime. |
 | Pinch grab point differs from raw pinch midpoint | Tune grab point and scoring in the prefab; compare with the current hand midpoint behavior. |
 | Removing touch changes discoverability | Add hover/outline feedback and keep pinch consistent across ships and planets. |
 | Ray beats pinch | Exclude planet/ship layers from the ray in the relevant mode; verify interactor priority. |
-| Shared proxy sees two hands on the same planet | Reject duplicate planet selections; require distinct planets. |
+| Two hands select the same planet | Set `HandGrabInteractable` max selecting interactors to `1`; require two distinct planet handles. |
 | Handle colliders interfere with destination ray | Dedicated handle layer excluded from the route ray mask. |
 | Ghost built at runtime | Author the ghost hierarchy in the scene/prefab and serialize it on the coordinator. |
 
