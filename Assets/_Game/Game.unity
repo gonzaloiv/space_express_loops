@@ -307,6 +307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.LookAtCameraOnY
   offset: 180
+  lookAtSpeed: 5
 --- !u!114 &50943840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1490,6 +1491,86 @@ AudioHighPassFilter:
   m_Enabled: 1
   m_CutoffFrequency: 183
   m_HighpassResonanceQ: 1
+--- !u!1001 &194917956
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1568662588}
+    m_Modifications:
+    - target: {fileID: 2968948018543188193, guid: f4055528478203d42b8d39b330c3e393, type: 3}
+      propertyPath: m_Name
+      value: PlayerControllerInstaller
+      objectReference: {fileID: 0}
+    - target: {fileID: 4346171729916644252, guid: f4055528478203d42b8d39b330c3e393, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4346171729916644252, guid: f4055528478203d42b8d39b330c3e393, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4346171729916644252, guid: f4055528478203d42b8d39b330c3e393, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4346171729916644252, guid: f4055528478203d42b8d39b330c3e393, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4346171729916644252, guid: f4055528478203d42b8d39b330c3e393, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4346171729916644252, guid: f4055528478203d42b8d39b330c3e393, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4346171729916644252, guid: f4055528478203d42b8d39b330c3e393, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4346171729916644252, guid: f4055528478203d42b8d39b330c3e393, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4346171729916644252, guid: f4055528478203d42b8d39b330c3e393, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4346171729916644252, guid: f4055528478203d42b8d39b330c3e393, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8723824393723348227, guid: f4055528478203d42b8d39b330c3e393, type: 3}
+      propertyPath: xrPlayerController
+      value: 
+      objectReference: {fileID: 1806820802}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4346171729916644252, guid: f4055528478203d42b8d39b330c3e393, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1806820787}
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f4055528478203d42b8d39b330c3e393, type: 3}
+--- !u!4 &194917957 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4346171729916644252, guid: f4055528478203d42b8d39b330c3e393, type: 3}
+  m_PrefabInstance: {fileID: 194917956}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &194917958 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8723824393723348227, guid: f4055528478203d42b8d39b330c3e393, type: 3}
+  m_PrefabInstance: {fileID: 194917956}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53a05efbdfc0f6142a7e9148fd377394, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Player.integrations::DigitalLove.Player.PlayerControllerInstaller
 --- !u!114 &203422341 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1169667551812114882, guid: 0a7d2469f24041c4284c66706f84c45e, type: 3}
@@ -1850,13 +1931,13 @@ MonoBehaviour:
   initialState: {fileID: 1730347950}
   locale: {fileID: 11400000, guid: ef5f93a95eb7b214c98395886e20e196, type: 2}
   analyticsProviderInstaller: {fileID: 1210227671}
-  playerControllerInstaller: {fileID: 0}
+  playerControllerInstaller: {fileID: 194917958}
   playerData:
     userId: 
     sessionCount: 0
     cookies: []
   forceLocalPlayerData:
-    value: 0
+    value: 1
 --- !u!114 &284223193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4910,6 +4991,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.LookAtCameraOnY
   offset: 180
+  lookAtSpeed: 5
 --- !u!1 &809088434
 GameObject:
   m_ObjectHideFlags: 0
@@ -5356,7 +5438,7 @@ MonoBehaviour:
   nextState: {fileID: 250434374}
   ttsHelper: {fileID: 1654487132}
   highScorePoster: {fileID: 7141206415059494585}
-  reviewPanel: {fileID: 1066275071803508604}
+  reviewPanel: {fileID: 2085512488}
   playerData:
     userId: 
     sessionCount: 0
@@ -8320,6 +8402,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.LookAtCameraOnY
   offset: 180
+  lookAtSpeed: 5
 --- !u!114 &1030105462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8696,6 +8779,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.LookAtCameraOnY
   offset: 180
+  lookAtSpeed: 5
 --- !u!114 &1127977405
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9031,7 +9115,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 723.08496, y: -50}
-  m_SizeDelta: {x: 243.83, y: 50}
+  m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1213392285
 MonoBehaviour:
@@ -9351,6 +9435,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.XR.MRUK::DigitalLove.XR.MRUtilityKit.MRUKRoomAnchorsContainer
   pairs: []
+  clearOnAwake:
+    value: 0
 --- !u!1 &1324782177
 GameObject:
   m_ObjectHideFlags: 0
@@ -10658,11 +10744,11 @@ Transform:
   m_Children:
   - {fileID: 1991196139}
   - {fileID: 1210227666}
-  - {fileID: 1806820787}
   - {fileID: 1972154422}
   - {fileID: 83098462}
   - {fileID: 1302786013}
   - {fileID: 1654487130}
+  - {fileID: 194917957}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1569995676
@@ -10677,6 +10763,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6adab333aad44db45b8a73d5cc35dc31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.XR.MRUK::DigitalLove.XR.MRUKUtil
+  clearSceneFallback:
+    value: 0
 --- !u!114 &1629463184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10691,6 +10779,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _wireCubePrefab: {fileID: 5464249754088275126, guid: 86012afc5d5b72c40898772a1cf5730e, type: 3}
   _revealingTarget: {fileID: 1806820792}
+  spawnsPerFrame: 1
+  proximityFade: 0
 --- !u!1 &1634309635
 GameObject:
   m_ObjectHideFlags: 0
@@ -11704,7 +11794,8 @@ MonoBehaviour:
   spaceSetupRequiredPanel: {fileID: 3258995010952126741}
   launchFunnelHelper: {fileID: 1210227667}
   mrukUtil: {fileID: 1569995676}
-  mrukRoot: {fileID: 0}
+  mrukRoot: {fileID: 984354079930849299}
+  requireHeadsetInsideRoom: 1
   forceSceneSetupPanel:
     value: 0
   skipMRUK:
@@ -11909,7 +12000,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1568662588}
+    m_TransformParent: {fileID: 194917957}
     m_Modifications:
     - target: {fileID: 100004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: m_Name
@@ -11921,7 +12012,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -2.06704
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -12026,6 +12117,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1806820798}
+    - targetCorrespondingSourceObject: {fileID: 100004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1806820802}
     - targetCorrespondingSourceObject: {fileID: 100006, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1806820797}
@@ -12187,9 +12281,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 555725d48e9051a4bb6b8d45178c2fdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Oculus.VR::OVRPassthroughLayer
-  projectionSurfaceType: 0
-  overlayType: 1
-  compositionDepth: 0
   hidden: 0
   overridePerLayerColorScaleAndOffset: 0
   colorScale: {x: 1, y: 1, z: 1, w: 1}
@@ -12236,11 +12327,24 @@ MonoBehaviour:
   _colorLutTargetTexture: {fileID: 0}
   _lutWeight: 1
   _flipLutY: 1
-  serializedSurfaceGeometry: []
   textureOpacity_: 1
   edgeRenderingEnabled_: 0
   edgeColor_: {r: 1, g: 1, b: 1, a: 1}
   colorMapType: 4
+--- !u!114 &1806820802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1799498462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ce90800933e544dc8c4e3acf7b56b18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Player::DigitalLove.Player.XRPlayerController
+  cam: {fileID: 1806820793}
+  origin: {fileID: 1806820788}
 --- !u!1001 &1822272471
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13898,6 +14002,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2065507273}
   m_CullTransparentMesh: 1
+--- !u!114 &2085512488 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6404456585243175914, guid: e303eb4a8c70159448a8141112e9be94, type: 3}
+  m_PrefabInstance: {fileID: 459253854}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7da05ce80ccd1b847a9ed22dd4968edd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Casual.UI::DigitalLove.Casual.UI.ReviewPanel
 --- !u!1 &2086895691
 GameObject:
   m_ObjectHideFlags: 0
@@ -14496,17 +14611,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &1066275071803508604 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1066275072159543074, guid: e303eb4a8c70159448a8141112e9be94, type: 3}
-  m_PrefabInstance: {fileID: 459253854}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7da05ce80ccd1b847a9ed22dd4968edd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Casual.UI::DigitalLove.Casual.UI.ReviewPanel
 --- !u!114 &1078497005036322215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16381,6 +16485,11 @@ MonoBehaviour:
   sceneLabels: 8196
   minY: 0.6
   maxY: 1.6
+  panelCollider: {fileID: 0}
+  overlapMask:
+    serializedVersion: 2
+    m_Bits: 0
+  clearanceBuffer: 0.08
 --- !u!114 &7141206415059494585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16409,7 +16518,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a443e67371534f44e9a56ceea2aec32b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Theming::DigitalLove.Theming.ImageStyler
-  color: {fileID: 11400000, guid: 662250d688224a94d9cc7ee06fe9809b, type: 2}
+  color: {fileID: 0}
   image: {fileID: 1082304817502454293}
 --- !u!114 &7286152940601267911
 MonoBehaviour:

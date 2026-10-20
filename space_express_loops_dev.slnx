@@ -1,5 +1,6 @@
 ﻿<Solution>
   <Project Path="DigitalLove.Casual.UI.csproj" />
+  <Project Path="DigitalLove.Player.csproj" />
   <Project Path="MegaFiers.csproj" />
   <Project Path="DigitalLove.TTS.csproj" />
   <Project Path="DigitalLove.Interactables.Core.csproj" />
@@ -33,7 +34,6 @@
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.Hands.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Vendor.UnityGif.csproj" />
-  <Project Path="DigitalLove.Player.csproj" />
   <Project Path="DigitalLove.Analytics.csproj" />
   <Project Path="DigitalLove.VFX.Materials.Editor.csproj" />
   <Project Path="DigitalLove.XR.OVR.csproj" />
