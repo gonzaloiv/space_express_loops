@@ -69,7 +69,7 @@ center (world) = contentRoot.TransformPoint(contentCenter)
 radius (world) = ContentRadius * Scale
 ```
 
-The center is the **bubble's view center**, not the camera. `UniverseView` already computes both for the bubble pose, and the transform plan uses the same `BubbleCenterWorld` as the Room reference point, so the visual focus and the scale target agree.
+The center is the **fixed player-view center where the Bubble spawned**, not the camera. `UniverseView` exposes it as `CenterWorld`, and the transform plan uses the same point as the Room reference, so the visual focus and the scale target agree.
 
 In the settled bubble state the radius equals `miniBubbleRadius`; during the transition it shrinks with the content.
 

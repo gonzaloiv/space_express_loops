@@ -7,6 +7,7 @@
   <Project Path="DigitalLove.Game.Spaceships.csproj" />
   <Project Path="DigitalLove.Interactables.OculusInteraction.csproj" />
   <Project Path="DigitalLove.Game.DebugActions.csproj" />
+  <Project Path="DigitalLove.Game.Levels.csproj" />
   <Project Path="MegaFiers.Editor.csproj" />
   <Project Path="DigitalLove.UI.DesignSystem.Localization.csproj" />
   <Project Path="DigitalLove.XR.Core.csproj" />
@@ -14,7 +15,6 @@
   <Project Path="Vendor.GameAnalytics.Editor.csproj" />
   <Project Path="DigitalLove.Global.csproj" />
   <Project Path="DigitalLove.DataAccess.Remote.csproj" />
-  <Project Path="DigitalLove.Game.Levels.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.csproj" />
   <Project Path="DigitalLove.Game.States.Setup.csproj" />
   <Project Path="Vendor.GameAnalytics.csproj" />

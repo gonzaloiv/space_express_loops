@@ -19,6 +19,9 @@ namespace DigitalLove.Game.Levels
         [SerializeField] private HubsSpawner hubsSpawner;
         [SerializeField] private UniverseView universeView;
 
+        private GameSnapshot currentSnapshot;
+        private bool hasCenteredContent;
+
         public PlanetsSpawner PlanetsSpawner => planetsSpawner;
         public SpaceshipsSpawner SpaceshipsSpawner => spaceshipsSpawner;
         public HubsSpawner HubsSpawner => hubsSpawner;
@@ -41,12 +44,15 @@ namespace DigitalLove.Game.Levels
             universeView.TransitionStarted += OnViewTransitionStarted;
             universeView.TransitionCompleted -= OnViewTransitionCompleted;
             universeView.TransitionCompleted += OnViewTransitionCompleted;
+            universeView.BubbleTransformCommitted -= OnBubbleTransformCommitted;
+            universeView.BubbleTransformCommitted += OnBubbleTransformCommitted;
         }
 
         private void Unsubscribe()
         {
             universeView.TransitionStarted -= OnViewTransitionStarted;
             universeView.TransitionCompleted -= OnViewTransitionCompleted;
+            universeView.BubbleTransformCommitted -= OnBubbleTransformCommitted;
         }
 
         private void OnViewTransitionStarted(bool _) =>
@@ -56,6 +62,14 @@ namespace DigitalLove.Game.Levels
         {
             spaceshipsSpawner.SetViewTransition(false);
             spaceshipsSpawner.RefreshGrabbablesAtStation();
+        }
+
+        private void OnBubbleTransformCommitted()
+        {
+            if (currentSnapshot == null)
+                return;
+
+            currentSnapshot.SaveBubbleTransform(universeView.BubbleOffsetLocal, universeView.BubbleYaw);
         }
 
         public void SyncIdCounters(GameSnapshot gameSnapshot)
@@ -92,7 +106,9 @@ namespace DigitalLove.Game.Levels
 
         public void SpawnRound(RoundData roundData, GameSnapshot gameSnapshot)
         {
+            currentSnapshot = gameSnapshot;
             universeView.WithRoomPose(() => SpawnRoundInternal(roundData, gameSnapshot));
+            CenterOnSpawnedContent();
         }
 
         private void SpawnRoundInternal(RoundData roundData, GameSnapshot gameSnapshot)
@@ -108,11 +124,16 @@ namespace DigitalLove.Game.Levels
 
         public void RestoreFromSnapshot(GameSnapshot gameSnapshot, Action onComplete)
         {
-            SetRoomBasedPose(() => universeView.WithRoomPose(() =>
+            currentSnapshot = gameSnapshot;
+            SetRoomBasedPose(() =>
             {
-                RespawnFromData(gameSnapshot);
+                if (gameSnapshot.hasBubbleTransform)
+                    universeView.RestoreBubbleTransform(gameSnapshot.bubbleOffsetLocal, gameSnapshot.bubbleYaw);
+
+                universeView.WithRoomPose(() => RespawnFromData(gameSnapshot));
+                CenterOnSpawnedContent();
                 onComplete?.Invoke();
-            }));
+            });
         }
 
         private void SpawnSpaceship(GameSnapshot gameSnapshot)
@@ -160,6 +181,14 @@ namespace DigitalLove.Game.Levels
             spaceshipsSpawner.RefreshGrabbablesAtStation();
         }
 
+        private void CenterOnSpawnedContent()
+        {
+            if (hasCenteredContent)
+                return;
+
+            hasCenteredContent = LevelContentCenter.TrySet(universeView, hubsSpawner.All, planetsSpawner.All);
+        }
+
         private void SpawnSpaceshipFromLoop(LoopData loop, GameSnapshot gameSnapshot)
         {
             HubBehaviour hub = hubsSpawner.GetById(loop.hubId)
@@ -170,6 +199,7 @@ namespace DigitalLove.Game.Levels
 
         public void StartFresh(Action onComplete)
         {
+            currentSnapshot = null;
             mrukRoomAnchorsContainer.Clear();
             SetRoomBasedPose(onComplete);
         }
@@ -183,6 +213,7 @@ namespace DigitalLove.Game.Levels
         {
             yield return WaitForRoomReady();
 
+            hasCenteredContent = false;
             MRUKRoom room = MRUK.Instance.GetCurrentRoom();
             Bounds roomBounds = room.GetRoomBounds();
             Pose originPose = new()

@@ -25,6 +25,8 @@ namespace DigitalLove.Game.Levels
         [SerializeField] private float settleDistance = 0.02f;
         [SerializeField] private float settleYaw = 3f;
         [SerializeField] private float bubbleMoveLimit = 0.35f;
+        [SerializeField] private float translationSharpness = 18f;
+        [SerializeField] private float yawSharpness = 14f;
 
         [Header("Debug")]
         [SerializeField] private bool logEvents;
@@ -45,7 +47,9 @@ namespace DigitalLove.Game.Levels
                 yawDeadZone,
                 settleDistance,
                 settleYaw,
-                bubbleMoveLimit);
+                bubbleMoveLimit,
+                translationSharpness,
+                yawSharpness);
         }
 
         private void OnEnable()

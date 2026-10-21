@@ -21,6 +21,9 @@ namespace DigitalLove.Game.Persistence
         public List<LoopData> loops;
         public Store store;
         public int lettersRequiredForRoundCompletion;
+        public bool hasBubbleTransform;
+        public Vector3 bubbleOffsetLocal;
+        public Quaternion bubbleYaw = Quaternion.identity;
 
         [JsonIgnore] private Action onUpdated;
 
@@ -78,6 +81,14 @@ namespace DigitalLove.Game.Persistence
         public void IncreaseRoundIndex()
         {
             roundIndex++;
+            NotifyUpdated();
+        }
+
+        public void SaveBubbleTransform(Vector3 offsetLocal, Quaternion yaw)
+        {
+            hasBubbleTransform = true;
+            bubbleOffsetLocal = offsetLocal;
+            bubbleYaw = yaw;
             NotifyUpdated();
         }
 

@@ -11,12 +11,16 @@ namespace DigitalLove.Game.Levels
         private readonly float settleDistance;
         private readonly float settleYaw;
         private readonly float moveLimit;
+        private readonly float translationSharpness;
+        private readonly float yawSharpness;
 
         private bool isActive;
         private Vector3 startMidpoint;
         private Vector2 startHandAxis;
         private Vector3 startPosition;
         private Quaternion startRotation;
+        private Vector3 smoothedOffset;
+        private float smoothedYaw;
 
         public BubbleMapTransformSession(
             float translationGain,
@@ -25,7 +29,9 @@ namespace DigitalLove.Game.Levels
             float yawDeadZone,
             float settleDistance,
             float settleYaw,
-            float moveLimit)
+            float moveLimit,
+            float translationSharpness,
+            float yawSharpness)
         {
             this.translationGain = translationGain;
             this.yawGain = yawGain;
@@ -34,6 +40,8 @@ namespace DigitalLove.Game.Levels
             this.settleDistance = settleDistance;
             this.settleYaw = settleYaw;
             this.moveLimit = moveLimit;
+            this.translationSharpness = translationSharpness;
+            this.yawSharpness = yawSharpness;
         }
 
         public void Begin(UniverseView view, TwoHandGestureInput input)
@@ -46,6 +54,8 @@ namespace DigitalLove.Game.Levels
             startHandAxis = input.HandAxisXZ;
             startPosition = view.CurrentPose.position;
             startRotation = view.CurrentPose.rotation;
+            smoothedOffset = Vector3.zero;
+            smoothedYaw = 0f;
             view.BeginBubblePreview();
         }
 
@@ -54,15 +64,17 @@ namespace DigitalLove.Game.Levels
             if (!isActive)
                 return;
 
-            Vector3 delta = input.Midpoint - startMidpoint;
-            Vector3 offset = new Vector3(delta.x, 0f, delta.z) * translationGain;
-            if (offset.magnitude < translationDeadZone)
-                offset = Vector3.zero;
-            offset = Vector3.ClampMagnitude(offset, moveLimit);
+            float dt = Mathf.Max(Time.deltaTime, 0.0001f);
+            Vector3 targetOffset = GetTargetOffset(input);
+            float targetYaw = GetYawDelta(input);
+            float offsetBlend = 1f - Mathf.Exp(-translationSharpness * dt);
+            float yawBlend = 1f - Mathf.Exp(-yawSharpness * dt);
 
-            float yaw = GetYawDelta(input);
-            Quaternion rotation = Quaternion.AngleAxis(yaw, Vector3.up) * startRotation;
-            view.ApplyBubblePreview(startPosition + offset, rotation);
+            smoothedOffset = Vector3.Lerp(smoothedOffset, targetOffset, offsetBlend);
+            smoothedYaw = Mathf.LerpAngle(smoothedYaw, targetYaw, yawBlend);
+
+            Quaternion rotation = Quaternion.AngleAxis(smoothedYaw, Vector3.up) * startRotation;
+            view.ApplyBubblePreview(smoothedOffset, rotation);
         }
 
         public void Commit(UniverseView view)
@@ -89,13 +101,26 @@ namespace DigitalLove.Game.Levels
                 view.CommitBubblePreview();
         }
 
+        private Vector3 GetTargetOffset(TwoHandGestureInput input)
+        {
+            Vector3 delta = input.Midpoint - startMidpoint;
+            Vector3 offset = new Vector3(delta.x, 0f, delta.z) * translationGain;
+            float magnitude = offset.magnitude;
+            if (magnitude <= translationDeadZone)
+                return Vector3.zero;
+
+            offset *= (magnitude - translationDeadZone) / magnitude;
+            return Vector3.ClampMagnitude(offset, moveLimit);
+        }
+
         private float GetYawDelta(TwoHandGestureInput input)
         {
             if (!input.HasValidAxis || startHandAxis.sqrMagnitude < 0.0001f)
                 return 0f;
 
             float angle = -Vector2.SignedAngle(startHandAxis, input.HandAxisXZ) * yawGain;
-            return Mathf.Abs(angle) < yawDeadZone ? 0f : angle;
+            float magnitude = Mathf.Abs(angle);
+            return Mathf.Sign(angle) * Mathf.Max(0f, magnitude - yawDeadZone);
         }
     }
 }

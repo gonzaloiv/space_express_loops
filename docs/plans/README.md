@@ -6,7 +6,7 @@ Plans are grouped by state. Move a plan between folders when its state changes.
 
 | Plan | State | Notes |
 |---|---|---|
-| [Bubble map drag and yaw](in-progress/universe-transform.md) | In progress | Bubble-only XZ drag + Y yaw implemented; headset tuning and validation pending. Room stays canonical. |
+| [Bubble map drag and yaw](in-progress/universe-transform.md) | In progress | Implementation complete: starts in Bubble, centered drag/yaw, save/restore, fixed center marker. Validation/tuning next. |
 
 ## Backlog
 
