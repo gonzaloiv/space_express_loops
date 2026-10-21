@@ -14,6 +14,7 @@ namespace DigitalLove.Game.Nodes
         {
             public Vector3 localPosition;
             public float radius;
+            public bool isProximityTarget;
         }
 
         [SerializeField] private List<Occupant> occupants = new();
@@ -41,8 +42,13 @@ namespace DigitalLove.Game.Nodes
             yRangeCache.Invalidate();
         }
 
-        public void Register(Vector3 localPosition, float radius) =>
-            occupants.Add(new Occupant { localPosition = localPosition, radius = radius });
+        public void Register(Vector3 localPosition, float radius, bool isProximityTarget = true) =>
+            occupants.Add(new Occupant
+            {
+                localPosition = localPosition,
+                radius = radius,
+                isProximityTarget = isProximityTarget
+            });
 
         public void Unregister(Vector3 localPosition, float radius)
         {
@@ -74,6 +80,15 @@ namespace DigitalLove.Game.Nodes
             float? maxDistanceFromOccupants = null,
             int maxIterations = DefaultMaxIterations) =>
             FindValidLocalPosition(radius, maxDistanceFromOccupants, maxIterations);
+
+        public bool IsValidLocalPosition(
+            Vector3 localPosition,
+            float radius,
+            float? maxDistanceFromOccupants = null)
+        {
+            MRUKRoom room = GetCurrentRoom();
+            return room != null && IsValidCandidate(localPosition, radius, maxDistanceFromOccupants, room, true);
+        }
 
         public Vector3 GetRoomCenterLocalPosition(float radius)
         {
@@ -109,7 +124,7 @@ namespace DigitalLove.Game.Nodes
                     continue;
 
                 Vector3 localPosition = transform.InverseTransformPoint(worldPosition.Value);
-                if (IsValidCandidate(localPosition, radius, maxDistanceFromOccupants, room))
+                if (IsValidCandidate(localPosition, radius, maxDistanceFromOccupants, room, false))
                     return localPosition;
             }
 
@@ -120,8 +135,16 @@ namespace DigitalLove.Game.Nodes
         private static MRUKRoom GetCurrentRoom() =>
             MRUK.Instance != null ? MRUK.Instance.GetCurrentRoom() : null;
 
-        private bool IsValidCandidate(Vector3 localPosition, float radius, float? maxDistanceFromOccupants, MRUKRoom room)
+        private bool IsValidCandidate(
+            Vector3 localPosition,
+            float radius,
+            float? maxDistanceFromOccupants,
+            MRUKRoom room,
+            bool checkWallClearance)
         {
+            if (checkWallClearance && !IsClearOfRoomWalls(localPosition, radius, room))
+                return false;
+
             if (maxDistanceFromOccupants.HasValue && !IsNearAnOccupant(localPosition, maxDistanceFromOccupants.Value))
                 return false;
             if (OverlapsOccupant(localPosition, radius))
@@ -131,6 +154,22 @@ namespace DigitalLove.Game.Nodes
             return true;
         }
 
+        private bool IsClearOfRoomWalls(Vector3 localPosition, float radius, MRUKRoom room)
+        {
+            Vector3 worldPosition = transform.TransformPoint(localPosition);
+            return room.IsPositionInRoom(worldPosition, true)
+                && IsClearOfWalls(room, worldPosition, radius);
+        }
+
+        private static bool IsClearOfWalls(MRUKRoom room, Vector3 worldPosition, float radius)
+        {
+            float clearance = radius;
+            return room.IsPositionInRoom(worldPosition + Vector3.right * clearance, true)
+                && room.IsPositionInRoom(worldPosition - Vector3.right * clearance, true)
+                && room.IsPositionInRoom(worldPosition + Vector3.forward * clearance, true)
+                && room.IsPositionInRoom(worldPosition - Vector3.forward * clearance, true);
+        }
+
         private bool IsNearAnOccupant(Vector3 localPosition, float maxDistance)
         {
             if (occupants.Count == 0)
@@ -138,7 +177,12 @@ namespace DigitalLove.Game.Nodes
 
             float closest = float.MaxValue;
             foreach (Occupant occupant in occupants)
+            {
+                if (!occupant.isProximityTarget)
+                    continue;
+
                 closest = Mathf.Min(closest, Vector3.Distance(localPosition, occupant.localPosition));
+            }
 
             return closest < maxDistance;
         }

@@ -104,6 +104,22 @@ namespace DigitalLove.Game.Spaceships
                 session.TravellerLoop.Resume();
         }
 
+        public void SetBubbleView(bool isBubble)
+        {
+            if (!isInitialized)
+                return;
+
+            refs.GrabbableWrapper.SetInteractionEnabled(!isBubble);
+
+            if (!isBubble || !stateMachine.IsCurrentState<SpaceshipSelectingState>())
+                return;
+
+            if (session.HasDestinations)
+                stateMachine.SetCurrentState<SpaceshipRunningState>();
+            else
+                stateMachine.SetCurrentState<SpaceshipIdleState>();
+        }
+
         public void RefreshGrabZoneTarget()
         {
             if (!isInitialized || !IsActive)

@@ -47,6 +47,18 @@ namespace DigitalLove.Game.Nodes
             return Spawn(hubId, hubData);
         }
 
+        public HubBehaviour GetFirstActive()
+        {
+            for (int i = 0; i < hubs.Count; i++)
+            {
+                HubBehaviour hub = hubs[i];
+                if (hub != null && hub.IsActive)
+                    return hub;
+            }
+
+            return null;
+        }
+
         public HubBehaviour GetById(string id)
         {
             if (string.IsNullOrEmpty(id))

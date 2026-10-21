@@ -17,6 +17,7 @@ namespace DigitalLove.Game.Levels
         [SerializeField] private PlanetsSpawner planetsSpawner;
         [SerializeField] private SpaceshipsSpawner spaceshipsSpawner;
         [SerializeField] private HubsSpawner hubsSpawner;
+        [SerializeField] private SilentPlanetsSpawner silentPlanetsSpawner;
         [SerializeField] private UniverseView universeView;
 
         private GameSnapshot currentSnapshot;
@@ -54,11 +55,11 @@ namespace DigitalLove.Game.Levels
             universeView.BubbleTransformCommitted -= OnBubbleTransformCommitted;
         }
 
-        private void OnViewTransitionStarted(bool _) =>
-            spaceshipsSpawner.SetViewTransition(true);
+        private void OnViewTransitionStarted(bool toBubble) { spaceshipsSpawner.SetViewTransition(true); spaceshipsSpawner.SetBubbleView(toBubble); }
 
-        private void OnViewTransitionCompleted(bool _)
+        private void OnViewTransitionCompleted(bool toBubble)
         {
+            spaceshipsSpawner.SetBubbleView(toBubble);
             spaceshipsSpawner.SetViewTransition(false);
             spaceshipsSpawner.RefreshGrabbablesAtStation();
         }
@@ -71,26 +72,12 @@ namespace DigitalLove.Game.Levels
             currentSnapshot.SaveBubbleTransform(universeView.BubbleOffsetLocal, universeView.BubbleYaw);
         }
 
-        public void SyncIdCounters(GameSnapshot gameSnapshot)
-        {
-            List<string> planetIds = new(gameSnapshot.planets.Count);
-            foreach (PlanetData planet in gameSnapshot.planets)
-                planetIds.Add(planet.id);
-            planetsSpawner.SyncIdsFromSnapshot(planetIds);
-
-            List<string> spaceshipIds = new(gameSnapshot.loops.Count);
-            foreach (LoopData loop in gameSnapshot.loops)
-                spaceshipIds.Add(loop.spaceshipId);
-            spaceshipsSpawner.SyncIdsFromSnapshot(spaceshipIds);
-
-            List<string> hubIds = new(gameSnapshot.hubs.Count);
-            foreach (HubData hub in gameSnapshot.hubs)
-                hubIds.Add(hub.id);
-            hubsSpawner.SyncIdsFromSnapshot(hubIds);
-        }
+        public void SyncIdCounters(GameSnapshot gameSnapshot) =>
+            SpawnerIdSync.Sync(gameSnapshot, planetsSpawner, spaceshipsSpawner, hubsSpawner);
 
         public void HideAll()
         {
+            silentPlanetsSpawner.ResetPool();
             planetsSpawner.ResetPool();
             spaceshipsSpawner.ResetPool();
             hubsSpawner.ResetPool();
@@ -176,6 +163,7 @@ namespace DigitalLove.Game.Levels
 
         private void FinalizeSpawn(GameSnapshot gameSnapshot)
         {
+            silentPlanetsSpawner.SpawnIfNeeded(gameSnapshot.EnsureSilentPlanetSeed());
             PlanetRouteColorSync.Apply(gameSnapshot, planetsSpawner, hubsSpawner, spaceshipsSpawner);
             spaceshipsSpawner.RefreshGrabbablesAtStation();
         }

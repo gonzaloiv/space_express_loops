@@ -48,12 +48,21 @@ namespace DigitalLove.Game.Spaceships
             switch (destinationSelection.TryConfirmOnRelease(host, restartTravellerLoop: false))
             {
                 case SelectionReleaseResult.Ignored:
+                    destinationSelection.ShowAtStation();
+                    if (host.HasRoute)
+                        machine.SetCurrentState<SpaceshipRunningState>();
+                    else
+                        machine.SetCurrentState<SpaceshipIdleState>();
                     return;
                 case SelectionReleaseResult.Committed:
                     machine.SetCurrentState<SpaceshipRunningState>();
                     return;
                 case SelectionReleaseResult.StayAtStation:
                     destinationSelection.ShowAtStation();
+                    if (host.HasRoute)
+                        machine.SetCurrentState<SpaceshipRunningState>();
+                    else
+                        machine.SetCurrentState<SpaceshipIdleState>();
                     break;
             }
         }

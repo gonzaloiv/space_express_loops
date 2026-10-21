@@ -16,18 +16,27 @@ namespace DigitalLove.Game.Nodes
         public float Radius => body.lossyScale.x;
         public Vector3 Position => body.position;
 
-        public void Init(float radius)
+        public void Init(float radius) =>
+            Init(radius, Random.Range(0, int.MaxValue));
+
+        public void Init(float radius, int variantSeed)
         {
             body.localScale = new Vector3(radius, radius, radius);
-            SetRandomActiveRenderer();
+            SetActiveRendererBySeed(variantSeed);
         }
 
-        private void SetRandomActiveRenderer()
+        public void SetVisible(bool visible)
+        {
+            if (activeRenderer != null)
+                activeRenderer.enabled = visible;
+        }
+
+        private void SetActiveRendererBySeed(int seed)
         {
             if (renderers == null || renderers.Count == 0)
                 return;
 
-            int startIndex = Random.Range(0, renderers.Count);
+            int startIndex = (int)((uint)seed % (uint)renderers.Count);
             for (int i = 0; i < renderers.Count; i++)
             {
                 int index = (startIndex + i) % renderers.Count;

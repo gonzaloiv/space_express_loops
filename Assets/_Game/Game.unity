@@ -1791,7 +1791,7 @@ MonoBehaviour:
   bubbleDistance: 0.45
   bubbleHeightOffset: -0.1
   minMiniScale: 0.02
-  transitionSecs: 0.3
+  transitionSecs: 0.45
   transitionEase: 4
 --- !u!1 &250434372
 GameObject:
@@ -4764,6 +4764,7 @@ Transform:
   - {fileID: 935971881}
   - {fileID: 1097461039}
   - {fileID: 933255160}
+  - {fileID: 1987654322}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &677709495
@@ -4783,6 +4784,7 @@ MonoBehaviour:
   planetsSpawner: {fileID: 1097461040}
   spaceshipsSpawner: {fileID: 933255161}
   hubsSpawner: {fileID: 935971882}
+  silentPlanetsSpawner: {fileID: 1987654321}
   universeView: {fileID: 242500899}
 --- !u!114 &677709496
 MonoBehaviour:
@@ -4821,6 +4823,68 @@ MonoBehaviour:
   floorMargin: 0.5
   ceilingMargin: 0.5
   minDistanceRadiusMultiplier: 1
+--- !u!1 &1987654320
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1987654322}
+  - component: {fileID: 1987654321}
+  m_Layer: 0
+  m_Name: SilentPlanets
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1987654322
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987654320}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 677709494}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1987654321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987654320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f959e7fe594449496df3e10880b009f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Levels::DigitalLove.Game.Levels.SilentPlanetsSpawner
+  roomPlacement: {fileID: 677709497}
+  hubsSpawner: {fileID: 935971882}
+  universeView: {fileID: 242500899}
+  prototype: {fileID: 1432176000000000001, guid: 6a1a9c1cd3694b11946468f943f46cd8, type: 3}
+  planetCount: 24
+  planetCap: 40
+  clusterCount: 3
+  clusterRadius: 1.2
+  clusterRingRadius: 1
+  clusterRingJitter: 0.5
+  minSeparation: 0.25
+  spacingMultiplier: 1.25
+  anchorClearance: 0.6
+  minRadius: 0.08
+  maxRadius: 0.14
+  verticalJitter: 0.35
+  placementAttempts: 32
+  roomVisibleRadius: 3
 --- !u!1 &781987388
 GameObject:
   m_ObjectHideFlags: 0
@@ -14365,9 +14429,11 @@ MonoBehaviour:
   translationGain: 1
   translationDeadZone: 0.01
   settleDistance: 0.01
-  bubbleMoveLimit: 5
   translationSmoothSecs: 0.1
-  logEvents: 0
+  dragStartJumpLimit: 0.12
+  recenterDistance: 0.05
+  recenterHoldSecs: 0.35
+  viewChangeCooldownSecs: 0.35
 --- !u!114 &782341900000000018 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5300513996942578409, guid: 0a7d2469f24041c4284c66706f84c45e, type: 3}
@@ -15037,6 +15103,7 @@ MonoBehaviour:
   ring: {fileID: 782341900000000048}
   authoredRadius: 0.04
   ringRadiusFactor: 0.5
+  heightOffset: 0
   normalColor: {r: 1, g: 0, b: 1, a: 1}
   blockedColor: {r: 1, g: 0.35, b: 0.2, a: 1}
 --- !u!222 &797675841606255178

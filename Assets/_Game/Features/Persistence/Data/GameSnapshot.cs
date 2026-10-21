@@ -24,6 +24,7 @@ namespace DigitalLove.Game.Persistence
         public bool hasBubbleTransform;
         public Vector3 bubbleOffsetLocal;
         public Quaternion bubbleYaw = Quaternion.identity;
+        public int silentPlanetSeed;
 
         [JsonIgnore] private Action onUpdated;
 
@@ -90,6 +91,16 @@ namespace DigitalLove.Game.Persistence
             bubbleOffsetLocal = offsetLocal;
             bubbleYaw = yaw;
             NotifyUpdated();
+        }
+
+        public int EnsureSilentPlanetSeed()
+        {
+            if (silentPlanetSeed != 0)
+                return silentPlanetSeed;
+
+            silentPlanetSeed = UnityEngine.Random.Range(1, int.MaxValue);
+            NotifyUpdated();
+            return silentPlanetSeed;
         }
 
         public void ResetLettersForNewRound()

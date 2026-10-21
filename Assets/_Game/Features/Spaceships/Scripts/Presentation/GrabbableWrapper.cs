@@ -13,6 +13,7 @@ namespace DigitalLove.Game.Spaceships
         [SerializeField] private AudioSource grabAudioSource;
 
         private bool pointerHandlingEnabled;
+        private bool interactionEnabled = true;
         private bool isGrabbed;
         private bool isPickingDestination;
 
@@ -42,13 +43,20 @@ namespace DigitalLove.Game.Spaceships
 
         public void DisablePointerHandling() => pointerHandlingEnabled = false;
 
+        public void SetInteractionEnabled(bool enabled)
+        {
+            interactionEnabled = enabled;
+            if (!enabled)
+                isGrabbed = false;
+        }
+
         private void OnEnable() => grabbable.WhenPointerEventRaised += OnPointerEvent;
 
         private void OnDisable() => grabbable.WhenPointerEventRaised -= OnPointerEvent;
 
         private void OnPointerEvent(PointerEvent pointer)
         {
-            if (!pointerHandlingEnabled)
+            if (!pointerHandlingEnabled || !interactionEnabled)
                 return;
 
             switch (pointer.Type)
