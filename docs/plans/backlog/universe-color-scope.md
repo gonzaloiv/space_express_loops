@@ -2,7 +2,7 @@
 
 **Status:** backlog - design ready, not implemented.
 
-**Related:** [Two views + interaction unify](../done/universe-views-and-interaction.md) · [Transforming the universe](universe-transform.md) · [Universe galaxies](universe-galaxies.md)
+**Related:** [Two views + interaction unify](../done/universe-views-and-interaction.md) · [Transforming the universe](../in-progress/universe-transform.md) · [Universe galaxies](universe-galaxies.md)
 
 **Wiring rule:** the scope driver and UI faders are authored components with serialized references. No runtime `AddComponent`, `GetComponent`, `FindObjectsByType`, or injected references. Shader globals are the only data channel.
 
@@ -69,7 +69,9 @@ center (world) = contentRoot.TransformPoint(contentCenter)
 radius (world) = ContentRadius * Scale
 ```
 
-`UniverseView` already computes both for the bubble pose. In the settled bubble state the radius equals `miniBubbleRadius`; during the transition it shrinks with the content.
+The center is the **bubble's view center**, not the camera. `UniverseView` already computes both for the bubble pose, and the transform plan uses the same `BubbleCenterWorld` as the Room reference point, so the visual focus and the scale target agree.
+
+In the settled bubble state the radius equals `miniBubbleRadius`; during the transition it shrinks with the content.
 
 ### 5.2 Mask
 
@@ -308,6 +310,7 @@ If materials live in Addressables, rebuild those bundles after the shader swap.
 | UI prefab references | Read shader globals instead of serializing a scope reference; works for spawned panels. |
 | Passthrough | Not desaturated. Decide after the headset test; full-screen post if needed. |
 | Multiple bubbles | One scope only; player-god view. |
+| Scope center | Bubble view center (`BubbleCenterWorld`), not the camera; shared with the transform Room anchor. |
 | SRP Batcher | All scope values are globals; no new CBUFFER entry. Verify. |
 | Addressables | Rebuild material bundles after the shader swap. |
 | L-shaped room (future) | AABB first; wall planes only if the room scope is implemented and the corners show. |

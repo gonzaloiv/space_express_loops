@@ -1,6 +1,6 @@
 # Universe — Bubble Map Drag and Yaw
 
-**Status:** in progress - planning confirmed; Bubble-only first version.
+**Status:** in progress - Bubble preview, gesture axis, and drag/yaw session implemented; validation pending.
 
 **Related:** [Two views + interaction unify](../done/universe-views-and-interaction.md) · [Universe galaxies](../backlog/universe-galaxies.md) · [Infinite sector](../backlog/universe-infinite-sector.md) · [Color scope](../backlog/universe-color-scope.md)
 
@@ -8,24 +8,26 @@
 
 ## Next step
 
-Implement Step 1: a Bubble-only preview API on `UniverseView` (capture, apply, cancel, commit a pose), then wire the existing two-hand gesture to drag/yaw the Bubble.
+Implement the bubble-view-center Room reference: `UniverseView` stores the Bubble offset/yaw in content-local space, uses the same `BubbleCenterWorld` as the color scope, applies it when building the Room pose, and clamps it to the room bounds. Then validate Bubble drag/yaw → Room continuity and tune `translationGain`, `yawGain`, `bubbleMoveLimit`, and the settle thresholds.
 
 ## 1. Goal
 
 Let the Bubble behave like a draggable map: two-hand pinch moves and rotates it in XZ, while the existing hand-distance mapping still controls scale and Room/Bubble commit.
 
-Room stays canonical and centered; the player keeps seeing the planets around them there.
+Room is anchored to the **bubble's content/view center** at the moment of the Bubble → Room transition, not to the camera. That is the point the bubble is currently looking at, so the map arrangement the player dragged in Bubble carries into Room. Y stays at the room pose height.
 
 ## 2. Decision summary
 
 | Decision | Choice |
 |---|---|
 | First view to transform | **Bubble only** |
-| Room | Canonical, centered; no yaw/translation editing |
+| Room | Bubble-view-center reference at transition time; no direct Room editing |
+| Room reference point | The bubble's content/view center (`BubbleCenterWorld`) projected to Room Y, captured once per transition |
+| Offset mapping | Bubble offset stored content-local, so the same planets stay in front after scaling |
 | Translation axes | XZ only; Y fixed |
 | Settle | Release commits; tiny movements below the dead zone revert |
 | Gesture | Existing two-hand pinch: midpoint drags, hand-axis yaw, distance scales |
-| Bubble edits on Room transition | Discarded; Bubble resets to canonical in front on re-entry |
+| Bubble edits on Room transition | Persisted through the content-local offset/yaw, clamped to the room bounds |
 
 Bubble-only is the smaller first version:
 
@@ -92,12 +94,52 @@ ghostScale = clamp(startScale * pow(handDistance / startHandDistance, scaleGain)
 ```
 
 - in Bubble, spreading both hands to `enterRoomScale` commits to Room;
-- the Bubble drag/yaw offset is discarded on that commit;
-- re-entering Bubble rebuilds the canonical front-of-player pose.
+- the Bubble offset is converted to content-local space and applied to the Room pose;
+- Room captures the bubble's view-center XZ at commit time, so the same planets stay in front after scaling;
+- going back to Bubble uses the same content-local offset and yaw, so the map does not reset.
 
-The first version does not persist Bubble edits into Room.
+The offset is clamped to the room bounds so a small Bubble drag cannot push the room content through a wall.
 
-### 4.5 Release
+### 4.5 Room reference and mapping (decided)
+
+Room uses the **bubble's view center** at the transition moment, not the camera. This is the same point the color-scope sphere uses:
+
+```text
+bubbleCenterWorld = contentRoot.TransformPoint(contentCenter)
+roomCenterY       = roomPose.position.y + roomPose.rotation * contentCenter  (world Y)
+roomCenter        = (bubbleCenterWorld.x, roomCenterY, bubbleCenterWorld.z)
+roomPosition      = roomCenter - bubbleYaw * contentCenter
+```
+
+The Bubble drag offset is stored in **content-local** space:
+
+```text
+offsetLocal = Inverse(bubbleYaw) * (bubbleCenterWorld - frontAnchor) / miniScale
+```
+
+Bubble reuses the same `offsetLocal` and `bubbleYaw`:
+
+```text
+bubblePosition = frontAnchor - bubbleYaw * (contentCenter * miniScale)
+                 + bubbleYaw * (offsetLocal * miniScale)
+```
+
+Consequences:
+
+- the map center the player is looking at in Bubble becomes the Room content center;
+- a planet in front of the bubble view stays in front after scaling to Room;
+- small Bubble drags become large Room moves (`1 / miniScale`), so the room clamp is required;
+- the reference point is captured **once per transition**, not every frame; walking around the room does not drag the content;
+- `offsetLocal` and yaw persist across Room ↔ Bubble within the round and reset in `SetRoomAnchor` (new room/round);
+- the color-scope sphere and the Room reference use the same `bubbleCenterWorld`, so the visual focus and the scale target agree.
+
+**Infinite-sector coordination:** once the universe streams beyond the room (see
+[Infinite sector](../backlog/universe-infinite-sector.md)), this mapping applies only
+within a `roomLinkRadius` around the central galaxy. If the Bubble focus is farther
+away, Bubble → Room returns to the hub/central gameplay region instead of dragging a
+remote exploration focus into the room.
+
+### 4.6 Release
 
 - Release commits the current Bubble pose.
 - If the total drag is under `settleDistance` and the total yaw under `settleYaw`, restore `startBubble` instead (accidental-nudge guard).
@@ -105,7 +147,7 @@ The first version does not persist Bubble edits into Room.
 
 ## 5. Step-by-step implementation
 
-### Step 1 — `UniverseView` Bubble preview API
+### Step 1 — `UniverseView` Bubble preview API (done)
 
 Add:
 
@@ -117,7 +159,7 @@ Add:
 
 No new GameObjects; no state-machine change.
 
-### Step 2 — Transform intent on `TwoHandGestureInput`
+### Step 2 — Transform intent on `TwoHandGestureInput` (done)
 
 Expose read-only values from the pinch points:
 
@@ -127,7 +169,7 @@ Expose read-only values from the pinch points:
 
 The input component stays policy-free.
 
-### Step 3 — Bubble session in `UniverseGhostController`
+### Step 3 — Bubble session in `UniverseGhostController` (done)
 
 - Start a Bubble transform session when the gesture becomes active and `universeView.IsMini`.
 - While active:
@@ -185,6 +227,7 @@ No planet/hub handles, no boundary ghost, no runtime-created visuals.
 | `settleDistance` | `0.02 m` |
 | `settleYaw` | `3°` |
 | `bubbleMoveLimit` | `0.35 m` half-extent in front of the player |
+| `roomLinkRadius` | `5 m` around the central galaxy |
 | `scaleGain` | `2.5` |
 | `enterRoomScale` | `0.60` |
 | `exitRoomScale` | `0.45` |
@@ -196,15 +239,23 @@ No planet/hub handles, no boundary ghost, no runtime-created visuals.
 | Drag and scale fight each other | Use midpoint for drag and distance for scale; both are independent. |
 | Bubble pushed out of reach | Clamp to `bubbleMoveLimit`; reset on re-entry. |
 | Disorientation | Yaw only around Y; no pitch/roll; keep the map at chest height. |
-| Bubble edits lost on Room transition | Accepted for the first version; the Bubble resets in front of the player. |
+| Far Bubble focus mapped into Room | Limit the mapping to `roomLinkRadius`; farther commits return to the central hub. |
+| Bubble edits lost on invalid focus | Reset to the central Bubble pose when the focus is outside the room-linked region. |
 | Gesture conflicts with routing | Session pauses routes and uses the existing busy-hand gate. |
 | Accidental nudges | Release settle thresholds restore the canonical pose. |
 
 ## 9. Open decisions
 
-None for the first version. Future options:
+None. Decided for this version:
 
-- persist Bubble yaw/offset into Room;
-- transform Room content;
+- Room reference: the bubble's view center (`BubbleCenterWorld`) at transition time, not the camera.
+- Mapping: content-local, so the planet arrangement stays in front of the camera.
+- Reference point: captured once per transition.
+- Persistence: within the round, reset by `SetRoomAnchor`.
+
+Future options:
+
+- move/rotate Room content directly;
 - add vertical movement;
-- add one-hand drag mode.
+- add one-hand drag mode;
+- follow the player continuously instead of capturing the anchor.

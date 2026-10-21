@@ -14356,6 +14356,13 @@ MonoBehaviour:
   scaleGain: 2.5
   enterRoomScale: 0.6
   exitRoomScale: 0.45
+  translationGain: 1
+  yawGain: 1
+  translationDeadZone: 0.01
+  yawDeadZone: 3
+  settleDistance: 0.02
+  settleYaw: 3
+  bubbleMoveLimit: 0.35
   logEvents: 0
 --- !u!114 &782341900000000018 stripped
 MonoBehaviour:

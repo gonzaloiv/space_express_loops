@@ -68,14 +68,15 @@ namespace DigitalLove.Game.Spaceships
         private void UpdateLine()
         {
             Vector3 forward = transform.forward;
-            Vector3 start = lineOrigin.position + forward * rayForwardOffset;
+            float scale = ContentScale;
+            Vector3 start = lineOrigin.position + forward * (rayForwardOffset * scale);
             Vector3 end = start + forward * RayDistance;
 
             if (candidatePlanet != null)
             {
                 float distance = Vector3.Distance(candidatePlanet.transform.position, start);
-                Vector3 offset = forward * (candidatePlanet.NodeBody.Radius - rayForwardOffset);
-                end = start + forward * distance - offset;
+                float radius = candidatePlanet.NodeBody.Radius;
+                end = start + forward * Mathf.Max(distance - radius, 0f);
             }
 
             lineRendererWithEdges.SetWorldTwoPositions(start, end);

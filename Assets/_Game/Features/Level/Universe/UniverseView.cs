@@ -26,7 +26,10 @@ namespace DigitalLove.Game.Levels
         private bool hasRoomAnchor;
         private bool isMini;
         private bool isTransitioning;
+        private bool isBubblePreviewActive;
+        private UniversePose bubblePreviewStartPose;
         private Tween transition;
+        private Tween previewTween;
 
         public event Action<bool> TransitionStarted;
         public event Action<bool> TransitionCompleted;
@@ -37,6 +40,7 @@ namespace DigitalLove.Game.Levels
         public float Scale => contentRoot.localScale.x;
         public float ContentRadius => contentRadius;
         public float MiniScale => Mathf.Clamp(miniBubbleRadius / contentRadius, minMiniScale, 1f);
+        public UniversePose BubblePose => isMini ? CurrentPose : BuildMiniPose();
 
         private void Awake()
         {
@@ -66,6 +70,7 @@ namespace DigitalLove.Game.Levels
             if (!hasRoomAnchor || isTransitioning)
                 return;
 
+            CommitBubblePreview();
             UniversePose target = bubble ? BuildMiniPose() : roomPose;
             if (instant || transitionSecs <= 0f)
             {
@@ -103,6 +108,54 @@ namespace DigitalLove.Game.Levels
 
         public UniversePose CurrentPose => new(contentRoot.position, contentRoot.rotation, contentRoot.localScale.x);
 
+        public void BeginBubblePreview()
+        {
+            if (!isMini || isTransitioning || isBubblePreviewActive)
+                return;
+
+            previewTween?.Kill();
+            bubblePreviewStartPose = CurrentPose;
+            isBubblePreviewActive = true;
+        }
+
+        public void ApplyBubblePreview(Vector3 position, Quaternion rotation)
+        {
+            if (!isBubblePreviewActive)
+                return;
+
+            previewTween?.Kill();
+            contentRoot.position = new Vector3(position.x, bubblePreviewStartPose.position.y, position.z);
+            contentRoot.rotation = YawOnly(rotation);
+        }
+
+        public void CancelBubblePreview()
+        {
+            if (!isBubblePreviewActive)
+                return;
+
+            isBubblePreviewActive = false;
+            previewTween?.Kill();
+
+            if (transitionSecs <= 0f)
+            {
+                ApplyPose(bubblePreviewStartPose);
+                return;
+            }
+
+            Sequence sequence = DOTween.Sequence();
+            sequence.Join(contentRoot.DOMove(bubblePreviewStartPose.position, transitionSecs).SetEase(transitionEase));
+            sequence.Join(contentRoot.DORotateQuaternion(bubblePreviewStartPose.rotation, transitionSecs).SetEase(transitionEase));
+            sequence.SetTarget(this);
+            previewTween = sequence;
+        }
+
+        public void CommitBubblePreview()
+        {
+            isBubblePreviewActive = false;
+            previewTween?.Kill();
+            previewTween = null;
+        }
+
         private UniversePose BuildMiniPose()
         {
             Camera camera = Camera.main;
@@ -119,6 +172,9 @@ namespace DigitalLove.Game.Levels
         private void StartTransition(UniversePose target, bool toMini)
         {
             transition?.Kill();
+            previewTween?.Kill();
+            previewTween = null;
+            isBubblePreviewActive = false;
             isTransitioning = true;
             TransitionStarted?.Invoke(toMini);
 
@@ -161,6 +217,9 @@ namespace DigitalLove.Game.Levels
             bool wasTransitioning = isTransitioning;
             transition?.Kill();
             transition = null;
+            previewTween?.Kill();
+            previewTween = null;
+            isBubblePreviewActive = false;
             isTransitioning = false;
             if (wasTransitioning)
                 TransitionCompleted?.Invoke(isMini);

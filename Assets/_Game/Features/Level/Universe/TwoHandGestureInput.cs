@@ -32,6 +32,8 @@ namespace DigitalLove.Game.Levels
         public Vector3 RightPinchPoint { get; private set; }
         public Vector3 Midpoint => (LeftPinchPoint + RightPinchPoint) * 0.5f;
         public float HandDistance => Vector3.Distance(LeftPinchPoint, RightPinchPoint);
+        public Vector2 HandAxisXZ => GetHandAxisXZ();
+        public bool HasValidAxis => HandAxisXZ.sqrMagnitude > 0.0001f;
 
         private void Awake()
         {
@@ -100,6 +102,15 @@ namespace DigitalLove.Game.Levels
                 return;
 
             isActive = true;
+        }
+
+        private Vector2 GetHandAxisXZ()
+        {
+            Vector3 axis = RightPinchPoint - LeftPinchPoint;
+            axis.y = 0f;
+            return axis.sqrMagnitude > 0.0001f
+                ? new Vector2(axis.x, axis.z).normalized
+                : Vector2.zero;
         }
 
         private bool IsPinching(Hand hand) =>

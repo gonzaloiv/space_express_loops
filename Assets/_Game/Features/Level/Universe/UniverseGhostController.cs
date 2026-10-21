@@ -17,6 +17,15 @@ namespace DigitalLove.Game.Levels
         [SerializeField] private float enterRoomScale = 0.6f;
         [SerializeField] private float exitRoomScale = 0.45f;
 
+        [Header("Bubble transform")]
+        [SerializeField] private float translationGain = 1f;
+        [SerializeField] private float yawGain = 1f;
+        [SerializeField] private float translationDeadZone = 0.01f;
+        [SerializeField] private float yawDeadZone = 3f;
+        [SerializeField] private float settleDistance = 0.02f;
+        [SerializeField] private float settleYaw = 3f;
+        [SerializeField] private float bubbleMoveLimit = 0.35f;
+
         [Header("Debug")]
         [SerializeField] private bool logEvents;
 
@@ -25,6 +34,19 @@ namespace DigitalLove.Game.Levels
         private float startScale;
         private float startHandDistance;
         private float nextScaleLogTime;
+        private BubbleMapTransformSession bubbleTransform;
+
+        private void Awake()
+        {
+            bubbleTransform = new BubbleMapTransformSession(
+                translationGain,
+                yawGain,
+                translationDeadZone,
+                yawDeadZone,
+                settleDistance,
+                settleYaw,
+                bubbleMoveLimit);
+        }
 
         private void OnEnable()
         {
@@ -96,12 +118,15 @@ namespace DigitalLove.Game.Levels
             startScale = universeView.Scale;
             startHandDistance = handDistance;
             spaceshipsSpawner.SetViewTransition(true);
+            bubbleTransform.Begin(universeView, gestureInput);
             if (logEvents)
                 Debug.Log($"[UniverseGhostController] session start scale={startScale} distance={startHandDistance}");
         }
 
         private void UpdateSessionState()
         {
+            bubbleTransform.Update(universeView, gestureInput);
+
             float handDistance = gestureInput.HandDistance;
             float ghostScale = GetGhostScale(handDistance);
 
@@ -151,6 +176,7 @@ namespace DigitalLove.Game.Levels
                 Debug.Log($"[UniverseGhostController] commit bubble={toBubble} scale={universeView.Scale}");
             sessionActive = false;
             suppressUntilRelease = true;
+            bubbleTransform.Commit(universeView);
             ghostView.Hide();
             universeView.SetBubbleView(toBubble, false);
         }
@@ -160,6 +186,7 @@ namespace DigitalLove.Game.Levels
             if (logEvents && sessionActive)
                 Debug.Log("[UniverseGhostController] session ended");
             sessionActive = false;
+            bubbleTransform.Settle(universeView);
             ghostView.Hide();
             spaceshipsSpawner.SetViewTransition(false);
         }
