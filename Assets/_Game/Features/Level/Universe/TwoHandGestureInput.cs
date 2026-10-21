@@ -16,7 +16,7 @@ namespace DigitalLove.Game.Levels
 
         [Header("Pinch")]
         [SerializeField, Range(0f, 1f)] private float pinchStrengthThreshold = 0.75f;
-        [SerializeField, Min(0f)] private float dwellSecs;
+        [SerializeField, Min(0f)] private float dwellSecs = 0.12f;
         [SerializeField, Min(0f)] private float releaseGraceSecs = 0.15f;
 
         private Hand leftHand;
@@ -24,16 +24,24 @@ namespace DigitalLove.Game.Levels
         private bool isActive;
         private float bothPinchingSince = -1f;
         private float lastBothPinchTime;
+        private float previousHandDistance;
+        private bool hasPreviousHandDistance;
 
         public bool IsActive => isActive;
         public bool IsLeftPinching { get; private set; }
         public bool IsRightPinching { get; private set; }
+        public bool IsSingleHandPinching => IsLeftPinching != IsRightPinching;
+        public bool IsAnyPinching => IsLeftPinching || IsRightPinching;
+        public Vector3 DragPoint => IsLeftPinching
+            ? LeftPinchPoint
+            : IsRightPinching
+                ? RightPinchPoint
+                : Midpoint;
         public Vector3 LeftPinchPoint { get; private set; }
         public Vector3 RightPinchPoint { get; private set; }
         public Vector3 Midpoint => (LeftPinchPoint + RightPinchPoint) * 0.5f;
         public float HandDistance => Vector3.Distance(LeftPinchPoint, RightPinchPoint);
-        public Vector2 HandAxisXZ => GetHandAxisXZ();
-        public bool HasValidAxis => HandAxisXZ.sqrMagnitude > 0.0001f;
+        public float HandDistanceSpeed { get; private set; }
 
         private void Awake()
         {
@@ -64,12 +72,31 @@ namespace DigitalLove.Game.Levels
             bool isTracked = hasLeft && hasRight;
             bool isPinching = IsLeftPinching && IsRightPinching;
 
+            UpdateDistanceSpeed(isPinching);
             UpdatePinchState(isPinching);
 
             if (isActive)
                 UpdateActive(isTracked, isPinching);
             else
                 TryActivate(isPinching);
+        }
+
+        private void UpdateDistanceSpeed(bool isPinching)
+        {
+            float distance = HandDistance;
+            if (!isPinching || Time.deltaTime <= 0f)
+            {
+                HandDistanceSpeed = 0f;
+                previousHandDistance = distance;
+                hasPreviousHandDistance = true;
+                return;
+            }
+
+            if (hasPreviousHandDistance)
+                HandDistanceSpeed = Mathf.Abs(distance - previousHandDistance) / Time.deltaTime;
+
+            previousHandDistance = distance;
+            hasPreviousHandDistance = true;
         }
 
         private void UpdatePinchState(bool isPinching)
@@ -102,15 +129,6 @@ namespace DigitalLove.Game.Levels
                 return;
 
             isActive = true;
-        }
-
-        private Vector2 GetHandAxisXZ()
-        {
-            Vector3 axis = RightPinchPoint - LeftPinchPoint;
-            axis.y = 0f;
-            return axis.sqrMagnitude > 0.0001f
-                ? new Vector2(axis.x, axis.z).normalized
-                : Vector2.zero;
         }
 
         private bool IsPinching(Hand hand) =>

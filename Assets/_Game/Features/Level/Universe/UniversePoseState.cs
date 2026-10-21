@@ -67,6 +67,8 @@ namespace DigitalLove.Game.Levels
             hasBubbleCenter = true;
         }
 
+        public void ResetBubbleOffset() => bubbleOffsetLocal = Vector3.zero;
+
         public void CaptureBubbleCenter(UniverseView.UniversePose pose) =>
             SetBubbleCenter(pose.position + pose.rotation * (pose.scale * CenterLocal));
 
@@ -111,20 +113,17 @@ namespace DigitalLove.Game.Levels
             isPreviewActive = true;
         }
 
-        public void ApplyPreview(Vector3 offsetFromStart, Quaternion rotation, float scale)
+        public void ApplyPreview(Vector3 offsetFromStart, float scale)
         {
             if (!isPreviewActive)
                 return;
 
-            Quaternion yaw = YawOnly(rotation);
             Vector3 focusLocal = previewStartFocusLocal
-                - Quaternion.Inverse(yaw) * (offsetFromStart / scale);
-
-            bubbleYaw = yaw;
+                - Quaternion.Inverse(bubbleYaw) * (offsetFromStart / scale);
             bubbleOffsetLocal = focusLocal - contentCenter;
 
-            Vector3 position = GetBubbleAnchor() - yaw * (scale * focusLocal);
-            ApplyPose(new UniverseView.UniversePose(position, yaw, scale));
+            Vector3 position = bubbleCenterWorld - bubbleYaw * (scale * focusLocal);
+            ApplyPose(new UniverseView.UniversePose(position, bubbleYaw, scale));
         }
 
         public void CancelPreview()
@@ -181,7 +180,7 @@ namespace DigitalLove.Game.Levels
         private void CaptureCurrent(float scale)
         {
             Quaternion yaw = YawOnly(contentRoot.rotation);
-            Vector3 canonical = GetBubbleAnchor() - yaw * (scale * contentCenter);
+            Vector3 canonical = bubbleCenterWorld - yaw * (scale * contentCenter);
             Vector3 offsetWorld = contentRoot.position - canonical;
             offsetWorld.y = 0f;
 

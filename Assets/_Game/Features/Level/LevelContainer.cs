@@ -28,7 +28,6 @@ namespace DigitalLove.Game.Levels
         public UniverseView UniverseView => universeView;
 
         private void OnEnable() => Subscribe();
-
         private void OnDisable() => Unsubscribe();
 
         public void Init()
@@ -108,7 +107,7 @@ namespace DigitalLove.Game.Levels
         {
             currentSnapshot = gameSnapshot;
             universeView.WithRoomPose(() => SpawnRoundInternal(roundData, gameSnapshot));
-            CenterOnSpawnedContent();
+            RefreshContentReferences();
         }
 
         private void SpawnRoundInternal(RoundData roundData, GameSnapshot gameSnapshot)
@@ -131,7 +130,7 @@ namespace DigitalLove.Game.Levels
                     universeView.RestoreBubbleTransform(gameSnapshot.bubbleOffsetLocal, gameSnapshot.bubbleYaw);
 
                 universeView.WithRoomPose(() => RespawnFromData(gameSnapshot));
-                CenterOnSpawnedContent();
+                RefreshContentReferences();
                 onComplete?.Invoke();
             });
         }
@@ -181,12 +180,10 @@ namespace DigitalLove.Game.Levels
             spaceshipsSpawner.RefreshGrabbablesAtStation();
         }
 
-        private void CenterOnSpawnedContent()
+        private void RefreshContentReferences()
         {
-            if (hasCenteredContent)
-                return;
-
-            hasCenteredContent = LevelContentCenter.TrySet(universeView, hubsSpawner.All, planetsSpawner.All);
+            if (!hasCenteredContent)
+                hasCenteredContent = LevelContentCenter.TrySet(universeView, hubsSpawner.All, planetsSpawner.All);
         }
 
         private void SpawnSpaceshipFromLoop(LoopData loop, GameSnapshot gameSnapshot)

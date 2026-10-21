@@ -32,5 +32,6 @@ namespace DigitalLove.Game.Levels
             view.SetContentCenterLocal(sum / count);
             return true;
         }
+
     }
 }

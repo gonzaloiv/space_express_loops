@@ -32,6 +32,7 @@ namespace DigitalLove.Game.Spaceships
         public string ColorCode => data.colorCode;
         public HubBehaviour Hub => refs.DestinationSelector.Hub;
         public bool IsActive => gameObject.activeInHierarchy;
+        public bool IsRouteEditing => stateMachine.IsCurrentState<SpaceshipSelectingState>();
         public bool HasRoute => isInitialized && session.HasDestinations &&
             (stateMachine.IsCurrentState<SpaceshipRunningState>() || stateMachine.IsCurrentState<SpaceshipSelectingState>());
 

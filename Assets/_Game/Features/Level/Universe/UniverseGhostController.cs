@@ -19,37 +19,36 @@ namespace DigitalLove.Game.Levels
 
         [Header("Bubble transform")]
         [SerializeField] private float translationGain = 1f;
-        [SerializeField] private float yawGain = 1f;
         [SerializeField] private float translationDeadZone = 0.01f;
-        [SerializeField] private float yawDeadZone = 3f;
-        [SerializeField] private float settleDistance = 0.02f;
-        [SerializeField] private float settleYaw = 3f;
-        [SerializeField] private float bubbleMoveLimit = 0.35f;
-        [SerializeField] private float translationSharpness = 18f;
-        [SerializeField] private float yawSharpness = 14f;
+        [SerializeField] private float settleDistance = 0.01f;
+        [SerializeField] private float translationSmoothSecs = 0.08f;
+        [SerializeField] private float dragStartJumpLimit = 0.12f;
+        [SerializeField] private float recenterDistance = 0.05f;
+        [SerializeField] private float recenterHoldSecs = 0.35f;
+        [SerializeField] private float viewChangeCooldownSecs = 0.35f;
 
-        [Header("Debug")]
-        [SerializeField] private bool logEvents;
-
+        private enum SessionMode { None, Drag, Scale }
         private bool sessionActive;
+        private SessionMode sessionMode;
         private bool suppressUntilRelease;
-        private float startScale;
-        private float startHandDistance;
-        private float nextScaleLogTime;
+        private float cooldownUntil;
         private BubbleMapTransformSession bubbleTransform;
+        private BubbleScaleSession bubbleScale;
 
         private void Awake()
         {
             bubbleTransform = new BubbleMapTransformSession(
                 translationGain,
-                yawGain,
                 translationDeadZone,
-                yawDeadZone,
                 settleDistance,
-                settleYaw,
-                bubbleMoveLimit,
-                translationSharpness,
-                yawSharpness);
+                translationSmoothSecs,
+                dragStartJumpLimit);
+            bubbleScale = new BubbleScaleSession(
+                scaleGain,
+                enterRoomScale,
+                exitRoomScale,
+                recenterDistance,
+                recenterHoldSecs);
         }
 
         private void OnEnable()
@@ -60,6 +59,7 @@ namespace DigitalLove.Game.Levels
         private void Start()
         {
             ghostView.Hide();
+            cooldownUntil = Time.unscaledTime + viewChangeCooldownSecs;
         }
 
         private void Update()
@@ -70,8 +70,27 @@ namespace DigitalLove.Game.Levels
                 return;
             }
 
+            universeView.SetMapGestureBlocked(spaceshipsSpawner.IsAnyRouteEditing());
+            if (spaceshipsSpawner.IsAnyRouteEditing())
+            {
+                if (sessionActive)
+                    EndSession();
+                ghostView.Hide();
+                return;
+            }
+
+            if (Time.unscaledTime < cooldownUntil)
+            {
+                ghostView.Hide();
+                return;
+            }
+
             if (UpdateSuppression())
                 return;
+
+            universeView.SetMapGestureActive(gestureInput.IsAnyPinching && !universeView.IsMapGestureBlocked);
+            if (!sessionActive)
+                universeView.SetScaleFeedback(0f);
 
             UpdateFeedback();
 
@@ -87,7 +106,7 @@ namespace DigitalLove.Game.Levels
                 return false;
 
             ghostView.Hide();
-            if (!gestureInput.IsActive)
+            if (!gestureInput.IsAnyPinching)
                 suppressUntilRelease = false;
             return true;
         }
@@ -97,9 +116,16 @@ namespace DigitalLove.Game.Levels
             if (!sessionActive)
                 return false;
 
-            if (!gestureInput.IsActive)
+            if (sessionMode == SessionMode.Scale && !gestureInput.IsActive)
             {
                 EndSession();
+                return true;
+            }
+
+            if (sessionMode == SessionMode.Drag && (gestureInput.IsActive || !gestureInput.IsSingleHandPinching))
+            {
+                EndSession();
+                suppressUntilRelease = true;
                 return true;
             }
 
@@ -109,40 +135,53 @@ namespace DigitalLove.Game.Levels
 
         private void TryStartSession()
         {
-            if (!gestureInput.IsActive)
-                return;
             if (!universeView.HasRoomAnchor)
                 return;
 
-            float handDistance = gestureInput.HandDistance;
-            if (handDistance < minHandSeparation)
-                return;
+            if (gestureInput.IsActive)
+            {
+                float handDistance = gestureInput.HandDistance;
+                if (handDistance < minHandSeparation)
+                    return;
 
+                StartSession(SessionMode.Scale, handDistance);
+                return;
+            }
+
+            bool insideBubble = Vector3.Distance(gestureInput.DragPoint, universeView.CenterWorld)
+                <= universeView.BubbleRadiusWorld * 0.5f;
+            if (universeView.IsMini && gestureInput.IsSingleHandPinching && insideBubble)
+                StartSession(SessionMode.Drag, 0f);
+        }
+
+        private void StartSession(SessionMode mode, float handDistance)
+        {
             sessionActive = true;
-            startScale = universeView.Scale;
-            startHandDistance = handDistance;
+            sessionMode = mode;
             spaceshipsSpawner.SetViewTransition(true);
-            bubbleTransform.Begin(universeView, gestureInput);
-            if (logEvents)
-                Debug.Log($"[UniverseGhostController] session start scale={startScale} distance={startHandDistance}");
+            bubbleTransform.Begin(universeView, gestureInput.DragPoint);
+            if (mode == SessionMode.Scale)
+                bubbleScale.Begin(universeView.Scale, handDistance);
         }
 
         private void UpdateSessionState()
         {
-            bubbleTransform.Update(universeView, gestureInput);
-
-            float handDistance = gestureInput.HandDistance;
-            float ghostScale = GetGhostScale(handDistance);
-
-            if (logEvents && Time.unscaledTime >= nextScaleLogTime)
+            if (sessionMode == SessionMode.Drag)
             {
-                nextScaleLogTime = Time.unscaledTime + 0.5f;
-                Debug.Log($"[UniverseGhostController] dist={handDistance:F3} ghostScale={ghostScale:F3} mini={universeView.IsMini}");
+                bubbleTransform.Update(universeView, gestureInput.DragPoint);
+                return;
             }
 
-            if (universeView.IsMini && ghostScale >= enterRoomScale)
+            BubbleScaleAction action = bubbleScale.Update(
+                universeView,
+                gestureInput.HandDistance,
+                Time.deltaTime);
+
+            if (action == BubbleScaleAction.Recenter)
+                RecenterBubble();
+            else if (action == BubbleScaleAction.EnterRoom)
                 Commit(false);
-            else if (!universeView.IsMini && ghostScale <= exitRoomScale)
+            else if (action == BubbleScaleAction.ExitRoom)
                 Commit(true);
         }
 
@@ -161,24 +200,22 @@ namespace DigitalLove.Game.Levels
                 gestureInput.LeftPinchPoint,
                 gestureInput.RightPinchPoint,
                 leftPinching,
-                rightPinching);
+                rightPinching,
+                gestureInput.HandDistanceSpeed);
         }
 
-        private float GetGhostScale(float handDistance)
+        private void RecenterBubble()
         {
-            if (startHandDistance < 0.0001f)
-                return startScale;
-
-            float raw = handDistance / startHandDistance;
-            float scale = startScale * Mathf.Pow(Mathf.Max(raw, 0.01f), scaleGain);
-            return Mathf.Clamp(scale, universeView.MiniScale, 1f);
+            EndSession();
+            universeView.ResetBubbleMap();
+            universeView.SetScaleFeedback(0f);
+            suppressUntilRelease = true;
         }
 
         private void Commit(bool toBubble)
         {
-            if (logEvents)
-                Debug.Log($"[UniverseGhostController] commit bubble={toBubble} scale={universeView.Scale}");
             sessionActive = false;
+            sessionMode = SessionMode.None;
             suppressUntilRelease = true;
             bubbleTransform.Commit(universeView);
             ghostView.Hide();
@@ -187,9 +224,8 @@ namespace DigitalLove.Game.Levels
 
         private void EndSession()
         {
-            if (logEvents && sessionActive)
-                Debug.Log("[UniverseGhostController] session ended");
             sessionActive = false;
+            sessionMode = SessionMode.None;
             bubbleTransform.Settle(universeView);
             ghostView.Hide();
             spaceshipsSpawner.SetViewTransition(false);
@@ -199,8 +235,9 @@ namespace DigitalLove.Game.Levels
         {
             spaceshipsSpawner.SetViewTransition(false);
             spaceshipsSpawner.RefreshGrabbablesAtStation();
+            cooldownUntil = Time.unscaledTime + viewChangeCooldownSecs;
 
-            if (suppressUntilRelease && !gestureInput.IsActive)
+            if (suppressUntilRelease && !gestureInput.IsAnyPinching)
                 suppressUntilRelease = false;
         }
 

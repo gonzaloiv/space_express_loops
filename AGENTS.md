@@ -1,6 +1,6 @@
 # Project Rules
 
-These mirror the Unity scene/prefab wiring rules in the global `AGENTS.md`.
+These mirror the Unity scene/prefab wiring rules and feature validation checklist in the global `AGENTS.md`.
 
 ## SerializeField wiring
 
@@ -15,3 +15,13 @@ These mirror the Unity scene/prefab wiring rules in the global `AGENTS.md`.
 - Author them as prefab/scene GameObjects and reference them through serialized fields.
 - Runtime code may position, scale, show, or hide authored objects; it must not invent them.
 - This applies to UI, VFX, line renderers, ghost previews, and interaction proxies.
+
+## Feature validation checklist
+
+After implementing a user-facing feature, include a short manual validation checklist in the final response, written for the target device (normally the headset).
+
+- Use a flat numbered list (`1.`, `2.`, ...), not grouped prose or checkboxes; one action or expected result per item.
+- Keep it to the smallest set that proves the feature: normally 6-10 items.
+- Cover only what applies: clean import/wiring, spawn/visibility, interaction/exclusions, adjacent regressions, Room/Bubble or state transitions, persistence/reset, comfort/clutter/performance.
+- Include a tuning or decision item when a trade-off is still open.
+- This is a manual acceptance pass, not a replacement for automated tests.

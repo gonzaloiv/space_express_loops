@@ -1,6 +1,5 @@
 using System;
 using DG.Tweening;
-using DigitalLove.Global;
 using UnityEngine;
 
 namespace DigitalLove.Game.Levels
@@ -11,13 +10,13 @@ namespace DigitalLove.Game.Levels
         [SerializeField] private Transform contentRoot;
 
         [Header("Bubble")]
-        [SerializeField] private float miniBubbleRadius = 0.28f;
-        [SerializeField] private float bubbleDistance = 0.45f;
+        [SerializeField, Min(0.05f)] private float miniBubbleRadius = 0.28f;
+        [SerializeField, Min(0.1f)] private float bubbleDistance = 0.45f;
         [SerializeField] private float bubbleHeightOffset = -0.1f;
-        [SerializeField] private float minMiniScale = 0.02f;
+        [SerializeField, Min(0.001f)] private float minMiniScale = 0.02f;
 
         [Header("Transition")]
-        [SerializeField] private float transitionSecs = 0.6f;
+        [SerializeField, Min(0f)] private float transitionSecs = 0.6f;
         [SerializeField] private Ease transitionEase = Ease.InOutSine;
 
         private UniversePoseState poseState;
@@ -29,23 +28,22 @@ namespace DigitalLove.Game.Levels
         public event Action<bool> TransitionStarted;
         public event Action<bool> TransitionCompleted;
         public event Action BubbleTransformCommitted;
-
         public bool IsMini => isMini;
         public bool IsTransitioning => isTransitioning;
         public bool HasRoomAnchor => poseState.HasRoomAnchor;
         public float Scale => contentRoot.localScale.x;
-        public float ContentRadius => poseState.ContentRadius;
         public float MiniScale => poseState.GetMiniScale(miniBubbleRadius, minMiniScale);
         public float BubbleRadiusWorld => poseState.ContentRadius * Scale;
         public Vector3 CenterWorld => poseState.CenterWorld;
-        public Vector3 BubbleCenterWorld => poseState.CenterWorld;
         public Vector3 BubbleOffsetLocal => poseState.BubbleOffsetLocal;
+        public bool IsMapGestureBlocked { get; private set; }
+        public bool IsMapGestureActive { get; private set; }
+        public float ScaleFeedback { get; private set; }
         public Quaternion BubbleYaw => poseState.BubbleYaw;
         private void Awake()
         {
             poseState = new UniversePoseState(contentRoot, bubbleDistance, bubbleHeightOffset);
         }
-
         public void SetRoomAnchor(Pose pose, Bounds roomBounds)
         {
             bool hadAnchor = poseState.HasRoomAnchor;
@@ -64,9 +62,6 @@ namespace DigitalLove.Game.Levels
 
             ApplyPose(poseState.RoomPose);
         }
-
-        [Button]
-        public void ToggleView() => SetBubbleView(!isMini, false);
 
         public void SetBubbleView(bool bubble, bool instant)
         {
@@ -116,6 +111,17 @@ namespace DigitalLove.Game.Levels
         public Vector3 WorldToContentLocal(Vector3 worldPosition) =>
             contentRoot.InverseTransformPoint(worldPosition);
 
+        public void SetMapGestureBlocked(bool blocked) => IsMapGestureBlocked = blocked;
+        public void SetMapGestureActive(bool active) => IsMapGestureActive = active;
+        public void SetScaleFeedback(float value) => ScaleFeedback = value;
+
+        public void ResetBubbleMap()
+        {
+            poseState.ResetBubbleOffset();
+            if (isMini && !isTransitioning)
+                ApplyPose(poseState.BuildMiniPoseAroundCenter(MiniScale));
+        }
+
         public void SetContentCenterLocal(Vector3 centerLocal)
         {
             poseState.SetContentCenterLocal(centerLocal);
@@ -132,13 +138,13 @@ namespace DigitalLove.Game.Levels
             poseState.BeginPreview();
         }
 
-        public void ApplyBubblePreview(Vector3 worldOffsetFromStart, Quaternion rotation)
+        public void ApplyBubblePreview(Vector3 worldOffsetFromStart)
         {
             if (!poseState.IsPreviewActive)
                 return;
 
             previewTween?.Kill();
-            poseState.ApplyPreview(worldOffsetFromStart, rotation, MiniScale);
+            poseState.ApplyPreview(worldOffsetFromStart, MiniScale);
         }
 
         public void CancelBubblePreview()
@@ -228,14 +234,6 @@ namespace DigitalLove.Game.Levels
             isTransitioning = false;
             if (wasTransitioning)
                 TransitionCompleted?.Invoke(isMini);
-        }
-
-        private void OnValidate()
-        {
-            miniBubbleRadius = Mathf.Max(0.05f, miniBubbleRadius);
-            bubbleDistance = Mathf.Max(0.1f, bubbleDistance);
-            transitionSecs = Mathf.Max(0f, transitionSecs);
-            minMiniScale = Mathf.Max(0.001f, minMiniScale);
         }
 
         public readonly struct UniversePose
