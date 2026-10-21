@@ -14,6 +14,7 @@
   <Project Path="Vendor.GameAnalytics.Editor.csproj" />
   <Project Path="DigitalLove.Global.csproj" />
   <Project Path="DigitalLove.DataAccess.Remote.csproj" />
+  <Project Path="DigitalLove.Game.Levels.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.csproj" />
   <Project Path="DigitalLove.Game.States.Setup.csproj" />
   <Project Path="Vendor.GameAnalytics.csproj" />
@@ -58,7 +59,6 @@
   <Project Path="DigitalLove.VFX.Materials.csproj" />
   <Project Path="DigitalLove.Game.Flow.GameEndState.csproj" />
   <Project Path="DigitalLove.XR.ARFoundation.csproj" />
-  <Project Path="DigitalLove.Game.Levels.csproj" />
   <Project Path="DigitalLove.Game.Flow.EditionState.csproj" />
   <Project Path="DigitalLove.Audio.TheRadio.csproj" />
   <Project Path="Unity.XR.Hands.Samples.VisualizerSample.csproj" />

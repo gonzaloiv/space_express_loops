@@ -85,8 +85,11 @@ namespace DigitalLove.Game.Spaceships
             if (!isInitialized || !IsActive)
                 return;
 
-            if (stateMachine.IsCurrentState<SpaceshipRunningState>())
+            if (stateMachine.IsCurrentState<SpaceshipRunningState>()
+                || stateMachine.IsCurrentState<SpaceshipSelectingState>())
+            {
                 destinationSelection.MoveToActiveStation();
+            }
         }
 
         public void SetViewTransition(bool isTransitioning)

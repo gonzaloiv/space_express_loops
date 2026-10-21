@@ -1,25 +1,26 @@
-# Universe — Two Views + Always-Available Two-Hand Scale
+# Universe — Two Views + Interaction Unification
 
-**Status:** in progress - view foundation implemented; replacing node handles with the space gesture.
+**Status:** in progress - gesture code landed; scene references still need wiring in Unity.
 
-**Related:** [Transforming the universe](../backlog/universe-transform.md) · [Interaction unification](interaction-unification.md) · [Galaxies and level/round creation](../backlog/universe-galaxies.md)
+**Related:** [Transforming the universe](../backlog/universe-transform.md) · [Galaxies and level/round creation](../backlog/universe-galaxies.md) · [Planet route drawing](../backlog/planet-route-drawing.md)
 
 **Wiring rule:** components, references, and feedback visuals are authored in the scene/prefabs. Do not use runtime `AddComponent`, injection, `FindObjectsByType`, `GetComponent`, or disabled unused components. Remove unused components.
 
 ## Next step (implementation order)
 
-The two-view foundation is in place: `UniverseView` applies `D` to `Level`, Room/Bubble poses and transitions work, routes are content-local, and scale feedback is the authored hand line. Remaining:
+The view foundation is in place: `UniverseView` applies `D` to `Level`, Room/Bubble poses and transitions work, routes are content-local, ships are pinch-only, and scale feedback is the authored hand line. Gesture code and node-handle removal are landed. Remaining:
 
-1. **Land the global gesture** — add `TwoHandGestureInput` and rewire `UniverseGhostController` to use its two pinch points. This is shared with the interaction-unification plan.
-2. **Delete the node handles** — remove `UniverseNodeHandle`, planet/hub proxies, their outline components, and the `UniverseHandles` layer.
-3. **Preserve route selection across Room ↔ Bubble** — do not cancel `SpaceshipSelectingState`; refresh the active station, destination ray, and grab zone after the transition.
-4. **Scene wiring** — add `TwoHandGestureInput` on the `Universe` root, remove node proxies, keep the authored hand line.
-5. **Tune the feel** — gain, thresholds, simultaneous-pinch activation, line feedback; test both directions in the headset.
-6. **Defer the bubble boundary visual** until the gesture feels right; the hand line is the current feedback.
+1. **Scene wiring** — `TwoHandGestureInput` on the `Universe` root is wired: left/right `Hand` components from the interaction rig plus its `DistanceHandGrabInteractor`s for the busy-hand gate. `handLine`, `UniverseGhostController.gestureInput`, and `spaceshipsSpawner` are wired in `Game.unity`. Confirm the refs resolve when Unity imports the scene.
+2. **Verify the harness** — chest-height bubble must be visibly bigger than before (`miniBubbleRadius = 0.28 m`).
+3. **Preserve route selection across Room ↔ Bubble** — `SpaceshipSelectingState` is kept; confirm the station, destination ray, and grab zone refresh after the transition.
+4. **Tune the feel** — gain, thresholds, simultaneous-pinch activation, line feedback; test both directions in the headset.
+5. **Defer the bubble boundary visual** until the gesture feels right; the hand line is the current feedback.
 
 ## 1. Goal
 
-Keep the two presentation states:
+One interaction model with two interaction kinds plus two presentation states.
+
+Presentation states:
 
 1. **Room** — room-scale content, normal routes.
 2. **Bubble** — a miniature of the same content in front of the player.
@@ -32,7 +33,19 @@ Switch between them with an **always-available two-hand pinch gesture**:
 - spread the hands farther to grow toward Room;
 - when the implied scale crosses a threshold, animate the real content to the other state.
 
+Interaction model:
+
+- **Targeted grabs** use `HandGrabInteractable` with thumb + index pinch. Ships are the primary targeted grab.
+- **Universe scale** uses a global two-hand pinch in open space. It has no target and no per-node handle proxies.
+- No touch-grab/pinch mix for the primary interactions.
+
 Planets and hubs are no longer grab handles. They remain normal world objects for routes and gameplay.
+
+This keeps ship grabbing and universe scaling clear:
+
+- one hand on a target = targeted interaction;
+- two hands pinching open space = universe scale;
+- one hand alone never scales.
 
 ## 2. Non-goals
 
@@ -47,11 +60,12 @@ Planets and hubs are no longer grab handles. They remain normal world objects fo
 - `Level` is the content root containing `Hubs`, `Planets`, and `Spaceships`.
 - `LevelContainer.SetRoomBasedPose()` places `Level` at the MRUK room anchor.
 - Route/traveller data has been converted to content-local space so it follows `Level`.
-- `SpaceshipBehaviour` is pinch-only (`HandGrabInteractable`); ships remain one-hand interactions.
+- `SpaceshipBehaviour` is pinch-only (`HandGrabInteractable`); ships remain one-hand interactions. `TouchHandGrabInteractable` has been removed from `Spaceship (1).prefab` and the grab is configured for pinch only (thumb + index required, any-finger release).
+- `Grabbable` and `GrabbableWrapper` listen to the same pointer-event flow.
 - `UniverseView` is on an unscaled `Universe` root and serializes `contentRoot` to `Level`.
 - The current node-handle proxies (`UniverseNodeHandle`) are provisional and will be removed.
 
-## 4. Core model
+## 4. Spaces and views
 
 ### 4.1 Spaces
 
@@ -101,7 +115,7 @@ The gesture drives a **preview scale**, not `D` directly.
 
 `TwoHandGestureInput`:
 
-- serialized `HandRef` left/right;
+- serialized `Hand` left/right (or `HandRef` shims when the rig wires them);
 - reads thumb-tip/index-tip pinch strength and midpoint;
 - activates when both hands pinch at the same time; an optional `dwellSecs` debounce defaults to `0` and can be raised to about `0.1 s` if tracking flickers;
 - gates activation when either hand is selecting something else:
@@ -110,9 +124,30 @@ The gesture drives a **preview scale**, not `D` directly.
   - hand ray/poke selecting UI;
 - serialized interactor references; no `FindObjectsByType` or `GetComponent`;
 - one hand pinching alone never starts the gesture;
-- **no route-editing mode gate:** route editing and view changes are not mutually exclusive. The gesture is suppressed only while a hand is selecting a ship or UI; both hands free means the gesture is available, even during a route-editing session.
+- **no route-editing mode gate:** route editing and view changes are not mutually exclusive. The gesture is suppressed only while a hand is selecting a ship or UI; both hands free means the gesture is available, even during a route-editing session;
+- this is a global hand gesture, not a second target-based interactable.
 
-### 5.2 Session
+### 5.2 Arbitration
+
+```text
+Idle
+  ├─ one hand selects ship/UI ──> TargetedInteraction
+  ├─ one hand pinches space ──> Nothing
+  └─ both hands pinch space (+ optional debounce) ──> UniverseScale
+        └─ release/cancel ──> Idle
+```
+
+Rules:
+
+- a ship grab is always one hand;
+- a single pinch in space never scales;
+- two hands pinching at the same time scale the universe; debounce is optional;
+- if either hand is selecting a ship/UI, the gesture does not start;
+- route editing and view changes coexist; the gesture is suppressed only while a hand is selecting a ship/UI, then available again on release;
+- a view change must not cancel an active route-selection state; refresh the station, ray, and grab zone after the transition;
+- state changes force-release the active gesture.
+
+### 5.3 Session
 
 On activation:
 
@@ -135,7 +170,7 @@ On release/cancel:
 - resume routes;
 - end the session.
 
-### 5.3 Scale mapping
+### 5.4 Scale mapping
 
 ```text
 raw = handDistance / max(startHandDistance, epsilon)
@@ -148,7 +183,7 @@ previewScale = clamp(startScale * pow(raw, scaleGain), miniScale, 1)
 - release grace ~`0.15 s` for pinch jitter;
 - hand tracking loss ends the session safely.
 
-### 5.4 Threshold commit
+### 5.5 Threshold commit
 
 - In Room: commit to Bubble when `previewScale <= exitRoomScale` (default `0.45`).
 - In Bubble: commit to Room when `previewScale >= enterRoomScale` (default `0.60`).
@@ -161,6 +196,7 @@ previewScale = clamp(startScale * pow(raw, scaleGain), miniScale, 1)
 - **Hand-to-hand line**: authored `LineRenderer`, shown while the gesture is active; endpoints are the pinch points.
 - **Activation**: line appears when both hands pinch simultaneously; the optional debounce only prevents tracking flicker.
 - **Limit feedback**: optional haptic/line pulse when a scale limit is hit.
+- Ship: existing authored hover/selection behavior.
 - No planet/hub outlines for this gesture.
 - No sphere ghost; it was removed because it obscured the scene and read as a giant outline.
 
@@ -190,6 +226,7 @@ Modified:
 - `LevelContainer` — room pose, route pause, spawn with room pose.
 - Route/line/traveller data — content-local (done).
 - `RaycastHelper`, `GrabbableWrapper`, `DestinationSelector` — scale-aware path interactions.
+- `SpaceshipBehaviour` / `SpaceshipsSpawner` — on transition completion, refresh the active station, destination ray, and grab zone without cancelling `SpaceshipSelectingState`.
 - `Game.unity` — `Universe` root, `UniverseView`, `UniverseGhostController`, `TwoHandGestureInput`, authored hand line.
 - `Spaceship (1).prefab` — pinch-only ship.
 
@@ -204,7 +241,19 @@ Delete, do not disable:
 - `UniverseHandles` layer and handle colliders.
 - First-hand ghost hint and sphere ghost visual.
 
-## 10. Phases
+## 10. Scene/prefab checklist
+
+| Asset | Change |
+|---|---|
+| `Spaceship (1).prefab` | Pinch-only `HandGrabInteractable`; `TouchHandGrabInteractable` removed. |
+| `Game.unity` / `Universe` root | `UniverseView` with `contentRoot = Level`; `UniverseGhostController`; `TwoHandGestureInput` with serialized hand/interactor refs. |
+| `Game.unity` / ghost | Authored hand-line `UniverseGhostView`; serialize on controller. |
+| `Game.unity` / planet and hub templates | Remove node handle proxies and per-node handle fields/components. |
+| `SpaceshipBehaviour` / `SpaceshipsSpawner` | On transition completion, refresh the active station, destination ray, and grab zone without cancelling `SpaceshipSelectingState`. |
+| Layers | Remove `UniverseHandles` if nothing else uses it. |
+| Input | Keep hand ray/poke for UI; pinch wins on ships. |
+
+## 11. Phases
 
 ### Phase A0 — Content-local routes (done)
 
@@ -216,23 +265,32 @@ Delete, do not disable:
 - `UniverseView` on unscaled `Universe` root, `contentRoot = Level`.
 - Room/Bubble transitions and route pause.
 
-### Phase A2 — Replace node handles with the space gesture (current)
+### Phase A2 — Ship pinch only (done)
 
-- Add authored `TwoHandGestureInput` with serialized hand/interactor refs.
-- Add simultaneous two-hand pinch activation, optional debounce, busy-hand gate, release grace.
-- Rewire `UniverseGhostController` to use gesture pinch points.
-- Remove node handle proxies and per-node handle fields/layer/outlines.
-- Keep the hand-to-hand line as the only scale feedback.
+- Remove touch grab from the ship.
+- Configure pinch-only grab.
+- Verify ship grab/drop and route editing.
 
-**Exit:** pinch both hands anywhere in open space; line appears; hands closer/farther commit the view.
+### Phase A3 — Global two-hand gesture (current)
 
-### Phase A3 — Tuning
+- `TwoHandGestureInput` added with serialized hand/interactor refs, simultaneous pinch, optional debounce, busy-hand gate, release grace (done).
+- `UniverseGhostController` rewired to gesture pinch points; `planetsSpawner`/`hubsSpawner` dependencies removed (done).
+- Route-selection state preserved across view changes; station/ray/grab zone refresh on transition completion (done).
+- Node handle code, scene proxies, per-node handle fields, and the `UniverseHandles` layer removed (done).
+- Hand-to-hand line remains the only scale feedback.
+- Remaining: assign hand and interactor refs on the `Universe` root in the scene.
+
+**Exit:** pinch both hands anywhere in open space; line appears; hands closer/farther commit the view. No node targets; ships remain pinch-only.
+
+### Phase A4 — Tuning and cleanup
 
 - Tune optional debounce, grace, gain, thresholds, line width/color.
-- Verify no activation while grabbing ships or UI.
+- Remove obsolete touch code from the ship path if unused.
+- Verify hand ray/pinch priority and no activation while grabbing ships or UI.
 - Verify routes and path creation remain usable in Bubble.
+- Remove or gate the temporary debug logs (`logEvents`).
 
-## 11. Test plan
+## 12. Test plan
 
 1. One-hand pinch: no gesture, no line.
 2. Both-hand pinch in open space: line appears on simultaneous pinch.
@@ -246,10 +304,11 @@ Delete, do not disable:
 10. Path creation still works in Bubble.
 11. Change view while selecting a destination: the selection survives and the station/ray/grab zone refresh.
 12. No node handle proxies, `UniverseHandles` layer, or node outlines remain.
+13. Ships grab and drop with thumb-index pinch only.
 
-## 12. Risks and decisions
+## 13. Risks and decisions
 
-| Decision | Choice |
+| Decision / Risk | Choice / Mitigation |
 |---|---|
 | Handle source | Always-available two-hand pinch; no planet/hub targets. |
 | Activation | Both hands pinching at the same time; optional debounce. |
@@ -260,12 +319,21 @@ Delete, do not disable:
 | Routes during gesture | Pause progression; resume settled. |
 | Bubble placement | In front of the player on entry; fixed while there. |
 | Rotation | Y-axis only when added later. |
+| Accidental activation while pinching a ship/UI | Busy-hand gate; optional short debounce. |
+| Pinch fatigue during long gestures | Keep sessions short; consider open-palm gesture later. |
+| Pinch tracking jitter | Release grace and dead zone. |
+| One-hand pinch ambiguity | One hand never starts the gesture. |
+| Gesture conflicts with path creation | Busy-hand gate suppresses the gesture only while a hand selects a ship/UI; routing and view changes otherwise coexist. |
+| View change while routing | Release the held ship/UI, pinch both hands, then resume routing; no mode switch. Preserve the selection state and refresh it after the transition. |
+| Stale route selection after view change | Refresh the active station, ray, and grab zone on transition completion. |
+| Removing node handles loses precise anchors | Accepted; the gesture is spatial, not target-based. |
+| Hand line readability | Tune color/width/activation pulse. |
 
-## 13. Defaults
+## 14. Defaults
 
 | Parameter | Default |
 |---|---|
-| `miniBubbleRadius` | `0.22 m` |
+| `miniBubbleRadius` | `0.28 m` |
 | `bubbleDistance` | `0.45 m` |
 | `bubbleHeightOffset` | `-0.10 m` |
 | `roomTransitionSecs` | `0.6 s` |
@@ -276,7 +344,7 @@ Delete, do not disable:
 | `releaseGraceSecs` | `0.15 s` |
 | `minHandSeparation` | `0.06 m` |
 
-## 14. Out of scope
+## 15. Out of scope
 
 - Two-hand translation/rotation.
 - Continuous transform.
@@ -284,3 +352,4 @@ Delete, do not disable:
 - Bubble boundary visual.
 - Persistent view state.
 - UI redesign.
+- Runtime component lookup or creation for this interaction.

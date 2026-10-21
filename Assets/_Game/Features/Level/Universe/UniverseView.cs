@@ -11,7 +11,7 @@ namespace DigitalLove.Game.Levels
         [SerializeField] private Transform contentRoot;
 
         [Header("Bubble")]
-        [SerializeField] private float miniBubbleRadius = 0.22f;
+        [SerializeField] private float miniBubbleRadius = 0.28f;
         [SerializeField] private float bubbleDistance = 0.45f;
         [SerializeField] private float bubbleHeightOffset = -0.1f;
         [SerializeField] private float minMiniScale = 0.02f;

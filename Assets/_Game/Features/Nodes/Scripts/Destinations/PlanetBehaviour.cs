@@ -6,7 +6,6 @@ namespace DigitalLove.Game.Nodes
     public class PlanetBehaviour : MonoBehaviour, IRouteWorldNode, IPoolableNode
     {
         [SerializeField] private PlanetRefs refs;
-        [SerializeField] private UniverseNodeHandle universeHandle;
 
         private PlanetRoutePresentation presentation;
         private PlanetHandlers handlers;
@@ -19,7 +18,6 @@ namespace DigitalLove.Game.Nodes
 
         public PlanetStore PlanetStore => refs.PlanetStore;
         public NodeBody NodeBody => refs.NodeBody;
-        public UniverseNodeHandle UniverseHandle => universeHandle;
         public Vector3 Position => refs.NodeBody.Position;
 
         public void Initialize()

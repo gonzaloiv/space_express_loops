@@ -1,9 +1,10 @@
 # Universe — Galaxies, Level/Round Creation, and Two-Hand Group Transform
 
 **Status:** backlog - follow-up to the two-views and universe-transform plans. Requires the
-content-local route work (Phase A0) from [Two views](../in-progress/universe-two-views.md).
+content-local route work (Phase A0) from the
+[two views + interaction plan](../in-progress/universe-views-and-interaction.md).
 
-**Related:** [Two views](../in-progress/universe-two-views.md),
+**Related:** [Two views + interaction unify](../in-progress/universe-views-and-interaction.md),
 [Transforming the universe](universe-transform.md)
 
 ## 1. Goal

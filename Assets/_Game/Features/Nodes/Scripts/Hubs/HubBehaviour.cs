@@ -7,12 +7,10 @@ namespace DigitalLove.Game.Nodes
     public class HubBehaviour : MonoBehaviour, IRouteWorldNode, IPoolableNode
     {
         [SerializeField] private HubRefs refs;
-        [SerializeField] private UniverseNodeHandle universeHandle;
 
         private string id;
 
         public NodeBody NodeBody => refs.NodeBody;
-        public UniverseNodeHandle UniverseHandle => universeHandle;
         public bool IsActive => gameObject.activeInHierarchy;
         public string Id => id;
         public Vector3 LocalPosition => transform.localPosition;

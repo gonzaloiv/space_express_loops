@@ -1,8 +1,8 @@
 # Universe — Transform Plan
 
-**Status:** backlog - follow-up after the [two views](../in-progress/universe-two-views.md) are working.
+**Status:** backlog - follow-up after the [two views](../in-progress/universe-views-and-interaction.md) are working.
 
-**Related:** [Two views](../in-progress/universe-two-views.md) · [Interaction unification](../in-progress/interaction-unification.md)
+**Related:** [Two views + interaction unify](../in-progress/universe-views-and-interaction.md)
 
 **Wiring rule:** ghost, handles, proxies, and coordinator references are authored in the scene/prefabs. No runtime `AddComponent`, injection, or disabled unused components.
 

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using DigitalLove.Game.Nodes;
 using DigitalLove.Game.Spaceships;
 using UnityEngine;
 
@@ -10,8 +8,7 @@ namespace DigitalLove.Game.Levels
         [Header("References")]
         [SerializeField] private UniverseView universeView;
         [SerializeField] private UniverseGhostView ghostView;
-        [SerializeField] private PlanetsSpawner planetsSpawner;
-        [SerializeField] private HubsSpawner hubsSpawner;
+        [SerializeField] private TwoHandGestureInput gestureInput;
         [SerializeField] private SpaceshipsSpawner spaceshipsSpawner;
 
         [Header("Scale")]
@@ -23,15 +20,16 @@ namespace DigitalLove.Game.Levels
         [Header("Debug")]
         [SerializeField] private bool logEvents;
 
-        private UniverseNodeHandle firstHandle;
-        private UniverseNodeHandle secondHandle;
-
         private bool sessionActive;
         private bool suppressUntilRelease;
         private float startScale;
         private float startHandDistance;
-        private int lastSelectionCount = -1;
         private float nextScaleLogTime;
+
+        private void OnEnable()
+        {
+            universeView.TransitionCompleted += OnTransitionCompleted;
+        }
 
         private void Start()
         {
@@ -40,83 +38,56 @@ namespace DigitalLove.Game.Levels
 
         private void Update()
         {
-            CollectSelection();
-            LogSelectionCount();
-
-            if (suppressUntilRelease)
-            {
-                ghostView.Hide();
-                if (firstHandle == null && secondHandle == null)
-                    suppressUntilRelease = false;
-                return;
-            }
-
-            if (sessionActive)
-            {
-                UpdateSession();
-                return;
-            }
-
-            if (firstHandle != null && secondHandle == null)
+            if (universeView.IsTransitioning)
             {
                 ghostView.Hide();
                 return;
             }
+
+            if (UpdateSuppression())
+                return;
+
+            if (UpdateActiveSession())
+                return;
 
             ghostView.Hide();
             TryStartSession();
         }
 
-        private void CollectSelection()
+        private bool UpdateSuppression()
         {
-            firstHandle = null;
-            secondHandle = null;
+            if (!suppressUntilRelease)
+                return false;
 
-            List<PlanetBehaviour> planets = planetsSpawner.All;
-            for (int i = 0; i < planets.Count; i++)
-                TryAddNode(planets[i]);
-
-            IReadOnlyList<HubBehaviour> hubs = hubsSpawner.All;
-            for (int i = 0; i < hubs.Count; i++)
-                TryAddNode(hubs[i]);
+            ghostView.Hide();
+            if (!gestureInput.IsActive)
+                suppressUntilRelease = false;
+            return true;
         }
 
-        private void TryAddNode(IRouteWorldNode node)
+        private bool UpdateActiveSession()
         {
-            if (!node.IsActive || !node.UniverseHandle.IsSelected)
-                return;
+            if (!sessionActive)
+                return false;
 
-            if (firstHandle == null)
+            if (!gestureInput.IsActive)
             {
-                firstHandle = node.UniverseHandle;
-                return;
+                EndSession();
+                return true;
             }
 
-            if (secondHandle == null && node.UniverseHandle.InteractorId != firstHandle.InteractorId)
-                secondHandle = node.UniverseHandle;
-        }
-
-        private void LogSelectionCount()
-        {
-            if (!logEvents)
-                return;
-
-            int count = (firstHandle != null ? 1 : 0) + (secondHandle != null ? 1 : 0);
-            if (count != lastSelectionCount)
-            {
-                lastSelectionCount = count;
-                Debug.Log($"[UniverseGhostController] selected handles = {count}");
-            }
+            UpdateSessionState();
+            return true;
         }
 
         private void TryStartSession()
         {
-            if (firstHandle == null || secondHandle == null)
+            if (!gestureInput.IsActive)
                 return;
-            if (universeView.IsTransitioning || !universeView.HasRoomAnchor)
+            if (!universeView.HasRoomAnchor)
                 return;
 
-            float handDistance = GetHandDistance();
+            float handDistance = gestureInput.HandDistance;
             if (handDistance < minHandSeparation)
                 return;
 
@@ -124,21 +95,15 @@ namespace DigitalLove.Game.Levels
             startScale = universeView.Scale;
             startHandDistance = handDistance;
             spaceshipsSpawner.SetViewTransition(true);
-            UpdateGhost(handDistance);
+            UpdateGhost();
             if (logEvents)
                 Debug.Log($"[UniverseGhostController] session start scale={startScale} distance={startHandDistance}");
         }
 
-        private void UpdateSession()
+        private void UpdateSessionState()
         {
-            if (firstHandle == null || secondHandle == null)
-            {
-                EndSession();
-                return;
-            }
-
-            float handDistance = GetHandDistance();
-            UpdateGhost(handDistance);
+            float handDistance = gestureInput.HandDistance;
+            UpdateGhost();
             float ghostScale = GetGhostScale(handDistance);
 
             if (logEvents && Time.unscaledTime >= nextScaleLogTime)
@@ -153,15 +118,8 @@ namespace DigitalLove.Game.Levels
                 Commit(true);
         }
 
-        private float GetHandDistance() =>
-            Vector3.Distance(firstHandle.GrabPose.position, secondHandle.GrabPose.position);
-
-        private void UpdateGhost(float handDistance)
-        {
-            Vector3 first = firstHandle.GrabPose.position;
-            Vector3 second = secondHandle.GrabPose.position;
-            ghostView.ShowHandLine(first, second);
-        }
+        private void UpdateGhost() =>
+            ghostView.ShowHandLine(gestureInput.LeftPinchPoint, gestureInput.RightPinchPoint);
 
         private float GetGhostScale(float handDistance)
         {
@@ -181,9 +139,6 @@ namespace DigitalLove.Game.Levels
             suppressUntilRelease = true;
             ghostView.Hide();
             universeView.SetBubbleView(toBubble, false);
-
-            if (!universeView.IsTransitioning)
-                spaceshipsSpawner.SetViewTransition(false);
         }
 
         private void EndSession()
@@ -195,9 +150,21 @@ namespace DigitalLove.Game.Levels
             spaceshipsSpawner.SetViewTransition(false);
         }
 
+        private void OnTransitionCompleted(bool toBubble)
+        {
+            spaceshipsSpawner.SetViewTransition(false);
+            spaceshipsSpawner.RefreshGrabbablesAtStation();
+
+            if (suppressUntilRelease && !gestureInput.IsActive)
+                suppressUntilRelease = false;
+        }
+
         private void OnDisable()
         {
-            EndSession();
+            universeView.TransitionCompleted -= OnTransitionCompleted;
+            if (sessionActive)
+                EndSession();
+            ghostView.Hide();
         }
     }
 }
