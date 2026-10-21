@@ -26,6 +26,8 @@ namespace DigitalLove.Game.Levels
         private float lastBothPinchTime;
 
         public bool IsActive => isActive;
+        public bool IsLeftPinching { get; private set; }
+        public bool IsRightPinching { get; private set; }
         public Vector3 LeftPinchPoint { get; private set; }
         public Vector3 RightPinchPoint { get; private set; }
         public Vector3 Midpoint => (LeftPinchPoint + RightPinchPoint) * 0.5f;
@@ -47,10 +49,20 @@ namespace DigitalLove.Game.Levels
         {
             bool hasLeft = TryGetPinchPoint(leftHand, out Vector3 leftPoint);
             bool hasRight = TryGetPinchPoint(rightHand, out Vector3 rightPoint);
-            bool isTracked = hasLeft && hasRight;
-            bool isPinching = isTracked && IsPinching(leftHand) && IsPinching(rightHand) && !IsHandBusy();
+            bool isBusy = IsHandBusy();
 
-            UpdatePinchState(isPinching, leftPoint, rightPoint);
+            if (hasLeft)
+                LeftPinchPoint = leftPoint;
+            if (hasRight)
+                RightPinchPoint = rightPoint;
+
+            IsLeftPinching = hasLeft && !isBusy && IsPinching(leftHand);
+            IsRightPinching = hasRight && !isBusy && IsPinching(rightHand);
+
+            bool isTracked = hasLeft && hasRight;
+            bool isPinching = IsLeftPinching && IsRightPinching;
+
+            UpdatePinchState(isPinching);
 
             if (isActive)
                 UpdateActive(isTracked, isPinching);
@@ -58,7 +70,7 @@ namespace DigitalLove.Game.Levels
                 TryActivate(isPinching);
         }
 
-        private void UpdatePinchState(bool isPinching, Vector3 leftPoint, Vector3 rightPoint)
+        private void UpdatePinchState(bool isPinching)
         {
             if (!isPinching)
             {
@@ -66,8 +78,6 @@ namespace DigitalLove.Game.Levels
                 return;
             }
 
-            LeftPinchPoint = leftPoint;
-            RightPinchPoint = rightPoint;
             lastBothPinchTime = Time.unscaledTime;
             if (bothPinchingSince < 0f)
                 bothPinchingSince = Time.unscaledTime;

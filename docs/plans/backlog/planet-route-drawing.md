@@ -10,7 +10,7 @@ scale; routes are removed and redrawn, not leg-edited; rounds grant ships to new
 or current planets; removing a route refunds its ship immediately; old
 hub-based saves are dropped.
 
-**Related:** [Two views + interaction unify](../in-progress/universe-views-and-interaction.md) ·
+**Related:** [Two views + interaction unify](../done/universe-views-and-interaction.md) ·
 [Transforming the universe](universe-transform.md)
 
 **Wiring rule:** route lines, draft lines, ship badges, highlight rings, and the

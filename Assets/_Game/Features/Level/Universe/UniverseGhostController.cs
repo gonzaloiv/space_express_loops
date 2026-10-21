@@ -47,10 +47,11 @@ namespace DigitalLove.Game.Levels
             if (UpdateSuppression())
                 return;
 
+            UpdateFeedback();
+
             if (UpdateActiveSession())
                 return;
 
-            ghostView.Hide();
             TryStartSession();
         }
 
@@ -95,7 +96,6 @@ namespace DigitalLove.Game.Levels
             startScale = universeView.Scale;
             startHandDistance = handDistance;
             spaceshipsSpawner.SetViewTransition(true);
-            UpdateGhost();
             if (logEvents)
                 Debug.Log($"[UniverseGhostController] session start scale={startScale} distance={startHandDistance}");
         }
@@ -103,7 +103,6 @@ namespace DigitalLove.Game.Levels
         private void UpdateSessionState()
         {
             float handDistance = gestureInput.HandDistance;
-            UpdateGhost();
             float ghostScale = GetGhostScale(handDistance);
 
             if (logEvents && Time.unscaledTime >= nextScaleLogTime)
@@ -118,8 +117,23 @@ namespace DigitalLove.Game.Levels
                 Commit(true);
         }
 
-        private void UpdateGhost() =>
-            ghostView.ShowHandLine(gestureInput.LeftPinchPoint, gestureInput.RightPinchPoint);
+        private void UpdateFeedback()
+        {
+            bool leftPinching = gestureInput.IsLeftPinching;
+            bool rightPinching = gestureInput.IsRightPinching;
+
+            if (!leftPinching && !rightPinching)
+            {
+                ghostView.Hide();
+                return;
+            }
+
+            ghostView.Show(
+                gestureInput.LeftPinchPoint,
+                gestureInput.RightPinchPoint,
+                leftPinching,
+                rightPinching);
+        }
 
         private float GetGhostScale(float handDistance)
         {

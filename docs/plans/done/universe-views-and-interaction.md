@@ -1,20 +1,19 @@
 # Universe — Two Views + Interaction Unification
 
-**Status:** in progress - gesture code landed; scene references still need wiring in Unity.
+**Status:** done - Phase A3 validated in headset; Phase A4 cleanup applied.
 
-**Related:** [Transforming the universe](../backlog/universe-transform.md) · [Galaxies and level/round creation](../backlog/universe-galaxies.md) · [Planet route drawing](../backlog/planet-route-drawing.md)
+**Related:** [Transforming the universe](../in-progress/universe-transform.md) · [Galaxies and level/round creation](../backlog/universe-galaxies.md) · [Planet route drawing](../backlog/planet-route-drawing.md)
 
 **Wiring rule:** components, references, and feedback visuals are authored in the scene/prefabs. Do not use runtime `AddComponent`, injection, `FindObjectsByType`, `GetComponent`, or disabled unused components. Remove unused components.
 
 ## Next step (implementation order)
 
-The view foundation is in place: `UniverseView` applies `D` to `Level`, Room/Bubble poses and transitions work, routes are content-local, ships are pinch-only, and scale feedback is the authored hand line. Gesture code and node-handle removal are landed. Remaining:
+Phase A3 is validated: `UniverseView` applies `D` to `Level`, Room/Bubble transitions work, routes are content-local, the two-hand gesture drives scaling with per-hand pinch rings and a hand line, and node handles are gone. Phase A4 cleanup is applied:
 
-1. **Scene wiring** — `TwoHandGestureInput` on the `Universe` root is wired: left/right `Hand` components from the interaction rig plus its `DistanceHandGrabInteractor`s for the busy-hand gate. `handLine`, `UniverseGhostController.gestureInput`, and `spaceshipsSpawner` are wired in `Game.unity`. Confirm the refs resolve when Unity imports the scene.
-2. **Verify the harness** — chest-height bubble must be visibly bigger than before (`miniBubbleRadius = 0.28 m`).
-3. **Preserve route selection across Room ↔ Bubble** — `SpaceshipSelectingState` is kept; confirm the station, destination ray, and grab zone refresh after the transition.
-4. **Tune the feel** — gain, thresholds, simultaneous-pinch activation, line feedback; test both directions in the headset.
-5. **Defer the bubble boundary visual** until the gesture feels right; the hand line is the current feedback.
+1. **Feel** — `scaleGain`, `enterRoomScale` / `exitRoomScale`, `dwellSecs`, `releaseGraceSecs`, `miniBubbleRadius` validated in the headset.
+2. **Feedback** — ring size/color and line width/color (`PinchMarkerLeft`, `PinchMarkerRight`, `HandLine`).
+3. **Arbitration** — no rings or scaling while a ship or UI is selected; routes and path creation work in Bubble.
+4. **Bubble boundary visual** — deferred; rings + line are the shipped feedback.
 
 ## 1. Goal
 
@@ -193,12 +192,13 @@ previewScale = clamp(startScale * pow(raw, scaleGain), miniScale, 1)
 
 ## 6. Feedback
 
-- **Hand-to-hand line**: authored `LineRenderer`, shown while the gesture is active; endpoints are the pinch points.
-- **Activation**: line appears when both hands pinch simultaneously; the optional debounce only prevents tracking flicker.
+- **Pinch markers**: authored billboard rings (`PinchMarkerLeft` / `PinchMarkerRight`) appear at each hand's pinch point as soon as that hand pinches.
+- **Hand-to-hand line**: authored `LineRenderer`, shown while both hands pinch; endpoints are the pinch points.
+- **Activation**: markers appear per hand immediately; the line appears when both hands pinch. The optional debounce only prevents tracking flicker.
 - **Limit feedback**: optional haptic/line pulse when a scale limit is hit.
 - Ship: existing authored hover/selection behavior.
 - No planet/hub outlines for this gesture.
-- No sphere ghost; it was removed because it obscured the scene and read as a giant outline.
+- No sphere ghost; markers are small rings, not a scene-scale sphere.
 
 ## 7. Routes and path creation
 
@@ -217,7 +217,7 @@ previewScale = clamp(startScale * pow(raw, scaleGain), miniScale, 1)
 | `UniverseView` | Applies `D` to serialized `contentRoot` (`Level`); room/mini poses, transitions, `WithRoomPose`. |
 | `TwoHandGestureInput` | Serialized hand/interactor refs, simultaneous pinch detection, optional debounce, busy-hand gate. |
 | `UniverseGhostController` | Gesture state machine, scale mapping, thresholds, route pause, commit. References `UniverseView`, `TwoHandGestureInput`, `UniverseGhostView`, `SpaceshipsSpawner`. |
-| `UniverseGhostView` | Authored hand-line visual; show/hide/set endpoints. No runtime creation. |
+| `UniverseGhostView` | Authored pinch-ring and hand-line visuals; show/hide/set endpoints. No runtime creation. |
 | `UniverseBubble` | Content bounds and bubble radius; future boundary view. |
 | `UniverseBubbleView` | Deferred; not part of this step. |
 
@@ -271,24 +271,24 @@ Delete, do not disable:
 - Configure pinch-only grab.
 - Verify ship grab/drop and route editing.
 
-### Phase A3 — Global two-hand gesture (current)
+### Phase A3 — Global two-hand gesture (done)
 
 - `TwoHandGestureInput` added with serialized hand/interactor refs, simultaneous pinch, optional debounce, busy-hand gate, release grace (done).
 - `UniverseGhostController` rewired to gesture pinch points; `planetsSpawner`/`hubsSpawner` dependencies removed (done).
 - Route-selection state preserved across view changes; station/ray/grab zone refresh on transition completion (done).
 - Node handle code, scene proxies, per-node handle fields, and the `UniverseHandles` layer removed (done).
-- Hand-to-hand line remains the only scale feedback.
-- Remaining: assign hand and interactor refs on the `Universe` root in the scene.
+- Per-hand pinch rings plus the hand-to-hand line are the only scale feedback (done).
+- Scene refs wired and validated in the headset (done).
 
-**Exit:** pinch both hands anywhere in open space; line appears; hands closer/farther commit the view. No node targets; ships remain pinch-only.
+**Exit met:** pinch both hands anywhere in open space; line appears; hands closer/farther commit the view. No node targets; ships remain pinch-only.
 
-### Phase A4 — Tuning and cleanup
+### Phase A4 — Tuning and cleanup (done)
 
 - Tune optional debounce, grace, gain, thresholds, line width/color.
-- Remove obsolete touch code from the ship path if unused.
+- Remove obsolete touch code from the ship path if unused (done: unused `TouchHandGrabRelease` removed).
 - Verify hand ray/pinch priority and no activation while grabbing ships or UI.
 - Verify routes and path creation remain usable in Bubble.
-- Remove or gate the temporary debug logs (`logEvents`).
+- Remove or gate the temporary debug logs (`logEvents`) (done: disabled in the scene).
 
 ## 12. Test plan
 

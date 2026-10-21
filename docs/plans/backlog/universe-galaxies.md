@@ -2,9 +2,9 @@
 
 **Status:** backlog - follow-up to the two-views and universe-transform plans. Requires the
 content-local route work (Phase A0) from the
-[two views + interaction plan](../in-progress/universe-views-and-interaction.md).
+[two views + interaction plan](../done/universe-views-and-interaction.md).
 
-**Related:** [Two views + interaction unify](../in-progress/universe-views-and-interaction.md),
+**Related:** [Two views + interaction unify](../done/universe-views-and-interaction.md),
 [Transforming the universe](universe-transform.md)
 
 ## 1. Goal
