@@ -1785,7 +1785,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e6301be3842ff74e86a6b3a494f5dbf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Levels::DigitalLove.Game.Levels.UniverseView
+  m_EditorClassIdentifier: DigitalLove.Game.Universe::DigitalLove.Game.Universe.UniverseView
   contentRoot: {fileID: 677709494}
   miniBubbleRadius: 0.6
   bubbleDistance: 0.45
@@ -1858,6 +1858,7 @@ MonoBehaviour:
     hasBubbleTransform: 0
     bubbleOffsetLocal: {x: 0, y: 0, z: 0}
     bubbleYaw: {x: 0, y: 0, z: 0, w: 1}
+    silentPlanetSeed: 0
 --- !u!1 &265684195
 GameObject:
   m_ObjectHideFlags: 0
@@ -4823,68 +4824,6 @@ MonoBehaviour:
   floorMargin: 0.5
   ceilingMargin: 0.5
   minDistanceRadiusMultiplier: 1
---- !u!1 &1987654320
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1987654322}
-  - component: {fileID: 1987654321}
-  m_Layer: 0
-  m_Name: SilentPlanets
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1987654322
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1987654320}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 677709494}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1987654321
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1987654320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f959e7fe594449496df3e10880b009f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Levels::DigitalLove.Game.Levels.SilentPlanetsSpawner
-  roomPlacement: {fileID: 677709497}
-  hubsSpawner: {fileID: 935971882}
-  universeView: {fileID: 242500899}
-  prototype: {fileID: 1432176000000000001, guid: 6a1a9c1cd3694b11946468f943f46cd8, type: 3}
-  planetCount: 24
-  planetCap: 40
-  clusterCount: 3
-  clusterRadius: 1.2
-  clusterRingRadius: 1
-  clusterRingJitter: 0.5
-  minSeparation: 0.25
-  spacingMultiplier: 1.25
-  anchorClearance: 0.6
-  minRadius: 0.08
-  maxRadius: 0.14
-  verticalJitter: 0.35
-  placementAttempts: 32
-  roomVisibleRadius: 3
 --- !u!1 &781987388
 GameObject:
   m_ObjectHideFlags: 0
@@ -9217,7 +9156,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 723.08496, y: -50}
-  m_SizeDelta: {x: 0, y: 50}
+  m_SizeDelta: {x: 243.83, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1213392285
 MonoBehaviour:
@@ -13251,6 +13190,68 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _facing: 0
   _doubleSided: 0
+--- !u!1 &1987654320
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1987654322}
+  - component: {fileID: 1987654321}
+  m_Layer: 0
+  m_Name: SilentPlanets
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1987654321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987654320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f959e7fe594449496df3e10880b009f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.SilentPlanets::DigitalLove.Game.SilentPlanets.SilentPlanetsSpawner
+  roomPlacement: {fileID: 677709497}
+  hubsSpawner: {fileID: 935971882}
+  universeView: {fileID: 242500899}
+  prototype: {fileID: 1432176000000000001, guid: 6a1a9c1cd3694b11946468f943f46cd8, type: 3}
+  planetCount: 36
+  planetCap: 48
+  clusterCount: 4
+  clusterRadius: 0.7
+  clusterRingRadius: 0.35
+  clusterRingJitter: 0.25
+  verticalMargin: 0
+  minSeparation: 0.22
+  spacingMultiplier: 1.15
+  anchorClearance: 0.3
+  minRadius: 0.08
+  maxRadius: 0.14
+  placementAttempts: 64
+  roomVisibleRadius: 3
+--- !u!4 &1987654322
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987654320}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 677709494}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1990742601
 GameObject:
   m_ObjectHideFlags: 0
@@ -14400,7 +14401,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1032cba50a2652f4fbb9e8409ee382c7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Levels::DigitalLove.Game.Levels.UniverseGhostView
+  m_EditorClassIdentifier: DigitalLove.Game.Universe::DigitalLove.Game.Universe.UniverseGhostView
   handLine: {fileID: 782341900000000023}
   leftPinchMarker: {fileID: 782341900000000041}
   rightPinchMarker: {fileID: 782341900000000044}
@@ -14417,7 +14418,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3f6390944b8a2a1489867fc422fae318, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Levels::DigitalLove.Game.Levels.UniverseGhostController
+  m_EditorClassIdentifier: DigitalLove.Game.Universe::DigitalLove.Game.Universe.UniverseGhostController
   universeView: {fileID: 242500899}
   ghostView: {fileID: 782341900000000012}
   gestureInput: {fileID: 782341900000000020}
@@ -14427,10 +14428,10 @@ MonoBehaviour:
   enterRoomScale: 0.6
   exitRoomScale: 0.45
   translationGain: 1
-  translationDeadZone: 0.01
   settleDistance: 0.01
   translationSmoothSecs: 0.1
   dragStartJumpLimit: 0.12
+  minDragDistance: 0.03
   recenterDistance: 0.05
   recenterHoldSecs: 0.35
   viewChangeCooldownSecs: 0.35
@@ -14467,7 +14468,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b3e1c7a9f4d24e5b8c6a1d2e3f405162, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Levels::DigitalLove.Game.Levels.TwoHandGestureInput
+  m_EditorClassIdentifier: DigitalLove.Game.Universe::DigitalLove.Game.Universe.TwoHandGestureInput
   leftHandSource: {fileID: 782341900000000019}
   rightHandSource: {fileID: 782341900000000018}
   busyInteractors:
@@ -15098,14 +15099,16 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c1e5a7b93d2f4c6a8b0d1e2f3a4b5c6d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Levels::DigitalLove.Game.Levels.UniverseCenterMarker
+  m_EditorClassIdentifier: DigitalLove.Game.Universe::DigitalLove.Game.Universe.UniverseCenterMarker
   universeView: {fileID: 242500899}
   ring: {fileID: 782341900000000048}
   authoredRadius: 0.04
-  ringRadiusFactor: 0.5
+  ringRadiusFactor: 0.4
   heightOffset: 0
   normalColor: {r: 1, g: 0, b: 1, a: 1}
+  activeColor: {r: 0, g: 1, b: 1, a: 1}
   blockedColor: {r: 1, g: 0.35, b: 0.2, a: 1}
+  commitColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!222 &797675841606255178
 CanvasRenderer:
   m_ObjectHideFlags: 0

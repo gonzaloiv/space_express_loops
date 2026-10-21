@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using DigitalLove.Game.Nodes;
 using DigitalLove.Game.Persistence;
+using DigitalLove.Game.SilentPlanets;
+using DigitalLove.Game.Universe;
 using DigitalLove.Game.Spaceships;
 using DigitalLove.XR.MRUtilityKit;
 using Meta.XR.MRUtilityKit;

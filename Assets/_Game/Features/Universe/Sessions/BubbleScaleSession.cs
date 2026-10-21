@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DigitalLove.Game.Levels
+namespace DigitalLove.Game.Universe
 {
     public enum BubbleScaleAction { None, EnterRoom, ExitRoom, Recenter }
 

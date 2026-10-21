@@ -1,13 +1,13 @@
 using UnityEngine;
 
-namespace DigitalLove.Game.Levels
+namespace DigitalLove.Game.Universe
 {
     public class UniverseCenterMarker : MonoBehaviour
     {
         [SerializeField] private UniverseView universeView;
         [SerializeField] private LineRenderer ring;
         [SerializeField] private float authoredRadius = 0.04f;
-        [SerializeField] private float ringRadiusFactor = 0.5f;
+        [SerializeField] private float ringRadiusFactor = 0.4f;
         [SerializeField] private float heightOffset;
         [SerializeField] private Color normalColor = Color.magenta;
         [SerializeField] private Color activeColor = Color.cyan;

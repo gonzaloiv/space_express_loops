@@ -90,6 +90,21 @@ namespace DigitalLove.Game.Nodes
             return room != null && IsValidCandidate(localPosition, radius, maxDistanceFromOccupants, room, true);
         }
 
+        public bool TryGetHeightRange(float radius, float margin, out float lowest, out float highest)
+        {
+            MRUKRoom room = GetCurrentRoom();
+            if (room == null || !yRangeCache.TryGet(room, transform, out float minY, out float maxY))
+            {
+                lowest = 0f;
+                highest = 0f;
+                return false;
+            }
+
+            lowest = minY + margin + radius;
+            highest = maxY - margin - radius;
+            return highest > lowest;
+        }
+
         public Vector3 GetRoomCenterLocalPosition(float radius)
         {
             MRUKRoom room = GetCurrentRoom();

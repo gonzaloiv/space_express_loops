@@ -1,35 +1,37 @@
 using UnityEngine;
 
-namespace DigitalLove.Game.Levels
+namespace DigitalLove.Game.Universe
 {
     public class BubbleMapTransformSession
     {
         private readonly float translationGain;
-        private readonly float translationDeadZone;
         private readonly float settleDistance;
         private readonly float translationSmoothSecs;
         private readonly float dragStartJumpLimit;
+        private readonly float minDragDistance;
 
         private bool isActive;
-        private bool hasDragStart;
-        private Vector3 startMidpoint;
+        private bool dragStarted;
+        private Vector3 grabStartPoint;
+        private Vector3 grabStartOffset;
+        private Vector3 initialDragPoint;
         private Vector3 startPosition;
+        private Vector3 accumulatedOffset;
         private Vector3 smoothedOffset;
         private Vector3 smoothVelocity;
-        private bool dragEngaged;
 
         public BubbleMapTransformSession(
             float translationGain,
-            float translationDeadZone,
             float settleDistance,
             float translationSmoothSecs,
-            float dragStartJumpLimit)
+            float dragStartJumpLimit,
+            float minDragDistance)
         {
             this.translationGain = translationGain;
-            this.translationDeadZone = translationDeadZone;
             this.settleDistance = settleDistance;
             this.translationSmoothSecs = translationSmoothSecs;
             this.dragStartJumpLimit = dragStartJumpLimit;
+            this.minDragDistance = minDragDistance;
         }
 
         public void Begin(UniverseView view, Vector3 dragPoint)
@@ -38,12 +40,14 @@ namespace DigitalLove.Game.Levels
                 return;
 
             isActive = true;
-            startMidpoint = dragPoint;
             startPosition = view.CurrentPose.position;
+            accumulatedOffset = Vector3.zero;
             smoothedOffset = Vector3.zero;
             smoothVelocity = Vector3.zero;
-            dragEngaged = false;
-            hasDragStart = false;
+            dragStarted = false;
+            grabStartPoint = dragPoint;
+            grabStartOffset = Vector3.zero;
+            initialDragPoint = dragPoint;
             view.BeginBubblePreview();
         }
 
@@ -52,28 +56,47 @@ namespace DigitalLove.Game.Levels
             if (!isActive)
                 return;
 
-            if (!hasDragStart)
+            if (!dragStarted)
             {
-                if ((dragPoint - startMidpoint).magnitude > dragStartJumpLimit)
-                {
-                    startMidpoint = dragPoint;
-                    startPosition = view.CurrentPose.position;
+                if ((dragPoint - initialDragPoint).magnitude < minDragDistance)
                     return;
-                }
 
-                hasDragStart = true;
+                dragStarted = true;
+                grabStartPoint = dragPoint;
+                grabStartOffset = accumulatedOffset;
+                return;
             }
 
+            Vector3 delta = dragPoint - grabStartPoint;
+            if (delta.magnitude > dragStartJumpLimit)
+            {
+                grabStartPoint = dragPoint;
+                grabStartOffset = accumulatedOffset;
+                return;
+            }
+
+            delta.y = 0f;
+            accumulatedOffset = ApplyLimit(
+                grabStartOffset + delta * translationGain,
+                view.BubbleRadiusWorld * 0.3f);
+
             float dt = Mathf.Max(Time.deltaTime, 0.0001f);
-            Vector3 targetOffset = GetTargetOffset(dragPoint, view.BubbleRadiusWorld * 0.4f);
             smoothedOffset = Vector3.SmoothDamp(
                 smoothedOffset,
-                targetOffset,
+                accumulatedOffset,
                 ref smoothVelocity,
                 translationSmoothSecs,
                 Mathf.Infinity,
                 dt);
-            view.ApplyBubblePreview(smoothedOffset);
+            view.ApplyBubbleDrag(smoothedOffset);
+        }
+
+        public void Rebase(Vector3 dragPoint)
+        {
+            initialDragPoint = dragPoint;
+            grabStartPoint = dragPoint;
+            grabStartOffset = accumulatedOffset;
+            dragStarted = false;
         }
 
         public void Commit(UniverseView view)
@@ -99,32 +122,15 @@ namespace DigitalLove.Game.Levels
                 view.CommitBubblePreview();
         }
 
-        private Vector3 GetTargetOffset(Vector3 dragPoint, float moveLimit)
+        private static Vector3 ApplyLimit(Vector3 offset, float limit)
         {
-            Vector3 delta = dragPoint - startMidpoint;
-            Vector3 offset = new Vector3(delta.x, 0f, delta.z) * translationGain;
             float magnitude = offset.magnitude;
-            if (!dragEngaged)
-            {
-                if (magnitude <= translationDeadZone)
-                    return Vector3.zero;
+            if (magnitude <= limit)
+                return offset;
 
-                dragEngaged = true;
-            }
-            else if (magnitude < translationDeadZone * 0.5f)
-            {
-                dragEngaged = false;
-                return Vector3.zero;
-            }
-
-            magnitude = Mathf.Max(0f, magnitude - translationDeadZone);
-            if (magnitude > moveLimit)
-            {
-                float excess = magnitude - moveLimit;
-                magnitude = moveLimit + excess / (1f + excess / moveLimit);
-            }
-
-            return offset.normalized * magnitude;
+            float excess = magnitude - limit;
+            float softened = limit + excess / (1f + excess / Mathf.Max(limit, 0.0001f));
+            return offset.normalized * softened;
         }
     }
 }

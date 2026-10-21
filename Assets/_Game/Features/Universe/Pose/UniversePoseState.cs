@@ -1,6 +1,7 @@
+using DG.Tweening;
 using UnityEngine;
 
-namespace DigitalLove.Game.Levels
+namespace DigitalLove.Game.Universe
 {
     public class UniversePoseState
     {
@@ -17,6 +18,7 @@ namespace DigitalLove.Game.Levels
         private bool hasBubbleCenter;
         private Quaternion bubbleYaw = Quaternion.identity;
         private bool isPreviewActive;
+        private Tween recenterTween;
         private UniverseView.UniversePose previewStartPose;
         private Vector3 previewStartOffsetLocal;
         private Vector3 previewStartFocusLocal;
@@ -69,6 +71,47 @@ namespace DigitalLove.Game.Levels
 
         public void ResetBubbleOffset() => bubbleOffsetLocal = Vector3.zero;
 
+        public void RecenterBubble(float scale, float secs)
+        {
+            recenterTween?.Kill();
+            Vector3 center = CenterWorld;
+            Vector3 from = Quaternion.Inverse(bubbleYaw) * (center - CurrentPose.position) / scale;
+            Vector3 to = contentCenter;
+
+            if (secs <= 0f)
+            {
+                bubbleOffsetLocal = Vector3.zero;
+                ApplyPose(BuildMiniPoseAroundCenter(scale));
+                return;
+            }
+
+            recenterTween = DOTween.To(
+                    () => 0f,
+                    t => ApplyPose(new UniverseView.UniversePose(
+                        center - bubbleYaw * (scale * Vector3.Lerp(from, to, t)),
+                        bubbleYaw,
+                        scale)),
+                    1f,
+                    secs)
+                .SetEase(Ease.InOutSine)
+                .OnComplete(() => { bubbleOffsetLocal = Vector3.zero; recenterTween = null; });
+        }
+
+        public void KillRecenter()
+        {
+            recenterTween?.Kill();
+            recenterTween = null;
+        }
+
+        public void SetBubbleYaw(Quaternion yaw) => bubbleYaw = YawOnly(yaw);
+
+        public void SetBubbleYawToCamera()
+        {
+            Camera camera = Camera.main;
+            if (camera != null)
+                bubbleYaw = YawOnly(camera.transform.rotation);
+        }
+
         public void CaptureBubbleCenter(UniverseView.UniversePose pose) =>
             SetBubbleCenter(pose.position + pose.rotation * (pose.scale * CenterLocal));
 
@@ -81,7 +124,6 @@ namespace DigitalLove.Game.Levels
 
         public float GetMiniScale(float miniBubbleRadius, float minMiniScale) =>
             Mathf.Clamp(miniBubbleRadius / contentRadius, minMiniScale, 1f);
-
         public UniverseView.UniversePose BuildMiniPose(float scale)
         {
             Vector3 position = GetBubbleAnchor() - bubbleYaw * (scale * CenterLocal);
@@ -96,9 +138,8 @@ namespace DigitalLove.Game.Levels
 
         public UniverseView.UniversePose BuildRoomPose()
         {
-            Vector3 focusLocal = CenterLocal;
-            Vector3 target = CenterWorld;
-            return new UniverseView.UniversePose(target - bubbleYaw * focusLocal, bubbleYaw, 1f);
+            Quaternion yaw = YawOnly(contentRoot.rotation);
+            return new UniverseView.UniversePose(CenterWorld - yaw * CenterLocal, yaw, 1f);
         }
 
         public void BeginPreview()
@@ -113,17 +154,19 @@ namespace DigitalLove.Game.Levels
             isPreviewActive = true;
         }
 
-        public void ApplyPreview(Vector3 offsetFromStart, float scale)
+        public void ApplyDrag(Vector3 worldOffset)
         {
             if (!isPreviewActive)
                 return;
 
-            Vector3 focusLocal = previewStartFocusLocal
-                - Quaternion.Inverse(bubbleYaw) * (offsetFromStart / scale);
-            bubbleOffsetLocal = focusLocal - contentCenter;
+            float scale = Mathf.Max(previewStartPose.scale, 0.0001f);
+            contentRoot.position = previewStartPose.position + worldOffset;
+            contentRoot.rotation = previewStartPose.rotation;
+            contentRoot.localScale = Vector3.one * scale;
 
-            Vector3 position = bubbleCenterWorld - bubbleYaw * (scale * focusLocal);
-            ApplyPose(new UniverseView.UniversePose(position, bubbleYaw, scale));
+            Vector3 focusLocal = previewStartFocusLocal
+                - Quaternion.Inverse(bubbleYaw) * (worldOffset / scale);
+            bubbleOffsetLocal = focusLocal - contentCenter;
         }
 
         public void CancelPreview()

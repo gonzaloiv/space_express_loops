@@ -2,7 +2,7 @@ using Oculus.Interaction;
 using Oculus.Interaction.Input;
 using UnityEngine;
 
-namespace DigitalLove.Game.Levels
+namespace DigitalLove.Game.Universe
 {
     [DefaultExecutionOrder(-100)]
     public class TwoHandGestureInput : MonoBehaviour
@@ -26,6 +26,10 @@ namespace DigitalLove.Game.Levels
         private float lastBothPinchTime;
         private float previousHandDistance;
         private bool hasPreviousHandDistance;
+        private bool wasLeftPinching;
+        private bool wasRightPinching;
+        private Vector3 leftPinchStartPoint;
+        private Vector3 rightPinchStartPoint;
 
         public bool IsActive => isActive;
         public bool IsLeftPinching { get; private set; }
@@ -37,6 +41,7 @@ namespace DigitalLove.Game.Levels
             : IsRightPinching
                 ? RightPinchPoint
                 : Midpoint;
+        public Vector3 DragStartPoint => IsLeftPinching ? leftPinchStartPoint : rightPinchStartPoint;
         public Vector3 LeftPinchPoint { get; private set; }
         public Vector3 RightPinchPoint { get; private set; }
         public Vector3 Midpoint => (LeftPinchPoint + RightPinchPoint) * 0.5f;
@@ -68,6 +73,7 @@ namespace DigitalLove.Game.Levels
 
             IsLeftPinching = hasLeft && !isBusy && IsPinching(leftHand);
             IsRightPinching = hasRight && !isBusy && IsPinching(rightHand);
+            UpdatePinchStartPoints(leftPoint, rightPoint);
 
             bool isTracked = hasLeft && hasRight;
             bool isPinching = IsLeftPinching && IsRightPinching;
@@ -79,6 +85,17 @@ namespace DigitalLove.Game.Levels
                 UpdateActive(isTracked, isPinching);
             else
                 TryActivate(isPinching);
+        }
+
+        private void UpdatePinchStartPoints(Vector3 leftPoint, Vector3 rightPoint)
+        {
+            if (IsLeftPinching && !wasLeftPinching)
+                leftPinchStartPoint = leftPoint;
+            if (IsRightPinching && !wasRightPinching)
+                rightPinchStartPoint = rightPoint;
+
+            wasLeftPinching = IsLeftPinching;
+            wasRightPinching = IsRightPinching;
         }
 
         private void UpdateDistanceSpeed(bool isPinching)

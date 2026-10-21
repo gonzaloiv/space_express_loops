@@ -2,7 +2,7 @@ using System;
 using DG.Tweening;
 using UnityEngine;
 
-namespace DigitalLove.Game.Levels
+namespace DigitalLove.Game.Universe
 {
     public class UniverseView : MonoBehaviour
     {
@@ -53,6 +53,7 @@ namespace DigitalLove.Game.Levels
 
             if (!hadAnchor || isMini)
             {
+                poseState.SetBubbleYawToCamera();
                 UniversePose bubblePose = BuildMiniPose();
                 ApplyPose(bubblePose);
                 poseState.CaptureBubbleCenter(bubblePose);
@@ -62,13 +63,17 @@ namespace DigitalLove.Game.Levels
 
             ApplyPose(poseState.RoomPose);
         }
-
         public void SetBubbleView(bool bubble, bool instant)
         {
             if (!HasRoomAnchor || isTransitioning)
                 return;
 
             CommitBubblePreview();
+            if (bubble)
+            {
+                poseState.ResetBubbleOffset();
+                poseState.SetBubbleYawToCamera();
+            }
             UniversePose target = bubble ? BuildMiniPose() : poseState.BuildRoomPose();
             if (bubble)
                 poseState.CaptureBubbleCenter(target);
@@ -82,7 +87,6 @@ namespace DigitalLove.Game.Levels
 
             StartTransition(target, bubble);
         }
-
         public void WithRoomPose(Action action)
         {
             if (action == null)
@@ -105,30 +109,28 @@ namespace DigitalLove.Game.Levels
                 poseState.ApplyPose(previous);
             }
         }
-
         public UniversePose CurrentPose => poseState.CurrentPose;
-
         public Vector3 WorldToContentLocal(Vector3 worldPosition) =>
             contentRoot.InverseTransformPoint(worldPosition);
-
         public void SetMapGestureBlocked(bool blocked) => IsMapGestureBlocked = blocked;
         public void SetMapGestureActive(bool active) => IsMapGestureActive = active;
         public void SetScaleFeedback(float value) => ScaleFeedback = value;
-
         public void ResetBubbleMap()
         {
-            poseState.ResetBubbleOffset();
+            previewTween?.Kill();
+            previewTween = null;
+            poseState.EndPreview();
             if (isMini && !isTransitioning)
-                ApplyPose(poseState.BuildMiniPoseAroundCenter(MiniScale));
+                poseState.RecenterBubble(MiniScale, transitionSecs);
+            else
+                poseState.ResetBubbleOffset();
         }
-
         public void SetContentCenterLocal(Vector3 centerLocal)
         {
             poseState.SetContentCenterLocal(centerLocal);
             if (isMini && !isTransitioning)
                 poseState.ApplyBubblePose(MiniScale);
         }
-
         public void BeginBubblePreview()
         {
             if (!isMini || isTransitioning)
@@ -137,14 +139,13 @@ namespace DigitalLove.Game.Levels
             previewTween?.Kill();
             poseState.BeginPreview();
         }
-
-        public void ApplyBubblePreview(Vector3 worldOffsetFromStart)
+        public void ApplyBubbleDrag(Vector3 worldOffset)
         {
             if (!poseState.IsPreviewActive)
                 return;
 
             previewTween?.Kill();
-            poseState.ApplyPreview(worldOffsetFromStart, MiniScale);
+            poseState.ApplyDrag(worldOffset);
         }
 
         public void CancelBubblePreview()
@@ -192,6 +193,7 @@ namespace DigitalLove.Game.Levels
         private void StartTransition(UniversePose target, bool toMini)
         {
             transition?.Kill();
+            poseState.KillRecenter();
             previewTween?.Kill();
             previewTween = null;
             poseState.EndPreview();
@@ -230,6 +232,7 @@ namespace DigitalLove.Game.Levels
             transition = null;
             previewTween?.Kill();
             previewTween = null;
+            poseState.KillRecenter();
             poseState.EndPreview();
             isTransitioning = false;
             if (wasTransitioning)

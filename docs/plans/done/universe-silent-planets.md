@@ -1,8 +1,8 @@
 # Universe — Silent (Non-Routable) Planets
 
-**Status:** in progress - implementation complete; headset validation and tuning pending.
+**Status:** done - implemented and headset-validated; persistence/restore validation is deferred to a future cross-feature restart pass.
 
-**Related:** [Bubble map drag](universe-transform.md) · [Infinite sector](../backlog/universe/universe-infinite-sector.md) · [Universe galaxies](../backlog/universe/universe-galaxies.md) · [Color scope](../backlog/universe/universe-color-scope.md)
+**Related:** [Bubble map drag](../in-progress/universe-transform.md) · [Infinite sector](../backlog/universe/universe-infinite-sector.md) · [Universe galaxies](../backlog/universe/universe-galaxies.md) · [Color scope](../backlog/universe/universe-color-scope.md)
 
 **Wiring rule:** all visuals and refs stay authored in scene/prefabs. No runtime `AddComponent`, `GetComponent`, or hierarchy creation. Silent planets are instantiated from an authored prefab pool.
 
@@ -18,6 +18,7 @@
 | Visual source | `SilentPlanet.prefab`, derived from `Body.prefab` with Outline, ScalePunch, and colliders removed. |
 | Placement | Radius-aware spacing; occupied by `MrukRoomLocalPlacement` so later gameplay planets avoid silent planets. |
 | Bubble claim | Silent planets improve Bubble legibility, but Bubble is still a room-scaled copy until Infinite Sector's view window. |
+| Vertical distribution | Silent planets only. Positions are uniform through the allowed room volume; gameplay and Bubble pan stay planar. |
 
 ## 2. Goal
 
@@ -35,6 +36,7 @@ Add **silent planets**: ambient planets that never generate letters, are not rou
 - Smaller, quieter visuals that do not read as interactable.
 - Authored prefab pooling/reuse of the existing planet visual.
 - Soft count budget, radius-aware spacing, and player-area clearance.
+- Volumetric silent distribution through the room's allowed height.
 
 ### Non-goals
 
@@ -59,16 +61,17 @@ Silent planet   = seeded position + visual variant, no gameplay data
 ## 5. Placement
 
 - **Anchor:** first active hub; fallback `MrukRoomLocalPlacement.RoomCenterLocalPosition`.
-- **Distribution:** 3 soft clusters on a ring around the anchor, plus jitter.
+- **Distribution:** 4 soft XZ clusters on a small ring around the anchor, with each planet taking a random Y through the room's allowed height (`TryGetHeightRange`, `verticalMargin = 0 m`). This fills the volume instead of creating stacked layers.
 - **Validation:** in-room check, height range, no overlap with gameplay/hub occupants, and radius-aware silent-to-silent spacing.
 - **Anchor clearance:** silent planets stay outside the hub/player area (`anchorClearance + radius`).
 - **Occupancy:** silent planets register in `MrukRoomLocalPlacement` with `isProximityTarget = false`, so they block overlap but do not change gameplay proximity checks.
-- **Count:** `silentPlanetCount = 24`, soft cap `40`.
+- **Count:** `silentPlanetCount = 36`, soft cap `48`; placement retries up to 64 times per planet to fill the cubic volume.
 - **Generated once per level:** `SpawnIfNeeded(seed)`; `HideAll`/`ResetPool` clears and re-enables generation.
 
 ## 6. Visual treatment
 
 - Smaller than gameplay planets (`0.08-0.14 m` radius).
+- Spread through the room volume so the Bubble reads as a 3D cluster rather than a flat ring.
 - No letter panel, selection outline, destination ray, or route slot.
 - `SilentPlanet.prefab` keeps `NodeBody` and `ConstantRotation`, removes `Outline`, `ScalePunch`, and colliders.
 - No tint in v1; per-cluster tint is optional later.
@@ -87,7 +90,8 @@ Silent planet   = seeded position + visual variant, no gameplay data
 
 | Type | Responsibility | Change |
 |---|---|---|
-| `SilentPlanetsSpawner` | Seed, placement, pool, count budget, room visibility | New (`DigitalLove.Game.Levels`) |
+| `SilentPlanetsSpawner` | Seed, placement, pool, count budget, room visibility | New (`DigitalLove.Game.SilentPlanets`) |
+| `SilentPlanetLayout` | Layered cluster centers across the room's Y range | New (`DigitalLove.Game.SilentPlanets`) |
 | `SilentPlanetBehaviour` | Visual variant, no gameplay state, visibility | New (`DigitalLove.Game.Nodes`) |
 | `SeededRandom` | Deterministic PRNG for placement and variants | New (`DigitalLove.Global`) |
 | `SilentPlanet.prefab` | Stripped visual prefab | New |
@@ -126,31 +130,37 @@ Silent planet   = seeded position + visual variant, no gameplay data
 - Bubble: show all.
 - Transition events keep visibility in sync.
 
-### S5 — Validation (pending)
+### S5 — Base validation (done)
 
-- Silent planets never generate letters or appear in routes.
-- No snapshot growth beyond the seed.
-- No overlap/clutter; performance within budget.
-- Bubble looks populated; Room stays readable.
-- Seed restore reproduces the same layout after app restart.
+- Headset pass: spawn/placement, non-interactive visuals, gameplay regression, next-round occupancy, Room/Bubble culling, and comfort/performance passed.
+- Persistence/restart validation is deferred to a future cross-feature restore/restart pass.
+
+### S6 — Volumetric distribution (done)
+
+- XZ clusters plus a random Y per planet fill the allowed room volume.
+- `verticalMargin = 0` lets the field reach the floor/ceiling limits without changing gameplay placement.
+- Gameplay planets are protected by occupancy checks and the spherical anchor clearance.
+- Gameplay planets and Bubble pan remain planar.
+- Persistence/restart validation remains deferred with the base feature.
 
 ## 10. Defaults
 
 | Parameter | Default |
 |---|---|
-| `planetCount` | `24` |
-| `planetCap` | `40` |
-| `clusterCount` | `3` |
-| `clusterRadius` | `1.2 m` |
-| `clusterRingRadius` | `1.0 m` |
-| `clusterRingJitter` | `0.5 m` |
-| `minSeparation` | `0.25 m` |
-| `spacingMultiplier` | `1.25` |
-| `anchorClearance` | `0.6 m` |
+| `planetCount` | `36` |
+| `planetCap` | `48` |
+| `clusterCount` | `4` |
+| `clusterRadius` | `0.7 m` |
+| `clusterRingRadius` | `0.35 m` |
+| `clusterRingJitter` | `0.25 m` |
+| `minSeparation` | `0.22 m` |
+| `spacingMultiplier` | `1.15` |
+| `anchorClearance` | `0.3 m` |
 | `minRadius` | `0.08 m` |
 | `maxRadius` | `0.14 m` |
-| `verticalJitter` | `0.35 m` |
-| `placementAttempts` | `32` |
+| `verticalMargin` | `0 m` |
+| Y distribution | Uniform through the room's allowed height |
+| `placementAttempts` | `64` |
 | `roomVisibleRadius` | `3 m` |
 
 ## 11. Risks
@@ -160,8 +170,9 @@ Silent planet   = seeded position + visual variant, no gameplay data
 | Clutter hides gameplay planets | Small radii, spacing, 3 m Room culling. |
 | Players try to route to them | No collider/Rigidbody/`PlanetBehaviour`, no outline, quieter look. |
 | Snapshot bloat | Only one seed is saved; positions regenerate. |
-| Performance | 24-40 simple visual planets, no stores/UI/colliders; measure draw calls. |
-| Player occlusion | Anchor clearance and in-room placement; validate in headset. |
+| Performance | 36-48 simple visual planets, no stores/UI/colliders; measure draw calls. |
+| Player occlusion | Spherical anchor clearance, in-room placement, and gameplay occupancy checks; validate in headset. |
+| Vertical spread crowds floor/ceiling | Cluster Y uses the room's allowed range with radius margins; validate in short rooms. |
 | Room culling pops at 3 m | Accepted for v1; fade needs transparent materials or a future scope shader. |
 | Bubble still feels redundant | Silent planets improve legibility, but a wider universe needs Infinite Sector. |
 | Generation changes invalidate old layouts | Seed-only restore; bump/document generation if placement rules change. |

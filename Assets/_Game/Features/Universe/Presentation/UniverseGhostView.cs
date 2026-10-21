@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DigitalLove.Game.Levels
+namespace DigitalLove.Game.Universe
 {
     public class UniverseGhostView : MonoBehaviour
     {

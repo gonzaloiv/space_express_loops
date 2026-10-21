@@ -7,7 +7,6 @@ Plans are grouped by state. Move a plan between folders when its state changes.
 | Plan | State | Notes |
 |---|---|---|
 | [Bubble map drag](in-progress/universe-transform.md) | In progress | One-hand map drag, route gate, soft bounds, center marker; validation and recenter pending. |
-| [Silent planets](in-progress/universe-silent-planets.md) | In progress | Seeded non-routable scenery, occupancy-aware placement, Room culling; headset validation pending. |
 
 ## Backlog
 
@@ -24,6 +23,12 @@ Plans are grouped by state. Move a plan between folders when its state changes.
 | Plan | State | Notes |
 |---|---|---|
 | [Planet route drawing](backlog/gameplay/planet-route-drawing.md) | Backlog | Design only; planet-to-planet drawn loops, round-granted ships, optional pencil. |
+
+### Architecture
+
+| Plan | State | Notes |
+|---|---|---|
+| [Reusable modes + Universe migration](backlog/architecture/modes-reusable-and-universe.md) | Backlog | Add `ModeController<T>` in `_Modules/FlowControl`, then replace Universe `isMini`/`isTransitioning` with one mode source of truth. |
 
 ### Presentation and companion
 

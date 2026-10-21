@@ -1,7 +1,7 @@
 using DigitalLove.Game.Spaceships;
 using UnityEngine;
 
-namespace DigitalLove.Game.Levels
+namespace DigitalLove.Game.Universe
 {
     public class UniverseGhostController : MonoBehaviour
     {
@@ -19,10 +19,10 @@ namespace DigitalLove.Game.Levels
 
         [Header("Bubble transform")]
         [SerializeField] private float translationGain = 1f;
-        [SerializeField] private float translationDeadZone = 0.01f;
         [SerializeField] private float settleDistance = 0.01f;
         [SerializeField] private float translationSmoothSecs = 0.08f;
         [SerializeField] private float dragStartJumpLimit = 0.12f;
+        [SerializeField] private float minDragDistance = 0.03f;
         [SerializeField] private float recenterDistance = 0.05f;
         [SerializeField] private float recenterHoldSecs = 0.35f;
         [SerializeField] private float viewChangeCooldownSecs = 0.35f;
@@ -31,6 +31,7 @@ namespace DigitalLove.Game.Levels
         private bool sessionActive;
         private SessionMode sessionMode;
         private bool suppressUntilRelease;
+        private bool dragLeft;
         private float cooldownUntil;
         private BubbleMapTransformSession bubbleTransform;
         private BubbleScaleSession bubbleScale;
@@ -39,10 +40,10 @@ namespace DigitalLove.Game.Levels
         {
             bubbleTransform = new BubbleMapTransformSession(
                 translationGain,
-                translationDeadZone,
                 settleDistance,
                 translationSmoothSecs,
-                dragStartJumpLimit);
+                dragStartJumpLimit,
+                minDragDistance);
             bubbleScale = new BubbleScaleSession(
                 scaleGain,
                 enterRoomScale,
@@ -61,7 +62,6 @@ namespace DigitalLove.Game.Levels
             ghostView.Hide();
             cooldownUntil = Time.unscaledTime + viewChangeCooldownSecs;
         }
-
         private void Update()
         {
             if (universeView.IsTransitioning)
@@ -69,7 +69,6 @@ namespace DigitalLove.Game.Levels
                 ghostView.Hide();
                 return;
             }
-
             universeView.SetMapGestureBlocked(spaceshipsSpawner.IsAnyRouteEditing());
             if (spaceshipsSpawner.IsAnyRouteEditing())
             {
@@ -78,28 +77,21 @@ namespace DigitalLove.Game.Levels
                 ghostView.Hide();
                 return;
             }
-
             if (Time.unscaledTime < cooldownUntil)
             {
                 ghostView.Hide();
                 return;
             }
-
             if (UpdateSuppression())
                 return;
-
             universeView.SetMapGestureActive(gestureInput.IsAnyPinching && !universeView.IsMapGestureBlocked);
             if (!sessionActive)
                 universeView.SetScaleFeedback(0f);
-
-            UpdateFeedback();
-
+            UniverseGhostFeedback.Update(ghostView, gestureInput);
             if (UpdateActiveSession())
                 return;
-
             TryStartSession();
         }
-
         private bool UpdateSuppression()
         {
             if (!suppressUntilRelease)
@@ -110,7 +102,6 @@ namespace DigitalLove.Game.Levels
                 suppressUntilRelease = false;
             return true;
         }
-
         private bool UpdateActiveSession()
         {
             if (!sessionActive)
@@ -122,11 +113,32 @@ namespace DigitalLove.Game.Levels
                 return true;
             }
 
-            if (sessionMode == SessionMode.Drag && (gestureInput.IsActive || !gestureInput.IsSingleHandPinching))
+            if (sessionMode == SessionMode.Drag && gestureInput.IsActive)
             {
-                EndSession();
-                suppressUntilRelease = true;
-                return true;
+                UpgradeToScale();
+            }
+            else if (sessionMode == SessionMode.Drag)
+            {
+                bool activeHandPinching = dragLeft
+                    ? gestureInput.IsLeftPinching
+                    : gestureInput.IsRightPinching;
+
+                if (!activeHandPinching)
+                {
+                    bool otherHandPinching = dragLeft
+                        ? gestureInput.IsRightPinching
+                        : gestureInput.IsLeftPinching;
+
+                    if (!otherHandPinching)
+                    {
+                        EndSession();
+                        suppressUntilRelease = true;
+                        return true;
+                    }
+
+                    dragLeft = !dragLeft;
+                    bubbleTransform.Rebase(GetDragPoint());
+                }
             }
 
             UpdateSessionState();
@@ -148,9 +160,8 @@ namespace DigitalLove.Game.Levels
                 return;
             }
 
-            bool insideBubble = Vector3.Distance(gestureInput.DragPoint, universeView.CenterWorld)
-                <= universeView.BubbleRadiusWorld * 0.5f;
-            if (universeView.IsMini && gestureInput.IsSingleHandPinching && insideBubble)
+            if (universeView.IsMini && gestureInput.IsSingleHandPinching
+                && Vector3.Distance(gestureInput.DragStartPoint, universeView.CenterWorld) <= universeView.BubbleRadiusWorld * 0.3f)
                 StartSession(SessionMode.Drag, 0f);
         }
 
@@ -158,17 +169,27 @@ namespace DigitalLove.Game.Levels
         {
             sessionActive = true;
             sessionMode = mode;
+            dragLeft = gestureInput.IsLeftPinching;
             spaceshipsSpawner.SetViewTransition(true);
-            bubbleTransform.Begin(universeView, gestureInput.DragPoint);
+            bubbleTransform.Begin(universeView, GetDragPoint());
             if (mode == SessionMode.Scale)
                 bubbleScale.Begin(universeView.Scale, handDistance);
         }
+
+        private void UpgradeToScale()
+        {
+            sessionMode = SessionMode.Scale;
+            bubbleScale.Begin(universeView.Scale, gestureInput.HandDistance);
+        }
+
+        private Vector3 GetDragPoint() =>
+            dragLeft ? gestureInput.LeftPinchPoint : gestureInput.RightPinchPoint;
 
         private void UpdateSessionState()
         {
             if (sessionMode == SessionMode.Drag)
             {
-                bubbleTransform.Update(universeView, gestureInput.DragPoint);
+                bubbleTransform.Update(universeView, GetDragPoint());
                 return;
             }
 
@@ -185,31 +206,13 @@ namespace DigitalLove.Game.Levels
                 Commit(true);
         }
 
-        private void UpdateFeedback()
-        {
-            bool leftPinching = gestureInput.IsLeftPinching;
-            bool rightPinching = gestureInput.IsRightPinching;
-
-            if (!leftPinching && !rightPinching)
-            {
-                ghostView.Hide();
-                return;
-            }
-
-            ghostView.Show(
-                gestureInput.LeftPinchPoint,
-                gestureInput.RightPinchPoint,
-                leftPinching,
-                rightPinching,
-                gestureInput.HandDistanceSpeed);
-        }
-
         private void RecenterBubble()
         {
             EndSession();
             universeView.ResetBubbleMap();
             universeView.SetScaleFeedback(0f);
             suppressUntilRelease = true;
+            cooldownUntil = Time.unscaledTime + Mathf.Max(viewChangeCooldownSecs, 0.45f);
         }
 
         private void Commit(bool toBubble)

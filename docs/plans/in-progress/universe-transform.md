@@ -23,20 +23,20 @@ The center is captured **when entering Bubble** (initial spawn or Room → Bubbl
 | Initial view | **Bubble**, centered in front of the camera |
 | First view to transform | **Bubble only** |
 | Room | Bubble-view-center reference at transition time; no direct Room editing |
-| Center point | Captured when entering Bubble; fixed for the visit. Dragging changes the content point shown there, not the center |
+| Center point | Captured when entering Bubble and kept fixed; the map content moves inside it |
 | Center source | Seeded from the spawned hubs/planets (content centroid), not room bounds |
-| Room reference point | The same center point, unchanged, at transition time |
+| Room reference point | The fixed Bubble center, so Room moves/centers on it |
 | Offset mapping | Bubble offset stored content-local, so the same planets stay in front after scaling |
 | Translation axes | XZ only; Y fixed |
-| Settle | Release commits; tiny movements below the dead zone revert |
-| Drag | One-hand pinch **inside the bubble circle** drags the map; a second pinch ends the drag (scale needs a clean two-hand start) |
+| Settle | Release commits; a tiny total movement (`settleDistance`) reverts |
+| Drag | One-hand pinch **inside the bubble circle** drags the map; adding the second pinch upgrades to scale and freezes translation |
 | Scale | Two-hand pinch after `dwellSecs = 0.12`; no rotation |
 | Route editing | Room only. Bubble disables ship grab/route editing and blocks map drag/scale while any selection is active |
 | Recenter | In Scale mode only, close both hands below `recenterDistance` and hold `recenterHoldSecs` in Bubble |
 | View cooldown | Ignore gestures for `viewChangeCooldownSecs` after a Room/Bubble transition (and at start) |
-| Drag/scale separation | One-hand drag and two-hand scale never mix; adding a second pinch ends the drag |
+| Drag/scale separation | Adding a second pinch stops translation and starts scaling; no mixed updates |
 | Drag start | First movement is latched; a large tracking jump rebases instead of moving the map |
-| Bubble edits on Room transition | Persisted through the content-local offset; the center stays fixed |
+| Bubble edits on Room transition | Persisted through the content-local offset; Bubble re-entry resets to the canonical pose so the center and content stay aligned |
 | Save data | `bubbleOffsetLocal` + `bubbleYaw` stored in `GameSnapshot`; restored after the room anchor loads |
 
 Bubble-only is the smaller first version:
@@ -65,26 +65,27 @@ On gesture activation in Bubble:
 
 ```text
 startPose     = universeView.CurrentPose
-startMidpoint = gestureInput.Midpoint
+startPoint = gestureInput.DragStartPoint
 ```
 
 Reject when the hand separation is below `minHandSeparation`.
 
 ### 4.2 Translation (one-hand drag)
 
-One hand pinches empty space and drags like a maps app. A second pinch ends the drag instead of mixing translation with scale; scale starts only from a clean two-hand pinch.
+One hand pinches empty space and drags like a maps app. Adding the second pinch freezes translation and starts scale around the same fixed center.
 
 ```text
-deltaMid   = currentMidpoint - startMidpoint
-target     = softDeadZone(deltaMid * translationGain, translationDeadZone)
-target     = ClampXZ(target, BubbleRadiusWorld * 0.5)
+delta      = currentDragPoint - pinchStartPoint
+offset     = pinchStartOffset + delta * translationGain
+offset     = ClampXZ(offset, BubbleRadiusWorld * 0.3)
 smoothed   = SmoothDamp(smoothed, target, translationSmoothSecs, dt)
 D.position = startBubble.position + smoothed
 ```
 
 - `translationGain = 1.0` for direct map-style dragging;
-- soft dead zone removes tiny jitter without a jump when crossing the threshold;
-- drag limit is `BubbleRadiusWorld * 0.4`, just inside the ring; near it the drag rubber-bands;
+- translation is measured from the pinch-start hand position and the offset of the universe at that moment, so switching hands or adding a second hand cannot jump;
+- the drag keeps the original hand as its point; the second hand only starts scale;
+- drag limit is `BubbleRadiusWorld * 0.3`, inside the ring; near it the drag rubber-bands;
 - `translationSmoothSecs` defaults to `0.08` (lower = snappier, higher = smoother);
 - Y is fixed to the canonical bubble height.
 
@@ -104,22 +105,22 @@ ghostScale = clamp(startScale * pow(handDistance / startHandDistance, scaleGain)
 ```
 
 - in Bubble, spreading both hands to `enterRoomScale` commits to Room;
-- the Bubble offset is converted to content-local space and applied to the Room pose;
-- Room captures the bubble's view-center XZ at commit time, so the same planets stay in front after scaling;
-- going back to Bubble uses the same content-local offset, so the map does not reset.
+- the Bubble offset stays inside the fixed Bubble center;
+- Room uses the same fixed center and focus, so scaling up moves the room view around it;
+- the Bubble offset is converted to content-local space and remains saved for reload;
+- going back to Bubble resets the offset and yaw to the canonical camera-front pose so the center and content stay aligned.
 
 The first version keeps the center fixed and does not clamp the Room pose to the room bounds; clamping is a later refinement if content leaves the room.
 
 ### 4.5 Room reference and mapping (decided)
 
-The center is one **fixed world point**: the center of the player's view where the Bubble was before translation (`frontAnchor`). It does not move when the map is dragged.
+The Bubble center is a **fixed world point** captured at Bubble entry. It does not move while dragging or scaling. On entry the Bubble yaw comes from the camera, so the map faces the player. Room scaling reads the **actual current Bubble rotation** and the same center/focus, so a hub on the bubble’s right stays on that same world right in Room.
 
 ```text
-centerLocal       = contentCenter + offsetLocal       // content point shown at the view center
-bubblePosition    = frontAnchor - bubbleYaw * (miniScale * centerLocal)
-centerWorld       = captured frontAnchor when entering Bubble (stored; not recomputed per frame)
-roomCenter        = centerWorld
-roomPosition      = roomCenter - bubbleYaw * centerLocal
+centerLocal    = contentCenter + offsetLocal       // content point shown at the Bubble center
+bubblePosition = frontAnchor - bubbleYaw * (miniScale * centerLocal)
+centerWorld    = captured frontAnchor when entering Bubble
+roomPosition   = centerWorld - currentBubbleYaw * centerLocal
 ```
 
 Dragging changes `offsetLocal` (which content point sits at the fixed center), not the center itself. Scaling to Room puts that same `centerLocal` at the Room center, so the planets center on the fixed point.
@@ -131,7 +132,7 @@ Consequences:
 - the content point at the center in Bubble is the content point at the center in Room;
 - a planet in front of the bubble view stays in front after scaling to Room;
 - small Bubble drags become large Room moves (`1 / miniScale`); clamping is deferred so the center never jumps;
-- `offsetLocal` persists across Room ↔ Bubble and is saved in `GameSnapshot`; it resets in `SetRoomAnchor` (new room/round) and is restored from the snapshot after the anchor loads;
+- `offsetLocal` is saved in `GameSnapshot`; it resets on Bubble entry, in `SetRoomAnchor` (new room/round), and is restored from the snapshot after the anchor loads;
 - the color-scope sphere uses the same `centerWorld`, so the visual focus and the scale target agree.
 
 **Infinite-sector coordination:** once the universe streams beyond the room (see
@@ -151,7 +152,7 @@ remote exploration focus into the room.
 ### 4.7 Release
 
 - Release commits the current Bubble pose.
-- Scaling under `recenterDistance` for `recenterHoldSecs` resets the map center.
+- Scaling under `recenterDistance` for `recenterHoldSecs` tweens the map back inside the fixed center over `transitionSecs`; there is no jump/revert tween.
 - One guard: restore `startBubble` only when combined movement (`translation + 0.001 m/degree`) is under `settleDistance`; otherwise commit.
 - Routes resume after the session.
 
@@ -174,7 +175,7 @@ No new GameObjects; no state-machine change.
 
 Expose read-only values from the pinch points:
 
-- `Vector3 Midpoint`;
+- `Vector3 DragPoint` / `DragStartPoint`;
 - `Vector2 HandAxisXZ` normalized;
 - `bool HasValidAxis` (separation above `minHandSeparation`).
 
@@ -182,11 +183,11 @@ The input component stays policy-free.
 
 ### Step 3 — Bubble session in `UniverseGhostController` (done)
 
-- Start a drag session only when the one-hand pinch starts inside the bubble circle; a second pinch ends the drag. Start scale only from a clean two-hand pinch (`dwellSecs`).
+- Start a drag session only when the one-hand pinch starts inside the bubble circle; the drag keeps that hand even after the second pinch, which upgrades to scale (`dwellSecs`) without translating.
 - Capture the fixed `CenterWorld` on Bubble entry; do not redefine it while in Room.
 - While active:
   - in Drag mode, apply one-hand midpoint drag via `ApplyBubblePreview` (focus moves around the fixed center);
-  - damp translation with a soft dead zone;
+  - accumulate per-frame deltas and damp the result;
   - keep computing scale as today.
 - On scale commit to Room: commit the focus, then transition around the same center.
 - On release: commit or restore based on the settle thresholds; resume routes.
@@ -202,7 +203,7 @@ The input component stays policy-free.
 ### Step 5 — Feedback (done)
 
 - Authored pinch rings and hand line are reused.
-- The authored `UniverseCenterMarker` is a horizontal ring at the fixed center with radius `BubbleRadiusWorld * ringRadiusFactor` (`0.5` default). It turns orange when route editing blocks gestures, cyan while a map drag is active, and blends toward green as scale approaches a commit threshold. Colors are applied through a material property block so the URP line shader picks them up; `heightOffset` aligns the ring with the planet plane.
+- The authored `UniverseCenterMarker` is a horizontal ring at the fixed center, Bubble only, with radius `BubbleRadiusWorld * ringRadiusFactor` (`0.4` default). It turns orange when route editing blocks gestures, cyan while a map drag is active, and blends toward green as scale approaches a commit threshold. Colors are applied through a material property block so the URP line shader picks them up; `heightOffset` aligns the ring with the planet plane.
 - The hand line thickens with hand-distance speed (`lineMaxMultiplier`, `lineTensionSpeed`).
 - No midpoint pivot marker or boundary sphere in this version.
 - No runtime-created visuals.
@@ -213,6 +214,8 @@ The input component stays policy-free.
 - Closing both hands below `recenterDistance` and holding resets the map to the fixed center.
 - Ship grab/route editing is disabled in Bubble and re-enabled in Room.
 - Gestures are ignored for `viewChangeCooldownSecs` after a view change or at start.
+- A two-hand scale never moves the Bubble center; Room centers on that same fixed point.
+- Bubble yaw is captured from the camera on entry; Room reuses that yaw, so left/right/front stay consistent between Bubble and Room.
 - Releasing commits; tiny movement restores the canonical Bubble pose.
 - The center marker stays fixed while dragging and is the center after scaling to Room.
 - Scale still commits Bubble → Room at the threshold; the transition opens around the center.
@@ -227,7 +230,7 @@ The input component stays policy-free.
 | Type | Responsibility | Change |
 |---|---|---|
 | `UniverseView` | Bubble pose, transitions, preview API | Extend |
-| `TwoHandGestureInput` | Midpoint and XZ hand axis | Extend |
+| `TwoHandGestureInput` | Drag point, start point, hand pinch state | Extend |
 | `UniverseGhostController` | Bubble session, drag mapping, settle | Extend |
 | `UniverseGhostView` | Rings, line, optional pivot marker | Extend only if needed |
 | `SpaceshipsSpawner` | Route pause/resume and station refresh | Existing API |
@@ -241,18 +244,19 @@ No planet/hub handles, no boundary ghost, no runtime-created visuals.
 | Parameter | Default |
 |---|---|
 | `translationGain` | `1.0` |
-| `translationDeadZone` | `0.01 m` |
 | `minHandSeparation` | `0.06 m` |
 | `dwellSecs` | `0.12 s` before two-hand scale activates |
 | `settleDistance` | `0.01 m` |
 | `lineMaxMultiplier` | `2.5` |
 | `lineTensionSpeed` | `0.6 m/s` |
-| `bubbleMoveLimit` | ring radius (`BubbleRadiusWorld * 0.5`) |
+| `bubbleMoveLimit` | `BubbleRadiusWorld * 0.3` |
 | `translationSmoothSecs` | `0.08 s` (scene uses `0.1`) |
 | `dragStartJumpLimit` | `0.12 m` |
+| `minDragDistance` | `0.03 m` before translation starts |
 | `recenterDistance` | `0.05 m` (pinch rings touch) |
 | `recenterHoldSecs` | `0.35 s` |
 | `viewChangeCooldownSecs` | `0.35 s` |
+| `minDragDistance` | `0.03 m` before drag starts |
 | `transitionSecs` | `0.45 s` |
 | `roomLinkRadius` | `5 m` around the central galaxy |
 | `scaleGain` | `2.5` |
@@ -263,7 +267,7 @@ No planet/hub handles, no boundary ghost, no runtime-created visuals.
 
 | Risk | Mitigation |
 |---|---|
-| Drag and scale fight each other | Use midpoint for drag and distance for scale; both are independent. |
+| Drag and scale fight each other | Second pinch freezes translation; only hand distance drives scale. |
 | Bubble pushed out of reach | Clamp to the ring radius; recenter resets it. |
 | Disorientation | No in-gesture rotation; keep the map at chest height and let head movement change the view. |
 | Far Bubble focus mapped into Room | Limit the mapping to `roomLinkRadius`; farther commits return to the central hub. |
@@ -275,10 +279,10 @@ No planet/hub handles, no boundary ghost, no runtime-created visuals.
 
 None. Decided for this version:
 
-- Room reference: the fixed player-view center (`CenterWorld`) at transition time, not the camera.
+- Room reference: the fixed Bubble center, so Room moves around it.
 - Mapping: content-local, so the planet arrangement stays in front of the camera.
 - Reference point: captured once per transition.
-- Persistence: content-local offset saved in `GameSnapshot`, reset by `SetRoomAnchor`, restored after the anchor loads. Yaw is stored for compatibility but not edited.
+- Persistence: content-local offset saved in `GameSnapshot`, reset by `SetRoomAnchor`/Bubble entry, restored after the anchor loads. Yaw is stored for compatibility but not edited.
 
 Future options:
 

@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using DigitalLove.Game.Nodes;
+using DigitalLove.Game.Universe;
 using DigitalLove.Global;
 using UnityEngine;
 
-namespace DigitalLove.Game.Levels
+namespace DigitalLove.Game.SilentPlanets
 {
     public class SilentPlanetsSpawner : MonoBehaviour
     {
@@ -14,19 +15,19 @@ namespace DigitalLove.Game.Levels
         [SerializeField] private SilentPlanetBehaviour prototype;
 
         [Header("Budget")]
-        [SerializeField, Min(0)] private int planetCount = 24;
-        [SerializeField, Min(0)] private int planetCap = 40;
-        [SerializeField, Min(1)] private int clusterCount = 3;
-        [SerializeField, Min(0f)] private float clusterRadius = 1.2f;
-        [SerializeField, Min(0f)] private float clusterRingRadius = 1f;
-        [SerializeField, Min(0f)] private float clusterRingJitter = 0.5f;
-        [SerializeField, Min(0f)] private float minSeparation = 0.25f;
-        [SerializeField, Min(0f)] private float spacingMultiplier = 1.25f;
-        [SerializeField, Min(0f)] private float anchorClearance = 0.6f;
+        [SerializeField, Min(0)] private int planetCount = 36;
+        [SerializeField, Min(0)] private int planetCap = 48;
+        [SerializeField, Min(1)] private int clusterCount = 4;
+        [SerializeField, Min(0f)] private float clusterRadius = 0.7f;
+        [SerializeField, Min(0f)] private float clusterRingRadius = 0.35f;
+        [SerializeField, Min(0f)] private float clusterRingJitter = 0.25f;
+        [SerializeField, Min(0f)] private float verticalMargin;
+        [SerializeField, Min(0f)] private float minSeparation = 0.22f;
+        [SerializeField, Min(0f)] private float spacingMultiplier = 1.15f;
+        [SerializeField, Min(0f)] private float anchorClearance = 0.3f;
         [SerializeField, Min(0f)] private float minRadius = 0.08f;
         [SerializeField, Min(0f)] private float maxRadius = 0.14f;
-        [SerializeField, Min(0f)] private float verticalJitter = 0.35f;
-        [SerializeField, Min(1)] private int placementAttempts = 32;
+        [SerializeField, Min(1)] private int placementAttempts = 64;
 
         [Header("Room view")]
         [SerializeField, Min(0f)] private float roomVisibleRadius = 3f;
@@ -53,10 +54,18 @@ namespace DigitalLove.Game.Levels
             hasSpawned = true;
             SeededRandom random = new(seed);
             Vector3 anchorLocal = GetAnchorLocal();
+            roomPlacement.TryGetHeightRange(maxRadius, verticalMargin, out float lowestY, out float highestY);
             int count = Mathf.Clamp(planetCount, 0, Mathf.Max(0, planetCap));
-            Vector3[] centers = BuildClusterCenters(random, anchorLocal, count);
+            SilentPlanetLayout layout = new(
+                random,
+                anchorLocal,
+                lowestY,
+                highestY,
+                clusterRingRadius,
+                clusterRingJitter);
+            Vector3[] centers = layout.BuildClusterCenters(count, clusterCount);
             for (int i = 0; i < count; i++)
-                TrySpawnPlanet(random, centers[i % centers.Length], anchorLocal);
+                TrySpawnPlanet(random, centers[i % centers.Length], anchorLocal, layout);
         }
 
         private void SetBubbleView(bool bubble)
@@ -98,13 +107,17 @@ namespace DigitalLove.Game.Levels
             }
         }
 
-        private void TrySpawnPlanet(SeededRandom random, Vector3 center, Vector3 anchorLocal)
+        private void TrySpawnPlanet(
+            SeededRandom random,
+            Vector3 center,
+            Vector3 anchorLocal,
+            SilentPlanetLayout layout)
         {
             for (int i = 0; i < placementAttempts; i++)
             {
                 float radius = random.Range(minRadius, maxRadius);
                 Vector3 candidate = center + random.InsideCircleXZ(clusterRadius);
-                candidate.y = anchorLocal.y + random.Range(-verticalJitter, verticalJitter);
+                candidate.y = layout.NextY();
                 if (!IsAcceptable(candidate, radius, anchorLocal))
                     continue;
 
@@ -117,10 +130,8 @@ namespace DigitalLove.Game.Levels
 
         private bool IsAcceptable(Vector3 candidate, float radius, Vector3 anchorLocal)
         {
-            Vector3 flat = candidate - anchorLocal;
-            flat.y = 0f;
             float clearance = anchorClearance + radius;
-            if (flat.sqrMagnitude < clearance * clearance)
+            if ((candidate - anchorLocal).sqrMagnitude < clearance * clearance)
                 return false;
 
             if (!roomPlacement.IsValidLocalPosition(candidate, radius))
@@ -138,26 +149,6 @@ namespace DigitalLove.Game.Levels
             }
 
             return true;
-        }
-
-        private Vector3[] BuildClusterCenters(SeededRandom random, Vector3 anchorLocal, int count)
-        {
-            if (count <= 0)
-                return System.Array.Empty<Vector3>();
-
-            int centerCount = Mathf.Clamp(clusterCount, 1, Mathf.Max(1, count));
-            Vector3[] centers = new Vector3[centerCount];
-            for (int i = 0; i < centerCount; i++)
-            {
-                float angle = (Mathf.PI * 2f * i / centerCount) + random.Range(-0.35f, 0.35f);
-                float distance = clusterRingRadius + random.Range(0f, clusterRingJitter);
-                centers[i] = anchorLocal + new Vector3(
-                    Mathf.Cos(angle) * distance,
-                    0f,
-                    Mathf.Sin(angle) * distance);
-            }
-
-            return centers;
         }
 
         private Vector3 GetAnchorLocal()

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using DigitalLove.Game.Nodes;
 using UnityEngine;
 
-namespace DigitalLove.Game.Levels
+namespace DigitalLove.Game.Universe
 {
     public static class LevelContentCenter
     {

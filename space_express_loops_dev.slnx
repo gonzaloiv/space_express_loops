@@ -7,7 +7,6 @@
   <Project Path="DigitalLove.Game.Spaceships.csproj" />
   <Project Path="DigitalLove.Interactables.OculusInteraction.csproj" />
   <Project Path="DigitalLove.Game.DebugActions.csproj" />
-  <Project Path="DigitalLove.Game.Levels.csproj" />
   <Project Path="MegaFiers.Editor.csproj" />
   <Project Path="DigitalLove.UI.DesignSystem.Localization.csproj" />
   <Project Path="DigitalLove.XR.Core.csproj" />
@@ -15,6 +14,7 @@
   <Project Path="Vendor.GameAnalytics.Editor.csproj" />
   <Project Path="DigitalLove.Global.csproj" />
   <Project Path="DigitalLove.DataAccess.Remote.csproj" />
+  <Project Path="DigitalLove.Game.Levels.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.csproj" />
   <Project Path="DigitalLove.Game.States.Setup.csproj" />
   <Project Path="Vendor.GameAnalytics.csproj" />
@@ -35,6 +35,7 @@
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.Hands.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Vendor.UnityGif.csproj" />
+  <Project Path="DigitalLove.Game.SilentPlanets.csproj" />
   <Project Path="DigitalLove.Analytics.csproj" />
   <Project Path="DigitalLove.VFX.Materials.Editor.csproj" />
   <Project Path="DigitalLove.XR.OVR.csproj" />
@@ -45,6 +46,7 @@
   <Project Path="DigitalLove.Casual.Analytics.csproj" />
   <Project Path="DigitalLove.Timeline.csproj" />
   <Project Path="DigitalLove.HomeMenu.csproj" />
+  <Project Path="DigitalLove.Game.Universe.csproj" />
   <Project Path="DigitalLove.FlowControl.Samples.csproj" />
   <Project Path="DigitalLove.Casual.Levels.csproj" />
   <Project Path="DigitalLove.Theming.csproj" />

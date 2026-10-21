@@ -9,6 +9,8 @@
         "DigitalLove.Global",
         "DigitalLove.XR.MRUK",
         "DigitalLove.Game.Persistence",
+        "DigitalLove.Game.Universe",
+        "DigitalLove.Game.SilentPlanets",
         "Oculus.Interaction"
     ],
     "includePlatforms": [],
