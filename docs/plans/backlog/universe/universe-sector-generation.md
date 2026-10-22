@@ -2,63 +2,65 @@
 
 **Status:** backlog - pure C# generation and extent math; no scene spawning.
 
-**Related:** [Infinite sector hub](universe-infinite-sector.md) · [Sector streaming](universe-sector-streaming.md) · [Bubble window](universe-bubble-window.md)
+**Framing:** [Space shaping](../gameplay/space-shaping-future.md). The seeded system
+layout is what the shaping lattice operates on; a puzzle system may be authored
+(editor-first, or from the puzzle seed) inside its sector.
+
+**Related:** [Sector field hub](universe-infinite-sector.md) · [Bubble window](universe-bubble-window.md)
 
 **Wiring rule:** generation is deterministic C#. No `UnityEngine.Random` in per-frame
 code, no scene iteration, no runtime-created assets.
 
 ## 1. Goal
 
-Provide the deterministic, testable foundation for an effectively infinite universe:
+Provide the deterministic, testable foundation for a bounded, seeded universe:
 
-- the focus/extent model and the floating-origin trigger;
+- the focus/extent model;
 - a sector grid with stable, seed-derived coordinates;
 - galaxy/system shape generation (Ring, Spiral, Cluster) returning local positions,
   radii, and an anchor pose.
 
 Everything here is pure C# and unit-testable without a Unity scene. Scene spawning and
-pooling live in [Sector streaming](universe-sector-streaming.md).
+visibility live in [Bubble window](universe-bubble-window.md): the whole bounded field is
+pre-spawned and out-of-frame content is hidden by the frame cube.
 
 ## 2. Model
 
 ```text
-Universe space (C) = Level local space, periodically rebased
+Universe space (C) = Level local space, fixed
 Focus F            = C point shown at the bubble center
-View window        = sphere of radius viewRadius around F
-UniverseBounds     = soft safety/streaming extent, not room bounds
+View window        = cube of half-size viewRadius around F
+UniverseBounds     = the bounded field extent (a fixed box), not room bounds
 ```
 
-## 3. Extent and floating origin
+## 3. Extent
 
-`UniverseBounds` (authored on the `Level`/`Universe` root) is a soft safety extent, not
-a room bound:
+`UniverseBounds` (authored on the `Level`/`Universe` root) is the bounded extent of the
+generated field:
 
 ```text
-origin               = deterministic universe origin in C
-safetyRadius         = 10 km (optional guard, not a gameplay wall)
-viewRadius           = 2.5 m
-originRebaseDistance = 500 m
+origin      = deterministic universe origin in C
+fieldRadius = the field half-size in C (how far the frame may pan)
+viewRadius  = 2.5 m
 ```
 
 Rules:
 
-- There is no room-centered edge; the focus can move indefinitely in sector space.
-- `safetyRadius` only guards against runaway values/teleport bugs; if hit, recenter to
-  the central hub instead of stopping.
-- When `|F - origin| > originRebaseDistance`, rebase: shift `Level`/content positions
-  and `F` by the same offset, keep sector coordinates unchanged. This keeps world float
-  precision stable across long pans.
-- Panning back over previously visited space regenerates the same content from the seed
-  unless round-activated state changed it.
+- The field is a bounded box around the origin, not infinite and not room-centered.
+- The focus clamps so the frame stays inside `fieldRadius`; the frame simply stops at the
+  edge (no visible boundary wall or edge fade).
+- Because the extent is small, there is no floating-origin rebase: content coordinates
+  stay within float-safe range.
+- Panning back over previously visited space shows the same content unless a puzzle
+  changed it (the field is pre-spawned, not regenerated).
 
 ## 4. Sector grid
 
 ```text
 sectorSize   = 5 m                (>= 2 * maxSystemRadius + gap)
-spawnRadius  = viewRadius + 3 m   (default 5.5 m)
-cullRadius   = viewRadius + 5 m   (default 7.5 m)
+fieldRadius  = bounded; sector count = fieldRadius / sectorSize
 density      = 0.55               (chance a sector contains a system)
-softSystemBudget  = 16            (soft; the pool grows with rounds)
+softSystemBudget  = 16            (soft)
 softPlanetBudget  = 64            (soft; add occlusion/simplification later)
 ```
 
@@ -67,8 +69,9 @@ softPlanetBudget  = 64            (soft; add occlusion/simplification later)
 - Enforce `sectorSize >= 2 * systemRadius + systemGap`, then run a spacing check
   against systems in neighboring sectors. If two systems would overlap, mark the
   sector empty or relocate the new system.
-- The central sector contains the pre-spawned gameplay galaxy and is always loaded.
-- Budgets are soft, not hard caps; the pool grows with the rounds.
+- A puzzle's system is authored (editor-first, or from the puzzle seed) inside its
+  sector; the grid itself only lays out ambient systems.
+- Budgets are soft, not hard caps; they bound the field size and therefore the load time.
 
 ## 5. Galaxy/system shapes
 
@@ -108,14 +111,19 @@ separate sun prefab/shader and no per-sun light.
 pose. It is seeded and testable; no Unity random or scene iteration. All shapes keep
 planets outside the anchor radius and enforce minimum separation.
 
+The same generator supplies a puzzle's seed layout: the designer may author a puzzle
+system from the seed, or hand-place it, then tune it by moving planets. Shape variety
+(Ring/Spiral/Cluster) matters less once the player reshapes the field, so Ring + jitter
+is the v1 default and the rest can follow.
+
 ## 6. Component map
 
 New:
 
 | Type | Responsibility | Assembly |
 |---|---|---|
-| `UniverseBounds` | Soft safety extent, rebase trigger, sector-grid origin; no gameplay wall. | `DigitalLove.Game.Levels` |
-| `UniverseFocus` | Focus point in C, view radius, bubble pose handoff. | `DigitalLove.Game.Levels` |
+| `UniverseBounds` | Bounded field extent and sector-grid origin; no gameplay wall. | `DigitalLove.Game.Levels` |
+| `UniverseFocus` | Focus point in C, view radius, bubble pose handoff, extent clamp. | `DigitalLove.Game.Levels` |
 | `GalaxyShapeData` | Shape/seed data for a system. | `DigitalLove.Game.Nodes` |
 | `GalaxyShape` | Pure seeded layout generator (positions, radii, anchor). | `DigitalLove.Game.Nodes` |
 
@@ -129,8 +137,8 @@ assembly.
 
 ### G0 — Extent, seed, and shape math
 
-- Add `UniverseBounds` (soft safety extent + rebase trigger), `UniverseFocus`, sector
-  coordinates, deterministic PRNG wiring.
+- Add `UniverseBounds` (bounded field extent), `UniverseFocus`, sector coordinates,
+  deterministic PRNG wiring.
 - Add `GalaxyShapeData` / `GalaxyShape` with Ring, Spiral, Cluster.
 - Add edit-mode tests/preview for shape positions, min separation, and determinism.
 - No scene spawning yet.
@@ -143,8 +151,7 @@ assembly.
    or another planet; same seed -> same layout.
 2. Sector grid: coordinates are stable; the spacing check rejects overlaps; a sector
    fits within `sectorSize`.
-3. Rebase: `|F - origin|` past `originRebaseDistance` produces a shift that keeps
-   sector coordinates unchanged.
+3. Extent: the focus clamps inside `fieldRadius`; the frame stays inside the field.
 4. Determinism: identical inputs produce identical output across runs.
 5. No per-frame allocations and no LINQ in the new code.
 
@@ -152,12 +159,9 @@ assembly.
 
 | Parameter | Default |
 |---|---|
-| `safetyRadius` | `10 km` (guard only, not a wall) |
-| `originRebaseDistance` | `500 m` |
+| `fieldRadius` | bounded; tuned to the desired field size |
 | `viewRadius` | `2.5 m` |
 | `sectorSize` | `5 m` (`>= 2 * maxSystemRadius + gap`) |
-| `spawnRadius` | `5.5 m` |
-| `cullRadius` | `7.5 m` |
 | `sectorDensity` | `0.55` |
 | `softSystemBudget` | `16` |
 | `softPlanetBudget` | `64` |
@@ -171,7 +175,7 @@ assembly.
 
 | Risk | Mitigation |
 |---|---|
-| Float precision over long pans | Rebase at `originRebaseDistance`; sector coordinates stay stable. |
 | Overlapping systems | `sectorSize >= 2 * systemRadius + gap` plus a neighbor spacing check. |
-| Generation changes invalidate saves | Version generation (`generatorVersion`); remap active planets by position. |
+| Generation changes invalidate saves | Version generation (`generatorVersion`); remap puzzle planets by position. |
 | Shape overlap with anchor | Keep planets outside the anchor radius and enforce min separation. |
+| Field too large to pre-spawn | Bound `fieldRadius` and the budgets to the load-time and memory budget; park streaming if the field must grow. |

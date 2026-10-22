@@ -23,10 +23,14 @@ namespace DigitalLove.Game.Universe
         public IModeController<UniverseViewMode> Mode => mode;
         public event Action BubbleTransformCommitted;
         public BubblePlacement BubblePlacement => rig.BuildPlacement();
+        public bool IsBubbleView => Mode.Current == UniverseViewMode.Bubble && !Mode.IsTransitioning;
+        public Vector3 FrameCenterWorld => rig.CenterWorld;
+        public Quaternion FrameRotation => rig.HomeRotation;
+        public float FrameHalfSizeWorld => rig.BubbleRadiusWorld;
         internal UniverseMapFeedback MapFeedback { get; } = new();
         internal BubbleViewState State => new(
             Mode.Current, Mode.IsTransitioning, rig.HasRoomAnchor,
-            new BubbleMetrics(rig.ContentPosition, rig.Scale, rig.MiniScale, rig.BubbleRadiusWorld),
+            new BubbleMetrics(rig.ContentPosition, rig.Scale, rig.MiniScale, rig.BubbleRadiusWorld, rig.HomeRotation),
             rig.CenterWorld);
 
         private void Awake()
@@ -151,7 +155,6 @@ namespace DigitalLove.Game.Universe
             KillAnchorTween();
             isPreviewActive = false;
             ResolveTransitionTarget(target, out Vector3 position, out Quaternion rotation, out float scale);
-            contentRoot.SetParent(roomAnchor, true);
 
             Sequence sequence = DOTween.Sequence();
             sequence.Join(contentRoot.DOMove(position, settings.transitionSecs).SetEase(settings.transitionEase));

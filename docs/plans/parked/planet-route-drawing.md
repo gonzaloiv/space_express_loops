@@ -1,8 +1,10 @@
 # Planet Route Drawing — Planet-to-Planet Loops and Round Ship Grants
 
-**Status:** backlog - design only. Replaces the hub/ship-grab route flow. Hubs
-and old hub-based saves are not supported; an incompatible snapshot starts a
-fresh game.
+**Status:** parked - out of the current framing. Drawn routes are replaced by
+[space shaping](../backlog/gameplay/space-shaping.md): the player moves planets and
+their forces bend the ship's constant launch, instead of drawing the path. Kept for
+reference only. Replaces the hub/ship-grab route flow. Hubs and old hub-based saves
+are not supported; an incompatible snapshot starts a fresh game.
 
 **Decisions confirmed:** drawing replaces stations; routes are closed loops; the
 drawn stroke (simplified and smoothed) is the route; one hand draws and two hands
@@ -10,8 +12,8 @@ scale; routes are removed and redrawn, not leg-edited; rounds grant ships to new
 or current planets; removing a route refunds its ship immediately; old
 hub-based saves are dropped.
 
-**Related:** [Two views + interaction unify](../../done/universe-views-and-interaction.md) ·
-[Transforming the universe](../../done/universe-transform.md)
+**Related:** [Two views + interaction unify](../done/universe-views-and-interaction.md) ·
+[Transforming the universe](../done/universe-transform.md)
 
 **Wiring rule:** route lines, draft lines, ship badges, highlight rings, and the
 optional pencil are authored in the planet prefab and scene. Do not create

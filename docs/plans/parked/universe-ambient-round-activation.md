@@ -1,10 +1,13 @@
 # Universe — Ambient Round Activation
 
-**Status:** backlog - rounds activate existing decor planets instead of spawning new ones.
-Depends on the ambient pool from [Sector streaming](universe-sector-streaming.md) and
-builds on the decor slice from [Silent planets](../done/universe-silent-planets.md).
+**Status:** parked - collides with the current framing. This is a management game
+(rounds activate decor planets, growing pool), not the physics puzzle in
+[space shaping](../backlog/gameplay/space-shaping.md). Kept for reference only.
+Depends on the ambient pool from
+the [sector field](../backlog/universe/universe-infinite-sector.md) and builds on the
+decor slice from [Silent planets](../done/universe-silent-planets.md).
 
-**Related:** [Infinite sector hub](universe-infinite-sector.md) · [Sector streaming](universe-sector-streaming.md) · [Universe galaxies](universe-galaxies.md)
+**Related:** [Sector field hub](../backlog/universe/universe-infinite-sector.md) · [Silent planets](../done/universe-silent-planets.md)
 
 **Wiring rule:** the authored `PlanetStore`/`ResourcePanel` components exist on the
 prefab but are disabled; activation never uses `AddComponent`. Panels come from a small
@@ -25,7 +28,7 @@ ambient planets instead of spawning new ones.
 - Spawning planets per round (that path stays for required content only).
 - Full gameplay on ambient planets before a round activates them.
 - Ambient planet persistence (deterministic from the seed; only active ids are saved).
-- The galaxy grouping/transform from [Universe galaxies](universe-galaxies.md).
+- Galaxy grouping/transform.
 
 ## 3. Decor first
 

@@ -54,7 +54,6 @@ namespace DigitalLove.Game.Universe
                 return;
             }
 
-            universeView.MapFeedback.SetBlocked(spaceshipsSpawner.IsAnyRouteEditing());
             if (IsRouteEditing() || gate.IsCoolingDown
                 || gate.UpdateSuppression(gestureInput.State, ghostView))
             {
@@ -89,8 +88,7 @@ namespace DigitalLove.Game.Universe
 
         private void UpdateGesture()
         {
-            bool isBlocked = universeView.MapFeedback.IsBlocked;
-            universeView.MapFeedback.SetActive(gestureInput.State.IsAnyPinching && !isBlocked);
+            universeView.MapFeedback.SetActive(gestureInput.State.IsAnyPinching);
             if (!isActive)
                 universeView.MapFeedback.SetScaleFeedback(0f);
             UniverseGhostFeedback.Refresh(ghostView, gestureInput.State);
@@ -163,8 +161,7 @@ namespace DigitalLove.Game.Universe
 
         private bool IsDragStartValid(BubbleViewState state) =>
             gestureInput.State.IsSingleHandPinching
-            && Vector3.Distance(gestureInput.State.DragStartPoint, state.CenterWorld)
-                <= state.Metrics.BubbleRadiusWorld * 0.3f;
+            && state.ContainsPoint(gestureInput.State.DragStartPoint, 0.3f);
 
         private void StartSession(SessionMode sessionMode, float handDistance, BubbleViewState state)
         {

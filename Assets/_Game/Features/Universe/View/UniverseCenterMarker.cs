@@ -11,7 +11,6 @@ namespace DigitalLove.Game.Universe
         [SerializeField] private float heightOffset;
         [SerializeField] private Color normalColor = Color.magenta;
         [SerializeField] private Color activeColor = Color.cyan;
-        [SerializeField] private Color blockedColor = new(1f, 0.35f, 0.2f, 1f);
         [SerializeField] private Color commitColor = Color.green;
 
         private MaterialPropertyBlock colorBlock;
@@ -26,16 +25,14 @@ namespace DigitalLove.Game.Universe
                 return;
 
             transform.position = state.CenterWorld + Vector3.up * heightOffset;
-            transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+            transform.rotation = state.Metrics.FrameRotation;
             float radius = state.Metrics.BubbleRadiusWorld * ringRadiusFactor;
             transform.localScale = Vector3.one * (radius / authoredRadius);
 
             UniverseMapFeedback feedback = universeView.MapFeedback;
-            Color color = feedback.IsBlocked
-                ? blockedColor
-                : feedback.IsActive
-                    ? activeColor
-                    : Color.Lerp(normalColor, commitColor, feedback.ScaleFeedback);
+            Color color = feedback.IsActive
+                ? activeColor
+                : Color.Lerp(normalColor, commitColor, feedback.ScaleFeedback);
             ring.startColor = color;
             ring.endColor = color;
             colorBlock.SetColor("_BaseColor", color);

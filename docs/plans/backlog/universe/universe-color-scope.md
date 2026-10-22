@@ -2,7 +2,7 @@
 
 **Status:** backlog - design ready, not implemented.
 
-**Related:** [Two views + interaction unify](../../done/universe-views-and-interaction.md) · [Transforming the universe](../../done/universe-transform.md) · [Universe galaxies](universe-galaxies.md)
+**Related:** [Two views + interaction unify](../../done/universe-views-and-interaction.md) · [Transforming the universe](../../done/universe-transform.md)
 
 **Wiring rule:** the scope driver and UI faders are authored components with serialized references. No runtime `AddComponent`, `GetComponent`, `FindObjectsByType`, or injected references. Shader globals are the only data channel.
 

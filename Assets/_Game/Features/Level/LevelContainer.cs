@@ -34,6 +34,12 @@ namespace DigitalLove.Game.Levels
         private void OnEnable() => Subscribe();
         private void OnDisable() => Unsubscribe();
 
+        private void Update()
+        {
+            if (universeView.IsBubbleView)
+                silentPlanetsSpawner.SetBubbleFrame(universeView.FrameCenterWorld, universeView.FrameRotation, universeView.FrameHalfSizeWorld);
+        }
+
         public void Init()
         {
             spaceshipsSpawner.SetPlanetAvailability(new LevelLoopPlanetAvailability(planetsSpawner, hubsSpawner));

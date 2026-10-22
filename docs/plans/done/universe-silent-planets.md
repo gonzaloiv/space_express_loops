@@ -2,7 +2,7 @@
 
 **Status:** done - implemented and headset-validated; persistence/restore validation is deferred to a future cross-feature restart pass.
 
-**Related:** [Bubble map drag](universe-transform.md) · [Infinite sector](../backlog/universe/universe-infinite-sector.md) · [Universe galaxies](../backlog/universe/universe-galaxies.md) · [Color scope](../backlog/universe/universe-color-scope.md)
+**Related:** [Bubble map drag](universe-transform.md) · [Sector field](../backlog/universe/universe-infinite-sector.md) · [Color scope](../backlog/universe/universe-color-scope.md)
 
 **Wiring rule:** all visuals and refs stay authored in scene/prefabs. No runtime `AddComponent`, `GetComponent`, or hierarchy creation. Silent planets are instantiated from an authored prefab pool.
 
@@ -43,7 +43,7 @@ Add **silent planets**: ambient planets that never generate letters, are not rou
 - Letters, rewards, lore, or interaction.
 - Routes to silent planets.
 - Persisting every silent position.
-- Infinite streaming; [Infinite sector](../backlog/universe/universe-infinite-sector.md) owns that.
+- The bounded sector field; [Sector field](../backlog/universe/universe-infinite-sector.md) owns that.
 - Color scope; it can include silent planets later.
 
 ## 4. Model

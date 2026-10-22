@@ -4,7 +4,7 @@
 
 **Post-completion fix:** route direction line and planet-surface offsets now scale with the content root in `RaycastHelper`, so indicators start/end correctly in Bubble.
 
-**Related:** [Transforming the universe](universe-transform.md) · [Galaxies and level/round creation](../backlog/universe/universe-galaxies.md) · [Planet route drawing](../backlog/gameplay/planet-route-drawing.md)
+**Related:** [Transforming the universe](universe-transform.md) · [Space shaping](../backlog/gameplay/space-shaping.md) · [Planet route drawing](../parked/planet-route-drawing.md)
 
 **Wiring rule:** components, references, and feedback visuals are authored in the scene/prefabs. Do not use runtime `AddComponent`, injection, `FindObjectsByType`, `GetComponent`, or disabled unused components. Remove unused components.
 

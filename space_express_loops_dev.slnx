@@ -40,6 +40,7 @@
   <Project Path="DigitalLove.VFX.Materials.Editor.csproj" />
   <Project Path="DigitalLove.XR.OVR.csproj" />
   <Project Path="DigitalLove.Game.SilentPlanets.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.csproj" />
   <Project Path="DigitalLove.Localization.csproj" />
   <Project Path="DigitalLove.VFX.Fader.csproj" />
   <Project Path="DigitalLove.TTS.Samples.csproj" />

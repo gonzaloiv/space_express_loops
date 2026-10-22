@@ -48,7 +48,6 @@ namespace DigitalLove.Game.Universe
         {
             roomAnchor.SetPositionAndRotation(contentRoot.position, contentRoot.rotation);
             roomAnchor.localScale = Vector3.one;
-            contentRoot.SetParent(roomAnchor, false);
             ApplyCanonicalRoomPose();
         }
 
@@ -63,7 +62,6 @@ namespace DigitalLove.Game.Universe
         {
             centerWorld = GetCameraFront();
             homeRotation = GetCameraYaw();
-            focusOffsetLocal = Vector3.zero;
         }
 
         public void EnterBubble()
@@ -73,25 +71,13 @@ namespace DigitalLove.Game.Universe
             ApplyBubblePose();
         }
 
-        public void ApplyBubblePose()
-        {
-            bubbleAnchor.SetPositionAndRotation(centerWorld, homeRotation);
-            bubbleAnchor.localScale = Vector3.one * MiniScale;
-            ParentContentToDisplay();
-        }
+        public void ApplyBubblePose() => ApplyDisplayPose(MiniScale);
 
-        public void ApplyRoomPose()
-        {
-            bubbleAnchor.SetPositionAndRotation(centerWorld, homeRotation);
-            bubbleAnchor.localScale = Vector3.one;
-            ParentContentToDisplay();
-        }
+        public void ApplyRoomPose() => ApplyDisplayPose(1f);
 
         public void ApplyCanonicalRoomPose()
         {
-            contentRoot.SetParent(roomAnchor, false);
-            contentRoot.localPosition = Vector3.zero;
-            contentRoot.localRotation = Quaternion.identity;
+            contentRoot.SetPositionAndRotation(roomAnchor.position, roomAnchor.rotation);
             contentRoot.localScale = Vector3.one;
         }
 
@@ -146,7 +132,6 @@ namespace DigitalLove.Game.Universe
         {
             if (isTransitioning)
             {
-                contentRoot.SetParent(roomAnchor, false);
                 contentRoot.SetPositionAndRotation(temporaryPosition, temporaryRotation);
                 contentRoot.localScale = Vector3.one * temporaryScale;
                 return;
@@ -173,18 +158,17 @@ namespace DigitalLove.Game.Universe
         public Vector3 WorldToContentLocal(Vector3 worldPosition) =>
             contentRoot.InverseTransformPoint(worldPosition);
 
-        private void ParentContentToDisplay()
+        private void ApplyDisplayPose(float scale)
         {
-            contentRoot.SetParent(bubbleAnchor, false);
-            contentRoot.localPosition = -FocusLocal;
-            contentRoot.localRotation = Quaternion.identity;
-            contentRoot.localScale = Vector3.one;
+            bubbleAnchor.SetPositionAndRotation(centerWorld, homeRotation);
+            bubbleAnchor.localScale = Vector3.one * scale;
+            contentRoot.SetPositionAndRotation(
+                centerWorld - homeRotation * (scale * FocusLocal),
+                homeRotation);
+            contentRoot.localScale = Vector3.one * scale;
         }
 
-        private void ApplyFocus()
-        {
-            contentRoot.localPosition = -FocusLocal;
-        }
+        private void ApplyFocus() => ApplyDisplayPose(Scale);
 
         private Vector3 GetCameraFront()
         {
