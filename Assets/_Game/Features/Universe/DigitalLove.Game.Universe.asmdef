@@ -3,9 +3,8 @@
     "rootNamespace": "",
     "references": [
         "DigitalLove.FlowControl",
-        "DigitalLove.Game.Nodes",
         "DigitalLove.Game.Spaceships",
-        "Oculus.Interaction"
+        "DigitalLove.Input"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

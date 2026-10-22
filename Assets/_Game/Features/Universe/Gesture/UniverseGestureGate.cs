@@ -1,3 +1,4 @@
+using DigitalLove.Input;
 using UnityEngine;
 
 namespace DigitalLove.Game.Universe
@@ -22,20 +23,20 @@ namespace DigitalLove.Game.Universe
 
         public void SuppressUntilRelease() => suppressUntilRelease = true;
 
-        public bool UpdateSuppression(TwoHandGestureInput input, UniverseGhostView ghostView)
+        public bool UpdateSuppression(TwoHandGestureState state, UniverseGhostView ghostView)
         {
             if (!suppressUntilRelease)
                 return false;
 
             ghostView.Hide();
-            suppressUntilRelease = input.IsAnyPinching;
+            suppressUntilRelease = state.IsAnyPinching;
             return true;
         }
 
-        public void OnTransitionCompleted(TwoHandGestureInput input)
+        public void OnTransitionCompleted(TwoHandGestureState state)
         {
             BeginCooldown();
-            if (suppressUntilRelease && !input.IsAnyPinching)
+            if (suppressUntilRelease && !state.IsAnyPinching)
                 suppressUntilRelease = false;
         }
     }

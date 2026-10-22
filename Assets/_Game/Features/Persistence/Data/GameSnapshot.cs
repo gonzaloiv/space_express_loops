@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using DigitalLove.Game.Nodes;
 using DigitalLove.Game.Spaceships;
+using DigitalLove.Global;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -22,12 +23,16 @@ namespace DigitalLove.Game.Persistence
         public Store store;
         public int lettersRequiredForRoundCompletion;
         public bool hasBubbleTransform;
-        public Vector3 bubbleOffsetLocal;
-        public Quaternion bubbleYaw = Quaternion.identity;
+        public SerializableVector3 bubbleOffsetLocal;
+        public float bubbleYawDegrees;
         public int silentPlanetSeed;
 
         [JsonIgnore] private Action onUpdated;
 
+        [JsonIgnore] public bool HasBubblePlacement => hasBubbleTransform && bubbleOffsetLocal != null;
+        [JsonIgnore] public Vector3 BubbleOffsetLocal =>
+            bubbleOffsetLocal != null ? bubbleOffsetLocal.ToVector3() : Vector3.zero;
+        [JsonIgnore] public Quaternion BubbleYaw => Quaternion.Euler(0f, bubbleYawDegrees, 0f);
         [JsonIgnore] public int CurrentLetters => store.letters;
         [JsonIgnore] public bool HasPlanets => planets != null && planets.Count > 0;
         [JsonIgnore] public bool HasAnyLoopWithDestinations => loops != null && loops.Exists(l => l.HasDestinations);
@@ -88,8 +93,8 @@ namespace DigitalLove.Game.Persistence
         public void SaveBubbleTransform(Vector3 offsetLocal, Quaternion yaw)
         {
             hasBubbleTransform = true;
-            bubbleOffsetLocal = offsetLocal;
-            bubbleYaw = yaw;
+            bubbleOffsetLocal = SerializableVector3.FromVector3(offsetLocal);
+            bubbleYawDegrees = yaw.eulerAngles.y;
             NotifyUpdated();
         }
 

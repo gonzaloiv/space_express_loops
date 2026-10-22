@@ -1,11 +1,13 @@
+using DigitalLove.Input;
+
 namespace DigitalLove.Game.Universe
 {
     internal static class UniverseGhostFeedback
     {
-        public static void Refresh(UniverseGhostView view, TwoHandGestureInput input)
+        public static void Refresh(UniverseGhostView view, TwoHandGestureState state)
         {
-            bool leftPinching = input.IsLeftPinching;
-            bool rightPinching = input.IsRightPinching;
+            bool leftPinching = state.IsLeftPinching;
+            bool rightPinching = state.IsRightPinching;
 
             if (!leftPinching && !rightPinching)
             {
@@ -14,11 +16,11 @@ namespace DigitalLove.Game.Universe
             }
 
             view.Show(
-                input.LeftPinchPoint,
-                input.RightPinchPoint,
+                state.Left.Point,
+                state.Right.Point,
                 leftPinching,
                 rightPinching,
-                input.HandDistanceSpeed);
+                state.DistanceSpeed);
         }
     }
 }

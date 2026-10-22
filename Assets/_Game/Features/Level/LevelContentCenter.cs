@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using DigitalLove.Game.Nodes;
+using DigitalLove.Game.Universe;
 using UnityEngine;
 
-namespace DigitalLove.Game.Universe
+namespace DigitalLove.Game.Levels
 {
-    public static class LevelContentCenter
+    internal static class LevelContentCenter
     {
         public static bool TrySet(
             UniverseView view,
@@ -17,12 +18,11 @@ namespace DigitalLove.Game.Universe
 
             Vector3 sum = Vector3.zero;
             for (int i = 0; i < hubs.Count; i++)
-                sum += view.WorldToContentLocal(hubs[i].Position);
-
+                sum += hubs[i].Position;
             for (int i = 0; i < planets.Count; i++)
-                sum += view.WorldToContentLocal(planets[i].Position);
+                sum += planets[i].Position;
 
-            view.SetContentCenterLocal(sum / count);
+            view.SetContentCenter(sum / count);
             return true;
         }
     }

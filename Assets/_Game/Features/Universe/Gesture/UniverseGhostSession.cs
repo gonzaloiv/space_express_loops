@@ -1,4 +1,5 @@
 using DigitalLove.Game.Spaceships;
+using DigitalLove.Input;
 using UnityEngine;
 
 namespace DigitalLove.Game.Universe
@@ -54,7 +55,7 @@ namespace DigitalLove.Game.Universe
 
             universeView.MapFeedback.SetBlocked(spaceshipsSpawner.IsAnyRouteEditing());
             if (IsRouteEditing() || gate.IsCoolingDown
-                || gate.UpdateSuppression(gestureInput, ghostView))
+                || gate.UpdateSuppression(gestureInput.State, ghostView))
                 return;
 
             UpdateGesture();
@@ -73,7 +74,7 @@ namespace DigitalLove.Game.Universe
         {
             spaceshipsSpawner.SetViewTransition(false);
             spaceshipsSpawner.RefreshGrabbablesAtStation();
-            gate.OnTransitionCompleted(gestureInput);
+            gate.OnTransitionCompleted(gestureInput.State);
         }
 
         private bool IsRouteEditing()
@@ -90,10 +91,10 @@ namespace DigitalLove.Game.Universe
         private void UpdateGesture()
         {
             bool isBlocked = universeView.MapFeedback.IsBlocked;
-            universeView.MapFeedback.SetActive(gestureInput.IsAnyPinching && !isBlocked);
+            universeView.MapFeedback.SetActive(gestureInput.State.IsAnyPinching && !isBlocked);
             if (!isActive)
                 universeView.MapFeedback.SetScaleFeedback(0f);
-            UniverseGhostFeedback.Refresh(ghostView, gestureInput);
+            UniverseGhostFeedback.Refresh(ghostView, gestureInput.State);
         }
 
         private bool UpdateActiveSession(BubbleViewState state)
@@ -101,7 +102,7 @@ namespace DigitalLove.Game.Universe
             if (!isActive)
                 return false;
 
-            if (mode == SessionMode.Scale && !gestureInput.IsActive)
+            if (mode == SessionMode.Scale && !gestureInput.State.IsActive)
             {
                 EndSession();
                 return true;
@@ -109,7 +110,7 @@ namespace DigitalLove.Game.Universe
 
             if (mode == SessionMode.Drag)
             {
-                if (gestureInput.IsActive)
+                if (gestureInput.State.IsActive)
                     UpgradeToScale(state);
                 else if (UpdateDragHand())
                     return true;
@@ -122,14 +123,14 @@ namespace DigitalLove.Game.Universe
         private bool UpdateDragHand()
         {
             bool activeHandPinching = dragLeft
-                ? gestureInput.IsLeftPinching
-                : gestureInput.IsRightPinching;
+                ? gestureInput.State.IsLeftPinching
+                : gestureInput.State.IsRightPinching;
             if (activeHandPinching)
                 return false;
 
             bool otherHandPinching = dragLeft
-                ? gestureInput.IsRightPinching
-                : gestureInput.IsLeftPinching;
+                ? gestureInput.State.IsRightPinching
+                : gestureInput.State.IsLeftPinching;
             if (!otherHandPinching)
             {
                 EndSession();
@@ -138,7 +139,7 @@ namespace DigitalLove.Game.Universe
             }
 
             dragLeft = !dragLeft;
-            bubbleTransform.Rebase(gestureInput.DragPoint);
+            bubbleTransform.Rebase(gestureInput.State.DragPoint);
             return false;
         }
 
@@ -147,9 +148,9 @@ namespace DigitalLove.Game.Universe
             if (!state.HasRoomAnchor)
                 return;
 
-            if (gestureInput.IsActive)
+            if (gestureInput.State.IsActive)
             {
-                float handDistance = gestureInput.HandDistance;
+                float handDistance = gestureInput.State.Distance;
                 if (handDistance < settings.minHandSeparation)
                     return;
 
@@ -162,18 +163,18 @@ namespace DigitalLove.Game.Universe
         }
 
         private bool IsDragStartValid(BubbleViewState state) =>
-            gestureInput.IsSingleHandPinching
-            && Vector3.Distance(gestureInput.DragStartPoint, state.CenterWorld)
+            gestureInput.State.IsSingleHandPinching
+            && Vector3.Distance(gestureInput.State.DragStartPoint, state.CenterWorld)
                 <= state.Metrics.BubbleRadiusWorld * 0.3f;
 
         private void StartSession(SessionMode sessionMode, float handDistance, BubbleViewState state)
         {
             isActive = true;
             mode = sessionMode;
-            dragLeft = gestureInput.IsLeftPinching;
+            dragLeft = gestureInput.State.IsLeftPinching;
             spaceshipsSpawner.SetViewTransition(true);
 
-            if (bubbleTransform.Begin(state, gestureInput.DragPoint))
+            if (bubbleTransform.Begin(state, gestureInput.State.DragPoint))
                 universeView.BeginBubblePreview();
 
             if (sessionMode == SessionMode.Scale)
@@ -183,21 +184,21 @@ namespace DigitalLove.Game.Universe
         private void UpgradeToScale(BubbleViewState state)
         {
             mode = SessionMode.Scale;
-            bubbleScale.Begin(state.Metrics.Scale, gestureInput.HandDistance);
+            bubbleScale.Begin(state.Metrics.Scale, gestureInput.State.Distance);
         }
 
         private void UpdateSessionState(BubbleViewState state)
         {
             if (mode == SessionMode.Drag)
             {
-                if (bubbleTransform.TryUpdate(state, gestureInput.DragPoint, Time.deltaTime, out Vector3 offset))
+                if (bubbleTransform.TryUpdate(state, gestureInput.State.DragPoint, Time.deltaTime, out Vector3 offset))
                     universeView.ApplyBubbleDrag(offset);
                 return;
             }
 
             BubbleScaleResult result = bubbleScale.Update(
                 state,
-                gestureInput.HandDistance,
+                gestureInput.State.Distance,
                 Time.deltaTime);
             universeView.MapFeedback.SetScaleFeedback(result.Feedback);
 

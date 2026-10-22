@@ -108,8 +108,8 @@ namespace DigitalLove.Game.Levels
             currentSnapshot = gameSnapshot;
             SetRoomBasedPose(() =>
             {
-                if (gameSnapshot.hasBubbleTransform)
-                    universeView.RestoreBubbleTransform(gameSnapshot.bubbleOffsetLocal, gameSnapshot.bubbleYaw);
+                if (gameSnapshot.HasBubblePlacement)
+                    universeView.RestoreBubbleTransform(gameSnapshot.BubbleOffsetLocal, gameSnapshot.BubbleYaw);
 
                 universeView.WithRoomPose(() => RespawnFromData(gameSnapshot));
                 RefreshContentReferences();

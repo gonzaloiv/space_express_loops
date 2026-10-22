@@ -1,9 +1,9 @@
 # Reusable Modes + Universe Mode Migration
 
-**Status:** backlog - short implementation plan; follows
-[`Assets/_Modules/docs/standards/modes.md`](../../../../Assets/_Modules/docs/standards/modes.md).
+**Status:** done - `ModeController<T>` shipped in `_Modules/FlowControl` with EditMode tests; `UniverseView` uses it as the single mode source of truth. Follows
+[`Assets/_Modules/docs/standards/modes.md`](../../../Assets/_Modules/docs/standards/modes.md).
 
-**Related:** [Bubble map drag](../../in-progress/universe-transform.md) · [Silent planets](../universe/universe-silent-planets.md) · [Infinite sector](../universe/universe-infinite-sector.md)
+**Related:** [Bubble map drag](universe-transform.md) · [Silent planets](universe-silent-planets.md) · [Infinite sector](../backlog/universe/universe-infinite-sector.md)
 
 ## Goal
 

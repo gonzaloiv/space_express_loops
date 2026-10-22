@@ -2,7 +2,7 @@
 
 **Status:** backlog - design only. No runtime code is changed in this step.
 
-**Related:** [`universe-views-and-interaction.md`](../../done/universe-views-and-interaction.md), [`universe-transform.md`](../../in-progress/universe-transform.md)
+**Related:** [`universe-views-and-interaction.md`](../../done/universe-views-and-interaction.md), [`universe-transform.md`](../../done/universe-transform.md)
 
 ## 1. Goal
 

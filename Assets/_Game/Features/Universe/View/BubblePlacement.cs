@@ -12,5 +12,18 @@ namespace DigitalLove.Game.Universe
             OffsetLocal = offsetLocal;
             Yaw = yaw;
         }
+
+        public static BubblePlacement FromAnchor(
+            Vector3 anchorPosition,
+            Vector3 homePosition,
+            Quaternion homeRotation,
+            float scale)
+        {
+            Vector3 worldOffset = anchorPosition - homePosition;
+            worldOffset.y = 0f;
+            return new BubblePlacement(
+                Quaternion.Inverse(homeRotation) * worldOffset / Mathf.Max(scale, 0.0001f),
+                homeRotation);
+        }
     }
 }

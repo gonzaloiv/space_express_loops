@@ -11,7 +11,7 @@ or current planets; removing a route refunds its ship immediately; old
 hub-based saves are dropped.
 
 **Related:** [Two views + interaction unify](../../done/universe-views-and-interaction.md) ·
-[Transforming the universe](../../in-progress/universe-transform.md)
+[Transforming the universe](../../done/universe-transform.md)
 
 **Wiring rule:** route lines, draft lines, ship badges, highlight rings, and the
 optional pencil are authored in the planet prefab and scene. Do not create

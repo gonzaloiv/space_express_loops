@@ -5,7 +5,7 @@ content-local route work (Phase A0) from the
 [two views + interaction plan](../../done/universe-views-and-interaction.md).
 
 **Related:** [Two views + interaction unify](../../done/universe-views-and-interaction.md),
-[Transforming the universe](universe-transform.md)
+[Transforming the universe](../../done/universe-transform.md)
 
 ## 1. Goal
 
@@ -30,7 +30,7 @@ layout response, not just a local collision clamp.
 Ships are **not** part of a galaxy's scalable content. They stay at `Level` scale;
 only their station anchors and route geometry adapt after a galaxy transform.
 
-The whole-universe transform from [Transforming the universe](universe-transform.md)
+The whole-universe transform from [Transforming the universe](../../done/universe-transform.md)
 continues to exist. A galaxy transform composes underneath it: the universe moves
 `Level`, while a galaxy transform changes that galaxy's local pose and the positions
 of its neighbors in the layout.

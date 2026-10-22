@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using DigitalLove.FlowControl;
 using UnityEngine;
 
@@ -8,73 +9,68 @@ namespace DigitalLove.Game.Universe
     {
         [Header("References")]
         [SerializeField] private Transform contentRoot;
+        [SerializeField] private Transform roomAnchor;
+        [SerializeField] private Transform bubbleAnchor;
         [SerializeField] private UniverseBubbleSettings settings = new();
 
         private readonly ModeController<UniverseViewMode> mode = new(UniverseViewMode.Room);
-        private UniversePoseState poseState;
-        private UniverseViewTransition transition;
-        private UniverseBubblePreview preview;
+        private UniverseContentRig rig;
+        private Tween anchorTween;
+        private Tween transitionTween;
+        private Vector3 previewStartPosition;
+        private Quaternion previewStartRotation;
+        private bool isPreviewActive;
 
         public IModeController<UniverseViewMode> Mode => mode;
         public event Action BubbleTransformCommitted;
-        public BubblePlacement BubblePlacement => new(poseState.BubbleOffsetLocal, poseState.BubbleYaw);
+        public BubblePlacement BubblePlacement => rig.BuildPlacement();
         internal UniverseMapFeedback MapFeedback { get; } = new();
         internal BubbleViewState State => new(
-            Mode.Current,
-            Mode.IsTransitioning,
-            poseState.HasRoomAnchor,
-            new BubbleMetrics(poseState.CurrentPose.position, poseState.Scale, poseState.MiniScale, poseState.BubbleRadiusWorld),
-            poseState.CenterWorld);
+            Mode.Current, Mode.IsTransitioning, rig.HasRoomAnchor,
+            new BubbleMetrics(rig.ContentPosition, rig.Scale, rig.MiniScale, rig.BubbleRadiusWorld),
+            rig.CenterWorld);
 
         private void Awake()
         {
-            poseState = new UniversePoseState(
-                contentRoot,
-                settings.bubbleDistance,
-                settings.bubbleHeightOffset,
-                settings.miniBubbleRadius,
-                settings.minMiniScale);
-            transition = new UniverseViewTransition(poseState, settings.transitionSecs, settings.transitionEase);
-            preview = new UniverseBubblePreview(poseState, contentRoot, settings.transitionSecs, settings.transitionEase);
+            rig = new UniverseContentRig(contentRoot, roomAnchor, bubbleAnchor, settings);
+            rig.Initialize();
         }
 
         public void SetRoomAnchor(Pose pose, Bounds roomBounds)
         {
-            bool hadAnchor = poseState.HasRoomAnchor;
-            poseState.SetRoomAnchor(pose, roomBounds);
+            bool hadAnchor = rig.HasRoomAnchor;
+            rig.SetRoomAnchor(pose, roomBounds);
             if (Mode.IsTransitioning)
                 return;
 
             if (!hadAnchor || Mode.Current == UniverseViewMode.Bubble)
             {
-                poseState.SetBubbleYawToCamera();
-                UniversePose bubblePose = BuildMiniPose();
-                ApplyPose(bubblePose);
-                poseState.CaptureBubbleCenter(bubblePose);
+                rig.EnterBubble();
                 mode.TrySet(UniverseViewMode.Bubble);
                 return;
             }
 
-            ApplyPose(poseState.RoomPose);
+            rig.ApplyRoomPose();
         }
 
         internal void SetBubbleView(UniverseViewMode target, bool instant)
         {
-            if (!poseState.HasRoomAnchor || Mode.IsTransitioning || Mode.Current == target)
+            if (!rig.HasRoomAnchor || Mode.IsTransitioning || Mode.Current == target)
                 return;
 
             CommitBubblePreview();
             if (instant || settings.transitionSecs <= 0f)
             {
-                ApplyPose(PrepareTarget(target));
+                if (target == UniverseViewMode.Room)
+                    rig.ApplyRoomPose();
+                else
+                    rig.EnterBubble();
                 mode.TrySet(target);
                 return;
             }
 
-            if (!mode.BeginTransition(target))
-                return;
-
-            StartTransition(PrepareTarget(target));
+            if (mode.BeginTransition(target))
+                PlayTransition(target);
         }
 
         public void WithRoomPose(Action action)
@@ -88,95 +84,152 @@ namespace DigitalLove.Game.Universe
                 return;
             }
 
-            UniversePose previous = poseState.CurrentPose;
-            poseState.ApplyPose(poseState.BuildRoomPose());
+            rig.BeginTemporaryRoomPose();
             try
             {
                 action();
             }
             finally
             {
-                poseState.ApplyPose(previous);
+                rig.EndTemporaryRoomPose(Mode.Current, Mode.IsTransitioning);
             }
         }
 
-        internal Vector3 WorldToContentLocal(Vector3 worldPosition) =>
-            contentRoot.InverseTransformPoint(worldPosition);
+        public void SetContentCenter(Vector3 worldCenter)
+        {
+            rig.SetContentCenterLocal(
+                rig.WorldToContentLocal(worldCenter),
+                Mode.Current == UniverseViewMode.Bubble && !Mode.IsTransitioning);
+        }
+
         internal void ResetBubbleMap()
         {
-            preview.End();
+            KillAnchorTween();
+            isPreviewActive = false;
             if (Mode.Current == UniverseViewMode.Bubble && !Mode.IsTransitioning)
-                poseState.RecenterBubble(poseState.MiniScale, settings.transitionSecs);
-            else
-                poseState.ResetBubbleOffset();
+                TweenAnchor(rig.HomePosition, rig.HomeRotation, rig.MiniScale);
         }
-        internal void SetContentCenterLocal(Vector3 centerLocal)
-        {
-            poseState.SetContentCenterLocal(centerLocal);
-            if (Mode.Current == UniverseViewMode.Bubble && !Mode.IsTransitioning)
-                poseState.ApplyBubblePose(poseState.MiniScale);
-        }
+
         internal void BeginBubblePreview()
         {
             if (Mode.Current != UniverseViewMode.Bubble || Mode.IsTransitioning)
                 return;
 
-            preview.Begin();
+            KillAnchorTween();
+            rig.ParentContentToBubble();
+            previewStartPosition = bubbleAnchor.position;
+            previewStartRotation = bubbleAnchor.rotation;
+            isPreviewActive = true;
         }
-        internal void ApplyBubbleDrag(Vector3 worldOffset) => preview.ApplyDrag(worldOffset);
-        internal void CancelBubblePreview() => preview.Cancel();
+
+        internal void ApplyBubbleDrag(Vector3 worldOffset)
+        {
+            if (!isPreviewActive)
+                return;
+
+            Vector3 position = previewStartPosition + worldOffset;
+            position.y = previewStartPosition.y;
+            bubbleAnchor.SetPositionAndRotation(position, previewStartRotation);
+        }
+
+        internal void CancelBubblePreview()
+        {
+            if (!isPreviewActive)
+                return;
+
+            isPreviewActive = false;
+            TweenAnchor(previewStartPosition, previewStartRotation, bubbleAnchor.localScale.x);
+        }
+
         internal void CommitBubblePreview()
         {
-            if (preview.Commit(poseState.MiniScale))
-                BubbleTransformCommitted?.Invoke();
+            if (!isPreviewActive)
+                return;
+
+            isPreviewActive = false;
+            KillAnchorTween();
+            BubbleTransformCommitted?.Invoke();
         }
-        public void RestoreBubbleTransform(Vector3 offsetLocal, Quaternion yaw)
+
+        public void RestoreBubbleTransform(Vector3 offsetLocal, Quaternion yaw) =>
+            rig.RestorePlacement(
+                offsetLocal,
+                yaw,
+                Mode.Current == UniverseViewMode.Bubble && !Mode.IsTransitioning);
+
+        private void PlayTransition(UniverseViewMode target)
         {
-            poseState.RestoreBubbleTransform(offsetLocal, yaw);
-            if (Mode.Current == UniverseViewMode.Bubble && !Mode.IsTransitioning)
-                poseState.ApplyBubblePose(poseState.MiniScale);
+            KillTransition();
+            KillAnchorTween();
+            isPreviewActive = false;
+            contentRoot.SetParent(roomAnchor, true);
+            ResolveTransitionTarget(target, out Vector3 position, out Quaternion rotation, out float scale);
+
+            Sequence sequence = DOTween.Sequence();
+            sequence.Join(contentRoot.DOMove(position, settings.transitionSecs).SetEase(settings.transitionEase));
+            sequence.Join(contentRoot.DORotateQuaternion(rotation, settings.transitionSecs).SetEase(settings.transitionEase));
+            sequence.Join(contentRoot.DOScale(scale, settings.transitionSecs).SetEase(settings.transitionEase));
+            transitionTween = sequence.OnComplete(() =>
+            {
+                transitionTween = null;
+                rig.CompleteTransition(target);
+                mode.CompleteTransition();
+            });
         }
 
-        private UniversePose BuildMiniPose() => poseState.BuildMiniPose(poseState.MiniScale);
-
-        private UniversePose PrepareTarget(UniverseViewMode target)
+        private void ResolveTransitionTarget(
+            UniverseViewMode target,
+            out Vector3 position,
+            out Quaternion rotation,
+            out float scale)
         {
-            if (target == UniverseViewMode.Room)
-                return poseState.BuildRoomPose();
+            if (target == UniverseViewMode.Bubble)
+            {
+                rig.PrepareBubble();
+                scale = bubbleAnchor.localScale.x;
+                position = rig.GetBubbleContentPosition();
+                rotation = bubbleAnchor.rotation;
+                return;
+            }
 
-            poseState.ResetBubbleOffset();
-            poseState.SetBubbleYawToCamera();
-            UniversePose pose = BuildMiniPose();
-            poseState.CaptureBubbleCenter(pose);
-            return pose;
+            position = roomAnchor.position;
+            rotation = roomAnchor.rotation;
+            scale = 1f;
         }
 
-        private void StartTransition(UniversePose target)
+        private void TweenAnchor(Vector3 position, Quaternion rotation, float scale)
         {
-            poseState.KillRecenter();
-            preview.End();
-            UniversePose start = poseState.CurrentPose;
-            transition.Play(
-                start,
-                target,
-                poseState.CenterLocal,
-                poseState.CenterWorld,
-                () => CompleteTransition(target));
+            KillAnchorTween();
+            if (settings.transitionSecs <= 0f)
+            {
+                bubbleAnchor.SetPositionAndRotation(position, rotation);
+                bubbleAnchor.localScale = Vector3.one * scale;
+                return;
+            }
+
+            Sequence sequence = DOTween.Sequence();
+            sequence.Join(bubbleAnchor.DOMove(position, settings.transitionSecs).SetEase(settings.transitionEase));
+            sequence.Join(bubbleAnchor.DORotateQuaternion(rotation, settings.transitionSecs).SetEase(settings.transitionEase));
+            sequence.Join(bubbleAnchor.DOScale(scale, settings.transitionSecs).SetEase(settings.transitionEase));
+            anchorTween = sequence;
         }
 
-        private void CompleteTransition(UniversePose target)
+        private void KillAnchorTween()
         {
-            ApplyPose(target);
-            mode.CompleteTransition();
+            anchorTween?.Kill();
+            anchorTween = null;
         }
 
-        private void ApplyPose(UniversePose pose) => poseState.ApplyPose(pose);
-
+        private void KillTransition()
+        {
+            transitionTween?.Kill();
+            transitionTween = null;
+        }
         private void OnDisable()
         {
-            transition?.Kill();
-            preview?.End();
-            poseState?.KillRecenter();
+            KillTransition();
+            KillAnchorTween();
+            isPreviewActive = false;
             mode.CancelTransition();
         }
     }

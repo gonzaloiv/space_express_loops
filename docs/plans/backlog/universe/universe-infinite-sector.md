@@ -2,10 +2,10 @@
 
 **Status:** backlog - design updated for an effectively infinite, non-room-limited universe;
 not implemented. Requires the view/transform work from
-[Transforming the universe](../../in-progress/universe-transform.md) for the bubble drag.
+[Transforming the universe](../../done/universe-transform.md) for the bubble drag.
 
 **Related:** [Two views + interaction unify](../../done/universe-views-and-interaction.md) ·
-[Transforming the universe](../../in-progress/universe-transform.md) · [Universe galaxies](universe-galaxies.md) ·
+[Transforming the universe](../../done/universe-transform.md) · [Universe galaxies](universe-galaxies.md) ·
 [Universe color scope](universe-color-scope.md)
 
 **Wiring rule:** ambient content uses pooled prefabs authored in the scene. No runtime
@@ -55,7 +55,7 @@ view and the rounds reuse that content.
 
 - Simulating or persisting unvisited sectors; content exists only while streamed around the focus.
 - A hard visible boundary wall, fog shell, or edge fade.
-- A new pan gesture; [Transforming the universe](../../in-progress/universe-transform.md) owns it.
+- A new pan gesture; [Transforming the universe](../../done/universe-transform.md) owns it.
 - Full gameplay on ambient planets before a round activates them.
 - Galaxy transform/layout propagation from [Universe galaxies](universe-galaxies.md);
   that plan remains the transform feature. This plan owns generation and streaming.
@@ -508,7 +508,7 @@ decor planets have no letters, UI, or colliders.
 
 ### Phase I2 - Pan, bounds, and streaming
 
-- Integrate the bubble drag from [Transforming the universe](../../in-progress/universe-transform.md).
+- Integrate the bubble drag from [Transforming the universe](../../done/universe-transform.md).
 - Replace `bubbleMoveLimit` with the sector/focus bounds; implement streaming
   hysteresis and floating-origin rebasing. There is no edge fade.
 - Add the within-Bubble recenter (minimum-scale hold) and round-start recenter.
@@ -586,7 +586,7 @@ active planets; restore returns the same active set.
 | Float precision | Rebase the content root and focus at `originRebaseDistance`; sector coordinates stay stable. |
 | Wayfinding | No visible edge; the recenter action and round-start hub focus provide orientation. |
 | Bubble scale | Switch from whole-content mini scale to a `viewRadius` window. The in-progress transform plan currently drags the whole-content bubble; coordinate the change before implementing. |
-| Pan control | Owned by [Transforming the universe](../../in-progress/universe-transform.md); this plan exposes bounds/focus only. Replace `bubbleMoveLimit` with the `UniverseBounds` clamp. |
+| Pan control | Owned by [Transforming the universe](../../done/universe-transform.md); this plan exposes bounds/focus only. Replace `bubbleMoveLimit` with the `UniverseBounds` clamp. |
 | Recenter | Minimum-scale hold (or a double pinch/home affordance) returns to the canonical bubble; round start recenters on the hub. |
 | Central gameplay | Pre-spawn a central gameplay galaxy in the room footprint; ambient systems stay outside. This resolves the "no pre-spawned planets near the hub" gap. |
 | Ambient gameplay | Decor first; rounds activate authored letter components. No `AddComponent`. |
