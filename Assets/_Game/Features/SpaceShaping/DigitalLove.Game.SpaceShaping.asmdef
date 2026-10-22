@@ -1,7 +1,9 @@
 {
     "name": "DigitalLove.Game.SpaceShaping",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "DigitalLove.Global"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

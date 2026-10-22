@@ -1,3 +1,4 @@
+using DigitalLove.Global;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
@@ -17,11 +18,15 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private int maxSteps = 1200;
         [SerializeField] private bool updateLive = true;
         [SerializeField] private LineRenderer[] gridLines;
-        [SerializeField] private Vector3 gridMin = new(-7f, -5f, -4f);
-        [SerializeField] private Vector3 gridMax = new(7f, 5f, 4f);
+        [SerializeField] private Vector3 gridMin = new(-6f, -4f, -3f);
+        [SerializeField] private Vector3 gridMax = new(6f, 4f, 3f);
         [SerializeField] private int gridCount = 4;
-        [SerializeField] private float gridDepthScale = 3.5f;
-        [SerializeField] private float gridMaxDisplacement = 3f;
+        [SerializeField] private float gridDepthScale = 1.5f;
+        [SerializeField] private float gridMaxDisplacement = 0.8f;
+        [SerializeField] private float moveRange = 2.5f;
+        [SerializeField] private float minSeparationScale = 1.2f;
+        [SerializeField] private float minScale = 1.2f;
+        [SerializeField] private float maxScale = 3.5f;
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");
@@ -38,15 +43,36 @@ namespace DigitalLove.Game.SpaceShaping
         private float[] lastPlanetScales;
         private bool hasSnapshot;
 
-        private void Start() => Simulate();
+        private Vector3[] homePositions;
+        private Vector3[] homeScales;
+
+        private void Start()
+        {
+            CaptureHomes();
+            Simulate();
+        }
 
         private void Update()
         {
             if (updateLive && HasMoved())
+            {
+                ConstrainSources();
                 Simulate();
+            }
         }
 
-        [ContextMenu("Simulate")]
+        private void CaptureHomes()
+        {
+            homePositions = new Vector3[planets.Length];
+            homeScales = new Vector3[planets.Length];
+            for (int i = 0; i < planets.Length; i++)
+            {
+                homePositions[i] = planets[i].position;
+                homeScales[i] = planets[i].localScale;
+            }
+        }
+
+        [Button]
         public void Simulate()
         {
             BuildField();
@@ -124,33 +150,56 @@ namespace DigitalLove.Game.SpaceShaping
             line.positionCount = n;
             for (int s = 0; s < n; s++)
             {
-                Vector3 node = GridNode(axis, s, i, j, n);
-                Vector3 pull = field.Pull(node) * gridDepthScale;
-                if (pull.sqrMagnitude > gridMaxDisplacement * gridMaxDisplacement)
-                    pull = pull.normalized * gridMaxDisplacement;
-                line.SetPosition(s, node + pull);
+                Vector3 node = LatticeGrid.Node(axis, s, i, j, n, gridMin, gridMax);
+                line.SetPosition(s, LatticeGrid.Warp(node, field, gridDepthScale, gridMaxDisplacement));
             }
         }
 
-        private Vector3 GridNode(int axis, int s, int i, int j, int n)
+        private void ConstrainSources()
         {
-            float a = T(s, n);
-            float b = T(i, n);
-            float c = T(j, n);
-            if (axis == 0)
-                return new Vector3(X(a), Y(b), Z(c));
-            if (axis == 1)
-                return new Vector3(X(b), Y(a), Z(c));
-            return new Vector3(X(b), Y(c), Z(a));
+            for (int i = 0; i < planets.Length; i++)
+            {
+                Vector3 offset = planets[i].position - homePositions[i];
+                if (offset.magnitude > moveRange)
+                    planets[i].position = homePositions[i] + offset.normalized * moveRange;
+
+                float scale = Mathf.Clamp(planets[i].localScale.x, minScale, maxScale);
+                planets[i].localScale = new Vector3(scale, scale, scale);
+            }
+
+            ResolveOverlaps();
         }
 
-        private static float T(int k, int n) => n <= 1 ? 0.5f : (float)k / (n - 1);
+        private void ResolveOverlaps()
+        {
+            for (int i = 0; i < planets.Length; i++)
+            {
+                for (int j = i + 1; j < planets.Length; j++)
+                {
+                    Vector3 delta = planets[j].position - planets[i].position;
+                    float distance = delta.magnitude;
+                    float minDistance = (planets[i].localScale.x + planets[j].localScale.x) * 0.5f * minSeparationScale;
+                    if (distance >= minDistance || distance < 0.0001f)
+                        continue;
 
-        private float X(float t) => Mathf.Lerp(gridMin.x, gridMax.x, t);
+                    Vector3 push = delta.normalized * ((minDistance - distance) * 0.5f);
+                    planets[i].position -= push;
+                    planets[j].position += push;
+                }
+            }
+        }
 
-        private float Y(float t) => Mathf.Lerp(gridMin.y, gridMax.y, t);
+        [Button]
+        public void ResetSources()
+        {
+            for (int i = 0; i < planets.Length; i++)
+            {
+                planets[i].position = homePositions[i];
+                planets[i].localScale = homeScales[i];
+            }
 
-        private float Z(float t) => Mathf.Lerp(gridMin.z, gridMax.z, t);
+            Simulate();
+        }
 
         private bool HasMoved()
         {
