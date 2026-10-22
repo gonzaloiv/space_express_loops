@@ -1,7 +1,7 @@
 # Reusable Modes + Universe Mode Migration
 
 **Status:** backlog - short implementation plan; follows
-[`Assets/_Modules/FlowControl/Docs/modes.md`](../../../../Assets/_Modules/FlowControl/Docs/modes.md).
+[`Assets/_Modules/docs/standards/modes.md`](../../../../Assets/_Modules/docs/standards/modes.md).
 
 **Related:** [Bubble map drag](../../in-progress/universe-transform.md) · [Silent planets](../universe/universe-silent-planets.md) · [Infinite sector](../universe/universe-infinite-sector.md)
 
@@ -48,7 +48,7 @@ Rules:
 
 ## Phase 2 — Universe mode
 
-Add `UniverseViewMode { Room, Bubble }` in `Universe/Presentation/`.
+Add `UniverseViewMode { Room, Bubble }` in `Universe/View/`.
 
 `UniverseView` owns `ModeController<UniverseViewMode>`:
 
@@ -68,9 +68,9 @@ Add `UniverseViewMode { Room, Bubble }` in `Universe/Presentation/`.
 | `UniverseCenterMarker` | show only in `Bubble` |
 | `BubbleScaleSession` | read `UniverseViewMode` instead of `IsMini` |
 | `BubbleMapTransformSession` | no mode ownership; unchanged |
-| `SilentPlanetsSpawner` | subscribe to `ModeChanged` instead of polling `IsMini` |
+| `SilentPlanetsSpawner` | expose `SetBubbleView`; no `UniverseView` dependency |
 | `SpaceshipsSpawner` / `SpaceshipBehaviour` | drive Bubble view state from `ModeChanged` |
-| `LevelContainer` | subscribe to `ModeChanged`/`TransitionCompleted` instead of `IsMini` polling |
+| `LevelContainer` / `LevelViewModeFanout` | subscribe to `ModeChanged`/`Transition*` instead of `IsMini` polling |
 | Flow/TTS/UI | read mode/events if needed; never write it |
 
 ## Phase 4 — Validation

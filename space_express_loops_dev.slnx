@@ -1,4 +1,5 @@
 ﻿<Solution>
+  <Project Path="DigitalLove.Game.Universe.csproj" />
   <Project Path="DigitalLove.Casual.UI.csproj" />
   <Project Path="DigitalLove.Player.csproj" />
   <Project Path="MegaFiers.csproj" />
@@ -35,7 +36,6 @@
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.Hands.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Vendor.UnityGif.csproj" />
-  <Project Path="DigitalLove.Game.SilentPlanets.csproj" />
   <Project Path="DigitalLove.Analytics.csproj" />
   <Project Path="DigitalLove.VFX.Materials.Editor.csproj" />
   <Project Path="DigitalLove.XR.OVR.csproj" />
@@ -46,7 +46,6 @@
   <Project Path="DigitalLove.Casual.Analytics.csproj" />
   <Project Path="DigitalLove.Timeline.csproj" />
   <Project Path="DigitalLove.HomeMenu.csproj" />
-  <Project Path="DigitalLove.Game.Universe.csproj" />
   <Project Path="DigitalLove.FlowControl.Samples.csproj" />
   <Project Path="DigitalLove.Casual.Levels.csproj" />
   <Project Path="DigitalLove.Theming.csproj" />
@@ -54,6 +53,7 @@
   <Project Path="DigitalLove.DataAccess.Local.csproj" />
   <Project Path="DigitalLove.Timeline.Integrations.csproj" />
   <Project Path="DigitalLove.Game.Persistence.csproj" />
+  <Project Path="DigitalLove.Game.SilentPlanets.csproj" />
   <Project Path="DigitalLove.XR.MetaPlatform.csproj" />
   <Project Path="DigitalLove.Game.Flow.GameStartState.csproj" />
   <Project Path="DigitalLove.Analytics.GameAnalytics.csproj" />
@@ -83,6 +83,7 @@
   <Project Path="DigitalLove.FlowControl.Routes.Editor.csproj" />
   <Project Path="DigitalLove.Audio.Samples.csproj" />
   <Project Path="DigitalLove.Interactables.Keypad.csproj" />
+  <Project Path="DigitalLove.FlowControl.Tests.EditMode.csproj" />
   <Project Path="TrinarySoftware.MEC.Runtime.csproj" />
   <Project Path="DigitalLove.Analytics.Unity.csproj" />
   <Project Path="DigitalLove.DataAccess.Integrations.csproj" />

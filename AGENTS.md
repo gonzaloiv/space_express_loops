@@ -18,7 +18,7 @@ These mirror the Unity scene/prefab wiring rules and feature validation checklis
 
 ## States, modes, and sessions
 
-Follow [`Assets/_Modules/FlowControl/Docs/modes.md`](Assets/_Modules/FlowControl/Docs/modes.md).
+Follow [`Assets/_Modules/docs/standards/modes.md`](Assets/_Modules/docs/standards/modes.md).
 
 - **Flow state** = app/round progression, save/load, blocking gates. Owned by `_Game/Flow` and `MonoState`.
 - **Mode** = persistent behaviour/presentation of one system. One owner, one enum, no parallel booleans like `isMini` + `isBubble`.

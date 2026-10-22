@@ -1787,12 +1787,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Universe::DigitalLove.Game.Universe.UniverseView
   contentRoot: {fileID: 677709494}
-  miniBubbleRadius: 0.6
-  bubbleDistance: 0.45
-  bubbleHeightOffset: -0.1
-  minMiniScale: 0.02
-  transitionSecs: 0.45
-  transitionEase: 4
+  settings:
+    miniBubbleRadius: 0.6
+    bubbleDistance: 0.45
+    bubbleHeightOffset: -0.1
+    minMiniScale: 0.02
+    transitionSecs: 0.45
+    transitionEase: 4
 --- !u!1 &250434372
 GameObject:
   m_ObjectHideFlags: 0

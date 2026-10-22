@@ -3,7 +3,6 @@
     "rootNamespace": "DigitalLove.Game.SilentPlanets",
     "references": [
         "DigitalLove.Game.Nodes",
-        "DigitalLove.Game.Universe",
         "DigitalLove.Global"
     ],
     "includePlatforms": [],

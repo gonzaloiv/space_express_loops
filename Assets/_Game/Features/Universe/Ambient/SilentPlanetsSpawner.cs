@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using DigitalLove.Game.Nodes;
-using DigitalLove.Game.Universe;
 using DigitalLove.Global;
 using UnityEngine;
 
@@ -11,7 +10,6 @@ namespace DigitalLove.Game.SilentPlanets
         [Header("References")]
         [SerializeField] private MrukRoomLocalPlacement roomPlacement;
         [SerializeField] private HubsSpawner hubsSpawner;
-        [SerializeField] private UniverseView universeView;
         [SerializeField] private SilentPlanetBehaviour prototype;
 
         [Header("Budget")]
@@ -36,18 +34,21 @@ namespace DigitalLove.Game.SilentPlanets
         private bool hasSpawned;
         private bool isBubbleView;
 
-        private void OnEnable() => SetSubscriptions(true);
-        private void OnDisable() => SetSubscriptions(false);
-
         public void ResetPool()
         {
             HideAll();
             InitializePool();
         }
 
+        public void SetBubbleView(bool bubble)
+        {
+            isBubbleView = bubble;
+            if (bubble)
+                ShowAll();
+        }
+
         public void SpawnIfNeeded(int seed)
         {
-            SetBubbleView(universeView.IsMini);
             if (hasSpawned)
                 return;
 
@@ -59,20 +60,12 @@ namespace DigitalLove.Game.SilentPlanets
             SilentPlanetLayout layout = new(
                 random,
                 anchorLocal,
-                lowestY,
-                highestY,
+                new Vector2(lowestY, highestY),
                 clusterRingRadius,
                 clusterRingJitter);
             Vector3[] centers = layout.BuildClusterCenters(count, clusterCount);
             for (int i = 0; i < count; i++)
                 TrySpawnPlanet(random, centers[i % centers.Length], anchorLocal, layout);
-        }
-
-        private void SetBubbleView(bool bubble)
-        {
-            isBubbleView = bubble;
-            if (bubble)
-                ShowAll();
         }
 
         private void LateUpdate()
@@ -161,76 +154,31 @@ namespace DigitalLove.Game.SilentPlanets
             return transform.InverseTransformPoint(roomCenterWorld);
         }
 
-        private SilentPlanetBehaviour AcquirePlanet()
-        {
-            for (int i = 0; i < planets.Count; i++)
+        private SilentPlanetBehaviour AcquirePlanet() =>
+            planets.AcquireInactive(prototype, transform, created =>
             {
-                SilentPlanetBehaviour planet = planets[i];
-                if (planet != null && !planet.IsActive)
-                    return planet;
-            }
+                created.Initialize();
+                created.Hide();
+            });
 
-            SilentPlanetBehaviour created = Instantiate(prototype, transform);
-            created.Initialize();
-            created.Hide();
-            planets.Add(created);
-            return created;
-        }
-
-        private void InitializePool()
-        {
-            for (int i = 0; i < planets.Count; i++)
-            {
-                if (planets[i] != null)
-                    planets[i].Initialize();
-            }
-        }
+        private void InitializePool() => planets.ForEachInPool(planet => planet.Initialize());
 
         private void HideAll()
         {
-            for (int i = 0; i < planets.Count; i++)
+            planets.ForEachInPool(planet =>
             {
-                SilentPlanetBehaviour planet = planets[i];
-                if (planet == null)
-                    continue;
-
                 if (planet.IsActive)
                     roomPlacement.Unregister(planet.LocalPosition, planet.Radius);
                 planet.Hide();
-            }
+            });
 
             hasSpawned = false;
         }
 
-        private void ShowAll()
+        private void ShowAll() => planets.ForEachInPool(planet =>
         {
-            for (int i = 0; i < planets.Count; i++)
-            {
-                if (planets[i] != null && planets[i].IsActive)
-                    planets[i].SetVisible(true);
-            }
-        }
-
-        private void SetSubscriptions(bool subscribe)
-        {
-            if (subscribe)
-            {
-                universeView.TransitionStarted += OnTransitionStarted;
-                universeView.TransitionCompleted += OnTransitionCompleted;
-                SetBubbleView(universeView.IsMini);
-                return;
-            }
-
-            universeView.TransitionStarted -= OnTransitionStarted;
-            universeView.TransitionCompleted -= OnTransitionCompleted;
-        }
-
-        private void OnTransitionStarted(bool toMini)
-        {
-            if (toMini)
-                SetBubbleView(true);
-        }
-
-        private void OnTransitionCompleted(bool toMini) => SetBubbleView(toMini);
+            if (planet.IsActive)
+                planet.SetVisible(true);
+        });
     }
 }

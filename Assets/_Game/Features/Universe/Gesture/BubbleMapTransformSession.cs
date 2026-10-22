@@ -2,7 +2,9 @@ using UnityEngine;
 
 namespace DigitalLove.Game.Universe
 {
-    public class BubbleMapTransformSession
+    internal enum BubbleTransformAction { None, Cancel, Commit }
+
+    internal class BubbleMapTransformSession
     {
         private readonly float translationGain;
         private readonly float settleDistance;
@@ -34,13 +36,23 @@ namespace DigitalLove.Game.Universe
             this.minDragDistance = minDragDistance;
         }
 
-        public void Begin(UniverseView view, Vector3 dragPoint)
+        public static BubbleMapTransformSession FromSettings(UniverseGhostSettings settings) =>
+            new(settings.translationGain,
+                settings.settleDistance,
+                settings.translationSmoothSecs,
+                settings.dragStartJumpLimit,
+                settings.minDragDistance);
+
+        public bool Begin(BubbleViewState state, Vector3 dragPoint)
         {
-            if (!view.IsMini)
-                return;
+            if (!state.IsBubble)
+            {
+                isActive = false;
+                return false;
+            }
 
             isActive = true;
-            startPosition = view.CurrentPose.position;
+            startPosition = state.Metrics.ContentPosition;
             accumulatedOffset = Vector3.zero;
             smoothedOffset = Vector3.zero;
             smoothVelocity = Vector3.zero;
@@ -48,78 +60,91 @@ namespace DigitalLove.Game.Universe
             grabStartPoint = dragPoint;
             grabStartOffset = Vector3.zero;
             initialDragPoint = dragPoint;
-            view.BeginBubblePreview();
+            return true;
         }
 
-        public void Update(UniverseView view, Vector3 dragPoint)
+        public bool TryUpdate(BubbleViewState state, Vector3 dragPoint, float dt, out Vector3 offset)
         {
+            offset = Vector3.zero;
             if (!isActive)
-                return;
+                return false;
 
             if (!dragStarted)
             {
-                if ((dragPoint - initialDragPoint).magnitude < minDragDistance)
-                    return;
-
-                dragStarted = true;
-                grabStartPoint = dragPoint;
-                grabStartOffset = accumulatedOffset;
-                return;
+                TryStartDrag(dragPoint);
+                return false;
             }
 
             Vector3 delta = dragPoint - grabStartPoint;
             if (delta.magnitude > dragStartJumpLimit)
             {
-                grabStartPoint = dragPoint;
-                grabStartOffset = accumulatedOffset;
-                return;
+                RebaseGrab(dragPoint);
+                return false;
             }
 
+            offset = ApplyDrag(state, delta, dt);
+            return true;
+        }
+
+        private void TryStartDrag(Vector3 dragPoint)
+        {
+            if ((dragPoint - initialDragPoint).magnitude < minDragDistance)
+                return;
+
+            dragStarted = true;
+            RebaseGrab(dragPoint);
+        }
+
+        private void RebaseGrab(Vector3 dragPoint)
+        {
+            grabStartPoint = dragPoint;
+            grabStartOffset = accumulatedOffset;
+        }
+
+        private Vector3 ApplyDrag(BubbleViewState state, Vector3 delta, float dt)
+        {
             delta.y = 0f;
             accumulatedOffset = ApplyLimit(
                 grabStartOffset + delta * translationGain,
-                view.BubbleRadiusWorld * 0.3f);
+                state.Metrics.BubbleRadiusWorld * 0.3f);
 
-            float dt = Mathf.Max(Time.deltaTime, 0.0001f);
             smoothedOffset = Vector3.SmoothDamp(
                 smoothedOffset,
                 accumulatedOffset,
                 ref smoothVelocity,
                 translationSmoothSecs,
                 Mathf.Infinity,
-                dt);
-            view.ApplyBubbleDrag(smoothedOffset);
+                Mathf.Max(dt, 0.0001f));
+            return smoothedOffset;
         }
 
         public void Rebase(Vector3 dragPoint)
         {
             initialDragPoint = dragPoint;
-            grabStartPoint = dragPoint;
-            grabStartOffset = accumulatedOffset;
+            RebaseGrab(dragPoint);
             dragStarted = false;
         }
 
-        public void Commit(UniverseView view)
+        public bool Commit()
         {
             if (!isActive)
-                return;
+                return false;
 
             isActive = false;
-            view.CommitBubblePreview();
+            return true;
         }
 
-        public void Settle(UniverseView view)
+        public BubbleTransformAction Settle(Vector3 currentPosition)
         {
             if (!isActive)
-                return;
+                return BubbleTransformAction.None;
 
             isActive = false;
-            Vector3 offset = view.CurrentPose.position - startPosition;
+            Vector3 offset = currentPosition - startPosition;
             offset.y = 0f;
-            if (offset.magnitude < settleDistance)
-                view.CancelBubblePreview();
-            else
-                view.CommitBubblePreview();
+            return offset.magnitude < settleDistance
+                ? BubbleTransformAction.Cancel
+                : BubbleTransformAction.Commit;
         }
 
         private static Vector3 ApplyLimit(Vector3 offset, float limit)

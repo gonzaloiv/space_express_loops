@@ -84,7 +84,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 124bf310eae84d889082cc3464b0afdd, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Nodes::DigitalLove.Game.Nodes.SilentPlanetBehaviour
+  m_EditorClassIdentifier: DigitalLove.Game.SilentPlanets::DigitalLove.Game.SilentPlanets.SilentPlanetBehaviour
   nodeBody: {fileID: 2804679764772829139}
 --- !u!1001 &1637795536009567056
 PrefabInstance:

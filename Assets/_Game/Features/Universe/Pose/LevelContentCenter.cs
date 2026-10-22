@@ -11,27 +11,19 @@ namespace DigitalLove.Game.Universe
             IReadOnlyList<HubBehaviour> hubs,
             IReadOnlyList<PlanetBehaviour> planets)
         {
-            Vector3 sum = Vector3.zero;
-            int count = 0;
-
-            for (int i = 0; i < hubs.Count; i++)
-            {
-                sum += view.WorldToContentLocal(hubs[i].Position);
-                count++;
-            }
-
-            for (int i = 0; i < planets.Count; i++)
-            {
-                sum += view.WorldToContentLocal(planets[i].Position);
-                count++;
-            }
-
+            int count = hubs.Count + planets.Count;
             if (count == 0)
                 return false;
+
+            Vector3 sum = Vector3.zero;
+            for (int i = 0; i < hubs.Count; i++)
+                sum += view.WorldToContentLocal(hubs[i].Position);
+
+            for (int i = 0; i < planets.Count; i++)
+                sum += view.WorldToContentLocal(planets[i].Position);
 
             view.SetContentCenterLocal(sum / count);
             return true;
         }
-
     }
 }

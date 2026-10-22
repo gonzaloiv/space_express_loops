@@ -20,21 +20,22 @@ namespace DigitalLove.Game.Universe
 
         private void LateUpdate()
         {
-            bool visible = universeView.IsMini;
-            ring.enabled = visible;
-            if (!visible)
+            BubbleViewState state = universeView.State;
+            ring.enabled = state.IsBubble;
+            if (!state.IsBubble)
                 return;
 
-            transform.position = universeView.CenterWorld + Vector3.up * heightOffset;
+            transform.position = state.CenterWorld + Vector3.up * heightOffset;
             transform.rotation = Quaternion.Euler(90f, 0f, 0f);
-            float radius = universeView.BubbleRadiusWorld * ringRadiusFactor;
+            float radius = state.Metrics.BubbleRadiusWorld * ringRadiusFactor;
             transform.localScale = Vector3.one * (radius / authoredRadius);
 
-            Color color = universeView.IsMapGestureBlocked
+            UniverseMapFeedback feedback = universeView.MapFeedback;
+            Color color = feedback.IsBlocked
                 ? blockedColor
-                : universeView.IsMapGestureActive
+                : feedback.IsActive
                     ? activeColor
-                    : Color.Lerp(normalColor, commitColor, universeView.ScaleFeedback);
+                    : Color.Lerp(normalColor, commitColor, feedback.ScaleFeedback);
             ring.startColor = color;
             ring.endColor = color;
             colorBlock.SetColor("_BaseColor", color);

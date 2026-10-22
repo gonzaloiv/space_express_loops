@@ -3,13 +3,15 @@ using UnityEngine;
 
 namespace DigitalLove.Game.Universe
 {
-    public class UniversePoseState
+    internal class UniversePoseState
     {
         private readonly Transform contentRoot;
         private readonly float bubbleDistance;
         private readonly float bubbleHeightOffset;
+        private readonly float miniBubbleRadius;
+        private readonly float minMiniScale;
 
-        private UniverseView.UniversePose roomPose;
+        private UniversePose roomPose;
         private Vector3 contentCenter;
         private float contentRadius = 2.5f;
         private bool hasRoomAnchor;
@@ -19,26 +21,31 @@ namespace DigitalLove.Game.Universe
         private Quaternion bubbleYaw = Quaternion.identity;
         private bool isPreviewActive;
         private Tween recenterTween;
-        private UniverseView.UniversePose previewStartPose;
+        private UniversePose previewStartPose;
         private Vector3 previewStartOffsetLocal;
         private Vector3 previewStartFocusLocal;
         private Quaternion previewStartYaw;
 
-        public UniversePoseState(Transform contentRoot, float bubbleDistance, float bubbleHeightOffset)
+        public UniversePoseState(Transform contentRoot, float bubbleDistance, float bubbleHeightOffset,
+            float miniBubbleRadius, float minMiniScale)
         {
             this.contentRoot = contentRoot;
             this.bubbleDistance = bubbleDistance;
             this.bubbleHeightOffset = bubbleHeightOffset;
-            roomPose = UniverseView.UniversePose.FromTransform(contentRoot);
+            this.miniBubbleRadius = miniBubbleRadius;
+            this.minMiniScale = minMiniScale;
+            roomPose = UniversePose.FromTransform(contentRoot);
         }
 
         public bool HasRoomAnchor => hasRoomAnchor;
-        public float ContentRadius => contentRadius;
+        public float Scale => contentRoot.localScale.x;
+        public float MiniScale => Mathf.Clamp(miniBubbleRadius / contentRadius, minMiniScale, 1f);
+        public float BubbleRadiusWorld => contentRadius * Scale;
         public Vector3 CenterLocal => contentCenter + bubbleOffsetLocal;
         public Vector3 CenterWorld => bubbleCenterWorld;
-        public UniverseView.UniversePose RoomPose => roomPose;
-        public UniverseView.UniversePose CurrentPose => UniverseView.UniversePose.FromTransform(contentRoot);
-        public UniverseView.UniversePose PreviewStartPose => previewStartPose;
+        public UniversePose RoomPose => roomPose;
+        public UniversePose CurrentPose => UniversePose.FromTransform(contentRoot);
+        public UniversePose PreviewStartPose => previewStartPose;
         public bool IsPreviewActive => isPreviewActive;
         public Vector3 BubbleOffsetLocal => bubbleOffsetLocal;
         public Quaternion BubbleYaw => bubbleYaw;
@@ -46,7 +53,7 @@ namespace DigitalLove.Game.Universe
         public void SetRoomAnchor(Pose pose, Bounds bounds)
         {
             Quaternion yaw = YawOnly(pose.rotation);
-            roomPose = new UniverseView.UniversePose(pose.position, yaw, 1f);
+            roomPose = new UniversePose(pose.position, yaw, 1f);
             if (bounds.size.sqrMagnitude > 0.0001f)
             {
                 contentCenter = Quaternion.Inverse(yaw) * (bounds.center - pose.position);
@@ -61,23 +68,11 @@ namespace DigitalLove.Game.Universe
         public void SetContentCenterLocal(Vector3 centerLocal) =>
             contentCenter = centerLocal;
 
-        public bool HasBubbleCenter => hasBubbleCenter;
-
-        public void SetBubbleCenter(Vector3 centerWorld)
-        {
-            bubbleCenterWorld = centerWorld;
-            hasBubbleCenter = true;
-        }
-
         public void ResetBubbleOffset() => bubbleOffsetLocal = Vector3.zero;
 
         public void RecenterBubble(float scale, float secs)
         {
             recenterTween?.Kill();
-            Vector3 center = CenterWorld;
-            Vector3 from = Quaternion.Inverse(bubbleYaw) * (center - CurrentPose.position) / scale;
-            Vector3 to = contentCenter;
-
             if (secs <= 0f)
             {
                 bubbleOffsetLocal = Vector3.zero;
@@ -85,15 +80,7 @@ namespace DigitalLove.Game.Universe
                 return;
             }
 
-            recenterTween = DOTween.To(
-                    () => 0f,
-                    t => ApplyPose(new UniverseView.UniversePose(
-                        center - bubbleYaw * (scale * Vector3.Lerp(from, to, t)),
-                        bubbleYaw,
-                        scale)),
-                    1f,
-                    secs)
-                .SetEase(Ease.InOutSine)
+            recenterTween = BuildRecenterTween(scale, secs)
                 .OnComplete(() => { bubbleOffsetLocal = Vector3.zero; recenterTween = null; });
         }
 
@@ -103,8 +90,6 @@ namespace DigitalLove.Game.Universe
             recenterTween = null;
         }
 
-        public void SetBubbleYaw(Quaternion yaw) => bubbleYaw = YawOnly(yaw);
-
         public void SetBubbleYawToCamera()
         {
             Camera camera = Camera.main;
@@ -112,8 +97,11 @@ namespace DigitalLove.Game.Universe
                 bubbleYaw = YawOnly(camera.transform.rotation);
         }
 
-        public void CaptureBubbleCenter(UniverseView.UniversePose pose) =>
-            SetBubbleCenter(pose.position + pose.rotation * (pose.scale * CenterLocal));
+        public void CaptureBubbleCenter(UniversePose pose)
+        {
+            bubbleCenterWorld = pose.position + pose.rotation * (pose.scale * CenterLocal);
+            hasBubbleCenter = true;
+        }
 
         public void ApplyBubblePose(float scale)
         {
@@ -122,24 +110,22 @@ namespace DigitalLove.Game.Universe
                 : BuildMiniPose(scale));
         }
 
-        public float GetMiniScale(float miniBubbleRadius, float minMiniScale) =>
-            Mathf.Clamp(miniBubbleRadius / contentRadius, minMiniScale, 1f);
-        public UniverseView.UniversePose BuildMiniPose(float scale)
+        public UniversePose BuildMiniPose(float scale)
         {
             Vector3 position = GetBubbleAnchor() - bubbleYaw * (scale * CenterLocal);
-            return new UniverseView.UniversePose(position, bubbleYaw, scale);
+            return new UniversePose(position, bubbleYaw, scale);
         }
 
-        public UniverseView.UniversePose BuildMiniPoseAroundCenter(float scale)
+        public UniversePose BuildMiniPoseAroundCenter(float scale)
         {
             Vector3 position = bubbleCenterWorld - bubbleYaw * (scale * CenterLocal);
-            return new UniverseView.UniversePose(position, bubbleYaw, scale);
+            return new UniversePose(position, bubbleYaw, scale);
         }
 
-        public UniverseView.UniversePose BuildRoomPose()
+        public UniversePose BuildRoomPose()
         {
             Quaternion yaw = YawOnly(contentRoot.rotation);
-            return new UniverseView.UniversePose(CenterWorld - yaw * CenterLocal, yaw, 1f);
+            return new UniversePose(CenterWorld - yaw * CenterLocal, yaw, 1f);
         }
 
         public void BeginPreview()
@@ -197,27 +183,43 @@ namespace DigitalLove.Game.Universe
         }
 
         public void ApplyTransitionPose(
-            UniverseView.UniversePose start,
-            UniverseView.UniversePose target,
+            UniversePose start,
+            UniversePose target,
             Vector3 centerLocal,
             Vector3 startCenter,
-            Vector3 endCenter,
             float t)
         {
             float scale = Mathf.Lerp(start.scale, target.scale, t);
             Quaternion rotation = Quaternion.Slerp(start.rotation, target.rotation, t);
+            Vector3 endCenter = target.position + target.rotation * (target.scale * centerLocal);
             Vector3 center = Vector3.Lerp(startCenter, endCenter, t);
-            ApplyPose(new UniverseView.UniversePose(
+            ApplyPose(new UniversePose(
                 center - rotation * (scale * centerLocal),
                 rotation,
                 scale));
         }
 
-        public void ApplyPose(UniverseView.UniversePose pose)
+        public void ApplyPose(UniversePose pose)
         {
             contentRoot.position = pose.position;
             contentRoot.rotation = pose.rotation;
             contentRoot.localScale = Vector3.one * pose.scale;
+        }
+
+        private Tween BuildRecenterTween(float scale, float secs)
+        {
+            Vector3 center = CenterWorld;
+            Vector3 from = Quaternion.Inverse(bubbleYaw) * (center - CurrentPose.position) / scale;
+            Vector3 to = contentCenter;
+            return DOTween.To(
+                    () => 0f,
+                    t => ApplyPose(new UniversePose(
+                        center - bubbleYaw * (scale * Vector3.Lerp(from, to, t)),
+                        bubbleYaw,
+                        scale)),
+                    1f,
+                    secs)
+                .SetEase(Ease.InOutSine);
         }
 
         private void CaptureCurrent(float scale)

@@ -1,8 +1,8 @@
 namespace DigitalLove.Game.Universe
 {
-    public static class UniverseGhostFeedback
+    internal static class UniverseGhostFeedback
     {
-        public static void Update(UniverseGhostView view, TwoHandGestureInput input)
+        public static void Refresh(UniverseGhostView view, TwoHandGestureInput input)
         {
             bool leftPinching = input.IsLeftPinching;
             bool rightPinching = input.IsRightPinching;

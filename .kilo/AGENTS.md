@@ -16,6 +16,56 @@ These mirror the Unity scene/prefab wiring rules and feature validation checklis
 - Runtime code may position, scale, show, or hide authored objects; it must not invent them.
 - This applies to UI, VFX, line renderers, ghost previews, and interaction proxies.
 
+## Parameter count
+
+In first-party C#:
+
+- A method or constructor takes **at most 5 parameters**; optional parameters count individually.
+- Group related values into a parameter object, or have the owning type construct its collaborators.
+- Do not pass the same long tail of tuning values through several layers.
+
+### Exceptions
+
+Unity lifecycle and message methods, interface implementations, and signatures required by an external API may exceed the limit. Skip `**/Vendor/**`, `**/Samples/**`, and `**/Plugins/**`.
+
+## Public surface
+
+In first-party C#:
+
+- Default to the narrowest visibility that works: `private`, then `internal`, and `public` only when another assembly, a prefab, or an external API needs the member.
+- State that only drives one system stays `internal`; expose it publicly only at the assembly boundary.
+- Events and read-only properties are the integration surface. Do not expose public mutable fields or setters for convenience.
+- A public getter with a private setter is still public surface; budget it like any other public member.
+- Do not widen visibility for tests; use `InternalsVisibleTo` only when the test assembly actually needs it.
+
+### Exceptions
+
+Serialized Unity fields, prefab-facing types, interface implementations, and public data types may need public visibility. Skip `**/Vendor/**`, `**/Samples/**`, and `**/Plugins/**`.
+
+## Visibility is not encapsulation
+
+- `internal` is assembly-wide public. Do not use it to disguise a wide interface or unfinished coupling.
+- If several collaborators reach into one type, fix the ownership or pass a snapshot/command; do not hide the members as `internal` and call it encapsulated.
+- Reserve `internal` for genuine module helpers shared by a small set of sibling types in the same assembly.
+- If a member would be public across an assembly boundary, justify its design as if it were public.
+
+## State ownership and snapshots
+
+When one type owns state that several collaborators need:
+
+- Do not let collaborators pull mutable state from the owner or call a broad set of setters.
+- Pass a small read-only snapshot (mode, scale, position, flags) into the collaborator.
+- Have the collaborator return intentions or actions; the owner or its coordinator applies them.
+- Keep the owner as the only writer, and keep presentation feedback with the system that produces it.
+- Prefer one `State`/`Snapshot` value over a row of public derived properties.
+
+## View independence
+
+- Content and domain systems must not reference the view that presents them.
+- The composition root (level/flow) observes the view and fans presentation state into content systems.
+- Feature assemblies should depend on domain modules, not on presentation assemblies.
+- A content spawner exposes commands such as `SetBubbleView(bool)`; it does not subscribe to view events itself.
+
 ## Feature validation checklist
 
 After implementing a user-facing feature, include a short manual validation checklist in the final response, written for the target device (normally the headset).

@@ -15,15 +15,14 @@ namespace DigitalLove.Game.SilentPlanets
         public SilentPlanetLayout(
             SeededRandom random,
             Vector3 anchorLocal,
-            float lowestY,
-            float highestY,
+            Vector2 yRange,
             float ringRadius,
             float ringJitter)
         {
             this.random = random;
             this.anchorLocal = anchorLocal;
-            this.lowestY = lowestY;
-            this.highestY = highestY;
+            lowestY = yRange.x;
+            highestY = yRange.y;
             this.ringRadius = ringRadius;
             this.ringJitter = ringJitter;
         }

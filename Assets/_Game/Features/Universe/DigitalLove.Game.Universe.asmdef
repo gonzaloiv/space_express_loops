@@ -2,6 +2,7 @@
     "name": "DigitalLove.Game.Universe",
     "rootNamespace": "",
     "references": [
+        "DigitalLove.FlowControl",
         "DigitalLove.Game.Nodes",
         "DigitalLove.Game.Spaceships",
         "Oculus.Interaction"

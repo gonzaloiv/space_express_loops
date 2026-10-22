@@ -1,6 +1,7 @@
+using DigitalLove.Game.Nodes;
 using UnityEngine;
 
-namespace DigitalLove.Game.Nodes
+namespace DigitalLove.Game.SilentPlanets
 {
     public class SilentPlanetBehaviour : MonoBehaviour, IPoolableNode
     {

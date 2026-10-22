@@ -23,6 +23,7 @@ namespace DigitalLove.Game.Levels
         [SerializeField] private UniverseView universeView;
 
         private GameSnapshot currentSnapshot;
+        private LevelViewModeFanout viewModeFanout;
         private bool hasCenteredContent;
 
         public PlanetsSpawner PlanetsSpawner => planetsSpawner;
@@ -42,28 +43,19 @@ namespace DigitalLove.Game.Levels
 
         private void Subscribe()
         {
-            universeView.TransitionStarted -= OnViewTransitionStarted;
-            universeView.TransitionStarted += OnViewTransitionStarted;
-            universeView.TransitionCompleted -= OnViewTransitionCompleted;
-            universeView.TransitionCompleted += OnViewTransitionCompleted;
+            viewModeFanout ??= new LevelViewModeFanout(
+                universeView,
+                spaceshipsSpawner,
+                silentPlanetsSpawner);
+            viewModeFanout.Subscribe();
             universeView.BubbleTransformCommitted -= OnBubbleTransformCommitted;
             universeView.BubbleTransformCommitted += OnBubbleTransformCommitted;
         }
 
         private void Unsubscribe()
         {
-            universeView.TransitionStarted -= OnViewTransitionStarted;
-            universeView.TransitionCompleted -= OnViewTransitionCompleted;
+            viewModeFanout?.Unsubscribe();
             universeView.BubbleTransformCommitted -= OnBubbleTransformCommitted;
-        }
-
-        private void OnViewTransitionStarted(bool toBubble) { spaceshipsSpawner.SetViewTransition(true); spaceshipsSpawner.SetBubbleView(toBubble); }
-
-        private void OnViewTransitionCompleted(bool toBubble)
-        {
-            spaceshipsSpawner.SetBubbleView(toBubble);
-            spaceshipsSpawner.SetViewTransition(false);
-            spaceshipsSpawner.RefreshGrabbablesAtStation();
         }
 
         private void OnBubbleTransformCommitted()
@@ -71,7 +63,8 @@ namespace DigitalLove.Game.Levels
             if (currentSnapshot == null)
                 return;
 
-            currentSnapshot.SaveBubbleTransform(universeView.BubbleOffsetLocal, universeView.BubbleYaw);
+            BubblePlacement placement = universeView.BubblePlacement;
+            currentSnapshot.SaveBubbleTransform(placement.OffsetLocal, placement.Yaw);
         }
 
         public void SyncIdCounters(GameSnapshot gameSnapshot) =>
@@ -165,6 +158,7 @@ namespace DigitalLove.Game.Levels
 
         private void FinalizeSpawn(GameSnapshot gameSnapshot)
         {
+            viewModeFanout.ApplyCurrentMode();
             silentPlanetsSpawner.SpawnIfNeeded(gameSnapshot.EnsureSilentPlanetSeed());
             PlanetRouteColorSync.Apply(gameSnapshot, planetsSpawner, hubsSpawner, spaceshipsSpawner);
             spaceshipsSpawner.RefreshGrabbablesAtStation();

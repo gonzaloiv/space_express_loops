@@ -2,6 +2,7 @@
     "name": "DigitalLove.Game.Levels",
     "rootNamespace": "",
     "references": [
+        "DigitalLove.FlowControl",
         "DigitalLove.Game.Nodes",
         "DigitalLove.Casual.Levels",
         "DigitalLove.Game.Spaceships",
