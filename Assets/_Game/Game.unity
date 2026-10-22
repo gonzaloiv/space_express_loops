@@ -1794,27 +1794,12 @@ MonoBehaviour:
   bubbleAnchor: {fileID: 782341900000000063}
   settings:
     miniBubbleRadius: 0.28
-    viewRadius: 2.5
+    viewRadius: 1.2
     bubbleDistance: 0.45
     bubbleHeightOffset: -0.1
     minMiniScale: 0.02
     transitionSecs: 0.6
     transitionEase: 4
---- !u!114 &782341900000000100
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 242500897}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4a1e7d29f3b4e5a8c6d0f1e2b3a4c5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Universe::DigitalLove.Game.Universe.UniverseColorScope
-  universeView: {fileID: 242500899}
-  softnessMeters: 0.03
-  maxStrength: 1
 --- !u!1 &250434372
 GameObject:
   m_ObjectHideFlags: 0
@@ -9181,7 +9166,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 723.08496, y: -50}
-  m_SizeDelta: {x: 243.83, y: 50}
+  m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1213392285
 MonoBehaviour:
@@ -15199,6 +15184,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 242500898}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &782341900000000100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242500897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4a1e7d29f3b4e5a8c6d0f1e2b3a4c5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Universe::DigitalLove.Game.Universe.UniverseColorScope
+  universeView: {fileID: 242500899}
+  softnessMeters: 0.03
+  maxStrength: 1
 --- !u!222 &797675841606255178
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -6,7 +6,7 @@ shader include, `UniverseView.BubbleBlend`, and the `UniverseColorScope` driver 
 and wired in `Game.unity`; world + room-prop materials are migrated to
 `DigitalLove/VFX/LitRim`. World-space UI hiding (`UniverseScopeUiVisibility`) is pending.
 
-**Related:** [Two views + interaction unify](../../done/universe-views-and-interaction.md) · [Transforming the universe](../../done/universe-transform.md)
+**Related:** [Two views + interaction unify](../done/universe-views-and-interaction.md) · [Transforming the universe](../done/universe-transform.md)
 
 **Wiring rule:** the scope driver and UI faders are authored components with serialized references. No runtime `AddComponent`, `GetComponent`, `FindObjectsByType`, or injected references. Shader globals are the only data channel.
 

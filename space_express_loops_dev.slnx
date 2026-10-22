@@ -6,7 +6,6 @@
   <Project Path="DigitalLove.Interactables.Core.csproj" />
   <Project Path="DigitalLove.Game.Spaceships.csproj" />
   <Project Path="DigitalLove.Interactables.OculusInteraction.csproj" />
-  <Project Path="DigitalLove.Game.DebugActions.csproj" />
   <Project Path="MegaFiers.Editor.csproj" />
   <Project Path="DigitalLove.UI.DesignSystem.Localization.csproj" />
   <Project Path="DigitalLove.XR.Core.csproj" />

@@ -4,7 +4,10 @@ Plans are grouped by state. Move a plan between folders when its state changes.
 
 ## In progress
 
-No plans in progress.
+| Plan | State | Notes |
+|---|---|---|
+| [Universe color scope](in-progress/universe-color-scope.md) | In progress | Box mask in the `LitRim` fork; shader, `UniverseView.BubbleBlend`, `UniverseColorScope`, and material migration done. World-space UI hiding (`UniverseScopeUiVisibility`) pending. |
+| [Space shaping — spike](in-progress/space-shaping-spike.md) | In progress | Tier 0 math (`SpacetimeField`, `TrajectoryIntegrator`) and the Tier 1 debug scene (`SpaceShapingPOC`) built; the launch-to-curvature ratio band and go/no-go decision are still open. |
 
 ## Backlog
 
@@ -12,16 +15,15 @@ No plans in progress.
 
 | Plan | State | Notes |
 |---|---|---|
-| [Space shaping — spike](backlog/gameplay/space-shaping-spike.md) | Backlog (do first) | Smallest testable version: pure math + a tiny 3D debug scene to find the thrust-to-force ratio. Gates the rest. |
 | [Space shaping — POC](backlog/gameplay/space-shaping.md) | Backlog (after the spike) | One ship, one destination. Move the sources; the derived spacetime grid bends the ship's path. Deterministic integrator, prediction line, commands/undo. |
 | [Space shaping — reframing and variations](backlog/gameplay/space-shaping-future.md) | Backlog (design only) | Recorded: Map/Sculpt views, simultaneous multi-ship, sequential multi-destination, level generation (editor + seed creator), minimum-move scoring. |
 | [Space shaping — integration into the game](backlog/gameplay/space-shaping-integration.md) | Backlog (design only) | Sketch: replace the current route/round/economy flow with the puzzle loop; scene, flow states, save/load, legacy removal. |
+| [Space shaping — architecture refactor](backlog/gameplay/space-shaping-architecture.md) | Backlog (design only) | Split the POC driver into one class per responsibility (domain / views / controllers / composition root) before it becomes the game. |
 
 ### Universe
 
 | Plan | State | Notes |
 |---|---|---|
-| [Universe color scope](backlog/universe/universe-color-scope.md) | Backlog | Bubble-first spatial color isolation in one URP Lit-based shader; soft edge, no post-process; room scope future. |
 | [Sector field (hub)](backlog/universe/universe-infinite-sector.md) | Backlog | Hub for the split slices below; bounded seeded field, no streaming. |
 | [Sector generation and extent](backlog/universe/universe-sector-generation.md) | Backlog | Slice 2: pure C# bounded extent, sector grid, `GalaxyShape` math, tests. No scene. Base for the shaping lattice. |
 

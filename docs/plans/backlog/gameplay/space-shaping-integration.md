@@ -3,7 +3,7 @@
 **Status:** backlog - design only (sketch). The largest and last slice; after the
 [POC](space-shaping.md) proves the feel.
 
-**Related:** [Spike](space-shaping-spike.md) · [POC](space-shaping.md) · [Reframing and variations](space-shaping-future.md) · [View frame](../../done/universe-bubble-window.md) · [Sector generation](../universe/universe-sector-generation.md)
+**Related:** [Spike](../../in-progress/space-shaping-spike.md) · [POC](space-shaping.md) · [Reframing and variations](space-shaping-future.md) · [View frame](../../done/universe-bubble-window.md) · [Sector generation](../universe/universe-sector-generation.md)
 
 **Wiring rule:** authored scene/prefab objects and serialized refs only. When the legacy
 flow is removed, delete its scene objects and components — do not leave them disabled.

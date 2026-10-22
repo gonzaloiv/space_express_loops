@@ -9,7 +9,7 @@ bounded, seeded field of systems that Map View pans; puzzles are authored
 (editor-first, or from the puzzle seed) as systems inside it. There is no
 round/hub/economy layer and no streaming here.
 
-**Related:** [Bubble map drag](../../done/universe-transform.md) · [Silent planets](../done/universe-silent-planets.md) · [Color scope](universe-color-scope.md)
+**Related:** [Bubble map drag](../../done/universe-transform.md) · [Silent planets](../done/universe-silent-planets.md) · [Color scope](../in-progress/universe-color-scope.md)
 
 ## Slices
 

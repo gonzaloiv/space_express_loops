@@ -10,6 +10,7 @@
     }
   ],
   "dependencies": {
+    "com.coplaydev.unity-mcp": "https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main",
     "com.gustavopsantos.reflex": "14.4.0",
     "com.meta.xr.mrutilitykit": "207.0.1",
     "com.meta.xr.sdk.audio": "85.0.0",
