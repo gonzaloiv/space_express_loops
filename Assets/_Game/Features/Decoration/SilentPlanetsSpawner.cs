@@ -31,7 +31,7 @@ namespace DigitalLove.Game.SilentPlanets
         [SerializeField, Min(0f)] private float roomVisibleRadius = 3f;
 
         [Header("Bubble view")]
-        [SerializeField, Min(1f)] private float bubbleFrameMargin = 1f;
+        [SerializeField, Min(1f)] private float bubbleFrameMargin = 2f;
 
         private readonly List<SilentPlanetBehaviour> planets = new();
         private bool hasSpawned;

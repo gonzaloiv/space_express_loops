@@ -1750,6 +1750,7 @@ GameObject:
   - component: {fileID: 242500899}
   - component: {fileID: 782341900000000017}
   - component: {fileID: 782341900000000020}
+  - component: {fileID: 782341900000000100}
   m_Layer: 0
   m_Name: Universe
   m_TagString: Untagged
@@ -1799,6 +1800,21 @@ MonoBehaviour:
     minMiniScale: 0.02
     transitionSecs: 0.6
     transitionEase: 4
+--- !u!114 &782341900000000100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242500897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4a1e7d29f3b4e5a8c6d0f1e2b3a4c5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Universe::DigitalLove.Game.Universe.UniverseColorScope
+  universeView: {fileID: 242500899}
+  softnessMeters: 0.03
+  maxStrength: 1
 --- !u!1 &250434372
 GameObject:
   m_ObjectHideFlags: 0
@@ -13245,6 +13261,7 @@ MonoBehaviour:
   maxRadius: 0.14
   placementAttempts: 64
   roomVisibleRadius: 3
+  bubbleFrameMargin: 1.1
 --- !u!4 &1987654322
 Transform:
   m_ObjectHideFlags: 0

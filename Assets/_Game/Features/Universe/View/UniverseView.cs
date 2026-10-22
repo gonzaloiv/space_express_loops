@@ -17,8 +17,10 @@ namespace DigitalLove.Game.Universe
         private UniverseContentRig rig;
         private Tween anchorTween;
         private Tween transitionTween;
+        private Tween blendTween;
         private Vector3 previewStartOffsetLocal;
         private bool isPreviewActive;
+        private float bubbleBlend;
 
         public IModeController<UniverseViewMode> Mode => mode;
         public event Action BubbleTransformCommitted;
@@ -27,6 +29,7 @@ namespace DigitalLove.Game.Universe
         public Vector3 FrameCenterWorld => rig.CenterWorld;
         public Quaternion FrameRotation => rig.HomeRotation;
         public float FrameHalfSizeWorld => rig.BubbleRadiusWorld;
+        public float BubbleBlend => bubbleBlend;
         internal UniverseMapFeedback MapFeedback { get; } = new();
         internal BubbleViewState State => new(
             Mode.Current, Mode.IsTransitioning, rig.HasRoomAnchor,
@@ -49,11 +52,13 @@ namespace DigitalLove.Game.Universe
             if (!hadAnchor || Mode.Current == UniverseViewMode.Bubble)
             {
                 rig.EnterBubble();
+                ApplyBlend(1f, true);
                 mode.TrySet(UniverseViewMode.Bubble);
                 return;
             }
 
             rig.ApplyRoomPose();
+            ApplyBlend(0f, true);
         }
 
         internal void SetBubbleView(UniverseViewMode target, bool instant)
@@ -68,6 +73,7 @@ namespace DigitalLove.Game.Universe
                     rig.ApplyRoomPose();
                 else
                     rig.EnterBubble();
+                ApplyBlend(target == UniverseViewMode.Bubble ? 1f : 0f, true);
                 mode.TrySet(target);
                 return;
             }
@@ -154,6 +160,7 @@ namespace DigitalLove.Game.Universe
             KillTransition();
             KillAnchorTween();
             isPreviewActive = false;
+            ApplyBlend(target == UniverseViewMode.Bubble ? 1f : 0f, false);
             ResolveTransitionTarget(target, out Vector3 position, out Quaternion rotation, out float scale);
 
             Sequence sequence = DOTween.Sequence();
@@ -209,6 +216,20 @@ namespace DigitalLove.Game.Universe
             anchorTween = null;
         }
 
+        private void ApplyBlend(float target, bool instant)
+        {
+            blendTween?.Kill();
+            blendTween = null;
+            if (instant)
+            {
+                bubbleBlend = target;
+                return;
+            }
+
+            blendTween = DOTween.To(() => bubbleBlend, v => bubbleBlend = v, target, settings.transitionSecs)
+                .SetEase(settings.transitionEase);
+        }
+
         private void KillTransition()
         {
             transitionTween?.Kill();
@@ -219,6 +240,8 @@ namespace DigitalLove.Game.Universe
         {
             KillTransition();
             KillAnchorTween();
+            blendTween?.Kill();
+            blendTween = null;
             isPreviewActive = false;
             mode.CancelTransition();
         }
