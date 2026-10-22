@@ -15,12 +15,12 @@ round/hub/economy layer and no streaming here.
 
 | Order | Plan | Scope | Depends on |
 |---|---|---|---|
-| 1 | [View frame (bubble cube)](universe-bubble-window.md) | The frame moves, the universe does not: a cube `{F, viewRadius, yaw}` drives the view; `m = miniBubbleRadius / viewRadius`. Removes content reparenting. Owns frame culling (hide out-of-frame content). | Transform (done) |
+| 1 | [View frame (bubble cube)](../../done/universe-bubble-window.md) | The frame moves, the universe does not: a cube `{F, viewRadius, yaw}` drives the view; `m = miniBubbleRadius / viewRadius`. Removes content reparenting. Owns frame culling (hide out-of-frame content). | Transform (done) |
 | 2 | [Sector generation and extent](universe-sector-generation.md) | Pure C# bounded extent model, sector grid, and `GalaxyShape` math; tests. No scene. | 1 |
 
 Why no streaming: the frame movement is bounded (`bubbleMoveLimit`), so the whole field is
 spawned at level start and out-of-view content is hidden by the frame cube
-([Bubble window](universe-bubble-window.md) §6.1).
+([Bubble window](../../done/universe-bubble-window.md) §6.1).
 
 ## What is already done
 

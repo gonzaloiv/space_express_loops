@@ -1,9 +1,9 @@
 # Universe — View Frame (Bubble Cube)
 
-**Status:** backlog - frame-first view model. Slice 1 of the sector-field split;
-prerequisite for color scope. Owns frame culling (the bounded field is pre-spawned).
+**Status:** done - implemented. Slice 1 of the sector-field split; prerequisite for color
+scope. Owns frame culling (the bounded field is pre-spawned).
 
-**Related:** [Bubble map drag](../../done/universe-transform.md) · [Sector field hub](universe-infinite-sector.md) · [Color scope](universe-color-scope.md)
+**Related:** [Bubble map drag](universe-transform.md) · [Sector field hub](../backlog/universe/universe-infinite-sector.md) · [Color scope](../backlog/universe/universe-color-scope.md)
 
 **Wiring rule:** frame values are serialized settings on the authored `Universe` root.
 No runtime `AddComponent`, `GetComponent`, or hierarchy creation. No new visual assets;
@@ -106,7 +106,7 @@ hides it.
 ## 6. Scope / marker / culling alignment
 
 - **Color scope:** the scope volume becomes the frame cube; the shader mask moves from a
-  sphere SDF to `sdBox` with equal extents. Update [Color scope](universe-color-scope.md).
+  sphere SDF to `sdBox` with equal extents. Update [Color scope](../backlog/universe/universe-color-scope.md).
 - **Center marker:** `UniverseCenterMarker` draws a square at the frame center with the
   cube extents instead of a ring.
 - **Culling:** content outside the cube (AABB test) is hidden/disabled; see §6.1.
@@ -129,13 +129,13 @@ The frame movement is bounded, so the universe does not stream:
 
 ## 7. Coordination
 
-- [Bubble map drag](../../done/universe-transform.md): its `bubbleMoveLimit` becomes a
+- [Bubble map drag](universe-transform.md): its `bubbleMoveLimit` becomes a
   frame clamp, and its `bubbleOffsetLocal`/`bubbleYaw` become frame focus + aperture.
   That plan is marked done but its view/pose model is superseded here; its deferred
   headset validation and tuning (`translationGain`, `translationSmoothSecs`,
   `recenterDistance`, `recenterHoldSecs`, `heightOffset`, `transitionSecs`) run in this
   slice, against the frame.
-- [Color scope](universe-color-scope.md): the scope center/radius become the frame cube,
+- [Color scope](../backlog/universe/universe-color-scope.md): the scope center/radius become the frame cube,
   not the content bounds.
 - Streaming: not needed; the field is bounded and pre-spawned, and this slice owns frame
   culling. `UniverseFocus` is this frame.
@@ -216,4 +216,4 @@ already in the code, so the remaining work is:
    removing it means spawning in content space, which is a separate placement step.
    `bubbleAnchor` is now a pose holder (written, not a parent).
 7. **Color scope alignment** (separate slice). The scope mask becomes the frame cube
-   (`sdBox`); update [Color scope](universe-color-scope.md).
+   (`sdBox`); update [Color scope](../backlog/universe/universe-color-scope.md).

@@ -23,7 +23,6 @@ No plans in progress.
 |---|---|---|
 | [Universe color scope](backlog/universe/universe-color-scope.md) | Backlog | Bubble-first spatial color isolation in one URP Lit-based shader; soft edge, no post-process; room scope future. |
 | [Sector field (hub)](backlog/universe/universe-infinite-sector.md) | Backlog | Hub for the split slices below; bounded seeded field, no streaming. |
-| [View frame (bubble window)](backlog/universe/universe-bubble-window.md) | Backlog | Slice 1: a box frame `{F, viewRadius, yaw}` moves over a fixed universe; `m = miniBubbleRadius / viewRadius`. Removes content reparenting. Owns frame culling; prereq for color scope; base for the Map/Sculpt frame. |
 | [Sector generation and extent](backlog/universe/universe-sector-generation.md) | Backlog | Slice 2: pure C# bounded extent, sector grid, `GalaxyShape` math, tests. No scene. Base for the shaping lattice. |
 
 ### Presentation and companion

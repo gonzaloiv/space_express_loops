@@ -1,6 +1,10 @@
 # Universe — Bubble Color Scope
 
-**Status:** backlog - design ready, not implemented.
+**Status:** in progress - implemented as a **box** mask (`sdBox`, to match the cube view
+frame) inside the existing `LitRim` URP-Lit fork, not a new shader and not a sphere. The
+shader include, `UniverseView.BubbleBlend`, and the `UniverseColorScope` driver are done
+and wired in `Game.unity`; world + room-prop materials are migrated to
+`DigitalLove/VFX/LitRim`. World-space UI hiding (`UniverseScopeUiVisibility`) is pending.
 
 **Related:** [Two views + interaction unify](../../done/universe-views-and-interaction.md) · [Transforming the universe](../../done/universe-transform.md)
 

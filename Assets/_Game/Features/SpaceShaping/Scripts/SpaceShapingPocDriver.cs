@@ -16,6 +16,12 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private float stepSecs = 1f / 120f;
         [SerializeField] private int maxSteps = 1200;
         [SerializeField] private bool updateLive = true;
+        [SerializeField] private LineRenderer[] gridLines;
+        [SerializeField] private Vector3 gridMin = new(-7f, -5f, -4f);
+        [SerializeField] private Vector3 gridMax = new(7f, 5f, 4f);
+        [SerializeField] private int gridCount = 4;
+        [SerializeField] private float gridDepthScale = 3.5f;
+        [SerializeField] private float gridMaxDisplacement = 3f;
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");
@@ -57,6 +63,7 @@ namespace DigitalLove.Game.SpaceShaping
             launch.ThrustAcceleration = thrustAcceleration;
             TrajectoryResult result = launch.Simulate(field, origin.position, destination.position, settings, integrator);
             Draw(result);
+            UpdateGrid();
             Snapshot();
         }
 
@@ -101,6 +108,49 @@ namespace DigitalLove.Game.SpaceShaping
                     return new Color(1f, 0.80f, 0.25f, 1f);
             }
         }
+
+        private void UpdateGrid()
+        {
+            int n = Mathf.Max(2, gridCount);
+            int perAxis = n * n;
+            for (int index = 0; index < gridLines.Length; index++)
+                DeformGridLine(gridLines[index], index / perAxis, index % perAxis, n);
+        }
+
+        private void DeformGridLine(LineRenderer line, int axis, int rem, int n)
+        {
+            int i = rem / n;
+            int j = rem % n;
+            line.positionCount = n;
+            for (int s = 0; s < n; s++)
+            {
+                Vector3 node = GridNode(axis, s, i, j, n);
+                Vector3 pull = field.Pull(node) * gridDepthScale;
+                if (pull.sqrMagnitude > gridMaxDisplacement * gridMaxDisplacement)
+                    pull = pull.normalized * gridMaxDisplacement;
+                line.SetPosition(s, node + pull);
+            }
+        }
+
+        private Vector3 GridNode(int axis, int s, int i, int j, int n)
+        {
+            float a = T(s, n);
+            float b = T(i, n);
+            float c = T(j, n);
+            if (axis == 0)
+                return new Vector3(X(a), Y(b), Z(c));
+            if (axis == 1)
+                return new Vector3(X(b), Y(a), Z(c));
+            return new Vector3(X(b), Y(c), Z(a));
+        }
+
+        private static float T(int k, int n) => n <= 1 ? 0.5f : (float)k / (n - 1);
+
+        private float X(float t) => Mathf.Lerp(gridMin.x, gridMax.x, t);
+
+        private float Y(float t) => Mathf.Lerp(gridMin.y, gridMax.y, t);
+
+        private float Z(float t) => Mathf.Lerp(gridMin.z, gridMax.z, t);
 
         private bool HasMoved()
         {

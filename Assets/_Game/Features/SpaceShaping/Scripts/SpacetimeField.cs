@@ -39,5 +39,19 @@ namespace DigitalLove.Game.SpaceShaping
 
             return acceleration;
         }
+
+        public Vector3 Pull(Vector3 position)
+        {
+            Vector3 pull = Vector3.zero;
+            for (int i = 0; i < sources.Count; i++)
+            {
+                SpaceSource source = sources[i];
+                Vector3 offset = source.Position - position;
+                float distance = Mathf.Max(offset.magnitude, source.Radius);
+                pull += offset * (source.Strength / (distance * distance));
+            }
+
+            return pull;
+        }
     }
 }

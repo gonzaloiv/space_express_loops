@@ -2,7 +2,7 @@
 
 **Status:** backlog - spike. Do first; it gates the rest of the feature.
 
-**Related:** [POC](space-shaping.md) · [Reframing and variations](space-shaping-future.md) · [Integration into the game](space-shaping-integration.md) · [View frame (bubble window)](../universe/universe-bubble-window.md)
+**Related:** [POC](space-shaping.md) · [Reframing and variations](space-shaping-future.md) · [Integration into the game](space-shaping-integration.md) · [View frame (bubble window)](../../done/universe-bubble-window.md)
 
 **Wiring rule:** Tier 0 is pure C#. Tier 1 uses authored scene objects and serialized refs only; no runtime component lookup or creation.
 

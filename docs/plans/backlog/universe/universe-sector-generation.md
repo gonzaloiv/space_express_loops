@@ -6,7 +6,7 @@
 layout is what the shaping lattice operates on; a puzzle system may be authored
 (editor-first, or from the puzzle seed) inside its sector.
 
-**Related:** [Sector field hub](universe-infinite-sector.md) · [Bubble window](universe-bubble-window.md)
+**Related:** [Sector field hub](universe-infinite-sector.md) · [Bubble window](../../done/universe-bubble-window.md)
 
 **Wiring rule:** generation is deterministic C#. No `UnityEngine.Random` in per-frame
 code, no scene iteration, no runtime-created assets.
@@ -21,7 +21,7 @@ Provide the deterministic, testable foundation for a bounded, seeded universe:
   radii, and an anchor pose.
 
 Everything here is pure C# and unit-testable without a Unity scene. Scene spawning and
-visibility live in [Bubble window](universe-bubble-window.md): the whole bounded field is
+visibility live in [Bubble window](../../done/universe-bubble-window.md): the whole bounded field is
 pre-spawned and out-of-frame content is hidden by the frame cube.
 
 ## 2. Model

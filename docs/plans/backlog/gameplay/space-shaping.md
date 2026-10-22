@@ -3,7 +3,7 @@
 **Status:** backlog - POC. After the [spike](space-shaping-spike.md). Replaces drawn
 routes with shaping space.
 
-**Related:** [Spike (smallest testable version)](space-shaping-spike.md) · [Reframing and variations](space-shaping-future.md) · [Integration into the game](space-shaping-integration.md) · [View frame (bubble window)](../universe/universe-bubble-window.md) · [Sector generation](../universe/universe-sector-generation.md) · [Parked: planet route drawing](../../parked/planet-route-drawing.md)
+**Related:** [Spike (smallest testable version)](space-shaping-spike.md) · [Reframing and variations](space-shaping-future.md) · [Integration into the game](space-shaping-integration.md) · [View frame (bubble window)](../../done/universe-bubble-window.md) · [Sector generation](../universe/universe-sector-generation.md) · [Parked: planet route drawing](../../parked/planet-route-drawing.md)
 
 **Wiring rule:** the grid visualization, the prediction line, the ship, and the sources are authored in the scene/prefab and referenced through serialized fields. No runtime `AddComponent`, `GetComponent`, `FindObjectsByType`, or hierarchy/mesh/asset creation. Follow the SerializeField wiring rules in the project `AGENTS.md`.
 
@@ -45,7 +45,7 @@ first slice of the reframing in
   `RouteLeg.positions`. Ships never integrate a field today.
 - Routes and route lines are content-local, so they already survive the content
   transform `D`.
-- The [view frame](../universe/universe-bubble-window.md) gives the box frame
+- The [view frame](../../done/universe-bubble-window.md) gives the box frame
   `{F, viewRadius, yaw}` this POC uses as the Sculpt box. It lands as its own slice; the
   POC consumes it.
 - `SeededRandom` (`DigitalLove.Global`) is the deterministic PRNG for any seeding.
@@ -302,7 +302,7 @@ decide whether this is a puzzle or a lottery. Tune them together in S2.
    flow field later.
 2. **Wells in v1.** Include the well/bump source in the POC, or planets-only first?
    Default: planets-only; wells in a follow-up.
-3. **View for the POC.** Use the [frame](../universe/universe-bubble-window.md) as the
+3. **View for the POC.** Use the [frame](../../done/universe-bubble-window.md) as the
    Sculpt box directly, or a stand-in if the frame slice is not wired yet. Default: use
    the frame.
 4. **Crash rendering.** How a crash reads in the UI (path color, marker) is a tuning

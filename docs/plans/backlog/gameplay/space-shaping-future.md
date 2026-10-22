@@ -3,7 +3,7 @@
 **Status:** backlog - design only, recorded. Not started. The actionable slice is
 [Space shaping — POC](space-shaping.md).
 
-**Related:** [POC](space-shaping.md) · [View frame (bubble window)](../universe/universe-bubble-window.md) · [Sector generation](../universe/universe-sector-generation.md) · [Sector field](../universe/universe-infinite-sector.md)
+**Related:** [POC](space-shaping.md) · [View frame (bubble window)](../../done/universe-bubble-window.md) · [Sector generation](../universe/universe-sector-generation.md) · [Sector field](../universe/universe-infinite-sector.md)
 
 **Wiring rule:** all visuals and interaction props stay authored in the scene/prefabs
 with serialized references. No runtime component lookup, mesh/material creation, or
@@ -33,7 +33,7 @@ Naming: "Sculpt View" is the micro view (the earlier "Edition View" collided wit
 ## 2. Views
 
 - **Map View = the existing Bubble, evolved.** The frame model in
-  [view frame](../universe/universe-bubble-window.md) already gives the movable box
+  [view frame](../../done/universe-bubble-window.md) already gives the movable box
   `{F, viewRadius, yaw}` over a universe fixed in content space; panning brings a
   distant sector in front. Map View is that, at a wide aperture.
 - **Sculpt View = the same frame, narrow aperture, source editing active.** Opening/
@@ -154,7 +154,7 @@ Parked (collide with this framing):
 
 Relied on (support the framing):
 
-- [View frame (bubble window)](../universe/universe-bubble-window.md) — the Map/Sculpt
+- [View frame (bubble window)](../../done/universe-bubble-window.md) — the Map/Sculpt
   frame.
 - [Sector generation](../universe/universe-sector-generation.md) — the structured,
   seeded system layout the sources come from.

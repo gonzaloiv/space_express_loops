@@ -3,7 +3,7 @@
 **Status:** backlog - design only (sketch). The largest and last slice; after the
 [POC](space-shaping.md) proves the feel.
 
-**Related:** [Spike](space-shaping-spike.md) · [POC](space-shaping.md) · [Reframing and variations](space-shaping-future.md) · [View frame](../universe/universe-bubble-window.md) · [Sector generation](../universe/universe-sector-generation.md)
+**Related:** [Spike](space-shaping-spike.md) · [POC](space-shaping.md) · [Reframing and variations](space-shaping-future.md) · [View frame](../../done/universe-bubble-window.md) · [Sector generation](../universe/universe-sector-generation.md)
 
 **Wiring rule:** authored scene/prefab objects and serialized refs only. When the legacy
 flow is removed, delete its scene objects and components — do not leave them disabled.
@@ -45,7 +45,7 @@ Delete (not disable) the pieces the reframing drops:
 ### 3.3 Keep and reuse
 
 - The universe frame (Map/Sculpt) from
-  [view frame](../universe/universe-bubble-window.md).
+  [view frame](../../done/universe-bubble-window.md).
 - Structured system layout from
   [sector generation](../universe/universe-sector-generation.md).
 - The planet prefab visual, the XR rig/hands, and the two-hand gesture.
