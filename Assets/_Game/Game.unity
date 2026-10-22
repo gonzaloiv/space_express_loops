@@ -1793,6 +1793,7 @@ MonoBehaviour:
   bubbleAnchor: {fileID: 782341900000000063}
   settings:
     miniBubbleRadius: 0.28
+    viewRadius: 2.5
     bubbleDistance: 0.45
     bubbleHeightOffset: -0.1
     minMiniScale: 0.02

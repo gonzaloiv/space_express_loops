@@ -4,6 +4,8 @@
 
 **Post-completion:** Room/Bubble now uses authored scene anchors (`RoomAnchor`/`BubbleAnchor`) through `UniverseContentRig`. A bubble drag moves the anchor, so the center ring travels with the map instead of staying fixed.
 
+**Superseded (view/pose model):** The view/pose model here — content reparented between anchors, `bubbleOffsetLocal`/`bubbleYaw`, `bubbleMoveLimit`, and the ring marker tied to the content center — is superseded by [View frame (bubble window)](../backlog/universe/universe-bubble-window.md), which makes a box frame `{F, viewRadius, yaw}` the source of truth over a universe fixed in content space. The gesture, input, commit, and route-pause work below survives; only the pose/scale basis and the marker shape change. This plan's deferred headset validation and tuning (`Next step`) are carried into that slice so they run once, against the frame.
+
 **Related:** [Two views + interaction unify](universe-views-and-interaction.md) · [Universe galaxies](../backlog/universe/universe-galaxies.md) · [Infinite sector](../backlog/universe/universe-infinite-sector.md) · [Color scope](../backlog/universe/universe-color-scope.md)
 
 **Wiring rule:** all visuals and refs stay authored in the scene/prefabs. No runtime `AddComponent`, `GetComponent`, or hierarchy creation.

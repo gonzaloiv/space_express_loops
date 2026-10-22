@@ -17,8 +17,7 @@ namespace DigitalLove.Game.Universe
         private UniverseContentRig rig;
         private Tween anchorTween;
         private Tween transitionTween;
-        private Vector3 previewStartPosition;
-        private Quaternion previewStartRotation;
+        private Vector3 previewStartOffsetLocal;
         private bool isPreviewActive;
 
         public IModeController<UniverseViewMode> Mode => mode;
@@ -36,10 +35,10 @@ namespace DigitalLove.Game.Universe
             rig.Initialize();
         }
 
-        public void SetRoomAnchor(Pose pose, Bounds roomBounds)
+        public void SetRoomAnchor(Pose pose)
         {
             bool hadAnchor = rig.HasRoomAnchor;
-            rig.SetRoomAnchor(pose, roomBounds);
+            rig.SetRoomAnchor(pose);
             if (Mode.IsTransitioning)
                 return;
 
@@ -78,12 +77,6 @@ namespace DigitalLove.Game.Universe
             if (action == null)
                 return;
 
-            if (Mode.Current == UniverseViewMode.Room)
-            {
-                action();
-                return;
-            }
-
             rig.BeginTemporaryRoomPose();
             try
             {
@@ -104,10 +97,9 @@ namespace DigitalLove.Game.Universe
 
         internal void ResetBubbleMap()
         {
-            KillAnchorTween();
             isPreviewActive = false;
             if (Mode.Current == UniverseViewMode.Bubble && !Mode.IsTransitioning)
-                TweenAnchor(rig.HomePosition, rig.HomeRotation, rig.MiniScale);
+                TweenFocusOffset(Vector3.zero);
         }
 
         internal void BeginBubblePreview()
@@ -116,9 +108,7 @@ namespace DigitalLove.Game.Universe
                 return;
 
             KillAnchorTween();
-            rig.ParentContentToBubble();
-            previewStartPosition = bubbleAnchor.position;
-            previewStartRotation = bubbleAnchor.rotation;
+            previewStartOffsetLocal = rig.FocusOffsetLocal;
             isPreviewActive = true;
         }
 
@@ -127,9 +117,7 @@ namespace DigitalLove.Game.Universe
             if (!isPreviewActive)
                 return;
 
-            Vector3 position = previewStartPosition + worldOffset;
-            position.y = previewStartPosition.y;
-            bubbleAnchor.SetPositionAndRotation(position, previewStartRotation);
+            rig.ApplyDrag(previewStartOffsetLocal, worldOffset);
         }
 
         internal void CancelBubblePreview()
@@ -138,7 +126,7 @@ namespace DigitalLove.Game.Universe
                 return;
 
             isPreviewActive = false;
-            TweenAnchor(previewStartPosition, previewStartRotation, bubbleAnchor.localScale.x);
+            TweenFocusOffset(previewStartOffsetLocal);
         }
 
         internal void CommitBubblePreview()
@@ -162,8 +150,8 @@ namespace DigitalLove.Game.Universe
             KillTransition();
             KillAnchorTween();
             isPreviewActive = false;
-            contentRoot.SetParent(roomAnchor, true);
             ResolveTransitionTarget(target, out Vector3 position, out Quaternion rotation, out float scale);
+            contentRoot.SetParent(roomAnchor, true);
 
             Sequence sequence = DOTween.Sequence();
             sequence.Join(contentRoot.DOMove(position, settings.transitionSecs).SetEase(settings.transitionEase));
@@ -185,33 +173,31 @@ namespace DigitalLove.Game.Universe
         {
             if (target == UniverseViewMode.Bubble)
             {
-                rig.PrepareBubble();
-                scale = bubbleAnchor.localScale.x;
-                position = rig.GetBubbleContentPosition();
-                rotation = bubbleAnchor.rotation;
+                rig.RecaptureBubble();
+                scale = rig.MiniScale;
+                position = rig.GetDisplayContentPosition(scale);
+                rotation = rig.HomeRotation;
                 return;
             }
 
-            position = roomAnchor.position;
-            rotation = roomAnchor.rotation;
             scale = 1f;
+            position = rig.GetDisplayContentPosition(scale);
+            rotation = rig.HomeRotation;
         }
 
-        private void TweenAnchor(Vector3 position, Quaternion rotation, float scale)
+        private void TweenFocusOffset(Vector3 targetOffset)
         {
             KillAnchorTween();
             if (settings.transitionSecs <= 0f)
             {
-                bubbleAnchor.SetPositionAndRotation(position, rotation);
-                bubbleAnchor.localScale = Vector3.one * scale;
+                rig.SetFocusOffset(targetOffset);
                 return;
             }
 
-            Sequence sequence = DOTween.Sequence();
-            sequence.Join(bubbleAnchor.DOMove(position, settings.transitionSecs).SetEase(settings.transitionEase));
-            sequence.Join(bubbleAnchor.DORotateQuaternion(rotation, settings.transitionSecs).SetEase(settings.transitionEase));
-            sequence.Join(bubbleAnchor.DOScale(scale, settings.transitionSecs).SetEase(settings.transitionEase));
-            anchorTween = sequence;
+            Vector3 start = rig.FocusOffsetLocal;
+            anchorTween = DOTween
+                .To(() => start, rig.SetFocusOffset, targetOffset, settings.transitionSecs)
+                .SetEase(settings.transitionEase);
         }
 
         private void KillAnchorTween()
@@ -225,6 +211,7 @@ namespace DigitalLove.Game.Universe
             transitionTween?.Kill();
             transitionTween = null;
         }
+
         private void OnDisable()
         {
             KillTransition();

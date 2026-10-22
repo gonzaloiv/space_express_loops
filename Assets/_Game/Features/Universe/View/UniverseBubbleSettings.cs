@@ -9,6 +9,7 @@ namespace DigitalLove.Game.Universe
     {
         [Header("Bubble")]
         [Min(0.05f)] public float miniBubbleRadius = 0.28f;
+        [Min(0.1f)] public float viewRadius = 2.5f;
         [Min(0.1f)] public float bubbleDistance = 0.45f;
         public float bubbleHeightOffset = -0.1f;
         [Min(0.001f)] public float minMiniScale = 0.02f;

@@ -13,8 +13,12 @@ No plans in progress.
 | Plan | State | Notes |
 |---|---|---|
 | [Universe color scope](backlog/universe/universe-color-scope.md) | Backlog | Bubble-first spatial color isolation in one URP Lit-based shader; soft edge, no post-process; room scope future. |
-| [Infinite sector](backlog/universe/universe-infinite-sector.md) | Backlog | Effectively infinite procedural sectors in the bubble window; streaming, floating-origin rebase, recenter, ambient planet activation. |
-| [Universe galaxies](backlog/universe/universe-galaxies.md) | Backlog | Galaxy groups, level/round creation, two-hand group transform, layout response. |
+| [Infinite sector (hub)](backlog/universe/universe-infinite-sector.md) | Backlog | Hub for the split slices below; shared context and order. |
+| [View frame (bubble cube)](backlog/universe/universe-bubble-window.md) | Backlog | Slice 1: a cube frame `{F, viewRadius, yaw}` moves over a fixed universe; `m = miniBubbleRadius / viewRadius`. Removes content reparenting. Prereq for streaming and color scope. |
+| [Sector generation and extent](backlog/universe/universe-sector-generation.md) | Backlog | Slice 2: pure C# extent/focus/rebase, sector grid, `GalaxyShape` math, tests. No scene. |
+| [Sector streaming](backlog/universe/universe-sector-streaming.md) | Backlog | Slice 3: pooled streaming, pan integration, floating-origin rebase, recenter, room-view visibility, central galaxy. |
+| [Ambient round activation](backlog/universe/universe-ambient-round-activation.md) | Backlog | Slice 4: rounds activate existing decor planets; pool growth, intergalactic selection, persistence. |
+| [Universe galaxies](backlog/universe/universe-galaxies.md) | Backlog | Galaxy groups, level/round creation, two-hand group transform, layout response. Still to be analysed. |
 
 ### Gameplay
 

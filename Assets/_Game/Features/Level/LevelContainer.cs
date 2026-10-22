@@ -196,7 +196,6 @@ namespace DigitalLove.Game.Levels
 
             hasCenteredContent = false;
             MRUKRoom room = MRUK.Instance.GetCurrentRoom();
-            Bounds roomBounds = room.GetRoomBounds();
             Pose originPose = new()
             {
                 position = room.Center(),
@@ -211,7 +210,7 @@ namespace DigitalLove.Game.Levels
                     toSet = originPose;
                 }
 
-                universeView.SetRoomAnchor(toSet, roomBounds);
+                universeView.SetRoomAnchor(toSet);
                 onComplete?.Invoke();
             });
         }

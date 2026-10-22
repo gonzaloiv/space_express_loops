@@ -11,5 +11,11 @@ namespace DigitalLove.Game.Universe
         public void SetActive(bool active) => IsActive = active;
 
         public void SetScaleFeedback(float value) => ScaleFeedback = value;
+
+        public void Reset()
+        {
+            IsActive = false;
+            ScaleFeedback = 0f;
+        }
     }
 }

@@ -45,7 +45,8 @@ namespace DigitalLove.Game.Levels
         private void OnTransitionStarted(UniverseViewMode target)
         {
             spaceshipsSpawner.SetViewTransition(true);
-            ApplyBubbleView(target);
+            spaceshipsSpawner.SetBubbleView(true);
+            silentPlanetsSpawner.SetBubbleView(target == UniverseViewMode.Bubble);
         }
 
         private void OnTransitionCompleted(UniverseViewMode target)

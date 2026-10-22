@@ -50,13 +50,17 @@ namespace DigitalLove.Game.Universe
             if (state.IsTransitioning)
             {
                 ghostView.Hide();
+                universeView.MapFeedback.Reset();
                 return;
             }
 
             universeView.MapFeedback.SetBlocked(spaceshipsSpawner.IsAnyRouteEditing());
             if (IsRouteEditing() || gate.IsCoolingDown
                 || gate.UpdateSuppression(gestureInput.State, ghostView))
+            {
+                universeView.MapFeedback.Reset();
                 return;
+            }
 
             UpdateGesture();
             if (!UpdateActiveSession(state))
@@ -70,12 +74,7 @@ namespace DigitalLove.Game.Universe
             ghostView.Hide();
         }
 
-        public void OnTransitionCompleted()
-        {
-            spaceshipsSpawner.SetViewTransition(false);
-            spaceshipsSpawner.RefreshGrabbablesAtStation();
-            gate.OnTransitionCompleted(gestureInput.State);
-        }
+        public void OnTransitionCompleted() => gate.OnTransitionCompleted(gestureInput.State);
 
         private bool IsRouteEditing()
         {

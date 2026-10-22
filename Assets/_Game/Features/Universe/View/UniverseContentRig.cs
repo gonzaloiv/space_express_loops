@@ -10,9 +10,10 @@ namespace DigitalLove.Game.Universe
         private readonly UniverseBubbleSettings settings;
 
         private Vector3 contentCenterLocal;
-        private float contentRadius = 2.5f;
-        private Vector3 homePosition;
+        private Vector3 focusOffsetLocal;
+        private Vector3 centerWorld;
         private Quaternion homeRotation = Quaternion.identity;
+        private bool bubbleCenterLocked;
         private Vector3 temporaryPosition;
         private Quaternion temporaryRotation;
         private float temporaryScale;
@@ -31,31 +32,62 @@ namespace DigitalLove.Game.Universe
 
         public bool HasRoomAnchor { get; private set; }
         public float Scale => contentRoot.lossyScale.x;
-        public float MiniScale => Mathf.Clamp(settings.miniBubbleRadius / contentRadius, settings.minMiniScale, 1f);
-        public float BubbleRadiusWorld => contentRadius * Scale;
+        public float MiniScale => Mathf.Clamp(
+            settings.miniBubbleRadius / Mathf.Max(settings.viewRadius, 0.01f),
+            settings.minMiniScale,
+            1f);
+        public float BubbleRadiusWorld => Mathf.Max(settings.viewRadius, 0.01f) * Scale;
         public Vector3 ContentPosition => contentRoot.position;
-        public Vector3 CenterWorld => contentRoot.position + contentRoot.rotation * (Scale * contentCenterLocal);
-        public Vector3 HomePosition => homePosition;
+        public Vector3 CenterWorld => centerWorld;
         public Quaternion HomeRotation => homeRotation;
+        public Vector3 FocusOffsetLocal => focusOffsetLocal;
+
+        private Vector3 FocusLocal => contentCenterLocal + focusOffsetLocal;
 
         public void Initialize()
         {
             roomAnchor.SetPositionAndRotation(contentRoot.position, contentRoot.rotation);
             roomAnchor.localScale = Vector3.one;
             contentRoot.SetParent(roomAnchor, false);
-            ApplyRoomPose();
+            ApplyCanonicalRoomPose();
         }
 
-        public void SetRoomAnchor(Pose pose, Bounds roomBounds)
+        public void SetRoomAnchor(Pose pose)
         {
             roomAnchor.SetPositionAndRotation(pose.position, YawOnly(pose.rotation));
             roomAnchor.localScale = Vector3.one;
-            if (roomBounds.size.sqrMagnitude > 0.0001f)
-                contentRadius = Mathf.Max(roomBounds.extents.magnitude, 0.1f);
             HasRoomAnchor = true;
         }
 
+        public void RecaptureBubble()
+        {
+            centerWorld = GetCameraFront();
+            homeRotation = GetCameraYaw();
+            focusOffsetLocal = Vector3.zero;
+        }
+
+        public void EnterBubble()
+        {
+            bubbleCenterLocked = false;
+            RecaptureBubble();
+            ApplyBubblePose();
+        }
+
+        public void ApplyBubblePose()
+        {
+            bubbleAnchor.SetPositionAndRotation(centerWorld, homeRotation);
+            bubbleAnchor.localScale = Vector3.one * MiniScale;
+            ParentContentToDisplay();
+        }
+
         public void ApplyRoomPose()
+        {
+            bubbleAnchor.SetPositionAndRotation(centerWorld, homeRotation);
+            bubbleAnchor.localScale = Vector3.one;
+            ParentContentToDisplay();
+        }
+
+        public void ApplyCanonicalRoomPose()
         {
             contentRoot.SetParent(roomAnchor, false);
             contentRoot.localPosition = Vector3.zero;
@@ -63,37 +95,43 @@ namespace DigitalLove.Game.Universe
             contentRoot.localScale = Vector3.one;
         }
 
-        public void EnterBubble()
-        {
-            PrepareBubble();
-            ParentContentToBubble();
-        }
-
-        public void PrepareBubble()
-        {
-            homePosition = GetCameraFront();
-            homeRotation = GetCameraYaw();
-            bubbleAnchor.SetPositionAndRotation(homePosition, homeRotation);
-            bubbleAnchor.localScale = Vector3.one * MiniScale;
-        }
-
-        public void ParentContentToBubble()
-        {
-            contentRoot.SetParent(bubbleAnchor, false);
-            contentRoot.localPosition = -contentCenterLocal;
-            contentRoot.localRotation = Quaternion.identity;
-            contentRoot.localScale = Vector3.one;
-        }
-
-        public Vector3 GetBubbleContentPosition() =>
-            bubbleAnchor.position - bubbleAnchor.rotation * (bubbleAnchor.localScale.x * contentCenterLocal);
-
         public void CompleteTransition(UniverseViewMode target)
         {
             if (target == UniverseViewMode.Bubble)
-                ParentContentToBubble();
+                ApplyBubblePose();
             else
                 ApplyRoomPose();
+        }
+
+        public Vector3 GetDisplayContentPosition(float scale) =>
+            centerWorld - homeRotation * (scale * FocusLocal);
+
+        public void SetContentCenterLocal(Vector3 centerLocal, bool applyToBubble)
+        {
+            contentCenterLocal = centerLocal;
+            if (!applyToBubble)
+                return;
+
+            if (!bubbleCenterLocked)
+            {
+                bubbleCenterLocked = true;
+                RecaptureBubble();
+            }
+
+            ApplyBubblePose();
+        }
+
+        public void SetFocusOffset(Vector3 offsetLocal)
+        {
+            focusOffsetLocal = offsetLocal;
+            ApplyFocus();
+        }
+
+        public void ApplyDrag(Vector3 startOffsetLocal, Vector3 worldOffset)
+        {
+            focusOffsetLocal = startOffsetLocal
+                - Quaternion.Inverse(homeRotation) * worldOffset / Mathf.Max(MiniScale, 0.0001f);
+            ApplyFocus();
         }
 
         public void BeginTemporaryRoomPose()
@@ -101,7 +139,7 @@ namespace DigitalLove.Game.Universe
             temporaryPosition = contentRoot.position;
             temporaryRotation = contentRoot.rotation;
             temporaryScale = Scale;
-            ApplyRoomPose();
+            ApplyCanonicalRoomPose();
         }
 
         public void EndTemporaryRoomPose(UniverseViewMode mode, bool isTransitioning)
@@ -115,39 +153,38 @@ namespace DigitalLove.Game.Universe
             }
 
             if (mode == UniverseViewMode.Bubble)
-                ParentContentToBubble();
+                ApplyBubblePose();
             else
                 ApplyRoomPose();
         }
 
-        public void SetContentCenterLocal(Vector3 centerLocal, bool applyToBubble)
-        {
-            contentCenterLocal = centerLocal;
-            if (!applyToBubble)
-                return;
-
-            bubbleAnchor.localScale = Vector3.one * MiniScale;
-            ParentContentToBubble();
-        }
+        public BubblePlacement BuildPlacement() => new(focusOffsetLocal, homeRotation);
 
         public void RestorePlacement(Vector3 offsetLocal, Quaternion yaw, bool applyToBubble)
         {
+            centerWorld = GetCameraFront();
             homeRotation = YawOnly(yaw);
-            homePosition = GetCameraFront();
-            bubbleAnchor.SetPositionAndRotation(
-                homePosition + homeRotation * (offsetLocal * MiniScale),
-                homeRotation);
-            bubbleAnchor.localScale = Vector3.one * MiniScale;
-
+            focusOffsetLocal = offsetLocal;
+            bubbleCenterLocked = true;
             if (applyToBubble)
-                ParentContentToBubble();
+                ApplyBubblePose();
         }
-
-        public BubblePlacement BuildPlacement() =>
-            BubblePlacement.FromAnchor(bubbleAnchor.position, homePosition, homeRotation, Scale);
 
         public Vector3 WorldToContentLocal(Vector3 worldPosition) =>
             contentRoot.InverseTransformPoint(worldPosition);
+
+        private void ParentContentToDisplay()
+        {
+            contentRoot.SetParent(bubbleAnchor, false);
+            contentRoot.localPosition = -FocusLocal;
+            contentRoot.localRotation = Quaternion.identity;
+            contentRoot.localScale = Vector3.one;
+        }
+
+        private void ApplyFocus()
+        {
+            contentRoot.localPosition = -FocusLocal;
+        }
 
         private Vector3 GetCameraFront()
         {
@@ -157,7 +194,7 @@ namespace DigitalLove.Game.Universe
 
             return camera.transform.position
                 + camera.transform.forward * settings.bubbleDistance
-                + camera.transform.up * settings.bubbleHeightOffset;
+                + Vector3.up * settings.bubbleHeightOffset;
         }
 
         private Quaternion GetCameraYaw()

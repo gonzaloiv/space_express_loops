@@ -111,16 +111,31 @@ namespace DigitalLove.Game.Spaceships
                 return;
 
             refs.GrabbableWrapper.SetInteractionEnabled(!isBubble);
-
-            if (isBubble && stateMachine.IsCurrentState<SpaceshipSelectingState>())
-            {
-                if (session.HasDestinations)
-                    stateMachine.SetCurrentState<SpaceshipRunningState>();
-                else
-                    stateMachine.SetCurrentState<SpaceshipIdleState>();
-            }
-
+            CancelSelectionForBubble(isBubble);
             refs.GrabMePanel.SetActive(!isBubble && stateMachine.IsCurrentState<SpaceshipIdleState>());
+            ApplyGrabbableVisibility(isBubble);
+        }
+
+        private void CancelSelectionForBubble(bool isBubble)
+        {
+            if (!isBubble || !stateMachine.IsCurrentState<SpaceshipSelectingState>())
+                return;
+
+            if (session.HasDestinations)
+                stateMachine.SetCurrentState<SpaceshipRunningState>();
+            else
+                stateMachine.SetCurrentState<SpaceshipIdleState>();
+        }
+
+        private void ApplyGrabbableVisibility(bool isBubble)
+        {
+            if (session.HasDestinations || stateMachine.IsCurrentState<SpaceshipSelectingState>())
+                return;
+
+            if (isBubble)
+                refs.GrabbableWrapper.Hide();
+            else
+                refs.GrabbableWrapper.Show();
         }
 
         public void RefreshGrabZoneTarget()
