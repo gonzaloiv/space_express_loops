@@ -1,9 +1,11 @@
 # Space Shaping — Test Slice (Is It a Game?)
 
-**Status:** in progress - T0 and T1 landed in the lab. The smallest change set that
-tests whether space-time editing is a **game**, not a toy. Built in the **POC lab
-scene**, not the game scene. Next: T2 (puzzles, prediction toggle, straight-line
-reference).
+**Status:** parked - **not completed**; superseded by the
+[lens plan](../in-progress/space-shaping-lens.md) (the lens changes the *verb*, not the
+*field*). T0 (determinism, HUD) and T1 (ship clock, deadline) **landed in code** and carry
+over as the lens plan's harness; T2 (puzzles, prediction toggle) and T3 (launch + flight +
+grade) were **not built** — they move into the lens plan as L2 and L1. The on-device gate
+never ran. Kept for the tuning data (§13, §16, §17) and the verification record.
 
 **Related:** [project direction](../../design/project-direction.md) · [relativity as gameplay](../../design/relativity-as-gameplay.md) · [transport company](../../design/transport-company.md) · [POC](../done/space-shaping.md) · [architecture](../done/space-shaping-architecture.md) · [integration](../backlog/gameplay/space-shaping-integration.md)
 
@@ -42,8 +44,9 @@ Build this in `SpaceShapingPOC.unity`, **not** by integrating into `Game.unity`.
 - No sectors, multi-ship, network map, or level generation.
 - No art, audio, or haptics polish.
 - No transport-company wrapper (contracts, economy, progression).
-- No move budget — the lab recomputes live with no commit step, so a move budget
-  needs commit-on-release semantics. A deadline is the cheaper cost (§5).
+- No move budget. A deadline is the cheaper cost (§5); the grade (T3) is time-based, not
+  move-based. T3 adds a **launch/commit** step for the game-feel pass, but scoring stays
+  on ship-time — no per-move scoring.
 
 ## 4. Existing facts (what the lab already does)
 
@@ -80,11 +83,31 @@ So "does it bend / can I reach it / does it feel good" is already testable today
 5. **Readout (DONE):** the HUD shows outcome, ship-time vs deadline (red when over),
    solved (green), and edit count.
 
-### T2 — content and the legibility probe (next)
-6. **3–5 puzzles** of rising difficulty (planet count/placement) as assets.
-7. **Prediction on/off toggle** for a "predict, then reveal" probe: ask the tester
-   which way the ship will curve, then show the line.
+### T2 — content and the legibility probe (puzzles done, toggle next)
+6. **Puzzles (DONE, §18):** 6 authored with different geometry, each measured so the start
+   fails and a solution exists inside the move range. Rising difficulty is only partly
+   there — every puzzle still shares the goal "place a well near the line"; planet count
+   would need a third authored source view.
+7. **Prediction on/off toggle** (next) for a "predict, then reveal" probe: ask the tester
+   which way the ship will curve, then show the line. This is the Gate A legibility
+   metric, so it is the one remaining item that must land before Gate A can run.
 8. Optional: faint **straight-line reference** (the empty-field path) as a baseline.
+
+### T3 — the game-feel minimum (after T2)
+The current lab is a live calculator: nothing commits, nothing flies, nothing is graded,
+so there is no moment to feel and no reason to retry. T3 adds the smallest set that makes
+the *game* observable. The puzzle is already testable without it (Gate A, §8).
+
+9. **Launch / commit.** A launch action that locks the current arrangement and runs it;
+   the ship becomes a real authored object that follows the computed path (reuse
+   `TravellerPathFollower` conventions). Without a commit there is no tension.
+10. **A flying ship + the clock.** The ship traverses the path; the ship clock ticks and
+    visibly slows near mass. This is the demo beat and the thing to watch.
+11. **A grade.** Pass = arrive under deadline (have). Score = margin under par (stars),
+    one number, no economy. Without a result worth improving there is no pull to retry.
+12. **Job name** on the readout (near-free flavour: origin -> destination).
+13. **Per-attempt telemetry:** attempts, retries after a grade, time-to-first-launch,
+    launch->result, edits-per-attempt. Extend `editCount`; do not add an edit cap (A6).
 
 ## 6. Phases
 
@@ -94,13 +117,22 @@ So "does it bend / can I reach it / does it feel good" is already testable today
 - **T1 (landed):** ship clock + deadline + readout.
   **Exit:** a puzzle can be failed by missing the deadline and passed by shaping the
   field. On-device pass still to do.
-- **T2 (next):** puzzles + prediction toggle.
-  **Exit:** 3–5 puzzles with a real difficulty spread; the predict-then-reveal probe
-  works.
+- **T2 (partly landed):** 6 puzzles done (§18); the prediction toggle is next.
+  **Exit:** 3–5 puzzles with a real difficulty spread (partly met — geometry varies, the
+  goal does not); the predict-then-reveal probe works (not yet).
+- **T3 (after T2):** launch + flight + grade + telemetry.
+  **Exit:** a puzzle can be committed, watched, and graded; a non-perfect grade is
+  re-attemptable. On-device pass still to do.
 
 ## 7. Test plan
 
 Run seated, on device, hand-tracked, with a tester who has not read the docs.
+
+Two stages: **Gate A** tests the puzzle (no T3 needed); **Gate B** tests the game (needs
+T3 — commit, flight, grade). Run the puzzle metrics first; only if Gate A passes is Gate B
+worth the session.
+
+### Puzzle metrics (Gate A)
 
 1. **Solve rate** per puzzle.
 2. **Time-to-solve and edit count** before success.
@@ -108,15 +140,46 @@ Run seated, on device, hand-tracked, with a tester who has not read the docs.
 4. **Is the deadline binding?** Do they plan against it, or ignore it?
 5. **Qualitative:** can they explain *why* their solution worked?
 
-The decision gate (§8) weighs 3 and 5 as much as 1.
+### Game metrics (Gate B, needs T3)
 
-## 8. Decision gate
+6. **Retry after a non-perfect grade** — the single best "is it fun" signal. A puzzle
+   solved once and abandoned is a chore; one re-run to improve is a game.
+7. **Hesitation at commit** — do they pause before Launch (planning) or mash it
+   (guessing)?
+8. **Does the clock land?** — do they notice/comment on it slowing near mass during the
+   flight?
+9. **Wants another job** — ask it, and watch whether they press Next unprompted.
+
+### The A/B that isolates the grade
+
+Run each tester on the same puzzle **twice**: once live (no commit, the current lab) and
+once with commit + flight + grade. If behaviour and engagement do not change, the grade
+is not adding fun — cut it. Cheap, and it directly tests the claim that a result is what
+turns the solve into a game.
+
+## 8. Decision gates
+
+**Gate A — mechanic (puzzle).**
 
 - **Pass:** testers solve the puzzles, call the curve roughly right, and explain why
-  → proceed to integration and polish; the design bet holds.
+  → the physics bet holds; build T3 and run Gate B.
 - **Fail:** testers fiddle blindly, cannot predict, and cannot explain → revisit the
-  mechanic (see [project direction](../../design/project-direction.md) §8 pivot
-  ideas) before any integration.
+  mechanic (see [project direction](../../design/project-direction.md) §12) before any
+  further work.
+
+**Gate B — game (fun).** Requires T3.
+
+- **Pass:** testers retry after a non-perfect grade, hesitate at commit, and want the
+  next job → it is a game, not a toy; **only Gate B justifies bubble integration.**
+- **Fail:** testers solve once and move on, mash Launch, and do not care about the grade
+  → the result is not carrying the loop; fix the stakes before integration, not the
+  presentation.
+
+**Scope note.** This slice has no fuel (non-goal §3), so it tests one axis (time), not the
+fast/cheap trade-off the design calls the point
+([transport company](../../design/transport-company.md) §1). Either accept Gate B as
+time-only, or add the speed choice (one slider + `k·launchSpeed²`) before testing —
+otherwise the design's central insight ships untested.
 
 ## 9. Defaults
 
@@ -423,3 +486,56 @@ Progression: learn to arrive (A), learn to speed up (B), tighter (C), tightest (
 Open: the **ship-time unit** question raised in the headset pass (are "seconds" the right
 readout?); 3-planet puzzles need a third authored source view, because
 `SpaceShapingView` clamps to `min(view sources, session sources)`.
+
+## 18. Puzzle variation pass (2026-10-23)
+
+Headset feedback: (a) two of the four starts already **arrive** — B `4.065`, C `3.762` —
+which are over their deadlines but read as "already solved"; and (b) the puzzles feel
+identical because only the start arrangement and the deadline vary. Origin, destination,
+capture radius, planet count, planet scale and move range are the same for all four. The
+state *is* reset per puzzle (fresh session, `edits` zeroed, deadline read from the puzzle),
+so that was not the cause. Approved scope: **starts + real geometry**.
+
+**Landed**
+
+- `SpaceShapingSession.Origin` exposed; `SpaceShapingView` places the `origin` /
+  `destination` markers from the session, so a puzzle can now change the trajectory
+  geometry. Scene refs wired (`origin: 200004`, `destination: 200014`).
+- Scene file edits (applied while the lab scene was closed): `SpaceShaping POC` →
+  `(0, 0, 0)` and `Destination` → `(4, 0, 0)` (the start-point fix), planet trigger
+  colliders `1.0` → `0.5` (grab volume), `puzzles` = A/B/C/D.
+- `StartPuzzle` no longer overwrites a new puzzle with the view's current positions, so
+  `Next` applies each puzzle's arrangement; `CaptureHomes` deleted.
+
+**Still to do** (blocked: the Unity bridge stopped answering pings mid-pass)
+
+- Re-author the starts so none arrives, and author 5–6 puzzles with different geometry.
+  Candidate set: straight-roomy (current A), straight-tight (move range 1.8, capture 1.0),
+  climb (origin `y -1.5` → destination `y +1.5`), short run (`-3` → `3`), turn-in-z
+  (destination `(4, 0, 2)`), asymmetric wells (scales `3.4` / `1.4`).
+- Measure every candidate before authoring it (start must fail; a solving arrangement must
+  exist inside the move range; deadline between the two), as in §16.
+- Re-verify: the §18 code edits (marker placement, `Origin`) are **uncompiled**, and the
+  6 EditMode tests have not been re-run since.
+
+**Completed** (after the bridge came back; note the lab scene's in-memory copy had not
+picked up the new `origin`/`destination` refs, so those were re-wired in-editor and the
+scene saved).
+
+The `origin`/`destination` markers now follow the puzzle, so each puzzle can change the
+run. Six puzzles, each measured before authoring — every start **fails** and a solution
+exists inside the move range:
+
+| puzzle | destination | capture | move | deadline | start | best in range |
+|---|---|---|---|---|---|---|
+| SamplePuzzle | (4, 0, 0) | 1.2 | 2.5 | 3.9 | Crash 0.937 | 2.797 |
+| SamplePuzzleB | (4, 0, 0) | 1.0 | 1.8 | 3.7 | Miss 7.424 | 2.987 |
+| SamplePuzzleC | (4, 1.5, 0) | 1.2 | 2.5 | 4.4 | Miss 7.374 | 3.232 |
+| SamplePuzzleD | (3, 0, 0) | 1.0 | 2.0 | 2.8 | Crash 0.852 | 2.167 |
+| SamplePuzzleE | (4, 0, 2) | 1.2 | 2.5 | 4.1 | Crash 1.555 | 2.875 |
+| SamplePuzzleF | (4, 0, 0) | 1.2 | 2.5 | 4.5 | Crash 1.698 | 2.841 |
+
+Variation is now in the geometry, not just the deadline: run length (`-3`→`3` vs `-4`→`4`),
+a climb (`-1.5` → `+1.5` in y), a turn in z (destination `(4, 0, 2)`), move freedom
+(1.8–2.5), well size (scales 1.4 and 3.4 in F) and capture radius (1.0–1.2). No puzzle
+starts in an arriving state. 6/6 EditMode tests pass.

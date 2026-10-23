@@ -4,7 +4,10 @@
     "references": [
         "DigitalLove.Global",
         "DigitalLove.Casual.Levels",
-        "DigitalLove.FlowControl"
+        "DigitalLove.FlowControl",
+        "Oculus.Interaction",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

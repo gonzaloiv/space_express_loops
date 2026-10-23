@@ -1,6 +1,7 @@
 # Relativity as Gameplay — Design Notes
 
-**Status:** design ideation, not a plan. Feeds
+**Status:** design ideation, not a plan. The effect menu the **cube** instruments
+(see [project direction](project-direction.md) §5, §9). Feeds
 [space-shaping-future](../plans/backlog/gameplay/space-shaping-future.md).
 **Context:** "Our Space" — seated mixed reality, Meta VR Start Developer
 Competition 2026 (see [project direction](project-direction.md)).

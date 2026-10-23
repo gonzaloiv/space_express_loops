@@ -3,7 +3,7 @@
 **Status:** backlog - design only, recorded. Not started. The actionable slice is
 [Space shaping — POC](../../done/space-shaping.md).
 
-**Related:** [POC](../../done/space-shaping.md) · [View frame (bubble window)](../../done/universe-bubble-window.md) · [Sector generation](../../in-progress/universe-sector-generation.md) · [Sector field](../universe/universe-infinite-sector.md)
+**Related:** [POC](../../done/space-shaping.md) · [View frame (bubble window)](../../done/universe-bubble-window.md) · [Sector generation](../../done/universe-sector-generation.md) · [Sector field](../universe/universe-infinite-sector.md)
 
 **Wiring rule:** all visuals and interaction props stay authored in the scene/prefabs
 with serialized references. No runtime component lookup, mesh/material creation, or
@@ -156,7 +156,7 @@ Relied on (support the framing):
 
 - [View frame (bubble window)](../../done/universe-bubble-window.md) — the Map/Sculpt
   frame.
-- [Sector generation](../../in-progress/universe-sector-generation.md) — the structured,
+- [Sector generation](../../done/universe-sector-generation.md) — the structured,
   seeded sector layout the sources come from.
 - [Sector field](../universe/universe-infinite-sector.md) — the bounded, pre-spawned
   field Map View pans; out-of-view sectors are **grayed** by the

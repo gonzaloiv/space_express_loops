@@ -8,5 +8,6 @@ namespace DigitalLove.Game.SpaceShaping
         public float CaptureRadius;
         public float StepSecs;
         public int MaxSteps;
+        public float DilationScale;
     }
 }

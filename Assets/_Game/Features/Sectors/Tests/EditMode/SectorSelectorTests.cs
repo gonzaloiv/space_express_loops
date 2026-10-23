@@ -121,32 +121,6 @@ namespace DigitalLove.Game.Sectors.Tests
             Assert.IsTrue(differs, "level seed did not change the selection");
         }
 
-        [Test]
-        public void TrySelectHub_PicksTheMostCentralSector()
-        {
-            SectorFieldData field = Default();
-            Assert.IsTrue(SectorSelector.TrySelectHub(field, 2, out SectorSelection hub));
-            Assert.IsTrue(hub.IsAnchor);
-            Assert.AreEqual(-1, hub.PlanetIndex);
-
-            SectorPlacement[] placements = SectorField.Generate(field);
-            float nearest = float.MaxValue;
-            for (int i = 0; i < placements.Length; i++)
-                nearest = Mathf.Min(nearest, placements[i].Center.sqrMagnitude);
-
-            Assert.AreEqual(nearest, hub.Placement.Center.sqrMagnitude, Tolerance);
-            Assert.AreEqual(hub.Placement.Layout.AnchorRadius, hub.Radius, Tolerance);
-        }
-
-        [Test]
-        public void TrySelectHub_FailsOnAnEmptyField()
-        {
-            SectorFieldData field = Default();
-            field.density = 0f;
-
-            Assert.IsFalse(SectorSelector.TrySelectHub(field, 1, out _));
-        }
-
         private static SectorFieldData Default() => new();
 
         private static SectorFieldData Small() => new()

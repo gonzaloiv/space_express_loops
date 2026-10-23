@@ -13392,8 +13392,8 @@ MonoBehaviour:
     gap: 0.05
     destinationRadius: 1.2
     layers: 1
-    softSectorBudget: 16
-    softPlanetBudget: 64
+    softSectorBudget: 32
+    softPlanetBudget: 128
     shape:
       kind: 0
       anchorScale:

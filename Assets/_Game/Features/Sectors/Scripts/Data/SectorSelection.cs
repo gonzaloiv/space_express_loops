@@ -24,8 +24,6 @@ namespace DigitalLove.Game.Sectors
             VariantSeed = variantSeed;
         }
 
-        public bool IsAnchor => PlanetIndex < 0;
-
         public SectorCell Cell => Placement.Cell;
     }
 }

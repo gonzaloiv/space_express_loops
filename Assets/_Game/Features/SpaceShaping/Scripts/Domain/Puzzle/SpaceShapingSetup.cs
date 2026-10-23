@@ -14,6 +14,8 @@ namespace DigitalLove.Game.SpaceShaping
         public float ThrustAcceleration;
         public float SourceStrengthScale;
         public float SeparationScale;
+        public float DilationScale;
+        public float Deadline;
         public SourceSpec[] Sources;
     }
 }

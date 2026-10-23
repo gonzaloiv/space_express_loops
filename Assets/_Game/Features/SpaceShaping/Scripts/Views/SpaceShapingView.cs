@@ -5,9 +5,10 @@ namespace DigitalLove.Game.SpaceShaping
     public class SpaceShapingView : MonoBehaviour
     {
         [SerializeField] private SpaceSourceView[] sources;
-        [SerializeField] private SpacetimeGridView grid;
         [SerializeField] private SpacetimeMeshView mesh;
         [SerializeField] private TrajectoryPredictionView prediction;
+        [SerializeField] private Transform origin;
+        [SerializeField] private Transform destination;
 
         private Vector3[] lastPositions;
         private float[] lastScales;
@@ -29,14 +30,22 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void SyncToSession(SpaceShapingSession session)
         {
-            for (int i = 0; i < sources.Length; i++)
+            int count = Mathf.Min(sources.Length, session.SourceCount);
+            for (int i = 0; i < count; i++)
                 session.SetSource(i, sources[i].LocalPosition, sources[i].LocalScale);
         }
 
         public void ApplyFromSession(SpaceShapingSession session)
         {
-            for (int i = 0; i < sources.Length; i++)
+            origin.localPosition = session.Origin;
+            destination.localPosition = session.Destination;
+
+            int count = Mathf.Min(sources.Length, session.SourceCount);
+            for (int i = 0; i < count; i++)
+            {
                 sources[i].SetLocal(session.GetPosition(i), session.GetScale(i));
+                sources[i].ShowRange(session.GetHome(i), session.GetMoveRange(i));
+            }
         }
 
         public void Snapshot()
@@ -58,7 +67,6 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void Render(SpacetimeField field, TrajectoryResult result, Vector3 destinationLocal)
         {
-            grid.Render(field);
             mesh.Render(field);
             prediction.Render(result, destinationLocal);
         }

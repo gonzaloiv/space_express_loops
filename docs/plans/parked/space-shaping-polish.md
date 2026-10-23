@@ -1,7 +1,8 @@
 # Space Shaping — Interaction and Presentation Polish
 
-**Status:** in progress - next after the [POC](../done/space-shaping.md) (closed). Presentation
-and interaction refinements, before / alongside game integration.
+**Status:** parked - the remaining work (ghost preview, grab feedback, move-range viz) is
+**planet-grab** interaction, superseded by the [lens](../in-progress/space-shaping-lens.md)
+(the cube transforms zones). Kept for the mesh-deform lattice (done) and the tuning notes.
 
 **Related:** [POC](../done/space-shaping.md) · [Architecture refactor](../done/space-shaping-architecture.md) · [Integration into the game](../backlog/gameplay/space-shaping-integration.md) · [Reframing and variations](../backlog/gameplay/space-shaping-future.md) · [View frame](../done/universe-bubble-window.md)
 

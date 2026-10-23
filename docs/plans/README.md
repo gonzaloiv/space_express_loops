@@ -2,13 +2,18 @@
 
 Plans are grouped by state. Move a plan between folders when its state changes.
 
+**Direction:** [project direction](../design/project-direction.md) — the **lens** (the cube):
+scale the space, scale the content; the ship flies the deformed spacetime.
+
+**Next:** the [lens plan](in-progress/space-shaping-lens.md) — spike **L0** (the lens
+interaction: cube size = the zone's space, content zoom = the planets' mass), then **L1**
+(launch + flight + grade), then **L2** (puzzles + prediction toggle).
+
 ## In progress
 
 | Plan | State | Notes |
 |---|---|---|
-| [Space shaping — test slice](in-progress/space-shaping-test-slice.md) | In progress | T0 + T1 done and tuned (`dilationScale 0.2`, `captureRadius 1.2`, deadlines 3.3-3.9): every puzzle start fails and is solvable inside the move range. Lab HUD is a canvas panel; 4 puzzles wired to Next. Next: decide the ship-time unit, then the prediction toggle. |
-| [Space shaping — interaction + presentation polish](in-progress/space-shaping-polish.md) | In progress | Mesh-deform lattice done; move-range viz done (grab-only, no per-frame `SetActive`). Remaining: ghost / pre-move preview, grab feedback, tuning. |
-| [Sector generation and extent](in-progress/universe-sector-generation.md) | In progress | G0 + G1 field/spawner done (`SectorField`, `SectorFieldSpawner`, 39 EditMode tests passing); `SectorSelector` picks active nodes from the field. Next: `PlanetsSpawner`/`HubsSpawner` as selectors + the aperture move. |
+| [Space shaping — the lens (testing the mechanic)](in-progress/space-shaping-lens.md) | In progress | New. Tests the **lens** (the cube): one verb — *scale* — on two targets (the cube's size = the zone's space; the content zoom = the planets' mass). Inherits the parked test slice's landed harness (determinism, ship clock, deadline, HUD) and its test approach. Next: L0, the lens interaction. |
 
 ## Backlog
 
@@ -35,13 +40,15 @@ Plans are grouped by state. Move a plan between folders when its state changes.
 ## Parked
 
 Not current. Kept for reference; they collide with the
-[space shaping](backlog/gameplay/space-shaping-future.md) framing. See
+[lens](../design/project-direction.md) framing. See
 [parked](parked/README.md).
 
 | Plan | Notes |
 |---|---|
-| [Planet route drawing](parked/planet-route-drawing.md) | Drawn routes replaced by shaping space. |
+| [Planet route drawing](parked/planet-route-drawing.md) | Drawn routes replaced by shaping space; the path is emergent from the field, not drawn. |
 | [Ambient round activation](parked/universe-ambient-round-activation.md) | A management game, not the physics puzzle. |
+| [Space shaping — test slice](parked/space-shaping-test-slice.md) | Superseded by the lens (planet-drag verb). Its harness and test approach carry into the [lens plan](in-progress/space-shaping-lens.md). |
+| [Space shaping — interaction + presentation polish](parked/space-shaping-polish.md) | Remaining work is planet-grab interaction; the mesh-deform lattice (done) and tuning notes carry over. |
 
 ## Done
 

@@ -19,3 +19,4 @@ MonoBehaviour:
   thrustAcceleration: 1
   sourceStrengthScale: 2
   separationScale: 1.2
+  dilationScale: 0.2

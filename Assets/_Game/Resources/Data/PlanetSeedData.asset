@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: PlanetSeedData
   m_EditorClassIdentifier: DigitalLove.Game.Nodes::DigitalLove.Game.Nodes.PlanetSeedData
   radius:
-    min: 0.15
-    max: 0.35
-  maxDistanceToOtherPlanet: {fileID: 11400000, guid: 6fc493b84a80f3b4e89f9f0f51e73f85, type: 2}
+    min: 0.1
+    max: 0.18
   lettersPerMinute:
     min: 15
     max: 20

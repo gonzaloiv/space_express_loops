@@ -16,7 +16,7 @@ round/hub/economy layer and no streaming here.
 | Order | Plan | Scope | Depends on |
 |---|---|---|---|
 | 1 | [View frame (bubble cube)](../../done/universe-bubble-window.md) | The frame moves, the universe does not: a cube `{F, viewRadius, yaw}` drives the view; `m = miniBubbleRadius / viewRadius`. Removes content reparenting. Its frame culling band was reversed by the [color scope](../../done/universe-color-scope.md). | Transform (done) |
-| 2 | [Sector generation and extent](../../in-progress/universe-sector-generation.md) | Pure C# bounded extent model, sector grid, and `SectorShape` math; tests. No scene. | 1 |
+| 2 | [Sector generation and extent](../../done/universe-sector-generation.md) | Pure C# bounded extent model, sector grid, and `SectorShape` math; tests. No scene. | 1 |
 
 Why no streaming: the frame movement is bounded (`bubbleMoveLimit`), so the whole field is
 spawned at level start and out-of-view content is grayed by the scope
@@ -28,12 +28,14 @@ spawned at level start and out-of-view content is grayed by the scope
   silent-planet frame hide was removed, and the scope is an **ellipsoid** sized from the content
   bounds (`ScopeRadiiWorld`). See [Color scope](../../done/universe-color-scope.md)
   §5.3/§6.2.
-- **`viewRadius` is `1.2` in `Game.unity`**, not the `2.5 m` these plans assume. Re-baseline
-  the extent and sector numbers against the Map/Sculpt apertures
-  ([Space shaping](../gameplay/space-shaping-future.md) §2) before generating a field.
-- **No hide band means every pre-spawned sector is rendered** (grayed), so draw calls and load
-  time scale with the field. The planned lever is "gray to a point, then hide" beyond a
-  margin; specify that band before the field grows.
+- **`viewRadius` is `1.2` in `Game.unity`**, not the `2.5 m` these plans assume, and the wired
+  field is deliberately small (`fieldRadius 1.8`) to match. **Do not raise the aperture until the
+  gameplay content comes from the field** (Map/Sculpt +
+  [integration](../gameplay/space-shaping-integration.md)): at a `12.5 m` aperture the current
+  room-local content shrinks to a ~2 cm speck. The trigger is the content move, not a date.
+- **The hide band is specified** (`SectorFieldSpawner.hideRadiusFactor = 1.5`), so a grown field
+  does not have to render everything. Raise `fieldRadius` with `softSectorBudget` together, and
+  order cells centre-out if a budget ever binds again.
 - **Space shaping coupling.** `SectorShape` supplies a puzzle's seed layout and playable
   sectors are authored; Map = wide aperture, Sculpt = narrow aperture over the same frame. The
   sector field is the substrate for the puzzle loop, not scenery.

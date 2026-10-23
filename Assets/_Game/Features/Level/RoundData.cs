@@ -14,6 +14,5 @@ namespace DigitalLove.Game.Levels
         public bool shouldSpawnSpaceship;
         public bool hasLoseCondition;
         public bool resetsLetters;
-        public float distanceBetweenPlanetsMultiplier = 1f;
     }
 }

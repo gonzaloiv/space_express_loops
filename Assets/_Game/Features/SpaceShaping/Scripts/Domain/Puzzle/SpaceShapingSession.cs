@@ -18,11 +18,20 @@ namespace DigitalLove.Game.SpaceShaping
 
         public int SourceCount => positions.Length;
 
+        public Vector3 Origin => setup.Origin;
+
         public Vector3 Destination => setup.Destination;
 
         public Vector3 GetPosition(int index) => positions[index];
 
         public float GetScale(int index) => scales[index];
+
+        public Vector3 GetHome(int index) => setup.Sources[index].Home;
+
+        public float GetMoveRange(int index) => setup.Sources[index].MoveRange;
+
+        public bool IsSolved(TrajectoryResult result) =>
+            result.Outcome == TrajectoryOutcome.Arrive && result.ShipTime <= setup.Deadline;
 
         public void SetSource(int index, Vector3 position, float scale)
         {
@@ -60,7 +69,8 @@ namespace DigitalLove.Game.SpaceShaping
                 Destination = setup.Destination,
                 CaptureRadius = setup.CaptureRadius,
                 StepSecs = setup.StepSecs,
-                MaxSteps = setup.MaxSteps
+                MaxSteps = setup.MaxSteps,
+                DilationScale = setup.DilationScale
             };
 
             launch.Model = setup.LaunchModel;

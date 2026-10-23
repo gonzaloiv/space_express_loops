@@ -7,7 +7,7 @@ move-range visualization, final tuning, and the lattice presentation (curved lin
 mesh deferred) — see the [architecture refactor](space-shaping-architecture.md)
 and [integration](../backlog/gameplay/space-shaping-integration.md) plans.
 
-**Related:** [Spike (smallest testable version)](space-shaping-spike.md) · [Reframing and variations](../backlog/gameplay/space-shaping-future.md) · [Integration into the game](../backlog/gameplay/space-shaping-integration.md) · [View frame (bubble window)](universe-bubble-window.md) · [Sector generation](../in-progress/universe-sector-generation.md) · [Parked: planet route drawing](../parked/planet-route-drawing.md)
+**Related:** [Spike (smallest testable version)](space-shaping-spike.md) · [Reframing and variations](../backlog/gameplay/space-shaping-future.md) · [Integration into the game](../backlog/gameplay/space-shaping-integration.md) · [View frame (bubble window)](universe-bubble-window.md) · [Sector generation](universe-sector-generation.md) · [Parked: planet route drawing](../parked/planet-route-drawing.md)
 
 **Wiring rule:** the grid visualization, the prediction line, the ship, and the sources are authored in the scene/prefab and referenced through serialized fields. No runtime `AddComponent`, `GetComponent`, `FindObjectsByType`, or hierarchy/mesh/asset creation. Follow the SerializeField wiring rules in the project `AGENTS.md`.
 

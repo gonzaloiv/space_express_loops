@@ -25,34 +25,6 @@ namespace DigitalLove.Game.Sectors
             return selections;
         }
 
-        public static bool TrySelectHub(
-            SectorFieldData field,
-            int levelSeed,
-            out SectorSelection hub)
-        {
-            SectorPlacement[] placements = SectorField.Generate(field);
-            if (placements.Length == 0)
-            {
-                hub = default;
-                return false;
-            }
-
-            int central = 0;
-            float nearest = float.MaxValue;
-            for (int i = 0; i < placements.Length; i++)
-            {
-                float distance = placements[i].Center.sqrMagnitude;
-                if (distance < nearest)
-                {
-                    nearest = distance;
-                    central = i;
-                }
-            }
-
-            hub = SelectAnchor(placements[central], field.worldSeed, levelSeed);
-            return true;
-        }
-
         private static SectorSelection SelectPlanet(SectorPlacement placement, int worldSeed)
         {
             SectorLayout layout = placement.Layout;
@@ -76,20 +48,6 @@ namespace DigitalLove.Game.Sectors
                 placement.Center + planet.Position,
                 planet.Radius,
                 seed + index + 1);
-        }
-
-        private static SectorSelection SelectAnchor(
-            SectorPlacement placement,
-            int worldSeed,
-            int levelSeed)
-        {
-            int seed = SectorGrid.CellSeed(worldSeed, placement.Cell);
-            return new SectorSelection(
-                placement,
-                -1,
-                placement.Center,
-                placement.Layout.AnchorRadius,
-                seed + levelSeed);
         }
 
         private static int[] BuildOrder(SectorFieldData field, SectorPlacement[] placements, int levelSeed)

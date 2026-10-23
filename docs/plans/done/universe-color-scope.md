@@ -384,7 +384,7 @@ Done:
 ## 15. Future
 
 - **Extent coupling.** When the sector-field extent lands
-  ([sector generation](../in-progress/universe-sector-generation.md): `UniverseBounds`,
+  ([sector generation](universe-sector-generation.md): `UniverseBounds`,
   `UniverseFocus`, `fieldRadius`), the universe becomes genuinely larger than the scope. At
   that point the scope radii should be re-derived from the **aperture** (`viewRadius`) instead
   of the content bounds - the content-bounds sizing exists only because the map was smaller than
@@ -409,6 +409,6 @@ Done:
 4. **More universe outside the scope** (optional, not a gate). The band currently exists because
    `scopeScale` shrinks the scope inside the content bounds. A thicker band and more systems in
    view is a content-volume question for the sector-field work
-   ([sector generation](../in-progress/universe-sector-generation.md),
+   ([sector generation](universe-sector-generation.md),
    [sector field hub](../backlog/universe/universe-infinite-sector.md)).
 

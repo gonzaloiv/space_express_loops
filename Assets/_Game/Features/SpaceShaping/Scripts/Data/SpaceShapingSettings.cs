@@ -17,5 +17,8 @@ namespace DigitalLove.Game.SpaceShaping
         [Header("Field")]
         public float sourceStrengthScale = 2f;
         public float separationScale = 1.2f;
+
+        [Header("Time")]
+        public float dilationScale = 1f;
     }
 }
