@@ -14,7 +14,7 @@ your real room. You run an interstellar transport company: each job is a deliver
 from one star to another, with a **deadline** and a **fuel grade**. Your one tool is
 **the cube** — a tangible instrument you move over the bubble. It has **two gestures**:
 **scale the space** (resize the cube — a shrunk zone is a shortcut) and **scale the
-content** (grab inside — the planets grow). Both change **time**, the ship's clock, so
+content** (grab inside — the planets spread and grow). Both change **time**, the ship's clock, so
 you deform the spacetime the ship flies through until the delivery lands on time and
 cheaply. Relativity is the language, and the cube is how you speak it.
 
@@ -72,7 +72,7 @@ The cube has **two gestures**, both two-hand scales:
 | Gesture | Effect | Relativity |
 |---|---|---|
 | **Cube scale** — resize the cube | stretches the local **space**: a shrunk zone is a **shortcut**, a magnified one a longer journey | time dilation |
-| **Content zoom** — grab inside | scales the **planets** (mass ∝ radius) → a deeper well → the ship's clock slows | time dilation |
+| **Content zoom** — grab inside | zooms the zone's content: the planets **spread** and **grow** (mass ∝ radius) → a deeper well → the ship's clock slows | time dilation |
 
 **Rotate** (frame dragging — a spinning zone swirls the path) is the **deferred** act-2
 variety beat, not part of the slice.

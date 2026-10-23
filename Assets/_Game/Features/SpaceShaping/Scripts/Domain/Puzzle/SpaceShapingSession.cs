@@ -26,10 +26,6 @@ namespace DigitalLove.Game.SpaceShaping
 
         public float GetScale(int index) => scales[index];
 
-        public Vector3 GetHome(int index) => setup.Sources[index].Home;
-
-        public float GetMoveRange(int index) => setup.Sources[index].MoveRange;
-
         public bool IsSolved(TrajectoryResult result) =>
             result.Outcome == TrajectoryOutcome.Arrive && result.ShipTime <= setup.Deadline;
 
@@ -62,15 +58,17 @@ namespace DigitalLove.Game.SpaceShaping
             return field;
         }
 
-        public TrajectoryResult Simulate(SpacetimeField field, TrajectoryIntegrator integrator, ShipLaunch launch)
+        public TrajectoryResult Simulate(
+            SpacetimeField field, TrajectoryIntegrator integrator, ShipLaunch launch, SpaceZone zone)
         {
             TrajectorySettings settings = new()
             {
                 Destination = setup.Destination,
                 CaptureRadius = setup.CaptureRadius,
                 StepSecs = setup.StepSecs,
-                MaxSteps = setup.MaxSteps,
-                DilationScale = setup.DilationScale
+                MaxSteps = StepBudget(zone),
+                DilationScale = setup.DilationScale,
+                Zone = zone
             };
 
             launch.Model = setup.LaunchModel;
@@ -78,5 +76,8 @@ namespace DigitalLove.Game.SpaceShaping
             launch.ThrustAcceleration = setup.ThrustAcceleration;
             return launch.Simulate(field, setup.Origin, setup.Destination, settings, integrator);
         }
+
+        private int StepBudget(SpaceZone zone) =>
+            zone.IsActive ? Mathf.CeilToInt(setup.MaxSteps * Mathf.Max(1f, zone.Scale)) : setup.MaxSteps;
     }
 }

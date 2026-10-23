@@ -23,7 +23,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         };
 
         private static TrajectoryResult Simulate(SpaceShapingSession session) =>
-            session.Simulate(session.BuildField(), new TrajectoryIntegrator(), new ShipLaunch());
+            session.Simulate(session.BuildField(), new TrajectoryIntegrator(), new ShipLaunch(), default);
 
         [Test]
         public void Arrival_InsideDeadline_IsSolved()

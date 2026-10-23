@@ -45,7 +45,7 @@ namespace DigitalLove.Game.SpaceShaping
             if (!changed)
                 return;
 
-            view.SyncToSession(session);
+            view.ApplyFromSession(session);
             Push();
         }
 
@@ -76,7 +76,7 @@ namespace DigitalLove.Game.SpaceShaping
             view.ApplyFromSession(session);
 
             SpacetimeField field = session.BuildField();
-            TrajectoryResult result = session.Simulate(field, integrator, launch);
+            TrajectoryResult result = session.Simulate(field, integrator, launch, view.Zone);
             view.Render(field, result, session.Destination);
             view.Snapshot();
             hud.Render(BuildReadout(result));

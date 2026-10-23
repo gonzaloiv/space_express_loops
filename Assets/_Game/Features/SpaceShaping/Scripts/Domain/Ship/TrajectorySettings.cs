@@ -9,5 +9,6 @@ namespace DigitalLove.Game.SpaceShaping
         public float StepSecs;
         public int MaxSteps;
         public float DilationScale;
+        public SpaceZone Zone;
     }
 }

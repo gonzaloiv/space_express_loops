@@ -170,7 +170,44 @@ Supersedes / repurposes:
 - The legacy round/letter/money economy (`EditionState` and friends), replaced by
   per-puzzle scoring.
 
-## 8. Open questions
+## 8. Campaign menu (level select)
+
+The macro layer is a **level selector** — not a read-only Map aperture. (The verb is now
+the cube/lens, not moving sources: see [project direction](../../../design/project-direction.md).)
+
+- **The selector:** a big universe — the company's network — shown as a field of **cubes,
+  one per level/job**. The player looks it over and picks a cube.
+- **The transition:** selecting a cube **scales it up** in front of the player; the cube
+  becomes the play space and the puzzle is inside it. Leaving scales it back to the map.
+  This is the [bubble scale transition](../../done/universe-bubble-window.md) reused, and it
+  stays MR-legal — nothing flies anywhere, content is only scaled in the room.
+- **The cube is the level.** The same cube is the puzzle's play space; the two gestures
+  (scale the space, scale the content) act on it. So "the cube is the instrument" and "the
+  cube is the level" are one object, and the selector is simply a map of cubes.
+- **Why it works:** it gives the transport-company fantasy its **network** (a map of jobs),
+  a clear 10-minute frame (a map of ~8–10 cubes — pick one, solve, back out), and a sense of
+  progression — without the read-vs-act split that was cut.
+- **Substrate:** the [sector field](../universe/universe-infinite-sector.md) (bounded,
+  seeded) is the universe of cubes; the
+  [sector generation](../../done/universe-sector-generation.md) layout places them.
+
+**The cubes are numbered.** The number is the **order** (the graph, implied — no drawn routes);
+the layout in the universe gives the spatial feel. Play 1 → N.
+
+**Cube 1 is a scale-only tutorial.** One gesture (the cube scale), a generous deadline — teach
+the lens before any complexity.
+
+**The company is lore only.** No economy, no ships, no unlocks for now: the fiction wraps the
+map, and progression is the **lit cubes + stars**.
+
+**Deferred:** this is the **campaign layer** — after the
+[lens gate](../in-progress/space-shaping-lens.md) passes, not before.
+
+**Open:** is the selector a *mode* or a Flow state? Selecting a level and loading it owns
+progression, so the *load* is Flow; the scale-up presentation is a mode
+(`_Modules/docs/standards/modes.md`).
+
+## 9. Open questions
 
 1. **Map/Sculpt transition.** One gesture that changes aperture, or an explicit open
    action on a sector? Default: aperture gesture plus an open action.

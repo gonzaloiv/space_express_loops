@@ -13,7 +13,7 @@ interaction: cube size = the zone's space, content zoom = the planets' mass), th
 
 | Plan | State | Notes |
 |---|---|---|
-| [Space shaping — the lens (testing the mechanic)](in-progress/space-shaping-lens.md) | In progress | New. Tests the **lens** (the cube): one verb — *scale* — on two targets (the cube's size = the zone's space; the content zoom = the planets' mass). Inherits the parked test slice's landed harness (determinism, ship clock, deadline, HUD) and its test approach. Next: L0, the lens interaction. |
+| [Space shaping — the lens (testing the mechanic)](in-progress/space-shaping-lens.md) | In progress | New. Tests the **lens** — the cube scale: resizing the cube stretches the local space (a shrunk zone is a shortcut). The planets are **fixed**; the content zoom is deferred to L0b. Inherits the parked test slice's harness. Next: L0, the cube scale. |
 
 ## Backlog
 

@@ -17,7 +17,7 @@ namespace DigitalLove.Game.SpaceShaping
         private Mesh mesh;
         private Vector3[] vertices;
 
-        public void Render(SpacetimeField field)
+        public void Render(SpacetimeField field, SpaceZone zone)
         {
             EnsureMesh();
 
@@ -38,7 +38,7 @@ namespace DigitalLove.Game.SpaceShaping
                 int j = line % gridCount;
                 float nodeIndex = (float)sample / (samplesPerLine - 1) * (gridCount - 1);
                 Vector3 node = LatticeGrid.Node(axis, nodeIndex, i, j, gridCount, gridMin, gridMax);
-                Vector3 warped = LatticeGrid.Warp(node, field, depthScale, maxDisplacement);
+                Vector3 warped = LatticeGrid.Warp(node, field, depthScale, maxDisplacement, zone);
                 vertices[v] = warped + LatticeGrid.RingOffset(axis, side, sides) * radius;
             }
 
