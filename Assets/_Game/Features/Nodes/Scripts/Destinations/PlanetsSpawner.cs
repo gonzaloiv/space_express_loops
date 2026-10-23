@@ -6,7 +6,6 @@ namespace DigitalLove.Game.Nodes
 {
     public class PlanetsSpawner : MonoBehaviour
     {
-        [SerializeField] private MrukRoomLocalPlacement roomPlacement;
         [SerializeField] private List<PlanetBehaviour> planets;
 
         private IdCounter idCreator = new();
@@ -41,11 +40,15 @@ namespace DigitalLove.Game.Nodes
         public List<PlanetData> GeneratePlanetDataFromPlanetsSeed(
             int planetsToAdd,
             PlanetSeedData seed,
-            float distanceBetweenPlanetsMultiplier)
+            IReadOnlyList<Vector3> fieldPositions)
         {
             List<PlanetData> roundPlanets = new(planetsToAdd);
             for (int i = 0; i < planetsToAdd; i++)
-                roundPlanets.Add(CreateDataFromSeed(idCreator.NextId, seed, distanceBetweenPlanetsMultiplier));
+            {
+                Vector3 localPosition = fieldPositions[i % fieldPositions.Count];
+                roundPlanets.Add(CreateDataFromSeed(idCreator.NextId, seed, localPosition));
+            }
+
             return roundPlanets;
         }
 
@@ -111,12 +114,9 @@ namespace DigitalLove.Game.Nodes
         private static bool IsAlreadySpawned(PlanetBehaviour planet, PlanetData data) =>
             !string.IsNullOrEmpty(planet.Id) && planet.Id.Equals(data.id) && planet.IsActive;
 
-        private PlanetData CreateDataFromSeed(string id, PlanetSeedData seed, float distanceBetweenPlanetsMultiplier)
+        private PlanetData CreateDataFromSeed(string id, PlanetSeedData seed, Vector3 localPosition)
         {
             float radius = seed.radius.GetRandomValue();
-            float maxDistanceToOtherPlanet = seed.maxDistanceToOtherPlanet.value * distanceBetweenPlanetsMultiplier;
-            Vector3 localPosition = roomPlacement.GetValidLocalPosition(radius, maxDistanceToOtherPlanet);
-            roomPlacement.Register(localPosition, radius);
             int lettersPerMinute = seed.lettersPerMinute.GetRandomValue();
             int maxLetters = (int)(seed.maxLettersMultiplier.GetRandomValue() * lettersPerMinute);
             return new PlanetData

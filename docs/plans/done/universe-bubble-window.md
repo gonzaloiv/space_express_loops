@@ -39,11 +39,12 @@ Default is a **cube** (equal half-size on all three axes, yaw-aligned):
   exactly and aligns with all three.
 - Containment/culling is exact and cheap (`|local| <= half` per axis) instead of
   distance-to-center.
-- The scope/marker/containment math is a cube SDF (`sdBox` with equal extents); the edge
-  can be softened with `sdRoundBox` if the hard corners read badly, but the shape stays a
-  cube.
-- "Bubble" stays the mode name; the frame is the concept, and the center marker becomes a
-  square outline.
+- The scope/marker/containment math started as a cube SDF (`sdBox` with equal extents); the edge
+  can be softened with `sdRoundBox` if the hard corners read badly. **Superseded:** the scope and
+  the pan clamp became one ellipsoid (see [color scope](universe-color-scope.md)); the cube is now
+  the visual reference only, while containment keeps the cube test.
+- "Bubble" stays the mode name; the frame is the concept. **Superseded:** the center marker draws
+  the scope's XZ ellipse (see [color scope](universe-color-scope.md)), not a square outline.
 - **Shape stays data.** Keep the frame half-size a `Vector3` and route containment,
   culling, and the scope mask through the frame (`Contains`, half-size) instead of
   hardcoding cube math at call sites. A sphere/ellipsoid/slab later is then a value or
@@ -105,10 +106,11 @@ hides it.
 
 ## 6. Scope / marker / culling alignment
 
-- **Color scope:** the scope volume becomes the frame cube; the shader mask moves from a
-  sphere SDF to `sdBox` with equal extents. Update [Color scope](universe-color-scope.md).
-- **Center marker:** `UniverseCenterMarker` draws a square at the frame center with the
-  cube extents instead of a ring.
+- **Color scope:** superseded - the scope stayed a sphere-like volume but is now an **ellipsoid**
+  sized from the content bounds, not the frame cube, so it agrees with the pan clamp. See
+  [Color scope](universe-color-scope.md).
+- **Center marker:** `UniverseCenterMarker` draws the **scope's XZ ellipse** from `ScopeRadiiWorld`,
+  axis-aligned (no frame yaw), so the reference is the functional boundary. See §12.1.
 - **Culling:** content outside the cube (AABB test) is hidden/disabled; see §6.1.
 - **Streaming:** not needed; the field is bounded and pre-spawned.
 
@@ -159,7 +161,7 @@ The frame movement is bounded, so the universe does not stream:
 1. Bubble shows a readable local region; planets are not microscopic.
 2. One-hand grab moves the frame; the grab only starts inside the frame cube.
 3. Two-hand pinch changes the aperture; Room = frame open; the transition fires once.
-4. The center marker square matches the frame extents.
+4. The center marker ellipse matches the scope extents.
 5. Content outside the frame is hidden (bounded field, no streaming).
 6. Saved frame (focus + aperture + yaw) restores the same view.
 7. No content reparenting occurs at runtime; routes/ships/round spawn are unaffected.
@@ -191,9 +193,10 @@ The frame movement is bounded, so the universe does not stream:
 Ordered; each is independently verifiable. The focus model + `viewRadius` window are
 already in the code, so the remaining work is:
 
-1. **Cube marker** (in progress). Author the marker LineRenderer as a cube wireframe
-   (retraced single stroke) and drop the `Euler(90,0,0)` rotation in
-   `UniverseCenterMarker` so it stands upright. Clean: a mesh or ~5 renderers.
+1. **Marker** (done, superseded shape). The marker is not a cube wireframe: `UniverseCenterMarker`
+   draws the **scope's XZ ellipse** from `ScopeRadiiWorld` (axis-aligned, no frame yaw), so the
+   reference *is* the functional boundary. It replaced `ringRadiusFactor`, which pointed at
+   `0.4 x BubbleRadiusWorld` and matched nothing.
 2. **Zoom** (settled). Keep two views + the commit gesture; the aperture stays a fixed
    setting. No live aperture zoom.
 3. **Cube containment** (superseded). The drag gate was `BubbleViewState.ContainsPoint`
@@ -220,7 +223,8 @@ already in the code, so the remaining work is:
    reparent. `WithRoomPose` remains — it's still needed for room-space placement, and
    removing it means spawning in content space, which is a separate placement step.
    `bubbleAnchor` is now a pose holder (written, not a parent).
-7. **Color scope alignment** (done, [color scope](universe-color-scope.md)). The scope mask is
-   `sdBox`, sized from the **content bounds** (`ContentRadiusWorld * boxScale`) rather than the
-   frame cube, because the map was smaller than the window; revisit if the sector-field extent
-   ever makes the universe larger than the window.
+7. **Color scope alignment** (done, [color scope](universe-color-scope.md)). The scope is an
+   **ellipsoid** sized from the **content bounds** (`ScopeRadiiWorld`), not the frame cube, because
+   the map was smaller than the window; the cube stayed as the visual reference. The pan clamp
+   shares the ellipsoid. Revisit if the sector-field extent ever makes the universe larger than
+   the aperture.

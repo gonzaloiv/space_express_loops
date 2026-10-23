@@ -2,33 +2,7 @@ using UnityEngine;
 
 namespace DigitalLove.Game.Universe
 {
-    internal readonly struct BubbleMetrics
-    {
-        public readonly Vector3 ContentPosition;
-        public readonly float Scale;
-        public readonly float MiniScale;
-        public readonly float BubbleRadiusWorld;
-        public readonly float ContentRadiusWorld;
-        public readonly Quaternion FrameRotation;
-
-        public BubbleMetrics(
-            Vector3 contentPosition,
-            float scale,
-            float miniScale,
-            float bubbleRadiusWorld,
-            float contentRadiusWorld,
-            Quaternion frameRotation)
-        {
-            ContentPosition = contentPosition;
-            Scale = scale;
-            MiniScale = miniScale;
-            BubbleRadiusWorld = bubbleRadiusWorld;
-            ContentRadiusWorld = contentRadiusWorld;
-            FrameRotation = frameRotation;
-        }
-    }
-
-    internal readonly struct BubbleViewState
+    public readonly struct BubbleViewState
     {
         public readonly UniverseViewMode Mode;
         public readonly bool IsTransitioning;
@@ -50,7 +24,7 @@ namespace DigitalLove.Game.Universe
             CenterWorld = centerWorld;
         }
 
-        public bool IsBubble => Mode == UniverseViewMode.Bubble;
+        public bool IsBubble => Mode == UniverseViewMode.Bubble && !IsTransitioning;
 
         public bool ContainsContentPoint(Vector3 worldPoint)
         {
@@ -58,5 +32,16 @@ namespace DigitalLove.Game.Universe
             float half = Metrics.ContentRadiusWorld;
             return Mathf.Abs(local.x) <= half && Mathf.Abs(local.y) <= half && Mathf.Abs(local.z) <= half;
         }
+    }
+
+    public struct BubbleMetrics
+    {
+        public Vector3 ContentPosition;
+        public float Scale;
+        public float MiniScale;
+        public float BubbleRadiusWorld;
+        public float ContentRadiusWorld;
+        public Vector3 ScopeRadii;
+        public Quaternion FrameRotation;
     }
 }

@@ -6,11 +6,7 @@ namespace DigitalLove.Game.Universe
 
     internal class BubbleMapTransformSession
     {
-        private readonly float translationGain;
-        private readonly float settleDistance;
-        private readonly float translationSmoothSecs;
-        private readonly float dragStartJumpLimit;
-        private readonly float minDragDistance;
+        private readonly UniverseGhostSettings settings;
 
         private bool isActive;
         private bool dragStarted;
@@ -22,26 +18,10 @@ namespace DigitalLove.Game.Universe
         private Vector3 smoothedOffset;
         private Vector3 smoothVelocity;
 
-        public BubbleMapTransformSession(
-            float translationGain,
-            float settleDistance,
-            float translationSmoothSecs,
-            float dragStartJumpLimit,
-            float minDragDistance)
+        public BubbleMapTransformSession(UniverseGhostSettings settings)
         {
-            this.translationGain = translationGain;
-            this.settleDistance = settleDistance;
-            this.translationSmoothSecs = translationSmoothSecs;
-            this.dragStartJumpLimit = dragStartJumpLimit;
-            this.minDragDistance = minDragDistance;
+            this.settings = settings;
         }
-
-        public static BubbleMapTransformSession FromSettings(UniverseGhostSettings settings) =>
-            new(settings.translationGain,
-                settings.settleDistance,
-                settings.translationSmoothSecs,
-                settings.dragStartJumpLimit,
-                settings.minDragDistance);
 
         public bool Begin(BubbleViewState state, Vector3 dragPoint)
         {
@@ -76,7 +56,7 @@ namespace DigitalLove.Game.Universe
             }
 
             Vector3 delta = dragPoint - grabStartPoint;
-            if (delta.magnitude > dragStartJumpLimit)
+            if (delta.magnitude > settings.dragStartJumpLimit)
             {
                 RebaseGrab(dragPoint);
                 return false;
@@ -88,7 +68,7 @@ namespace DigitalLove.Game.Universe
 
         private void TryStartDrag(Vector3 dragPoint)
         {
-            if ((dragPoint - initialDragPoint).magnitude < minDragDistance)
+            if ((dragPoint - initialDragPoint).magnitude < settings.minDragDistance)
                 return;
 
             dragStarted = true;
@@ -105,14 +85,15 @@ namespace DigitalLove.Game.Universe
         {
             delta.y = 0f;
             accumulatedOffset = ApplyLimit(
-                grabStartOffset + delta * translationGain,
-                state.Metrics.BubbleRadiusWorld * 0.3f);
+                grabStartOffset + delta * settings.translationGain,
+                state.Metrics.ScopeRadii,
+                settings.panLimitFactor);
 
             smoothedOffset = Vector3.SmoothDamp(
                 smoothedOffset,
                 accumulatedOffset,
                 ref smoothVelocity,
-                translationSmoothSecs,
+                settings.translationSmoothSecs,
                 Mathf.Infinity,
                 Mathf.Max(dt, 0.0001f));
             return smoothedOffset;
@@ -142,20 +123,29 @@ namespace DigitalLove.Game.Universe
             isActive = false;
             Vector3 offset = currentPosition - startPosition;
             offset.y = 0f;
-            return offset.magnitude < settleDistance
+            return offset.magnitude < settings.settleDistance
                 ? BubbleTransformAction.Cancel
                 : BubbleTransformAction.Commit;
         }
 
-        private static Vector3 ApplyLimit(Vector3 offset, float limit)
+        private static Vector3 ApplyLimit(Vector3 offset, Vector3 radii, float factor)
         {
-            float magnitude = offset.magnitude;
+            float limit = Mathf.Max(factor, 0.0001f);
+            Vector3 safe = new(
+                Mathf.Max(radii.x, 0.0001f),
+                Mathf.Max(radii.y, 0.0001f),
+                Mathf.Max(radii.z, 0.0001f));
+            Vector3 normalized = new(offset.x / safe.x, offset.y / safe.y, offset.z / safe.z);
+
+            float magnitude = normalized.magnitude;
             if (magnitude <= limit)
                 return offset;
 
-            float excess = magnitude - limit;
-            float softened = limit + excess / (1f + excess / Mathf.Max(limit, 0.0001f));
-            return offset.normalized * softened;
+            float scale = limit / magnitude;
+            return new Vector3(
+                normalized.x * scale * safe.x,
+                offset.y,
+                normalized.z * scale * safe.z);
         }
     }
 }

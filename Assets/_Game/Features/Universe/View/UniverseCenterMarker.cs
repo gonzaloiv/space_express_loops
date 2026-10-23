@@ -7,8 +7,7 @@ namespace DigitalLove.Game.Universe
         [SerializeField] private UniverseView universeView;
         [SerializeField] private LineRenderer ring;
         [SerializeField] private float authoredRadius = 0.04f;
-        [SerializeField] private float ringRadiusFactor = 0.4f;
-        [SerializeField] private float heightOffset;
+        [SerializeField, Range(0.1f, 1.5f)] private float sizeFactor = 0.6f;
         [SerializeField] private Color normalColor = Color.magenta;
         [SerializeField] private Color activeColor = Color.cyan;
         [SerializeField] private Color commitColor = Color.green;
@@ -24,10 +23,11 @@ namespace DigitalLove.Game.Universe
             if (!state.IsBubble)
                 return;
 
-            transform.position = state.CenterWorld + Vector3.up * heightOffset;
-            transform.rotation = state.Metrics.FrameRotation;
-            float radius = state.Metrics.BubbleRadiusWorld * ringRadiusFactor;
-            transform.localScale = Vector3.one * (radius / authoredRadius);
+            Vector3 radii = state.Metrics.ScopeRadii;
+            float radius = Mathf.Max(radii.x, Mathf.Max(radii.y, radii.z)) * sizeFactor;
+            transform.position = state.CenterWorld;
+            transform.rotation = Quaternion.identity;
+            transform.localScale = Vector3.one * (radius / Mathf.Max(authoredRadius, 0.0001f));
 
             UniverseMapFeedback feedback = universeView.MapFeedback;
             Color color = feedback.IsActive

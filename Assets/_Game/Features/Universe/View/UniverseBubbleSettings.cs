@@ -14,6 +14,10 @@ namespace DigitalLove.Game.Universe
         public float bubbleHeightOffset = -0.1f;
         [Min(0.001f)] public float minMiniScale = 0.02f;
 
+        [Header("Scope")]
+        [Range(0.1f, 2f)] public float scopeScale = 1.1f;
+        public Vector3 scopeRadii = Vector3.one;
+
         [Header("Transition")]
         [Min(0f)] public float transitionSecs = 0.6f;
         public Ease transitionEase = Ease.InOutSine;

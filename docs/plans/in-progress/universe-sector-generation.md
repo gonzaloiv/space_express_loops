@@ -57,13 +57,18 @@ generated field:
 
 ```text
 origin      = deterministic universe origin in C
-fieldRadius = the field half-size in C (how far the frame may pan)
-viewRadius  = 1.2 m in the current scene; re-baseline against the Map/Sculpt apertures
+fieldRadius = the field half-size in C (how far the frame may pan); <= ~14 m (aperture cap)
+viewRadius  = the aperture: Map = fieldRadius, Sculpt = one sector radius
 ```
 
 Rules:
 
 - The field is a bounded box around the origin, not infinite and not room-centered.
+- **Content space is real metres** (planets `0.15-0.35 m`, sectors `1.2-2.0 m`, cells `5 m`); the
+  rig's parent scale/offset presents it (`UniverseContentRig.ApplyDisplayPose`).
+- **`viewRadius` is the aperture.** `MiniScale = miniBubbleRadius / viewRadius` makes the chosen
+  region fill the window, so Map = `fieldRadius` and Sculpt = one sector radius need no new
+  mechanism. `minMiniScale = 0.02` and `miniBubbleRadius = 0.28` cap the aperture at **14 m**.
 - The focus clamps so the frame stays inside `fieldRadius`; the frame simply stops at the
   edge (no visible boundary wall or edge fade).
 - Because the extent is small, there is no floating-origin rebase: content coordinates
@@ -144,6 +149,9 @@ references only `DigitalLove.Global`:
 | `SectorLayout` | Generator result: sector radius, anchor radius/rotation, planets. |
 | `SectorShape` | Pure seeded layout generator (Ring/Spiral/Cluster, separation, containment). |
 | `SectorCell` / `SectorGrid` | Deterministic cell coordinates, per-cell seed, fit and spacing checks. |
+| `SectorFieldData` | Field parameters: world seed, cell size, field radius, density, gap, layers, sector/planet budgets, shape data. |
+| `SectorField` | Pure field generator: occupied cells, spacing rejection, budgets, per-cell layout. |
+| `SectorPlacement` | One placed sector: cell, world center, layout. |
 | `UniverseBounds` / `UniverseFocus` | Bounded field extent and focus clamp. |
 | `SectorSeededExtensions` | Seeded sampling of `MinMaxFloat` / `MinMaxInt`. |
 
@@ -172,22 +180,109 @@ entangled with it; `Levels` and `SpaceShaping` reference it. Tests live in
 Bridge from the generated field to the scene: G0's math is not yet visible in the game, and the
 current destinations/hubs become a **selection over the field**.
 
-Scope:
+Pure layer (done): `SectorFieldData` + `SectorField` + `SectorPlacement` generate the whole
+field - occupied cells by density, spacing rejection, sector/planet budgets, and a per-cell
+`SectorLayout` seeded from the cell. EditMode tests cover budgets, cell centers, spacing,
+density, determinism, and radius range.
 
-- **Spawn the field** from pooled visuals: one ambient sector per occupied grid cell, anchored on
-  the cell center, using the existing planet visual (`NodeBody`) unchanged. Ambient sectors carry
-  no gameplay.
-- **Selection.** Pick which field planets become the active **destinations** (letters/store) and
-  which become **hubs**. Selection is a pure function of (world seed, level/puzzle identity,
-  active count), so it is deterministic and reproducible; the field itself is never regenerated.
-- **Spawners become selectors.** `PlanetsSpawner` / `HubsSpawner` stop placing room-local planets
-  and instead activate field planets; `MrukRoomLocalPlacement` no longer applies to gameplay
-  planets. `NodeBody` stays as the visual.
-- **One source of truth.** A planet's position comes from the field, so the field and gameplay
-  cannot disagree about where a planet is.
+Spawner (done): `SectorFieldSpawner` (in `DigitalLove.Game.SilentPlanets`, which now references
+`DigitalLove.Game.Sectors`) generates the field and pools `SilentPlanet.prefab` instances - one
+per placement planet plus a scaled-up anchor per sector - in content-local space, keeping the
+old public surface (`ResetPool`, `SetBubbleView`, `SpawnIfNeeded`). It **replaced**
+`SilentPlanetsSpawner` (and `SilentPlanetLayout`); `LevelContainer` and `LevelViewModeFanout`
+were retyped, and the component is wired on `Level/SilentPlanets` with `prototype` from the
+prefab and `viewTransform` on `CenterEyeAnchor`.
+
+**Staged deliberately.** A real-metre field (`fieldRadius = 12.5`, `cellSize = 5`) is ~25 m
+across, so it only fits the window if the aperture moves to `fieldRadius` - and at that aperture
+the existing room-local content shrinks to a speck, which is why the selection half below is
+coupled to it. To avoid that upheaval, the wired field is **small and at the current aperture**:
+`cellSize 0.9`, `fieldRadius 1.8`, `planetRadius 0.04-0.08`, sector radius `0.28-0.38`. Raise the
+aperture (Map = `fieldRadius`) only together with the selection step.
+
+Selection (pure layer done): `SectorSelector` + `SectorSelection` pick active nodes from the
+field - `SelectDestinations(field, levelSeed, count)` takes the sectors in a seed-scrambled
+order and returns the planet nearest each sector center, and `TrySelectHub` returns the anchor
+of the most central sector. One selection per sector, deterministic in (world seed, level seed,
+count). EditMode tests cover determinism, clamping, distinct sectors, planet fidelity, level
+seeding, and the central hub.
+
+Remaining:
+
+- **Destinations are field-selected (done).** `LevelContainer.SpawnPlanets` calls
+  `SectorSelector.SelectDestinations(field, worldSeed, offset, count)` - the offset is the
+  snapshot's planet count, so each round takes the next sectors - and passes the positions to
+  `PlanetsSpawner`, which no longer places room-locally and no longer registers with
+  `MrukRoomLocalPlacement`. The planet's own radius still comes from `PlanetSeedData`; the field
+  supplies position only, and the bigger gameplay planet hides the smaller ambient one at the
+  same spot.
+- **Hubs stay room-local (deliberate).** `HubsSpawner` keeps `MrukRoomLocalPlacement`, because the
+  [integration](../backlog/gameplay/space-shaping-integration.md) deletes hubs/stations. Selecting
+  hubs from the field would be wasted work. `SyncFromSnapshot` now registers hubs only.
+- **Aperture.** Set `viewRadius` to `fieldRadius` for Map view once the field is real-metre and
+  the gameplay content comes from it. `minMiniScale = 0.02` caps the aperture at 14 m.
+- **Field budget is finite.** With `softSectorBudget = 16` and `density 0.55` the field holds ~14
+  sectors, so rounds exhaust it after a few rounds and later rounds add no planets. Raise the
+  budget and `fieldRadius` together when more is needed.
 - **Visibility.** Out-of-frame content is grayed by the
   [color scope](../done/universe-color-scope.md); the hide band beyond the gray edge is still to
   be specified, and visibility is driven by the composition root, never by the field assembly.
+  Room view keeps the distance cull (`viewTransform` + `roomVisibleRadius`).
+
+## 12. Fixes found while building G1
+
+- **Content radius units.** `SetContentRadius` took a **world** radius and divided by the content
+  root's scale; the field's play radius is **content-local**, so in Bubble pose it was divided by
+  `MiniScale` (~0.233) and inflated ~4.3x - the scope swallowed the whole field and nothing grayed.
+  Now `SetContentRadiusLocal` takes content-local metres and does not divide. `ContentRadiusWorld`
+  still multiplies by `Scale` for the shader/pan consumers.
+- **Content centre was set after spawning.** `LevelContainer` centred the content on the *average*
+  of hubs + gameplay planets in `FinalizeSpawn`, i.e. **after** `PlanetBehaviour` positioned its
+  letters panel in world space (`PlanetBehaviour.cs:84`). The content then re-centred, leaving the
+  panels offset by that delta - visible as the HUD sitting at one extreme of the cluster, and much
+  worse once destinations came from a skewed subset. Now `LevelContainer.Init` sets the content
+  centre to the content origin and the content radius to the field's play radius **before**
+  anything spawns, so the content never shifts. `LevelContentCenter` is deleted.
+- **Scope radius source.** With a field, the content radius is the field's `destinationRadius`
+  (the playable core), not the outer field: the core stays coloured and the ambient field grays
+  outward, which is the look that works. `SectorFieldSpawner.PlayRadius` exposes it.
+
+- **Destination distance.** Destinations were selected from anywhere in the field, so they landed
+  up to 3.6 m apart and routes were unreachable. The old room placement kept planets within
+  `maxDistanceToOtherPlanet 1.5 x 0.66 ~ 0.99 m`. `SectorFieldData.destinationRadius` now limits
+  selection to sectors inside a core radius (`0` = no limit), so the field can stay big for the
+  gray band while only its core hosts destinations. The scope and the marker cube follow, because
+  `ContentRadiusWorld` is measured over hubs + gameplay planets.
+- **Planet size relationship.** Destinations take their radius from `PlanetSeedData.radius`
+  (`0.15-0.35 m`, an asset); field planets take it from the shape data. A destination is placed at
+  a field planet's position and hides it, so the gameplay planet must be the larger of the two.
+  The gap is capped by the shape math: the sector must contain the anchor plus the separation, so
+  `planetRadius <= sectorRadius / ~2.1` with `anchorScale 1.0-1.15` and `minSeparation 1.05`. With a
+  `0.4 m` cell the field tops out near `0.06 m`, so destinations stay visibly larger. Widening the
+  field's size range (`planetRadius 0.02-0.06`) makes the jump less obvious; closing it fully needs
+  either smaller destinations (edit `PlanetSeedData.radius`) or bigger cells (fewer destinations in
+  the core).
+- **`SectorGrid.CellSeed` was a poor hash.** It mixed the coordinates with multiplies and XORs
+  whose low bits barely moved, so for some world seeds every cell's `seed % 1000` landed in a
+  narrow high band: at `density 0.55` the field came out **empty** and at `1.0` full, and
+  occupancy was effectively a function of `x` alone. Replaced with a lowbias32-style mixer and
+  an unsigned modulo for the density test. `CellSeed_IsWellDistributed` now checks that every
+  `% 10` bucket is hit across cells for several world seeds, and
+  `Generate_ProducesSectorsAtDefaultDensity` checks the field is non-empty for 16 seeds - the
+  earlier tests passed only because they were trivially satisfied by an empty field.
+- **Left to clean up:** `RoundData.distanceBetweenPlanetsMultiplier` and
+  `PlanetSeedData.maxDistanceToOtherPlanet` are now unused - they existed only for room-local
+  planet spacing. They are authored data (scene/asset), and `MrukRoomLocalPlacement` is still
+  live for hubs, so remove them together with room placement for hubs, not before.
+
+- **`SectorGrid.CellSeed` was a poor hash.** It mixed the coordinates with multiplies and XORs
+  whose low bits barely moved, so for some world seeds every cell's `seed % 1000` landed in a
+  narrow high band: at `density 0.55` the field came out **empty** and at `1.0` full, and
+  occupancy was effectively a function of `x` alone. Replaced with a lowbias32-style mixer and
+  an unsigned modulo for the density test. `CellSeed_IsWellDistributed` now checks that every
+  `% 10` bucket is hit across cells for several world seeds, and
+  `Generate_ProducesSectorsAtDefaultDensity` checks the field is non-empty for 16 seeds - the
+  earlier tests passed only because they were trivially satisfied by an empty field.
 
 Not here: the snapshot rewrite and the room-placement rethink (§11), and the puzzle-loop
 replacement ([integration](../backlog/gameplay/space-shaping-integration.md)).
@@ -238,7 +333,7 @@ should be settled before G0's numbers are frozen.
 
 | Issue | Why it matters |
 |---|---|
-| **Units of content space** | The plan is written in universe metres (`cellSize = 5 m`, `sectorRadius = 1.2-2.0 m`), but the game's planets are `0.15-0.35 m` in *room* metres and the view shrinks content by `MiniScale ~ 0.23`. A `5 m` cell is ~`1.17 m` on screen against a `0.28 m` window. Decide whether content space is a large universe space the frame magnifies, or room metres. |
+| **Units of content space** | **Settled: content space is real metres** (`cellSize = 5 m`, `sectorRadius = 1.2-2.0 m`, planets `0.15-0.35 m`), and the rig's parent scale/offset presents it (`UniverseContentRig.ApplyDisplayPose`). `viewRadius` becomes the **aperture**: Map = `fieldRadius`, Sculpt = one sector radius, so `MiniScale = miniBubbleRadius / viewRadius` fills the window with no new mechanism. Budget: `minMiniScale = 0.02` and `miniBubbleRadius = 0.28` cap the aperture at **14 m**, so `fieldRadius <= ~14 m`. |
 | **Placement model** | Direction: generate the field first and **select** the current destinations/hubs from it, so positions have one source of truth. `PlanetsSpawner` / `HubsSpawner` / `MrukRoomLocalPlacement` become selectors; `NodeBody` stays as the planet visual. This is G1. |
 | **Aperture ownership** | Map = wide / Sculpt = narrow over one frame; `modes.md` says a view/camera/input mode is a Mode, not a Flow state. Does the aperture live on the view as a Mode, or as a field on the frame? `viewRadius` is `1.2` in the scene vs `2.5` assumed here. |
 | **Save/load** | Deferred: the snapshot has to be rethought, not patched - seed + `generatorVersion` + which field planets are active. Not part of G0 or G1. |
@@ -247,5 +342,5 @@ should be settled before G0's numbers are frozen.
 | **Bounded-edge UX** | The frame "simply stops at the edge (no visible boundary wall or edge fade)". How does the player know they reached the edge? Also the clamp is `0.3 x` today, which fights "pan to bring any sector in front". |
 | **Batching** | A large field of individual planet renderers plus per-instance material instances (route colours via `NodeBody.SetRouteColor`) breaks SRP batching. Do ambient field planets share materials? |
 | **Silent planets** | The hub says that pool "should be migrated into the field's ambient sectors rather than kept permanently"; when, and does it replace `SilentPlanetsSpawner`? |
-| **Puzzle-side numbers** | Planet density, region size, and ship cap are gated by the in-progress [space shaping spike](../in-progress/space-shaping-spike.md). G0 should land the deterministic math and tests, not tune density. |
+| **Puzzle-side numbers** | Planet density, region size, and ship cap are gated by the in-progress [space shaping spike](../done/space-shaping-spike.md). G0 should land the deterministic math and tests, not tune density. |
 

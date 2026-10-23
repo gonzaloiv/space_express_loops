@@ -8,16 +8,16 @@ namespace DigitalLove.Game.Levels
     {
         private readonly UniverseView universeView;
         private readonly SpaceshipsSpawner spaceshipsSpawner;
-        private readonly SilentPlanetsSpawner silentPlanetsSpawner;
+        private readonly SectorFieldSpawner sectorFieldSpawner;
 
         public LevelViewModeFanout(
             UniverseView universeView,
             SpaceshipsSpawner spaceshipsSpawner,
-            SilentPlanetsSpawner silentPlanetsSpawner)
+            SectorFieldSpawner sectorFieldSpawner)
         {
             this.universeView = universeView;
             this.spaceshipsSpawner = spaceshipsSpawner;
-            this.silentPlanetsSpawner = silentPlanetsSpawner;
+            this.sectorFieldSpawner = sectorFieldSpawner;
         }
 
         public void Subscribe()
@@ -46,7 +46,7 @@ namespace DigitalLove.Game.Levels
         {
             spaceshipsSpawner.SetViewTransition(true);
             spaceshipsSpawner.SetBubbleView(true);
-            silentPlanetsSpawner.SetBubbleView(target == UniverseViewMode.Bubble);
+            sectorFieldSpawner.SetBubbleView(target == UniverseViewMode.Bubble);
         }
 
         private void OnTransitionCompleted(UniverseViewMode target)
@@ -60,7 +60,7 @@ namespace DigitalLove.Game.Levels
         {
             bool isBubble = mode == UniverseViewMode.Bubble;
             spaceshipsSpawner.SetBubbleView(isBubble);
-            silentPlanetsSpawner.SetBubbleView(isBubble);
+            sectorFieldSpawner.SetBubbleView(isBubble);
         }
     }
 }

@@ -25,8 +25,8 @@ spawned at level start and out-of-view content is grayed by the scope
 ## Baseline and coupling (updated after the color scope)
 
 - **The scope does not use `viewRadius`.** Out-of-frame content is *grayed*, not hidden: the
-  silent-planet frame hide was removed, and the scope box is sized from the content bounds
-  (`ContentRadiusWorld * boxScale`). See [Color scope](../../done/universe-color-scope.md)
+  silent-planet frame hide was removed, and the scope is an **ellipsoid** sized from the content
+  bounds (`ScopeRadiiWorld`). See [Color scope](../../done/universe-color-scope.md)
   §5.3/§6.2.
 - **`viewRadius` is `1.2` in `Game.unity`**, not the `2.5 m` these plans assume. Re-baseline
   the extent and sector numbers against the Map/Sculpt apertures

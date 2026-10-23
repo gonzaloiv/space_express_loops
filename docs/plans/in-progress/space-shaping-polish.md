@@ -3,7 +3,7 @@
 **Status:** in progress - next after the [POC](../done/space-shaping.md) (closed). Presentation
 and interaction refinements, before / alongside game integration.
 
-**Related:** [POC](../done/space-shaping.md) · [Architecture refactor](space-shaping-architecture.md) · [Integration into the game](../backlog/gameplay/space-shaping-integration.md) · [Reframing and variations](../backlog/gameplay/space-shaping-future.md) · [View frame](../done/universe-bubble-window.md)
+**Related:** [POC](../done/space-shaping.md) · [Architecture refactor](../done/space-shaping-architecture.md) · [Integration into the game](../backlog/gameplay/space-shaping-integration.md) · [Reframing and variations](../backlog/gameplay/space-shaping-future.md) · [View frame](../done/universe-bubble-window.md)
 
 **Wiring rule:** authored objects + serialized refs only; no runtime component lookup or asset/hierarchy creation. Deforming an authored mesh is the one open rule question (see §4).
 
@@ -19,8 +19,11 @@ without them. They are **next steps**, not POC blockers.
    from the field), URP **Unlit**, no shadows, 32 samples/line. Replaces the `LineRenderer`
    grid. Follow-up: retire the `LineRenderer` grid from `SpaceShapingView`, and settle the
    `meshFilter.mesh` runtime-instance question (or move to vertex-shader deformation).
-2. **Move-range visualization.** Show each source's allowed range (a wire sphere or ring per
-   planet) so the puzzle constraint is visible before you hit it.
+2. **Move-range visualization (DONE).** A `RangeRings` mesh (`RangeRingMeshBuilder`)
+   shows each planet's allowed move range as a **boundary ring**, centred on the home,
+   visible **only while that planet is grabbed** (Meta `Grabbable` selecting points).
+   `SpaceSourceView` applies the active state only on change (no per-frame `SetActive`).
+   Tuning of ring width/radius remains in item 5.
 3. **Ghost / pre-move preview.** Show the proposed source position (and a coarse path) during
    a drag; commit on release.
 4. **Grab / scale feedback.** Haptics or highlight on grab and on reaching the scale limits.

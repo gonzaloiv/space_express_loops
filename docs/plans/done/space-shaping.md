@@ -4,10 +4,10 @@
 -> grid -> trajectory; bounded moves and grab/scale work on device; the lab runs on the
 target architecture. Carried forward (not POC blockers): ghost / pre-move preview,
 move-range visualization, final tuning, and the lattice presentation (curved lines done;
-mesh deferred) — see the [architecture refactor](../in-progress/space-shaping-architecture.md)
+mesh deferred) — see the [architecture refactor](space-shaping-architecture.md)
 and [integration](../backlog/gameplay/space-shaping-integration.md) plans.
 
-**Related:** [Spike (smallest testable version)](../in-progress/space-shaping-spike.md) · [Reframing and variations](../backlog/gameplay/space-shaping-future.md) · [Integration into the game](../backlog/gameplay/space-shaping-integration.md) · [View frame (bubble window)](universe-bubble-window.md) · [Sector generation](../in-progress/universe-sector-generation.md) · [Parked: planet route drawing](../parked/planet-route-drawing.md)
+**Related:** [Spike (smallest testable version)](space-shaping-spike.md) · [Reframing and variations](../backlog/gameplay/space-shaping-future.md) · [Integration into the game](../backlog/gameplay/space-shaping-integration.md) · [View frame (bubble window)](universe-bubble-window.md) · [Sector generation](../in-progress/universe-sector-generation.md) · [Parked: planet route drawing](../parked/planet-route-drawing.md)
 
 **Wiring rule:** the grid visualization, the prediction line, the ship, and the sources are authored in the scene/prefab and referenced through serialized fields. No runtime `AddComponent`, `GetComponent`, `FindObjectsByType`, or hierarchy/mesh/asset creation. Follow the SerializeField wiring rules in the project `AGENTS.md`.
 
@@ -21,7 +21,7 @@ generation, no final art. The deliverable is "moving a source visibly deforms wh
 ship goes, the grid shows why, and I can tune a reachable-but-not-trivial path."
 
 The launch-to-curvature ratio is found in the separate
-[spike](../in-progress/space-shaping-spike.md); this plan starts once the spike passes. This is the
+[spike](space-shaping-spike.md); this plan starts once the spike passes. This is the
 first slice of the reframing in
 [Space shaping — reframing and variations](../backlog/gameplay/space-shaping-future.md).
 
@@ -177,7 +177,7 @@ Assembly note: `SpaceShaping` may reference `Nodes`, `Spaceships`, and the frame
 
 ## 6. Phases
 
-The first step is the separate [spike](../in-progress/space-shaping-spike.md): pure math plus a tiny 3D
+The first step is the separate [spike](space-shaping-spike.md): pure math plus a tiny 3D
 debug scene to find the launch-to-curvature ratio and the launch model. It gates
 everything below — do not build the grid visualization or the frame wiring until the
 spike passes.

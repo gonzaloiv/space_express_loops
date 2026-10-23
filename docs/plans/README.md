@@ -6,10 +6,9 @@ Plans are grouped by state. Move a plan between folders when its state changes.
 
 | Plan | State | Notes |
 |---|---|---|
-| [Space shaping — spike](in-progress/space-shaping-spike.md) | Done (passed) | Tier 0 math (`SpacetimeField`, `TrajectoryIntegrator`) and the Tier 1 debug scene; ratio band found and coast chosen. Superseded by the POC. |
-| [Space shaping — interaction + presentation polish](in-progress/space-shaping-polish.md) | In progress | Next: mesh-deform lattice (tubes/ribbons), move-range viz, ghost preview, grab feedback, tuning. Carried forward from the POC. |
-| [Space shaping — architecture refactor](in-progress/space-shaping-architecture.md) | In progress | First pass done: the lab runs on `Domain/` / `Data/` / `Views/` / `Flow/`; the POC driver is deleted. Remaining: game integration. |
-| [Sector generation and extent](in-progress/universe-sector-generation.md) | In progress | G0 done: `DigitalLove.Game.Sectors` assembly with `SectorShape` (Ring/Spiral/Cluster), cell grid, extent/focus, 23 EditMode tests passing. Next: G1 — spawn the field and select destinations/hubs from it. |
+| [Space shaping — test slice](in-progress/space-shaping-test-slice.md) | In progress | T0 + T1 done and tuned (`dilationScale 0.2`, `captureRadius 1.2`, deadlines 3.3-3.9): every puzzle start fails and is solvable inside the move range. Lab HUD is a canvas panel; 4 puzzles wired to Next. Next: decide the ship-time unit, then the prediction toggle. |
+| [Space shaping — interaction + presentation polish](in-progress/space-shaping-polish.md) | In progress | Mesh-deform lattice done; move-range viz done (grab-only, no per-frame `SetActive`). Remaining: ghost / pre-move preview, grab feedback, tuning. |
+| [Sector generation and extent](in-progress/universe-sector-generation.md) | In progress | G0 + G1 field/spawner done (`SectorField`, `SectorFieldSpawner`, 39 EditMode tests passing); `SectorSelector` picks active nodes from the field. Next: `PlanetsSpawner`/`HubsSpawner` as selectors + the aperture move. |
 
 ## Backlog
 

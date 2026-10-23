@@ -1,13 +1,13 @@
 # Space Shaping — Architecture Refactor (POC → real structure)
 
-**Status:** backlog - **first pass done.** The lab scene (`SpaceShapingPOC`) was rebuilt on
-the target architecture: `Domain/` (Sources / Spacetime / Ship / Puzzle), `Data/`
-(`PuzzleData`, `PuzzleSource`, `SpaceShapingSettings`), `Views/` (`SpaceSourceView`,
-`SpacetimeGridView`, `TrajectoryPredictionView`, `SpaceShapingView`), `Flow/`
-(`SpaceShapingState`, `SpaceShapingFlow`). `SpaceShapingPocDriver` is deleted. Remaining:
-the game integration (this shape drops into the real flow).
+**Status:** done - first pass complete. The lab scene (`SpaceShapingPOC`) runs on the target
+architecture: `Domain/` (Sources / Spacetime / Ship / Puzzle), `Data/` (`PuzzleData`,
+`PuzzleSource`, `SpaceShapingSettings`), `Views/` (`SpaceSourceView`, `SpacetimeMeshView`,
+`TrajectoryPredictionView`, `SpaceShapingView`), `Flow/` (`SpaceShapingState`,
+`SpaceShapingFlow`). The POC driver and the `LineRenderer` grid are gone. The game
+integration is tracked separately ([integration plan](../backlog/gameplay/space-shaping-integration.md)).
 
-**Related:** [POC](../done/space-shaping.md) · [Reframing and variations](../backlog/gameplay/space-shaping-future.md) · [Integration into the game](../backlog/gameplay/space-shaping-integration.md) · [View frame](../done/universe-bubble-window.md)
+**Related:** [POC](space-shaping.md) · [Reframing and variations](../backlog/gameplay/space-shaping-future.md) · [Integration into the game](../backlog/gameplay/space-shaping-integration.md) · [View frame](universe-bubble-window.md)
 
 ## 1. Why
 

@@ -20,6 +20,7 @@ namespace DigitalLove.Game.Universe
 
         [Header("Bubble transform")]
         [SerializeField] private float translationGain = 1f;
+        [SerializeField] private float panLimitFactor = 1.25f;
         [SerializeField] private float settleDistance = 0.01f;
         [SerializeField] private float translationSmoothSecs = 0.08f;
         [SerializeField] private float dragStartJumpLimit = 0.12f;
@@ -39,6 +40,7 @@ namespace DigitalLove.Game.Universe
                 enterRoomScale = enterRoomScale,
                 exitRoomScale = exitRoomScale,
                 translationGain = translationGain,
+                panLimitFactor = panLimitFactor,
                 settleDistance = settleDistance,
                 translationSmoothSecs = translationSmoothSecs,
                 dragStartJumpLimit = dragStartJumpLimit,

@@ -7,6 +7,7 @@ namespace DigitalLove.Game.Universe
         public float enterRoomScale;
         public float exitRoomScale;
         public float translationGain;
+        public float panLimitFactor = 1.25f;
         public float settleDistance;
         public float translationSmoothSecs;
         public float dragStartJumpLimit;

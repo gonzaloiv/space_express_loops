@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DigitalLove.Game.Nodes;
 using DigitalLove.Game.Persistence;
+using DigitalLove.Game.Sectors;
 using DigitalLove.Game.SilentPlanets;
 using DigitalLove.Game.Universe;
 using DigitalLove.Game.Spaceships;
@@ -19,12 +20,11 @@ namespace DigitalLove.Game.Levels
         [SerializeField] private PlanetsSpawner planetsSpawner;
         [SerializeField] private SpaceshipsSpawner spaceshipsSpawner;
         [SerializeField] private HubsSpawner hubsSpawner;
-        [SerializeField] private SilentPlanetsSpawner silentPlanetsSpawner;
+        [SerializeField] private SectorFieldSpawner sectorFieldSpawner;
         [SerializeField] private UniverseView universeView;
 
         private GameSnapshot currentSnapshot;
         private LevelViewModeFanout viewModeFanout;
-        private bool hasCenteredContent;
 
         public PlanetsSpawner PlanetsSpawner => planetsSpawner;
         public SpaceshipsSpawner SpaceshipsSpawner => spaceshipsSpawner;
@@ -41,12 +41,18 @@ namespace DigitalLove.Game.Levels
             HideAll();
         }
 
+        private void ApplyContentFrame()
+        {
+            universeView.SetContentCenter(universeView.ContentPosition);
+            universeView.SetContentRadius(sectorFieldSpawner.PlayRadius);
+        }
+
         private void Subscribe()
         {
             viewModeFanout ??= new LevelViewModeFanout(
                 universeView,
                 spaceshipsSpawner,
-                silentPlanetsSpawner);
+                sectorFieldSpawner);
             viewModeFanout.Subscribe();
             universeView.BubbleTransformCommitted -= OnBubbleTransformCommitted;
             universeView.BubbleTransformCommitted += OnBubbleTransformCommitted;
@@ -72,7 +78,7 @@ namespace DigitalLove.Game.Levels
 
         public void HideAll()
         {
-            silentPlanetsSpawner.ResetPool();
+            sectorFieldSpawner.ResetPool();
             planetsSpawner.ResetPool();
             spaceshipsSpawner.ResetPool();
             hubsSpawner.ResetPool();
@@ -88,8 +94,8 @@ namespace DigitalLove.Game.Levels
         public void SpawnRound(RoundData roundData, GameSnapshot gameSnapshot)
         {
             currentSnapshot = gameSnapshot;
+            ApplyContentFrame();
             universeView.WithRoomPose(() => SpawnRoundInternal(roundData, gameSnapshot));
-            RefreshContentReferences();
         }
 
         private void SpawnRoundInternal(RoundData roundData, GameSnapshot gameSnapshot)
@@ -111,8 +117,8 @@ namespace DigitalLove.Game.Levels
                 if (gameSnapshot.HasBubblePlacement)
                     universeView.RestoreBubbleTransform(gameSnapshot.BubbleOffsetLocal, gameSnapshot.BubbleYaw);
 
+                ApplyContentFrame();
                 universeView.WithRoomPose(() => RespawnFromData(gameSnapshot));
-                RefreshContentReferences();
                 onComplete?.Invoke();
             });
         }
@@ -132,10 +138,24 @@ namespace DigitalLove.Game.Levels
 
         private void SpawnPlanets(GameSnapshot gameSnapshot, RoundData roundData)
         {
+            sectorFieldSpawner.SpawnIfNeeded(gameSnapshot.EnsureSilentPlanetSeed());
+            SectorFieldData field = sectorFieldSpawner.Field;
+            int offset = gameSnapshot.planets.Count;
+            int count = roundData.planetsToAdd.GetRandomValue();
+            SectorSelection[] selections = SectorSelector.SelectDestinations(
+                field,
+                field.worldSeed,
+                offset,
+                count);
+
+            List<Vector3> positions = new(selections.Length);
+            for (int i = 0; i < selections.Length; i++)
+                positions.Add(selections[i].Position);
+
             List<PlanetData> roundPlanets = planetsSpawner.GeneratePlanetDataFromPlanetsSeed(
-                roundData.planetsToAdd.GetRandomValue(),
+                positions.Count,
                 roundData.planetSeed,
-                roundData.distanceBetweenPlanetsMultiplier
+                positions
             );
             gameSnapshot.AddPlanets(roundPlanets);
             planetsSpawner.SpawnPlanets(gameSnapshot.planets);
@@ -143,10 +163,7 @@ namespace DigitalLove.Game.Levels
 
         private void RespawnFromData(GameSnapshot gameSnapshot)
         {
-            roomPlacement.SyncFromSnapshot(
-                gameSnapshot.hubs,
-                gameSnapshot.planets,
-                hubsSpawner.HubPlacementRadius);
+            roomPlacement.SyncFromSnapshot(gameSnapshot.hubs, hubsSpawner.HubPlacementRadius);
             hubsSpawner.SpawnHubs(gameSnapshot.hubs);
             planetsSpawner.SpawnPlanets(gameSnapshot.planets);
 
@@ -159,15 +176,9 @@ namespace DigitalLove.Game.Levels
         private void FinalizeSpawn(GameSnapshot gameSnapshot)
         {
             viewModeFanout.ApplyCurrentMode();
-            silentPlanetsSpawner.SpawnIfNeeded(gameSnapshot.EnsureSilentPlanetSeed());
+            sectorFieldSpawner.SpawnIfNeeded(gameSnapshot.EnsureSilentPlanetSeed());
             PlanetRouteColorSync.Apply(gameSnapshot, planetsSpawner, hubsSpawner, spaceshipsSpawner);
             spaceshipsSpawner.RefreshGrabbablesAtStation();
-        }
-
-        private void RefreshContentReferences()
-        {
-            if (!hasCenteredContent)
-                hasCenteredContent = LevelContentCenter.TrySet(universeView, hubsSpawner.All, planetsSpawner.All);
         }
 
         private void SpawnSpaceshipFromLoop(LoopData loop, GameSnapshot gameSnapshot)
@@ -194,7 +205,6 @@ namespace DigitalLove.Game.Levels
         {
             yield return WaitForRoomReady();
 
-            hasCenteredContent = false;
             MRUKRoom room = MRUK.Instance.GetCurrentRoom();
             Pose originPose = new()
             {

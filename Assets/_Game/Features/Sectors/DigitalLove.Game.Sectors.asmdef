@@ -1,0 +1,16 @@
+{
+    "name": "DigitalLove.Game.Sectors",
+    "rootNamespace": "DigitalLove.Game.Sectors",
+    "references": [
+        "DigitalLove.Global"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

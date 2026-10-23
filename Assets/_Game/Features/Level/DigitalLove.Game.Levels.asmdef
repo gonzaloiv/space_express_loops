@@ -4,6 +4,7 @@
     "references": [
         "DigitalLove.FlowControl",
         "DigitalLove.Game.Nodes",
+        "DigitalLove.Game.Sectors",
         "DigitalLove.Casual.Levels",
         "DigitalLove.Game.Spaceships",
         "meta.xr.mrutilitykit",

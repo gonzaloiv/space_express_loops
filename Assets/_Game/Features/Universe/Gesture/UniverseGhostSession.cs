@@ -33,7 +33,7 @@ namespace DigitalLove.Game.Universe
             this.gestureInput = gestureInput;
             this.spaceshipsSpawner = spaceshipsSpawner;
             this.settings = settings;
-            bubbleTransform = BubbleMapTransformSession.FromSettings(settings);
+            bubbleTransform = new BubbleMapTransformSession(settings);
             bubbleScale = BubbleScaleSession.FromSettings(settings);
             gate = new UniverseGestureGate(settings.viewChangeCooldownSecs);
         }

@@ -1,9 +1,11 @@
 # Universe — Bubble Color Scope
 
-**Status:** done - implemented as a **box** mask (`sdBox`, to match the cube view frame) inside
-the existing `LitRim` URP-Lit fork, not a new shader and not a sphere. Shader include,
-`UniverseView.BubbleBlend`, `UniverseColorScope` (box sized from the content bounds, shrunk by
-`boxScale`), world + room-prop materials on `DigitalLove/VFX/LitRim`, and the world-space UI
+**Status:** done - implemented as an **ellipsoid** mask inside the existing `LitRim` URP-Lit fork,
+not a new shader. The scope was originally an `sdBox` to match the cube view frame; the frame
+cube is now a **visual reference only**, and the functional boundary (gray edge, UI fade, pan
+clamp) is one ellipsoid so the three agree. Shader include, `UniverseView.BubbleBlend` /
+`ScopeRadiiWorld`, `UniverseColorScope` (radii from the content bounds, scaled by `scopeScale`
+and `scopeRadii`), world + room-prop materials on `DigitalLove/VFX/LitRim`, and the world-space UI
 fader (`UniverseScopeUiVisibility`, four level roots) are all done, wired in `Game.unity`, and
 verified on device.
 
@@ -113,18 +115,24 @@ That is the acceptance criterion.
 
 Consequences:
 
-- **The scope box is sized from the content bounds, shrunk by `boxScale`.** It no longer depends
-  on `viewRadius`, so the gray band exists at rest without needing the universe to be larger
-  than the frame: the box is `0.8 x content radius`, so the outer shell of the map is already
-  outside and grays. More content outside the box (a thicker band, more systems in view) is a
-  content-volume question for the sector-field work, not a blocker for this plan.
+- **The scope is an ellipsoid sized from the content bounds, shrunk by `scopeScale`.** It no
+  longer depends on `viewRadius`, so the gray band exists at rest without needing the universe to
+  be larger than the frame: the radii are `0.8 x content radius` (per-axis via `scopeRadii`), so
+  the outer shell of the map is already outside and grays. More content outside the scope (a
+  thicker band, more systems in view) is a content-volume question for the sector-field work, not
+  a blocker for this plan.
+- **The frame cube is a visual reference only.** The functional boundary is the ellipsoid, so the
+  gray edge, the UI fade and the pan clamp all share one shape. The cube stays as the frame
+  reference in the model. The pan clamp is a **hard stop** at `panLimitFactor x ScopeRadiiWorld`
+  (the drag smoothing gives the soft arrival); an earlier soft clamp asymptoted to *twice* the
+  limit, so the map kept creeping past the boundary instead of stopping.
 - **Out-of-frame elements must not be hidden.** The silent-planet bubble-frame hide
   (`bubbleFrameMargin` in `SilentPlanetsSpawner`) was removed for this reason: silent planets
   now stay visible in Bubble view and the scope grays them. Frame culling is otherwise not
   implemented (the frame owns containment math only). Any future culling must skip elements
   that should gray instead of vanish.
 - **No shader work is needed for them.** World materials already point at the scope shader,
-  so out-of-frame planets gray as soon as they sit outside the box.
+  so out-of-scope planets gray as soon as they sit outside it.
 - Room props and transition frames also gray, but they are not the requirement.
 
 ## 6. Runtime
@@ -135,8 +143,9 @@ Read-only surface; no behavior change:
 
 ```text
 FrameCenterWorld   = the world point the frame center lands on (content center at rest)
-ContentRadiusWorld = content bounds radius * Scale   // the scope box half-size
-BubbleRadiusWorld  = viewRadius * Scale              // the frame window (marker, drag limit)
+ContentRadiusWorld = content bounds radius * Scale
+ScopeRadiiWorld    = per-axis scope radii (ContentRadiusWorld * scopeScale * scopeRadii)
+BubbleRadiusWorld  = viewRadius * Scale              // the aperture (a scalar; shape-free)
 BubbleBlend        = 0 in Room, 1 in Bubble, tweened over transitionSecs
 ```
 
@@ -146,11 +155,10 @@ falling back to `viewRadius` before content exists.
 
 **Why the scope uses `ContentRadiusWorld`, not `BubbleRadiusWorld`:** `BubbleRadiusWorld`
 always equals `miniBubbleRadius` (`viewRadius * MiniScale`), while the map's world radius is
-`contentRadius * MiniScale`. With `viewRadius (1.2) > contentRadius`, the box was larger than
-the visible map, so graying only triggered once a drag pushed a planet past the box edge — and
-the drag is clamped to `BubbleRadiusWorld * 0.3`, so that only happened at full drag. Sizing the
-box from the content bounds makes the box edge coincide with the map edge, so a planet grays as
-soon as it leaves the map.
+`contentRadius * MiniScale`. With `viewRadius (1.2) > contentRadius`, the scope was larger than
+the visible map, so graying only triggered once a drag pushed a planet past the scope edge — and
+the drag is clamped, so that only happened at full drag. Sizing the scope from the content bounds
+makes its edge coincide with the map edge, so a planet grays as soon as it leaves the map.
 
 `BubbleBlend` is tweened in `StartTransition` and snapped in `CompleteTransition` and on instant transitions.
 
@@ -161,22 +169,21 @@ Serialized `MonoBehaviour` on the `Universe` root:
 ```text
 [SerializeField] UniverseView universeView
 [SerializeField] float softnessMeters = 0.03
-[SerializeField] float boxScale = 0.8
 [SerializeField] float maxStrength = 1
 ```
 
-`boxScale` shrinks the scope box inside the content bounds, so the gray-out and the UI hide
-trigger nearer the center of the cube; the UI fader reads the same `_ColorScopeHalfSize`, so it
-follows automatically.
+The scope extents live on `UniverseBubbleSettings` (`scopeScale = 0.8`, `scopeRadii = 1,1,1`),
+not on the driver, so the pan clamp can read the same shape. `scopeScale` shrinks the scope
+inside the content bounds and `scopeRadii` stretches it per axis (lateral vs vertical reach); the
+UI fader reads the same globals, so it follows automatically.
 
 `LateUpdate` (after DOTween moves the content):
 
 ```text
 strength = universeView.State.HasRoomAnchor ? universeView.BubbleBlend * maxStrength : 0
 
-Shader.SetGlobalVector(_ColorScopeCenter,   universeView.FrameCenterWorld)
-Shader.SetGlobalVector(_ColorScopeHalfSize, Vector3.one * (universeView.ContentRadiusWorld * boxScale))
-Shader.SetGlobalVector(_ColorScopeRotation, universeView.FrameRotation)
+Shader.SetGlobalVector(_ColorScopeCenter, universeView.FrameCenterWorld)
+Shader.SetGlobalVector(_ColorScopeRadii,  universeView.ScopeRadiiWorld)
 Shader.SetGlobalFloat (_ColorScopeSoftness, softnessMeters)
 Shader.SetGlobalFloat (_ColorScopeStrength, strength)
 ```
@@ -192,9 +199,9 @@ Wiring: add the component to the `Universe` root in `Game.unity` and serialize t
 `UniverseScopeUiVisibility` (`Assets/_Modules/UI/Behaviours/UniverseScopeUiVisibility.cs`) is implemented; it still needs to be added to world-space UI roots that should disappear outside the frame (letters panels, store, TTS, posters, world-space buttons). It only reads shader globals, so it has no asmdef dependency on `_Game`.
 
 - serialized `CanvasGroup`;
-- reads the same five shader globals the driver writes (`_ColorScopeCenter`, `_ColorScopeHalfSize`, `_ColorScopeRotation`, `_ColorScopeSoftness`, `_ColorScopeStrength`) - no scope reference, so spawned UI prefabs work;
+- reads the same four shader globals the driver writes (`_ColorScopeCenter`, `_ColorScopeRadii`, `_ColorScopeSoftness`, `_ColorScopeStrength`) - no scope reference, so spawned UI prefabs work;
 - if `_ColorScopeStrength` is 0, alpha is 1;
-- otherwise computes the same **box** mask (`sdBox` with `_ColorScopeRotation`, matching `ColorScope.hlsl`) from its own `transform.position`;
+- otherwise computes the same **ellipsoid** mask (`(length(local / radii) - 1) * min(radii)`, matching `ColorScope.hlsl`) from its own `transform.position`;
 - keeps the panel visible while the mask is above `0.65`, hides it below `0.35` (hysteresis), and fades `CanvasGroup.alpha` over a short `fadeSecs`;
 - `CanvasGroup.blocksRaycasts` follows the visible state;
 - do not disable the GameObject; gameplay state stays intact.
@@ -355,7 +362,9 @@ If materials live in Addressables, rebuild those bundles after the shader swap.
 | Parameter | Default |
 |---|---|
 | `softnessMeters` | `0.03 m` |
-| `boxScale` | `0.8` |
+| `scopeScale` | `0.8` |
+| `scopeRadii` | `1, 1, 1` (per-axis reach) |
+| `panLimitFactor` | `1.25` x `ScopeRadiiWorld` (hard stop; 1.25 = pan by one content radius, i.e. reach the whole map) |
 | `maxStrength` | `1` |
 | Edge AA | `fwidth`, minimum `0.0001` |
 | Luminance | Rec.601 |
@@ -368,7 +377,7 @@ Done:
 
 - `Assets/_Modules/VFX/Materials/Shaders/ColorScope.hlsl` - shared scope include.
 - `Assets/_Modules/VFX/Materials/Shaders/LitRim.shader` + `LitRimForwardPass.hlsl` + `LitRimInput.hlsl` - the URP-Lit fork that applies the scope (the fork is `LitRim`, not a separate `ColorScope/Lit`).
-- `Assets/_Game/Features/Universe/View/UniverseColorScope.cs` - the driver (`FrameCenterWorld`, `ContentRadiusWorld`, `FrameRotation`, `BubbleBlend`).
+- `Assets/_Game/Features/Universe/View/UniverseColorScope.cs` - the driver (`FrameCenterWorld`, `ScopeRadiiWorld`, `BubbleBlend`).
 - `Assets/_Game/Features/Universe/View/UniverseScopeUiVisibility.cs` (`_Modules/UI/Behaviours`) - the UI fader, wired with a `CanvasGroup` on the four **level** world-space roots in `Game.unity`: `Level/Hubs/Panel - Store/Canvas`, `Level/Planets/Planet (1)/Panel - Store/Canvas`, `Level/Spaceships/Spaceship (1)/Traveller/Panel/Canvas`, `Level/Spaceships/Spaceship (1)/RoutePanel/Canvas`. Scene-level panels (`TTSPanel`, `HighestScorePoster`, `ReviewPanel`, `GameEndPanel`) are deliberately left alone — only level elements are in scope.
 - `Assets/_Game/Game.unity` - `UniverseColorScope` wired on the `Universe` root; world + room-prop materials repointed to `DigitalLove/VFX/LitRim`.
 
@@ -376,10 +385,10 @@ Done:
 
 - **Extent coupling.** When the sector-field extent lands
   ([sector generation](../in-progress/universe-sector-generation.md): `UniverseBounds`,
-  `UniverseFocus`, `fieldRadius`), the universe becomes genuinely larger than the window. At
-  that point the scope box should be re-derived from the **frame window** (`viewRadius`) instead
-  of `ContentRadiusWorld * boxScale` - the content-bounds sizing exists only because the map was
-  smaller than the window. Revisit §5.3/§6.2 then.
+  `UniverseFocus`, `fieldRadius`), the universe becomes genuinely larger than the scope. At
+  that point the scope radii should be re-derived from the **aperture** (`viewRadius`) instead
+  of the content bounds - the content-bounds sizing exists only because the map was smaller than
+  the window. Revisit §5.3/§6.2 then.
 - Room-volume scope (MRUK bounds, then wall planes).
 - Unlit/VFX/particle scope with alpha-based particles.
 - Passthrough desaturation via a full-screen pass if the test requires it.
@@ -387,18 +396,19 @@ Done:
 
 ## 16. Next steps (ordered)
 
-1. **See the desaturation (goal 1).** Done - confirmed in the editor: out-of-frame content grays
-   and the frame interior stays colored, after the box was sized from the content bounds and
-   `boxScale` was added to pull the boundary inward.
+1. **See the desaturation (goal 1).** Done - confirmed in the editor: out-of-scope content grays
+   and the scope interior stays colored, after the scope was sized from the content bounds and
+   `scopeScale` was added to pull the boundary inward.
 2. **World-space UI hiding.** Done: `UniverseScopeUiVisibility` is wired with a `CanvasGroup` on
    the four level world-space roots only (see §14); scene-level panels (TTS, poster, review,
    end panel) are left alone. Watch the interaction with `ScaleOnOff` / `ScalePunch` on those
    canvases, which already animate scale for show/hide.
 3. **Tuning and device verification.** Done - tuned and checked on device (edge reads as a fade,
-   both eyes, motion stable). Re-run the §11 list if `boxScale` or `softnessMeters` change again.
-4. **More universe outside the box** (optional, not a gate). The band currently exists because
-   `boxScale` shrinks the box inside the content bounds. A thicker band and more systems in view
-   is a content-volume question for the sector-field work
+   both eyes, motion stable). Re-run the §11 list if `scopeScale`, `scopeRadii` or
+   `softnessMeters` change again.
+4. **More universe outside the scope** (optional, not a gate). The band currently exists because
+   `scopeScale` shrinks the scope inside the content bounds. A thicker band and more systems in
+   view is a content-volume question for the sector-field work
    ([sector generation](../in-progress/universe-sector-generation.md),
    [sector field hub](../backlog/universe/universe-infinite-sector.md)).
 

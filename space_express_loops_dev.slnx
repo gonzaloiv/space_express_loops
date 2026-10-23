@@ -39,7 +39,7 @@
   <Project Path="DigitalLove.Analytics.csproj" />
   <Project Path="DigitalLove.VFX.Materials.Editor.csproj" />
   <Project Path="DigitalLove.XR.OVR.csproj" />
-  <Project Path="DigitalLove.Game.SilentPlanets.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Editor.csproj" />
   <Project Path="DigitalLove.Game.Sectors.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Localization.csproj" />
   <Project Path="DigitalLove.VFX.Fader.csproj" />
@@ -53,6 +53,7 @@
   <Project Path="DigitalLove.Casual.Levels.csproj" />
   <Project Path="DigitalLove.Theming.csproj" />
   <Project Path="DigitalLove.XR.Samples.csproj" />
+  <Project Path="DigitalLove.Game.SilentPlanets.csproj" />
   <Project Path="DigitalLove.DataAccess.Local.csproj" />
   <Project Path="DigitalLove.Timeline.Integrations.csproj" />
   <Project Path="DigitalLove.Game.Persistence.csproj" />
@@ -60,13 +61,13 @@
   <Project Path="DigitalLove.Game.Flow.GameStartState.csproj" />
   <Project Path="DigitalLove.Analytics.GameAnalytics.csproj" />
   <Project Path="DigitalLove.Game.TTS.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.VFX.Materials.csproj" />
   <Project Path="DigitalLove.Game.Flow.GameEndState.csproj" />
   <Project Path="DigitalLove.XR.ARFoundation.csproj" />
   <Project Path="DigitalLove.Game.Flow.EditionState.csproj" />
   <Project Path="DigitalLove.Audio.TheRadio.csproj" />
   <Project Path="Unity.XR.Hands.Samples.VisualizerSample.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.Editor.csproj" />
   <Project Path="DigitalLove.VFX.MegaFiers.csproj" />
   <Project Path="DigitalLove.VFX.ShadowLike.csproj" />
   <Project Path="Simple360Render.Runtime.csproj" />
