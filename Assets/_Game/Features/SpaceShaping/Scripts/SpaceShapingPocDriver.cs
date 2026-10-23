@@ -9,6 +9,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private Transform destination;
         [SerializeField] private Transform[] planets;
         [SerializeField] private LineRenderer pathLine;
+        [SerializeField] private Transform container;
         [SerializeField] private LaunchModel launchModel = LaunchModel.Coast;
         [SerializeField] private float launchSpeed = 1f;
         [SerializeField] private float thrustAcceleration = 1f;
@@ -45,6 +46,9 @@ namespace DigitalLove.Game.SpaceShaping
 
         private Vector3[] homePositions;
         private Vector3[] homeScales;
+        private Vector3[] positions;
+        private float[] scales;
+        private SourceLimits limits;
 
         private void Start()
         {
@@ -65,9 +69,18 @@ namespace DigitalLove.Game.SpaceShaping
         {
             homePositions = new Vector3[planets.Length];
             homeScales = new Vector3[planets.Length];
+            positions = new Vector3[planets.Length];
+            scales = new float[planets.Length];
+            limits = new SourceLimits
+            {
+                MoveRange = moveRange,
+                MinScale = minScale,
+                MaxScale = maxScale,
+                SeparationScale = minSeparationScale
+            };
             for (int i = 0; i < planets.Length; i++)
             {
-                homePositions[i] = planets[i].position;
+                homePositions[i] = Local(planets[i]);
                 homeScales[i] = planets[i].localScale;
             }
         }
@@ -76,9 +89,11 @@ namespace DigitalLove.Game.SpaceShaping
         public void Simulate()
         {
             BuildField();
+            Vector3 originLocal = Local(origin);
+            Vector3 destinationLocal = Local(destination);
             TrajectorySettings settings = new()
             {
-                Destination = destination.position,
+                Destination = destinationLocal,
                 CaptureRadius = captureRadius,
                 StepSecs = stepSecs,
                 MaxSteps = maxSteps
@@ -87,11 +102,13 @@ namespace DigitalLove.Game.SpaceShaping
             launch.Model = launchModel;
             launch.LaunchSpeed = launchSpeed;
             launch.ThrustAcceleration = thrustAcceleration;
-            TrajectoryResult result = launch.Simulate(field, origin.position, destination.position, settings, integrator);
+            TrajectoryResult result = launch.Simulate(field, originLocal, destinationLocal, settings, integrator);
             Draw(result);
             UpdateGrid();
             Snapshot();
         }
+
+        private Vector3 Local(Transform source) => container.InverseTransformPoint(source.position);
 
         private void BuildField()
         {
@@ -100,16 +117,20 @@ namespace DigitalLove.Game.SpaceShaping
             {
                 Transform planet = planets[i];
                 float radius = planet.localScale.x * 0.5f;
-                field.Add(new SpaceSource(planet.position, radius, radius * sourceStrengthScale));
+                field.Add(new SpaceSource(Local(planet), radius, radius * sourceStrengthScale));
             }
         }
 
         private void Draw(TrajectoryResult result)
         {
             ApplyOutcomeColor(result.Outcome);
-            pathLine.positionCount = result.Points.Count;
-            for (int i = 0; i < result.Points.Count; i++)
+            bool arrived = result.Outcome == TrajectoryOutcome.Arrive;
+            int count = result.Points.Count;
+            pathLine.positionCount = arrived ? count + 1 : count;
+            for (int i = 0; i < count; i++)
                 pathLine.SetPosition(i, result.Points[i]);
+            if (arrived)
+                pathLine.SetPosition(count, Local(destination));
         }
 
         private void ApplyOutcomeColor(TrajectoryOutcome outcome)
@@ -124,15 +145,11 @@ namespace DigitalLove.Game.SpaceShaping
 
         private static Color ColorFor(TrajectoryOutcome outcome)
         {
-            switch (outcome)
-            {
-                case TrajectoryOutcome.Arrive:
-                    return new Color(0.30f, 1f, 0.40f, 1f);
-                case TrajectoryOutcome.Crash:
-                    return new Color(1f, 0.28f, 0.24f, 1f);
-                default:
-                    return new Color(1f, 0.80f, 0.25f, 1f);
-            }
+            if (outcome == TrajectoryOutcome.Arrive)
+                return new Color(0.30f, 1f, 0.40f, 1f);
+            if (outcome == TrajectoryOutcome.Crash)
+                return new Color(1f, 0.28f, 0.24f, 1f);
+            return new Color(1f, 0.80f, 0.25f, 1f);
         }
 
         private void UpdateGrid()
@@ -159,33 +176,23 @@ namespace DigitalLove.Game.SpaceShaping
         {
             for (int i = 0; i < planets.Length; i++)
             {
-                Vector3 offset = planets[i].position - homePositions[i];
-                if (offset.magnitude > moveRange)
-                    planets[i].position = homePositions[i] + offset.normalized * moveRange;
-
-                float scale = Mathf.Clamp(planets[i].localScale.x, minScale, maxScale);
-                planets[i].localScale = new Vector3(scale, scale, scale);
+                positions[i] = Local(planets[i]);
+                scales[i] = planets[i].localScale.x;
             }
 
-            ResolveOverlaps();
+            SourceConstraints.Apply(positions, scales, homePositions, limits);
+            ApplyConstrained();
         }
 
-        private void ResolveOverlaps()
+        private void ApplyConstrained()
         {
             for (int i = 0; i < planets.Length; i++)
             {
-                for (int j = i + 1; j < planets.Length; j++)
-                {
-                    Vector3 delta = planets[j].position - planets[i].position;
-                    float distance = delta.magnitude;
-                    float minDistance = (planets[i].localScale.x + planets[j].localScale.x) * 0.5f * minSeparationScale;
-                    if (distance >= minDistance || distance < 0.0001f)
-                        continue;
+                if ((positions[i] - Local(planets[i])).sqrMagnitude > 0.00000001f)
+                    planets[i].position = container.TransformPoint(positions[i]);
 
-                    Vector3 push = delta.normalized * ((minDistance - distance) * 0.5f);
-                    planets[i].position -= push;
-                    planets[j].position += push;
-                }
+                if (!Mathf.Approximately(scales[i], planets[i].localScale.x))
+                    planets[i].localScale = new Vector3(scales[i], scales[i], scales[i]);
             }
         }
 
@@ -194,7 +201,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             for (int i = 0; i < planets.Length; i++)
             {
-                planets[i].position = homePositions[i];
+                planets[i].position = container.TransformPoint(homePositions[i]);
                 planets[i].localScale = homeScales[i];
             }
 
