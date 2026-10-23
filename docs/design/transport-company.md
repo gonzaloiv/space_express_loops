@@ -1,7 +1,8 @@
-# Pivot: Interstellar Transport Company — Time + Fuel
+# Transport Company — Time + Fuel (the two resources)
 
-**Status:** design direction, not a plan. Detail for the transport-company pivot in
-[project direction](project-direction.md); builds on
+**Status:** design, not a plan. The **two-resource model**. The pivot is
+[project direction](project-direction.md) §3; the fiction is [lore](lore.md); the campaign is
+[progression](progression.md). Builds on
 [relativity as gameplay](relativity-as-gameplay.md).
 **Date:** 2026-10-23.
 
@@ -69,37 +70,17 @@ knows *why* they failed (late) and *why* they scored low (wasteful).
 
 This is all pure C#, deterministic, testable — no change to the architecture.
 
-## 4. The "ethic" framing
+## 4. The eco rating (the score's flavour)
 
-Fuel as an **eco rating** gives the game a distinctive, wholesome identity: a
-**green transport company** that rewards the least wasteful route.
+Mechanically, fuel **is** the efficiency score axis: on-time is mandatory, fuel efficiency is
+the grade (§2). Presenting it as an **eco rating** is the flavour — the fiction behind it (the
+2048 stationary-state economy, "greed is eco-friendly") is in [lore](lore.md).
 
-- Score axes: on-time (mandatory) + fuel efficiency (the virtue).
-- Flavour: "cleanest route", "zero-burn slingshot", eco badges per job, a company
-  rating that improves with efficiency.
-- This is a **strong competition hook**: a logistics game whose whole point is
-  *not wasting energy*, in a genre that usually celebrates excess.
+## 5. The pivot (elsewhere)
 
-(If "ethic" was meant as *aesthetic* rather than *ecological*, the same two-resource
-model stands — the framing just becomes visual style instead of a moral score.)
-
-The fiction behind the eco framing — the 2048 stationary-state economy and the
-"greed is eco-friendly" theme — is in [lore](lore.md).
-
-## 5. The transport-company pivot
-
-The interstellar route map (distances between stars) is the natural macro layer:
-
-- **Map = the company's network.** Star systems, route lines, distances. The
-  campaign is the network growing as you take on more contracts.
-- **A job = one delivery** across the network (A → B, or A → B → C), with a
-  deadline and a fuel grade.
-- **The verb = shaping spacetime** to make the delivery work efficiently.
-- **Progression = the company**: unlock systems, buy better ships (more fuel
-  budget / higher speed / faster clock), earn reputation. Between jobs, not live.
-
-This drops the idle economy entirely (the hybrid's main problem) and keeps exactly
-what makes the fantasy work: mail/express, a map, a fleet, and reputation.
+The transport-company pivot itself — the map, a job = a delivery, progression — is
+[project direction](project-direction.md) §3, and the campaign structure is
+[progression](progression.md). This doc is only the **two resources**.
 
 ## 6. Guardrails
 

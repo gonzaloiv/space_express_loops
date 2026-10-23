@@ -173,7 +173,8 @@ Supersedes / repurposes:
 ## 8. Campaign menu (level select)
 
 The macro layer is a **level selector** — not a read-only Map aperture. (The verb is now
-the cube/lens, not moving sources: see [project direction](../../../design/project-direction.md).)
+the cube/lens, not moving sources: see [project direction](../../../design/project-direction.md).
+The design is [progression](../../../design/progression.md).)
 
 - **The selector:** a big universe — the company's network — shown as a field of **cubes,
   one per level/job**. The player looks it over and picks a cube.

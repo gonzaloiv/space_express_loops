@@ -236,6 +236,7 @@ mechanic before writing another plan.
   clock, frame dragging, horizons (the cube instruments these).
 - [Transport company: time + fuel](transport-company.md) — the two-resource model in
   detail.
+- [Progression](progression.md) — how the game advances: the numbered-cube network + stars.
 - [Lore](lore.md) — the fiction frame: the 2048 stationary-state economy, "the Wrap",
   "revenue is relative", greed-is-eco-friendly.
 - [Plans](../plans/README.md) — the engineering plans (space shaping, sectors,
