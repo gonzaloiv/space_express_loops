@@ -5,6 +5,8 @@ frame) inside the existing `LitRim` URP-Lit fork, not a new shader and not a sph
 shader include, `UniverseView.BubbleBlend`, and the `UniverseColorScope` driver are done
 and wired in `Game.unity`; world + room-prop materials are migrated to
 `DigitalLove/VFX/LitRim`. World-space UI hiding (`UniverseScopeUiVisibility`) is pending.
+**Blocker (§5.3):** the universe must extend beyond the frame so planets exist outside it —
+otherwise there is nothing to gray.
 
 **Related:** [Two views + interaction unify](../done/universe-views-and-interaction.md) · [Transforming the universe](../done/universe-transform.md)
 
@@ -103,17 +105,29 @@ half3 ApplyColorScope(half3 color, float3 positionWS)
 - `_ColorScopeSoftness` defaults to `0.03 m`; at the default `~0.26 m` bubble radius this is a visible but tight edge.
 - Rec.601 matches the existing `DigitalLove/Unlit/Grayscale` shader.
 
-### 5.3 Visibility prerequisite
+### 5.3 Requirement: universe elements outside the frame stay visible and gray out
 
-The shader only changes **rendered surfaces outside the sphere**. In the current two-views behavior the whole `Level` is scaled into the bubble, so in settled Bubble view there may be no game content outside the sphere.
+The scope changes **rendered surfaces outside the frame**. This is a required effect, not an
+optional extra: **planets and other universe elements that sit outside the frame must stay
+spawned and rendered, and the scope grays them** while the frame interior stays colored.
+That is the acceptance criterion.
 
-The effect is visible on:
+Consequences:
 
-- rendered room props/environment that are not part of `Level`;
-- any content that is outside the sphere during the transition;
-- future content that stays in the room while the bubble is shown.
+- **The universe must be larger than the frame.** Content must extend beyond `viewRadius`
+  in content space so elements land outside the cube on screen. A universe that fits inside
+  `viewRadius` has nothing to gray — that is the current gap.
+- **Out-of-frame elements must not be hidden.** The silent-planet bubble-frame hide
+  (`bubbleFrameMargin` in `SilentPlanetsSpawner`) was removed for this reason: silent planets
+  now stay visible in Bubble view and the scope grays them. Frame culling is otherwise not
+  implemented (the frame owns containment math only, `BubbleViewState.ContainsPoint`). Any
+  future culling must skip elements that should gray instead of vanish.
+- **No shader work is needed for them.** World materials already point at the scope shader,
+  so out-of-frame planets gray as soon as they exist outside `viewRadius`.
+- Room props and transition frames also gray, but they are not the requirement.
 
-If the intended look is "room-scale planets stay visible while the bubble shows a new universe", that is a separate content change and must be settled before implementation.
+This is a content/extent change, not a scope change: settle the universe extent so planets
+exist outside the frame, then verify with §11 test 15.
 
 ## 6. Runtime
 
@@ -122,10 +136,23 @@ If the intended look is "room-scale planets stay visible while the bubble shows 
 Read-only surface; no behavior change:
 
 ```text
-BubbleCenterWorld = contentRoot.TransformPoint(contentCenter)
-BubbleRadiusWorld = ContentRadius * Scale
-BubbleBlend       = 0 in Room, 1 in Bubble, tweened over transitionSecs
+FrameCenterWorld   = the world point the frame center lands on (content center at rest)
+ContentRadiusWorld = content bounds radius * Scale   // the scope box half-size
+BubbleRadiusWorld  = viewRadius * Scale              // the frame window (marker, drag limit)
+BubbleBlend        = 0 in Room, 1 in Bubble, tweened over transitionSecs
 ```
+
+`ContentRadiusWorld` is fed from the content bounds (`LevelContentCenter` measures the max
+distance from the content center to any hub/planet and calls `UniverseView.SetContentRadius`),
+falling back to `viewRadius` before content exists.
+
+**Why the scope uses `ContentRadiusWorld`, not `BubbleRadiusWorld`:** `BubbleRadiusWorld`
+always equals `miniBubbleRadius` (`viewRadius * MiniScale`), while the map's world radius is
+`contentRadius * MiniScale`. With `viewRadius (1.2) > contentRadius`, the box was larger than
+the visible map, so graying only triggered once a drag pushed a planet past the box edge — and
+the drag is clamped to `BubbleRadiusWorld * 0.3`, so that only happened at full drag. Sizing the
+box from the content bounds makes the box edge coincide with the map edge, so a planet grays as
+soon as it leaves the map.
 
 `BubbleBlend` is tweened in `StartTransition` and snapped in `CompleteTransition` and on instant transitions.
 
@@ -142,13 +169,13 @@ Serialized `MonoBehaviour` on the `Universe` root:
 `LateUpdate` (after DOTween moves the content):
 
 ```text
-if (!universeView.HasRoomAnchor) strength = 0
-else strength = universeView.BubbleBlend * maxStrength
+strength = universeView.State.HasRoomAnchor ? universeView.BubbleBlend * maxStrength : 0
 
-Shader.SetGlobalVector(_ColorScopeCenter, universeView.BubbleCenterWorld)
-Shader.SetGlobalFloat(_ColorScopeRadius, universeView.BubbleRadiusWorld)
-Shader.SetGlobalFloat(_ColorScopeSoftness, softnessMeters)
-Shader.SetGlobalFloat(_ColorScopeStrength, strength)
+Shader.SetGlobalVector(_ColorScopeCenter,   universeView.FrameCenterWorld)
+Shader.SetGlobalVector(_ColorScopeHalfSize, Vector3.one * universeView.ContentRadiusWorld)
+Shader.SetGlobalVector(_ColorScopeRotation, universeView.FrameRotation)
+Shader.SetGlobalFloat (_ColorScopeSoftness, softnessMeters)
+Shader.SetGlobalFloat (_ColorScopeStrength, strength)
 ```
 
 - cache every `Shader.PropertyToID`;
@@ -159,12 +186,12 @@ Wiring: add the component to the `Universe` root in `Game.unity` and serialize t
 
 ### 6.3 World-space UI
 
-Add `UniverseScopeUiVisibility` (`Assets/_Modules/UI/Behaviours`) to world-space UI roots that should disappear outside the bubble (letters panels, store, TTS, posters, world-space buttons). It only reads shader globals, so it has no asmdef dependency on `_Game`.
+`UniverseScopeUiVisibility` (`Assets/_Modules/UI/Behaviours/UniverseScopeUiVisibility.cs`) is implemented; it still needs to be added to world-space UI roots that should disappear outside the frame (letters panels, store, TTS, posters, world-space buttons). It only reads shader globals, so it has no asmdef dependency on `_Game`.
 
 - serialized `CanvasGroup`;
-- reads the same four shader globals (no scope reference, so spawned UI prefabs work);
+- reads the same five shader globals the driver writes (`_ColorScopeCenter`, `_ColorScopeHalfSize`, `_ColorScopeRotation`, `_ColorScopeSoftness`, `_ColorScopeStrength`) - no scope reference, so spawned UI prefabs work;
 - if `_ColorScopeStrength` is 0, alpha is 1;
-- otherwise computes the same sphere mask from its own `transform.position`;
+- otherwise computes the same **box** mask (`sdBox` with `_ColorScopeRotation`, matching `ColorScope.hlsl`) from its own `transform.position`;
 - keeps the panel visible while the mask is above `0.65`, hides it below `0.35` (hysteresis), and fades `CanvasGroup.alpha` over a short `fadeSecs`;
 - `CanvasGroup.blocksRaycasts` follows the visible state;
 - do not disable the GameObject; gameplay state stays intact.
@@ -297,7 +324,7 @@ If materials live in Addressables, rebuild those bundles after the shader swap.
 12. Before the room anchor is ready, no desaturation is applied.
 13. Frame Debugger: no extra passes; draw calls unchanged; SRP Batcher active.
 14. Headset: stable frame time in Room and Bubble.
-15. Visibility prerequisite: place a world prop outside the bubble and confirm it grays out. If nothing is outside, the effect is only visible during the transition/future content.
+15. Extent requirement: with planets/universe elements outside the frame, confirm they stay visible and gray out; the frame interior stays colored.
 
 ## 12. Risks and decisions
 
@@ -305,7 +332,7 @@ If materials live in Addressables, rebuild those bundles after the shader swap.
 |---|---|
 | Cost on Quest | Per-fragment ALU only; no blit/resolve/bandwidth. Cheapest option. |
 | Hard per-object boundary | Per-fragment sphere SDF with `fwidth` and smoothstep. |
-| Content outside the bubble | The effect only shows on rendered surfaces outside the sphere. Current code scales all of `Level` into the bubble; room props/future content provide the outside content. Settle this before implementation. |
+| Content outside the frame | Required: universe elements outside the frame stay rendered and gray out (§5.3). Needs content that extends beyond `viewRadius`; no culling may hide them. |
 | One shader vs one material asset | One shader, many material assets. A literal single material asset needs MPBs/atlases and is not planned. |
 | Stock URP Lit fork | One shader + one forward-pass copy. Pin URP version and re-apply on upgrade. |
 | Unlit/particles | Stock in v1; they are inside the bubble. Add small custom variants later only if stragglers appear. |
@@ -333,19 +360,13 @@ If materials live in Addressables, rebuild those bundles after the shader swap.
 
 ## 14. Files
 
-Create:
+Done:
 
-- `Assets/_Modules/VFX/Materials/Shaders/ColorScope.hlsl`
-- `Assets/_Modules/VFX/Materials/Shaders/ColorScope/Lit.shader`
-- `Assets/_Modules/VFX/Materials/Shaders/ColorScope/LitForwardPass.hlsl`
-- `Assets/_Game/Features/Level/Universe/UniverseColorScope.cs`
-- `Assets/_Modules/UI/Behaviours/UniverseScopeUiVisibility.cs`
-
-Modify:
-
-- `Assets/_Game/Features/Level/Universe/UniverseView.cs` - bubble center/radius, `BubbleBlend`.
-- `Assets/_Game/Game.unity` - add `UniverseColorScope` on the `Universe` root; add UI faders to world-space panels.
-- World URP Lit material assets - repoint to `DigitalLove/ColorScope/Lit`.
+- `Assets/_Modules/VFX/Materials/Shaders/ColorScope.hlsl` - shared scope include.
+- `Assets/_Modules/VFX/Materials/Shaders/LitRim.shader` + `LitRimForwardPass.hlsl` + `LitRimInput.hlsl` - the URP-Lit fork that applies the scope (the fork is `LitRim`, not a separate `ColorScope/Lit`).
+- `Assets/_Game/Features/Universe/View/UniverseColorScope.cs` - the driver (`FrameCenterWorld`, `ContentRadiusWorld`, `FrameRotation`, `BubbleBlend`).
+- `Assets/_Game/Features/Universe/View/UniverseScopeUiVisibility.cs` (`_Modules/UI/Behaviours`) - the UI fader, wired with a `CanvasGroup` on the four **level** world-space roots in `Game.unity`: `Level/Hubs/Panel - Store/Canvas`, `Level/Planets/Planet (1)/Panel - Store/Canvas`, `Level/Spaceships/Spaceship (1)/Traveller/Panel/Canvas`, `Level/Spaceships/Spaceship (1)/RoutePanel/Canvas`. Scene-level panels (`TTSPanel`, `HighestScorePoster`, `ReviewPanel`, `GameEndPanel`) are deliberately left alone — only level elements are in scope.
+- `Assets/_Game/Game.unity` - `UniverseColorScope` wired on the `Universe` root; world + room-prop materials repointed to `DigitalLove/VFX/LitRim`.
 
 ## 15. Future
 
@@ -353,3 +374,28 @@ Modify:
 - Unlit/VFX/particle scope with alpha-based particles.
 - Passthrough desaturation via a full-screen pass if the test requires it.
 - Multiple scopes only if the game ever shows more than one bubble.
+
+## 16. Next steps (ordered)
+
+Goal 1 first: **see the desaturation**. Everything else waits until it is visible.
+
+1. **See the desaturation (goal 1).** Prove out-of-frame content grays while the frame
+   interior stays colored, with no new code. Two ways, cheapest first:
+   - drag the bubble map so existing content leaves the frame - the drag moves the frame F,
+     so planets pushed outside the 0.28 m box (`viewRadius: 1.2` in `Game.unity`) should gray;
+   - if the universe is too small to push anything out, temporarily lower `viewRadius` on
+     the `Universe` root to force content outside, then revert.
+   If nothing grays, check `_ColorScopeStrength > 0` (needs `State.HasRoomAnchor`) and that
+   the visible materials use `DigitalLove/VFX/LitRim`.
+2. **Real universe extent.** Make planets/universe elements live beyond `viewRadius` so
+   they naturally sit outside the frame (§5.3) - the sector-field work
+   ([sector generation](../backlog/universe/universe-sector-generation.md),
+   [sector field hub](../backlog/universe/universe-infinite-sector.md)). Replaces the test
+   object from goal 1.
+3. **World-space UI hiding.** Done: `UniverseScopeUiVisibility` is wired with a `CanvasGroup` on
+   the four level world-space roots only (see §14); scene-level panels (TTS, poster, review,
+   end panel) are left alone. Watch the interaction with `ScaleOnOff` / `ScalePunch` on those
+   canvases, which already animate scale for show/hide.
+4. **Tuning and device verification.** Phase 3: softness/edge with `fwidth`, both eyes,
+   GPU time, SRP Batcher, draw calls.
+

@@ -21,7 +21,7 @@ namespace DigitalLove.Game.Universe
                 : 0f;
 
             Shader.SetGlobalVector(CenterId, universeView.FrameCenterWorld);
-            Shader.SetGlobalVector(HalfSizeId, Vector3.one * universeView.FrameHalfSizeWorld);
+            Shader.SetGlobalVector(HalfSizeId, Vector3.one * universeView.ContentRadiusWorld);
             Shader.SetGlobalVector(RotationId, ToVector(universeView.FrameRotation));
             Shader.SetGlobalFloat(SoftnessId, softnessMeters);
             Shader.SetGlobalFloat(StrengthId, strength);

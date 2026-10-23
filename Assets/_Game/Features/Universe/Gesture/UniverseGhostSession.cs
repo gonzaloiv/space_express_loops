@@ -161,7 +161,7 @@ namespace DigitalLove.Game.Universe
 
         private bool IsDragStartValid(BubbleViewState state) =>
             gestureInput.State.IsSingleHandPinching
-            && state.ContainsPoint(gestureInput.State.DragStartPoint, 0.3f);
+            && state.ContainsContentPoint(gestureInput.State.DragStartPoint);
 
         private void StartSession(SessionMode sessionMode, float handDistance, BubbleViewState state)
         {

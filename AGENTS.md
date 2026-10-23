@@ -35,3 +35,13 @@ After implementing a user-facing feature, include a short manual validation chec
 - Cover only what applies: clean import/wiring, spawn/visibility, interaction/exclusions, adjacent regressions, Room/Bubble or state transitions, persistence/reset, comfort/clutter/performance.
 - Include a tuning or decision item when a trade-off is still open.
 - This is a manual acceptance pass, not a replacement for automated tests.
+
+## Explain with folders
+
+Organize first-party code into folders that describe what it does, so the tree reads as an outline of the system. Do this everywhere it is possible.
+
+- Group by responsibility, not by file kind: `Domain/`, `Data/`, `Views/`, `Flow/`, `Editor/`. A file's folder should tell you what it is before you open it.
+- One responsibility per folder; keep related types together and unrelated ones apart.
+- Prefer a descriptive folder over name prefixes or a flat dump of files.
+- When moving files, move the `.meta` too; keep GUIDs (never re-create assets).
+- Skip `**/Vendor/**`, `**/Samples/**`, and `**/Plugins/**`.

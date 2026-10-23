@@ -141,3 +141,123 @@ Each step is independently verifiable; the scene keeps working after every step.
    attempt) vs `SpaceShapingLevel`. The future plan uses "puzzle"; confirm.
 4. **Editor input:** for now the editor drags Transforms; `SpaceSourceEditor` will take
    grab events from the hand interactor later. Keep the same command path for both.
+
+## 11. Known follow-ups (POC findings)
+
+Recorded from the working POC; not blocking, but improve these in later versions.
+
+### Scaling interaction feel
+- Two-hand scale uses Meta's `TwoGrabFreeTransformer`, which also **rotates**. Harmless
+  while planets are spheres (only `localScale` feeds the field), but it will matter once
+  planets are non-spherical or textured. Eventual fix: a **scale-only** transformer.
+- Scaling is **continuous and clamped** to `[minScale, maxScale]`; it does not snap to the
+  discrete mass steps. Later: snap to ~3 steps so moves are countable for scoring.
+- The constraint is applied **on change**, not on release, so an out-of-range grab can
+  feel sticky at the boundary. Later: constrain on release through `SpaceSourceEditor`.
+- No grab/scale **haptics or highlight** feedback, and no **ghost / pre-move preview**.
+
+### Arrival visual
+- The trajectory stopped at the **capture-sphere entry**, which read as ending "under" the
+  destination. Fixed by appending the destination point on `Arrive`. Later: review
+  `captureRadius` against the destination's visual radius.
+
+### Line width
+- Lines are container-scaled (proportional), which keeps the editor look. A
+  **constant on-screen width** option would need per-line compensation that preserves the
+  grid-vs-path ratio (not one shared value).
+
+### Grab setup (as built)
+- Planets use Meta `HandGrabInteractable` (pinch, no grab poses) on **layer 12** (the
+  ship's grabbable layer) with `Rigidbody` (kinematic) + `Grabbable`.
+- `Grabbable._transferOnSecondSelection` must be **false** for two-hand scale to work
+  (the ship has it true, which is why a straight copy did not scale).
+
+## 12. Integration-aware revisions
+
+Reading the target with the game integration in mind changes a few things.
+
+### Rethink
+- **The composition root is the Flow, not the puzzle.** The project rules say the
+  composition root is the level/flow, which observes the views and fans state into content
+  systems. So split the puzzle:
+  - `SpaceShapingPuzzle` = the **definition** (immutable: source homes/ranges, origin,
+    destination, seed, solution move count).
+  - `SpaceShapingSession` = the **attempt** (mutable domain state: current source
+    positions/scales, move count).
+  - A **Flow state** (`MonoState`) owns the session, binds the views, and sequences
+    present -> solve -> score -> next.
+- **Map/Sculpt is a Mode, not Flow states.** Per `_Modules/docs/standards/modes.md`, a
+  view/camera/input mode is a Mode (one owner, one enum); only gameplay progression (the
+  puzzle lifecycle) is a Flow state.
+- **Recompute on commit, not per frame.** The POC's `Update`/`HasMoved` polling is a lab
+  convenience. In the game the session recomputes when an edit commits; the ghost /
+  pre-move preview is a separate cheap path.
+- **Definition vs session** (closes the naming open question).
+
+### Close
+- **Naming:** `SpaceShapingPuzzle` (definition) + `SpaceShapingSession` (attempt).
+- **Snapshot:** definition id/seed + source state + move count; domain-owned and
+  serializable (primitives / `Vector3` only).
+- **Grab input path:** planet interactable -> `SpaceSourceView` (select/release) ->
+  `SpaceSourceEditor` (command) -> `SpaceShapingSession.Apply` -> recompute -> views
+  render. The domain never sees the interactable.
+- **Frame:** the frame provides the content-local space; the domain stays content-local
+  and the views convert.
+- **Wiring:** the session is wired by serialized refs from the Flow state (not DI),
+  matching the existing Flow pattern.
+
+### Risks
+- **Scene churn:** moving the `gridLines` / `pathLine` / `planets` refs from the driver to
+  the views; do it in the lab scene first.
+- **Removing the legacy flow** (rounds/letters/economy) breaks `Game.unity`; land the new
+  flow behind a switch first, then delete.
+- **Domain purity:** the session must not reference views or the Meta interactable.
+- **Determinism / save:** the session must round-trip through the snapshot without scene
+  state.
+- **Level-gen / solution format** must be settled before scoring (the definition carries
+  the solution move count).
+- **Live vs commit feedback:** the ghost preview must not run the full integrator every
+  frame at scale.
+
+## 13. First pass: rebuild the POC scene on the target architecture
+
+Goal: replace the monolithic driver with the layered structure **in the lab scene**, keeping
+the existing Flow pattern so it drops into the game later.
+
+### Reuse (do not reinvent)
+- **`LevelData`** (`DigitalLove.Casual.Levels`) stays the level-definition base. The puzzle
+  definition extends it: **`SpaceShapingPuzzleData : LevelData`** — authored puzzle (id,
+  source homes/ranges/scales, origin, destination, limits, launch settings, solution move
+  count).
+- The **Flow** (`MonoState` + `StateMachine`) stays the composition root: a
+  **`SpaceShapingState : MonoState`** owns the session and binds the views.
+
+### Domain (pure C#, no scene)
+- **`SpaceShapingSetup`** — immutable values from the data (origin, destination, source
+  homes/ranges/scales, `SourceLimits`, launch settings, capture radius).
+- **`SpaceShapingSession`** — the attempt: source positions/scales + move count;
+  `Constrain`, `BuildField`, `Simulate`, `Snapshot`/`Restore`.
+- **`SourceEditCommand`** + **`SourceEditHistory`** — move/scale with undo.
+- Existing: `SpaceSource`, `SpacetimeField`, `LatticeGrid`, `TrajectoryIntegrator`,
+  `ShipLaunch`, `SourceConstraints`, `SourceLimits`.
+
+### Views (MonoBehaviour, render only)
+- **`SpaceSourceView`** — one planet: home/range, `Transform` <-> source, select/release.
+- **`SpacetimeGridView`** — the lattice read-out; `Render(field)`.
+- **`TrajectoryPredictionView`** — the path + outcome colour; `Render(result)`.
+
+### Flow
+- **`SpaceShapingState : MonoState`** — `Enter`: load the session from the data + source
+  views, render, listen for edits. `Exit`: stop.
+- A thin container object holds the scene refs (source views, grid view, prediction view,
+  container) so the state stays sequencing-only.
+
+### Scene layout (lab)
+- `Space` container: `Origin`, `Destination`, `PlanetA`, `PlanetB` (each with
+  `SpaceSourceView`), `SpacetimeGrid` (`SpacetimeGridView`), the path line
+  (`TrajectoryPredictionView`).
+- A `StateMachine` + `SpaceShapingState`.
+- `SpaceShapingPocDriver` is **deleted** once migrated.
+
+
+

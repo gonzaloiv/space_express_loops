@@ -22,8 +22,24 @@ namespace DigitalLove.Game.Levels
             for (int i = 0; i < planets.Count; i++)
                 sum += planets[i].Position;
 
-            view.SetContentCenter(sum / count);
+            Vector3 center = sum / count;
+            view.SetContentCenter(center);
+            view.SetContentRadius(MaxDistanceFrom(center, hubs, planets));
             return true;
+        }
+
+        private static float MaxDistanceFrom(
+            Vector3 center,
+            IReadOnlyList<HubBehaviour> hubs,
+            IReadOnlyList<PlanetBehaviour> planets)
+        {
+            float radius = 0f;
+            for (int i = 0; i < hubs.Count; i++)
+                radius = Mathf.Max(radius, (hubs[i].Position - center).magnitude);
+            for (int i = 0; i < planets.Count; i++)
+                radius = Mathf.Max(radius, (planets[i].Position - center).magnitude);
+
+            return radius;
         }
     }
 }

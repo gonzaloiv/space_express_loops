@@ -30,16 +30,9 @@ namespace DigitalLove.Game.SilentPlanets
         [Header("Room view")]
         [SerializeField, Min(0f)] private float roomVisibleRadius = 3f;
 
-        [Header("Bubble view")]
-        [SerializeField, Min(1f)] private float bubbleFrameMargin = 2f;
-
         private readonly List<SilentPlanetBehaviour> planets = new();
         private bool hasSpawned;
         private bool isBubbleView;
-        private bool hasBubbleFrame;
-        private Vector3 bubbleFrameCenter;
-        private Quaternion bubbleFrameRotation;
-        private float bubbleFrameHalfSize;
 
         public void ResetPool()
         {
@@ -48,14 +41,6 @@ namespace DigitalLove.Game.SilentPlanets
         }
 
         public void SetBubbleView(bool bubble) => isBubbleView = bubble;
-
-        public void SetBubbleFrame(Vector3 center, Quaternion rotation, float halfSize)
-        {
-            hasBubbleFrame = true;
-            bubbleFrameCenter = center;
-            bubbleFrameRotation = rotation;
-            bubbleFrameHalfSize = halfSize;
-        }
 
         public void SpawnIfNeeded(int seed)
         {
@@ -84,31 +69,9 @@ namespace DigitalLove.Game.SilentPlanets
                 return;
 
             if (isBubbleView)
-                UpdateBubbleVisibility();
+                ShowAll();
             else
                 UpdateRoomVisibility();
-        }
-
-        private void UpdateBubbleVisibility()
-        {
-            for (int i = 0; i < planets.Count; i++)
-            {
-                SilentPlanetBehaviour planet = planets[i];
-                if (planet == null || !planet.IsActive)
-                    continue;
-
-                planet.SetVisible(IsInBubbleFrame(planet.Position));
-            }
-        }
-
-        private bool IsInBubbleFrame(Vector3 worldPosition)
-        {
-            if (!hasBubbleFrame)
-                return true;
-
-            Vector3 local = Quaternion.Inverse(bubbleFrameRotation) * (worldPosition - bubbleFrameCenter);
-            float half = bubbleFrameHalfSize * bubbleFrameMargin;
-            return Mathf.Abs(local.x) <= half && Mathf.Abs(local.y) <= half && Mathf.Abs(local.z) <= half;
         }
 
         private void UpdateRoomVisibility()

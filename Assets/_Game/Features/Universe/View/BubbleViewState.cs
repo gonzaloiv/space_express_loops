@@ -8,6 +8,7 @@ namespace DigitalLove.Game.Universe
         public readonly float Scale;
         public readonly float MiniScale;
         public readonly float BubbleRadiusWorld;
+        public readonly float ContentRadiusWorld;
         public readonly Quaternion FrameRotation;
 
         public BubbleMetrics(
@@ -15,12 +16,14 @@ namespace DigitalLove.Game.Universe
             float scale,
             float miniScale,
             float bubbleRadiusWorld,
+            float contentRadiusWorld,
             Quaternion frameRotation)
         {
             ContentPosition = contentPosition;
             Scale = scale;
             MiniScale = miniScale;
             BubbleRadiusWorld = bubbleRadiusWorld;
+            ContentRadiusWorld = contentRadiusWorld;
             FrameRotation = frameRotation;
         }
     }
@@ -49,10 +52,10 @@ namespace DigitalLove.Game.Universe
 
         public bool IsBubble => Mode == UniverseViewMode.Bubble;
 
-        public bool ContainsPoint(Vector3 worldPoint, float halfSizeFactor)
+        public bool ContainsContentPoint(Vector3 worldPoint)
         {
             Vector3 local = Quaternion.Inverse(Metrics.FrameRotation) * (worldPoint - CenterWorld);
-            float half = Metrics.BubbleRadiusWorld * halfSizeFactor;
+            float half = Metrics.ContentRadiusWorld;
             return Mathf.Abs(local.x) <= half && Mathf.Abs(local.y) <= half && Mathf.Abs(local.z) <= half;
         }
     }

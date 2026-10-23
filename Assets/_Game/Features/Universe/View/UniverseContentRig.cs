@@ -10,6 +10,7 @@ namespace DigitalLove.Game.Universe
         private readonly UniverseBubbleSettings settings;
 
         private Vector3 contentCenterLocal;
+        private float contentRadiusLocal;
         private Vector3 focusOffsetLocal;
         private Vector3 centerWorld;
         private Quaternion homeRotation = Quaternion.identity;
@@ -39,6 +40,7 @@ namespace DigitalLove.Game.Universe
         public float BubbleRadiusWorld => Mathf.Max(settings.viewRadius, 0.01f) * Scale;
         public Vector3 ContentPosition => contentRoot.position;
         public Vector3 CenterWorld => centerWorld;
+        public float ContentRadiusWorld => (contentRadiusLocal > 0f ? contentRadiusLocal : settings.viewRadius) * Scale;
         public Quaternion HomeRotation => homeRotation;
         public Vector3 FocusOffsetLocal => focusOffsetLocal;
 
@@ -91,6 +93,11 @@ namespace DigitalLove.Game.Universe
 
         public Vector3 GetDisplayContentPosition(float scale) =>
             centerWorld - homeRotation * (scale * FocusLocal);
+
+        public void SetContentRadiusWorld(float worldRadius)
+        {
+            contentRadiusLocal = worldRadius / Mathf.Max(Scale, 0.0001f);
+        }
 
         public void SetContentCenterLocal(Vector3 centerLocal, bool applyToBubble)
         {

@@ -79,3 +79,9 @@ crashlytics-build.properties
 Assets/_Ignore
 Assets/_Ignore.meta
 Captures
+Assets/StreamingAssets/RuntimeActionBindings.json
+Assets/StreamingAssets/RuntimeActionBindings.json.meta
+Assets/Resources/PerformanceTestRunInfo.json
+Assets/Resources/PerformanceTestRunInfo.json.meta
+Assets/Resources/PerformanceTestRunSettings.json
+Assets/Resources/PerformanceTestRunSettings.json.meta

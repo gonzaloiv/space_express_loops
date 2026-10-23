@@ -28,12 +28,12 @@ namespace DigitalLove.Game.Universe
         public bool IsBubbleView => Mode.Current == UniverseViewMode.Bubble && !Mode.IsTransitioning;
         public Vector3 FrameCenterWorld => rig.CenterWorld;
         public Quaternion FrameRotation => rig.HomeRotation;
-        public float FrameHalfSizeWorld => rig.BubbleRadiusWorld;
+        public float ContentRadiusWorld => rig.ContentRadiusWorld;
         public float BubbleBlend => bubbleBlend;
         internal UniverseMapFeedback MapFeedback { get; } = new();
         internal BubbleViewState State => new(
             Mode.Current, Mode.IsTransitioning, rig.HasRoomAnchor,
-            new BubbleMetrics(rig.ContentPosition, rig.Scale, rig.MiniScale, rig.BubbleRadiusWorld, rig.HomeRotation),
+            new BubbleMetrics(rig.ContentPosition, rig.Scale, rig.MiniScale, rig.BubbleRadiusWorld, rig.ContentRadiusWorld, rig.HomeRotation),
             rig.CenterWorld);
 
         private void Awake()
@@ -104,6 +104,8 @@ namespace DigitalLove.Game.Universe
                 rig.WorldToContentLocal(worldCenter),
                 Mode.Current == UniverseViewMode.Bubble && !Mode.IsTransitioning);
         }
+
+        public void SetContentRadius(float worldRadius) => rig.SetContentRadiusWorld(worldRadius);
 
         internal void ResetBubbleMap()
         {
