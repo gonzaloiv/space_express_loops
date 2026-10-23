@@ -6,6 +6,7 @@ namespace DigitalLove.Game.SpaceShaping
     {
         [SerializeField] private SpaceSourceView[] sources;
         [SerializeField] private SpacetimeGridView grid;
+        [SerializeField] private SpacetimeMeshView mesh;
         [SerializeField] private TrajectoryPredictionView prediction;
 
         private Vector3[] lastPositions;
@@ -58,6 +59,7 @@ namespace DigitalLove.Game.SpaceShaping
         public void Render(SpacetimeField field, TrajectoryResult result, Vector3 destinationLocal)
         {
             grid.Render(field);
+            mesh.Render(field);
             prediction.Render(result, destinationLocal);
         }
     }

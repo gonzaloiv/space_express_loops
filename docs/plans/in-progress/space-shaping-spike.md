@@ -2,7 +2,7 @@
 
 **Status:** in progress - spike. Do first; it gates the rest of the feature.
 
-**Related:** [POC](../backlog/gameplay/space-shaping.md) · [Reframing and variations](../backlog/gameplay/space-shaping-future.md) · [Integration into the game](../backlog/gameplay/space-shaping-integration.md) · [View frame (bubble window)](../done/universe-bubble-window.md)
+**Related:** [POC](../done/space-shaping.md) · [Reframing and variations](../backlog/gameplay/space-shaping-future.md) · [Integration into the game](../backlog/gameplay/space-shaping-integration.md) · [View frame (bubble window)](../done/universe-bubble-window.md)
 
 **Wiring rule:** Tier 0 is pure C#. Tier 1 uses authored scene objects and serialized refs only; no runtime component lookup or creation.
 
@@ -78,7 +78,7 @@ persistence, multi-ship, scoring.
 
 ## 8. Exit / decision
 
-- **Pass:** a usable ratio band exists -> proceed to the [POC](../backlog/gameplay/space-shaping.md) S1
+- **Pass:** a usable ratio band exists -> proceed to the [POC](../done/space-shaping.md) S1
   (source editing + derived grid).
 - **Fail:** the path is a lottery or trivial at every ratio -> stop; the mechanic needs
   rethinking before any further build.

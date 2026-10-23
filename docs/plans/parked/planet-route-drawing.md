@@ -1,7 +1,7 @@
 # Planet Route Drawing — Planet-to-Planet Loops and Round Ship Grants
 
 **Status:** parked - out of the current framing. Drawn routes are replaced by
-[space shaping](../backlog/gameplay/space-shaping.md): the player moves planets and
+[space shaping](../done/space-shaping.md): the player moves planets and
 their forces bend the ship's constant launch, instead of drawing the path. Kept for
 reference only. Replaces the hub/ship-grab route flow. Hubs and old hub-based saves
 are not supported; an incompatible snapshot starts a fresh game.

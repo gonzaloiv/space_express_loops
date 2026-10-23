@@ -1,9 +1,9 @@
 # Space Shaping — Integration into the Game
 
 **Status:** backlog - design only (sketch). The largest and last slice; after the
-[POC](space-shaping.md) proves the feel.
+[POC](../../done/space-shaping.md) proves the feel.
 
-**Related:** [Spike](../../in-progress/space-shaping-spike.md) · [POC](space-shaping.md) · [Reframing and variations](space-shaping-future.md) · [View frame](../../done/universe-bubble-window.md) · [Sector generation](../../in-progress/universe-sector-generation.md)
+**Related:** [Spike](../../in-progress/space-shaping-spike.md) · [POC](../../done/space-shaping.md) · [Reframing and variations](space-shaping-future.md) · [View frame](../../done/universe-bubble-window.md) · [Sector generation](../../in-progress/universe-sector-generation.md)
 
 **Wiring rule:** authored scene/prefab objects and serialized refs only. When the legacy
 flow is removed, delete its scene objects and components — do not leave them disabled.
@@ -14,7 +14,7 @@ Turn the POC into the actual game: the puzzle loop **replaces** the current
 route/round/economy loop, wired into `Game.unity`, the flow state machine, save/load,
 and UI.
 
-This is the phase the [POC](space-shaping.md) defers when it says removing the existing
+This is the phase the [POC](../../done/space-shaping.md) defers when it says removing the existing
 route/hub/ship code is "a later phase once the feel is proven."
 
 ## 2. Key decision (open)

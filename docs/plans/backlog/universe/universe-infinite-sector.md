@@ -5,8 +5,8 @@ slices. Each slice below is its own plan; this file only holds shared context an
 order.
 
 **Framing:** [Space shaping](../gameplay/space-shaping-future.md). The universe is a
-bounded, seeded field of systems that Map View pans; puzzles are authored
-(editor-first, or from the puzzle seed) as systems inside it. There is no
+bounded, seeded field of sectors that Map View pans; puzzles are authored
+(editor-first, or from the puzzle seed) as sectors inside it. There is no
 round/hub/economy layer and no streaming here.
 
 **Related:** [Bubble map drag](../../done/universe-transform.md) · [Silent planets](../../done/universe-silent-planets.md) · [Color scope](../../done/universe-color-scope.md)
@@ -16,7 +16,7 @@ round/hub/economy layer and no streaming here.
 | Order | Plan | Scope | Depends on |
 |---|---|---|---|
 | 1 | [View frame (bubble cube)](../../done/universe-bubble-window.md) | The frame moves, the universe does not: a cube `{F, viewRadius, yaw}` drives the view; `m = miniBubbleRadius / viewRadius`. Removes content reparenting. Its frame culling band was reversed by the [color scope](../../done/universe-color-scope.md). | Transform (done) |
-| 2 | [Sector generation and extent](../../in-progress/universe-sector-generation.md) | Pure C# bounded extent model, sector grid, and `GalaxyShape` math; tests. No scene. | 1 |
+| 2 | [Sector generation and extent](../../in-progress/universe-sector-generation.md) | Pure C# bounded extent model, sector grid, and `SectorShape` math; tests. No scene. | 1 |
 
 Why no streaming: the frame movement is bounded (`bubbleMoveLimit`), so the whole field is
 spawned at level start and out-of-view content is grayed by the scope
@@ -31,11 +31,11 @@ spawned at level start and out-of-view content is grayed by the scope
 - **`viewRadius` is `1.2` in `Game.unity`**, not the `2.5 m` these plans assume. Re-baseline
   the extent and sector numbers against the Map/Sculpt apertures
   ([Space shaping](../gameplay/space-shaping-future.md) §2) before generating a field.
-- **No hide band means every pre-spawned system is rendered** (grayed), so draw calls and load
+- **No hide band means every pre-spawned sector is rendered** (grayed), so draw calls and load
   time scale with the field. The planned lever is "gray to a point, then hide" beyond a
   margin; specify that band before the field grows.
-- **Space shaping coupling.** `GalaxyShape` supplies a puzzle's seed layout and playable
-  systems are authored; Map = wide aperture, Sculpt = narrow aperture over the same frame. The
+- **Space shaping coupling.** `SectorShape` supplies a puzzle's seed layout and playable
+  sectors are authored; Map = wide aperture, Sculpt = narrow aperture over the same frame. The
   sector field is the substrate for the puzzle loop, not scenery.
 
 ## What is already done
@@ -43,7 +43,7 @@ spawned at level start and out-of-view content is grayed by the scope
 The **decor-first slice** landed as [Silent planets](../../done/universe-silent-planets.md)
 (`SilentPlanetsSpawner` / `SilentPlanetLayout` / `SilentPlanetBehaviour` under
 `Assets/_Game/Features/Decoration/`). It was a deliberate separate first slice; its pool
-and behaviour should be migrated into the field's ambient system rather than kept
+and behaviour should be migrated into the field's ambient sectors rather than kept
 permanently.
 
 ## Shared decisions
@@ -51,7 +51,7 @@ permanently.
 | Topic | Decision |
 |---|---|
 | Exploration | The bubble/Map view is the god view; pan translates the view, aperture changes Map <-> Sculpt. |
-| Ambient systems | Decor: pooled visuals with no gameplay until a puzzle uses them. |
+| Ambient sectors | Decor: pooled visuals with no gameplay until a puzzle uses them. |
 | Puzzles | Authored (editor-first, or from the puzzle seed), not spawned by rounds. |
 | Extent | A bounded field: a fixed extent around the origin, not infinite; the frame clamps inside it. |
 | Visibility | Pre-spawn the whole field. Out-of-frame content is **grayed** by the color scope (not hidden); a distance hide beyond the gray band is planned to bound render cost. No streaming, no floating-origin rebase. |
@@ -66,7 +66,7 @@ Do not start with volumetrics or physics.
 
 | Element | Role | Cost | Phase |
 |---|---|---|---|
-| Anchor planet (sun role) | System anchor/landmark | Low; existing planet prefab, no light | v1 (field) |
+| Anchor planet (sun role) | Sector anchor/landmark | Low; existing planet prefab, no light | v1 (field) |
 | Planets | Decor, activatable for a puzzle | Low-medium; pooled prefab | v1 (field) |
 | Moons/rings | Planet variety | Low; child visuals | v1.5 |
 | Asteroid belt/field | Visual ring, optional obstacle | Medium; instanced meshes | v1.5 |

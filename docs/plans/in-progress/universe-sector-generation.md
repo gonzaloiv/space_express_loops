@@ -2,9 +2,9 @@
 
 **Status:** in progress - G0: pure C# generation and extent math; no scene spawning.
 
-**Framing:** [Space shaping](../backlog/gameplay/space-shaping-future.md). The seeded system
-layout is what the shaping lattice operates on; a puzzle system may be authored
-(editor-first, or from the puzzle seed) inside its sector.
+**Framing:** [Space shaping](../backlog/gameplay/space-shaping-future.md). The seeded sector
+layout is what the shaping lattice operates on; a puzzle sector may be authored
+(editor-first, or from the puzzle seed) inside its grid cell.
 
 **Related:** [Sector field hub](../backlog/universe/universe-infinite-sector.md) · [Bubble window](../done/universe-bubble-window.md) · [Color scope](../done/universe-color-scope.md)
 
@@ -16,15 +16,29 @@ code, no scene iteration, no runtime-created assets.
 Provide the deterministic, testable foundation for a bounded, seeded universe:
 
 - the focus/extent model;
-- a sector grid with stable, seed-derived coordinates;
-- galaxy/system shape generation (Ring, Spiral, Cluster) returning local positions,
-  radii, and an anchor pose.
+- a sector grid with stable, seed-derived cell coordinates;
+- sector shape generation (Ring, Spiral, Cluster) returning local positions, radii, and
+  an anchor pose.
 
-Everything here is pure C# and unit-testable without a Unity scene. Scene spawning lives in
-[Bubble window](../done/universe-bubble-window.md); out-of-frame content is **grayed** by the
+Everything in G0 is pure C# and unit-testable without a Unity scene. Putting the field into the
+scene and selecting the active destinations/hubs from it is **G1** (below) - the
+[Bubble window](../done/universe-bubble-window.md) plan never implemented field spawning, so it
+is not handed off there. Out-of-frame content is **grayed** by the
 [color scope](../done/universe-color-scope.md), not hidden, and a distance hide beyond the gray
 band is still to be specified (see the [sector field hub](../backlog/universe/universe-infinite-sector.md) baseline
 notes).
+
+## Vocabulary
+
+| Term | Meaning |
+|---|---|
+| field | The whole bounded universe (`UniverseBounds`). |
+| grid cell | One deterministic cell of the sector grid; spacing, density, and budgets live here. |
+| sector | A group of planets around an anchor (the "sun" role) - the galaxy-like unit the player sees. |
+| region | Reserved for a puzzle's area in [space shaping](../backlog/gameplay/space-shaping-future.md); may span several grid cells. Not implemented here. |
+
+"System" and "galaxy" are retired: the group is a **sector** (`SectorShape`), its container is a
+**grid cell**.
 
 ## 2. Model
 
@@ -60,32 +74,31 @@ Rules:
 ## 4. Sector grid
 
 ```text
-sectorSize   = 5 m                (>= 2 * maxSystemRadius + gap)
-fieldRadius  = bounded; sector count = fieldRadius / sectorSize
-density      = 0.55               (chance a sector contains a system)
-softSystemBudget  = 16            (soft)
+cellSize     = 5 m                (>= 2 * maxSectorRadius + gap)
+fieldRadius  = bounded; cell count = fieldRadius / cellSize
+density      = 0.55               (chance a cell contains a sector)
+softSectorBudget  = 16            (soft)
 softPlanetBudget  = 64            (soft; add occlusion/simplification later)
 ```
 
-- Sectors are deterministic cells in C; each sector seed derives from
-  `worldSeed + sectorCoord`.
-- Enforce `sectorSize >= 2 * systemRadius + systemGap`, then run a spacing check
-  against systems in neighboring sectors. If two systems would overlap, mark the
-  sector empty or relocate the new system.
-- A puzzle's system is authored (editor-first, or from the puzzle seed) inside its
-  sector; the grid itself only lays out ambient systems.
+- Cells are deterministic in C; each cell seed derives from `worldSeed + cellCoord`.
+- Enforce `cellSize >= 2 * sectorRadius + sectorGap`, then run a spacing check against
+  sectors in neighboring cells. If two sectors would overlap, mark the cell empty or
+  relocate the new sector.
+- A puzzle's sector is authored (editor-first, or from the puzzle seed) inside its cell; the
+  grid itself only lays out ambient sectors.
 - Budgets are soft, not hard caps; they bound the field size and therefore the load time.
 
-## 5. Galaxy/system shapes
+## 5. Sector shapes
 
 ### 5.1 Data
 
-`GalaxyShapeData` (authored or generated per system):
+`SectorShapeData` (authored or generated per sector):
 
 ```text
 shape             Ring | Spiral | Cluster | Binary (future)
 anchorScale       1.2-2.5x a normal planet radius (the "sun" role)
-radius            system radius at scale 1 (e.g. 1.2-2.0 m)
+radius            sector radius at scale 1 (e.g. 1.2-2.0 m)
 planetCount       2-6
 planetRadius      MinMaxFloat (matches the current 0.15-0.35 m)
 ringCount         1-3 (Ring)
@@ -105,55 +118,89 @@ separate sun prefab/shader and no per-sun light.
   jitter. Default for v1.
 - **Spiral:** 2-3 logarithmic arms; planets sampled along the arms with jitter. Second
   v1 shape.
-- **Cluster:** Poisson-disc-ish placement in a flattened sphere; fallback for dense
-  sectors.
+- **Cluster:** Poisson-disc-ish placement in a flattened sphere; fallback for dense cells.
 - **Binary:** two anchor planets with a barycenter; future.
 - **Satellite:** planets/moons around a large anchor planet; future.
 
-`GalaxyShape` is a pure C# generator returning local positions, radii, and an anchor
-pose. It is seeded and testable; no Unity random or scene iteration. All shapes keep
-planets outside the anchor radius and enforce minimum separation.
+`SectorShape` is a pure C# generator returning local positions, radii, and an anchor pose.
+It is seeded and testable; no Unity random or scene iteration. All shapes keep planets
+outside the anchor radius and enforce minimum separation.
 
-The same generator supplies a puzzle's seed layout: the designer may author a puzzle
-system from the seed, or hand-place it, then tune it by moving planets. Shape variety
-(Ring/Spiral/Cluster) matters less once the player reshapes the field, so Ring + jitter
-is the v1 default and the rest can follow.
+The same generator supplies a puzzle's seed layout: the designer may author a puzzle sector
+from the seed, or hand-place it, then tune it by moving planets. Shape variety
+(Ring/Spiral/Cluster) matters less once the player reshapes the field, so Ring + jitter is
+the v1 default and the rest can follow.
 
 ## 6. Component map
 
-New:
+New, all in the **`DigitalLove.Game.Sectors`** assembly (`Assets/_Game/Features/Sectors`), which
+references only `DigitalLove.Global`:
 
-| Type | Responsibility | Assembly |
-|---|---|---|
-| `UniverseBounds` | Bounded field extent and sector-grid origin; no gameplay wall. | `DigitalLove.Game.Levels` |
-| `UniverseFocus` | Focus point in C, view radius, bubble pose handoff, extent clamp. | `DigitalLove.Game.Levels` |
-| `GalaxyShapeData` | Shape/seed data for a system. | `DigitalLove.Game.Nodes` |
-| `GalaxyShape` | Pure seeded layout generator (positions, radii, anchor). | `DigitalLove.Game.Nodes` |
+| Type | Responsibility |
+|---|---|
+| `SectorShapeKind` | `Ring`, `Spiral`, `Cluster`. |
+| `SectorShapeData` | Authored/generated shape data for a sector (kind, radii, counts, spread, inclination, min separation). |
+| `SectorPlanet` | One generated planet: local position + radius. |
+| `SectorLayout` | Generator result: sector radius, anchor radius/rotation, planets. |
+| `SectorShape` | Pure seeded layout generator (Ring/Spiral/Cluster, separation, containment). |
+| `SectorCell` / `SectorGrid` | Deterministic cell coordinates, per-cell seed, fit and spacing checks. |
+| `UniverseBounds` / `UniverseFocus` | Bounded field extent and focus clamp. |
+| `SectorSeededExtensions` | Seeded sampling of `MinMaxFloat` / `MinMaxInt`. |
 
-Reuse: `SeededRandom` (`DigitalLove.Global`) for deterministic PRNG.
+Reuse: `SeededRandom` (`DigitalLove.Global`). Note `MinMaxFloat.GetRandomValue()` and
+`MinMaxInt.GetRandomValue()` use `UnityEngine.Random`, so they must not be used here - the
+seeded extensions replace them.
 
-Assembly note: generation/data in `DigitalLove.Game.Nodes`, extent/focus in
-`DigitalLove.Game.Levels`. Do not make `Nodes` or `Levels` reference the transform
-assembly.
+Assembly note: the field is its own pure assembly so the retiring `Nodes` spawners are not
+entangled with it; `Levels` and `SpaceShaping` reference it. Tests live in
+`Tests/EditMode/DigitalLove.Game.Sectors.Tests.EditMode`.
 
 ## 7. Phases
 
-### G0 — Extent, seed, and shape math
+### G0 — Extent, seed, and shape math (done)
 
-- Add `UniverseBounds` (bounded field extent), `UniverseFocus`, sector coordinates,
-  deterministic PRNG wiring.
-- Add `GalaxyShapeData` / `GalaxyShape` with Ring, Spiral, Cluster.
-- Add edit-mode tests/preview for shape positions, min separation, and determinism.
+- `UniverseBounds`, `UniverseFocus`, cell coordinates, seeded PRNG wiring - done.
+- `SectorShapeData` / `SectorShape` with Ring, Spiral, Cluster - done.
+- EditMode tests for shape counts, containment, separation, radius range, determinism, cell
+  coordinates/seed, fit and spacing checks, and focus clamping - done, 23 passing.
 - No scene spawning yet.
 
-**Exit:** seeded shapes are stable, non-overlapping, and fit their sector.
+**Exit:** met - seeded shapes are stable, non-overlapping, and fit their grid cell.
+
+### G1 — Spawn the field and select the active nodes
+
+Bridge from the generated field to the scene: G0's math is not yet visible in the game, and the
+current destinations/hubs become a **selection over the field**.
+
+Scope:
+
+- **Spawn the field** from pooled visuals: one ambient sector per occupied grid cell, anchored on
+  the cell center, using the existing planet visual (`NodeBody`) unchanged. Ambient sectors carry
+  no gameplay.
+- **Selection.** Pick which field planets become the active **destinations** (letters/store) and
+  which become **hubs**. Selection is a pure function of (world seed, level/puzzle identity,
+  active count), so it is deterministic and reproducible; the field itself is never regenerated.
+- **Spawners become selectors.** `PlanetsSpawner` / `HubsSpawner` stop placing room-local planets
+  and instead activate field planets; `MrukRoomLocalPlacement` no longer applies to gameplay
+  planets. `NodeBody` stays as the visual.
+- **One source of truth.** A planet's position comes from the field, so the field and gameplay
+  cannot disagree about where a planet is.
+- **Visibility.** Out-of-frame content is grayed by the
+  [color scope](../done/universe-color-scope.md); the hide band beyond the gray edge is still to
+  be specified, and visibility is driven by the composition root, never by the field assembly.
+
+Not here: the snapshot rewrite and the room-placement rethink (§11), and the puzzle-loop
+replacement ([integration](../backlog/gameplay/space-shaping-integration.md)).
+
+**Exit:** the field is visible in the scene, and a level's destinations/hubs are selected from it
+deterministically, with no room-local placement for gameplay planets.
 
 ## 8. Test plan
 
-1. Shapes: Ring/Spiral/Cluster produce the expected counts; no planet overlaps the sun
-   or another planet; same seed -> same layout.
-2. Sector grid: coordinates are stable; the spacing check rejects overlaps; a sector
-   fits within `sectorSize`.
+1. Sector shapes: Ring/Spiral/Cluster produce the expected counts; no planet overlaps the
+   anchor or another planet; same seed -> same layout.
+2. Grid: cell coordinates are stable; the spacing check rejects overlaps; a sector fits
+   within `cellSize`.
 3. Extent: the focus clamps inside `fieldRadius`; the frame stays inside the field.
 4. Determinism: identical inputs produce identical output across runs.
 5. No per-frame allocations and no LINQ in the new code.
@@ -164,12 +211,12 @@ assembly.
 |---|---|
 | `fieldRadius` | bounded; tuned to the desired field size |
 | `viewRadius` | `1.2 m` in the current scene; re-baseline against the Map/Sculpt apertures |
-| `sectorSize` | `5 m` (`>= 2 * maxSystemRadius + gap`) |
+| `cellSize` | `5 m` (`>= 2 * maxSectorRadius + gap`) |
 | `sectorDensity` | `0.55` |
-| `softSystemBudget` | `16` |
+| `softSectorBudget` | `16` |
 | `softPlanetBudget` | `64` |
-| `planetsPerSystem` | `2-6` |
-| `systemRadius` | `1.2-2.0 m` |
+| `planetsPerSector` | `2-6` |
+| `sectorRadius` | `1.2-2.0 m` |
 | `planetRadius` | `0.15-0.35 m` |
 | `anchorScale` | `1.2-2.5x` planet radius |
 | `generatorVersion` | `1` |
@@ -178,8 +225,27 @@ assembly.
 
 | Risk | Mitigation |
 |---|---|
-| Overlapping systems | `sectorSize >= 2 * systemRadius + gap` plus a neighbor spacing check. |
+| Overlapping sectors | `cellSize >= 2 * sectorRadius + gap` plus a neighbor spacing check. |
 | Generation changes invalidate saves | Version generation (`generatorVersion`); remap puzzle planets by position. |
 | Shape overlap with anchor | Keep planets outside the anchor radius and enforce min separation. |
 | Field too large to pre-spawn | Bound `fieldRadius` and the budgets to the load-time and memory budget; park streaming if the field must grow. |
-| No hide band | Out-of-frame content is grayed, not hidden, so every pre-spawned system renders. Bound `fieldRadius` and the budgets, and add a distance hide beyond the gray band before the field grows. |
+| No hide band | Out-of-frame content is grayed, not hidden, so every pre-spawned sector renders. Bound `fieldRadius` and the budgets, and add a distance hide beyond the gray band before the field grows. |
+
+## 11. Open issues (undefined)
+
+These are not risks with mitigations; they are decisions the plan does not yet make. They
+should be settled before G0's numbers are frozen.
+
+| Issue | Why it matters |
+|---|---|
+| **Units of content space** | The plan is written in universe metres (`cellSize = 5 m`, `sectorRadius = 1.2-2.0 m`), but the game's planets are `0.15-0.35 m` in *room* metres and the view shrinks content by `MiniScale ~ 0.23`. A `5 m` cell is ~`1.17 m` on screen against a `0.28 m` window. Decide whether content space is a large universe space the frame magnifies, or room metres. |
+| **Placement model** | Direction: generate the field first and **select** the current destinations/hubs from it, so positions have one source of truth. `PlanetsSpawner` / `HubsSpawner` / `MrukRoomLocalPlacement` become selectors; `NodeBody` stays as the planet visual. This is G1. |
+| **Aperture ownership** | Map = wide / Sculpt = narrow over one frame; `modes.md` says a view/camera/input mode is a Mode, not a Flow state. Does the aperture live on the view as a Mode, or as a field on the frame? `viewRadius` is `1.2` in the scene vs `2.5` assumed here. |
+| **Save/load** | Deferred: the snapshot has to be rethought, not patched - seed + `generatorVersion` + which field planets are active. Not part of G0 or G1. |
+| **Room placement** | Deferred: `MrukRoomLocalPlacement` stops applying to gameplay planets once they come from the field; what survives for genuine room props is open. |
+| **Hide band** | Unspecified; it is the only thing bounding draw calls and load time once content grays instead of hiding. |
+| **Bounded-edge UX** | The frame "simply stops at the edge (no visible boundary wall or edge fade)". How does the player know they reached the edge? Also the clamp is `0.3 x` today, which fights "pan to bring any sector in front". |
+| **Batching** | A large field of individual planet renderers plus per-instance material instances (route colours via `NodeBody.SetRouteColor`) breaks SRP batching. Do ambient field planets share materials? |
+| **Silent planets** | The hub says that pool "should be migrated into the field's ambient sectors rather than kept permanently"; when, and does it replace `SilentPlanetsSpawner`? |
+| **Puzzle-side numbers** | Planet density, region size, and ship cap are gated by the in-progress [space shaping spike](../in-progress/space-shaping-spike.md). G0 should land the deterministic math and tests, not tune density. |
+

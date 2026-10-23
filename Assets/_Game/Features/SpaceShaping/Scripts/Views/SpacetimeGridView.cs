@@ -8,6 +8,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private Vector3 gridMin = new(-6f, -4f, -3f);
         [SerializeField] private Vector3 gridMax = new(6f, 4f, 3f);
         [SerializeField] private int gridCount = 4;
+        [SerializeField] private int samplesPerLine = 16;
         [SerializeField] private float depthScale = 1.5f;
         [SerializeField] private float maxDisplacement = 0.8f;
 
@@ -23,10 +24,12 @@ namespace DigitalLove.Game.SpaceShaping
         {
             int i = rem / n;
             int j = rem % n;
-            line.positionCount = n;
-            for (int s = 0; s < n; s++)
+            int samples = Mathf.Max(n, samplesPerLine);
+            line.positionCount = samples;
+            for (int s = 0; s < samples; s++)
             {
-                Vector3 node = LatticeGrid.Node(axis, s, i, j, n, gridMin, gridMax);
+                float nodeIndex = (float)s / (samples - 1) * (n - 1);
+                Vector3 node = LatticeGrid.Node(axis, nodeIndex, i, j, n, gridMin, gridMax);
                 line.SetPosition(s, LatticeGrid.Warp(node, field, depthScale, maxDisplacement));
             }
         }

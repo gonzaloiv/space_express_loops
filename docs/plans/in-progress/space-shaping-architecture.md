@@ -7,7 +7,7 @@ the target architecture: `Domain/` (Sources / Spacetime / Ship / Puzzle), `Data/
 (`SpaceShapingState`, `SpaceShapingFlow`). `SpaceShapingPocDriver` is deleted. Remaining:
 the game integration (this shape drops into the real flow).
 
-**Related:** [POC](space-shaping.md) · [Reframing and variations](space-shaping-future.md) · [Integration into the game](space-shaping-integration.md) · [View frame](../../done/universe-bubble-window.md)
+**Related:** [POC](../done/space-shaping.md) · [Reframing and variations](../backlog/gameplay/space-shaping-future.md) · [Integration into the game](../backlog/gameplay/space-shaping-integration.md) · [View frame](../done/universe-bubble-window.md)
 
 ## 1. Why
 
@@ -169,6 +169,13 @@ Recorded from the working POC; not blocking, but improve these in later versions
 - Lines are container-scaled (proportional), which keeps the editor look. A
   **constant on-screen width** option would need per-line compensation that preserves the
   grid-vs-path ratio (not one shared value).
+
+### Lattice presentation (deferred)
+- Grid lines are `LineRenderer`s (billboarded quads). `samplesPerLine` samples each line so
+  it curves smoothly; the angular look is gone.
+- For rounded / textured lines or camera-independent thickness, deform an authored
+  **tube / ribbon mesh** (write warped vertices on change) or deform in a **vertex shader**.
+  Not doing it now; it needs the "deform an authored mesh" rule decision.
 
 ### Grab setup (as built)
 - Planets use Meta `HandGrabInteractable` (pinch, no grab poses) on **layer 12** (the

@@ -2,7 +2,7 @@
 
 **Status:** parked - collides with the current framing. This is a management game
 (rounds activate decor planets, growing pool), not the physics puzzle in
-[space shaping](../backlog/gameplay/space-shaping.md). Kept for reference only.
+[space shaping](../done/space-shaping.md). Kept for reference only.
 Depends on the ambient pool from
 the [sector field](../backlog/universe/universe-infinite-sector.md) and builds on the
 decor slice from [Silent planets](../done/universe-silent-planets.md).
