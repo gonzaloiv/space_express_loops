@@ -7,12 +7,14 @@ namespace DigitalLove.Game.SpaceShaping
         private readonly SpaceShapingSetup setup;
         private readonly Vector3[] positions;
         private readonly float[] scales;
+        private readonly SourceSpec[] specs;
 
         public SpaceShapingSession(SpaceShapingSetup setup)
         {
             this.setup = setup;
             positions = new Vector3[setup.Sources.Length];
             scales = new float[setup.Sources.Length];
+            specs = new SourceSpec[setup.Sources.Length];
             Reset();
         }
 
@@ -29,22 +31,29 @@ namespace DigitalLove.Game.SpaceShaping
         public bool IsSolved(TrajectoryResult result) =>
             result.Outcome == TrajectoryOutcome.Arrive && result.ShipTime <= setup.Deadline;
 
-        public void SetSource(int index, Vector3 position, float scale)
-        {
-            positions[index] = position;
-            scales[index] = scale;
-        }
-
         public void Reset()
         {
             for (int i = 0; i < positions.Length; i++)
             {
                 positions[i] = setup.Sources[i].Home;
                 scales[i] = setup.Sources[i].InitialScale;
+                specs[i] = setup.Sources[i];
             }
         }
 
-        public void Constrain() => SourceConstraints.Apply(positions, scales, setup.Sources, setup.SeparationScale);
+        public void ApplyZone(SpaceZone zone)
+        {
+            for (int i = 0; i < positions.Length; i++)
+            {
+                SourceSpec source = setup.Sources[i];
+                float factor = Mathf.Lerp(1f, zone.Scale, zone.InsideFactor(source.Home));
+                positions[i] = zone.Centre + (source.Home - zone.Centre) * factor;
+                scales[i] = source.InitialScale * factor;
+                specs[i] = Scaled(source, zone.Centre, factor);
+            }
+        }
+
+        public void Constrain() => SourceConstraints.Apply(positions, scales, specs, setup.SeparationScale);
 
         public SpacetimeField BuildField()
         {
@@ -79,5 +88,14 @@ namespace DigitalLove.Game.SpaceShaping
 
         private int StepBudget(SpaceZone zone) =>
             zone.IsActive ? Mathf.CeilToInt(setup.MaxSteps * Mathf.Max(1f, zone.Scale)) : setup.MaxSteps;
+
+        private static SourceSpec Scaled(SourceSpec source, Vector3 centre, float factor) => new()
+        {
+            Home = centre + (source.Home - centre) * factor,
+            InitialScale = source.InitialScale * factor,
+            MoveRange = source.MoveRange * factor,
+            MinScale = source.MinScale * factor,
+            MaxScale = source.MaxScale * factor
+        };
     }
 }

@@ -12,11 +12,11 @@ hand-tracking first-class.
 **Our Space** is a seated mixed-reality game where a miniature universe floats in
 your real room. You run an interstellar transport company: each job is a delivery
 from one star to another, with a **deadline** and a **fuel grade**. Your one tool is
-**the cube** — a tangible instrument you move over the bubble. It has **two gestures**:
-**scale the space** (resize the cube — a shrunk zone is a shortcut) and **scale the
-content** (grab inside — the planets spread and grow). Both change **time**, the ship's clock, so
-you deform the spacetime the ship flies through until the delivery lands on time and
-cheaply. Relativity is the language, and the cube is how you speak it.
+**the cube** — a tangible instrument you move over the bubble. **Grab inside it and scale**:
+the space stretches (a shrunk zone is a shortcut) and the planets spread and grow. Both
+change **time**, the ship's clock, so you deform the spacetime the ship flies through until
+the delivery lands on time and cheaply. Relativity is the language, and the cube is how you
+speak it.
 
 ## 2. Where the project is
 
@@ -69,13 +69,14 @@ So: the *room* is the backdrop and the anchor; the *bubble* is the playfield; th
 
 The cube has **two gestures**, both two-hand scales:
 
-| Gesture | Effect | Relativity |
-|---|---|---|
-| **Cube scale** — resize the cube | stretches the local **space**: a shrunk zone is a **shortcut**, a magnified one a longer journey | time dilation |
-| **Content zoom** — grab inside | zooms the zone's content: the planets **spread** and **grow** (mass ∝ radius) → a deeper well → the ship's clock slows | time dilation |
+| Gesture | Trigger | Effect | Relativity |
+|---|---|---|---|
+| **The scale** *(L0)* | a two-hand pinch **inside** the cube | scales the space *and* the content: the metric stretches (a shrunk zone is a **shortcut**) and the planets **spread** and **grow** (mass ∝ radius) | time dilation |
+| **The region** *(act 2)* | grab the cube's **edges / corners** | sets *where* you work (how much of the map the zone covers) | — |
 
-**Rotate** (frame dragging — a spinning zone swirls the path) is the **deferred** act-2
-variety beat, not part of the slice.
+**Deferred act-2 beats:** **rotate** (frame dragging — a spinning zone swirls the path) and the
+**region** (resizing the cube). The region's size must stay **separate from the scale** — coupling
+them is the bug.
 
 - **Soft brush.** The cube's influence falls off at the edges so neighbouring zones
   blend; a hard edge would tear the mesh.
@@ -110,30 +111,28 @@ variety beat, not part of the slice.
 
 Structured **asymmetrically** so the puzzle stays crisp:
 
-| Resource | Physical basis | Role | Failure |
+| Resource | Basis | Role | Failure |
 |---|---|---|---|
-| **Time** | ship proper time; slowed deep in a well | the **deadline** | hard fail (late) |
-| **Fuel** | launch energy `k · launchSpeed²` | the **efficiency grade** (eco rating, pay) | soft (lower score) |
+| **Time** | ship proper time; slowed deep in a well | the **window** `[Tmin, Tmax]` | hard fail (outside it) |
+| **Fuel** | the **edits** — the work the scale does | the **eco rating** (pay) | soft (lower score) |
 
-**Why fuel is the missing piece.** The launch is Coast — an initial velocity, no
-burn (`ShipLaunch.cs`). In a Coast + well model the ship *exchanges energy with the
-field for free*: it falls into a well and comes out faster or redirected. That is a
-**gravity assist**, and it already emerges from the current physics. Without a fuel
-cost there is no reason to ever launch slow — so the field would be decoration. With
-fuel, the skillful play is to **launch cheap and let the field give you the speed
-you did not pay for**. The resource and the mechanic justify each other.
+**Why the edits cost fuel.** The field's **natural assists** (falling into a well,
+slingshotting) are *free* — the ship exchanges energy with the field on its own
+(`ShipLaunch` is Coast). The **edits** are what you pay for: wrapping a zone is the *paid*
+move. So the skillful play is to **read the field better and edit less** — get the speed you
+did not pay for. The resource and the mechanic justify each other.
 
-**The trade-off.** Fast but thirsty (launch fast) vs cheap but slow (launch slow and
-sculpt the field to gain speed and cut the path). Cheap *and* on time is the perfect
-run. Both costs are shown in the prediction **before** commit, so the choice is
-informed, not a lottery.
+**The trade-off.** Fast but wasteful (scale the space hard) vs cheap but slow (leave the field
+alone and use its natural assists). Cheap *and* in the window is the perfect run. Both costs
+are shown in the prediction **before** commit, so the choice is informed, not a lottery.
 
-**The ethic framing.** Fuel as an **eco rating** makes it a *green transport
-company*: the point is not wasting energy. Distinctive, wholesome, competition-ready.
+**The ethic framing.** Fuel as an **eco rating** makes it a *green transport company*: the
+point is not wasting energy — and the greedy play (the free assist) *is* the green play
+([lore](lore.md)).
 
-> **Not in the code yet.** `ShipLaunch` is Coast with no fuel term, so the slice scores on
-> **ship-time only** ([lens plan](../plans/in-progress/space-shaping-lens.md) §7). Fuel is
-> the intended grade, added once the core loop holds.
+> **Not in the code yet.** The edits are free in the lab (`SpaceZone` has no cost), so the slice
+> scores on **ship-time only** ([lens plan](../plans/in-progress/space-shaping-lens.md) §7). The
+> fuel term is added once the core loop holds.
 
 ## 8. Why management is the frame, not a co-equal system
 

@@ -11,6 +11,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         private MaterialPropertyBlock propertyBlock;
 
+        public void SetVisible(bool visible) => line.enabled = visible;
+
         public void Render(TrajectoryResult result, Vector3 destinationLocal)
         {
             ApplyColor(result.Outcome);

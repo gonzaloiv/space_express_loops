@@ -49,5 +49,7 @@ namespace DigitalLove.Game.SpaceShaping
             mesh.Render(field, Zone);
             prediction.Render(result, destinationLocal);
         }
+
+        public void SetPredictionVisible(bool visible) => prediction.SetVisible(visible);
     }
 }

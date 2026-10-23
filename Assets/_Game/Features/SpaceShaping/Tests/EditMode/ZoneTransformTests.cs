@@ -155,5 +155,43 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
 
             Assert.AreEqual(TrajectoryOutcome.Arrive, result.Outcome);
         }
+        [Test]
+        public void Session_ZoneSpreadsAndGrowsContent()
+        {
+            SpaceShapingSession session = new(ContentSetup());
+            session.ApplyZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 2f, 0f));
+
+            Assert.AreEqual(new Vector3(-4f, 0f, 0f), session.GetPosition(0));
+            Assert.AreEqual(4f, session.GetScale(0), 0.0001f);
+        }
+
+        [Test]
+        public void Session_OutsideZone_IsUnchanged()
+        {
+            SpaceShapingSession session = new(ContentSetup());
+            session.ApplyZone(new SpaceZone(Vector3.zero, new Vector3(1f, 1f, 1f), 2f, 0f));
+
+            Assert.AreEqual(new Vector3(-2f, 0f, 0f), session.GetPosition(0));
+            Assert.AreEqual(2f, session.GetScale(0), 0.0001f);
+        }
+
+        private static SpaceShapingSetup ContentSetup() => new()
+        {
+            Origin = new Vector3(-4f, 0f, 0f),
+            Destination = new Vector3(4f, 0f, 0f),
+            CaptureRadius = 0.6f,
+            StepSecs = 1f / 120f,
+            MaxSteps = 4000,
+            LaunchModel = LaunchModel.Coast,
+            LaunchSpeed = 1f,
+            ThrustAcceleration = 1f,
+            SourceStrengthScale = 2f,
+            SeparationScale = 1.2f,
+            DilationScale = 1f,
+            Sources = new[]
+            {
+                new SourceSpec { Home = new Vector3(-2f, 0f, 0f), InitialScale = 2f, MoveRange = 2f, MinScale = 1f, MaxScale = 4f }
+            }
+        };
     }
 }

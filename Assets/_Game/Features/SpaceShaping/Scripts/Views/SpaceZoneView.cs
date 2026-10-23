@@ -4,17 +4,24 @@ namespace DigitalLove.Game.SpaceShaping
 {
     public class SpaceZoneView : MonoBehaviour
     {
-        [SerializeField] private Vector3 baseSize = new(8f, 6f, 4f);
         [SerializeField] private float falloff = 0.5f;
 
-        public SpaceZone Zone
+        private float scale = 1f;
+
+        public SpaceZone Zone => new(Centre, Size * 0.5f, scale, falloff);
+
+        public Vector3 Centre => transform.localPosition;
+
+        public Vector3 Size => transform.localScale;
+
+        public float Scale => scale;
+
+        public void SetFrame(Vector3 centre, Vector3 size)
         {
-            get
-            {
-                Vector3 size = transform.localScale;
-                float scale = baseSize.x > 0f ? size.x / baseSize.x : 1f;
-                return new SpaceZone(transform.localPosition, size * 0.5f, scale, falloff);
-            }
+            transform.localPosition = centre;
+            transform.localScale = size;
         }
+
+        public void SetScale(float value) => scale = Mathf.Max(value, 0.01f);
     }
 }

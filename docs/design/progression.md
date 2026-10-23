@@ -17,8 +17,8 @@ Two things: **what advances**, and **what gates**.
 2. **The network (what you build).** The map *is* the company: solved cubes lit, current
    highlighted, locked dark. Every solve **grows the network** — the transport-company fantasy,
    made visible.
-3. **The score (what you chase).** Per-job **stars** (ship-time bucketed 1–3) plus a running
-   total. That is *mastery*, separate from *breadth*.
+3. **The score (what you chase).** Per-job **stars** (the **edit energy** / eco rating, bucketed
+   1–3) plus a running total. That is *mastery*, separate from *breadth*.
 
 So progression has **two axes** — breadth (light every cube) and depth (3-star each). Different
 players chase different ones.
@@ -31,10 +31,18 @@ players chase different ones.
   no route lines to build or read.
 - The layout gives the spatial "big universe" feel; the numbers give the sequence.
 
-## 4. The first job — a scale-only tutorial
+## 4. The learning path — the cube grows
 
-Cube 1 uses **one gesture** — the cube scale — with one planet and a generous deadline. It teaches
-the lens before any complexity, and it is exactly the current lab POC.
+The two gestures are taught in order, so the player never faces both at once:
+
+1. **Jobs 1–2 — the fixed cube.** The cube comes at a **fixed size** (a fixed region); the only
+   move is the **grab-inside scale** (the space + the content). One lever, one planet, a generous
+   window.
+2. **Job 3+ — the resizable cube (act 2).** The frame unlocks, alongside rotate: the player can
+   now **resize** the cube (the region) as well as scale it — that is when "which zone do I work
+   on" enters.
+
+So the first thing taught is the **scale**; the **region** comes once the scale is understood.
 
 ## 5. The company is lore only
 
@@ -44,7 +52,7 @@ core loop is fun.
 
 ## 6. The 10-minute shape
 
-About **8–10 cubes**, ~1 minute each. The curve rises by **planet count** and **deadline
+About **8–10 cubes**, ~1 minute each. The curve rises by **planet count** and **window
 tightness**; the map visibly fills as you go — that filling *is* the progression feel.
 
 ## 7. Open

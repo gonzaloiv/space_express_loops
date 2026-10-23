@@ -11,6 +11,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private ShapingLabHud hud;
         [SerializeField] private ShapingLabButton resetButton;
         [SerializeField] private ShapingLabButton nextButton;
+        [SerializeField] private ShapingLabButton predictButton;
 
         private readonly TrajectoryIntegrator integrator = new();
         private readonly ShipLaunch launch = new();
@@ -19,6 +20,7 @@ namespace DigitalLove.Game.SpaceShaping
         private int puzzleIndex;
         private int editCount;
         private bool wasChanged;
+        private bool predictionEnabled = true;
 
         public override void Enter()
         {
@@ -37,6 +39,8 @@ namespace DigitalLove.Game.SpaceShaping
                 ResetPuzzle();
             if (nextButton.ConsumePressed())
                 NextPuzzle();
+            if (predictButton.ConsumePressed())
+                TogglePrediction();
 
             bool changed = view.HasChanged();
             if (changed && !wasChanged)
@@ -45,7 +49,6 @@ namespace DigitalLove.Game.SpaceShaping
             if (!changed)
                 return;
 
-            view.ApplyFromSession(session);
             Push();
         }
 
@@ -70,8 +73,15 @@ namespace DigitalLove.Game.SpaceShaping
             StartPuzzle();
         }
 
+        private void TogglePrediction()
+        {
+            predictionEnabled = !predictionEnabled;
+            view.SetPredictionVisible(predictionEnabled);
+        }
+
         private void Push()
         {
+            session.ApplyZone(view.Zone);
             session.Constrain();
             view.ApplyFromSession(session);
 
