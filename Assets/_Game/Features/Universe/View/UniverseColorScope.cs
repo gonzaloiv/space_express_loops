@@ -6,6 +6,7 @@ namespace DigitalLove.Game.Universe
     {
         [SerializeField] private UniverseView universeView;
         [SerializeField, Min(0f)] private float softnessMeters = 0.03f;
+        [SerializeField, Range(0.1f, 1f)] private float boxScale = 0.8f;
         [SerializeField, Range(0f, 1f)] private float maxStrength = 1f;
 
         private static readonly int CenterId = Shader.PropertyToID("_ColorScopeCenter");
@@ -21,7 +22,7 @@ namespace DigitalLove.Game.Universe
                 : 0f;
 
             Shader.SetGlobalVector(CenterId, universeView.FrameCenterWorld);
-            Shader.SetGlobalVector(HalfSizeId, Vector3.one * universeView.ContentRadiusWorld);
+            Shader.SetGlobalVector(HalfSizeId, Vector3.one * (universeView.ContentRadiusWorld * boxScale));
             Shader.SetGlobalVector(RotationId, ToVector(universeView.FrameRotation));
             Shader.SetGlobalFloat(SoftnessId, softnessMeters);
             Shader.SetGlobalFloat(StrengthId, strength);

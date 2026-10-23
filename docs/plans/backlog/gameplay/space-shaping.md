@@ -1,9 +1,13 @@
 # Space Shaping — POC (One Ship, One Destination)
 
-**Status:** backlog - POC. After the [spike](../../in-progress/space-shaping-spike.md). Replaces drawn
-routes with shaping space.
+**Status:** backlog - POC **validated** in the lab scene (`SpaceShapingPOC`). One ship, one
+destination; sources -> field -> grid -> trajectory; bounded moves and grab/scale work on
+device. The lab now runs on the target architecture (see
+[architecture refactor](space-shaping-architecture.md)); remaining polish: ghost / pre-move
+preview, move-range visualization, tuning. Next: presentation (curved / mesh lattice), then
+game integration. Replaces drawn routes with shaping space.
 
-**Related:** [Spike (smallest testable version)](../../in-progress/space-shaping-spike.md) · [Reframing and variations](space-shaping-future.md) · [Integration into the game](space-shaping-integration.md) · [View frame (bubble window)](../../done/universe-bubble-window.md) · [Sector generation](../universe/universe-sector-generation.md) · [Parked: planet route drawing](../../parked/planet-route-drawing.md)
+**Related:** [Spike (smallest testable version)](../../in-progress/space-shaping-spike.md) · [Reframing and variations](space-shaping-future.md) · [Integration into the game](space-shaping-integration.md) · [View frame (bubble window)](../../done/universe-bubble-window.md) · [Sector generation](../../in-progress/universe-sector-generation.md) · [Parked: planet route drawing](../../parked/planet-route-drawing.md)
 
 **Wiring rule:** the grid visualization, the prediction line, the ship, and the sources are authored in the scene/prefab and referenced through serialized fields. No runtime `AddComponent`, `GetComponent`, `FindObjectsByType`, or hierarchy/mesh/asset creation. Follow the SerializeField wiring rules in the project `AGENTS.md`.
 

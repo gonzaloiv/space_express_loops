@@ -2,7 +2,9 @@
     "name": "DigitalLove.Game.SpaceShaping",
     "rootNamespace": "",
     "references": [
-        "DigitalLove.Global"
+        "DigitalLove.Global",
+        "DigitalLove.Casual.Levels",
+        "DigitalLove.FlowControl"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

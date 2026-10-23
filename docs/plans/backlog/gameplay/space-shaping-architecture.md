@@ -1,9 +1,13 @@
 # Space Shaping — Architecture Refactor (POC → real structure)
 
-**Status:** backlog - refactor plan. The POC works; this is the split into one class per
-responsibility, before the feature grows into the game.
+**Status:** backlog - **first pass done.** The lab scene (`SpaceShapingPOC`) was rebuilt on
+the target architecture: `Domain/` (Sources / Spacetime / Ship / Puzzle), `Data/`
+(`PuzzleData`, `PuzzleSource`, `SpaceShapingSettings`), `Views/` (`SpaceSourceView`,
+`SpacetimeGridView`, `TrajectoryPredictionView`, `SpaceShapingView`), `Flow/`
+(`SpaceShapingState`, `SpaceShapingFlow`). `SpaceShapingPocDriver` is deleted. Remaining:
+the game integration (this shape drops into the real flow).
 
-**Related:** [POC](space-shaping.md) · [Reframing and variations](space-shaping-future.md) · [Integration into the game](space-shaping-integration.md) · [View frame](../universe/universe-bubble-window.md)
+**Related:** [POC](space-shaping.md) · [Reframing and variations](space-shaping-future.md) · [Integration into the game](space-shaping-integration.md) · [View frame](../../done/universe-bubble-window.md)
 
 ## 1. Why
 
@@ -147,7 +151,7 @@ Each step is independently verifiable; the scene keeps working after every step.
 Recorded from the working POC; not blocking, but improve these in later versions.
 
 ### Scaling interaction feel
-- Two-hand scale uses Meta's `TwoGrabFreeTransformer`, which also **rotates**. Harmless
+- Two-hand scale uses Meta's `GrabFreeTransformer`, which also **rotates**. Harmless
   while planets are spheres (only `localScale` feeds the field), but it will matter once
   planets are non-spherical or textured. Eventual fix: a **scale-only** transformer.
 - Scaling is **continuous and clamped** to `[minScale, maxScale]`; it does not snap to the

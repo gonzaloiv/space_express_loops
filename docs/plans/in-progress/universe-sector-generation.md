@@ -1,12 +1,12 @@
 # Universe — Sector Generation and Extent
 
-**Status:** backlog - pure C# generation and extent math; no scene spawning.
+**Status:** in progress - G0: pure C# generation and extent math; no scene spawning.
 
-**Framing:** [Space shaping](../gameplay/space-shaping-future.md). The seeded system
+**Framing:** [Space shaping](../backlog/gameplay/space-shaping-future.md). The seeded system
 layout is what the shaping lattice operates on; a puzzle system may be authored
 (editor-first, or from the puzzle seed) inside its sector.
 
-**Related:** [Sector field hub](universe-infinite-sector.md) · [Bubble window](../../done/universe-bubble-window.md)
+**Related:** [Sector field hub](../backlog/universe/universe-infinite-sector.md) · [Bubble window](../done/universe-bubble-window.md) · [Color scope](../done/universe-color-scope.md)
 
 **Wiring rule:** generation is deterministic C#. No `UnityEngine.Random` in per-frame
 code, no scene iteration, no runtime-created assets.
@@ -20,16 +20,19 @@ Provide the deterministic, testable foundation for a bounded, seeded universe:
 - galaxy/system shape generation (Ring, Spiral, Cluster) returning local positions,
   radii, and an anchor pose.
 
-Everything here is pure C# and unit-testable without a Unity scene. Scene spawning and
-visibility live in [Bubble window](../../done/universe-bubble-window.md): the whole bounded field is
-pre-spawned and out-of-frame content is hidden by the frame cube.
+Everything here is pure C# and unit-testable without a Unity scene. Scene spawning lives in
+[Bubble window](../done/universe-bubble-window.md); out-of-frame content is **grayed** by the
+[color scope](../done/universe-color-scope.md), not hidden, and a distance hide beyond the gray
+band is still to be specified (see the [sector field hub](../backlog/universe/universe-infinite-sector.md) baseline
+notes).
 
 ## 2. Model
 
 ```text
 Universe space (C) = Level local space, fixed
-Focus F            = C point shown at the bubble center
+Focus F            = C point shown at the view center
 View window        = cube of half-size viewRadius around F
+Aperture           = Map = wide, Sculpt = narrow (one frame, two apertures)
 UniverseBounds     = the bounded field extent (a fixed box), not room bounds
 ```
 
@@ -41,7 +44,7 @@ generated field:
 ```text
 origin      = deterministic universe origin in C
 fieldRadius = the field half-size in C (how far the frame may pan)
-viewRadius  = 2.5 m
+viewRadius  = 1.2 m in the current scene; re-baseline against the Map/Sculpt apertures
 ```
 
 Rules:
@@ -160,7 +163,7 @@ assembly.
 | Parameter | Default |
 |---|---|
 | `fieldRadius` | bounded; tuned to the desired field size |
-| `viewRadius` | `2.5 m` |
+| `viewRadius` | `1.2 m` in the current scene; re-baseline against the Map/Sculpt apertures |
 | `sectorSize` | `5 m` (`>= 2 * maxSystemRadius + gap`) |
 | `sectorDensity` | `0.55` |
 | `softSystemBudget` | `16` |
@@ -179,3 +182,4 @@ assembly.
 | Generation changes invalidate saves | Version generation (`generatorVersion`); remap puzzle planets by position. |
 | Shape overlap with anchor | Keep planets outside the anchor radius and enforce min separation. |
 | Field too large to pre-spawn | Bound `fieldRadius` and the budgets to the load-time and memory budget; park streaming if the field must grow. |
+| No hide band | Out-of-frame content is grayed, not hidden, so every pre-spawned system renders. Bound `fieldRadius` and the budgets, and add a distance hide beyond the gray band before the field grows. |

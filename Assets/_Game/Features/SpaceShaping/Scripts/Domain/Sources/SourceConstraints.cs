@@ -4,21 +4,22 @@ namespace DigitalLove.Game.SpaceShaping
 {
     public static class SourceConstraints
     {
-        public static void Apply(Vector3[] positions, float[] scales, Vector3[] homes, SourceLimits limits)
+        public static void Apply(Vector3[] positions, float[] scales, SourceSpec[] specs, float separationScale)
         {
-            ClampRangeAndScale(positions, scales, homes, limits);
-            Separate(positions, scales, limits.SeparationScale);
+            ClampRangeAndScale(positions, scales, specs);
+            Separate(positions, scales, separationScale);
         }
 
-        private static void ClampRangeAndScale(Vector3[] positions, float[] scales, Vector3[] homes, SourceLimits limits)
+        private static void ClampRangeAndScale(Vector3[] positions, float[] scales, SourceSpec[] specs)
         {
             for (int i = 0; i < positions.Length; i++)
             {
-                Vector3 offset = positions[i] - homes[i];
-                if (offset.magnitude > limits.MoveRange)
-                    positions[i] = homes[i] + offset.normalized * limits.MoveRange;
+                SourceSpec spec = specs[i];
+                Vector3 offset = positions[i] - spec.Home;
+                if (offset.magnitude > spec.MoveRange)
+                    positions[i] = spec.Home + offset.normalized * spec.MoveRange;
 
-                scales[i] = Mathf.Clamp(scales[i], limits.MinScale, limits.MaxScale);
+                scales[i] = Mathf.Clamp(scales[i], spec.MinScale, spec.MaxScale);
             }
         }
 

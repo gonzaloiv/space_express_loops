@@ -6,7 +6,7 @@
 
 **Superseded (view/pose model):** The view/pose model here — content reparented between anchors, `bubbleOffsetLocal`/`bubbleYaw`, `bubbleMoveLimit`, and the ring marker tied to the content center — is superseded by [View frame (bubble window)](universe-bubble-window.md), which makes a box frame `{F, viewRadius, yaw}` the source of truth over a universe fixed in content space. The gesture, input, commit, and route-pause work below survives; only the pose/scale basis and the marker shape change. This plan's deferred headset validation and tuning (`Next step`) are carried into that slice so they run once, against the frame.
 
-**Related:** [Two views + interaction unify](universe-views-and-interaction.md) · [Space shaping](../backlog/gameplay/space-shaping.md) · [Sector field](../backlog/universe/universe-infinite-sector.md) · [Color scope](../in-progress/universe-color-scope.md)
+**Related:** [Two views + interaction unify](universe-views-and-interaction.md) · [Space shaping](../backlog/gameplay/space-shaping.md) · [Sector field](../backlog/universe/universe-infinite-sector.md) · [Color scope](universe-color-scope.md)
 
 **Wiring rule:** all visuals and refs stay authored in the scene/prefabs. No runtime `AddComponent`, `GetComponent`, or hierarchy creation.
 

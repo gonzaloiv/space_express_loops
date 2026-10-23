@@ -1,14 +1,13 @@
 # Universe — Bubble Color Scope
 
-**Status:** in progress - implemented as a **box** mask (`sdBox`, to match the cube view
-frame) inside the existing `LitRim` URP-Lit fork, not a new shader and not a sphere. The
-shader include, `UniverseView.BubbleBlend`, and the `UniverseColorScope` driver are done
-and wired in `Game.unity`; world + room-prop materials are migrated to
-`DigitalLove/VFX/LitRim`. World-space UI hiding (`UniverseScopeUiVisibility`) is pending.
-**Blocker (§5.3):** the universe must extend beyond the frame so planets exist outside it —
-otherwise there is nothing to gray.
+**Status:** done - implemented as a **box** mask (`sdBox`, to match the cube view frame) inside
+the existing `LitRim` URP-Lit fork, not a new shader and not a sphere. Shader include,
+`UniverseView.BubbleBlend`, `UniverseColorScope` (box sized from the content bounds, shrunk by
+`boxScale`), world + room-prop materials on `DigitalLove/VFX/LitRim`, and the world-space UI
+fader (`UniverseScopeUiVisibility`, four level roots) are all done, wired in `Game.unity`, and
+verified on device.
 
-**Related:** [Two views + interaction unify](../done/universe-views-and-interaction.md) · [Transforming the universe](../done/universe-transform.md)
+**Related:** [Two views + interaction unify](universe-views-and-interaction.md) · [Transforming the universe](universe-transform.md)
 
 **Wiring rule:** the scope driver and UI faders are authored components with serialized references. No runtime `AddComponent`, `GetComponent`, `FindObjectsByType`, or injected references. Shader globals are the only data channel.
 
@@ -114,20 +113,19 @@ That is the acceptance criterion.
 
 Consequences:
 
-- **The universe must be larger than the frame.** Content must extend beyond `viewRadius`
-  in content space so elements land outside the cube on screen. A universe that fits inside
-  `viewRadius` has nothing to gray — that is the current gap.
+- **The scope box is sized from the content bounds, shrunk by `boxScale`.** It no longer depends
+  on `viewRadius`, so the gray band exists at rest without needing the universe to be larger
+  than the frame: the box is `0.8 x content radius`, so the outer shell of the map is already
+  outside and grays. More content outside the box (a thicker band, more systems in view) is a
+  content-volume question for the sector-field work, not a blocker for this plan.
 - **Out-of-frame elements must not be hidden.** The silent-planet bubble-frame hide
   (`bubbleFrameMargin` in `SilentPlanetsSpawner`) was removed for this reason: silent planets
   now stay visible in Bubble view and the scope grays them. Frame culling is otherwise not
-  implemented (the frame owns containment math only, `BubbleViewState.ContainsPoint`). Any
-  future culling must skip elements that should gray instead of vanish.
+  implemented (the frame owns containment math only). Any future culling must skip elements
+  that should gray instead of vanish.
 - **No shader work is needed for them.** World materials already point at the scope shader,
-  so out-of-frame planets gray as soon as they exist outside `viewRadius`.
+  so out-of-frame planets gray as soon as they sit outside the box.
 - Room props and transition frames also gray, but they are not the requirement.
-
-This is a content/extent change, not a scope change: settle the universe extent so planets
-exist outside the frame, then verify with §11 test 15.
 
 ## 6. Runtime
 
@@ -163,8 +161,13 @@ Serialized `MonoBehaviour` on the `Universe` root:
 ```text
 [SerializeField] UniverseView universeView
 [SerializeField] float softnessMeters = 0.03
+[SerializeField] float boxScale = 0.8
 [SerializeField] float maxStrength = 1
 ```
+
+`boxScale` shrinks the scope box inside the content bounds, so the gray-out and the UI hide
+trigger nearer the center of the cube; the UI fader reads the same `_ColorScopeHalfSize`, so it
+follows automatically.
 
 `LateUpdate` (after DOTween moves the content):
 
@@ -172,7 +175,7 @@ Serialized `MonoBehaviour` on the `Universe` root:
 strength = universeView.State.HasRoomAnchor ? universeView.BubbleBlend * maxStrength : 0
 
 Shader.SetGlobalVector(_ColorScopeCenter,   universeView.FrameCenterWorld)
-Shader.SetGlobalVector(_ColorScopeHalfSize, Vector3.one * universeView.ContentRadiusWorld)
+Shader.SetGlobalVector(_ColorScopeHalfSize, Vector3.one * (universeView.ContentRadiusWorld * boxScale))
 Shader.SetGlobalVector(_ColorScopeRotation, universeView.FrameRotation)
 Shader.SetGlobalFloat (_ColorScopeSoftness, softnessMeters)
 Shader.SetGlobalFloat (_ColorScopeStrength, strength)
@@ -352,6 +355,7 @@ If materials live in Addressables, rebuild those bundles after the shader swap.
 | Parameter | Default |
 |---|---|
 | `softnessMeters` | `0.03 m` |
+| `boxScale` | `0.8` |
 | `maxStrength` | `1` |
 | Edge AA | `fwidth`, minimum `0.0001` |
 | Luminance | Rec.601 |
@@ -370,6 +374,12 @@ Done:
 
 ## 15. Future
 
+- **Extent coupling.** When the sector-field extent lands
+  ([sector generation](../in-progress/universe-sector-generation.md): `UniverseBounds`,
+  `UniverseFocus`, `fieldRadius`), the universe becomes genuinely larger than the window. At
+  that point the scope box should be re-derived from the **frame window** (`viewRadius`) instead
+  of `ContentRadiusWorld * boxScale` - the content-bounds sizing exists only because the map was
+  smaller than the window. Revisit §5.3/§6.2 then.
 - Room-volume scope (MRUK bounds, then wall planes).
 - Unlit/VFX/particle scope with alpha-based particles.
 - Passthrough desaturation via a full-screen pass if the test requires it.
@@ -377,25 +387,18 @@ Done:
 
 ## 16. Next steps (ordered)
 
-Goal 1 first: **see the desaturation**. Everything else waits until it is visible.
-
-1. **See the desaturation (goal 1).** Prove out-of-frame content grays while the frame
-   interior stays colored, with no new code. Two ways, cheapest first:
-   - drag the bubble map so existing content leaves the frame - the drag moves the frame F,
-     so planets pushed outside the 0.28 m box (`viewRadius: 1.2` in `Game.unity`) should gray;
-   - if the universe is too small to push anything out, temporarily lower `viewRadius` on
-     the `Universe` root to force content outside, then revert.
-   If nothing grays, check `_ColorScopeStrength > 0` (needs `State.HasRoomAnchor`) and that
-   the visible materials use `DigitalLove/VFX/LitRim`.
-2. **Real universe extent.** Make planets/universe elements live beyond `viewRadius` so
-   they naturally sit outside the frame (§5.3) - the sector-field work
-   ([sector generation](../backlog/universe/universe-sector-generation.md),
-   [sector field hub](../backlog/universe/universe-infinite-sector.md)). Replaces the test
-   object from goal 1.
-3. **World-space UI hiding.** Done: `UniverseScopeUiVisibility` is wired with a `CanvasGroup` on
+1. **See the desaturation (goal 1).** Done - confirmed in the editor: out-of-frame content grays
+   and the frame interior stays colored, after the box was sized from the content bounds and
+   `boxScale` was added to pull the boundary inward.
+2. **World-space UI hiding.** Done: `UniverseScopeUiVisibility` is wired with a `CanvasGroup` on
    the four level world-space roots only (see §14); scene-level panels (TTS, poster, review,
    end panel) are left alone. Watch the interaction with `ScaleOnOff` / `ScalePunch` on those
    canvases, which already animate scale for show/hide.
-4. **Tuning and device verification.** Phase 3: softness/edge with `fwidth`, both eyes,
-   GPU time, SRP Batcher, draw calls.
+3. **Tuning and device verification.** Done - tuned and checked on device (edge reads as a fade,
+   both eyes, motion stable). Re-run the §11 list if `boxScale` or `softnessMeters` change again.
+4. **More universe outside the box** (optional, not a gate). The band currently exists because
+   `boxScale` shrinks the box inside the content bounds. A thicker band and more systems in view
+   is a content-volume question for the sector-field work
+   ([sector generation](../in-progress/universe-sector-generation.md),
+   [sector field hub](../backlog/universe/universe-infinite-sector.md)).
 

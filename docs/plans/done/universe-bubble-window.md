@@ -3,7 +3,7 @@
 **Status:** done - implemented. Slice 1 of the sector-field split; prerequisite for color
 scope. Owns frame culling (the bounded field is pre-spawned).
 
-**Related:** [Bubble map drag](universe-transform.md) · [Sector field hub](../backlog/universe/universe-infinite-sector.md) · [Color scope](../in-progress/universe-color-scope.md)
+**Related:** [Bubble map drag](universe-transform.md) · [Sector field hub](../backlog/universe/universe-infinite-sector.md) · [Color scope](universe-color-scope.md)
 
 **Wiring rule:** frame values are serialized settings on the authored `Universe` root.
 No runtime `AddComponent`, `GetComponent`, or hierarchy creation. No new visual assets;
@@ -106,7 +106,7 @@ hides it.
 ## 6. Scope / marker / culling alignment
 
 - **Color scope:** the scope volume becomes the frame cube; the shader mask moves from a
-  sphere SDF to `sdBox` with equal extents. Update [Color scope](../in-progress/universe-color-scope.md).
+  sphere SDF to `sdBox` with equal extents. Update [Color scope](universe-color-scope.md).
 - **Center marker:** `UniverseCenterMarker` draws a square at the frame center with the
   cube extents instead of a ring.
 - **Culling:** content outside the cube (AABB test) is hidden/disabled; see §6.1.
@@ -135,7 +135,7 @@ The frame movement is bounded, so the universe does not stream:
   headset validation and tuning (`translationGain`, `translationSmoothSecs`,
   `recenterDistance`, `recenterHoldSecs`, `heightOffset`, `transitionSecs`) run in this
   slice, against the frame.
-- [Color scope](../in-progress/universe-color-scope.md): the scope center/radius become the frame cube,
+- [Color scope](universe-color-scope.md): the scope center/radius become the frame cube,
   not the content bounds.
 - Streaming: not needed; the field is bounded and pre-spawned, and this slice owns frame
   culling. `UniverseFocus` is this frame.
@@ -196,9 +196,11 @@ already in the code, so the remaining work is:
    `UniverseCenterMarker` so it stands upright. Clean: a mesh or ~5 renderers.
 2. **Zoom** (settled). Keep two views + the commit gesture; the aperture stays a fixed
    setting. No live aperture zoom.
-3. **Cube containment** (done). The drag gate uses `BubbleViewState.ContainsPoint`
-   (`|local| <= half` per axis) and the marker takes the frame yaw. The drag limit still
-   uses the soft radial limit — keep until the cube feel is confirmed.
+3. **Cube containment** (superseded). The drag gate was `BubbleViewState.ContainsPoint`
+   (`|local| <= half` per axis, factor `0.3`), which only allowed a drag to start in the
+   central 30% of the cube. It is now `BubbleViewState.ContainsContentPoint` (the content
+   radius cube), so a drag starts anywhere on the map; `ContainsPoint` was removed as dead
+   code. The marker takes the frame yaw.
 4. **Snapshot the aperture** — not needed while the aperture is fixed; revisit only if
    zoom ever becomes dynamic.
 5. **Window visibility (the infinite illusion).** The universe is built up front; the
@@ -207,13 +209,18 @@ already in the code, so the remaining work is:
    frame, driven by the composition root so content systems do not reference the view.
    The color scope stays a separate slice. The selection marker is a smaller cube than the
    frame extents (`ringRadiusFactor`), so the window and the selection read as different
-   sizes. *Done:* the decor band sits at `cube × bubbleFrameMargin` (1.0, i.e. the cube
-   limits) and the drag clamp was lifted from 0.3× to 1× so the band, not the pan limit,
-   is the visible boundary. Raise or drop the clamp once the universe extent is known.
+   sizes. *Superseded:* the decor hide landed as `bubbleFrameMargin` on
+   `SilentPlanetsSpawner` (value `2`, not `1.0`), and the drag clamp is still
+   `BubbleRadiusWorld * 0.3` in `BubbleMapTransformSession`, not `1x`. Both were then
+   reversed by the [color scope](universe-color-scope.md) §5.3: out-of-frame elements must
+   stay visible and gray, so the silent-planet hide was removed and `bubbleFrameMargin`
+   with it. There is no window culling today.
 6. **Remove reparenting** (done). Content stays a scene root and poses are applied as world
    transforms (`ApplyDisplayPose`); `PlayTransition` and `EndTemporaryRoomPose` no longer
    reparent. `WithRoomPose` remains — it's still needed for room-space placement, and
    removing it means spawning in content space, which is a separate placement step.
    `bubbleAnchor` is now a pose holder (written, not a parent).
-7. **Color scope alignment** (separate slice). The scope mask becomes the frame cube
-   (`sdBox`); update [Color scope](../in-progress/universe-color-scope.md).
+7. **Color scope alignment** (done, [color scope](universe-color-scope.md)). The scope mask is
+   `sdBox`, sized from the **content bounds** (`ContentRadiusWorld * boxScale`) rather than the
+   frame cube, because the map was smaller than the window; revisit if the sector-field extent
+   ever makes the universe larger than the window.

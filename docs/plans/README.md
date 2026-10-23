@@ -6,8 +6,8 @@ Plans are grouped by state. Move a plan between folders when its state changes.
 
 | Plan | State | Notes |
 |---|---|---|
-| [Universe color scope](in-progress/universe-color-scope.md) | In progress | Shader, `UniverseColorScope`, and material migration done. Next: **see the desaturation** (goal 1) — out-of-frame planets must gray out; needs content beyond `viewRadius`. UI fader and tuning after (§16). |
 | [Space shaping — spike](in-progress/space-shaping-spike.md) | In progress | Tier 0 math (`SpacetimeField`, `TrajectoryIntegrator`) and the Tier 1 debug scene (`SpaceShapingPOC`) built; the launch-to-curvature ratio band and go/no-go decision are still open. |
+| [Sector generation and extent](in-progress/universe-sector-generation.md) | In progress | G0: pure C# bounded extent, sector grid, `GalaxyShape` math, tests. No scene. Substrate for the shaping lattice; re-baseline `viewRadius` against the Map/Sculpt apertures. |
 
 ## Backlog
 
@@ -24,8 +24,7 @@ Plans are grouped by state. Move a plan between folders when its state changes.
 
 | Plan | State | Notes |
 |---|---|---|
-| [Sector field (hub)](backlog/universe/universe-infinite-sector.md) | Backlog | Hub for the split slices below; bounded seeded field, no streaming. |
-| [Sector generation and extent](backlog/universe/universe-sector-generation.md) | Backlog | Slice 2: pure C# bounded extent, sector grid, `GalaxyShape` math, tests. No scene. Base for the shaping lattice. |
+| [Sector field (hub)](backlog/universe/universe-infinite-sector.md) | Backlog | Hub for the split slices below; bounded seeded field, no streaming. Slice 1 (view frame) done; slice 2 is in progress. |
 
 ### Presentation and companion
 

@@ -226,6 +226,8 @@ GameObject:
   - component: {fileID: 50943838}
   - component: {fileID: 50943839}
   - component: {fileID: 50943840}
+  - component: {fileID: 50943842}
+  - component: {fileID: 50943841}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -323,6 +325,34 @@ MonoBehaviour:
   content: {fileID: 50943835}
   animationSecs: 0.1
   multiplier: 0.1
+--- !u!114 &50943841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 50943834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 587ceaf81378bd84faa0ed9128657332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.UniverseScopeUiVisibility
+  canvasGroup: {fileID: 50943842}
+  fadeSecs: 0.15
+  showThreshold: 0.65
+  hideThreshold: 0.35
+--- !u!225 &50943842
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 50943834}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &61369671
 GameObject:
   m_ObjectHideFlags: 0
@@ -1869,6 +1899,39 @@ MonoBehaviour:
       z: 0
     bubbleYawDegrees: 0
     silentPlanetSeed: 0
+--- !u!1 &263972589 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 431847117557832026, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
+  m_PrefabInstance: {fileID: 1846539444}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &263972595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 263972589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 587ceaf81378bd84faa0ed9128657332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.UniverseScopeUiVisibility
+  canvasGroup: {fileID: 263972596}
+  fadeSecs: 0.15
+  showThreshold: 0.65
+  hideThreshold: 0.35
+--- !u!225 &263972596
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 263972589}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &265684195
 GameObject:
   m_ObjectHideFlags: 0
@@ -2434,6 +2497,39 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 312708637}
   m_CullTransparentMesh: 1
+--- !u!1 &385385216 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 672482870812169545, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
+  m_PrefabInstance: {fileID: 1846539444}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &385385222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 385385216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 587ceaf81378bd84faa0ed9128657332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.UniverseScopeUiVisibility
+  canvasGroup: {fileID: 385385223}
+  fadeSecs: 0.15
+  showThreshold: 0.65
+  hideThreshold: 0.35
+--- !u!225 &385385223
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 385385216}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &410467811
 GameObject:
   m_ObjectHideFlags: 0
@@ -8774,6 +8870,8 @@ GameObject:
   - component: {fileID: 1127977405}
   - component: {fileID: 1127977404}
   - component: {fileID: 1127977403}
+  - component: {fileID: 1127977408}
+  - component: {fileID: 1127977407}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -8872,6 +8970,34 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1127977407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127977401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 587ceaf81378bd84faa0ed9128657332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.UniverseScopeUiVisibility
+  canvasGroup: {fileID: 1127977408}
+  fadeSecs: 0.15
+  showThreshold: 0.65
+  hideThreshold: 0.35
+--- !u!225 &1127977408
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127977401}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1145033693
 GameObject:
   m_ObjectHideFlags: 0
@@ -12579,7 +12705,19 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 431847117557832026, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 263972596}
+    - targetCorrespondingSourceObject: {fileID: 431847117557832026, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 263972595}
+    - targetCorrespondingSourceObject: {fileID: 672482870812169545, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 385385223}
+    - targetCorrespondingSourceObject: {fileID: 672482870812169545, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 385385222}
   m_SourcePrefab: {fileID: 100100000, guid: 909039b7d59dc9749b94831354dc1298, type: 3}
 --- !u!114 &1846539445 stripped
 MonoBehaviour:

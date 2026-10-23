@@ -2,7 +2,7 @@
 
 **Status:** done - implemented and headset-validated; persistence/restore validation is deferred to a future cross-feature restart pass.
 
-**Related:** [Bubble map drag](universe-transform.md) · [Sector field](../backlog/universe/universe-infinite-sector.md) · [Color scope](../in-progress/universe-color-scope.md)
+**Related:** [Bubble map drag](universe-transform.md) · [Sector field](../backlog/universe/universe-infinite-sector.md) · [Color scope](universe-color-scope.md)
 
 **Wiring rule:** all visuals and refs stay authored in scene/prefabs. No runtime `AddComponent`, `GetComponent`, or hierarchy creation. Silent planets are instantiated from an authored prefab pool.
 
