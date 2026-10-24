@@ -29,7 +29,12 @@ namespace DigitalLove.Game.SpaceShaping
         public float GetScale(int index) => scales[index];
 
         public bool IsSolved(TrajectoryResult result) =>
-            result.Outcome == TrajectoryOutcome.Arrive && result.ShipTime <= setup.Deadline;
+            result.Outcome == TrajectoryOutcome.Arrive
+            && result.ShipTime >= setup.Tmin
+            && result.ShipTime <= setup.Tmax;
+
+        public int Grade(float entropyLeft) =>
+            entropyLeft >= setup.EntropyPar ? 3 : entropyLeft >= 0f ? 2 : 1;
 
         public void Reset()
         {

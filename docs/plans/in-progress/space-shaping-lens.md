@@ -13,7 +13,7 @@ or asset creation. New readouts are authored objects in the lab scene.
 
 Answer: **is the lens a game?**
 
-The lens has **two gestures** (the design — [project direction](../../design/project-direction.md) §5), but the POC ships **one**:
+The lens has **two gestures** (the design — [project direction](../../design/project-direction.md) §5); the POC originally shipped **one**, and now ships both (the region as a single-zone POC build, ahead of job 3):
 
 | Gesture | Trigger | Effect | Changes |
 |---|---|---|---|
@@ -282,15 +282,88 @@ removed.
   are fixed.
 - **`Zone Cube`** authored as the region (fixed at rest; scale 1 → inert).
 
-**NOT built — the frame/region gesture (job 3).** `SpaceZoneView.SetFrame` exists (a plain
-setter), but nothing drives it from a gesture: the region is fixed by the scene Transform. The
-single-hand frame gesture (move + resize the region) is a job-3 build item, not a head start.
+**Superseded (2026-10-24) — the frame/region gesture is now built.** The region is no longer fixed:
+`SpaceZoneView.SetFrame` is driven by the `ZoneGrabListener` rim grab (see the later entry below),
+and the cube renders as a visible **frame** (edges) with an inset **fill** (the content region).
 
-**Nuance to confirm on device.** The scale is triggered by a **two-hand** pinch and the frame by a
-**single-hand** pinch, rather than a spatial "inside the cube" test — simpler and more robust, but
-worth a headset check against the §1 wording.
+**Done (2026-10-24).** Gate A prep (window `[tmin, tmax]`, `IsSolved` in-window, `solutionMoves`
+removed), L1 entropy (budget/par, `ScaleExcursion` = `Σ |Δscale|`, `Grade` 1–3 stars, HUD readout),
+**ship travel** (`ShipTravelView` + solved-and-idle `0.5s` trigger), the **partial zone**
+(Zone Cube `4×3×2` so the scale is local), and all **6 puzzles** re-authored for the scale verb
+(A–F, mix of "shrink-to-arrive" and "miss→shrink").
 
-**Not built.** **Gate A prep** (the `PuzzleData` window `[Tmin, Tmax]` + one fresh scale-verb
-puzzle), the entropy budget/par, and all of L1 (ship travel + flight + entropy grade).
+**Done (2026-10-24, later) — the frame is visible and the two grabs are distinct.**
 
-**Tests.** 61/61 EditMode — the zone transform, the spread/grow, and the session wiring.
+- **The frame is visible.** `Zone Cube` renders a **wireframe box** (`ZoneFrame` mesh +
+  `ZoneFrame.mat`, built by `ZoneFrameMeshBuilder`), not a translucent fill. A child **`Zone Fill`**
+  (built-in cube + `ZoneCube.mat`) is the **content visual**, inset by `contentInset` and kept sized
+  by `SpaceZoneView`. The **domain zone stays the frame's full size** (`Size * 0.5f`); the inset is
+  visual only and defines the rim-vs-inside split for the grab.
+- **One gesture owner.** `ZoneFrameMoveListener` + `ZoneContentScaleListener` are replaced by
+  **`ZoneGrabListener`**, which classifies each grab by hand position against
+  `SpaceZoneView.ContentHalfExtents` (rim vs inside) and dispatches:
+  - **one hand → move** the frame (the grab volume follows);
+  - **two hands on the rim → resize** the frame (the region; uniform factor, aspect kept);
+  - **two hands inside → scale** the metric (the universe).
+- **Per-target feedback.** The **edges tint** when the frame is grabbed; the **fill tints**
+  (shrink↔magnify by scale) when the inside is grabbed.
+- **Single-hand only moves.** The earlier single-hand edge-grab resize (which read as "scaling")
+  is gone; both scale gestures are two-hand.
+
+**Done (2026-10-24, later still) — interaction legibility + the applied field.**
+
+- **Hover feedback.** Before the pinch, the target under the hand lights: hovering the **rim**
+  brightens the **edges**, hovering the **inside** brightens the **fill**. Subscribed to the
+  `Grabbable`'s pointer events (`WhenPointerEventRaised`, `PointerEventType.Hover`/`Move`/`Unhover`).
+- **Mode is colour-coded while grabbing** (the fix for "I don't know when I'm moving vs scaling"):
+  **move** = cyan edges, **resize** = amber edges, **scale** = the fill glows shrink-blue ↔
+  magnify-orange (edges drop to idle).
+- **The field is applied, not derived.** `SpaceShapingState.Push` now gates `ApplyZone`/`Constrain`
+  on `SpaceShapingView.ScaleChanged`, so the content deformation is committed **only when the scale
+  changes**. Moving or resizing the frame no longer re-derives the planets. The lens/metric stays
+  live with the frame (the trajectory and the mesh warp still follow where the cube is).
+  Caveat: one region at a time — re-scaling after moving re-derives from `Home` at the new centre
+  (multiple zones / soft brush is job 3).
+
+**Done (2026-10-24, tuning pass) — grab volume + feel.**
+
+- **Grab volume matched to the cube.** The grab trigger is now `4.5×3.5×2.5` (was `7×5×3`), so the
+  cube must be **touched** — previously it could be grabbed ~15 cm away. It still scales with the
+  frame (rest size `4×3×2`).
+- **Removed the solid collider on `Zone Cube`** — a solid box on the wireframe frame blocked hands
+  from reaching inside.
+- **The frame is opaque** (`Universal Render Pipeline/Unlit`) so it sorts and occludes correctly
+  against the translucent fill.
+- **Wider rim band.** `contentInset = 0.8` (was `0.5`): the inside core is ~`0.32×0.22×0.12 m` and
+  the rim is a ~6.5 cm band, so both the scale and resize gestures are hittable on a 40×30×20 cm cube.
+- **Mode is re-decided when the second hand arrives** (`AllInside()`), not from whichever hand
+  pinched first.
+- **`SpaceZoneView.OnValidate`** keeps the fill sized in the editor (not just at `Awake`).
+
+**Done (2026-10-24, tuning pass 2) — grab reliability, line weight, smoothing, two-planet puzzles.**
+
+- **The grab is the stock Interaction SDK** — `Oculus.Interaction.Grabbable` +
+  `HandGrab.HandGrabInteractable` on `Zone Content Grab`, selected by the rig's
+  `HandGrabInteractor`/`DistanceHandGrabInteractor`. Selection = a grab type whose fingers pass
+  `HandGrabAPI.IsHandSelect*FingersChanged`, gated by the interactable's `GrabbingRule`.
+- **Spurious grabs fixed.** The cube's `_pinchGrabRules` had thumb/index/middle all *Optional* and
+  none *Required*, so `GrabbingRule.SelectsWithOptionals` was true and **any one** of those fingers
+  crossing its threshold started a grab (a curled middle finger was enough). Now thumb + index are
+  **Required** and middle/ring/pinky Ignored, so a real pinch is needed.
+- **Thinner lines.** Frame bar radius `0.03 → 0.014` (mesh rebuilt); lattice tube radius
+  `0.05 → 0.025` (`SpacetimeMeshView.radius`, which drives the runtime lattice).
+- **Smoother scale.** The scale gesture drives a target and `ZoneGrabListener` eases toward it
+  (`scaleSmoothSecs = 0.08`), so the scale, the planet spread, and the mesh warp move smoothly
+  instead of stepping. Entropy (`Σ|Δscale|`) is unaffected (the deltas telescope).
+- **Two-planet puzzles.** All six puzzles had their second planet parked at `z = 2.5` — outside the
+  zone (`half-extents 2×1.5×1`), so it never moved. Each now sits inside the zone and both planets
+  participate. Solvability re-verified by sweeping the zone scale (solves at 0.40–0.50 … 0.75).
+- **The lab has no "Simulate" button** — the three buttons are **Reset**, **Next**, **Predict**.
+  `Predict` toggles the predicted-trajectory line (`SpaceShapingView.SetPredictionVisible`).
+
+**Remaining in this plan.** The **testability polish** (travel moment, window gauge, haptics/audio,
+cargo — see [feel & polish](../backlog/presentation/space-shaping-feel.md)).
+
+**Next plan.** Rotate (frame dragging) and collapse feedback.
+
+**Tests.** 63/63 EditMode — the zone transform, the spread/grow, the session wiring, the window solve cases, and the entropy grade.

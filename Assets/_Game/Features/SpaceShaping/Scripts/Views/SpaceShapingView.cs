@@ -28,6 +28,14 @@ namespace DigitalLove.Game.SpaceShaping
                 || current.Falloff != lastZone.Falloff;
         }
 
+        public bool ScaleChanged()
+        {
+            if (!hasSnapshot)
+                return true;
+
+            return zone.Zone.Scale != lastZone.Scale;
+        }
+
         public void ApplyFromSession(SpaceShapingSession session)
         {
             origin.localPosition = session.Origin;
@@ -51,5 +59,13 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         public void SetPredictionVisible(bool visible) => prediction.SetVisible(visible);
+
+        public void ResetZone()
+        {
+            zone.ResetScale();
+            hasSnapshot = false;
+        }
+
+        public float ZoneExcursion => zone.ScaleExcursion;
     }
 }

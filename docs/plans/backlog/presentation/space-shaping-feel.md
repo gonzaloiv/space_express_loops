@@ -35,7 +35,10 @@ game first. None of these gate the mechanic; they are the polish that turns "wor
 - Tie the entropy bar to the collapse so the *world* is the meter, not a HUD number: the
   neighbourhood dims/warps as the bar drains.
 
-## Order (after the gate)
+## Order
 
-1 → 2 → 3, with 4 and 5 alongside. The travel moment (1) is the demo beat; the collapse (2) is
-the depth; the window gauge (3) makes the hard fail legible.
+**1, 3, 4, 5 are current-plan polish** (make the test really testable). **2 (collapse) is next
+plan**, alongside rotate.
+
+The travel moment (1) is the demo beat; the window gauge (3) makes the hard fail legible; cargo
+(4) and diegetic entropy (5) ride alongside. Collapse (2) waits for the next plan.

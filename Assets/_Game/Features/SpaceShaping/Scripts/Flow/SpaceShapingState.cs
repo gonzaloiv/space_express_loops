@@ -12,6 +12,8 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private ShapingLabButton resetButton;
         [SerializeField] private ShapingLabButton nextButton;
         [SerializeField] private ShapingLabButton predictButton;
+        [SerializeField] private ShipTravelView ship;
+        [SerializeField] private float travelIdleSecs = 0.5f;
 
         private readonly TrajectoryIntegrator integrator = new();
         private readonly ShipLaunch launch = new();
@@ -21,6 +23,9 @@ namespace DigitalLove.Game.SpaceShaping
         private int editCount;
         private bool wasChanged;
         private bool predictionEnabled = true;
+        private TrajectoryResult? lastResult;
+        private bool travelled;
+        private float idleElapsed;
 
         public override void Enter()
         {
@@ -46,24 +51,46 @@ namespace DigitalLove.Game.SpaceShaping
             if (changed && !wasChanged)
                 editCount++;
             wasChanged = changed;
-            if (!changed)
+
+            if (changed)
+            {
+                travelled = false;
+                idleElapsed = 0f;
+                Push();
+                return;
+            }
+
+            if (travelled || !lastResult.HasValue || !session.IsSolved(lastResult.Value))
                 return;
 
-            Push();
+            idleElapsed += Time.deltaTime;
+            if (idleElapsed >= travelIdleSecs)
+            {
+                travelled = true;
+                ship.Travel(lastResult.Value);
+            }
         }
 
         private void StartPuzzle()
         {
             editCount = 0;
             wasChanged = false;
+            travelled = false;
+            idleElapsed = 0f;
+            view.ResetZone();
             session = new SpaceShapingSession(BuildSetup());
+            ship.Reset(session.Origin);
             Push();
         }
 
         private void ResetPuzzle()
         {
             editCount = 0;
+            travelled = false;
+            idleElapsed = 0f;
+            view.ResetZone();
             session.Reset();
+            ship.Reset(session.Origin);
             Push();
         }
 
@@ -81,12 +108,16 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void Push()
         {
-            session.ApplyZone(view.Zone);
-            session.Constrain();
-            view.ApplyFromSession(session);
+            if (view.ScaleChanged())
+            {
+                session.ApplyZone(view.Zone);
+                session.Constrain();
+                view.ApplyFromSession(session);
+            }
 
             SpacetimeField field = session.BuildField();
             TrajectoryResult result = session.Simulate(field, integrator, launch, view.Zone);
+            lastResult = result;
             view.Render(field, result, session.Destination);
             view.Snapshot();
             hud.Render(BuildReadout(result));
@@ -95,12 +126,17 @@ namespace DigitalLove.Game.SpaceShaping
         private ShapingReadout BuildReadout(TrajectoryResult result)
         {
             PuzzleData puzzle = puzzles[puzzleIndex];
+            float entropyLeft = puzzle.entropyBudget - view.ZoneExcursion;
             return new ShapingReadout
             {
                 PuzzleName = puzzle.name,
                 Outcome = result.Outcome,
                 ShipTime = result.ShipTime,
-                Deadline = puzzle.deadline,
+                Tmin = puzzle.tmin,
+                Tmax = puzzle.tmax,
+                EntropyLeft = entropyLeft,
+                Stars = session.Grade(entropyLeft),
+                Scale = view.Zone.Scale,
                 Solved = session.IsSolved(result),
                 EditCount = editCount
             };
@@ -122,7 +158,10 @@ namespace DigitalLove.Game.SpaceShaping
                 SourceStrengthScale = settings.sourceStrengthScale,
                 SeparationScale = settings.separationScale,
                 DilationScale = settings.dilationScale,
-                Deadline = puzzle.deadline,
+                Tmin = puzzle.tmin,
+                Tmax = puzzle.tmax,
+                EntropyBudget = puzzle.entropyBudget,
+                EntropyPar = puzzle.entropyPar,
                 Sources = BuildSpecs(puzzle)
             };
         }

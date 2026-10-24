@@ -15,18 +15,20 @@ MonoBehaviour:
   id: puzzle_05
   prefab: {fileID: 0}
   origin: {x: -4, y: 0, z: 0}
-  destination: {x: 4, y: 0, z: 2}
+  destination: {x: 4, y: 0, z: 0}
   captureRadius: 1.2
-  deadline: 4.1
-  solutionMoves: 1
+  tmin: 0
+  tmax: 4.9
+  entropyBudget: 1
+  entropyPar: 0.5
   sources:
-  - home: {x: 0, y: 1, z: 0.3}
-    scale: 2.4
+  - home: {x: 0, y: 1, z: 0}
+    scale: 0.35
     moveRange: 2.5
-    minScale: 1.2
-    maxScale: 3.5
-  - home: {x: 1, y: -1, z: 1}
-    scale: 2.4
+    minScale: 0.2
+    maxScale: 0.7
+  - home: {x: 0, y: -0.9, z: 0.7}
+    scale: 0.2
     moveRange: 2.5
-    minScale: 1.2
-    maxScale: 3.5
+    minScale: 0.1
+    maxScale: 0.4

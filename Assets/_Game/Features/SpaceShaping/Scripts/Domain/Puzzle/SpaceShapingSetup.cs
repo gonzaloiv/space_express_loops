@@ -15,7 +15,10 @@ namespace DigitalLove.Game.SpaceShaping
         public float SourceStrengthScale;
         public float SeparationScale;
         public float DilationScale;
-        public float Deadline;
+        public float Tmin;
+        public float Tmax;
+        public float EntropyBudget;
+        public float EntropyPar;
         public SourceSpec[] Sources;
     }
 }
