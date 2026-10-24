@@ -11,7 +11,7 @@ hand-tracking first-class.
 
 **Our Space** is a seated mixed-reality game where a miniature universe floats in
 your real room. You run an interstellar transport company: each job is a delivery
-from one star to another, with a **deadline** and a **fuel grade**. Your one tool is
+from one star to another, with a **window** and an **eco grade**. Your one tool is
 **the cube** — a tangible instrument you move over the bubble. **Grab inside it and scale**:
 the space stretches (a shrunk zone is a shortcut) and the planets spread and grow. Both
 change **time**, the ship's clock, so you deform the spacetime the ship flies through until
@@ -38,7 +38,9 @@ weight for this target. What is missing is **one fused, playable seated slice** 
 
 From an idle "routes and rounds" loop to an **interstellar transport company**:
 
-- **A job = one delivery** from one star to another, with a deadline and a fuel grade.
+- **A job = one delivery** from one star to another, with a **window** and an **eco grade**; a job
+  can also be a **multi-leg / loop route** (A → B → C, sequential relaunches on one shared field —
+  [space-shaping-future](../plans/backlog/gameplay/space-shaping-future.md) §3.2).
 - **The verb = shaping spacetime** to make the delivery work efficiently.
 - **Progression = the company:** unlock systems, buy ships, earn reputation —
   *between* jobs, never ticking live under the puzzle.
@@ -67,16 +69,18 @@ So: the *room* is the backdrop and the anchor; the *bubble* is the playfield; th
 
 ## 5. The cube: the one instrument
 
-The cube has **two gestures**, both two-hand scales:
+The cube has **three gestures**, taught in order (scale → region → rotate):
 
 | Gesture | Trigger | Effect | Relativity |
 |---|---|---|---|
 | **The scale** *(L0)* | a two-hand pinch **inside** the cube | scales the space *and* the content: the metric stretches (a shrunk zone is a **shortcut**) and the planets **spread** and **grow** (mass ∝ radius) | time dilation |
-| **The region** *(act 2)* | grab the cube's **edges / corners** | sets *where* you work (how much of the map the zone covers) | — |
+| **The region** *(job 3)* | grab the cube's **edges / corners** | sets *where* you work — and you can scale **several** zones; the soft brush blends them | — |
+| **The rotate** *(job 4)* | spin the zone | **frame dragging** — a spinning zone swirls the path; adds direction for free | frame dragging |
 
-**Deferred act-2 beats:** **rotate** (frame dragging — a spinning zone swirls the path) and the
-**region** (resizing the cube). The region's size must stay **separate from the scale** — coupling
-them is the bug.
+**Multiple scales are the way.** The player scales **several** zones, and the soft brush blends
+them into one field — that is the core of the verb, not a later unlock. The region's size must stay
+**separate from the scale** — coupling them is the bug. **Rotate** (frame dragging) unlocks at
+**job 4** (see [progression](progression.md) §4).
 
 - **Soft brush.** The cube's influence falls off at the edges so neighbouring zones
   blend; a hard edge would tear the mesh.
@@ -100,39 +104,42 @@ them is the bug.
 2. **The cube is the product.** The one tool, and the signature moment — "the cube
    deforms the universe". It gets the polish budget (feel, sound, haptics, the visible
    field-warp).
-3. **Two gestures: scale the space, scale the content.** The field is derived, never
-   edited.
-4. **Two resources, one hard fail.** Time is the deadline; fuel is the grade.
+3. **Scale the space and the content together.** One gesture does both; the region is the
+   second gesture (job 3), rotate the third (job 4). The field is derived, never edited.
+4. **One hard fail, one score.** Time is the window; entropy is the eco grade (the fuel is the
+   job's given launch).
 5. **Discrete jobs.** ~1 minute each; a **10-minute experience**, about **8–10 levels**.
    Nothing live-ticking.
 6. **Relativity is the language.** Not a skin — the cube instruments it.
 
-## 7. The two resources: time + fuel
-
-Structured **asymmetrically** so the puzzle stays crisp:
+## 7. The resources: time + fuel + entropy
 
 | Resource | Basis | Role | Failure |
 |---|---|---|---|
 | **Time** | ship proper time; slowed deep in a well | the **window** `[Tmin, Tmax]` | hard fail (outside it) |
-| **Fuel** | the **edits** — the work the scale does | the **eco rating** (pay) | soft (lower score) |
+| **Fuel** | the job's **given** launch fuel | the **brief** — make it work, or no money | (the job's difficulty) |
+| **Entropy** | the **Wrap's** cost — the edits | the **eco rating** (pay) | soft (lower score) |
 
-**Why the edits cost fuel.** The field's **natural assists** (falling into a well,
-slingshotting) are *free* — the ship exchanges energy with the field on its own
-(`ShipLaunch` is Coast). The **edits** are what you pay for: wrapping a zone is the *paid*
-move. So the skillful play is to **read the field better and edit less** — get the speed you
-did not pay for. The resource and the mechanic justify each other.
+**The job hands you the fuel.** "Make it work with this launch fuel, or the money does not add
+up." It is fixed per job — a constraint, not a lever.
 
-**The trade-off.** Fast but wasteful (scale the space hard) vs cheap but slow (leave the field
-alone and use its natural assists). Cheap *and* in the window is the perfect run. Both costs
-are shown in the prediction **before** commit, so the choice is informed, not a lottery.
+**Entropy is what you spend.** The Wrap costs entropy: every edit burns it, and the grade is the
+entropy you *did not* spend. So the skillful play is to **read the field better and edit less** —
+the field's natural assists (falling into a well, slingshotting) are *free*. The greedy play is
+the green play ([lore](lore.md)).
 
-**The ethic framing.** Fuel as an **eco rating** makes it a *green transport company*: the
-point is not wasting energy — and the greedy play (the free assist) *is* the green play
-([lore](lore.md)).
+**The collapse is the core tension.** As entropy drains the universe visibly **collapses** — the
+Wrap spends the *last remaining order* in the neighbourhood. It is the game's central stake: the
+cheaper you are, the less of the universe you burn, and the longer it holds together
+([lore](lore.md) §2).
 
-> **Not in the code yet.** The edits are free in the lab (`SpaceZone` has no cost), so the slice
-> scores on **ship-time only** ([lens plan](../plans/in-progress/space-shaping-lens.md) §7). The
-> fuel term is added once the core loop holds.
+**The trade-off.** Edit less (free assists, green) vs edit more (the Wrap buys speed, but burns
+entropy). Cheap *and* in the window is the perfect run. Both costs are shown in the prediction
+**before the ship travels**.
+
+> **Not in the code yet.** The edits are free in the lab, so the slice scores on **ship-time
+> only** ([lens plan](../plans/in-progress/space-shaping-lens.md) §7). Entropy is added once the
+> core loop holds.
 
 ## 8. Why management is the frame, not a co-equal system
 
@@ -160,8 +167,8 @@ routes; keep the economy *between* jobs. Then the management layer is a wrapper
   `TrajectoryIntegrator`; the rate falls with depth. Both gestures move it — the **space**
   scale changes travel time, the **content** scale deepens the well — and a clock visibly
   slowing on a dive is a great demo beat.
-- **Frame dragging** = the *fuel-free* direction change, via a spinning zone. **Deferred**
-  (the rotate gesture, act 2).
+- **Frame dragging** = the *free* direction change, via a spinning zone — the rotate gesture,
+  unlocked at **job 4**.
 - **Later:** event horizons (a true fail state).
 - Full details: [relativity as gameplay](relativity-as-gameplay.md).
 
@@ -169,51 +176,51 @@ routes; keep the economy *between* jobs. Then the management layer is a wrapper
 zooming never changed the result, so the prediction could be trusted across views. This
 direction makes **scale physical**: transforming a zone changes what happens inside it.
 That is the point of the mechanic. Cost: the prediction must be re-earned (show the
-result before commit), and the player must always be able to tell which zone the ship is
+result before the ship travels), and the player must always be able to tell which zone the ship is
 in — the ship is always at **map size**; the *zone* changes, never the ship.
 
 ## 10. Player verb is continuous; authoring is discrete
 
 - **Player:** the cube is **continuous** and apply-anywhere. No discrete steps, no move
   counts.
-- **Score:** a **continuous** value — ship-time (fuel, once it exists) — **bucketed to
+- **Score:** a **continuous** value — entropy left (once it exists) — **bucketed to
   stars** (1–3). A coarse readout over a free tool. Move-count scoring is dropped.
 - **Authoring:** the only place discreteness lives. Take a **solved arrangement** and
-  apply its solution **steps in reverse** to make the start. The reverse of the scramble
-  is a guaranteed solution; its score sets the star bar; the number and size of reversed
-  steps is the difficulty dial. **The start should fail on time, not crash** — a
-  near-miss over the deadline teaches the goal ("get there *on time*") where a crash
-  reads as "broken".
+  **deform** it to make the start (the verb is a continuous scale, not reversed moves). The
+  solved arrangement is a guaranteed solution; its entropy cost sets the star bar; the size of
+  the deformation is the difficulty dial. **The start should fail on time, not crash** — a
+  near-miss over the window teaches the goal ("get there *on time*") where a crash reads as
+  "broken".
 
-Pipeline: [space-shaping-future](../plans/backlog/gameplay/space-shaping-future.md) §4
+Pipeline: [space-shaping-future](../plans/backlog/gameplay/space-shaping-future.md) §3
 (search-and-test, never inversion).
 
 ## 11. Risks (condensed)
 
 | Risk | Status / mitigation |
 |---|---|
-| Toy, not game (no stake) | **Addressed** by deadline + fuel grade (§7). |
+| Toy, not game (no stake) | **Addressed** by the window + entropy grade (§7). |
 | The cube is "just a group drag" | Resolved: the cube scale is a **metric stretch** (a shortcut), not a content move — see [lens plan](../plans/in-progress/space-shaping-lens.md) §3. |
 | Field illegibility | Make the map *read the field* (straight-line reference, accel arrows); the bubble already shows the warped sheet. |
 | Ship-zone legibility | The ship is map-size; show which zone it is in (tint, trail). |
-| Prediction trust | Scale is now physical; show the result before commit. |
+| Prediction trust | Scale is now physical; show the result live, before the ship travels. |
 | Identity | **Resolved** by the transport-company pivot and the name "Our Space". |
 | Competition scope | Keep one fused seated slice; no sectors/multi-ship/generation until proven. |
 | Room-scale legacy drag | Freeze room-scale gameplay; keep only MR bubble anchoring. |
-| Content ceiling | Multi-ship is "near-chaotic"; do not promise it. |
+| Content ceiling | Simultaneous multi-ship is "near-chaotic" for generation; authored multi-route is fine (a shared bottleneck is a legibility win). |
 
 ## 12. Next step + decision gate
 
 The immediate next step is the
 [space-shaping lens plan](../plans/in-progress/space-shaping-lens.md): test whether the
 **lens** — scale the space, scale the content — is a *game*, **built in the POC lab scene**
-(the harness carries over from the parked test slice), then the game-feel pass (launch +
+(the harness carries over from the parked test slice), then the game-feel pass (ship travel +
 flight + grade), before fusing into the bubble.
 
 1. **Test in the lab, seated, hand-tracked** (no MR/bubble): does the mechanic survive a
    goal and a cost?
 2. **Only if the gate passes:** fuse the lab puzzle into the bubble (one seated MR
-   experience), add the cube, and author more jobs (fuel/eco grading once it exists).
+   experience), add the cube, and author more jobs (entropy/eco grading once it exists).
 
 **Gate:** if the tester solves the puzzles, can say *why*, and wants the next job —
 invest in integration, polish, and the identity. If they fiddle blindly, revisit the
@@ -227,13 +234,14 @@ mechanic before writing another plan.
 - No co-equal live-ticking economy under the puzzle.
 - No interaction affordances to paper over an illegible field — fix the read.
 - No discrete steps or move counts for the *player*; discreteness is for authoring only.
+- No second core mechanic (entropy-as-currency, planet-drag). One verb: the scale.
 - Do not pitch a systems roadmap; pitch one polished seated MR moment.
 
 ## 14. Related documents
 
 - [Relativity as gameplay](relativity-as-gameplay.md) — the effect menu; the ship
   clock, frame dragging, horizons (the cube instruments these).
-- [Transport company: time + fuel](transport-company.md) — the two-resource model in
+- [Transport company: time, fuel + entropy](transport-company.md) — the resource model in
   detail.
 - [Progression](progression.md) — how the game advances: the numbered-cube network + stars.
 - [Lore](lore.md) — the fiction frame: the 2048 stationary-state economy, "the Wrap",

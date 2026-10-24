@@ -5,9 +5,9 @@ slices. Each slice below is its own plan; this file only holds shared context an
 order.
 
 **Framing:** [Space shaping](../gameplay/space-shaping-future.md). The universe is a
-bounded, seeded field of sectors that Map View pans; puzzles are authored
-(editor-first, or from the puzzle seed) as sectors inside it. There is no
-round/hub/economy layer and no streaming here.
+bounded, seeded field of sectors that the **level selector** (a field of cubes, one per
+job) pans; puzzles are authored (editor-first, or from the puzzle seed) as sectors inside
+it. There is no round/hub/economy layer and no streaming here.
 
 **Related:** [Bubble map drag](../../done/universe-transform.md) · [Silent planets](../../done/universe-silent-planets.md) · [Color scope](../../done/universe-color-scope.md)
 
@@ -30,15 +30,16 @@ spawned at level start and out-of-view content is grayed by the scope
   §5.3/§6.2.
 - **`viewRadius` is `1.2` in `Game.unity`**, not the `2.5 m` these plans assume, and the wired
   field is deliberately small (`fieldRadius 1.8`) to match. **Do not raise the aperture until the
-  gameplay content comes from the field** (Map/Sculpt +
+  gameplay content comes from the field** (the level selector +
   [integration](../gameplay/space-shaping-integration.md)): at a `12.5 m` aperture the current
   room-local content shrinks to a ~2 cm speck. The trigger is the content move, not a date.
 - **The hide band is specified** (`SectorFieldSpawner.hideRadiusFactor = 1.5`), so a grown field
   does not have to render everything. Raise `fieldRadius` with `softSectorBudget` together, and
   order cells centre-out if a budget ever binds again.
 - **Space shaping coupling.** `SectorShape` supplies a puzzle's seed layout and playable
-  sectors are authored; Map = wide aperture, Sculpt = narrow aperture over the same frame. The
-  sector field is the substrate for the puzzle loop, not scenery.
+  sectors are authored; the level selector (a field of cubes) is the wide view, and a picked
+  cube scales up into the play space. The sector field is the substrate for the puzzle loop,
+  not scenery.
 
 ## What is already done
 
@@ -52,7 +53,7 @@ permanently.
 
 | Topic | Decision |
 |---|---|
-| Exploration | The bubble/Map view is the god view; pan translates the view, aperture changes Map <-> Sculpt. |
+| Exploration | The level selector is the god view; pan translates the view, and picking a cube scales it up into the play space. |
 | Ambient sectors | Decor: pooled visuals with no gameplay until a puzzle uses them. |
 | Puzzles | Authored (editor-first, or from the puzzle seed), not spawned by rounds. |
 | Extent | A bounded field: a fixed extent around the origin, not infinite; the frame clamps inside it. |

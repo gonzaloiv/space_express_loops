@@ -1,7 +1,7 @@
 # Lore — "Our Space"
 
 **Status:** design flavour, not a plan. The fiction that frames the transport-company
-pivot in [project direction](project-direction.md) and the two-resource model in
+pivot in [project direction](project-direction.md) and the resource model in
 [transport company](transport-company.md).
 **Date:** 2026-10-23.
 
@@ -27,6 +27,9 @@ the only lever is *cost*. Keep it as backdrop and subtext — never as expositio
   the word the design docs use.
 - It is **new and experimental**, which justifies why the player is learning it and
   why it *is* the game.
+- **Why it exists.** The world finally put a **hard cap on fuel** (not like today), so the company
+  could not burn more — and found a way to spend **entropy** directly instead. It is untested and,
+  in principle, can **literally destroy the universe**. Ironic, given today's situation.
 
 ## 3. "Revenue is relative"
 
@@ -56,8 +59,8 @@ for nothing by reading the field better. The greedy play **is** the green play. 
 scold, no guilt, no "green mode."
 
 - **No dilemma is the feature** — but know where the fault line is. In the model it
-  already exists: **fuel-greed vs the time promise.** The cheap route can be slow, and
-  the victim is the customer's deadline. That is the real tension
+  already exists: **entropy-greed vs the time promise.** Editing little is cheap, and
+  the victim is the customer's window. That is the real tension
   ([transport company](transport-company.md) §2).
 - **Darker, later (optional):** the cheap path grazes someone's home, or parks the
   crew in a time well — a social or human cost, externalised off the ledger.
@@ -72,10 +75,11 @@ in dialogue; the ambiguity is what makes a small game stick.
 ## 6. Guardrails
 
 - **Backdrop, not exposition.** Nobody says "revenue is relative" or "greed is
-  eco-friendly" out loud. A fuel-saved number climbing while margin climbs *is* the
+  eco-friendly" out loud. An entropy-saved number climbing while margin climbs *is* the
   statement.
 - **One term.** The system is "the Wrap"; the verb is "shaping".
-- **Plain language** for the player: "the ship's clock", "fuel/eco rating".
+- **Plain language** for the player: "the ship's clock" and "entropy" (the bar); "eco rating" is
+  the flavour, not a second term. No other physics jargon.
 - **Tone: melancholy and adult** — a company that survives, not one that conquers.
   Not a growth fantasy.
 - **Don't stack puns in the pitch.** One signature pun ("Our Space") plus one

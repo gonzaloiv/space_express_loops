@@ -34,7 +34,7 @@ current codebase; legibility is how well a seated first-timer reads it.
 | Effect | Basis | Game verb | Cost | Legibility |
 |---|---|---|---|---|
 | Curved space (have) | potential well / geodesic | move mass to bend the path | done | high |
-| **Time dilation** | clocks slow deep in a well (and when fast) | route the ship to **spend or save ship-time**; hit a deadline; least-proper-time score | low | high — a clock is readable |
+| **Time dilation** | clocks slow deep in a well (and when fast) | route the ship to **spend or save ship-time**; hit the **window** `[Tmin, Tmax]`; the score is **entropy left**, not ship-time | low | high — a clock is readable |
 | **Frame dragging** | a spinning mass twists spacetime | **spinning planets swirl** the path; adds direction, not just position | low | high — visible spiral |
 | **Event horizon** | a point of no return | a hazard that is a *true* fail, not a UI label | low | very high |
 | Gravitational lensing | light bends around mass | route a signal/beacon around an occluder | medium | medium-high |
@@ -54,8 +54,9 @@ The single best relativity idea for this game, because it turns geometry into
 - Track proper time by accumulating one scalar in the existing loop
   (`TrajectoryIntegrator.Integrate`, `TrajectoryIntegrator.cs:16-29`) — no new math
   path, no allocations.
-- New objective: **arrive within a ship-time budget**, or **minimise ship-time**
-  (the golf/par model already implied by `PuzzleData.solutionMoves`).
+- New objective: **arrive within the window `[Tmin, Tmax]`** (ship-time), then be graded on
+  **entropy left** (the edits' cost). `PuzzleData.solutionMoves` is removed — the score is
+  entropy, not move count.
 - Why it works as a puzzle: the *shortest* path and the *cheapest-time* path
   differ. Diving deep past a planet is short but the clock crawls; swinging wide is
   long but the clock races. That is a real choice the player can *see* (the clock)
@@ -89,8 +90,8 @@ horizon the ship can never leave — a genuine fail, not a UI colour.
 | Time dilation | `TrajectoryIntegrator`, `TrajectoryResult` | accumulate proper time; carry it in the result |
 | Frame dragging | `SpaceSource`, `SpacetimeField.Acceleration` | add `Spin`; add tangential term |
 | Event horizon | `SpaceSource`, `TrajectoryIntegrator.Classify` | add horizon radius; classify as `Horizon` fail |
-| Objective change | `PuzzleData`, `SpaceShapingSetup`, `SpaceShapingSession` | ship-time budget/par alongside `solutionMoves` |
-| Read-out | `TrajectoryPredictionView` / UI | show the ship clock; tint by time cost |
+| Objective change | `PuzzleData`, `SpaceShapingSetup`, `SpaceShapingSession` | window `[Tmin, Tmax]`, entropy budget, and the entropy-left grade (replaces `solutionMoves`) |
+| Read-out | `TrajectoryPredictionView` / UI | show the ship clock and the entropy bar; tint by time cost |
 
 All pure-C#, deterministic, unit-testable — consistent with the existing domain
 split (`Scripts/Domain/…`) and the project's "no LINQ, no per-frame allocations"
@@ -105,12 +106,13 @@ rule.
 - **Every mechanic changes a decision**, or it is a gimmick (§1).
 - **Plain language in-game.** Surface it as "the ship's clock" and "spin", not
   "Schwarzschild" or "Lense-Thirring".
-- **Keep the content-local, scale-independent simulation** so the bubble/scale
-  gestures do not change the result.
+- **Scale is now physical.** Transforming a zone changes what happens inside it (see
+  [project direction](project-direction.md) §9). The prediction is re-earned before commit, and
+  the ship stays map-size so the zone is always legible.
 
 ## 6. Recommended order
 
-1. **Ship clock + a ship-time objective** on the existing one-ship puzzle — the
+1. **Ship clock + the window `[Tmin, Tmax]`** on the existing one-ship puzzle — the
    highest-value relativity step, and it also supplies the missing stake.
 2. **Event horizon** as a hazard — cheap, and completes the tension.
 3. **Frame dragging** — variety once the core is proven.
@@ -121,8 +123,8 @@ rule.
 - Time dilation from **depth only**, **speed only**, or both? Depth-only is simpler
   and reads cleanly as "gravity slows time"; adding speed makes the fast wide path
   also slow, which muddies the choice.
-- Objective shape: **arrive at all**, **arrive within budget**, or **minimise
-  ship-time**? Budget is forgiving and readable; minimise is the golf/par model.
+- Objective shape: **settled** — arrive within the window `[Tmin, Tmax]`; the score is
+  **entropy left**, not ship-time (see [transport company](transport-company.md)).
 - Does the ship clock apply to the **live prediction** too (so the player sees the
   cost before committing), or only to the launched run?
 - Is the horizon a **hard fail** (attempt over) or a soft "cannot pass" wall in the

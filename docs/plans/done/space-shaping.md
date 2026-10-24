@@ -7,6 +7,12 @@ move-range visualization, final tuning, and the lattice presentation (curved lin
 mesh deferred) — see the [architecture refactor](space-shaping-architecture.md)
 and [integration](../backlog/gameplay/space-shaping-integration.md) plans.
 
+> **Superseded in part (2026-10-24).** The verb changed: the player now scales **zones** with
+> the cube (the lens), not drag planets — see the [lens plan](../in-progress/space-shaping-lens.md).
+> The simulation is **scale-physical**, not scale-independent; the score is **entropy-left**, not
+> ship-time or move count; and **launch may be removed** (continuous edition under review). Kept as
+> the historical record of the POC plus the physics and architecture that still stand.
+
 **Related:** [Spike (smallest testable version)](space-shaping-spike.md) · [Reframing and variations](../backlog/gameplay/space-shaping-future.md) · [Integration into the game](../backlog/gameplay/space-shaping-integration.md) · [View frame (bubble window)](universe-bubble-window.md) · [Sector generation](universe-sector-generation.md) · [Parked: planet route drawing](../parked/planet-route-drawing.md)
 
 **Wiring rule:** the grid visualization, the prediction line, the ship, and the sources are authored in the scene/prefab and referenced through serialized fields. No runtime `AddComponent`, `GetComponent`, `FindObjectsByType`, or hierarchy/mesh/asset creation. Follow the SerializeField wiring rules in the project `AGENTS.md`.

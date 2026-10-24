@@ -3,7 +3,7 @@
 **Status:** backlog - design only (sketch). The largest and last slice; after the
 [POC](../../done/space-shaping.md) proves the feel.
 
-**Related:** [Spike](../../done/space-shaping-spike.md) · [POC](../../done/space-shaping.md) · [Reframing and variations](space-shaping-future.md) · [View frame](../../done/universe-bubble-window.md) · [Sector generation](../../done/universe-sector-generation.md)
+**Related:** [Spike](../../done/space-shaping-spike.md) · [POC](../../done/space-shaping.md) · [Variations](space-shaping-future.md) · [View frame](../../done/universe-bubble-window.md) · [Sector generation](../../done/universe-sector-generation.md)
 
 **Wiring rule:** authored scene/prefab objects and serialized refs only. When the legacy
 flow is removed, delete its scene objects and components — do not leave them disabled.
@@ -44,17 +44,18 @@ Delete (not disable) the pieces the reframing drops:
 
 ### 3.3 Keep and reuse
 
-- The universe frame (Map/Sculpt) from
-  [view frame](../../done/universe-bubble-window.md).
+- The one-view universe frame + the cube level selector (campaign menu) from
+  [progression](../../design/progression.md) and [view frame](../../done/universe-bubble-window.md).
 - Structured system layout from
   [sector generation](../../done/universe-sector-generation.md).
-- The planet prefab visual, the XR rig/hands, and the two-hand gesture.
+- The planet prefab visual, the XR rig/hands, and the cube's two-hand scale gesture.
 - The existing route line/path-follower rendering conventions for the trajectory.
 
 ### 3.4 Scene and flow
 
-- `Game.unity`: remove the legacy route/hub wiring; add the derived spacetime grid
-  visualization, source editing, the prediction line, and the puzzle controller.
+- `Game.unity`: remove the legacy route/hub wiring; add the cube/zone scale, the derived
+  spacetime grid, the prediction line, the entropy bar (eco rating), and the puzzle
+  controller.
 - Flow states: a puzzle lifecycle replacing `GameStartState` / `EditionState` /
   `NewRoundState` / `GameEndState` as needed. Follow `_Modules/docs/standards/modes.md`
   for what is a Flow state vs a mode.
@@ -62,25 +63,28 @@ Delete (not disable) the pieces the reframing drops:
 ### 3.5 Save / load
 
 - Store: puzzle identity or seed, source state (planet positions, strengths, and any
-  wells), and the per-puzzle score. The field and grid are derived.
+  wells), the window `[Tmin, Tmax]`, the launch speed (the narrative fuel), the entropy
+  budget/par, and the per-puzzle entropy score. The field and grid are derived.
 - The legacy snapshot schema is dropped. Prefer reset-to-fresh over migration, as in the
   parked [planet route drawing](../../parked/planet-route-drawing.md) plan.
 
 ### 3.6 UI
 
-- Per-puzzle score, reset, and next-puzzle affordances.
+- The entropy bar (eco rating), the window readout, reset, and next-puzzle affordances.
 - Remove route/resource panels.
 
 ### 3.7 Level pipeline
 
 - Editor-authored puzzles (primary) plus the seed-based creator (ship count, planet
   density, force variation) from
-  [reframing §4](space-shaping-future.md).
+  [variations §3](space-shaping-future.md).
 
 ## 4. Non-goals
 
-- Multi-ship and multi-destination (see
-  [reframing §3](space-shaping-future.md)); integration can land single-ship first.
+- Simultaneous multi-ship (see
+  [variations §2.1](space-shaping-future.md)); integration lands single-ship first. A
+  sequential **loop route** (multi-destination) is in scope — see
+  [project direction](../../design/project-direction.md) §3.
 - Streaming and galaxies beyond what Map View needs.
 - Final art/audio polish.
 
@@ -93,12 +97,12 @@ Delete (not disable) the pieces the reframing drops:
 
 **Exit:** the game boots into one space-shaping puzzle and can be solved and scored.
 
-### I1 — Map / Sculpt wiring
+### I1 — Universe / level-selector wiring
 
-- Wire the frame as Map/Sculpt over the real scene; the derived grid visualization,
-  source editing, and the prediction line in `Game.unity`.
+- Wire the one-view universe frame and the cube level selector over the real scene; the
+  derived grid visualization, the cube/zone scale, and the prediction line in `Game.unity`.
 
-**Exit:** the player selects a sector in Map View and shapes its sources in Sculpt View.
+**Exit:** the player picks a cube, scales it up into the play space, and shapes its zone.
 
 ### I2 — Save / load + score
 
@@ -128,6 +132,6 @@ Delete (not disable) the pieces the reframing drops:
 1. **Replacement vs mode** (§2) — the gating decision.
 2. **What survives of the old game** — score/progression/menu, or a clean slate?
 3. **Snapshot policy** — reset legacy saves (assumed) or migrate.
-4. **Map View's role** — selection/navigation only, or does it carry the demand layer
-   ("desire lines")? That layer is undesigned.
+4. **Level selector's role** — selection only (pick a cube, solve, back out), or does it
+   also carry a "demand layer"? That layer is undesigned.
 5. **Sequencing** — land single-ship integration before multi-ship, or together.

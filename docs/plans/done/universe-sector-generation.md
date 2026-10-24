@@ -49,7 +49,7 @@ notes).
 Universe space (C) = Level local space, fixed
 Focus F            = C point shown at the view center
 View window        = cube of half-size viewRadius around F
-Aperture           = Map = wide, Sculpt = narrow (one frame, two apertures)
+Aperture           = the level selector's wide view vs a picked cube scaled up (one frame)
 UniverseBounds     = the bounded field extent (a fixed box), not room bounds
 ```
 
@@ -229,7 +229,7 @@ Remaining:
 - **Aperture - do not touch until it is forced.** `viewRadius` stays `1.2` and the field stays
   small on purpose: the current game works and looks right at that aperture. Raising it to the
   field's real-metre extent is a **trigger**, not a task - do it only when the gameplay content
-  comes from the field (the Map/Sculpt + [integration](../backlog/gameplay/space-shaping-integration.md)
+  comes from the field (the level selector + [integration](../backlog/gameplay/space-shaping-integration.md)
   work), because at a `12.5 m` aperture the existing room-local content shrinks to a ~2 cm speck.
   `minMiniScale = 0.02` caps the aperture at 14 m. Changing it before then buys nothing and breaks
   the current game.
@@ -320,7 +320,7 @@ deterministically, with no room-local placement for gameplay planets.
 | Parameter | Default |
 |---|---|
 | `fieldRadius` | bounded; tuned to the desired field size |
-| `viewRadius` | `1.2 m` in the current scene; re-baseline against the Map/Sculpt apertures |
+| `viewRadius` | `1.2 m` in the current scene; re-baseline against the level selector's aperture |
 | `cellSize` | `5 m` (`>= 2 * maxSectorRadius + gap`) |
 | `sectorDensity` | `0.55` |
 | `softSectorBudget` | `16` |
@@ -344,14 +344,14 @@ deterministically, with no room-local placement for gameplay planets.
 ## 11. Open issues
 
 Raised before G0/G1 and settled or handed off as noted. Items still open are owned by the
-[integration](../backlog/gameplay/space-shaping-integration.md) or Map/Sculpt work, not by this
+[integration](../backlog/gameplay/space-shaping-integration.md) or the level-selector work, not by this
 plan.
 
 | Issue | Outcome |
 |---|---|
-| **Units of content space** | **Settled: content space is real metres**, and the rig's parent scale/offset presents it (`UniverseContentRig.ApplyDisplayPose`). `viewRadius` is the **aperture**: Map = `fieldRadius`, Sculpt = one sector radius, so `MiniScale = miniBubbleRadius / viewRadius` fills the window with no new mechanism. `minMiniScale = 0.02` and `miniBubbleRadius = 0.28` cap the aperture at **14 m**. The wired field is deliberately *small* (`fieldRadius 1.8`) at the current aperture - see the hub's trigger note. |
+| **Units of content space** | **Settled: content space is real metres**, and the rig's parent scale/offset presents it (`UniverseContentRig.ApplyDisplayPose`). `viewRadius` is the **aperture**: the selector = `fieldRadius`, a picked cube = one sector radius, so `MiniScale = miniBubbleRadius / viewRadius` fills the window with no new mechanism. `minMiniScale = 0.02` and `miniBubbleRadius = 0.28` cap the aperture at **14 m**. The wired field is deliberately *small* (`fieldRadius 1.8`) at the current aperture - see the hub's trigger note. |
 | **Placement model** | **Done for destinations**: the field generates first and `SectorSelector` selects the active destinations from it, so positions have one source of truth. `HubsSpawner` stays room-local on purpose (integration deletes hubs). |
-| **Aperture ownership** | **Open, handed off.** Map = wide / Sculpt = narrow over one frame; `modes.md` says a view/camera/input mode is a Mode, not a Flow state. Does the aperture live on the view as a Mode, or as a field on the frame? Settle it when the content moves onto the field. |
+| **Aperture ownership** | **Open, handed off.** The selector is wide / a picked cube is narrow over one frame; `modes.md` says a view/camera/input mode is a Mode, not a Flow state. Does the aperture live on the view as a Mode, or as a field on the frame? Settle it when the content moves onto the field. |
 | **Save/load** | **Open, handed off.** The snapshot has to be rethought, not patched - seed + `generatorVersion` + which field planets are active. |
 | **Room placement** | **Settled for planets**: `MrukRoomLocalPlacement` no longer applies to gameplay planets (and `SyncFromSnapshot` registers hubs only). What survives for genuine room props is still open. |
 | **Hide band** | **Settled:** `SectorFieldSpawner.hideRadiusFactor` (`1.5`) hides field planets beyond that multiple of the scope, so a grown field does not render everything. |

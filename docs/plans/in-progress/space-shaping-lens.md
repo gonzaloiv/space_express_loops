@@ -18,11 +18,12 @@ The lens has **two gestures** (the design — [project direction](../../design/p
 | Gesture | Trigger | Effect | Changes |
 |---|---|---|---|
 | **The scale** *(L0)* | a two-hand pinch **inside** the cube | scales the space *and* the content: the metric stretches (a shrunk zone is a **shortcut**) and the planets **spread** and **grow** (mass ∝ radius) | travel time + the ship's clock |
-| **The region** *(act 2, like rotate)* | grab the cube's **edges / corners** | sets *where* you work: how much of the map the zone covers | — |
+| **The region** *(job 3)* | grab the cube's **edges / corners** | sets *where* you work — and you can scale **several** zones; the soft brush blends them | — |
 
-**L0 fixes the cube's size** (one region), so the only move is the scale. The **region** unlocks
-later, with rotate — and when it does, its size must stay **separate from the scale** (coupling
-them is the bug: a big scale would *be* a big region, and moving the cube would undo the scale).
+**L0 fixes the cube's size** (one region), so the only move is the scale. The **region**
+(multiple scales) unlocks at **job 3**, rotate at **job 4** — and the region's size must stay
+**separate from the scale** (coupling them is the bug: a big scale would *be* a big region, and
+moving the cube would undo the scale).
 
 Both effects change **time** — the game's hard resource — and the question is whether that loop
 has a goal, a cost, and a legible read.
@@ -30,7 +31,7 @@ has a goal, a cost, and a legible read.
 ## 2. Harness inherited, verb not
 
 - **Inherited (landed):** the determinism gate (`TrajectoryDeterminismTests`), the ship clock
-  (`TrajectoryResult.ShipTime`), the deadline (`PuzzleData.deadline`), the HUD harness, the
+  (`TrajectoryResult.ShipTime`), the window (`PuzzleData.deadline` → `Tmin`/`Tmax`), the HUD harness, the
   field/domain (`SpacetimeField`, `TrajectoryIntegrator`), the mesh read (`SpacetimeMeshView`).
 - **Not inherited: the puzzles.** They were verified under the *move* verb, with deadlines tuned
   to it; author fresh in L2.
@@ -60,53 +61,71 @@ The POC tests **the scale**. The cube is **fixed** (one region) and the planets 
 5. **The prediction on/off toggle** — Gate A's predict-then-reveal probe needs it, so it lands
    in **L0**, not L2.
 
+### Gate A prep — the window + one fresh puzzle
+
+6. **The window** — `PuzzleData` gains `[Tmin, Tmax]` (replaces `deadline`); `IsSolved` = arrived
+   **and** `Tmin ≤ shipTime ≤ Tmax`.
+7. **One fresh puzzle** — re-author one puzzle for the **scale** verb (*solved → deform*, see
+   [project direction](../../design/project-direction.md) §10), with a binding window. Gate A runs
+   on this, not the old move-verb puzzles.
+
 ### L1 — the game-feel pass
 
-6. **Launch / commit** + a flying ship (authored, follows the computed path).
-7. **A grade** — the **edit energy** (the eco rating) bucketed to stars; no move counts.
-8. **Job name** + per-attempt telemetry.
+8. **Ship travel** (no launch step) — the trajectory is recalculated live as you edit; when it
+   is right the ship travels (authored, follows the computed path) and the grade lands.
+9. **A grade** — the **entropy left** (the eco rating) bucketed to stars; no move counts.
+10. **Job name** + per-attempt telemetry.
 
 ### L2 — content
 
-9. **3–5 puzzles**, authored fresh as *solved → scramble* (see
-   [project direction](../../design/project-direction.md) §10), with a rising difficulty. **Jobs
-   1–2 fix the cube's size** (the scale only); **job 3+ unlocks resizing** the frame — the
-   [learning path](../../design/progression.md) §4.
+11. **The remaining 3–5 puzzles**, authored fresh as *solved → deform* (see
+    [project direction](../../design/project-direction.md) §10), with a rising difficulty. **Jobs
+    1–2 fix the cube's size** (the scale only); **job 3 unlocks multiple scales**, **job 4
+    rotate** — the [learning path](../../design/progression.md) §4.
 
 ## 4. Phases
 
 - **L0 (next):** the lens — the **scale**.
   **Exit:** the grab-inside scale changes the predicted path and ship-time; the mesh reads the
-  stretch; deadlines re-tuned.
+  stretch.
+- **Gate A prep:** the window + one fresh scale-verb puzzle.
+  **Exit:** one puzzle can be solved, failed on the window, and re-attempted under the scale verb.
 - **L1:** the game-feel pass.
-  **Exit:** a puzzle can be committed, watched, graded, and re-attempted.
+  **Exit:** a puzzle is shaped live; when the trajectory is right the ship travels, is graded,
+  and can be re-attempted.
 - **L2:** content + legibility.
   **Exit:** 3–5 puzzles with a real spread; the predict-then-reveal probe works.
+
+**First on-device milestone (the minimal cool slice).** Skip the campaign and ship **L0 + Gate A
+prep + the L1 travel/bar** on **one** puzzle: shape → auto-travel → grade → retry. That is enough
+to run Gate A *and* feel Gate B. Defer rotate, multiple scales, multi-ship, collapse feedback, and
+all polish until it passes.
 
 ## 5. Test plan
 
 Run seated, on device, hand-tracked, with a tester who has not read the docs. **Gate A** tests
-the puzzle; **Gate B** tests the game (needs L1). The **prediction toggle must land in L0** —
-Gate A needs it.
+the puzzle; **Gate B** tests the game (needs L1). Gate A needs the **prediction toggle** (L0) plus
+the **window** and **one fresh scale-verb puzzle** (Gate A prep) — the old move-verb puzzles are
+not used.
 
 ### Puzzle metrics (Gate A)
 
 1. **Solve rate** per puzzle.
 2. **Time-to-solve and edit count** before success.
 3. **The lens probe:** can the player predict how the cube scale changes the path and the clock?
-4. **Is the deadline binding?** Do they plan against it, or ignore it?
+4. **Is the window binding?** Do they plan against it, or ignore it?
 5. **Qualitative:** can they explain *why* their solution worked?
 
 ### Game metrics (Gate B, needs L1)
 
 6. **Retry after a non-perfect grade.**
-7. **Hesitation at commit.**
+7. **Hesitation before travel** — do they shape deliberately, or fiddle until it goes?
 8. **Does the clock land** (noticed slowing near mass)?
 9. **Wants another job.**
 
 ### The A/B that isolates the grade
 
-Run the same puzzle **twice**: live (no commit) and commit + flight + grade. If engagement does
+Run the same puzzle **twice**: live (no ship travel) and travel + grade. If engagement does
 not change, cut the grade.
 
 ## 6. Decision gates
@@ -115,9 +134,9 @@ not change, cut the grade.
 run**, and explain why → build L1 and run Gate B. Fail: they fiddle blindly and cannot predict →
 revisit the interaction.
 
-**Gate B — game (fun).** Requires L1. Pass: testers retry after a grade, hesitate at commit, and
-want the next job → **only Gate B justifies integration.** Fail: they solve once, mash Launch,
-and ignore the grade → fix the stakes, not the presentation.
+**Gate B — game (fun).** Requires L1. Pass: testers retry after a grade, hesitate before travel,
+and want the next job → **only Gate B justifies integration.** Fail: they solve once and ignore
+the grade → fix the stakes, not the presentation.
 
 ## 7. Defaults
 
@@ -125,9 +144,9 @@ and ignore the grade → fix the stakes, not the presentation.
 |---|---|
 | scene | `SpaceShapingPOC.unity` (lab) |
 | posture | seated, on device, hand tracking |
-| gestures | **grab-inside scale** (L0); the region (the frame) is act 2 |
+| gestures | **grab-inside scale** (L0); the region (multiple scales) is **job 3** |
 | dilation model | depth-only: `dτ = dt · clamp(1 + kΦ·Φ)` |
-| score | the **edit energy** (the eco rating) → stars; the field's assists are free |
+| score | the **entropy left** → stars; entropy = a per-job **budget** drained by the **scale interval**; assists are free |
 | puzzles | 3–5, rising difficulty |
 | success | Arrive **within the window** `[Tmin, Tmax]` |
 | deferred | rotate, black holes, one-view polish, integration, sectors |
@@ -137,7 +156,7 @@ and ignore the grade → fix the stakes, not the presentation.
 | Risk | Mitigation |
 |---|---|
 | Size vs scale coupling | The cube's size is the **region**; the **scale** is the grab-inside. Never derive the scale from the size. |
-| Scale = time is illegible | show the clock and the path before commit; the mesh must read the stretch |
+| Scale = time is illegible | show the clock and the path live (before travel); the mesh must read the stretch |
 | The cube is "just a group drag" | the metric stretch (L0.1) — not a content move |
 | Constraints cancel the zoom | exempt cube-scaled sources from `Separate`; scale `Home`/`MoveRange` (L0.1) |
 | Deadlines stop binding | re-tune them under the new verb — an explicit L0/L2 exit item |
@@ -149,37 +168,64 @@ and ignore the grade → fix the stakes, not the presentation.
 | Decision | Call |
 |---|---|
 | Deadline | A **window** `[Tmin, Tmax]` — arrive inside it, not "before T". |
-| Cube scale | **Costs energy** — the edit is the *paid* move (see Fuel). |
+| Cube scale | **Costs entropy** — the edit is the *paid* move (see Entropy). |
 | Launch speed | **Authored** per job — one lever. |
-| Fuel | **The edit energy** — the score (the eco rating). The field's natural assists are **free**. |
-| Score | The **energy spent** (the eco rating) vs the par; lower is greener. |
+| Fuel | **Narrative** — the job's *given* launch (a launch that would fail); shaping is what makes it land. Not a surfaced stat. |
+| Entropy | A per-job **budget**; each scale edit drains it by the **scale interval** (`Σ |Δscale|`). The score is the **entropy left** (the eco rating). Assists are free. |
+| Score | The **entropy left** vs the **entropy par** (the star target); less spent is greener. The time target is the **window**, not the par. |
 | Star-gating | **None** for now; revisit with the puzzle creator. |
-| Cube 1 | Hit a **target inside the par**. |
+| Cube 1 | Hit a **target inside the window**. |
 | Step-count cap (magnified zone) | **Raise `maxSteps` with the zone** — a sim-budget limit, not the score. |
 | Tunnelling (shrunk zone) | **Sweep the segment.** |
-| The scale's trigger | **Grab inside** the cube. (The **edges/corners** resize the frame — the region — but that is **act 2**, not L0.) |
+| The scale's trigger | **Grab inside** the cube. (The **edges/corners** resize the frame — the region — but that is **job 3**, not L0.) |
 | The spread | **Expected** — the scale spreads the planets; scale `Home`/`MoveRange`. |
 | Falloff width | Tune in the lab (test before fixing). |
 | Zone read | L0: the mesh warp; the planets visibly growing/shrinking (the scale). |
+| Multiple scales | **Core** (job 3) — several zones, the soft brush blends them; not a later unlock. |
+| Rotate | **Job 4** — the spin gesture (frame dragging). |
+| Grid legibility | Improve the mesh/lattice so the ripple (scale here → path shifts there) reads. |
+| Launch / commit | **Continuous + automatic** — no launch step or confirm. The trajectory is recalculated live; the ship travels on its own once the trajectory is right **and the player has stopped editing** (released the cube / idle). The grade locks at travel. |
 
-`PuzzleData` gains the **window** (`Tmin`/`Tmax`) and the **par** (the target time); `IsSolved`
-becomes "arrived **and** `Tmin ≤ shipTime ≤ Tmax`".
+### `PuzzleData` changes (Gate A prep + L1, for the implementing agent)
+
+- Remove `deadline` (float) — replaced by the **window** `Tmin` / `Tmax` (floats).
+- Remove `solutionMoves` (int) — dead; the score is entropy, not move count.
+- Add `launchSpeed` (float) — the job's **given** launch (the narrative "fuel": a launch that
+  would fail; shaping is what makes it land).
+- Add `entropyBudget` (float) — the per-job entropy **budget** (authored).
+- Add `entropyPar` (float) — the entropy target for the 1–3 star cut (or derive star thresholds
+  from `entropyBudget`).
+- `IsSolved` becomes: arrived **and** `Tmin ≤ shipTime ≤ Tmax`. Entropy left is carried in the
+  result for the grade.
+
+**Entropy cost = the scale interval.** Accumulate `Σ |Δscale|` while the pinch is held (per-frame,
+deterministic); subtract it from `entropyBudget`.
+
+- **Absolute value** — shrinking then growing costs twice (undoing is also work).
+- **Per-frame, while pinching** — oscillation is punished; a decisive single scale is cheap.
+- **Unweighted in L0** (one fixed cube); weight by zone volume when the region unlocks (job 3).
+
+**Entropy is a score, not a cap.** Overspending goes negative and is allowed — you pass the window
+with **1 star**; the collapse is the visual stake, not a fail (see
+[transport company](../../design/transport-company.md) §7).
 
 ## 10. What's deferred (not this slice)
 
-- **Rotate (frame dragging)** — the variety beat, act 2
-  ([relativity as gameplay](../../design/relativity-as-gameplay.md) §3.2).
-- **Black holes (event horizon)** — the stake, after the gate
+- **Rotate (frame dragging)** — now unlocked at **job 4**, not act 2
+  ([progression](../../design/progression.md) §4).
+- **Black holes (event horizon)** — still deferred
   ([relativity as gameplay](../../design/relativity-as-gameplay.md) §3.3).
-- **The region (resizing the cube)** — the act-2 unlock, like rotate. Its size must stay separate
-  from the scale.
+- **The collapse** — the core tension; the *visual* collapse (the field deforming as entropy drains)
+  lands with the entropy bar in L1; a *live* deforming field is a later build.
 - One-view polish, integration, sector generation.
 - `PuzzleData.solutionMoves` (dead) — remove it, consistent with "no move counts".
+
+The region / **multiple scales** is **core**, not deferred — see §9.
 
 ## 11. Readiness to start (2026-10-23)
 
 The design decisions are settled, the review's stale lines are fixed (the gestures table §1;
-"build the cube" §3 L0.2; the edit energy §7; the prediction toggle scoped into L0 §3 L0.5), and
+"build the cube" §3 L0.2; entropy §7; the prediction toggle scoped into L0 §3 L0.5), and
 the zone model is defined in §12 with its safety cases. L0's build list is unambiguous; it is now
 implemented — see §14.
 
@@ -229,23 +275,22 @@ removed.
   planets (positions about the zone centre) and grows their radius, with `Home`/`MoveRange`/
   `MaxScale` scaled so the constraints ride (`Constrain`).
 - **The mesh warp** — `SpacetimeMeshView` + `LatticeGrid.Warp` by the zone.
-- **The grab-inside scale** — `CubeScaleController` (a two-hand pinch sets the zone scale),
-  `TwoHandGestureInput` wired to the `OVRHands` hands, on a `Zone Gesture` object.
+- **The grab-inside scale** — `ZoneContentScaleListener` (a two-hand pinch on the zone's
+  `Grabbable`, `SelectingPointsCount >= 2`, drives `SpaceZoneView.SetScale`).
 - **The prediction toggle** — the line visibility + the `Predict` button on the Lab Panel.
 - **Planet drag removed** — the `Grabbable`s, colliders and `RangeA`/`RangeB` deleted; the planets
   are fixed.
 - **`Zone Cube`** authored as the region (fixed at rest; scale 1 → inert).
 
-**Ahead of L0 (act 2).** `CubeFrameController` (a single-hand corner drag → move + resize the
-region) is **built and wired**, though the doc defers the region to act 2. It does not disturb L0:
-the frame only sets `halfExtents`/`centre`; the scale stays separate (size ≠ scale holds). Keep it
-as the act-2 head start, or shelve it.
+**NOT built — the frame/region gesture (job 3).** `SpaceZoneView.SetFrame` exists (a plain
+setter), but nothing drives it from a gesture: the region is fixed by the scene Transform. The
+single-hand frame gesture (move + resize the region) is a job-3 build item, not a head start.
 
 **Nuance to confirm on device.** The scale is triggered by a **two-hand** pinch and the frame by a
 **single-hand** pinch, rather than a spatial "inside the cube" test — simpler and more robust, but
 worth a headset check against the §1 wording.
 
-**Not built.** The `PuzzleData` window `[Tmin, Tmax]` + par (`IsSolved`), and all of L1
-(launch/flight/edit-energy grade).
+**Not built.** **Gate A prep** (the `PuzzleData` window `[Tmin, Tmax]` + one fresh scale-verb
+puzzle), the entropy budget/par, and all of L1 (ship travel + flight + entropy grade).
 
 **Tests.** 61/61 EditMode — the zone transform, the spread/grow, and the session wiring.

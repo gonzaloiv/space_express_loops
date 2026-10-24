@@ -5,15 +5,16 @@ Plans are grouped by state. Move a plan between folders when its state changes.
 **Direction:** [project direction](../design/project-direction.md) — the **lens** (the cube):
 scale the space, scale the content; the ship flies the deformed spacetime.
 
-**Next:** the [lens plan](in-progress/space-shaping-lens.md) — spike **L0** (the lens
-interaction: cube size = the zone's space, content zoom = the planets' mass), then **L1**
-(launch + flight + grade), then **L2** (puzzles + prediction toggle).
+**Next:** the [lens plan](in-progress/space-shaping-lens.md) — **L0** (the lens/scale), then
+**L1** (flight + the entropy/eco grade; **continuous** — no launch step, the ship travels when the trajectory is right), then
+**L2** (puzzles + prediction toggle). Core: the **scale**; **multiple scales** land at job 3,
+**rotate** at job 4; the **score is entropy-left** (the window is the hard fail).
 
 ## In progress
 
 | Plan | State | Notes |
 |---|---|---|
-| [Space shaping — the lens (testing the mechanic)](in-progress/space-shaping-lens.md) | In progress | New. Tests the **lens** — the cube scale: resizing the cube stretches the local space (a shrunk zone is a shortcut). The planets are **fixed**; the content zoom is deferred to L0b. Inherits the parked test slice's harness. Next: L0, the cube scale. |
+| [Space shaping — the lens (testing the mechanic)](in-progress/space-shaping-lens.md) | In progress | Tests the **lens** — the cube scale (a shrunk zone is a shortcut); **multiple scales** are core (job 3), **rotate** at job 4. Score = **entropy-left** (the window is the hard fail). Inherits the parked test slice's harness. Next: L0/L1. |
 
 ## Backlog
 
@@ -21,8 +22,8 @@ interaction: cube size = the zone's space, content zoom = the planets' mass), th
 
 | Plan | State | Notes |
 |---|---|---|
-| [Space shaping — reframing and variations](backlog/gameplay/space-shaping-future.md) | Backlog (design only) | Recorded: Map/Sculpt views, simultaneous multi-ship, sequential multi-destination, level generation (editor + seed creator), minimum-move scoring. |
-| [Space shaping — integration into the game](backlog/gameplay/space-shaping-integration.md) | Backlog (design only) | Sketch: replace the current route/round/economy flow with the puzzle loop; scene, flow states, save/load, legacy removal. |
+| [Space shaping — variations](backlog/gameplay/space-shaping-future.md) | Backlog (design only) | Recorded: multi-ship cap, sequential loop route, level generation (editor + seed creator). Aligned: verb = the scale, score = entropy, one view. |
+| [Space shaping — integration into the game](backlog/gameplay/space-shaping-integration.md) | Backlog (design only) | Sketch: replace the legacy route/round/economy flow with the puzzle loop; cube/zone scale, entropy score, one view + level selector, loop route in scope. |
 
 ### Universe
 
@@ -36,6 +37,7 @@ interaction: cube size = the zone's space, content zoom = the planets' mass), th
 |---|---|---|
 | [TTS voice panel](backlog/presentation/tts-voice-panel-personality.md) | Backlog | Design only; camera-operator companion behavior for the TTS panel. |
 | [Hologram look](backlog/presentation/hologram-look.md) | Backlog | Design only; hologram pass for the bubble view first, then edition view (object-scoped). Independent of other work streams. |
+| [Space shaping — feel & presentation polish](backlog/presentation/space-shaping-feel.md) | Backlog (design only) | Collected feel beats after the gate: travel payoff, collapse feedback, window gauge + comedy, cargo personality. |
 
 ## Parked
 

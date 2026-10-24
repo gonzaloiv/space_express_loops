@@ -7,6 +7,11 @@ architecture: `Domain/` (Sources / Spacetime / Ship / Puzzle), `Data/` (`PuzzleD
 `SpaceShapingFlow`). The POC driver and the `LineRenderer` grid are gone. The game
 integration is tracked separately ([integration plan](../backlog/gameplay/space-shaping-integration.md)).
 
+> **Superseded in part (2026-10-24).** The lens build (L0) replaced source *editing* with the
+> **zone/cube scale** (`SpaceZone`, `CubeScaleController`, the `SpacetimeMeshView` warp) — see the
+> [lens plan](../in-progress/space-shaping-lens.md). `solutionMoves` / move-count scoring is dead
+> (the score is **entropy-left**). The Domain/Data/Views/Flow split still stands.
+
 **Related:** [POC](space-shaping.md) · [Reframing and variations](../backlog/gameplay/space-shaping-future.md) · [Integration into the game](../backlog/gameplay/space-shaping-integration.md) · [View frame](universe-bubble-window.md)
 
 ## 1. Why
