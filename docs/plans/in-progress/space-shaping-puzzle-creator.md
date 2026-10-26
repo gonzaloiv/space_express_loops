@@ -223,6 +223,11 @@ and the window, and save the variants.
   `sources`. `origin`/`destination` are **derived from `distance`** (±x); `captureRadius` moved to
   settings; `entropyPar` is gone (the star grade is a fraction of the budget — see §9). The builder
   sizes the cluster to fit `distance/2`, so the bake copies `seed.distance` exactly.
+- **The cube is sized from the run** — `PuzzleData.ZoneSize` (`distance³`) is the **one source of
+  truth** for the search's zone and the game's cube: `PuzzleSolutionSearch` builds its candidate zone
+  at `ZoneSize`, and `SpaceShapingState.ResetView` applies it to the frame on puzzle start
+  (`SpaceShapingView.SetZoneFrame`), so the baked solution reproduces in the headset. `ZoneGrabListener`
+  re-caches its rest size at each gesture start so the grab handle stays proportional.
 - **The endpoints assume a centred field.** `PuzzleData.Origin`/`Destination` are `(±distance/2, 0, 0)`,
   and `SectorShape` applies only a **yaw** (`SectorShape.cs:14`), so a straight ±x run passes through
   the cluster's centre. **Keep the field centred** (or place the endpoints from the cluster's bounds) —
@@ -274,6 +279,7 @@ and the window, and save the variants.
 | Pipeline | **Independent stages, one exported file each** (`PuzzleSeed → SectorShapeData → planets → start → PuzzleData`); each stage is re-runnable and hand-editable |
 | Artifact format | **`ScriptableObject` at the boundaries** (`PuzzleSeed`, the exported `SectorShapeData`, the final `PuzzleData`); **plain `[Serializable]`** for the in-memory domain payloads (`PuzzleFieldPlanet`, `PuzzleZone`, `PuzzleSimSettings`). Stage 1's artifact is currently a `SectorFieldData`; becomes `SectorShapeData` when §3's switch lands (§6 P0) |
 | Reachable scale range | Moved out of `ZoneGrabListener` into domain data (`PuzzleSimSettings`); the view reads the same source |
+| Cube size | **Baked from the run** (`PuzzleData.ZoneSize` = `distance³`) and applied on puzzle start, so the search's zone and the game's cube agree; the creator never bakes a solution the headset can't reproduce |
 | Field at load | **Never generated at load** — the field is baked into `PuzzleData`; the creator is authoring-only (the game never references the creator) |
 | Selection transition | The two-hand scale-out stays with the selection (separate; see §12) |
 | Solution search | **Search-and-test** — enumerate, forward-simulate, keep an arriving set (no inversion) |
@@ -322,6 +328,10 @@ and the window, and save the variants.
 - **Movement / reframe step kinds** (job 3) and **rotate** (job 4).
 - **Solution conditions** (`translatable`, `moves`) — the idea lives in §2 / §7 / §9, not built. The
   search extension and the runtime cube lock come after the scale-only path proves.
+- **Density / the run corridor** — the field fills the run, so a dense cluster blocks the straight
+  start (and no scale arrives); keeping the **run axis clear** (rotate the field so the run passes
+  through its widest gap, and/or drop corridor planets) is what lets `planetCount` rise. Deferred
+  (next steps).
 - **The per-job progression mapping** — the seed is three fields (`seed`, `distance`, `planetCount`);
   the stage lives in [progression](../../design/systems/progression.md) §4.
 - **Generating at load** — **decided against** (§9): the field is baked, never generated at runtime.
@@ -335,11 +345,13 @@ and the window, and save the variants.
 **Read first:** this plan (§2–§9), the [puzzle data model](#7-data-model), and the global/project
 `AGENTS.md` rules. Then work the tasks in order; each is small and independently verifiable.
 
-**Status (2026-10-26):** Task 1 (P0) and Task 2 (P1) are done, and P2/P3 are done — the
-`SectorShape.Generate` path, the stage artifacts (`PuzzleShapeAsset`, `PuzzlePlanetListAsset`),
-`PuzzleVerifier`, `PuzzleSolutionSearch` (+ `Find`), `PuzzleFieldBake.BakeVariants`, and the window's
-Export shape / Export planets / Bake variants buttons. 40/40 EditMode tests green. **Still open:** P4
-(the full window) and the §2 solution conditions.
+**Status (2026-10-26):** **all phases P0–P4 are done** — the `SectorShape.Generate` path, the stage
+artifacts (`PuzzleShapeAsset`, `PuzzlePlanetListAsset`), `PuzzleVerifier`, `PuzzleSolutionSearch`
+(+ `Find`), `PuzzleFieldBake.BakeVariants` (with a `PuzzleBakeStatus` diagnostic and seed resampling via
+`PuzzleSeedScanner`), the cube-size bake (`PuzzleData.ZoneSize` applied on start), and the creator
+window (Export shape / Export planets / Generate + preview / Find working seed / Save variants).
+41/41 EditMode tests green. **Still open:** the §2 solution conditions (`translatable`, `scalable`,
+`moves`) and the **density / run corridor** (§12).
 
 **Where things live:** game `DigitalLove.Game.SpaceShaping` (runtime loop, `PuzzleData`,
 `SpaceShapingSession`, `SpaceShapingSettings`); authoring `DigitalLove.Game.SpaceShaping.Creator`

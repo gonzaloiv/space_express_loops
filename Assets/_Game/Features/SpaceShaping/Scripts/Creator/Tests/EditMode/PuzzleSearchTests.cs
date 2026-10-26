@@ -50,6 +50,16 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
+        public void FoundZone_CoversTheField()
+        {
+            float outer = 0f;
+            for (int i = 0; i < puzzle.sources.Length; i++)
+                outer = Mathf.Max(outer, puzzle.sources[i].home.magnitude + puzzle.sources[i].scale * 0.5f);
+
+            Assert.Greater(solution.Zones[0].size.x * 0.5f, outer);
+        }
+
+        [Test]
         public void Verify_OverBudget_IsNotSolved()
         {
             puzzle.solution = solution.Zones;

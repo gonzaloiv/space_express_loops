@@ -2,12 +2,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public struct PuzzleVerification
     {
-        public TrajectoryOutcome StartOutcome;
-        public TrajectoryOutcome SolvedOutcome;
-        public float ShipTime;
+        public TrajectoryResult Start;
+        public TrajectoryResult SolvedRun;
         public float EntropySpent;
         public bool Solved;
 
-        public bool StartFails => StartOutcome != TrajectoryOutcome.Arrive;
+        public TrajectoryOutcome StartOutcome => Start.Outcome;
+
+        public TrajectoryOutcome SolvedOutcome => SolvedRun.Outcome;
+
+        public float ShipTime => SolvedRun.ShipTime;
+
+        public bool StartFails => Start.Outcome != TrajectoryOutcome.Arrive;
     }
 }

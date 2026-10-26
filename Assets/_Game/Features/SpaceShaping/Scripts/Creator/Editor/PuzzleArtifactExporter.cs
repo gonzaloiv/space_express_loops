@@ -1,4 +1,3 @@
-using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,7 +5,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 {
     public static class PuzzleArtifactExporter
     {
-        private const string GeneratedFolder = "Assets/_Game/Features/SpaceShaping/Generated";
+        private const string SpaceShapingFolder = "Assets/_Game/Features/SpaceShaping";
+        private const string GeneratedName = "Generated";
+        private const string GeneratedFolder = SpaceShapingFolder + "/" + GeneratedName;
 
         public static PuzzleShapeAsset ExportShape(PuzzleSeed seed, SpaceShapingSettings settings) =>
             Write(PuzzleArtifactFactory.Shape(seed, settings), $"{seed.name}_Shape");
@@ -14,22 +15,27 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         public static PuzzlePlanetListAsset ExportPlanets(PuzzleShapeAsset shape) =>
             Write(PuzzleArtifactFactory.Planets(shape), $"{shape.name}_Planets");
 
-        public static PuzzleData[] ExportVariants(
-            PuzzlePlanetListAsset planets, SpaceShapingSettings settings, float windowTightness, int variants)
+        public static void SaveVariants(PuzzleData[] variants, string name)
         {
-            PuzzleData[] baked = PuzzleFieldBake.BakeVariants(
-                planets, PuzzleSimSettings.From(settings), windowTightness, variants);
-            for (int i = 0; i < baked.Length; i++)
-                Write(baked[i], $"{planets.name}_Puzzle_{i + 1}");
-
-            return baked;
+            for (int i = 0; i < variants.Length; i++)
+                Write(variants[i], $"{name}_Puzzle_{i + 1}");
         }
 
         private static T Write<T>(T asset, string name) where T : ScriptableObject
         {
             EnsureFolder();
             string path = $"{GeneratedFolder}/{name}.asset";
-            AssetDatabase.DeleteAsset(path);
+            T existing = AssetDatabase.LoadAssetAtPath<T>(path);
+            if (existing == asset)
+            {
+                EditorUtility.SetDirty(asset);
+                AssetDatabase.SaveAssets();
+                return asset;
+            }
+
+            if (existing != null)
+                AssetDatabase.DeleteAsset(path);
+
             AssetDatabase.CreateAsset(asset, path);
             AssetDatabase.SaveAssets();
             return asset;
@@ -37,11 +43,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         private static void EnsureFolder()
         {
-            if (Directory.Exists(GeneratedFolder))
-                return;
-
-            Directory.CreateDirectory(GeneratedFolder);
-            AssetDatabase.Refresh();
+            if (!AssetDatabase.IsValidFolder(GeneratedFolder))
+                AssetDatabase.CreateFolder(SpaceShapingFolder, GeneratedName);
         }
     }
 }

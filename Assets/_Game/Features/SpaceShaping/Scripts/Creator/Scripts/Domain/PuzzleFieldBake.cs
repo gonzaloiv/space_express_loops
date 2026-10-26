@@ -16,19 +16,37 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         }
 
         public static PuzzleData[] BakeVariants(
-            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, float windowTightness, int variants)
+            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, float windowTightness, int variants) =>
+            BakeVariants(planets, settings, windowTightness, variants, out _);
+
+        public static PuzzleData[] BakeVariants(
+            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, float windowTightness, int variants,
+            out PuzzleBakeStatus status)
         {
             PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
             Apply(field, planets, settings);
+            PuzzleData[] baked = BakeField(field, settings, windowTightness, variants, out status);
+            Object.DestroyImmediate(field);
+            return baked;
+        }
+
+        private static PuzzleData[] BakeField(
+            PuzzleData field, PuzzleSimSettings settings, float windowTightness, int variants,
+            out PuzzleBakeStatus status)
+        {
+            status = PuzzleBakeStatus.StartNotMiss;
             if (!StartMisses(field, settings))
+                return System.Array.Empty<PuzzleData>();
+
+            PuzzleSolution[] solutions = PuzzleSolutionSearch.Find(field, settings, SearchSamples, variants);
+            if (solutions.Length == 0)
             {
-                Object.DestroyImmediate(field);
+                status = PuzzleBakeStatus.NoSolution;
                 return System.Array.Empty<PuzzleData>();
             }
 
-            PuzzleSolution[] solutions = PuzzleSolutionSearch.Find(field, settings, SearchSamples, variants);
             List<PuzzleData> baked = BakeEach(field, solutions, windowTightness, settings);
-            Object.DestroyImmediate(field);
+            status = baked.Count > 0 ? PuzzleBakeStatus.Baked : PuzzleBakeStatus.Unverified;
             return baked.ToArray();
         }
 

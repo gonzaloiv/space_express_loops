@@ -17,5 +17,7 @@ namespace DigitalLove.Game.SpaceShaping
         public Vector3 Origin => new(distance * -0.5f, 0f, 0f);
 
         public Vector3 Destination => new(distance * 0.5f, 0f, 0f);
+
+        public Vector3 ZoneSize => new(distance, distance, distance);
     }
 }

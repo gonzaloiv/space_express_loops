@@ -15,9 +15,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             return new PuzzleVerification
             {
-                StartOutcome = startResult.Outcome,
-                SolvedOutcome = solvedResult.Outcome,
-                ShipTime = solvedResult.ShipTime,
+                Start = startResult,
+                SolvedRun = solvedResult,
                 EntropySpent = solved.EntropySpent,
                 Solved = solved.IsSolved(solvedResult) && solved.EntropySpent <= setup.EntropyBudget
             };

@@ -113,6 +113,8 @@ namespace DigitalLove.Game.SpaceShaping
         private void BeginGesture()
         {
             classified = true;
+            restZoneSize = zone.Size;
+            restGrabScale = transform.localScale;
             frameGrab = !InsideContent(HandWorld());
             grabOffset = zone.Centre - HandLocal();
         }

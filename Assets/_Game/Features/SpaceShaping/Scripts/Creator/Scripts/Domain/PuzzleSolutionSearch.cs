@@ -24,7 +24,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleData puzzle, PuzzleSimSettings settings, int samples, int max)
         {
             List<PuzzleSolution> found = new();
-            Vector3 size = Vector3.one * puzzle.distance;
+            Vector3 size = puzzle.ZoneSize;
             int count = Mathf.Max(MinSamples, samples);
             for (int i = 0; i < count && found.Count < max; i++)
             {

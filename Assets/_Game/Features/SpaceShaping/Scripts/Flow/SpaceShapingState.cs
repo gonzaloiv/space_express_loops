@@ -28,7 +28,7 @@ namespace DigitalLove.Game.SpaceShaping
         public void ResetPuzzle()
         {
             wasScaling = false;
-            view.ResetZone();
+            ResetView();
             session.Reset();
             ship.Reset(session.Origin);
             PushField();
@@ -87,10 +87,16 @@ namespace DigitalLove.Game.SpaceShaping
             ship.Travel(PushField());
         }
 
+        private void ResetView()
+        {
+            view.ResetZone();
+            view.SetZoneFrame(puzzles[puzzleIndex].ZoneSize);
+        }
+
         private void StartPuzzle()
         {
             wasScaling = false;
-            view.ResetZone();
+            ResetView();
             session = new SpaceShapingSession(BuildSetup());
             ship.Reset(session.Origin);
             PushField();
