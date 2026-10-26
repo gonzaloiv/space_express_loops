@@ -78,6 +78,8 @@ makes a small game stick.
 - **Externalised costs.** A cheap route that grazes an inhabited world, or a crew put in a time
   well, as a social/human price hidden from the ledger.
 - **The tech team as characters.** They built the Wrap and roll their eyes at the slogan.
+- **Per-job launch (the narrative fuel).** Once the launch is per-job, each job's *given* launch
+  becomes a story beat — a launch that would fail, made to land.
 
 ## Open questions
 

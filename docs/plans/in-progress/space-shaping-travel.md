@@ -1,7 +1,7 @@
 # Space Shaping — Travel on Every Modification
 
-**Status:** now · space shaping · updated 2026-10-26 — launch on every committed pinch: no commit
-step, no idle trigger, no prediction line.
+**Status:** now · space shaping · updated 2026-10-26 — **shipped** (launch on every committed pinch;
+no idle trigger, no prediction line, HUD verdict at flight end); §5 is the deferred polish.
 
 **Related:** [core loop](../../design/core-loop.md) §1–§2 · [resources](../../design/systems/resources.md) ·
 [the cube](../../design/systems/cube.md) · [puzzle creator](space-shaping-puzzle-creator.md)
@@ -31,7 +31,7 @@ launches the ship along the resulting trajectory. The lab currently launches on 
 ## 3. Scope
 
 - `SpaceShapingState.LateUpdate`: launch on the committed pinch (`wasScaling` → `CommitPreview`),
-  not on solved-and-idle. Remove `travelIdleSecs` (dead).
+  not on solved-and-idle; `travelIdleSecs` removed. **Shipped.**
 - `ShipTravelView`: launch per modification; a new launch **interrupts** the current flight; restart
   from the origin.
 - **Remove the prediction:** delete `TrajectoryPredictionView` and the **Predict** button/toggle
@@ -53,6 +53,7 @@ launches the ship along the resulting trajectory. The lab currently launches on 
 | After a fail | **Keep shaping** — the launch is only a check. |
 | Surfacing | Pass / fail / grade on the **HUD**. |
 | Prediction | **Removed** — update the trajectory visual at launch only. |
+| HUD verdict | **At flight end** — the readout is written when the ship finishes its run (arrive, miss or crash); live shaping and the flight itself never write it. |
 
 ## 5. Deferred
 

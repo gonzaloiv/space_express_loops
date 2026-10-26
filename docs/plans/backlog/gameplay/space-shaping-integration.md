@@ -61,7 +61,7 @@ Delete (not disable) the pieces the reframing drops:
 ### 3.4 Scene and flow
 
 - `Game.unity`: remove the legacy route/hub wiring; add the cube/zone scale, the derived
-  spacetime grid, the prediction line, the entropy bar (eco rating), and the puzzle
+  spacetime grid (flat until the player scales), the entropy bar (eco rating), and the puzzle
   controller.
 - Flow states: a puzzle lifecycle replacing `GameStartState` / `EditionState` /
   `NewRoundState` / `GameEndState` as needed. Follow `_Modules/docs/standards/modes.md`
@@ -125,7 +125,8 @@ puzzle loop, not scenery.
 ### I1 — Universe / level-selector wiring
 
 - Wire the one-view universe frame and the cube level selector over the real scene; the
-  derived grid visualization, the cube/zone scale, and the prediction line in `Game.unity`.
+  derived grid visualization (flat until the player scales), the cube/zone scale, and the
+  entropy bar in `Game.unity`.
 
 **Exit:** the player picks a cube, scales it up into the play space, and shapes its zone.
 

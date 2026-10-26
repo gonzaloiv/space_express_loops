@@ -27,8 +27,8 @@ than incidental.** Structure them asymmetrically:
 | **Entropy** | the **Wrap's** cost — the modifications | the **eco rating** (pay) | soft (lower score) |
 
 - **Time = the window.** Relativity: the ship's proper-time clock ([relativity](relativity.md)).
-- **Fuel = the job's brief.** The launch fuel you are *given*; make it work, or the money does not
-  add up. Fixed per job, not a lever.
+- **Fuel = the brief.** The launch you are *given*; make it work, or the money does not add up. Not a
+  lever. **Global for now** (`SpaceShapingSettings.launchSpeed`); per-job is deferred.
 - **Entropy = the score.** Every **modification** burns it; the grade is the entropy you *did not*
   spend. **Retrying is free** — only modifications cost.
 - **Reading the field reconciles them** — the field's natural assists are *free*, so you can edit
@@ -81,8 +81,9 @@ This is the design insight: *the resource and the mechanic justify each other.*
 - `entropy` = a per-job **budget**. Each modification drains it; the grade is the entropy **left**.
 - **The bar and the star par come from the puzzle creator:** the budget is based on the **number of
   modifications** the level's solution needs, and the creator derives it ([puzzle creator](../../plans/in-progress/space-shaping-puzzle-creator.md)).
-- `fuel` = the job's **given** launch (authored per job) → the launch speed. **Narrative, not a
-  stat**: the launch is fixed — a launch that would *fail* — and shaping is what makes it land.
+- `fuel` = the **given** launch → the launch speed. **Narrative, not a stat**: the launch is fixed — a
+  launch that would *fail* — and shaping is what makes it land. **Global for now**; per-job is
+  deferred.
 - `time = Σ dτ` — proper time accumulated in `TrajectoryIntegrator`, carried in `TrajectoryResult`.
 - Per job: arrive inside `[Tmin, Tmax]` (hard) and be graded on entropy left (stars / eco rating).
 

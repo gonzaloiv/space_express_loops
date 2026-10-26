@@ -18,8 +18,9 @@ namespace DigitalLove.Game.SpaceShaping
 
         private SpaceShapingSession session;
         private int puzzleIndex;
-        private TrajectoryResult? lastResult;
+        private TrajectoryResult launched;
         private bool wasScaling;
+        private bool flying;
 
         public override void Enter()
         {
@@ -47,6 +48,7 @@ namespace DigitalLove.Game.SpaceShaping
             }
 
             TrackGesture();
+            TrackFlight();
         }
 
         private void TrackGesture()
@@ -64,40 +66,51 @@ namespace DigitalLove.Game.SpaceShaping
             }
 
             if (view.HasChanged())
-                Push();
+                PushField();
+        }
+
+        private void TrackFlight()
+        {
+            bool isFlying = ship.IsFlying;
+            if (flying && !isFlying && !view.IsScaling)
+                hud.Render(BuildReadout(launched, true));
+
+            flying = isFlying;
         }
 
         private void BeginScale()
         {
             session.PreviewZone(view.Zone);
             wasScaling = true;
-            Push();
+            PushField();
         }
 
         private void CommitScale()
         {
             wasScaling = false;
             session.CommitPreview();
-            Push();
-            ship.Travel(lastResult.Value);
+            launched = PushField();
+            ship.Travel(launched);
         }
 
         private void StartPuzzle()
         {
             wasScaling = false;
+            flying = false;
             view.ResetZone();
             session = new SpaceShapingSession(BuildSetup());
             ship.Reset(session.Origin);
-            Push();
+            hud.Render(BuildReadout(PushField(), false));
         }
 
         private void ResetPuzzle()
         {
             wasScaling = false;
+            flying = false;
             view.ResetZone();
             session.Reset();
             ship.Reset(session.Origin);
-            Push();
+            hud.Render(BuildReadout(PushField(), false));
         }
 
         private void NextPuzzle()
@@ -106,30 +119,29 @@ namespace DigitalLove.Game.SpaceShaping
             StartPuzzle();
         }
 
-        private void Push()
+        private TrajectoryResult PushField()
         {
             view.ApplyFromSession(session);
 
             SpacetimeField field = session.BuildField();
             TrajectoryResult result = session.Simulate(field, integrator, launch);
-            lastResult = result;
-            view.Render(field, session.Zones);
+            view.Render(session.Zones);
             view.Snapshot();
-            hud.Render(BuildReadout(result));
+            return result;
         }
 
-        private ShapingReadout BuildReadout(TrajectoryResult result)
+        private ShapingReadout BuildReadout(TrajectoryResult result, bool verified)
         {
             PuzzleData puzzle = puzzles[puzzleIndex];
-            float entropyLeft = puzzle.entropyBudget - session.EntropySpent;
             return new ShapingReadout
             {
                 PuzzleName = puzzle.name,
+                Verified = verified,
                 Outcome = result.Outcome,
                 ShipTime = result.ShipTime,
                 Tmin = puzzle.tmin,
                 Tmax = puzzle.tmax,
-                EntropyLeft = entropyLeft,
+                EntropyLeft = puzzle.entropyBudget - session.EntropySpent,
                 Stars = session.Grade(),
                 Scale = view.Zone.Scale,
                 Solved = session.IsSolved(result),

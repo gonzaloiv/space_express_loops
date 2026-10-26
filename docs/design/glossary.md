@@ -23,7 +23,7 @@ One term per idea. In-game copy uses the plain terms; the physics names stay int
 | **eco rating** | The flavour name for the entropy grade (stars). |
 | **the window** | `[Tmin, Tmax]` — the ship-time band the delivery must arrive inside. |
 | **the ship's clock** | Ship proper time; slows deep in a well. |
-| **fuel** | The job's *given* launch (the brief) — not a player lever. |
+| **fuel** | The launch you are *given* (the brief) — not a player lever. **Global for now**; per-job later. |
 | **spin** | The surfaced word for a rotating source (frame dragging). |
 | **stars** | The 1–3 grade from entropy left. |
 | **the field** | The derived acceleration/potential the ship flies through. |

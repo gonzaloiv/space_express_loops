@@ -73,20 +73,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void Layout_KeepsEndpointsClearOfTheCluster()
+        public void Cluster_FitsInsideTheRun()
         {
             PuzzleSeed seed = Seed();
             SpaceShapingSettings settings = Settings();
             PuzzleFieldPlanet[] planets = Planets(seed, settings);
-            PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
-            puzzle.distance = PuzzleFieldLayout.RunLength(planets, seed.distance, settings.captureRadius);
+            float half = seed.distance * 0.5f;
 
             for (int i = 0; i < planets.Length; i++)
-            {
-                float clearance = planets[i].radius + settings.captureRadius;
-                Assert.Greater((planets[i].position - puzzle.Origin).magnitude, clearance);
-                Assert.Greater((planets[i].position - puzzle.Destination).magnitude, clearance);
-            }
+                Assert.Less(planets[i].position.magnitude + planets[i].radius + settings.captureRadius, half);
         }
 
         [Test]
@@ -100,7 +95,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
             PuzzleFieldPlanet[] planets = Planets(seed, settings);
             Assert.AreEqual(planets.Length, puzzle.sources.Length);
-            Assert.GreaterOrEqual(puzzle.distance, seed.distance);
+            Assert.AreEqual(seed.distance, puzzle.distance, 1e-4f);
 
             for (int i = 0; i < planets.Length; i++)
             {

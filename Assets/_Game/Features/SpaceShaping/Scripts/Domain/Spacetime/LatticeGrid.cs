@@ -17,17 +17,12 @@ namespace DigitalLove.Game.SpaceShaping
             return new Vector3(Lerp(min.x, max.x, b), Lerp(min.y, max.y, c), Lerp(min.z, max.z, a));
         }
 
-        public static Vector3 Warp(
-            Vector3 node, SpacetimeField field, float scale, float maxDisplacement, IReadOnlyList<SpaceZone> zones)
+        public static Vector3 Warp(Vector3 node, IReadOnlyList<SpaceZone> zones)
         {
-            Vector3 pull = field.Pull(node) * scale;
-            if (pull.sqrMagnitude > maxDisplacement * maxDisplacement)
-                pull = pull.normalized * maxDisplacement;
-
-            Vector3 warped = node + pull;
             if (zones == null)
-                return warped;
+                return node;
 
+            Vector3 warped = node;
             for (int i = 0; i < zones.Count; i++)
             {
                 SpaceZone zone = zones[i];

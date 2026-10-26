@@ -10,13 +10,13 @@ scale the space, scale the content; the ship flies the deformed spacetime.
 
 | Plan | Area | Why here |
 |---|---|---|
-| [Space shaping — puzzle creator](in-progress/space-shaping-puzzle-creator.md) | space shaping | Seed → verified `PuzzleData` variants, editor/offline. The `SectorField → SourceSpec` bridge and the field-region → puzzle mapping. |
-| [Space shaping — travel on every modification](in-progress/space-shaping-travel.md) | space shaping | Replace the solved-and-idle travel trigger with travel on every modification (no commit); pass / fail / free retry. |
+| [Space shaping — puzzle creator](in-progress/space-shaping-puzzle-creator.md) | space shaping | Seed → verified `PuzzleData` variants, editor/offline. Builds its own `SectorShapeData`; the `PuzzleFieldPlanet → PuzzleSource` bridge. |
+| [Space shaping — travel on every modification](in-progress/space-shaping-travel.md) | space shaping | **Shipped** — launch on every committed pinch; only the §5 HUD decision is open. |
 
 ## Next
 
 The runway after Now: the **device gate** (the gate criteria are in
-[vision](../design/vision.md) §12), then — only if it passes — integration.
+[vision](../design/vision.md) §7), then — only if it passes — integration.
 
 | Plan | Area | Why here |
 |---|---|---|

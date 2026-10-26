@@ -47,8 +47,8 @@
   <Project Path="DigitalLove.Game.UI.csproj" />
   <Project Path="DigitalLove.Game.Sectors.csproj" />
   <Project Path="DigitalLove.Casual.Analytics.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.Creator.csproj" />
   <Project Path="DigitalLove.Timeline.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Creator.csproj" />
   <Project Path="DigitalLove.HomeMenu.csproj" />
   <Project Path="DigitalLove.FlowControl.Samples.csproj" />
   <Project Path="DigitalLove.Casual.Levels.csproj" />

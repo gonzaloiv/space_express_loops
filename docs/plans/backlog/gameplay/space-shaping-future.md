@@ -16,7 +16,9 @@ hierarchy building.
 - **One view, one instrument.** The cube is the tool and the level. There is no Map/Sculpt
   split (see [vision](../../../design/vision.md) §4).
 - **The verb is the scale.** The player scales zones (space + content); the field, grid and
-  trajectory are derived.
+  trajectory are derived. The grid is the *record of the player's zones*: it starts flat and warps
+  only where a zone is applied — the planets' own wells are not drawn, so a bend always reads as
+  something the player did ([cube](../../../design/systems/cube.md)).
 - **The score is entropy.** A per-job budget drained by the scale interval; the grade is
   entropy left. No move counts.
 
@@ -96,7 +98,7 @@ star thresholds (entropy par) are set from the secured solution's cost.
 
 - Source state is **baked into the puzzle asset** at author time (the seed generates the field
   offline — see the [puzzle creator](../../in-progress/space-shaping-puzzle-creator.md)); the field
-  and grid are derived from the stored positions, not stored separately.
+  is derived from the stored positions, and the grid from the player's zones — neither is stored.
 - Mass is coupled to size for now (`mass ∝ radius`); a later element could decouple them (a
   small heavy planet).
 - Each ship carries origin, ordered destinations, and its launch — the existing

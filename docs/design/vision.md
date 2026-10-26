@@ -35,8 +35,8 @@ Build status lives on the [plans board](../plans/README.md); this doc does not t
    field-warp).
 3. **Scale the space and the content together.** One gesture does both; the region is the
    second gesture (job 3), rotate the third (job 4). The field is derived, never edited.
-4. **One hard fail, one score.** Time is the window; entropy is the eco grade (the fuel is the
-   job's given launch).
+4. **One hard fail, one score.** Time is the window; entropy is the eco grade (the launch is given,
+   not a lever).
 5. **Discrete jobs.** ~1 minute each; a **10-minute experience**, about **8–10 levels**.
    Nothing live-ticking.
 6. **Relativity is the language.** Not a skin — the cube instruments it.

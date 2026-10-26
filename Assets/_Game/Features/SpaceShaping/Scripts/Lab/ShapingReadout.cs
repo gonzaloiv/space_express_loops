@@ -3,6 +3,7 @@ namespace DigitalLove.Game.SpaceShaping
     public struct ShapingReadout
     {
         public string PuzzleName;
+        public bool Verified;
         public TrajectoryOutcome Outcome;
         public float ShipTime;
         public float Tmin;

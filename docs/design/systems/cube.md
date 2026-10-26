@@ -44,7 +44,9 @@ from the scale** — coupling them is the bug. Rotate unlocks at **job 4**
 
 ## Feedback
 
-- The mesh **warps** with the zone scale (the stretch must read, or the mechanic is invisible).
+- The mesh **starts flat and warps only with the player's zones** — the planets' wells are not drawn,
+  so any bend reads as something the player did; the lattice spans the run (sized from
+  `origin`→`destination`).
 - The planets visibly **spread and grow**.
 - The ship **launches on each modification** and flies the current trajectory — the flight is the
   read; the trajectory visual updates at launch (no separate prediction line)
@@ -63,4 +65,7 @@ None. The tool has no fail state; the **window** is the only hard fail ([resourc
 
 - **Mesh-only future:** dropping planets entirely would be a purer tool, but it discards the
   verified puzzles — **not the slice**.
+- **`SourceSpec.MoveRange` is vestigial** — `SourceSpecs.From` sets it to the planet's scale, and the
+  zone scale moves `Home` with the planet, so `SourceConstraints`' clamp never binds. Drop it, or give
+  it a real meaning (a per-planet move limit).
 - Rotate (job 4) timing, and the region/scale decoupling under multiple zones.

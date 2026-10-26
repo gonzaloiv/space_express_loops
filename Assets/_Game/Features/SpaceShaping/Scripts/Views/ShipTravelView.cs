@@ -10,6 +10,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         private Coroutine flight;
 
+        public bool IsFlying { get; private set; }
+
         public void Reset(Vector3 origin)
         {
             Stop();
@@ -19,6 +21,7 @@ namespace DigitalLove.Game.SpaceShaping
         public void Travel(TrajectoryResult result)
         {
             Stop();
+            IsFlying = true;
             flight = StartCoroutine(Fly(result));
         }
 
@@ -27,13 +30,17 @@ namespace DigitalLove.Game.SpaceShaping
             if (flight != null)
                 StopCoroutine(flight);
             flight = null;
+            IsFlying = false;
         }
 
         private IEnumerator Fly(TrajectoryResult result)
         {
             List<Vector3> points = result.Points;
             if (points.Count < 2)
+            {
+                IsFlying = false;
                 yield break;
+            }
 
             float t = 0f;
             int last = points.Count - 1;
@@ -45,6 +52,7 @@ namespace DigitalLove.Game.SpaceShaping
             }
 
             transform.localPosition = points[last];
+            IsFlying = false;
         }
     }
 }

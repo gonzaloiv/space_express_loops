@@ -46,7 +46,8 @@ namespace DigitalLove.Game.SpaceShaping
             hasSnapshot = true;
         }
 
-        public void Render(SpacetimeField field, IReadOnlyList<SpaceZone> zones) => mesh.Render(field, zones);
+        public void Render(IReadOnlyList<SpaceZone> zones) =>
+            mesh.Render(zones, Vector3.Distance(origin.position, destination.position) * 0.5f);
 
         public void ResetZone()
         {

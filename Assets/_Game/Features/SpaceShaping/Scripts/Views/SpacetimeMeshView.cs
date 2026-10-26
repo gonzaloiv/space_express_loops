@@ -5,22 +5,26 @@ namespace DigitalLove.Game.SpaceShaping
 {
     public class SpacetimeMeshView : MonoBehaviour
     {
+        private const float FieldMargin = 2f;
+        private const float DepthRatio = 0.6f;
+        private const float WidthRatio = 0.5f;
+
         [SerializeField] private MeshFilter meshFilter;
-        [SerializeField] private Vector3 gridMin = new(-6f, -4f, -3f);
-        [SerializeField] private Vector3 gridMax = new(6f, 4f, 3f);
         [SerializeField] private int gridCount = 4;
         [SerializeField] private int samplesPerLine = 16;
         [SerializeField] private int sides = 6;
         [SerializeField] private float radius = 0.05f;
-        [SerializeField] private float depthScale = 1.5f;
-        [SerializeField] private float maxDisplacement = 0.8f;
 
         private Mesh mesh;
         private Vector3[] vertices;
 
-        public void Render(SpacetimeField field, IReadOnlyList<SpaceZone> zones)
+        public void Render(IReadOnlyList<SpaceZone> zones, float halfExtent)
         {
             EnsureMesh();
+
+            float half = halfExtent / transform.lossyScale.x + FieldMargin;
+            Vector3 gridMin = new(-half, -half * DepthRatio, -half * WidthRatio);
+            Vector3 gridMax = new(half, half * DepthRatio, half * WidthRatio);
 
             int perAxis = gridCount * gridCount;
             int perLine = samplesPerLine * sides;
@@ -39,7 +43,7 @@ namespace DigitalLove.Game.SpaceShaping
                 int j = line % gridCount;
                 float nodeIndex = (float)sample / (samplesPerLine - 1) * (gridCount - 1);
                 Vector3 node = LatticeGrid.Node(axis, nodeIndex, i, j, gridCount, gridMin, gridMax);
-                Vector3 warped = LatticeGrid.Warp(node, field, depthScale, maxDisplacement, zones);
+                Vector3 warped = LatticeGrid.Warp(node, zones);
                 vertices[v] = warped + LatticeGrid.RingOffset(axis, side, sides) * radius;
             }
 

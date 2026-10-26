@@ -7,10 +7,11 @@ polish that turns "works" into "wow". Not current work: the focus is **interesti
 
 **Related:** [vision](../../../design/vision.md) · [lore](../../../design/world/lore.md)
 
-## 1. The travel moment (the payoff beat)
+## 1. The flight (the payoff beat)
 
-- The trajectory locks **green** when it is right; the ship lights up and **glides** on its own
-  (no button). This departure is the emotional payoff of the loop.
+- The ship **flies on every modification** — the flight *is* the reveal (the prediction line is gone,
+  [travel plan](../../in-progress/space-shaping-travel.md)). The payoff is the launch-and-land beat: a
+  run that lands reads as a win; a miss reads as a failure.
 - A **haptic "stretch"** on the cube scale, and a rising **pitch** as entropy drains — the cube is
   the product; it should *feel* like it is pulling spacetime.
 
@@ -49,5 +50,5 @@ polish that turns "works" into "wow". Not current work: the focus is **interesti
 puzzles** (a puzzle creator on the real universe field). Revisit this pass once the puzzle content
 exists. Recorded here.
 
-The travel moment (1) is the demo beat; the window gauge (3) makes the hard fail legible;
+The flight (1) is the demo beat; the window gauge (3) makes the hard fail legible;
 diegetic entropy (5) ties the bar to the collapse; collapse (2) and cargo (4) ride with them.
