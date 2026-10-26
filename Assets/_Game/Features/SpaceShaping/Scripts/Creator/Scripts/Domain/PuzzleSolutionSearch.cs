@@ -24,16 +24,25 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleData puzzle, PuzzleSimSettings settings, int samples, int max)
         {
             List<PuzzleSolution> found = new();
-            Vector3 size = puzzle.ZoneSize;
-            int count = Mathf.Max(MinSamples, samples);
-            for (int i = 0; i < count && found.Count < max; i++)
+            float[] scales = Scales(settings, Mathf.Max(MinSamples, samples));
+            for (int i = 0; i < scales.Length && found.Count < max; i++)
             {
-                PuzzleZone zone = Candidate(size, settings, i, count);
+                PuzzleZone zone = Zone(puzzle.ZoneSize, scales[i]);
                 if (Arrives(puzzle, settings, zone, out float shipTime, out float entropy))
                     found.Add(Solution(zone, shipTime, entropy));
             }
 
             return found.ToArray();
+        }
+
+        private static float[] Scales(PuzzleSimSettings settings, int count)
+        {
+            float[] scales = new float[count];
+            for (int i = 0; i < count; i++)
+                scales[i] = Mathf.Lerp(settings.MinScaleFactor, settings.MaxScaleFactor, i / (float)(count - 1));
+
+            System.Array.Sort(scales, (a, b) => Mathf.Abs(a - 1f).CompareTo(Mathf.Abs(b - 1f)));
+            return scales;
         }
 
         private static PuzzleSolution Solution(PuzzleZone zone, float shipTime, float entropy) => new()
@@ -43,17 +52,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             EntropySpent = entropy
         };
 
-        private static PuzzleZone Candidate(Vector3 size, PuzzleSimSettings settings, int index, int count)
+        private static PuzzleZone Zone(Vector3 size, float scale) => new()
         {
-            float t = index / (float)(count - 1);
-            return new PuzzleZone
-            {
-                centre = Vector3.zero,
-                size = size,
-                scale = Mathf.Lerp(settings.MinScaleFactor, settings.MaxScaleFactor, t),
-                falloff = 0f
-            };
-        }
+            centre = Vector3.zero,
+            size = size,
+            scale = scale,
+            falloff = 0f
+        };
 
         private static bool Arrives(
             PuzzleData puzzle, PuzzleSimSettings settings, PuzzleZone zone, out float shipTime, out float entropy)

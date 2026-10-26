@@ -16,8 +16,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private Color frameMove = new(0.5f, 0.9f, 1f, 1f);
         [SerializeField] private Color frameResize = new(1f, 0.55f, 0.15f, 1f);
         [SerializeField] private float frameGain = 1.5f;
-        [SerializeField] private float minFrame = 1.5f;
-        [SerializeField] private float maxFrame = 9f;
+        [SerializeField] private float frameGrowRatio = 2f;
 
         [Header("Fill - the scaled space")]
         [SerializeField] private Color fillIdle = new(0.55f, 0.65f, 0.95f, 0.1f);
@@ -149,8 +148,7 @@ namespace DigitalLove.Game.SpaceShaping
                 return;
 
             float ratio = HandDistance() / startHandDistance;
-            float factor = Mathf.Pow(ratio, frameGain);
-            factor = Mathf.Clamp(factor, MinFactor(minFrame), MaxFactor(maxFrame));
+            float factor = Mathf.Clamp(Mathf.Pow(ratio, frameGain), 1f, frameGrowRatio);
             zone.SetFrame(zone.Centre, startSize * factor);
             SyncGrab();
         }
@@ -167,16 +165,6 @@ namespace DigitalLove.Game.SpaceShaping
 
         private static float SafeRatio(float value, float reference) =>
             reference > 0.0001f ? value / reference : 1f;
-
-        private float MinFactor(float bound) =>
-            Mathf.Max(bound / Mathf.Max(startSize.x, 0.01f),
-                Mathf.Max(bound / Mathf.Max(startSize.y, 0.01f),
-                    bound / Mathf.Max(startSize.z, 0.01f)));
-
-        private float MaxFactor(float bound) =>
-            Mathf.Min(bound / Mathf.Max(startSize.x, 0.01f),
-                Mathf.Min(bound / Mathf.Max(startSize.y, 0.01f),
-                    bound / Mathf.Max(startSize.z, 0.01f)));
 
         private void ApplyFeedback()
         {

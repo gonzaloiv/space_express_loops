@@ -25,7 +25,7 @@ namespace DigitalLove.Game.SpaceShaping
             CaptureRadius = settings.CaptureRadius,
             StepSecs = settings.StepSecs,
             MaxSteps = settings.MaxSteps,
-            LaunchSpeed = settings.LaunchSpeed,
+            LaunchSpeed = puzzle.launchSpeed > 0f ? puzzle.launchSpeed : settings.LaunchSpeed,
             SourceStrengthScale = settings.SourceStrengthScale,
             SeparationScale = settings.SeparationScale,
             DilationScale = settings.DilationScale,

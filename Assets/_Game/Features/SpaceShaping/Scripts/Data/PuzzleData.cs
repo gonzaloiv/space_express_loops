@@ -8,6 +8,7 @@ namespace DigitalLove.Game.SpaceShaping
     {
         [Header("Space Shaping")]
         public float distance = 8f;
+        public float launchSpeed;
         public float tmin;
         public float tmax = 12f;
         public float entropyBudget = 1f;

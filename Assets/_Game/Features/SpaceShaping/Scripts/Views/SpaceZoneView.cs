@@ -5,7 +5,7 @@ namespace DigitalLove.Game.SpaceShaping
     public class SpaceZoneView : MonoBehaviour
     {
         [SerializeField] private float falloff = 0.5f;
-        [SerializeField] private float contentInset = 0.8f;
+        [SerializeField] private float contentInsetFraction = 0.05f;
         [SerializeField] private Transform contentVisual;
 
         private float scale = 1f;
@@ -25,7 +25,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             get
             {
-                Vector3 content = Size - Vector3.one * contentInset;
+                Vector3 content = Size * (1f - contentInsetFraction);
                 return new Vector3(
                     Mathf.Max(content.x, 0.1f),
                     Mathf.Max(content.y, 0.1f),

@@ -6,7 +6,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleFieldBuilder
     {
-        private const float FieldMargin = 0.1f;
+        private const float FieldMarginFraction = 0.02f;
         private const float Spread = 0.7f;
         private const float Thickness = 0.08f;
         private const float PlanetRadiusFraction = 0.06f;
@@ -29,7 +29,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static float SectorRadius(PuzzleSeed seed, SpaceShapingSettings settings) =>
             Mathf.Max(
                 MinSectorRadius,
-                (seed.distance * 0.5f - PlanetRadiusMax(seed) - settings.captureRadius - FieldMargin)
+                (seed.distance * 0.5f
+                    - PlanetRadiusMax(seed)
+                    - settings.captureRadius
+                    - seed.distance * FieldMarginFraction)
                     / (Spread - Thickness));
 
         private static SectorShapeData BuildShape(

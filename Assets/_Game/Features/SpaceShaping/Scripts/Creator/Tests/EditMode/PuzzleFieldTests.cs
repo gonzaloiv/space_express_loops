@@ -144,8 +144,36 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
                 outer = Mathf.Max(outer, planets.planets[i].position.magnitude + planets.planets[i].radius);
 
             Assert.AreEqual(planets.planets.Length, puzzle.sources.Length);
+            Assert.Greater(puzzle.launchSpeed, 0f);
             Assert.Greater(puzzle.Destination.x, outer);
             Assert.Less(puzzle.Destination.x, outer + sim.CaptureRadius + 0.5f);
+        }
+
+        [Test]
+        public void BuildSetup_PrefersThePuzzleLaunch()
+        {
+            PuzzleData puzzle = Bare();
+            puzzle.launchSpeed = 2f;
+
+            SpaceShapingSetup setup = SpaceShapingSetup.Build(puzzle, PuzzleSimSettings.From(Settings()));
+
+            Assert.AreEqual(2f, setup.LaunchSpeed, 1e-4f);
+        }
+
+        [Test]
+        public void BuildSetup_FallsBackToSettingsLaunch()
+        {
+            PuzzleData puzzle = Bare();
+            PuzzleSimSettings sim = PuzzleSimSettings.From(Settings());
+
+            Assert.AreEqual(sim.LaunchSpeed, SpaceShapingSetup.Build(puzzle, sim).LaunchSpeed, 1e-4f);
+        }
+
+        private static PuzzleData Bare()
+        {
+            PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
+            puzzle.sources = System.Array.Empty<PuzzleSource>();
+            return puzzle;
         }
 
         private static PuzzleSeed Seed() => ScriptableObject.CreateInstance<PuzzleSeed>();

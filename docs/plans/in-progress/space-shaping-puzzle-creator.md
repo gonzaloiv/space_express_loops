@@ -38,9 +38,11 @@ The seed carries only the **per-job variation**, and it is deliberately tiny —
 **Everything constant lives in one settings asset — `SpaceShapingSettings`** (sim + launch + editing
 envelope + the reachable scale range): `stepSecs`, `maxSteps`, `launchSpeed`, `sourceStrengthScale`,
 `separationScale`, `dilationScale`, `captureRadius`, `minScaleFactor`, `maxScaleFactor`. The
-**field's own constants live in `PuzzleFieldBuilder`**, not the settings asset: `FieldGap`,
-`FieldMargin`, `Spread`, `Thickness`, `PlanetRadiusFraction` (`0.06 × distance`), `PlanetRadiusSpread`,
-`PlanetsPerRing`.
+**field's own constants live in `PuzzleFieldBuilder`**, not the settings asset: `FieldMarginFraction`
+(`0.02 × distance`), `Spread`, `Thickness`, `PlanetRadiusFraction` (`0.06 × distance`),
+`PlanetRadiusSpread`, `PlanetsPerRing`. The margins are **fractions of the run**, not absolute metres,
+so the builder is scale-free — a ~1 m puzzle and a ~12 m puzzle both work (`PuzzleFieldBake.RunMargin`
+and `SpacetimeMeshView`'s lattice margin are fractions too).
 
 The **brief** (window tightness, entropy budget) is **not** on the seed: P3 derives `tmin`/`tmax`/
 `entropyBudget` into the `PuzzleData` from the found solution. Creator-run parameters (`variants`) live
@@ -219,10 +221,11 @@ and the window, and save the variants.
 
 - **`PuzzleSource` is two fields** — `home`, `scale`. The editing envelope (`moveRange`, `minScale`,
   `maxScale`) is **derived at runtime** from `SpaceShapingSettings`, so it is not stored per planet.
-- **`PuzzleData` keeps only the runtime essentials** — `distance`, `tmin`, `tmax`, `entropyBudget`,
-  `sources`. `origin`/`destination` are **derived from `distance`** (±x); `captureRadius` moved to
-  settings; `entropyPar` is gone (the star grade is a fraction of the budget — see §9). The builder
-  sizes the cluster to fit `distance/2`, so the bake copies `seed.distance` exactly.
+- **`PuzzleData` keeps only the runtime essentials** — `distance`, `launchSpeed`, `tmin`, `tmax`,
+  `entropyBudget`, `sources`. `origin`/`destination` are **derived from `distance`** (±x);
+  `captureRadius` moved to settings; `entropyPar` is gone (the star grade is a fraction of the
+  budget — see §9). The builder sizes the cluster to fit `distance/2`, so the bake copies
+  `seed.distance` exactly.
 - **The cube is sized from the run** — `PuzzleData.ZoneSize` (`distance³`) is the **one source of
   truth** for the search's zone and the game's cube: `PuzzleSolutionSearch` builds its candidate zone
   at `ZoneSize`, and `SpaceShapingState.ResetView` applies it to the frame on puzzle start
@@ -240,7 +243,8 @@ and the window, and save the variants.
 - **`tmin`/`tmax`/`entropyBudget`** are **written by P3**, not typed.
 - **Add `PuzzleSimSettings`** (new) — a plain `struct` mirroring what the verifier/search need
   (stepSecs, maxSteps, launch, strength / separation / dilation, reachable scale range, envelope), so
-  they are pure and asset-free. Launch stays a **settings** constant, not a per-puzzle field.
+  they are pure and asset-free. Launch is **baked per puzzle** (`PuzzleData.launchSpeed`);
+  `PuzzleSimSettings.LaunchSpeed` is only the **fallback** for a puzzle that carries none.
 - **Add `PuzzleBrief`** (new, idea) — the creator-run conditions a solution must meet (§2):
   `translatable`, `scalable`, `moves`, `windowTightness`, `variants`. Plain `struct`/asset on the
   wizard; the resolved conditions are copied onto `PuzzleData` so the game can enforce them.
@@ -280,6 +284,8 @@ and the window, and save the variants.
 | Artifact format | **`ScriptableObject` at the boundaries** (`PuzzleSeed`, the exported `SectorShapeData`, the final `PuzzleData`); **plain `[Serializable]`** for the in-memory domain payloads (`PuzzleFieldPlanet`, `PuzzleZone`, `PuzzleSimSettings`). Stage 1's artifact is currently a `SectorFieldData`; becomes `SectorShapeData` when §3's switch lands (§6 P0) |
 | Reachable scale range | Moved out of `ZoneGrabListener` into domain data (`PuzzleSimSettings`); the view reads the same source |
 | Cube size | **Baked from the run** (`PuzzleData.ZoneSize` = `distance³`) and applied on puzzle start, so the search's zone and the game's cube agree; the creator never bakes a solution the headset can't reproduce |
+| Launch speed | **Baked per puzzle** — the creator derives it from the run (`0.9 × run / (maxSteps × stepSecs)`) so the bare start just misses and the solution lands near scale 1; `SpaceShapingSettings.launchSpeed` is only the fallback |
+| Frame resize | The cube can **grow but not shrink** below the puzzle's size (`ZoneGrabListener` clamps to `[1×, 2×]` of the gesture-start size), so a frame gesture can't break the baked coverage; shrinking the region is the deferred reframe job |
 | Field at load | **Never generated at load** — the field is baked into `PuzzleData`; the creator is authoring-only (the game never references the creator) |
 | Selection transition | The two-hand scale-out stays with the selection (separate; see §12) |
 | Solution search | **Search-and-test** — enumerate, forward-simulate, keep an arriving set (no inversion) |
@@ -337,8 +343,8 @@ and the window, and save the variants.
 - **Generating at load** — **decided against** (§9): the field is baked, never generated at runtime.
 - **Multi-ship / loop routes** — [variations](../backlog/gameplay/space-shaping-future.md) §2.
 - **Runtime level selection / loading** — [integration](../backlog/gameplay/space-shaping-integration.md).
-- **Per-job launch (the narrative fuel)** — the launch stays a **settings** constant for now (§7);
-  make it per-job (and add its lore) later.
+- **Per-job launch lore** — the launch *speed* is now **baked per puzzle** (§7, §9); only its **lore**
+  is deferred.
 
 ## 13. Handoff — for the next agent
 
@@ -348,7 +354,8 @@ and the window, and save the variants.
 **Status (2026-10-26):** **all phases P0–P4 are done** — the `SectorShape.Generate` path, the stage
 artifacts (`PuzzleShapeAsset`, `PuzzlePlanetListAsset`), `PuzzleVerifier`, `PuzzleSolutionSearch`
 (+ `Find`), `PuzzleFieldBake.BakeVariants` (with a `PuzzleBakeStatus` diagnostic and seed resampling via
-`PuzzleSeedScanner`), the cube-size bake (`PuzzleData.ZoneSize` applied on start), and the creator
+`PuzzleSeedScanner`), the cube-size bake (`PuzzleData.ZoneSize` applied on start), the per-puzzle
+launch bake (`PuzzleData.launchSpeed`, so the run and the launch can't drift apart), and the creator
 window (Export shape / Export planets / Generate + preview / Find working seed / Save variants).
 41/41 EditMode tests green. **Still open:** the §2 solution conditions (`translatable`, `scalable`,
 `moves`) and the **density / run corridor** (§12).

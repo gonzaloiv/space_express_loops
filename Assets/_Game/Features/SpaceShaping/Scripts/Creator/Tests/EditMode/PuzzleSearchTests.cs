@@ -82,12 +82,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
         private static PuzzleData Puzzle(int seed)
         {
+            SpaceShapingSettings asset = Settings();
             PuzzleSeed source = ScriptableObject.CreateInstance<PuzzleSeed>();
             source.seed = seed;
             PuzzleData created = ScriptableObject.CreateInstance<PuzzleData>();
-            created.distance = source.distance;
-            created.sources = PuzzleSourceBridge.ToSources(
-                PuzzleFieldGenerator.Generate(PuzzleFieldBuilder.Build(source, Settings()), source.seed));
+            PuzzleFieldBake.Apply(
+                created,
+                PuzzleArtifactFactory.Planets(PuzzleArtifactFactory.Shape(source, asset)),
+                PuzzleSimSettings.From(asset));
             return created;
         }
 

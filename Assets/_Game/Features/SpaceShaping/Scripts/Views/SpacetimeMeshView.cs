@@ -5,7 +5,7 @@ namespace DigitalLove.Game.SpaceShaping
 {
     public class SpacetimeMeshView : MonoBehaviour
     {
-        private const float FieldMargin = 0.2f;
+        private const float FieldMargin = 0.05f;
         private const float DepthRatio = 0.6f;
         private const float WidthRatio = 0.5f;
 
@@ -24,7 +24,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             EnsureMesh();
 
-            float half = halfExtent / transform.lossyScale.x + FieldMargin;
+            float half = halfExtent / transform.lossyScale.x * (1f + FieldMargin);
             Vector3 gridMin = new(-half, -half * DepthRatio, -half * WidthRatio);
             Vector3 gridMax = new(half, half * DepthRatio, half * WidthRatio);
 
