@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b09b8d5cd9a9d142a7b285eea85e9e8, type: 3}
+  m_Name: PuzzleSeed_Shape_Planets
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Creator::DigitalLove.Game.SpaceShaping.Creator.PuzzlePlanetListAsset
+  distance: 8
+  planets:
+  - position: {x: -0.47113833, y: 0.19837148, z: 2.0396395}
+    radius: 0.48864955
+  - position: {x: -2.1363883, y: -0.030836178, z: -0.49348646}
+    radius: 0.33741528
+  - position: {x: 0.46732718, y: -0.15104343, z: -2.0231404}
+    radius: 0.43400684
+  - position: {x: 1.767719, y: 0.02258, z: 0.40832737}
+    radius: 0.48235768
+  - position: {x: -0.7212813, y: 0.26847163, z: 3.1225522}
+    radius: 0.3550142
+  - position: {x: -3.1104388, y: 0.38936722, z: -0.7184833}
+    radius: 0.36213303
+  - position: {x: 0.72380567, y: -0.0077224206, z: -3.1334805}
+    radius: 0.43611023
+  - position: {x: 3.1251144, y: -0.23497425, z: 0.7218736}
+    radius: 0.59093434

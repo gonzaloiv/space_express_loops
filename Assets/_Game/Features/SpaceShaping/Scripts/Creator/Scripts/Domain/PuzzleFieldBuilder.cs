@@ -8,11 +8,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     {
         private const float FieldMargin = 0.1f;
         private const float Spread = 0.7f;
-        private const float Thickness = 0.3f;
+        private const float Thickness = 0.08f;
         private const float PlanetRadiusFraction = 0.06f;
         private const float PlanetRadiusSpread = 0.3f;
         private const int PlanetsPerRing = 6;
         private const float SeparationMargin = 1.1f;
+        private const float MinSectorRadius = 0.1f;
 
         public static SectorShapeData Build(PuzzleSeed seed, SpaceShapingSettings settings)
         {
@@ -27,14 +28,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         private static float SectorRadius(PuzzleSeed seed, SpaceShapingSettings settings) =>
             Mathf.Max(
-                0.1f,
-                (seed.distance * 0.5f - PlanetRadiusMax(seed) - settings.captureRadius - FieldMargin) / Spread);
+                MinSectorRadius,
+                (seed.distance * 0.5f - PlanetRadiusMax(seed) - settings.captureRadius - FieldMargin)
+                    / (Spread - Thickness));
 
         private static SectorShapeData BuildShape(
             PuzzleSeed seed, SpaceShapingSettings settings, float sectorRadius) => new()
         {
             kind = Shape(seed),
-            radius = new MinMaxFloat(sectorRadius * 0.6f, sectorRadius),
+            radius = new MinMaxFloat(sectorRadius, sectorRadius),
             anchorScale = new MinMaxFloat(1f, 1f),
             planetCount = new MinMaxInt { min = seed.planetCount, max = seed.planetCount },
             planetRadius = new MinMaxFloat(

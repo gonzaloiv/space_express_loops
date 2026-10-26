@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: PuzzleSeed
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Creator::DigitalLove.Game.SpaceShaping.Creator.PuzzleSeed
   seed: 3
-  distance: 1
-  planetCount: 32
+  distance: 8
+  planetCount: 8

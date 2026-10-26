@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Creator
@@ -14,26 +15,33 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public static bool TryFind(
             PuzzleData puzzle, PuzzleSimSettings settings, int samples, out PuzzleSolution solution)
         {
-            solution = default;
+            PuzzleSolution[] found = Find(puzzle, settings, samples, 1);
+            solution = found.Length > 0 ? found[0] : default;
+            return found.Length > 0;
+        }
+
+        public static PuzzleSolution[] Find(
+            PuzzleData puzzle, PuzzleSimSettings settings, int samples, int max)
+        {
+            List<PuzzleSolution> found = new();
             Vector3 size = Vector3.one * puzzle.distance;
             int count = Mathf.Max(MinSamples, samples);
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count && found.Count < max; i++)
             {
                 PuzzleZone zone = Candidate(size, settings, i, count);
                 if (Arrives(puzzle, settings, zone, out float shipTime, out float entropy))
-                {
-                    solution = new PuzzleSolution
-                    {
-                        Zones = new[] { zone },
-                        ShipTime = shipTime,
-                        EntropySpent = entropy
-                    };
-                    return true;
-                }
+                    found.Add(Solution(zone, shipTime, entropy));
             }
 
-            return false;
+            return found.ToArray();
         }
+
+        private static PuzzleSolution Solution(PuzzleZone zone, float shipTime, float entropy) => new()
+        {
+            Zones = new[] { zone },
+            ShipTime = shipTime,
+            EntropySpent = entropy
+        };
 
         private static PuzzleZone Candidate(Vector3 size, PuzzleSimSettings settings, int index, int count)
         {

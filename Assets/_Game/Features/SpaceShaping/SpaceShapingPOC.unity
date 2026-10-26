@@ -44961,7 +44961,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.SpaceShapingState
   puzzles:
-  - {fileID: 11400000, guid: 2433e583643c93543bd8bffcc306a7b6, type: 2}
+  - {fileID: 11400000, guid: 6620a5571ffbe6040852d41a8426ef6f, type: 2}
   settings: {fileID: 11400000, guid: 1000000000000000000000000000001a, type: 2}
   view: {fileID: 1095678997}
   ship: {fileID: 1688476328}

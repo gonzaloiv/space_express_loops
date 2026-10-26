@@ -14,6 +14,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         public static PuzzlePlanetListAsset ExportPlanets(PuzzleShapeAsset shape) =>
             Write(PuzzleArtifactFactory.Planets(shape), $"{shape.name}_Planets");
 
+        public static PuzzleData[] ExportVariants(
+            PuzzlePlanetListAsset planets, SpaceShapingSettings settings, float windowTightness, int variants)
+        {
+            PuzzleData[] baked = PuzzleFieldBake.BakeVariants(
+                planets, PuzzleSimSettings.From(settings), windowTightness, variants);
+            for (int i = 0; i < baked.Length; i++)
+                Write(baked[i], $"{planets.name}_Puzzle_{i + 1}");
+
+            return baked;
+        }
+
         private static T Write<T>(T asset, string name) where T : ScriptableObject
         {
             EnsureFolder();

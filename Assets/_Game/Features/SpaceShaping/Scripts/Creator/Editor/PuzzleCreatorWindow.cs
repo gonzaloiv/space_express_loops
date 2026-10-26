@@ -9,7 +9,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         [SerializeField] private SpaceShapingSettings settings;
         [SerializeField] private PuzzleShapeAsset shape;
         [SerializeField] private PuzzlePlanetListAsset planets;
-        [SerializeField] private PuzzleData target;
+        [SerializeField] private int variants = 1;
+        [SerializeField] private float windowTightness = 1f;
 
         [MenuItem("DigitalLove/Space Shaping/Puzzle Creator")]
         private static void Open() => GetWindow<PuzzleCreatorWindow>("Puzzle Creator");
@@ -23,14 +24,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 "Shape", shape, typeof(PuzzleShapeAsset), false);
             planets = (PuzzlePlanetListAsset)EditorGUILayout.ObjectField(
                 "Planets", planets, typeof(PuzzlePlanetListAsset), false);
-            target = (PuzzleData)EditorGUILayout.ObjectField("Target puzzle", target, typeof(PuzzleData), false);
+            variants = EditorGUILayout.IntSlider("Variants", variants, 1, 8);
+            windowTightness = EditorGUILayout.FloatField("Window tightness (s)", windowTightness);
 
-            DrawExportShape();
-            DrawExportPlanets();
+            DrawShape();
+            DrawPlanets();
             DrawBake();
         }
 
-        private void DrawExportShape()
+        private void DrawShape()
         {
             using (new EditorGUI.DisabledScope(seed == null || settings == null))
             {
@@ -39,7 +41,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             }
         }
 
-        private void DrawExportPlanets()
+        private void DrawPlanets()
         {
             using (new EditorGUI.DisabledScope(shape == null))
             {
@@ -50,18 +52,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         private void DrawBake()
         {
-            using (new EditorGUI.DisabledScope(planets == null || target == null))
+            using (new EditorGUI.DisabledScope(planets == null || settings == null))
             {
-                if (GUILayout.Button("Bake field"))
+                if (GUILayout.Button("Bake variants"))
                     Bake();
             }
         }
 
         private void Bake()
         {
-            PuzzleFieldBake.Apply(target, planets);
-            EditorUtility.SetDirty(target);
-            AssetDatabase.SaveAssets();
+            PuzzleData[] baked = PuzzleArtifactExporter.ExportVariants(
+                planets, settings, windowTightness, variants);
+            Debug.Log($"Puzzle creator: baked {baked.Length} verified variant(s) from {planets.name}.");
         }
     }
 }

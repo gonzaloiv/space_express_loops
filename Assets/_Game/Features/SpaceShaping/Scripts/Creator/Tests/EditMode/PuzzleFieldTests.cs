@@ -40,6 +40,20 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
+        public void Build_FillsTheRun()
+        {
+            PuzzleSeed seed = Seed();
+            SpaceShapingSettings settings = Settings();
+            PuzzleFieldPlanet[] planets = Planets(seed, settings);
+            float outer = 0f;
+            for (int i = 0; i < planets.Length; i++)
+                outer = Mathf.Max(outer, planets[i].position.magnitude + planets[i].radius);
+
+            Assert.Greater(outer, seed.distance * 0.5f - settings.captureRadius - 1f);
+            Assert.LessOrEqual(outer, seed.distance * 0.5f - settings.captureRadius);
+        }
+
+        [Test]
         public void Build_SpacesWiderThanThePuzzleNeeds()
         {
             SpaceShapingSettings settings = Settings();
@@ -114,23 +128,24 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void Bake_FillsThePuzzleFromThePlanets()
+        public void Bake_DerivesTheRunFromTheField()
         {
             PuzzleSeed seed = Seed();
+            SpaceShapingSettings settings = Settings();
+            PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
             PuzzlePlanetListAsset planets = PuzzleArtifactFactory.Planets(
-                PuzzleArtifactFactory.Shape(seed, Settings()));
+                PuzzleArtifactFactory.Shape(seed, settings));
             PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
 
-            PuzzleFieldBake.Apply(puzzle, planets);
+            PuzzleFieldBake.Apply(puzzle, planets, sim);
+
+            float outer = 0f;
+            for (int i = 0; i < planets.planets.Length; i++)
+                outer = Mathf.Max(outer, planets.planets[i].position.magnitude + planets.planets[i].radius);
 
             Assert.AreEqual(planets.planets.Length, puzzle.sources.Length);
-            Assert.AreEqual(seed.distance, puzzle.distance, 1e-4f);
-
-            for (int i = 0; i < planets.planets.Length; i++)
-            {
-                Assert.AreEqual(planets.planets[i].position, puzzle.sources[i].home);
-                Assert.AreEqual(planets.planets[i].radius * 2f, puzzle.sources[i].scale, 1e-4f);
-            }
+            Assert.Greater(puzzle.Destination.x, outer);
+            Assert.Less(puzzle.Destination.x, outer + sim.CaptureRadius + 0.5f);
         }
 
         private static PuzzleSeed Seed() => ScriptableObject.CreateInstance<PuzzleSeed>();

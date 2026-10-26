@@ -46,6 +46,18 @@ The **brief** (window tightness, entropy budget) is **not** on the seed: P3 deri
 `entropyBudget` into the `PuzzleData` from the found solution. Creator-run parameters (`variants`) live
 on the **wizard**.
 
+**The brief also carries the solution's shape — the conditions a solution must meet** (added
+2026-10-26, idea only; not built):
+
+| Condition | Meaning |
+|---|---|
+| `translatable` | whether the **cube may be moved** (its centre changes) or is fixed at home. Per level: some puzzles are scale-only in place, others need the cube carried to the right places |
+| `scalable` | whether the **cube's scale may be edited** (shrink / magnify) or is locked at 1. Scale is the **only lever today**, so `scalable = false` needs a later lever (rotate / reframe) before it can be solvable |
+| `moves` | how many scale edits the solution makes — the cube **edits `N` places**, scaling up or down at each. `moves = 1` with `translatable = false` is the v1 path |
+
+They live on the **wizard/brief** (creator-run), not the seed. `PuzzleData` stores the resolved
+conditions so the game can enforce them (lock the cube when not translatable, show the expected count).
+
 The seed is **not** required to reproduce a puzzle exactly: it produces **one or many variants**, and
 the saved variants are what the game uses.
 
@@ -135,6 +147,8 @@ Forward (sources → path) is easy and deterministic; the inverse is underdeterm
    **arrives inside a target window** and **inside the budget**. At v1 the cube is **fixed** and the
    step is **scale only**, so the grid is over the **scale at the cube's centre** (the centre /
    reframe axes arrive at job 3). That kept set is *a* valid trajectory — one of many.
+   The grid is bounded by the brief's conditions (§2): **scale only** when `translatable = false`,
+   **centre × scale** when translatable, composed over up to `moves` edits (one zone at v1).
 4. **Start.** The bare field, with **no modifications applied**. Reject and resample if it already
    arrives or crashes: the start must **fail on time** (a near-miss, not a crash).
 5. **Derive.** `[Tmin, Tmax]` is **centered on the solution's ship-time** (band width from
@@ -222,6 +236,9 @@ and the window, and save the variants.
 - **Add `PuzzleSimSettings`** (new) — a plain `struct` mirroring what the verifier/search need
   (stepSecs, maxSteps, launch, strength / separation / dilation, reachable scale range, envelope), so
   they are pure and asset-free. Launch stays a **settings** constant, not a per-puzzle field.
+- **Add `PuzzleBrief`** (new, idea) — the creator-run conditions a solution must meet (§2):
+  `translatable`, `scalable`, `moves`, `windowTightness`, `variants`. Plain `struct`/asset on the
+  wizard; the resolved conditions are copied onto `PuzzleData` so the game can enforce them.
 
 ## 8. Code placement
 
@@ -264,6 +281,8 @@ and the window, and save the variants.
 | Window | **Derived**, centered on the solution's ship-time; width from `windowTightness` |
 | Star grade | The **fraction of `entropyBudget` used** (`used / budget`): 3★ ≤ 1/3, 2★ ≤ 2/3, else 1★. Timing is the **window** (`Tmin`/`Tmax` = too early / too late), not a par |
 | Steps target | **Soft** — the count is not enforced; the player may solve differently. The seed hints, the search reports the actual count |
+| Solution conditions (idea) | **Per level, on the brief** — `translatable` (the cube may be moved or is fixed), `scalable` (its scale may be edited or is locked) and `moves` (the cube edits `N` places, up or down). v1 is `translatable = false`, `scalable = true`, `moves = 1` |
+| Condition enforcement (idea) | The creator's search **honours** the conditions; the game **locks the cube** when a puzzle is not translatable / not scalable and shows the expected move count |
 | Step kinds (v1) | **Scale only**; movement / reframe arrive at job 3 |
 | Seed determinism | The **pipeline is deterministic** (same field → same solution; needed for tests). The **seed is not a stable asset id** — a generator change may yield different variants, so the **baked variants are authoritative** |
 | Placement | **Editor/offline bake**; never in the player's frame budget |
@@ -301,6 +320,8 @@ and the window, and save the variants.
 - **The selection field and the two-hand scale-out transition** — the level selector; separate from
   the puzzle field (integration).
 - **Movement / reframe step kinds** (job 3) and **rotate** (job 4).
+- **Solution conditions** (`translatable`, `moves`) — the idea lives in §2 / §7 / §9, not built. The
+  search extension and the runtime cube lock come after the scale-only path proves.
 - **The per-job progression mapping** — the seed is three fields (`seed`, `distance`, `planetCount`);
   the stage lives in [progression](../../design/systems/progression.md) §4.
 - **Generating at load** — **decided against** (§9): the field is baked, never generated at runtime.
@@ -313,6 +334,12 @@ and the window, and save the variants.
 
 **Read first:** this plan (§2–§9), the [puzzle data model](#7-data-model), and the global/project
 `AGENTS.md` rules. Then work the tasks in order; each is small and independently verifiable.
+
+**Status (2026-10-26):** Task 1 (P0) and Task 2 (P1) are done, and P2/P3 are done — the
+`SectorShape.Generate` path, the stage artifacts (`PuzzleShapeAsset`, `PuzzlePlanetListAsset`),
+`PuzzleVerifier`, `PuzzleSolutionSearch` (+ `Find`), `PuzzleFieldBake.BakeVariants`, and the window's
+Export shape / Export planets / Bake variants buttons. 40/40 EditMode tests green. **Still open:** P4
+(the full window) and the §2 solution conditions.
 
 **Where things live:** game `DigitalLove.Game.SpaceShaping` (runtime loop, `PuzzleData`,
 `SpaceShapingSession`, `SpaceShapingSettings`); authoring `DigitalLove.Game.SpaceShaping.Creator`
@@ -358,11 +385,47 @@ found solution and bakes variants; P4 replaces the current bake-only window with
 + save window. **The existing `PuzzleCreatorWindow` only bakes** (`PuzzleFieldBake.Apply`) — it is a
 P0 stopgap, not P4.
 
+### Idea — solution conditions (unscheduled)
+
+`translatable`, `scalable` and `moves` on the brief (§2, §7, §9): the cube may be moved or is fixed,
+and its scale edited or locked, **per level**; the solution makes `N` scale edits — the cube **edits
+`N` places**, up or down. Not built. When picked up:
+
+1. `PuzzleSolutionSearch` extends from the scale-only grid to **centre × scale** (translatable) and to
+   `moves` edits; `PuzzleFieldBake` rejects a variant whose solution breaks the conditions.
+2. `PuzzleData` carries the resolved conditions so the game can enforce them.
+3. `ZoneGrabListener` **rejects one-hand moves** when the puzzle is not translatable and **two-hand
+   scale** when it is not scalable, and the HUD shows the expected move count.
+
+### Task 3 — review fixes (land before P3)
+
+P0/P1/P2 are in (`9489959`); these gaps must close before P3 bakes variants — see the
+[review](../../reviews/space-shaping-creator-p1-p2.md).
+
+1. **The start must fail on time, not crash.** `PuzzleVerification.StartFails` is `!= Arrive`
+   (`PuzzleVerification.cs:11`), so a `Crash` passes as "start fails". Require `Miss` and reject
+   `Crash` (§5 step 4, §9).
+2. **The search must honour the window and the budget.** `PuzzleSolutionSearch.Arrives` returns on
+   `Outcome == Arrive` only (`PuzzleSolutionSearch.cs:50-60`); add the `[tmin, tmax]` and
+   `EntropySpent ≤ budget` checks, otherwise P3's derived window is circular and the
+   `windowTightness` dial never binds (§6 P2).
+3. **Reject and resample the start.** Nothing checks that the bare start already arrives or crashes
+   (§5 step 4); add that to the bake path before P3 derives the window.
+4. **One cube source, one geometry.** The creator's zone (`PuzzleZone.ToSpaceZone`: `size × 0.5`,
+   `falloff = 0`) must match the view's (`SpaceZoneView.Zone`: `Size × 0.5`, `contentInset = 0.8`,
+   `falloff = 0.5`), or a found solution will not reproduce in the game. Read the region from the
+   same authored source the view uses (the `SpaceZoneView` transform) instead of
+   `size = Vector3.one * puzzle.distance` (`PuzzleSolutionSearch.cs:18`), and sweep **scale** inside
+   that fixed cube. The cube is **smaller than the run** and is authored only for the
+   **non-editable-cube** puzzles (progression.md §4: jobs 1–2 are a fixed region, only the
+   grab-inside scale moves).
+
 ### Open decisions to settle (do not silently change)
 
-- **Planet size:** the bridge's `radius * 2f` stays **as-is** for now. It is a look-parity choice, not
-  a bug, and it is what makes the puzzle's separation requirement equal the sector's spacing (§4).
-  Only revisit if you want parity with the universe's planet look — and then raise
+- **Planet size:** the bridge's `radius * 2f` stays **as-is** for now, and the builder's
+  `distance × 0.06 ± 30 %` band stays. This is a look-parity choice, not a bug, and it is what makes
+  the puzzle's separation requirement equal the sector's spacing (§4). Whether to match the
+  universe's smaller planet look is a **lab/test** question — only revisit with tests, and then raise
   `sourceStrengthScale`, since the gravity radius is `scale × 0.5` (`SpaceShapingSession.BuildField`).
 
 ### Rules that bite here
