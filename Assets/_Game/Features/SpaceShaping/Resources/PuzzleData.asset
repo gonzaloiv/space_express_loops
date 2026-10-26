@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10000000000000000000000000000016, type: 3}
+  m_Name: PuzzleData
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.PuzzleData
+  id: 
+  prefab: {fileID: 0}
+  origin: {x: -6, y: 0, z: 0}
+  destination: {x: 6, y: 0, z: 0}
+  tmin: 0
+  tmax: 12
+  entropyBudget: 1
+  sources:
+  - home: {x: 0.103402756, y: 1.7539479, z: 0.24480286}
+    scale: 1.2
+  - home: {x: -1.0515058, y: -1.2797782, z: 0.6351825}
+    scale: 1.2
+  - home: {x: -0.06130855, y: 0.6454481, z: -1.1497992}
+    scale: 1.2
+  - home: {x: 1.0608461, y: -0.095599756, z: 1.4185977}
+    scale: 1.2
+  - home: {x: -1.647738, y: -0.26898023, z: 0.5996355}
+    scale: 1.2
+  - home: {x: 0.42395347, y: -1.3272831, z: -1.0979689}
+    scale: 1.2
+  - home: {x: 0.20822912, y: -1.7586342, z: 0.10392228}
+    scale: 1.2
+  - home: {x: -1.6547052, y: 0.3342822, z: -0.5451235}
+    scale: 1.2
+  - home: {x: 0.7856578, y: 0.8006209, z: -1.3743005}
+    scale: 1.2
+  - home: {x: 0.8440635, y: 1.1827303, z: 1.0176734}
+    scale: 1.2
+  - home: {x: -1.5981754, y: -0.7178328, z: -0.2783977}
+    scale: 1.2
+  - home: {x: 1.2090049, y: -1.2515293, z: -0.34486955}
+    scale: 1.2
+  - home: {x: 0.008821158, y: -1.2798024, z: 1.2284061}
+    scale: 1.2
+  - home: {x: -1.1706021, y: -0.0035169395, z: -1.3329035}
+    scale: 1.2
+  - home: {x: 0.94727147, y: 1.4767087, z: -0.2626065}
+    scale: 1.2
+  - home: {x: 0.24357669, y: 0.5102867, z: 1.6814374}
+    scale: 1.2
+  - home: {x: 0.12535854, y: 1.5625246, z: -0.8305153}
+    scale: 1.2
+  - home: {x: 1.5450171, y: 0.29458937, z: -0.82042223}
+    scale: 1.2
+  - home: {x: -0.85349596, y: -0.49148282, z: 1.4754467}
+    scale: 1.2
+  - home: {x: -0.5961122, y: -1.6275489, z: -0.37774104}
+    scale: 1.2
+  - home: {x: 1.6978836, y: -0.3509758, z: 0.37544695}
+    scale: 1.2
+  - home: {x: -1.1619275, y: 0.54120165, z: 1.2263681}
+    scale: 1.2
+  - home: {x: 0.004164968, y: 0.007680606, z: -1.773944}
+    scale: 1.2
+  - home: {x: 1.5593003, y: 0.76802164, z: 0.354512}
+    scale: 1.2
+  - home: {x: -0.9534936, y: 1.4955201, z: 0.034976415}
+    scale: 1.2
+  - home: {x: -0.50728774, y: -0.72875696, z: -0.9767153}
+    scale: 1.2
+  - home: {x: 0.9910053, y: -1.1775546, z: 0.882172}
+    scale: 1.2
+  - home: {x: -1.249719, y: 0.41533104, z: 0.09001435}
+    scale: 1.2
+  - home: {x: 0.98850065, y: -0.59519017, z: -1.3474303}
+    scale: 1.2
+  - home: {x: 0.045794755, y: -0.45464364, z: 1.2383869}
+    scale: 1.2
+  - home: {x: -0.561453, y: -0.98497665, z: -1.3643847}
+    scale: 1.2
+  - home: {x: 1.2523127, y: 0.4151888, z: -0.04160738}
+    scale: 1.2
+  - home: {x: -0.27335763, y: 1.3962284, z: 1.0596111}
+    scale: 1.2
+  - home: {x: -0.9515798, y: 1.0397705, z: -1.0771846}
+    scale: 1.2

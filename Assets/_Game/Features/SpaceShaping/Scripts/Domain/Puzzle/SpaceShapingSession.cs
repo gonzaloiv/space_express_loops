@@ -5,6 +5,9 @@ namespace DigitalLove.Game.SpaceShaping
 {
     public class SpaceShapingSession
     {
+        private const float ThreeStarUse = 1f / 3f;
+        private const float TwoStarUse = 2f / 3f;
+
         private readonly SpaceShapingSetup setup;
         private readonly Vector3[] positions;
         private readonly float[] scales;
@@ -46,8 +49,14 @@ namespace DigitalLove.Game.SpaceShaping
             && result.ShipTime >= setup.Tmin
             && result.ShipTime <= setup.Tmax;
 
-        public int Grade(float entropyLeft) =>
-            entropyLeft >= setup.EntropyPar ? 3 : entropyLeft >= 0f ? 2 : 1;
+        public int Grade()
+        {
+            float fraction = setup.EntropyBudget > 0f ? entropySpent / setup.EntropyBudget : 0f;
+            if (fraction <= ThreeStarUse)
+                return 3;
+
+            return fraction <= TwoStarUse ? 2 : 1;
+        }
 
         public void Reset()
         {

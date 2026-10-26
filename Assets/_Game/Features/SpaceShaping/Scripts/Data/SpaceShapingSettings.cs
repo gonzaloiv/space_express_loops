@@ -10,9 +10,7 @@ namespace DigitalLove.Game.SpaceShaping
         public int maxSteps = 1200;
 
         [Header("Launch")]
-        public LaunchModel launchModel = LaunchModel.Coast;
         public float launchSpeed = 1f;
-        public float thrustAcceleration = 1f;
 
         [Header("Field")]
         public float sourceStrengthScale = 2f;
@@ -20,5 +18,12 @@ namespace DigitalLove.Game.SpaceShaping
 
         [Header("Time")]
         public float dilationScale = 1f;
+
+        [Header("Sources")]
+        public float captureRadius = 0.6f;
+
+        [Header("Reachable scale")]
+        public float minScaleFactor = 0.4f;
+        public float maxScaleFactor = 2.5f;
     }
 }

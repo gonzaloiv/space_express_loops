@@ -139,7 +139,7 @@ namespace DigitalLove.Game.SpaceShaping
                 Tmin = puzzle.tmin,
                 Tmax = puzzle.tmax,
                 EntropyLeft = entropyLeft,
-                Stars = session.Grade(entropyLeft),
+                Stars = session.Grade(),
                 Scale = view.Zone.Scale,
                 Solved = session.IsSolved(result),
                 Zones = session.CommandCount
@@ -151,9 +151,9 @@ namespace DigitalLove.Game.SpaceShaping
             PuzzleData puzzle = puzzles[puzzleIndex];
             return new SpaceShapingSetup
             {
-                Origin = puzzle.origin,
-                Destination = puzzle.destination,
-                CaptureRadius = puzzle.captureRadius,
+                Origin = puzzle.Origin,
+                Destination = puzzle.Destination,
+                CaptureRadius = settings.captureRadius,
                 StepSecs = settings.stepSecs,
                 MaxSteps = settings.maxSteps,
                 LaunchModel = settings.launchModel,
@@ -165,12 +165,11 @@ namespace DigitalLove.Game.SpaceShaping
                 Tmin = puzzle.tmin,
                 Tmax = puzzle.tmax,
                 EntropyBudget = puzzle.entropyBudget,
-                EntropyPar = puzzle.entropyPar,
                 Sources = BuildSpecs(puzzle)
             };
         }
 
-        private static SourceSpec[] BuildSpecs(PuzzleData puzzle)
+        private SourceSpec[] BuildSpecs(PuzzleData puzzle)
         {
             SourceSpec[] specs = new SourceSpec[puzzle.sources.Length];
             for (int i = 0; i < specs.Length; i++)
@@ -180,9 +179,9 @@ namespace DigitalLove.Game.SpaceShaping
                 {
                     Home = source.home,
                     InitialScale = source.scale,
-                    MoveRange = source.moveRange,
-                    MinScale = source.minScale,
-                    MaxScale = source.maxScale
+                    MoveRange = settings.sourceMoveRange,
+                    MinScale = source.scale * settings.minScaleFactor,
+                    MaxScale = source.scale * settings.maxScaleFactor
                 };
             }
 

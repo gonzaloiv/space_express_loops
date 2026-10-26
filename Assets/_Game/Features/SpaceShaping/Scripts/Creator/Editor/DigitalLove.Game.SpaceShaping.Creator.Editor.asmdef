@@ -1,0 +1,20 @@
+{
+    "name": "DigitalLove.Game.SpaceShaping.Creator.Editor",
+    "rootNamespace": "DigitalLove.Game.SpaceShaping.Creator.EditorTools",
+    "references": [
+        "DigitalLove.Game.SpaceShaping.Creator",
+        "DigitalLove.Game.SpaceShaping",
+        "DigitalLove.Casual.Levels"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a653680055d8a644b9da0f0e6c7c3ee3, type: 3}
+  m_Name: PuzzleSeed
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Creator::DigitalLove.Game.SpaceShaping.Creator.PuzzleSeed
+  worldSeed: 1
+  shape: 0
+  distance: 12
+  planetCount: 34
+  planetRadius: 0.6
+  windowTightness: 1
+  entropyBudget: 1

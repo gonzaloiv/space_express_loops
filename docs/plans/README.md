@@ -1,57 +1,57 @@
-# Plans
+# Plans — the board
 
-Plans are grouped by state. Move a plan between folders when its state changes.
+The single source of truth for what is being built: **Now → Next → Later**. Update this file when a
+plan changes state; each plan carries a matching `**Status:**` line.
 
-**Direction:** [project direction](../design/project-direction.md) — the **lens** (the cube):
+**Direction:** [vision](../design/vision.md) — the **lens** (the cube):
 scale the space, scale the content; the ship flies the deformed spacetime.
 
-**Next:** the [lens plan](in-progress/space-shaping-lens.md) — **L0** (the lens/scale), then
-**L1** (flight + the entropy/eco grade; **continuous** — no launch step, the ship travels when the trajectory is right), then
-**L2** (puzzles + prediction toggle). Core: the **scale**; **multiple scales** land at job 3,
-**rotate** at job 4; the **score is entropy-left** (the window is the hard fail).
+## Now
 
-## In progress
-
-| Plan | State | Notes |
+| Plan | Area | Why here |
 |---|---|---|
-| [Space shaping — the lens (testing the mechanic)](in-progress/space-shaping-lens.md) | In progress | Tests the **lens** — the cube scale (a shrunk zone is a shortcut); **multiple scales** are core (job 3), **rotate** at job 4. Score = **entropy-left** (the window is the hard fail). Inherits the parked test slice's harness. Next: L0/L1. |
+| [Space shaping — puzzle creator](in-progress/space-shaping-puzzle-creator.md) | space shaping | Seed → verified `PuzzleData` variants, editor/offline. The `SectorField → SourceSpec` bridge and the field-region → puzzle mapping. |
+| [Space shaping — travel on every modification](in-progress/space-shaping-travel.md) | space shaping | Replace the solved-and-idle travel trigger with travel on every modification (no commit); pass / fail / free retry. |
 
-## Backlog
+## Next
 
-### Gameplay
+The runway after Now: the **device gate** (the gate criteria are in
+[vision](../design/vision.md) §12), then — only if it passes — integration.
 
-| Plan | State | Notes |
+| Plan | Area | Why here |
 |---|---|---|
-| [Space shaping — variations](backlog/gameplay/space-shaping-future.md) | Backlog (design only) | Recorded: multi-ship cap, sequential loop route, level generation (editor + seed creator). Aligned: verb = the scale, score = entropy, one view. |
-| [Space shaping — integration into the game](backlog/gameplay/space-shaping-integration.md) | Backlog (design only) | Sketch: replace the legacy route/round/economy flow with the puzzle loop; cube/zone scale, entropy score, one view + level selector, loop route in scope. |
+| [Space shaping — integration into the game](backlog/gameplay/space-shaping-integration.md) | space shaping | The largest, last slice: the puzzle loop replaces the legacy route/round/economy flow. **Gated on the device gate.** |
 
-### Universe
+## Later
 
-| Plan | State | Notes |
+Design-only or deferred. Nothing here is scheduled.
+
+| Plan | Area | Why here |
 |---|---|---|
-| [Sector field (hub)](backlog/universe/universe-infinite-sector.md) | Backlog | Hub for the split slices below; bounded seeded field, no streaming. Slice 1 (view frame) done; slice 2 is in progress. |
+| [Space shaping — feel & presentation polish](backlog/presentation/space-shaping-feel.md) | presentation | The *feel* beats after the gate: travel payoff, collapse feedback, window gauge, cargo personality. |
+| [Space shaping — variations](backlog/gameplay/space-shaping-future.md) | space shaping | Recorded: multi-ship cap, loop route, level generation. After the gate. |
+| [Universe — element pack](backlog/universe/universe-element-pack.md) | universe | Later ambient/decor set for the sector field: belts, moons, nebulae, stations… Not scheduled. |
+| [Hologram look](backlog/presentation/hologram-look.md) | presentation | Design only; hologram pass for the bubble view, then the edition view. Independent. |
+| [TTS voice panel](backlog/presentation/tts-voice-panel-personality.md) | presentation | Design only; camera-operator companion behavior for the TTS panel. |
 
-### Presentation and companion
+## Open tails
 
-| Plan | State | Notes |
-|---|---|---|
-| [TTS voice panel](backlog/presentation/tts-voice-panel-personality.md) | Backlog | Design only; camera-operator companion behavior for the TTS panel. |
-| [Hologram look](backlog/presentation/hologram-look.md) | Backlog | Design only; hologram pass for the bubble view first, then edition view (object-scoped). Independent of other work streams. |
-| [Space shaping — feel & presentation polish](backlog/presentation/space-shaping-feel.md) | Backlog (design only) | Collected feel beats after the gate: travel payoff, collapse feedback, window gauge + comedy, cargo personality. |
+Loose ends that still need a home. Close one by linking the plan that finishes it.
 
-## Parked
-
-Not current. Kept for reference; they collide with the
-[lens](../design/project-direction.md) framing. See
-[parked](parked/README.md).
-
-| Plan | Notes |
+| Open tail | Lands in |
 |---|---|
-| [Planet route drawing](parked/planet-route-drawing.md) | Drawn routes replaced by shaping space; the path is emergent from the field, not drawn. |
-| [Ambient round activation](parked/universe-ambient-round-activation.md) | A management game, not the physics puzzle. |
-| [Space shaping — test slice](parked/space-shaping-test-slice.md) | Superseded by the lens (planet-drag verb). Its harness and test approach carry into the [lens plan](in-progress/space-shaping-lens.md). |
-| [Space shaping — interaction + presentation polish](parked/space-shaping-polish.md) | Remaining work is planet-grab interaction; the mesh-deform lattice (done) and tuning notes carry over. |
+| Silent planets — persistence/restore validation | A future cross-feature restart pass |
+| Silent planets — migrate the decor pool into the field's ambient sectors | [Element pack](backlog/universe/universe-element-pack.md) |
+| Sector field — raise `viewRadius`/aperture | Trigger: when gameplay content moves onto the field → [integration](backlog/gameplay/space-shaping-integration.md) |
+| The lens — surface the session `Undo`; **rotate** (job 4) | [Feel](backlog/presentation/space-shaping-feel.md) / [variations](backlog/gameplay/space-shaping-future.md) |
 
-## Done
+## Conventions
 
-See [done](done/README.md) for completed plans.
+- Every plan starts with a status line:
+  `**Status:** <state> · <area> · updated <yyyy-mm-dd> — <one-line summary>`
+  where `<state>` is one of `now`, `next`, `later`.
+- `<area>` is one of `space shaping`, `universe`, `presentation`, `flow`.
+- Folders: `now` → `in-progress/`; `next` and `later` → `backlog/`. Move the file and update this
+  board in the same change.
+- Run `docs/plans/check-plans.ps1` (or `/check-plans`) after moving files — it verifies links and
+  status/folder consistency.

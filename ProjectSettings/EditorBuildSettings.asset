@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Game/Features/SpaceShaping/Scenes/SpaceShapingPOC.unity
+    path: Assets/_Game/Features/SpaceShaping/SpaceShapingPOC.unity
     guid: 1000000000000000000000000000000c
   - enabled: 1
     path: Assets/_Game/Game.unity
