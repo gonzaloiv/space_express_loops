@@ -16,6 +16,10 @@ These mirror the Unity scene/prefab wiring rules and feature validation checklis
 - Runtime code may position, scale, show, or hide authored objects; it must not invent them.
 - This applies to UI, VFX, line renderers, ghost previews, and interaction proxies.
 
+## Spawned content
+
+Content that is generated or pooled at runtime **from an authored prototype** is fine — the sector field's silent planets (`SectorFieldSpawner` + `NodePoolExtensions.AcquireInactive`) and the puzzle field's planets (`SpaceShapingView`'s `SpaceSourceView` pool) are the precedent. Spawn from a serialized prototype and pool it; never invent a mesh, material, or hierarchy with no authored source.
+
 ## States, modes, and sessions
 
 Follow [`Assets/_Modules/docs/standards/modes.md`](Assets/_Modules/docs/standards/modes.md).

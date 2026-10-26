@@ -11,7 +11,6 @@ scale the space, scale the content; the ship flies the deformed spacetime.
 | Plan | Area | Why here |
 |---|---|---|
 | [Space shaping — puzzle creator](in-progress/space-shaping-puzzle-creator.md) | space shaping | Seed → verified `PuzzleData` variants, editor/offline. Builds its own `SectorShapeData`; the `PuzzleFieldPlanet → PuzzleSource` bridge. |
-| [Space shaping — travel on every modification](in-progress/space-shaping-travel.md) | space shaping | **Shipped** — launch on every committed pinch; only the §5 HUD decision is open. |
 
 ## Next
 

@@ -27,7 +27,7 @@ legacy flow. Settle this before I0.
 ## Decisions (2026-10-26)
 
 - **Scope:** the **full run** — the level selector and **8–10 jobs** are in scope, not one puzzle.
-- **Loop:** **no commit** — travel on every modification ([travel plan](../../in-progress/space-shaping-travel.md)).
+- **Loop:** **no commit** — travel on every modification.
 - **Persistence:** save **player progression** (stars / cubes solved), **not** in-level state (§3.5).
 - **Target:** Meta Quest 3S, **72 fps**.
 - **UI:** the HUD sits **over the level** (world-anchored) (§3.6).

@@ -10,15 +10,15 @@ namespace DigitalLove.Game.SpaceShaping.EditorTools
         private const int Sides = 4;
         private const float RingRadius = 0.5f;
         private const float TubeRadius = 0.006f;
-        private const string MeshesFolder = "Assets/_Game/Features/SpaceShaping/Meshes";
-        private const string AssetPath = MeshesFolder + "/RangeRings.asset";
+        private const string ModelsFolder = "Assets/_Game/Features/SpaceShaping/Models";
+        private const string AssetPath = ModelsFolder + "/RangeRings.asset";
 
         [MenuItem("DigitalLove/Space Shaping/Build Range Rings")]
         public static void Build()
         {
             Mesh mesh = BuildMesh();
-            if (!AssetDatabase.IsValidFolder(MeshesFolder))
-                AssetDatabase.CreateFolder("Assets/_Game/Features/SpaceShaping", "Meshes");
+            if (!AssetDatabase.IsValidFolder(ModelsFolder))
+                AssetDatabase.CreateFolder("Assets/_Game/Features/SpaceShaping", "Models");
             if (AssetDatabase.LoadAssetAtPath<Mesh>(AssetPath) != null)
                 AssetDatabase.DeleteAsset(AssetPath);
             AssetDatabase.CreateAsset(mesh, AssetPath);

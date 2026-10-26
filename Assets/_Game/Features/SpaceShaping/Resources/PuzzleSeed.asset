@@ -12,10 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a653680055d8a644b9da0f0e6c7c3ee3, type: 3}
   m_Name: PuzzleSeed
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Creator::DigitalLove.Game.SpaceShaping.Creator.PuzzleSeed
-  worldSeed: 1
-  shape: 0
-  distance: 12
+  seed: 1
+  distance: 1
   planetCount: 10
-  planetRadius: 0.6
-  windowTightness: 1
-  entropyBudget: 1

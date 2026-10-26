@@ -9,9 +9,10 @@ polish that turns "works" into "wow". Not current work: the focus is **interesti
 
 ## 1. The flight (the payoff beat)
 
-- The ship **flies on every modification** — the flight *is* the reveal (the prediction line is gone,
-  [travel plan](../../in-progress/space-shaping-travel.md)). The payoff is the launch-and-land beat: a
-  run that lands reads as a win; a miss reads as a failure.
+- The ship **flies on every modification** — the flight *is* the reveal (the prediction line is gone).
+  The payoff is the launch-and-land beat: a run that lands reads as a win; a miss reads as a failure.
+- **Flight-duration tuning** (`travelSecs`): the run now fires on every edit, so its length needs a
+  pass — long enough to read the arc, short enough not to slow shaping down.
 - A **haptic "stretch"** on the cube scale, and a rising **pitch** as entropy drains — the cube is
   the product; it should *feel* like it is pulling spacetime.
 

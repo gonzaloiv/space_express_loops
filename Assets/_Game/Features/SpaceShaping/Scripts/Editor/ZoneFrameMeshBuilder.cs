@@ -8,14 +8,14 @@ namespace DigitalLove.Game.SpaceShaping.EditorTools
     {
         private const int Sides = 4;
         private const float BarRadius = 0.014f;
-        private const string MeshesFolder = "Assets/_Game/Features/SpaceShaping/Meshes";
-        private const string AssetPath = MeshesFolder + "/ZoneFrame.asset";
+        private const string ModelsFolder = "Assets/_Game/Features/SpaceShaping/Models";
+        private const string AssetPath = ModelsFolder + "/ZoneFrame.asset";
 
         [MenuItem("DigitalLove/Space Shaping/Build Zone Frame")]
         public static void Build()
         {
-            if (!AssetDatabase.IsValidFolder(MeshesFolder))
-                AssetDatabase.CreateFolder("Assets/_Game/Features/SpaceShaping", "Meshes");
+            if (!AssetDatabase.IsValidFolder(ModelsFolder))
+                AssetDatabase.CreateFolder("Assets/_Game/Features/SpaceShaping", "Models");
 
             Mesh existing = AssetDatabase.LoadAssetAtPath<Mesh>(AssetPath);
             Mesh mesh = existing != null ? existing : new Mesh();

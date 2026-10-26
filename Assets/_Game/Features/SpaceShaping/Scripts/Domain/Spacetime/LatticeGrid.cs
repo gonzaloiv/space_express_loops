@@ -17,23 +17,31 @@ namespace DigitalLove.Game.SpaceShaping
             return new Vector3(Lerp(min.x, max.x, b), Lerp(min.y, max.y, c), Lerp(min.z, max.z, a));
         }
 
-        public static Vector3 Warp(Vector3 node, IReadOnlyList<SpaceZone> zones)
+        public static Vector3 Warp(
+            Vector3 node, SpacetimeField field, float depthScale, float maxDisplacement, IReadOnlyList<SpaceZone> zones)
         {
-            if (zones == null)
-                return node;
-
             Vector3 warped = node;
-            for (int i = 0; i < zones.Count; i++)
+            if (zones != null)
             {
-                SpaceZone zone = zones[i];
-                if (!zone.IsActive)
-                    continue;
+                for (int i = 0; i < zones.Count; i++)
+                {
+                    SpaceZone zone = zones[i];
+                    if (!zone.IsActive)
+                        continue;
 
-                float inside = zone.InsideFactor(node);
-                warped = Vector3.Lerp(warped, zone.Centre + (warped - zone.Centre) * zone.Scale, inside);
+                    float inside = zone.InsideFactor(node);
+                    warped = Vector3.Lerp(warped, zone.Centre + (warped - zone.Centre) * zone.Scale, inside);
+                }
             }
 
-            return warped;
+            if (field == null)
+                return warped;
+
+            Vector3 pull = field.Pull(warped) * depthScale;
+            if (pull.sqrMagnitude > maxDisplacement * maxDisplacement)
+                pull = pull.normalized * maxDisplacement;
+
+            return warped + pull;
         }
 
         public static Vector3 RingOffset(int axis, int side, int sides)

@@ -32,14 +32,14 @@ The seed carries only the **per-job variation**, and it is deliberately tiny —
 | Property | Meaning |
 |---|---|
 | `seed` | the field's seed; also picks the shape (`seed % 3` → ring / spiral / cluster) |
-| `distance` | run length → `origin` / `destination`; also scales the planet size (`distance × 0.05`) |
+| `distance` | run length → `origin` / `destination`; also scales the planet size (`distance × 0.06`) |
 | `planetCount` | how many sources — the main difficulty dial |
 
 **Everything constant lives in one settings asset — `SpaceShapingSettings`** (sim + launch + editing
 envelope + the reachable scale range): `stepSecs`, `maxSteps`, `launchSpeed`, `sourceStrengthScale`,
 `separationScale`, `dilationScale`, `captureRadius`, `minScaleFactor`, `maxScaleFactor`. The
 **field's own constants live in `PuzzleFieldBuilder`**, not the settings asset: `FieldGap`,
-`FieldMargin`, `Spread`, `Thickness`, `PlanetRadiusFraction` (`0.05 × distance`), `PlanetRadiusSpread`,
+`FieldMargin`, `Spread`, `Thickness`, `PlanetRadiusFraction` (`0.06 × distance`), `PlanetRadiusSpread`,
 `PlanetsPerRing`.
 
 The **brief** (window tightness, entropy budget) is **not** on the seed: P3 derives `tmin`/`tmax`/
@@ -103,7 +103,7 @@ The mapping is a **`localScale`**, not a geometric radius: `PuzzleFieldPlanet.Ra
 
 **Decision to state — planet size (the one open decision in this plan).** The bridge multiplies the
 radius by `2` (`scale = radius * 2f`, `PuzzleSourceBridge`), so the puzzle's planets are **larger**
-than the universe's (`planetRadius` default `0.15–0.35` vs the builder's `distance × 0.05` = `0.6` at
+than the universe's (`planetRadius` default `0.15–0.35` vs the builder's `distance × 0.06` = `0.72` at
 distance 12), and the gravity radius is **half** the visual. Pick one and write it down: **(a)** match
 the universe's look (small planets) and raise `sourceStrengthScale` so the field still bends, or
 **(b)** keep the larger planets for the mechanic and accept the size difference.
@@ -113,9 +113,11 @@ The generated planets must not be moved by the puzzle's first `Constrain`. The p
 map makes `sᵢ = 2Rᵢ` — so in sector units the puzzle needs `1.2 × (Rᵢ + Rⱼ)`. `PuzzleFieldBuilder`
 sets the sector's `minSeparation` from `settings.separationScale` (**1.2**), so the sector spaces at
 exactly `1.2 × (Rᵢ + Rⱼ)`: **equal, no margin** (the sector's own default is `1.5`, which would give
-`1.5 ≥ 1.2`). Give the builder a small margin (e.g. `separationScale × 1.1`) so float noise can't
-nudge a planet on the first `Constrain` — the `BakedSources_NeedNoCorrection` test is knife-edge as
-it stands.
+`1.5 ≥ 1.2`). **Decision — the builder adds a margin:** set the sector's `minSeparation` to
+`separationScale × 1.1` (**1.32 ≥ 1.2**), so the sector spaces **wider** than the puzzle requires and
+float noise can't nudge a planet on the first `Constrain`; the `BakedSources_NeedNoCorrection` test
+is knife-edge without it. The sector's spacing is not a hard guarantee either — `ResolveOverlaps`
+stops after 32 passes and `Constrain` can undo a push — so the margin is worth having regardless.
 
 `PuzzleSource` (the serializable asset field) and `SourceSpec` (the domain struct) are the same
 shape; the bake (§5) maps one to the other.
@@ -162,12 +164,15 @@ config is untouched.
 **in memory**. **Still to do:** export each stage's artifact to a file (no `ScriptableObject` wrapper
 or JSON export exists yet).
 
+**Also (P0):** set the builder's `minSeparation` to `separationScale × 1.1` so the generated field
+keeps a margin over the puzzle's `1.2 × (Rᵢ + Rⱼ)` requirement (§4).
+
 ### P1 — data + verifier
 
 Add `PuzzleZone` (serializable: centre, size, scale, falloff) and `PuzzleData.solution[]`; add
 **`PuzzleVerifier`** (runtime, pure) that, given a puzzle + settings, simulates the start (expect
 **fail**) and start + solution (expect **arrive centered in `[Tmin,Tmax]`**, `EntropySpent ≤ budget`).
-Extract `PuzzleSetup.Build(puzzle, settings)` out of `SpaceShapingState` (building a setup from a
+Extract `SpaceShapingSetup.Build(puzzle, settings)` out of `SpaceShapingState` (building a setup from a
 puzzle is domain work, not flow orchestration) so the tool and the game share one path.
 
 **Exit:** a hand-made `PuzzleData` verifies green; the six old puzzles are retired.
@@ -224,7 +229,7 @@ and the window, and save the variants.
   `PuzzleData`). It does **not** reference `Sectors`.
 - **Authoring — `DigitalLove.Game.SpaceShaping.Creator`** (pure, no `UnityEditor`): `PuzzleSeed`,
   `PuzzleFieldPlanet`, the builder/generator, the **`PuzzleFieldPlanet → PuzzleSource`** bridge, and later
-  `PuzzleVerifier` / `PuzzleSolutionSearch` / `PuzzleSetup` / the bake. References the game +
+  `PuzzleVerifier` / `PuzzleSolutionSearch` / `SpaceShapingSetup` / the bake. References the game +
   `Sectors` + `Global`. The game **never** references the creator, and the field is **never generated
   at load**, so the generator lives here.
 - **Creator Editor — `…SpaceShaping.Creator.Editor`:** the wizard window, the verify/bake menu
@@ -248,6 +253,7 @@ and the window, and save the variants.
 |---|---|
 | Feature | **Seed-based creator** is primary; a designer can hand-edit and verify a variant |
 | Puzzle field | **Independent** of the selection field; generated by the sector creator driven by the seed |
+| Sector separation margin | The builder spaces **wider** than the puzzle needs — `minSeparation = separationScale × 1.1` (**1.32 ≥ 1.2**) — so the first `Constrain` never moves a baked planet |
 | Pipeline | **Independent stages, one exported file each** (`PuzzleSeed → SectorShapeData → planets → start → PuzzleData`); each stage is re-runnable and hand-editable |
 | Artifact format | **`ScriptableObject` at the boundaries** (`PuzzleSeed`, the exported `SectorShapeData`, the final `PuzzleData`); **plain `[Serializable]`** for the in-memory domain payloads (`PuzzleFieldPlanet`, `PuzzleZone`, `PuzzleSimSettings`). Stage 1's artifact is currently a `SectorFieldData`; becomes `SectorShapeData` when §3's switch lands (§6 P0) |
 | Reachable scale range | Moved out of `ZoneGrabListener` into domain data (`PuzzleSimSettings`); the view reads the same source |
@@ -285,7 +291,8 @@ and the window, and save the variants.
   (`radius → scale`), with `SourceSpecs.From` deriving the envelope; the seed-driven field meets the
   requested planet count/distance and **fits the
   play space** (extent ≈ `distance` + margin); the generated field respects `SourceConstraints`
-  separation (the first `Constrain` does not move a planet).
+  separation with margin (the first `Constrain` does not move a planet; the sector spaces ≥
+  `separationScale × 1.1`).
 - **Manual (Editor)** — run Generate for a seed, preview the field + start vs solution, save the
   variants, and confirm each re-verifies.
 
@@ -301,3 +308,78 @@ and the window, and save the variants.
 - **Runtime level selection / loading** — [integration](../backlog/gameplay/space-shaping-integration.md).
 - **Per-job launch (the narrative fuel)** — the launch stays a **settings** constant for now (§7);
   make it per-job (and add its lore) later.
+
+## 13. Handoff — for the next agent
+
+**Read first:** this plan (§2–§9), the [puzzle data model](#7-data-model), and the global/project
+`AGENTS.md` rules. Then work the tasks in order; each is small and independently verifiable.
+
+**Where things live:** game `DigitalLove.Game.SpaceShaping` (runtime loop, `PuzzleData`,
+`SpaceShapingSession`, `SpaceShapingSettings`); authoring `DigitalLove.Game.SpaceShaping.Creator`
+(pure, no `UnityEditor`); editor tools `…Creator.Editor` (namespace `…Creator.EditorTools`); tests `…Creator.Tests.EditMode` and
+`…SpaceShaping.Tests.EditMode`. The game **never** references the creator; the creator references the
+game + `Sectors` + `Global`.
+
+### Task 1 — P0 leftovers (do first)
+
+1. **Switch the field to `SectorShape.Generate` directly.** `PuzzleFieldGenerator.cs` currently calls
+   `SectorField.Generate` and `PuzzleFieldBuilder.Build` returns a `SectorFieldData` with the
+   `cellSize = 2 × fieldRadius` trick. Change stage 1's artifact to a built **`SectorShapeData`** and
+   stage 2 to `SectorShape.Generate(shape, new SeededRandom(seed))` → one `SectorLayout` centred at
+   the origin. Delete the `SectorFieldData` path; do not touch the universe's own config (§3, §6 P0).
+   This changes the builder/generator signatures, so update `PuzzleFieldBake` and **rewrite**
+   `PuzzleFieldTests.Build_FieldFitsThePlaySpace` (it asserts on `SectorField.FitsInCells`) rather than
+   deleting it.
+2. **Apply the separation margin.** In `PuzzleFieldBuilder`, set `minSeparation` to
+   `settings.separationScale * 1.1f` (**1.32 ≥ 1.2**), not the bare `separationScale` (§4, §6 P0).
+   `BakedSources_NeedNoCorrection` must then have real margin.
+3. **Export each stage's artifact to a file.** One artifact per stage (§3, §8): a `ScriptableObject`
+   wrapper (or JSON) for the `SectorShapeData` and the planet list, since `SectorShapeData` is a plain
+   `[Serializable]` class. Keep intermediates under a `Generated/` folder; commit only the final
+   `PuzzleData` (§10).
+
+### Task 2 — P1 (data + verifier)
+
+1. Add `PuzzleZone { Vector3 centre; Vector3 size; float scale; float falloff; }` (mirrors
+   `SpaceZone`) and `PuzzleData.solution[]` (§7).
+2. Add **`PuzzleVerifier`** (runtime, pure): given a puzzle + settings, simulate the start (expect
+   **fail**) and start + solution (expect **arrive inside `[Tmin, Tmax]`**, `EntropySpent ≤ budget`).
+   Both use the same `SpaceShapingSession` / `TrajectoryIntegrator` the game uses (§10 risk row).
+3. Extract **`SpaceShapingSetup.Build(puzzle, settings)`** out of `SpaceShapingState.BuildSetup` so the tool
+   and the game share one path. Add `PuzzleSimSettings` (plain `struct`) for the asset-free inputs.
+
+**Exit:** a hand-made `PuzzleData` verifies green; the six old puzzles are retired.
+
+### Then P2 → P4
+
+Follow §6: P2 adds `PuzzleSolutionSearch` (bounded, offline, scale-only grid at v1) and
+`origin`/`destination` placement from `distance`; P3 derives `tmin`/`tmax`/`entropyBudget` from the
+found solution and bakes variants; P4 replaces the current bake-only window with a Generate + preview
++ save window. **The existing `PuzzleCreatorWindow` only bakes** (`PuzzleFieldBake.Apply`) — it is a
+P0 stopgap, not P4.
+
+### Open decisions to settle (do not silently change)
+
+- **Planet size:** the bridge's `radius * 2f` stays **as-is** for now. It is a look-parity choice, not
+  a bug, and it is what makes the puzzle's separation requirement equal the sector's spacing (§4).
+  Only revisit if you want parity with the universe's planet look — and then raise
+  `sourceStrengthScale`, since the gravity radius is `scale × 0.5` (`SpaceShapingSession.BuildField`).
+
+### Rules that bite here
+
+- **No LINQ** in first-party code; use explicit loops / `List.Find` / `*Extensions`.
+- **Size limits:** type < 250 lines, method < 25 lines, ≤ 5 parameters (optional count).
+- **No runtime creation:** the field is baked, never generated at load; no meshes/assets/hierarchy at
+  runtime (§9). **No `GetComponent`/find-by-name** — serialized refs only.
+- **Editor-only UI** stays under `Creator/Editor/`; keep the pure domain code in the runtime assembly
+  so EditMode tests can reach it (§8).
+- **Do not run git** — the user owns commits.
+
+### Verification
+
+- Unity EditMode: run both test assemblies (`…SpaceShaping.Tests.EditMode`,
+  `…Creator.Tests.EditMode`) and check the console for compile errors before trusting behavior.
+- `powershell -NoProfile -File docs/plans/check-plans.ps1` must stay green after any plan edit.
+- Manual pass (§11): bake a seed, preview start vs solution, save variants, confirm each re-verifies.
+  Ask before entering Play mode or mutating the scene.
+

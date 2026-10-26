@@ -6,11 +6,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleFieldBuilder
     {
-        private const float FieldGap = 0.5f;
-        private const float FieldMargin = 1f;
+        private const float FieldGap = 0.05f;
+        private const float FieldMargin = 0.1f;
         private const float Spread = 0.7f;
         private const float Thickness = 0.3f;
-        private const float PlanetRadiusFraction = 0.05f;
+        private const float PlanetRadiusFraction = 0.06f;
         private const float PlanetRadiusSpread = 0.3f;
         private const int PlanetsPerRing = 6;
 
@@ -32,7 +32,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             };
         }
 
-        public static float PlanetRadius(PuzzleSeed seed) => seed.distance * PlanetRadiusFraction;
+        private static float PlanetRadius(PuzzleSeed seed) => seed.distance * PlanetRadiusFraction;
 
         private static float PlanetRadiusMax(PuzzleSeed seed) =>
             PlanetRadius(seed) * (1f + PlanetRadiusSpread);

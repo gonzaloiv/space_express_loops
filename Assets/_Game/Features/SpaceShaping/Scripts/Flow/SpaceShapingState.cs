@@ -8,9 +8,6 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private PuzzleData[] puzzles;
         [SerializeField] private SpaceShapingSettings settings;
         [SerializeField] private SpaceShapingView view;
-        [SerializeField] private ShapingLabHud hud;
-        [SerializeField] private ShapingLabButton resetButton;
-        [SerializeField] private ShapingLabButton nextButton;
         [SerializeField] private ShipTravelView ship;
 
         private readonly TrajectoryIntegrator integrator = new();
@@ -18,9 +15,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private SpaceShapingSession session;
         private int puzzleIndex;
-        private TrajectoryResult launched;
         private bool wasScaling;
-        private bool flying;
 
         public override void Enter()
         {
@@ -30,25 +25,34 @@ namespace DigitalLove.Game.SpaceShaping
 
         public override void Exit() => session = null;
 
+        public void ResetPuzzle()
+        {
+            wasScaling = false;
+            view.ResetZone();
+            session.Reset();
+            ship.Reset(session.Origin);
+            PushField();
+        }
+
+        public void NextPuzzle()
+        {
+            puzzleIndex = (puzzleIndex + 1) % puzzles.Length;
+            StartPuzzle();
+        }
+
+        public void PreviewField()
+        {
+            SpaceShapingSession preview = new(BuildSetup());
+            view.SetEndpoints(preview.Origin, preview.Destination);
+            view.Render(preview.BuildField(), preview.Zones);
+        }
+
         private void LateUpdate()
         {
             if (session == null || !parent.IsCurrentState<SpaceShapingState>())
                 return;
 
-            if (resetButton.ConsumePressed())
-            {
-                ResetPuzzle();
-                return;
-            }
-
-            if (nextButton.ConsumePressed())
-            {
-                NextPuzzle();
-                return;
-            }
-
             TrackGesture();
-            TrackFlight();
         }
 
         private void TrackGesture()
@@ -69,15 +73,6 @@ namespace DigitalLove.Game.SpaceShaping
                 PushField();
         }
 
-        private void TrackFlight()
-        {
-            bool isFlying = ship.IsFlying;
-            if (flying && !isFlying && !view.IsScaling)
-                hud.Render(BuildReadout(launched, true));
-
-            flying = isFlying;
-        }
-
         private void BeginScale()
         {
             session.PreviewZone(view.Zone);
@@ -89,34 +84,16 @@ namespace DigitalLove.Game.SpaceShaping
         {
             wasScaling = false;
             session.CommitPreview();
-            launched = PushField();
-            ship.Travel(launched);
+            ship.Travel(PushField());
         }
 
         private void StartPuzzle()
         {
             wasScaling = false;
-            flying = false;
             view.ResetZone();
             session = new SpaceShapingSession(BuildSetup());
             ship.Reset(session.Origin);
-            hud.Render(BuildReadout(PushField(), false));
-        }
-
-        private void ResetPuzzle()
-        {
-            wasScaling = false;
-            flying = false;
-            view.ResetZone();
-            session.Reset();
-            ship.Reset(session.Origin);
-            hud.Render(BuildReadout(PushField(), false));
-        }
-
-        private void NextPuzzle()
-        {
-            puzzleIndex = (puzzleIndex + 1) % puzzles.Length;
-            StartPuzzle();
+            PushField();
         }
 
         private TrajectoryResult PushField()
@@ -125,28 +102,9 @@ namespace DigitalLove.Game.SpaceShaping
 
             SpacetimeField field = session.BuildField();
             TrajectoryResult result = session.Simulate(field, integrator, launch);
-            view.Render(session.Zones);
+            view.Render(field, session.Zones);
             view.Snapshot();
             return result;
-        }
-
-        private ShapingReadout BuildReadout(TrajectoryResult result, bool verified)
-        {
-            PuzzleData puzzle = puzzles[puzzleIndex];
-            return new ShapingReadout
-            {
-                PuzzleName = puzzle.name,
-                Verified = verified,
-                Outcome = result.Outcome,
-                ShipTime = result.ShipTime,
-                Tmin = puzzle.tmin,
-                Tmax = puzzle.tmax,
-                EntropyLeft = puzzle.entropyBudget - session.EntropySpent,
-                Stars = session.Grade(),
-                Scale = view.Zone.Scale,
-                Solved = session.IsSolved(result),
-                Zones = session.CommandCount
-            };
         }
 
         private SpaceShapingSetup BuildSetup()

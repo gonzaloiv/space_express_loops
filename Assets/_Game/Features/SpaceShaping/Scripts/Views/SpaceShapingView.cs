@@ -1,16 +1,19 @@
 using System.Collections.Generic;
+using DigitalLove.Game.Nodes;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
 {
     public class SpaceShapingView : MonoBehaviour
     {
-        [SerializeField] private SpaceSourceView[] sources;
+        [SerializeField] private SpaceSourceView prototype;
+        [SerializeField] private Transform sourceParent;
         [SerializeField] private SpacetimeMeshView mesh;
         [SerializeField] private SpaceZoneView zone;
         [SerializeField] private Transform origin;
         [SerializeField] private Transform destination;
 
+        private readonly List<SpaceSourceView> pool = new();
         private SpaceZone lastZone;
         private bool hasSnapshot;
 
@@ -32,12 +35,20 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void ApplyFromSession(SpaceShapingSession session)
         {
-            origin.localPosition = session.Origin;
-            destination.localPosition = session.Destination;
+            SetEndpoints(session.Origin, session.Destination);
 
-            int count = Mathf.Min(sources.Length, session.SourceCount);
+            int count = session.SourceCount;
             for (int i = 0; i < count; i++)
-                sources[i].SetLocal(session.GetPosition(i), session.GetScale(i));
+                Source(i).SetLocal(session.GetPosition(i), session.GetScale(i));
+
+            for (int i = count; i < pool.Count; i++)
+                pool[i].Hide();
+        }
+
+        public void SetEndpoints(Vector3 originPosition, Vector3 destinationPosition)
+        {
+            origin.localPosition = originPosition;
+            destination.localPosition = destinationPosition;
         }
 
         public void Snapshot()
@@ -46,13 +57,21 @@ namespace DigitalLove.Game.SpaceShaping
             hasSnapshot = true;
         }
 
-        public void Render(IReadOnlyList<SpaceZone> zones) =>
-            mesh.Render(zones, Vector3.Distance(origin.position, destination.position) * 0.5f);
+        public void Render(SpacetimeField field, IReadOnlyList<SpaceZone> zones) =>
+            mesh.Render(field, zones, Vector3.Distance(origin.position, destination.position) * 0.5f);
 
         public void ResetZone()
         {
             zone.ResetScale();
             hasSnapshot = false;
+        }
+
+        private SpaceSourceView Source(int index)
+        {
+            if (pool.Count == 0)
+                pool.AcquireInactive(prototype, sourceParent, created => created.Initialize());
+
+            return pool.EnsureSlot(index, sourceParent, created => created.Initialize());
         }
     }
 }

@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stepSecs: 0.008333333
   maxSteps: 1200
-  launchModel: 0
-  launchSpeed: 1
-  thrustAcceleration: 1
-  sourceStrengthScale: 2
+  launchSpeed: 0.1
+  sourceStrengthScale: 0.02
   separationScale: 1.2
   dilationScale: 0.2
+  captureRadius: 0.06
+  minScaleFactor: 0.4
+  maxScaleFactor: 2.5

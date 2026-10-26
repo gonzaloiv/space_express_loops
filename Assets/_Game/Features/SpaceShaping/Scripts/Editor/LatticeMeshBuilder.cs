@@ -13,7 +13,7 @@ namespace DigitalLove.Game.SpaceShaping.EditorTools
         private const float Radius = 0.05f;
         private static readonly Vector3 Min = new(-6f, -4f, -3f);
         private static readonly Vector3 Max = new(6f, 4f, 3f);
-        private const string AssetPath = "Assets/_Game/Features/SpaceShaping/Meshes/LatticeMesh.asset";
+        private const string AssetPath = "Assets/_Game/Features/SpaceShaping/Models/LatticeMesh.asset";
 
         [MenuItem("DigitalLove/Space Shaping/Build Lattice Mesh")]
         public static void Build()
@@ -86,8 +86,8 @@ namespace DigitalLove.Game.SpaceShaping.EditorTools
 
         private static void EnsureFolder()
         {
-            if (!AssetDatabase.IsValidFolder("Assets/_Game/Features/SpaceShaping/Meshes"))
-                AssetDatabase.CreateFolder("Assets/_Game/Features/SpaceShaping", "Meshes");
+            if (!AssetDatabase.IsValidFolder("Assets/_Game/Features/SpaceShaping/Models"))
+                AssetDatabase.CreateFolder("Assets/_Game/Features/SpaceShaping", "Models");
         }
     }
 }

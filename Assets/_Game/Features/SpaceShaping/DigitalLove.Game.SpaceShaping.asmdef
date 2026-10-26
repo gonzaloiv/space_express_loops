@@ -3,12 +3,11 @@
     "rootNamespace": "",
     "references": [
         "DigitalLove.Global",
+        "DigitalLove.Game.Nodes",
         "DigitalLove.Casual.Levels",
         "DigitalLove.FlowControl",
         "DigitalLove.Input",
-        "Oculus.Interaction",
-        "Unity.TextMeshPro",
-        "UnityEngine.UI"
+        "Oculus.Interaction"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

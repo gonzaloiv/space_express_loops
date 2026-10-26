@@ -2,7 +2,9 @@
     "name": "DigitalLove.Game.SpaceShaping.Editor",
     "rootNamespace": "",
     "references": [
-        "DigitalLove.Game.SpaceShaping"
+        "DigitalLove.Game.SpaceShaping",
+        "DigitalLove.FlowControl",
+        "DigitalLove.Casual.Levels"
     ],
     "includePlatforms": [
         "Editor"
