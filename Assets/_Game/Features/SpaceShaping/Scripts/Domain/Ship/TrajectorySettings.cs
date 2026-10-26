@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
@@ -9,6 +10,6 @@ namespace DigitalLove.Game.SpaceShaping
         public float StepSecs;
         public int MaxSteps;
         public float DilationScale;
-        public SpaceZone Zone;
+        public IReadOnlyList<SpaceZone> Zones;
     }
 }

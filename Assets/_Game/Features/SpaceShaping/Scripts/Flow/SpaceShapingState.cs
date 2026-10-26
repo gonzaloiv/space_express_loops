@@ -20,11 +20,10 @@ namespace DigitalLove.Game.SpaceShaping
 
         private SpaceShapingSession session;
         private int puzzleIndex;
-        private int editCount;
-        private bool wasChanged;
         private bool predictionEnabled = true;
         private TrajectoryResult? lastResult;
         private bool travelled;
+        private bool wasScaling;
         private float idleElapsed;
 
         public override void Enter()
@@ -41,21 +40,32 @@ namespace DigitalLove.Game.SpaceShaping
                 return;
 
             if (resetButton.ConsumePressed())
+            {
                 ResetPuzzle();
+                return;
+            }
+
             if (nextButton.ConsumePressed())
+            {
                 NextPuzzle();
+                return;
+            }
+
             if (predictButton.ConsumePressed())
                 TogglePrediction();
 
-            bool changed = view.HasChanged();
-            if (changed && !wasChanged)
-                editCount++;
-            wasChanged = changed;
+            bool scaling = view.IsScaling;
+            if (scaling)
+                session.PreviewZone(view.Zone);
+            else if (wasScaling)
+                session.CommitPreview();
 
-            if (changed)
+            bool changed = view.HasChanged();
+            if (scaling || changed || wasScaling)
             {
                 travelled = false;
                 idleElapsed = 0f;
+                wasScaling = scaling;
                 Push();
                 return;
             }
@@ -73,9 +83,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void StartPuzzle()
         {
-            editCount = 0;
-            wasChanged = false;
             travelled = false;
+            wasScaling = false;
             idleElapsed = 0f;
             view.ResetZone();
             session = new SpaceShapingSession(BuildSetup());
@@ -85,8 +94,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void ResetPuzzle()
         {
-            editCount = 0;
             travelled = false;
+            wasScaling = false;
             idleElapsed = 0f;
             view.ResetZone();
             session.Reset();
@@ -108,17 +117,12 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void Push()
         {
-            if (view.ScaleChanged())
-            {
-                session.ApplyZone(view.Zone);
-                session.Constrain();
-                view.ApplyFromSession(session);
-            }
+            view.ApplyFromSession(session);
 
             SpacetimeField field = session.BuildField();
-            TrajectoryResult result = session.Simulate(field, integrator, launch, view.Zone);
+            TrajectoryResult result = session.Simulate(field, integrator, launch);
             lastResult = result;
-            view.Render(field, result, session.Destination);
+            view.Render(field, result, session.Destination, session.Zones);
             view.Snapshot();
             hud.Render(BuildReadout(result));
         }
@@ -126,7 +130,7 @@ namespace DigitalLove.Game.SpaceShaping
         private ShapingReadout BuildReadout(TrajectoryResult result)
         {
             PuzzleData puzzle = puzzles[puzzleIndex];
-            float entropyLeft = puzzle.entropyBudget - view.ZoneExcursion;
+            float entropyLeft = puzzle.entropyBudget - session.EntropySpent;
             return new ShapingReadout
             {
                 PuzzleName = puzzle.name,
@@ -138,7 +142,7 @@ namespace DigitalLove.Game.SpaceShaping
                 Stars = session.Grade(entropyLeft),
                 Scale = view.Zone.Scale,
                 Solved = session.IsSolved(result),
-                EditCount = editCount
+                Zones = session.CommandCount
             };
         }
 

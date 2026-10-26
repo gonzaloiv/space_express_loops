@@ -79,6 +79,7 @@ namespace DigitalLove.Game.SpaceShaping
             int count = grabbable.SelectingPointsCount;
             if (count == 0)
             {
+                zone.SetScaling(false);
                 ResetGesture();
                 ApplyFeedback();
                 return;
@@ -105,6 +106,7 @@ namespace DigitalLove.Game.SpaceShaping
             else
                 ScaleUniverse();
 
+            zone.SetScaling(count >= 2 && !frameGrab);
             ApplyFeedback();
             lastCount = count;
         }

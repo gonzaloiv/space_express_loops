@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
@@ -16,6 +17,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         public SpaceZone Zone => zone.Zone;
 
+        public bool IsScaling => zone.IsScaling;
+
         public bool HasChanged()
         {
             if (!hasSnapshot)
@@ -26,14 +29,6 @@ namespace DigitalLove.Game.SpaceShaping
                 || current.HalfExtents != lastZone.HalfExtents
                 || current.Scale != lastZone.Scale
                 || current.Falloff != lastZone.Falloff;
-        }
-
-        public bool ScaleChanged()
-        {
-            if (!hasSnapshot)
-                return true;
-
-            return zone.Zone.Scale != lastZone.Scale;
         }
 
         public void ApplyFromSession(SpaceShapingSession session)
@@ -52,9 +47,10 @@ namespace DigitalLove.Game.SpaceShaping
             hasSnapshot = true;
         }
 
-        public void Render(SpacetimeField field, TrajectoryResult result, Vector3 destinationLocal)
+        public void Render(
+            SpacetimeField field, TrajectoryResult result, Vector3 destinationLocal, IReadOnlyList<SpaceZone> zones)
         {
-            mesh.Render(field, Zone);
+            mesh.Render(field, zones);
             prediction.Render(result, destinationLocal);
         }
 
@@ -65,7 +61,5 @@ namespace DigitalLove.Game.SpaceShaping
             zone.ResetScale();
             hasSnapshot = false;
         }
-
-        public float ZoneExcursion => zone.ScaleExcursion;
     }
 }

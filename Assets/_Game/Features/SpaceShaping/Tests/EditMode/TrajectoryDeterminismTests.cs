@@ -82,7 +82,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
 
             SpaceShapingSession session = new(setup);
             SpacetimeField field = session.BuildField();
-            TrajectoryResult viaSession = session.Simulate(field, new TrajectoryIntegrator(), new ShipLaunch(), default);
+            TrajectoryResult viaSession = session.Simulate(field, new TrajectoryIntegrator(), new ShipLaunch());
             TrajectoryResult direct = new TrajectoryIntegrator().Integrate(field, setup.Origin, Launch(), Settings());
 
             Assert.AreEqual(direct.Outcome, viaSession.Outcome);

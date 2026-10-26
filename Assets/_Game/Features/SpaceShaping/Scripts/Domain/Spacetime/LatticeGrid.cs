@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
@@ -17,18 +18,27 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         public static Vector3 Warp(
-            Vector3 node, SpacetimeField field, float scale, float maxDisplacement, SpaceZone zone)
+            Vector3 node, SpacetimeField field, float scale, float maxDisplacement, IReadOnlyList<SpaceZone> zones)
         {
             Vector3 pull = field.Pull(node) * scale;
             if (pull.sqrMagnitude > maxDisplacement * maxDisplacement)
                 pull = pull.normalized * maxDisplacement;
 
             Vector3 warped = node + pull;
-            if (!zone.IsActive)
+            if (zones == null)
                 return warped;
 
-            float inside = zone.InsideFactor(node);
-            return Vector3.Lerp(warped, zone.Centre + (warped - zone.Centre) * zone.Scale, inside);
+            for (int i = 0; i < zones.Count; i++)
+            {
+                SpaceZone zone = zones[i];
+                if (!zone.IsActive)
+                    continue;
+
+                float inside = zone.InsideFactor(node);
+                warped = Vector3.Lerp(warped, zone.Centre + (warped - zone.Centre) * zone.Scale, inside);
+            }
+
+            return warped;
         }
 
         public static Vector3 RingOffset(int axis, int side, int sides)

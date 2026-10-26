@@ -361,6 +361,39 @@ removed), L1 entropy (budget/par, `ScaleExcursion` = `Σ |Δscale|`, `Grade` 1�
 - **The lab has no "Simulate" button** — the three buttons are **Reset**, **Next**, **Predict**.
   `Predict` toggles the predicted-trajectory line (`SpaceShapingView.SetPredictionVisible`).
 
+**Done (2026-10-26) — the whole field is applied, not just the content.** The mesh warp and the
+metric still followed the **live** frame (`SpacetimeMeshView` was rendered from `view.Zone` every
+frame), so **translating** the cube re-warped the lattice and re-bent the path. Now `SpaceShapingView`
+keeps an **applied zone** (`AppliedZone`) captured in `ApplyFromSession` — which only runs when
+`ScaleChanged` — and the mesh render *and* the trajectory sim both read it. Moving or resizing the
+frame changes nothing; only the grab-inside **scale** commits a new zone (and re-derives from `Home`
+at the current centre). This reverses the earlier "the lens/metric stays live with the frame" caveat:
+the field is applied, never derived, so the cube is a cursor and the deformation stays where it was
+scaled.
+
+**Done (2026-10-26, later) — the scale is a command history (accumulate + undo).** The applied
+zone is now an explicit **`SpaceScaleCommand`** per modification, not a single derived snapshot.
+`SpaceShapingSession` keeps a `List<SpaceScaleCommand>` and replays them from `Home` on every
+change (`RestorePristine` → `ApplyCommands` → `Constrain` → `RebuildZones`); `ApplyZone` appends,
+`Undo` pops, `Reset` clears. **One command per pinch**: the gesture is live-previewed via
+`PreviewZone` (a non-committed command) while `SpaceZoneView.IsScaling` is set by `ZoneGrabListener`,
+and `CommitPreview` runs on release. Consequences:
+
+- **Multiple zones now blend.** `SpaceShapingSession.Zones` (committed + preview) feeds both the
+  mesh (`LatticeGrid.Warp` applies each zone in sequence) and the metric (`TrajectorySettings.Zones`;
+  the position step is divided by the **product** of the zone divisors). This is job 3's core,
+  arriving early per the decision below.
+- **The step budget scales with the largest zone** (`StepBudget` = `MaxSteps · max(1, scale)`).
+- **The edit's cost rides on its command.** `SpaceScaleCommand` carries `EntropyCost` — the
+  `Σ |Δscale|` accrued **while the pinch is held** (`PreviewZone` adds each frame's delta from the
+  previous frame / last committed scale). `SpaceShapingSession.EntropySpent` = the sum over committed
+  commands plus the live preview, and the readout uses it (`entropyBudget − EntropySpent`). **Undo
+  refunds** the popped command's cost. The old `SpaceZoneView.ScaleExcursion` is gone.
+- **Undo is a session capability, not yet surfaced.** `SpaceShapingSession.Undo` pops the last
+  command and replays (covered by `Undo_RemovesLastCommandAndRestoresContent`); the lab has **no
+  button** for it yet — wiring one is deferred. The HUD now reads `zones N` (command count) instead
+  of `edits N`.
+
 **Remaining in this plan.** The **testability polish** (travel moment, window gauge, haptics/audio,
 cargo — see [feel & polish](../backlog/presentation/space-shaping-feel.md)).
 

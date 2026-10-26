@@ -11,6 +11,6 @@ namespace DigitalLove.Game.SpaceShaping
         public int Stars;
         public float Scale;
         public bool Solved;
-        public int EditCount;
+        public int Zones;
     }
 }

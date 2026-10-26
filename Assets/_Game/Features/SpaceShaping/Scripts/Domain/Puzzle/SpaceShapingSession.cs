@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
@@ -8,6 +9,12 @@ namespace DigitalLove.Game.SpaceShaping
         private readonly Vector3[] positions;
         private readonly float[] scales;
         private readonly SourceSpec[] specs;
+        private readonly List<SpaceScaleCommand> commands = new();
+        private readonly List<SpaceZone> zones = new();
+
+        private SpaceScaleCommand preview;
+        private float previewLastScale;
+        private float entropySpent;
 
         public SpaceShapingSession(SpaceShapingSetup setup)
         {
@@ -24,6 +31,12 @@ namespace DigitalLove.Game.SpaceShaping
 
         public Vector3 Destination => setup.Destination;
 
+        public IReadOnlyList<SpaceZone> Zones => zones;
+
+        public int CommandCount => commands.Count;
+
+        public float EntropySpent => entropySpent;
+
         public Vector3 GetPosition(int index) => positions[index];
 
         public float GetScale(int index) => scales[index];
@@ -38,27 +51,46 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void Reset()
         {
-            for (int i = 0; i < positions.Length; i++)
-            {
-                positions[i] = setup.Sources[i].Home;
-                scales[i] = setup.Sources[i].InitialScale;
-                specs[i] = setup.Sources[i];
-            }
+            commands.Clear();
+            preview = null;
+            previewLastScale = 0f;
+            Recompute();
         }
 
         public void ApplyZone(SpaceZone zone)
         {
-            for (int i = 0; i < positions.Length; i++)
-            {
-                SourceSpec source = setup.Sources[i];
-                float factor = Mathf.Lerp(1f, zone.Scale, zone.InsideFactor(source.Home));
-                positions[i] = zone.Centre + (source.Home - zone.Centre) * factor;
-                scales[i] = source.InitialScale * factor;
-                specs[i] = Scaled(source, zone.Centre, factor);
-            }
+            PreviewZone(zone);
+            CommitPreview();
         }
 
-        public void Constrain() => SourceConstraints.Apply(positions, scales, specs, setup.SeparationScale);
+        public void PreviewZone(SpaceZone zone)
+        {
+            float reference = preview != null ? previewLastScale : LastCommittedScale();
+            float cost = (preview != null ? preview.EntropyCost : 0f) + Mathf.Abs(zone.Scale - reference);
+            previewLastScale = zone.Scale;
+            preview = new SpaceScaleCommand(zone, cost);
+            Recompute();
+        }
+
+        public void CommitPreview()
+        {
+            if (preview == null)
+                return;
+
+            commands.Add(preview);
+            preview = null;
+            Recompute();
+        }
+
+        public bool Undo()
+        {
+            if (commands.Count == 0)
+                return false;
+
+            commands.RemoveAt(commands.Count - 1);
+            Recompute();
+            return true;
+        }
 
         public SpacetimeField BuildField()
         {
@@ -73,16 +105,16 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         public TrajectoryResult Simulate(
-            SpacetimeField field, TrajectoryIntegrator integrator, ShipLaunch launch, SpaceZone zone)
+            SpacetimeField field, TrajectoryIntegrator integrator, ShipLaunch launch)
         {
             TrajectorySettings settings = new()
             {
                 Destination = setup.Destination,
                 CaptureRadius = setup.CaptureRadius,
                 StepSecs = setup.StepSecs,
-                MaxSteps = StepBudget(zone),
+                MaxSteps = StepBudget(),
                 DilationScale = setup.DilationScale,
-                Zone = zone
+                Zones = zones
             };
 
             launch.Model = setup.LaunchModel;
@@ -91,16 +123,66 @@ namespace DigitalLove.Game.SpaceShaping
             return launch.Simulate(field, setup.Origin, setup.Destination, settings, integrator);
         }
 
-        private int StepBudget(SpaceZone zone) =>
-            zone.IsActive ? Mathf.CeilToInt(setup.MaxSteps * Mathf.Max(1f, zone.Scale)) : setup.MaxSteps;
-
-        private static SourceSpec Scaled(SourceSpec source, Vector3 centre, float factor) => new()
+        private void Recompute()
         {
-            Home = centre + (source.Home - centre) * factor,
-            InitialScale = source.InitialScale * factor,
-            MoveRange = source.MoveRange * factor,
-            MinScale = source.MinScale * factor,
-            MaxScale = source.MaxScale * factor
-        };
+            RestorePristine();
+            ApplyCommands();
+            SourceConstraints.Apply(positions, scales, specs, setup.SeparationScale);
+            RebuildZones();
+            RecomputeEntropy();
+        }
+
+        private void RestorePristine()
+        {
+            for (int i = 0; i < positions.Length; i++)
+            {
+                positions[i] = setup.Sources[i].Home;
+                scales[i] = setup.Sources[i].InitialScale;
+                specs[i] = setup.Sources[i];
+            }
+        }
+
+        private void ApplyCommands()
+        {
+            for (int c = 0; c < commands.Count; c++)
+                commands[c].Apply(positions, scales, specs);
+
+            if (preview != null)
+                preview.Apply(positions, scales, specs);
+        }
+
+        private void RebuildZones()
+        {
+            zones.Clear();
+            for (int c = 0; c < commands.Count; c++)
+                zones.Add(commands[c].Zone);
+
+            if (preview != null)
+                zones.Add(preview.Zone);
+        }
+
+        private void RecomputeEntropy()
+        {
+            float total = preview != null ? preview.EntropyCost : 0f;
+            for (int c = 0; c < commands.Count; c++)
+                total += commands[c].EntropyCost;
+
+            entropySpent = total;
+        }
+
+        private float LastCommittedScale() =>
+            commands.Count > 0 ? commands[commands.Count - 1].Zone.Scale : 1f;
+
+        private int StepBudget()
+        {
+            float factor = 1f;
+            for (int i = 0; i < zones.Count; i++)
+            {
+                if (zones[i].IsActive)
+                    factor = Mathf.Max(factor, zones[i].Scale);
+            }
+
+            return Mathf.CeilToInt(setup.MaxSteps * factor);
+        }
     }
 }

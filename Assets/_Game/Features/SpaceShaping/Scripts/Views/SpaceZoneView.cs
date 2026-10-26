@@ -9,7 +9,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private Transform contentVisual;
 
         private float scale = 1f;
-        private float scaleExcursion;
+        private bool scaling;
 
         public SpaceZone Zone => new(Centre, Size * 0.5f, scale, falloff);
 
@@ -19,7 +19,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         public float Scale => scale;
 
-        public float ScaleExcursion => scaleExcursion;
+        public bool IsScaling => scaling;
 
         public Vector3 ContentSize
         {
@@ -46,17 +46,14 @@ namespace DigitalLove.Game.SpaceShaping
             ApplyContentVisual();
         }
 
-        public void SetScale(float value)
-        {
-            value = Mathf.Max(value, 0.01f);
-            scaleExcursion += Mathf.Abs(value - scale);
-            scale = value;
-        }
+        public void SetScale(float value) => scale = Mathf.Max(value, 0.01f);
+
+        public void SetScaling(bool value) => scaling = value;
 
         public void ResetScale()
         {
             scale = 1f;
-            scaleExcursion = 0f;
+            scaling = false;
         }
 
         private void ApplyContentVisual()

@@ -15,7 +15,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             readout.color = ColorFor(state);
             readout.text = FormattableString.Invariant(
-                $"{state.PuzzleName}\n{state.Outcome}\nscale {state.Scale:0.00}\nship {state.ShipTime:0.00}s in [{state.Tmin:0.00}–{state.Tmax:0.00}s]\nentropy {state.EntropyLeft:0.00} ({state.Stars}*)\nedits {state.EditCount}");
+                $"{state.PuzzleName}\n{state.Outcome}\nscale {state.Scale:0.00}\nship {state.ShipTime:0.00}s in [{state.Tmin:0.00}–{state.Tmax:0.00}s]\nentropy {state.EntropyLeft:0.00} ({state.Stars}*)\nzones {state.Zones}");
         }
 
         private Color ColorFor(ShapingReadout state)

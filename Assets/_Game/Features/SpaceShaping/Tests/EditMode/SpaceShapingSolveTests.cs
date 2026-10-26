@@ -26,7 +26,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         };
 
         private static TrajectoryResult Simulate(SpaceShapingSession session) =>
-            session.Simulate(session.BuildField(), new TrajectoryIntegrator(), new ShipLaunch(), default);
+            session.Simulate(session.BuildField(), new TrajectoryIntegrator(), new ShipLaunch());
 
         [Test]
         public void Arrival_InsideWindow_IsSolved()

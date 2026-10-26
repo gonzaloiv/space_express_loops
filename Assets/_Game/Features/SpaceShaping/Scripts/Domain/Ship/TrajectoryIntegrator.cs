@@ -23,7 +23,7 @@ namespace DigitalLove.Game.SpaceShaping
                 shipTime += settings.StepSecs * Dilation(field, position, settings.DilationScale);
                 velocity += acceleration * settings.StepSecs;
                 Vector3 from = position;
-                position += velocity * settings.StepSecs / settings.Zone.StepDivisor(position);
+                position += velocity * settings.StepSecs / StepDivisor(settings.Zones, position);
                 points.Add(position);
 
                 TrajectoryOutcome outcome = Classify(field, from, position, start, settings);
@@ -36,6 +36,18 @@ namespace DigitalLove.Game.SpaceShaping
 
         private static float Dilation(SpacetimeField field, Vector3 position, float scale) =>
             Mathf.Clamp(1f + scale * field.Potential(position), 0.05f, 1f);
+
+        private static float StepDivisor(IReadOnlyList<SpaceZone> zones, Vector3 position)
+        {
+            if (zones == null)
+                return 1f;
+
+            float divisor = 1f;
+            for (int i = 0; i < zones.Count; i++)
+                divisor *= zones[i].StepDivisor(position);
+
+            return divisor;
+        }
 
         private static TrajectoryOutcome Classify(
             SpacetimeField field, Vector3 from, Vector3 to, Vector3 start, TrajectorySettings settings)
