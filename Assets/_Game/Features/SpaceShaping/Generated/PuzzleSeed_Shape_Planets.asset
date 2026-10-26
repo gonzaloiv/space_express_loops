@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b09b8d5cd9a9d142a7b285eea85e9e8, type: 3}
+  m_Name: PuzzleSeed_Shape_Planets
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Creator::DigitalLove.Game.SpaceShaping.Creator.PuzzlePlanetListAsset
+  planets:
+  - position: {x: 0.03247706, y: 0.13636003, z: -0.041402448}
+    radius: 0.061081193
+  - position: {x: -0.007804065, y: 0.122856736, z: 0.07879277}
+    radius: 0.04217691
+  - position: {x: -0.06809414, y: 0.12782721, z: 0.019656356}
+    radius: 0.054250855
+  - position: {x: 0.06664999, y: 0.02392099, z: -0.12786144}
+    radius: 0.06029471
+  - position: {x: 0.124153145, y: -0.033284117, z: 0.06957837}
+    radius: 0.044376776
+  - position: {x: 0.05739901, y: 0.12449855, z: 0.05067984}
+    radius: 0.04526663
+  - position: {x: 0.039477333, y: -0.088438034, z: 0.10946795}
+    radius: 0.05451378
+  - position: {x: -0.09930294, y: -0.10155004, z: 0.034489132}
+    radius: 0.07386679
+  - position: {x: -0.036296032, y: 0.12882254, z: -0.058739543}
+    radius: 0.04241714
+  - position: {x: 0.13294947, y: -0.02488314, z: -0.055391774}
+    radius: 0.049135663
+  - position: {x: 0.13081251, y: 0.0650249, z: -0.0047781826}
+    radius: 0.06285734
+  - position: {x: 0.06596606, y: -0.0059613334, z: 0.1302917}
+    radius: 0.047369555
+  - position: {x: -0.0028520199, y: -0.060059693, z: 0.13322043}
+    radius: 0.05051692
+  - position: {x: -0.13157637, y: 0.02086114, z: 0.06012862}
+    radius: 0.06404451
+  - position: {x: -0.07438892, y: -0.017359894, z: -0.12461101}
+    radius: 0.07744181
+  - position: {x: -0.006160992, y: 0.07041777, z: -0.12793109}
+    radius: 0.04206803
+  - position: {x: 0.0686317, y: -0.12891549, z: 0.005785521}
+    radius: 0.07595632
+  - position: {x: -0.033710293, y: 0.06355086, z: 0.12723164}
+    radius: 0.055675033
+  - position: {x: -0.056432936, y: -0.10385763, z: -0.08597617}
+    radius: 0.051762633
+  - position: {x: -0.13875964, y: 0.0439182, z: -0.013414157}
+    radius: 0.052793834
+  - position: {x: 0.07587951, y: -0.083168834, z: -0.09321068}
+    radius: 0.053389028
+  - position: {x: -0.019128082, y: -0.14419249, z: 0.014339755}
+    radius: 0.04918774
+  - position: {x: 0.12816365, y: -0.069685645, z: 0.008998613}
+    radius: 0.044514015
+  - position: {x: -0.07940021, y: 0.10620235, z: 0.061478853}
+    radius: 0.057619534
+  - position: {x: -0.12708707, y: -0.07063698, z: -0.014908792}
+    radius: 0.060159992
+  - position: {x: -0.110507384, y: 0.06700211, z: -0.0682775}
+    radius: 0.04728371
+  - position: {x: -0.084970124, y: -0.039065864, z: 0.11232506}
+    radius: 0.060592853
+  - position: {x: 0.08693987, y: 0.08485223, z: -0.08126831}
+    radius: 0.06534793
+  - position: {x: 0.09412757, y: 0.081032336, z: 0.077050254}
+    radius: 0.07295699
+  - position: {x: 0.05390033, y: -0.1058026, z: 0.085226424}
+    radius: 0.07425765
+  - position: {x: 0.018263306, y: -0.07556549, z: -0.12377112}
+    radius: 0.06446502
+  - position: {x: -0.0825224, y: 0.06507485, z: -0.10157904}
+    radius: 0.07647891

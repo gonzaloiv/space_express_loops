@@ -12,6 +12,7 @@ namespace DigitalLove.Game.SpaceShaping
         public float tmax = 12f;
         public float entropyBudget = 1f;
         public PuzzleSource[] sources;
+        public PuzzleZone[] solution;
 
         public Vector3 Origin => new(distance * -0.5f, 0f, 0f);
 

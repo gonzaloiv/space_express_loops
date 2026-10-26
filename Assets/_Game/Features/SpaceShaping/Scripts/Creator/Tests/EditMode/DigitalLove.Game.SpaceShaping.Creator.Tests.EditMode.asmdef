@@ -5,6 +5,7 @@
         "DigitalLove.Game.SpaceShaping.Creator",
         "DigitalLove.Game.SpaceShaping",
         "DigitalLove.Game.Sectors",
+        "DigitalLove.Global",
         "DigitalLove.Casual.Levels",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"

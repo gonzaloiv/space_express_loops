@@ -4,6 +4,7 @@
     "references": [
         "DigitalLove.Game.SpaceShaping.Creator",
         "DigitalLove.Game.SpaceShaping",
+        "DigitalLove.Game.Sectors",
         "DigitalLove.Casual.Levels"
     ],
     "includePlatforms": [

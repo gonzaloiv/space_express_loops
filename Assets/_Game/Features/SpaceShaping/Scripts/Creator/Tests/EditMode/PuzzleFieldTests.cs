@@ -33,10 +33,19 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         public void Build_FieldFitsThePlaySpace()
         {
             PuzzleSeed seed = Seed();
-            SectorFieldData field = PuzzleFieldBuilder.Build(seed, Settings());
+            SectorShapeData shape = PuzzleFieldBuilder.Build(seed, Settings());
 
-            Assert.IsTrue(SectorField.FitsInCells(field));
-            Assert.LessOrEqual(seed.distance, field.fieldRadius * 2f);
+            Assert.AreEqual(seed.planetCount, shape.planetCount.max);
+            Assert.Less(shape.radius.max, seed.distance);
+        }
+
+        [Test]
+        public void Build_SpacesWiderThanThePuzzleNeeds()
+        {
+            SpaceShapingSettings settings = Settings();
+            SectorShapeData shape = PuzzleFieldBuilder.Build(Seed(), settings);
+
+            Assert.GreaterOrEqual(shape.minSeparation, settings.separationScale * 1.1f);
         }
 
         [Test]
@@ -56,7 +65,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleSeed seed = Seed();
             SpaceShapingSettings settings = Settings();
             PuzzleSource[] sources = PuzzleSourceBridge.ToSources(Planets(seed, settings));
-            SourceSpec[] specs = SourceSpecs.From(sources, settings);
+            SourceSpec[] specs = SourceSpecs.From(sources, PuzzleSimSettings.From(settings));
 
             Vector3[] positions = new Vector3[specs.Length];
             float[] scales = new float[specs.Length];
@@ -85,22 +94,42 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void Bake_FillsThePuzzleFromTheSeed()
+        public void ShapeAsset_CarriesSeedAndDistance()
         {
             PuzzleSeed seed = Seed();
-            SpaceShapingSettings settings = Settings();
+            PuzzleShapeAsset asset = PuzzleArtifactFactory.Shape(seed, Settings());
+
+            Assert.AreEqual(seed.seed, asset.seed);
+            Assert.AreEqual(seed.distance, asset.distance, 1e-4f);
+        }
+
+        [Test]
+        public void PlanetList_CarriesDistance()
+        {
+            PuzzleSeed seed = Seed();
+            PuzzlePlanetListAsset asset = PuzzleArtifactFactory.Planets(
+                PuzzleArtifactFactory.Shape(seed, Settings()));
+
+            Assert.AreEqual(seed.distance, asset.distance, 1e-4f);
+        }
+
+        [Test]
+        public void Bake_FillsThePuzzleFromThePlanets()
+        {
+            PuzzleSeed seed = Seed();
+            PuzzlePlanetListAsset planets = PuzzleArtifactFactory.Planets(
+                PuzzleArtifactFactory.Shape(seed, Settings()));
             PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
 
-            PuzzleFieldBake.Apply(puzzle, seed, settings);
+            PuzzleFieldBake.Apply(puzzle, planets);
 
-            PuzzleFieldPlanet[] planets = Planets(seed, settings);
-            Assert.AreEqual(planets.Length, puzzle.sources.Length);
+            Assert.AreEqual(planets.planets.Length, puzzle.sources.Length);
             Assert.AreEqual(seed.distance, puzzle.distance, 1e-4f);
 
-            for (int i = 0; i < planets.Length; i++)
+            for (int i = 0; i < planets.planets.Length; i++)
             {
-                Assert.AreEqual(planets[i].position, puzzle.sources[i].home);
-                Assert.AreEqual(planets[i].radius * 2f, puzzle.sources[i].scale, 1e-4f);
+                Assert.AreEqual(planets.planets[i].position, puzzle.sources[i].home);
+                Assert.AreEqual(planets.planets[i].radius * 2f, puzzle.sources[i].scale, 1e-4f);
             }
         }
 
@@ -109,6 +138,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         private static SpaceShapingSettings Settings() => ScriptableObject.CreateInstance<SpaceShapingSettings>();
 
         private static PuzzleFieldPlanet[] Planets(PuzzleSeed seed, SpaceShapingSettings settings) =>
-            PuzzleFieldGenerator.Generate(PuzzleFieldBuilder.Build(seed, settings));
+            PuzzleFieldGenerator.Generate(PuzzleFieldBuilder.Build(seed, settings), seed.seed);
     }
 }

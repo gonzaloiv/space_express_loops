@@ -107,25 +107,7 @@ namespace DigitalLove.Game.SpaceShaping
             return result;
         }
 
-        private SpaceShapingSetup BuildSetup()
-        {
-            PuzzleData puzzle = puzzles[puzzleIndex];
-            return new SpaceShapingSetup
-            {
-                Origin = puzzle.Origin,
-                Destination = puzzle.Destination,
-                CaptureRadius = settings.captureRadius,
-                StepSecs = settings.stepSecs,
-                MaxSteps = settings.maxSteps,
-                LaunchSpeed = settings.launchSpeed,
-                SourceStrengthScale = settings.sourceStrengthScale,
-                SeparationScale = settings.separationScale,
-                DilationScale = settings.dilationScale,
-                Tmin = puzzle.tmin,
-                Tmax = puzzle.tmax,
-                EntropyBudget = puzzle.entropyBudget,
-                Sources = SourceSpecs.From(puzzle.sources, settings)
-            };
-        }
+        private SpaceShapingSetup BuildSetup() =>
+            SpaceShapingSetup.Build(puzzles[puzzleIndex], PuzzleSimSettings.From(settings));
     }
 }

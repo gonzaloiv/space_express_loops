@@ -44963,10 +44963,7 @@ MonoBehaviour:
   puzzles:
   - {fileID: 11400000, guid: 2433e583643c93543bd8bffcc306a7b6, type: 2}
   settings: {fileID: 11400000, guid: 1000000000000000000000000000001a, type: 2}
-  view: {fileID: 0}
-  hud: {fileID: 0}
-  resetButton: {fileID: 0}
-  nextButton: {fileID: 0}
+  view: {fileID: 1095678997}
   ship: {fileID: 1688476328}
 --- !u!114 &1095678995
 MonoBehaviour:
@@ -57832,7 +57829,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.SpacetimeMeshView
   meshFilter: {fileID: 1402556517}
   gridCount: 4
-  samplesPerLine: 32
   sides: 6
   radius: 0.003
   depthScale: 0.15

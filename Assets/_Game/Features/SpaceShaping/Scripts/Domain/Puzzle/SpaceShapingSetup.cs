@@ -17,5 +17,22 @@ namespace DigitalLove.Game.SpaceShaping
         public float Tmax;
         public float EntropyBudget;
         public SourceSpec[] Sources;
+
+        public static SpaceShapingSetup Build(PuzzleData puzzle, PuzzleSimSettings settings) => new()
+        {
+            Origin = puzzle.Origin,
+            Destination = puzzle.Destination,
+            CaptureRadius = settings.CaptureRadius,
+            StepSecs = settings.StepSecs,
+            MaxSteps = settings.MaxSteps,
+            LaunchSpeed = settings.LaunchSpeed,
+            SourceStrengthScale = settings.SourceStrengthScale,
+            SeparationScale = settings.SeparationScale,
+            DilationScale = settings.DilationScale,
+            Tmin = puzzle.tmin,
+            Tmax = puzzle.tmax,
+            EntropyBudget = puzzle.entropyBudget,
+            Sources = SourceSpecs.From(puzzle.sources, settings)
+        };
     }
 }

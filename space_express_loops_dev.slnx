@@ -41,6 +41,8 @@
   <Project Path="DigitalLove.VFX.Materials.Editor.csproj" />
   <Project Path="DigitalLove.XR.OVR.csproj" />
   <Project Path="DigitalLove.Game.Sectors.Tests.EditMode.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Creator.csproj" />
   <Project Path="DigitalLove.Localization.csproj" />
   <Project Path="DigitalLove.VFX.Fader.csproj" />
   <Project Path="DigitalLove.TTS.Samples.csproj" />
@@ -48,7 +50,6 @@
   <Project Path="DigitalLove.Game.Sectors.csproj" />
   <Project Path="DigitalLove.Casual.Analytics.csproj" />
   <Project Path="DigitalLove.Timeline.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.Creator.csproj" />
   <Project Path="DigitalLove.HomeMenu.csproj" />
   <Project Path="DigitalLove.FlowControl.Samples.csproj" />
   <Project Path="DigitalLove.Casual.Levels.csproj" />
@@ -62,7 +63,6 @@
   <Project Path="DigitalLove.XR.MetaPlatform.csproj" />
   <Project Path="DigitalLove.Game.Flow.GameStartState.csproj" />
   <Project Path="DigitalLove.Analytics.GameAnalytics.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Game.TTS.csproj" />
   <Project Path="DigitalLove.VFX.Materials.csproj" />
   <Project Path="DigitalLove.Game.Flow.GameEndState.csproj" />
@@ -87,8 +87,8 @@
   <Project Path="DigitalLove.Input.csproj" />
   <Project Path="DigitalLove.Reflex.csproj" />
   <Project Path="DigitalLove.Analytics.Integrations.csproj" />
-  <Project Path="DigitalLove.FlowControl.Routes.Editor.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Creator.Editor.csproj" />
+  <Project Path="DigitalLove.FlowControl.Routes.Editor.csproj" />
   <Project Path="DigitalLove.Audio.Samples.csproj" />
   <Project Path="DigitalLove.Interactables.Keypad.csproj" />
   <Project Path="DigitalLove.FlowControl.Tests.EditMode.csproj" />

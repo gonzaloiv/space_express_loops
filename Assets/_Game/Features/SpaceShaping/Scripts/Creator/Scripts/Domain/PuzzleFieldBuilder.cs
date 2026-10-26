@@ -6,30 +6,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleFieldBuilder
     {
-        private const float FieldGap = 0.05f;
         private const float FieldMargin = 0.1f;
         private const float Spread = 0.7f;
         private const float Thickness = 0.3f;
         private const float PlanetRadiusFraction = 0.06f;
         private const float PlanetRadiusSpread = 0.3f;
         private const int PlanetsPerRing = 6;
+        private const float SeparationMargin = 1.1f;
 
-        public static SectorFieldData Build(PuzzleSeed seed, SpaceShapingSettings settings)
+        public static SectorShapeData Build(PuzzleSeed seed, SpaceShapingSettings settings)
         {
             float sectorRadius = SectorRadius(seed, settings);
-            float fieldRadius = sectorRadius + PlanetRadiusMax(seed) + FieldMargin;
-            return new SectorFieldData
-            {
-                worldSeed = seed.seed,
-                cellSize = fieldRadius * 2f,
-                fieldRadius = fieldRadius,
-                density = 1f,
-                gap = FieldGap,
-                layers = 1,
-                softSectorBudget = 1,
-                softPlanetBudget = seed.planetCount,
-                shape = BuildShape(seed, settings, sectorRadius)
-            };
+            return BuildShape(seed, settings, sectorRadius);
         }
 
         private static float PlanetRadius(PuzzleSeed seed) => seed.distance * PlanetRadiusFraction;
@@ -55,7 +43,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             armCount = new MinMaxInt { min = 2, max = 3 },
             spread = Spread,
             inclination = Thickness,
-            minSeparation = settings.separationScale
+            minSeparation = settings.separationScale * SeparationMargin
         };
 
         private static SectorShapeKind Shape(PuzzleSeed seed) =>

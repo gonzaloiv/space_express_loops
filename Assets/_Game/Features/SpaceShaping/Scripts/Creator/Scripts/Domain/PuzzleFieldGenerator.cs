@@ -1,28 +1,18 @@
-using System.Collections.Generic;
 using DigitalLove.Game.Sectors;
+using DigitalLove.Global;
 
 namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleFieldGenerator
     {
-        public static PuzzleFieldPlanet[] Generate(SectorFieldData field)
+        public static PuzzleFieldPlanet[] Generate(SectorShapeData shape, int seed)
         {
-            SectorPlacement[] placements = SectorField.Generate(field);
-            List<PuzzleFieldPlanet> planets = new();
-            for (int p = 0; p < placements.Length; p++)
-                AddSector(placements[p], planets);
+            SectorLayout layout = SectorShape.Generate(shape, new SeededRandom(seed));
+            PuzzleFieldPlanet[] planets = new PuzzleFieldPlanet[layout.PlanetCount];
+            for (int i = 0; i < planets.Length; i++)
+                planets[i] = new PuzzleFieldPlanet(layout.Planets[i].Position, layout.Planets[i].Radius);
 
-            return planets.ToArray();
-        }
-
-        private static void AddSector(SectorPlacement placement, List<PuzzleFieldPlanet> planets)
-        {
-            SectorLayout layout = placement.Layout;
-            for (int i = 0; i < layout.PlanetCount; i++)
-            {
-                SectorPlanet planet = layout.Planets[i];
-                planets.Add(new PuzzleFieldPlanet(placement.Center + planet.Position, planet.Radius));
-            }
+            return planets;
         }
     }
 }

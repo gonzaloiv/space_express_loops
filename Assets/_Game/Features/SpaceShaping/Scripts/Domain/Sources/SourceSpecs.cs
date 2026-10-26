@@ -2,7 +2,7 @@ namespace DigitalLove.Game.SpaceShaping
 {
     public static class SourceSpecs
     {
-        public static SourceSpec[] From(PuzzleSource[] sources, SpaceShapingSettings settings)
+        public static SourceSpec[] From(PuzzleSource[] sources, PuzzleSimSettings settings)
         {
             SourceSpec[] specs = new SourceSpec[sources.Length];
             for (int i = 0; i < specs.Length; i++)
@@ -13,8 +13,8 @@ namespace DigitalLove.Game.SpaceShaping
                     Home = sources[i].home,
                     InitialScale = scale,
                     MoveRange = scale,
-                    MinScale = scale * settings.minScaleFactor,
-                    MaxScale = scale * settings.maxScaleFactor
+                    MinScale = scale * settings.MinScaleFactor,
+                    MaxScale = scale * settings.MaxScaleFactor
                 };
             }
 
