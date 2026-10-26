@@ -24,9 +24,8 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private Color fillHover = new(0.7f, 0.82f, 1f, 0.22f);
         [SerializeField] private Color fillShrink = new(0.2f, 0.6f, 1f, 0.28f);
         [SerializeField] private Color fillMagnify = new(1f, 0.45f, 0.2f, 0.28f);
+        [SerializeField] private SpaceShapingSettings settings;
         [SerializeField] private float scaleGain = 2f;
-        [SerializeField] private float minScale = 0.4f;
-        [SerializeField] private float maxScale = 2.5f;
         [SerializeField] private float scaleSmoothSecs = 0.08f;
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
@@ -136,7 +135,8 @@ namespace DigitalLove.Game.SpaceShaping
                 return;
 
             float ratio = HandDistance() / startHandDistance;
-            float target = Mathf.Clamp(startScale * Mathf.Pow(ratio, scaleGain), minScale, maxScale);
+            float target = Mathf.Clamp(
+                startScale * Mathf.Pow(ratio, scaleGain), settings.minScaleFactor, settings.maxScaleFactor);
             float blend = 1f - Mathf.Exp(-Time.deltaTime / Mathf.Max(scaleSmoothSecs, 0.001f));
             zone.SetScale(Mathf.Lerp(zone.Scale, target, blend));
         }
@@ -201,7 +201,8 @@ namespace DigitalLove.Game.SpaceShaping
             grabbable.SelectingPointsCount >= 2 ? frameResize : frameMove;
 
         private Color ScaleColor() =>
-            Color.Lerp(fillShrink, fillMagnify, Mathf.InverseLerp(minScale, maxScale, zone.Scale));
+            Color.Lerp(fillShrink, fillMagnify, Mathf.InverseLerp(
+                settings.minScaleFactor, settings.maxScaleFactor, zone.Scale));
 
         private void SetColor(Renderer target, ref MaterialPropertyBlock block, Color color)
         {

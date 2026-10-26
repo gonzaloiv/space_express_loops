@@ -6,10 +6,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 {
     public class PuzzleFieldTests
     {
-        private const float PuzzleSeparation = 1.2f;
-        private const float MinScaleFactor = 0.4f;
-        private const float MaxScaleFactor = 2.5f;
-
         [Test]
         public void Generate_SameSeed_IsDeterministic()
         {
@@ -48,22 +44,19 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         {
             PuzzleFieldPlanet[] planets = { new(new Vector3(1f, 2f, 3f), 0.5f) };
 
-            SourceSpec[] specs = PuzzleSourceBridge.ToSources(planets, 2f, MinScaleFactor, MaxScaleFactor);
+            PuzzleSource[] sources = PuzzleSourceBridge.ToSources(planets);
 
-            Assert.AreEqual(new Vector3(1f, 2f, 3f), specs[0].Home);
-            Assert.AreEqual(1f, specs[0].InitialScale, 1e-4f);
-            Assert.AreEqual(2f, specs[0].MoveRange, 1e-4f);
-            Assert.AreEqual(0.4f, specs[0].MinScale, 1e-4f);
-            Assert.AreEqual(2.5f, specs[0].MaxScale, 1e-4f);
+            Assert.AreEqual(new Vector3(1f, 2f, 3f), sources[0].home);
+            Assert.AreEqual(1f, sources[0].scale, 1e-4f);
         }
 
         [Test]
-        public void Bridge_Sources_NeedNoCorrection()
+        public void BakedSources_NeedNoCorrection()
         {
             PuzzleSeed seed = Seed();
             SpaceShapingSettings settings = Settings();
-            SourceSpec[] specs = PuzzleSourceBridge.ToSources(
-                Planets(seed, settings), settings.sourceMoveRange, MinScaleFactor, MaxScaleFactor);
+            PuzzleSource[] sources = PuzzleSourceBridge.ToSources(Planets(seed, settings));
+            SourceSpec[] specs = SourceSpecs.From(sources, settings);
 
             Vector3[] positions = new Vector3[specs.Length];
             float[] scales = new float[specs.Length];
@@ -73,7 +66,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
                 scales[i] = specs[i].InitialScale;
             }
 
-            SourceConstraints.Apply(positions, scales, specs, PuzzleSeparation);
+            SourceConstraints.Apply(positions, scales, specs, settings.separationScale);
 
             for (int i = 0; i < specs.Length; i++)
                 Assert.Less((positions[i] - specs[i].Home).magnitude, 1e-3f);

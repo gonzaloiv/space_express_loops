@@ -10,16 +10,13 @@ namespace DigitalLove.Game.SpaceShaping
         {
             List<Vector3> points = new(settings.MaxSteps + 1);
             Vector3 position = start;
-            Vector3 velocity = launch.Model == LaunchModel.Coast ? launch.Direction * launch.Speed : Vector3.zero;
+            Vector3 velocity = launch.Direction * launch.Speed;
             float shipTime = 0f;
             points.Add(position);
 
             for (int step = 0; step < settings.MaxSteps; step++)
             {
                 Vector3 acceleration = field.Acceleration(position);
-                if (launch.Model == LaunchModel.Thrust)
-                    acceleration += launch.Direction * launch.ThrustAcceleration;
-
                 shipTime += settings.StepSecs * Dilation(field, position, settings.DilationScale);
                 velocity += acceleration * settings.StepSecs;
                 Vector3 from = position;

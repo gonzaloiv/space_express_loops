@@ -126,9 +126,7 @@ namespace DigitalLove.Game.SpaceShaping
                 Zones = zones
             };
 
-            launch.Model = setup.LaunchModel;
             launch.LaunchSpeed = setup.LaunchSpeed;
-            launch.ThrustAcceleration = setup.ThrustAcceleration;
             return launch.Simulate(field, setup.Origin, setup.Destination, settings, integrator);
         }
 

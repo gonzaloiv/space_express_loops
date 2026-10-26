@@ -8,7 +8,6 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
     {
         private static LaunchSettings Launch() => new()
         {
-            Model = LaunchModel.Coast,
             Direction = Vector3.right,
             Speed = 1f
         };
@@ -207,9 +206,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             CaptureRadius = 0.6f,
             StepSecs = 1f / 120f,
             MaxSteps = maxSteps,
-            LaunchModel = LaunchModel.Coast,
             LaunchSpeed = 1f,
-            ThrustAcceleration = 1f,
             SourceStrengthScale = 2f,
             SeparationScale = 1.2f,
             DilationScale = 1f,
@@ -223,9 +220,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             CaptureRadius = 0.6f,
             StepSecs = 1f / 120f,
             MaxSteps = 4000,
-            LaunchModel = LaunchModel.Coast,
             LaunchSpeed = 1f,
-            ThrustAcceleration = 1f,
             SourceStrengthScale = 2f,
             SeparationScale = 1.2f,
             DilationScale = 1f,

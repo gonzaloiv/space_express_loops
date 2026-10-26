@@ -1,5 +1,6 @@
 using DigitalLove.Game.Sectors;
 using DigitalLove.Global;
+using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Creator
 {
@@ -10,6 +11,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private const float Spread = 0.7f;
         private const float Thickness = 0.3f;
         private const float PlanetRadiusFraction = 0.05f;
+        private const int PlanetsPerRing = 6;
 
         public static SectorFieldData Build(PuzzleSeed seed, SpaceShapingSettings settings)
         {
@@ -41,7 +43,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             anchorScale = new MinMaxFloat(1f, 1f),
             planetCount = new MinMaxInt { min = seed.planetCount, max = seed.planetCount },
             planetRadius = new MinMaxFloat(PlanetRadius(seed), PlanetRadius(seed)),
-            ringCount = new MinMaxInt { min = 1, max = 1 },
+            ringCount = new MinMaxInt { min = Rings(seed), max = Rings(seed) },
             armCount = new MinMaxInt { min = 2, max = 3 },
             spread = Spread,
             inclination = Thickness,
@@ -50,5 +52,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         private static SectorShapeKind Shape(PuzzleSeed seed) =>
             (SectorShapeKind)(((seed.seed % 3) + 3) % 3);
+
+        private static int Rings(PuzzleSeed seed) =>
+            Mathf.Max(1, (seed.planetCount + PlanetsPerRing - 1) / PlanetsPerRing);
     }
 }

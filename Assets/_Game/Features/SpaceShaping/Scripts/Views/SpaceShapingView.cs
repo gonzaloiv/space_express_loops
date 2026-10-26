@@ -7,7 +7,6 @@ namespace DigitalLove.Game.SpaceShaping
     {
         [SerializeField] private SpaceSourceView[] sources;
         [SerializeField] private SpacetimeMeshView mesh;
-        [SerializeField] private TrajectoryPredictionView prediction;
         [SerializeField] private SpaceZoneView zone;
         [SerializeField] private Transform origin;
         [SerializeField] private Transform destination;
@@ -47,14 +46,7 @@ namespace DigitalLove.Game.SpaceShaping
             hasSnapshot = true;
         }
 
-        public void Render(
-            SpacetimeField field, TrajectoryResult result, Vector3 destinationLocal, IReadOnlyList<SpaceZone> zones)
-        {
-            mesh.Render(field, zones);
-            prediction.Render(result, destinationLocal);
-        }
-
-        public void SetPredictionVisible(bool visible) => prediction.SetVisible(visible);
+        public void Render(SpacetimeField field, IReadOnlyList<SpaceZone> zones) => mesh.Render(field, zones);
 
         public void ResetZone()
         {

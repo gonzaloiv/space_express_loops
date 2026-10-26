@@ -12,9 +12,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             CaptureRadius = 0.6f,
             StepSecs = 1f / 120f,
             MaxSteps = 1200,
-            LaunchModel = LaunchModel.Coast,
             LaunchSpeed = 1f,
-            ThrustAcceleration = 1f,
             SourceStrengthScale = 2f,
             SeparationScale = 1.2f,
             DilationScale = 1f,
@@ -70,6 +68,35 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
 
             Assert.AreEqual(TrajectoryOutcome.Miss, result.Outcome);
             Assert.IsFalse(session.IsSolved(result));
+        }
+
+        [Test]
+        public void Crash_IsNotSolved()
+        {
+            SpaceShapingSetup setup = Setup(0f, 9f);
+            setup.Sources = new[]
+            {
+                new SourceSpec { Home = Vector3.zero, InitialScale = 4f, MoveRange = 0f, MinScale = 1f, MaxScale = 4f }
+            };
+            SpaceShapingSession session = new(setup);
+            TrajectoryResult result = Simulate(session);
+
+            Assert.AreEqual(TrajectoryOutcome.Crash, result.Outcome);
+            Assert.IsFalse(session.IsSolved(result));
+        }
+
+        [Test]
+        public void Entropy_IsChargedPerModification_NotPerSimulation()
+        {
+            SpaceShapingSession session = new(Setup(0f, 9f));
+            session.ApplyZone(Zone(1.5f));
+            float spent = session.EntropySpent;
+
+            Simulate(session);
+            Simulate(session);
+            Simulate(session);
+
+            Assert.AreEqual(spent, session.EntropySpent, 0.0001f);
         }
 
         [Test]

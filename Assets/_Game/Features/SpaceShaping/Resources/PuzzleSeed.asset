@@ -15,7 +15,7 @@ MonoBehaviour:
   worldSeed: 1
   shape: 0
   distance: 12
-  planetCount: 34
+  planetCount: 10
   planetRadius: 0.6
   windowTightness: 1
   entropyBudget: 1
