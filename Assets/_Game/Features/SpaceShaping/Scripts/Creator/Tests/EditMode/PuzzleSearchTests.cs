@@ -10,6 +10,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         private PuzzleData puzzle;
         private PuzzleSimSettings settings;
         private PuzzleSolution solution;
+        private int foundSeed;
 
         [OneTimeSetUp]
         public void FindSolution()
@@ -19,9 +20,32 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             {
                 puzzle = Puzzle(seed);
                 PuzzleSolutionSearch.TryFind(puzzle, settings, out solution);
+                if (solution.Zones != null)
+                    foundSeed = seed;
             }
 
             Assert.IsNotNull(solution.Zones, "no seed in the scan produced an arriving solution");
+        }
+
+        [Test]
+        public void Search_HonoursTheWindow()
+        {
+            PuzzleData offWindow = Puzzle(foundSeed);
+            offWindow.tmin = 0f;
+            offWindow.tmax = 0.0001f;
+
+            Assert.IsFalse(PuzzleSolutionSearch.TryFind(offWindow, settings, out _));
+        }
+
+        [Test]
+        public void Search_HonoursTheBudget()
+        {
+            PuzzleData noBudget = Puzzle(foundSeed);
+            noBudget.tmin = 0f;
+            noBudget.tmax = float.MaxValue;
+            noBudget.entropyBudget = 0f;
+
+            Assert.IsFalse(PuzzleSolutionSearch.TryFind(noBudget, settings, out _));
         }
 
         [Test]

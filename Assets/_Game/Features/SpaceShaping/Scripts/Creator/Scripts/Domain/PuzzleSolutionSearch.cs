@@ -21,15 +21,24 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         }
 
         public static PuzzleSolution[] Find(
-            PuzzleData puzzle, PuzzleSimSettings settings, int samples, int max)
+            PuzzleData puzzle, PuzzleSimSettings settings, int samples, int max) =>
+            Collect(puzzle, settings, samples, max, true);
+
+        public static PuzzleSolution[] Arrivals(
+            PuzzleData puzzle, PuzzleSimSettings settings, int samples, int max) =>
+            Collect(puzzle, settings, samples, max, false);
+
+        private static PuzzleSolution[] Collect(
+            PuzzleData puzzle, PuzzleSimSettings settings, int samples, int max, bool inWindow)
         {
             List<PuzzleSolution> found = new();
             float[] scales = Scales(settings, Mathf.Max(MinSamples, samples));
             for (int i = 0; i < scales.Length && found.Count < max; i++)
             {
-                PuzzleZone zone = Zone(puzzle.ZoneSize, scales[i]);
-                if (Arrives(puzzle, settings, zone, out float shipTime, out float entropy))
-                    found.Add(Solution(zone, shipTime, entropy));
+                PuzzleZone zone = Zone(puzzle.ZoneSize, scales[i], settings.ZoneFalloff);
+                SpaceShapingSession session = new(SpaceShapingSetup.Build(puzzle, settings));
+                if (Arrives(session, puzzle, zone, inWindow, out PuzzleSolution solution))
+                    found.Add(solution);
             }
 
             return found.ToArray();
@@ -45,31 +54,38 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return scales;
         }
 
-        private static PuzzleSolution Solution(PuzzleZone zone, float shipTime, float entropy) => new()
-        {
-            Zones = new[] { zone },
-            ShipTime = shipTime,
-            EntropySpent = entropy
-        };
-
-        private static PuzzleZone Zone(Vector3 size, float scale) => new()
+        private static PuzzleZone Zone(Vector3 size, float scale, float falloff) => new()
         {
             centre = Vector3.zero,
             size = size,
             scale = scale,
-            falloff = 0f
+            falloff = falloff
         };
 
         private static bool Arrives(
-            PuzzleData puzzle, PuzzleSimSettings settings, PuzzleZone zone, out float shipTime, out float entropy)
+            SpaceShapingSession session, PuzzleData puzzle, PuzzleZone zone, bool inWindow,
+            out PuzzleSolution solution)
         {
-            SpaceShapingSession session = new(SpaceShapingSetup.Build(puzzle, settings));
             session.ApplyZone(zone.ToSpaceZone());
             TrajectoryResult result = session.Simulate(
                 session.BuildField(), new TrajectoryIntegrator(), new ShipLaunch());
-            shipTime = result.ShipTime;
-            entropy = session.EntropySpent;
-            return result.Outcome == TrajectoryOutcome.Arrive;
+            solution = new PuzzleSolution
+            {
+                Zones = new[] { zone },
+                ShipTime = result.ShipTime,
+                EntropySpent = session.EntropySpent
+            };
+
+            if (result.Outcome != TrajectoryOutcome.Arrive)
+                return false;
+
+            return !inWindow || WithinWindow(result, session, puzzle);
         }
+
+        private static bool WithinWindow(
+            TrajectoryResult result, SpaceShapingSession session, PuzzleData puzzle) =>
+            result.ShipTime >= puzzle.tmin
+            && result.ShipTime <= puzzle.tmax
+            && session.EntropySpent <= puzzle.entropyBudget;
     }
 }

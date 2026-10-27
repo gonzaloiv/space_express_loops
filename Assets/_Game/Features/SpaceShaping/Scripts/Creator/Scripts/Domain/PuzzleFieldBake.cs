@@ -40,6 +40,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (!StartMisses(field, settings))
                 return System.Array.Empty<PuzzleData>();
 
+            PuzzleSolution[] reference = PuzzleSolutionSearch.Arrivals(field, settings, SearchSamples, 1);
+            if (reference.Length == 0)
+            {
+                status = PuzzleBakeStatus.NoSolution;
+                return System.Array.Empty<PuzzleData>();
+            }
+
+            SetWindow(field, reference[0], windowTightness);
             PuzzleSolution[] solutions = PuzzleSolutionSearch.Find(field, settings, SearchSamples, variants);
             if (solutions.Length == 0)
             {
@@ -47,21 +55,28 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return System.Array.Empty<PuzzleData>();
             }
 
-            List<PuzzleData> baked = BakeEach(field, solutions, windowTightness, settings);
+            List<PuzzleData> baked = BakeEach(field, solutions, settings);
             status = baked.Count > 0 ? PuzzleBakeStatus.Baked : PuzzleBakeStatus.Unverified;
             return baked.ToArray();
+        }
+
+        private static void SetWindow(PuzzleData field, PuzzleSolution reference, float windowTightness)
+        {
+            field.tmin = reference.ShipTime - windowTightness * 0.5f;
+            field.tmax = reference.ShipTime + windowTightness * 0.5f;
+            field.entropyBudget = reference.EntropySpent * StarBudgetFactor;
         }
 
         private static bool StartMisses(PuzzleData field, PuzzleSimSettings settings) =>
             PuzzleVerifier.Verify(field, settings).StartOutcome == TrajectoryOutcome.Miss;
 
         private static List<PuzzleData> BakeEach(
-            PuzzleData field, PuzzleSolution[] solutions, float windowTightness, PuzzleSimSettings settings)
+            PuzzleData field, PuzzleSolution[] solutions, PuzzleSimSettings settings)
         {
             List<PuzzleData> baked = new();
             for (int i = 0; i < solutions.Length; i++)
             {
-                PuzzleData variant = Variant(field, solutions[i], windowTightness);
+                PuzzleData variant = Variant(field, solutions[i]);
                 if (PuzzleVerifier.Verify(variant, settings).Solved)
                     baked.Add(variant);
                 else
@@ -71,16 +86,16 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return baked;
         }
 
-        private static PuzzleData Variant(PuzzleData field, PuzzleSolution solution, float windowTightness)
+        private static PuzzleData Variant(PuzzleData field, PuzzleSolution solution)
         {
             PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
             puzzle.distance = field.distance;
             puzzle.launchSpeed = field.launchSpeed;
             puzzle.sources = field.sources;
             puzzle.solution = solution.Zones;
-            puzzle.tmin = solution.ShipTime - windowTightness * 0.5f;
-            puzzle.tmax = solution.ShipTime + windowTightness * 0.5f;
-            puzzle.entropyBudget = solution.EntropySpent * StarBudgetFactor;
+            puzzle.tmin = field.tmin;
+            puzzle.tmax = field.tmax;
+            puzzle.entropyBudget = field.entropyBudget;
             return puzzle;
         }
 

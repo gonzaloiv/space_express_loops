@@ -22,6 +22,9 @@ namespace DigitalLove.Game.SpaceShaping
         [Header("Sources")]
         public float captureRadius = 0.6f;
 
+        [Header("Zone")]
+        public float zoneFalloff = 0.5f;
+
         [Header("Reachable scale")]
         public float minScaleFactor = 0.4f;
         public float maxScaleFactor = 2.5f;

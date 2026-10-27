@@ -51,7 +51,11 @@ namespace DigitalLove.Game.SpaceShaping
             destination.localPosition = destinationPosition;
         }
 
-        public void SetZoneFrame(Vector3 size) => zone.SetFrame(Vector3.zero, size);
+        public void SetZoneFrame(Vector3 size, float falloff)
+        {
+            zone.SetFrame(Vector3.zero, size);
+            zone.SetFalloff(falloff);
+        }
 
         public void Snapshot()
         {

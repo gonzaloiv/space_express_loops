@@ -198,8 +198,13 @@ puzzle is domain work, not flow orchestration) so the tool and the game share on
 Place `origin`/`destination` from `distance`, and add **`PuzzleSolutionSearch`** (runtime, pure,
 **bounded and offline**): a fixed grid over the **scale** (the cube's centre is fixed at v1; the
 centre / reframe axes arrive at job 3), clamped to the frame's reachable range, forward-simulating
-each candidate and returning one that arrives in the target window. One zone at v1; the search
-reports the actual modification count against the seed's `steps` target.
+each candidate and returning one that arrives **inside the window and inside the budget**. One zone
+at v1; the search reports the actual modification count against the seed's `steps` target.
+
+**The search honours the window and the budget** (`PuzzleSolutionSearch.Find` rejects a candidate
+outside `[tmin, tmax]` or over `entropyBudget`). The bake makes the window non-circular: it derives
+`[tmin, tmax]` / `entropyBudget` from **one unconstrained arrival** (`Arrivals`), then searches
+*inside* them, so the `windowTightness` dial binds (a tighter band admits fewer variants).
 
 **Exit:** a field with no solution gets one found; the found solution re-verifies in P1.
 
@@ -231,6 +236,10 @@ and the window, and save the variants.
   at `ZoneSize`, and `SpaceShapingState.ResetView` applies it to the frame on puzzle start
   (`SpaceShapingView.SetZoneFrame`), so the baked solution reproduces in the headset. `ZoneGrabListener`
   re-caches its rest size at each gesture start so the grab handle stays proportional.
+- **The cube's falloff is one source** — `SpaceShapingSettings.zoneFalloff` → `PuzzleSimSettings.ZoneFalloff`.
+  The creator's search builds its zone at that falloff, and `SpaceShapingState.ResetView` pushes the
+  same value into `SpaceZoneView` (`SetZoneFrame(size, falloff)`), so the zone the player edits has the
+  same numbers the creator searched (was `falloff = 0` in the creator vs `0.5` in the view).
 - **The endpoints assume a centred field.** `PuzzleData.Origin`/`Destination` are `(±distance/2, 0, 0)`,
   and `SectorShape` applies only a **yaw** (`SectorShape.cs:14`), so a straight ±x run passes through
   the cluster's centre. **Keep the field centred** (or place the endpoints from the cluster's bounds) —
@@ -283,6 +292,7 @@ and the window, and save the variants.
 | Pipeline | **Independent stages, one exported file each** (`PuzzleSeed → SectorShapeData → planets → start → PuzzleData`); each stage is re-runnable and hand-editable |
 | Artifact format | **`ScriptableObject` at the boundaries** (`PuzzleSeed`, the exported `SectorShapeData`, the final `PuzzleData`); **plain `[Serializable]`** for the in-memory domain payloads (`PuzzleFieldPlanet`, `PuzzleZone`, `PuzzleSimSettings`). Stage 1's artifact is currently a `SectorFieldData`; becomes `SectorShapeData` when §3's switch lands (§6 P0) |
 | Reachable scale range | Moved out of `ZoneGrabListener` into domain data (`PuzzleSimSettings`); the view reads the same source |
+| Zone falloff | **One source** — `SpaceShapingSettings.zoneFalloff` → `PuzzleSimSettings.ZoneFalloff`; the creator's search and the game's zone both use it, so the found solution reproduces |
 | Cube size | **Baked from the run** (`PuzzleData.ZoneSize` = `distance³`) and applied on puzzle start, so the search's zone and the game's cube agree; the creator never bakes a solution the headset can't reproduce |
 | Launch speed | **Baked per puzzle** — the creator derives it from the run (`0.9 × run / (maxSteps × stepSecs)`) so the bare start just misses and the solution lands near scale 1; `SpaceShapingSettings.launchSpeed` is only the fallback |
 | Frame resize | The cube can **grow but not shrink** below the puzzle's size (`ZoneGrabListener` clamps to `[1×, 2×]` of the gesture-start size), so a frame gesture can't break the baked coverage; shrinking the region is the deferred reframe job |
@@ -360,6 +370,13 @@ window (Export shape / Export planets / Generate + preview / Find working seed /
 41/41 EditMode tests green. **Still open:** the §2 solution conditions (`translatable`, `scalable`,
 `moves`) and the **density / run corridor** (§12).
 
+**Review follow-ups landed (2026-10-27):** the search now honours the window and the budget
+(`PuzzleSolutionSearch.Find` checks `[tmin, tmax]` + `entropyBudget`; the bake derives them from one
+unconstrained `Arrivals` pass), and the creator's zone uses the same falloff as the game's view
+(`SpaceShapingSettings.zoneFalloff` → `PuzzleSimSettings.ZoneFalloff`, pushed into `SpaceZoneView`).
+Deferred: the verifier still treats a `Crash` as a failed start (review item 1), and the v1 cube is
+still the whole run rather than a smaller authored region (review item 4).
+
 **Where things live:** game `DigitalLove.Game.SpaceShaping` (runtime loop, `PuzzleData`,
 `SpaceShapingSession`, `SpaceShapingSettings`); authoring `DigitalLove.Game.SpaceShaping.Creator`
 (pure, no `UnityEditor`); editor tools `…Creator.Editor` (namespace `…Creator.EditorTools`); tests `…Creator.Tests.EditMode` and
@@ -421,23 +438,23 @@ and its scale edited or locked, **per level**; the solution makes `N` scale edit
 P0/P1/P2 are in (`9489959`); these gaps must close before P3 bakes variants — see the
 [review](../../reviews/space-shaping-creator-p1-p2.md).
 
-1. **The start must fail on time, not crash.** `PuzzleVerification.StartFails` is `!= Arrive`
-   (`PuzzleVerification.cs:11`), so a `Crash` passes as "start fails". Require `Miss` and reject
-   `Crash` (§5 step 4, §9).
-2. **The search must honour the window and the budget.** `PuzzleSolutionSearch.Arrives` returns on
-   `Outcome == Arrive` only (`PuzzleSolutionSearch.cs:50-60`); add the `[tmin, tmax]` and
-   `EntropySpent ≤ budget` checks, otherwise P3's derived window is circular and the
-   `windowTightness` dial never binds (§6 P2).
-3. **Reject and resample the start.** Nothing checks that the bare start already arrives or crashes
-   (§5 step 4); add that to the bake path before P3 derives the window.
-4. **One cube source, one geometry.** The creator's zone (`PuzzleZone.ToSpaceZone`: `size × 0.5`,
-   `falloff = 0`) must match the view's (`SpaceZoneView.Zone`: `Size × 0.5`, `contentInset = 0.8`,
-   `falloff = 0.5`), or a found solution will not reproduce in the game. Read the region from the
-   same authored source the view uses (the `SpaceZoneView` transform) instead of
-   `size = Vector3.one * puzzle.distance` (`PuzzleSolutionSearch.cs:18`), and sweep **scale** inside
-   that fixed cube. The cube is **smaller than the run** and is authored only for the
-   **non-editable-cube** puzzles (progression.md §4: jobs 1–2 are a fixed region, only the
-   grab-inside scale moves).
+**Landed (2026-10-27):** (2) the search honours the window and the budget; (3) the bake rejects and
+resamples the start; (4) the creator's zone shares the view's falloff. **(1) is deferred** — it does
+not gate P3. The v1 cube is still the whole run; making it a smaller authored region is open (§12).
+
+1. **The start must fail on time, not crash.** *(deferred)* `PuzzleVerification.StartFails` is
+   `!= Arrive` (`PuzzleVerification.cs:16`), so a `Crash` passes as "start fails". Require `Miss` and
+   reject `Crash` (§5 step 4, §9). The bake path already requires `Miss` (`PuzzleFieldBake.StartMisses`),
+   so this only tightens the verifier's report.
+2. **The search must honour the window and the budget.** *(done)* `PuzzleSolutionSearch.Find` now
+   checks `[tmin, tmax]` and `EntropySpent ≤ budget`; `Arrivals` is the unconstrained pass the bake
+   uses to set the window, so `windowTightness` binds (§6 P2).
+3. **Reject and resample the start.** *(done)* `PuzzleFieldBake.StartMisses` requires `Miss` (rejects
+   `Arrive` and `Crash`) before baking, and `PuzzleSeedScanner` resamples seeds until a bake succeeds.
+4. **One cube source, one geometry.** *(done — falloff)* The creator's zone now uses the same falloff
+   as the view (`SpaceShapingSettings.zoneFalloff` → `PuzzleSimSettings.ZoneFalloff`, pushed into
+   `SpaceZoneView`), so a found solution reproduces. **Still open:** the v1 cube is the whole run
+   (`PuzzleData.ZoneSize = distance³`), not a smaller authored region (§12; review item 4).
 
 ### Open decisions to settle (do not silently change)
 

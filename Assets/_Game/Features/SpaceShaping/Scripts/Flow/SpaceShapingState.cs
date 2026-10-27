@@ -90,7 +90,7 @@ namespace DigitalLove.Game.SpaceShaping
         private void ResetView()
         {
             view.ResetZone();
-            view.SetZoneFrame(puzzles[puzzleIndex].ZoneSize);
+            view.SetZoneFrame(puzzles[puzzleIndex].ZoneSize, settings.zoneFalloff);
         }
 
         private void StartPuzzle()

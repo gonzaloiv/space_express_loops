@@ -9,6 +9,7 @@ namespace DigitalLove.Game.SpaceShaping
         public float SeparationScale;
         public float DilationScale;
         public float CaptureRadius;
+        public float ZoneFalloff;
         public float MinScaleFactor;
         public float MaxScaleFactor;
 
@@ -21,6 +22,7 @@ namespace DigitalLove.Game.SpaceShaping
             SeparationScale = settings.separationScale,
             DilationScale = settings.dilationScale,
             CaptureRadius = settings.captureRadius,
+            ZoneFalloff = settings.zoneFalloff,
             MinScaleFactor = settings.minScaleFactor,
             MaxScaleFactor = settings.maxScaleFactor
         };

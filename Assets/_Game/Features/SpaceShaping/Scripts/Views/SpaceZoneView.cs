@@ -46,6 +46,8 @@ namespace DigitalLove.Game.SpaceShaping
             ApplyContentVisual();
         }
 
+        public void SetFalloff(float value) => falloff = Mathf.Max(value, 0f);
+
         public void SetScale(float value) => scale = Mathf.Max(value, 0.01f);
 
         public void SetScaling(bool value) => scaling = value;

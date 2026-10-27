@@ -19,5 +19,6 @@ MonoBehaviour:
   separationScale: 1.2
   dilationScale: 0.2
   captureRadius: 0.06
+  zoneFalloff: 0.5
   minScaleFactor: 0.4
   maxScaleFactor: 2.5
