@@ -53,8 +53,10 @@ namespace DigitalLove.Game.SpaceShaping
             for (int i = 0; i < sources.Count; i++)
             {
                 SpaceSource source = sources[i];
-                bool isOrigin = (source.Position - start).sqrMagnitude < 0.0001f;
-                if (!isOrigin && SegmentHitsSphere(from, to, source.Position, source.Radius))
+                if (IsAt(source.Position, start) || IsAt(source.Position, settings.Destination))
+                    continue;
+
+                if (SegmentHitsSphere(from, to, source.Position, source.Radius))
                     return TrajectoryOutcome.Crash;
             }
 
@@ -63,6 +65,9 @@ namespace DigitalLove.Game.SpaceShaping
 
             return TrajectoryOutcome.Miss;
         }
+
+        private static bool IsAt(Vector3 position, Vector3 point) =>
+            (position - point).sqrMagnitude < 0.0001f;
 
         private static bool SegmentHitsSphere(Vector3 from, Vector3 to, Vector3 centre, float radius)
         {

@@ -7,7 +7,9 @@ namespace DigitalLove.Game.SpaceShaping
     public class PuzzleData : LevelData
     {
         [Header("Space Shaping")]
-        public float distance = 1f;
+        public Vector3 origin;
+        public Vector3 destination;
+        public Vector3 zoneCentre;
         public float launchSpeed;
         public float tmin;
         public float tmax = 12f;
@@ -15,8 +17,10 @@ namespace DigitalLove.Game.SpaceShaping
         public PuzzleSource[] sources;
         public PuzzleZone[] solution;
 
-        public Vector3 Origin => new(distance * -0.5f, 0f, 0f);
+        public Vector3 Origin => origin;
 
-        public Vector3 Destination => new(distance * 0.5f, 0f, 0f);
+        public Vector3 Destination => destination;
+
+        public float Distance => Vector3.Distance(origin, destination);
     }
 }

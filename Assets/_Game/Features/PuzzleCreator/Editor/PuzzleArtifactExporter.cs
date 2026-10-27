@@ -26,19 +26,23 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             EnsureFolder();
             string path = $"{GeneratedFolder}/{name}.asset";
             T existing = AssetDatabase.LoadAssetAtPath<T>(path);
-            if (existing == asset)
+            if (existing == null)
             {
-                EditorUtility.SetDirty(asset);
+                AssetDatabase.CreateAsset(asset, path);
                 AssetDatabase.SaveAssets();
                 return asset;
             }
 
-            if (existing != null)
-                AssetDatabase.DeleteAsset(path);
+            if (existing != asset)
+            {
+                EditorUtility.CopySerialized(asset, existing);
+                existing.name = name;
+                UnityEngine.Object.DestroyImmediate(asset);
+            }
 
-            AssetDatabase.CreateAsset(asset, path);
+            EditorUtility.SetDirty(existing);
             AssetDatabase.SaveAssets();
-            return asset;
+            return existing;
         }
 
         private static void EnsureFolder()

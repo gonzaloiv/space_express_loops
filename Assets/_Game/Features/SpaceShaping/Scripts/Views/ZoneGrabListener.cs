@@ -40,17 +40,9 @@ namespace DigitalLove.Game.SpaceShaping
         private float startScale;
         private Vector3 startSize;
         private Vector3 grabOffset;
-        private Vector3 restZoneSize;
-        private Vector3 restGrabScale;
 
         private bool hovering;
         private Vector3 hoverWorld;
-
-        private void Awake()
-        {
-            restZoneSize = zone.Size;
-            restGrabScale = transform.localScale;
-        }
 
         private void OnEnable() => grabbable.WhenPointerEventRaised += OnPointerEvent;
 
@@ -112,8 +104,6 @@ namespace DigitalLove.Game.SpaceShaping
         private void BeginGesture()
         {
             classified = true;
-            restZoneSize = zone.Size;
-            restGrabScale = transform.localScale;
             frameGrab = !InsideContent(HandWorld());
             grabOffset = zone.Centre - HandLocal();
         }
@@ -124,11 +114,7 @@ namespace DigitalLove.Game.SpaceShaping
             lastCount = 0;
         }
 
-        private void Move()
-        {
-            zone.SetFrame(HandLocal() + grabOffset, zone.Size);
-            SyncGrab();
-        }
+        private void Move() => zone.SetFrame(HandLocal() + grabOffset, zone.Size);
 
         private void ScaleUniverse()
         {
@@ -150,21 +136,7 @@ namespace DigitalLove.Game.SpaceShaping
             float ratio = HandDistance() / startHandDistance;
             float factor = Mathf.Clamp(Mathf.Pow(ratio, frameGain), 1f, frameGrowRatio);
             zone.SetFrame(zone.Centre, startSize * factor);
-            SyncGrab();
         }
-
-        private void SyncGrab()
-        {
-            transform.localPosition = zone.Centre;
-            Vector3 size = zone.Size;
-            transform.localScale = new Vector3(
-                restGrabScale.x * SafeRatio(size.x, restZoneSize.x),
-                restGrabScale.y * SafeRatio(size.y, restZoneSize.y),
-                restGrabScale.z * SafeRatio(size.z, restZoneSize.z));
-        }
-
-        private static float SafeRatio(float value, float reference) =>
-            reference > 0.0001f ? value / reference : 1f;
 
         private void ApplyFeedback()
         {

@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0da5e29851b2b964ea174ae86cea47af, type: 3}
   m_Name: PuzzleSeed_Shape
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Creator::DigitalLove.Game.SpaceShaping.Creator.PuzzleShapeAsset
-  seed: 1
+  seed: 4
   distance: 1
+  clearance: 0.05
   shape:
     kind: 1
     anchorScale:
@@ -23,14 +24,14 @@ MonoBehaviour:
       min: 0.5516129
       max: 0.5516129
     planetCount:
-      min: 1
-      max: 1
+      min: 12
+      max: 12
     planetRadius:
       min: 0.042
       max: 0.077999994
     ringCount:
-      min: 1
-      max: 1
+      min: 2
+      max: 2
     armCount:
       min: 2
       max: 3

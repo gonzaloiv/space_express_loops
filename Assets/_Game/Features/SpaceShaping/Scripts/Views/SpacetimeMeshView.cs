@@ -5,9 +5,11 @@ namespace DigitalLove.Game.SpaceShaping
 {
     public class SpacetimeMeshView : MonoBehaviour
     {
-        private const float FieldMargin = 0.05f;
-        private const float DepthRatio = 0.6f;
-        private const float WidthRatio = 0.5f;
+        [SerializeField] private float fieldMargin = 0.05f;
+        [SerializeField, Tooltip("Depth (Y) as a fraction of the run half-length. Set to 1 (with Width 1) for a cube.")]
+        private float depthRatio = 0.6f;
+        [SerializeField, Tooltip("Width (Z) as a fraction of the run half-length. Set to 1 (with Depth 1) for a cube.")]
+        private float widthRatio = 0.5f;
 
         [SerializeField] private MeshFilter meshFilter;
         [SerializeField] private int gridCount = 4;
@@ -24,9 +26,9 @@ namespace DigitalLove.Game.SpaceShaping
         {
             EnsureMesh();
 
-            float half = halfExtent / transform.lossyScale.x * (1f + FieldMargin);
-            Vector3 gridMin = new(-half, -half * DepthRatio, -half * WidthRatio);
-            Vector3 gridMax = new(half, half * DepthRatio, half * WidthRatio);
+            float half = halfExtent / transform.lossyScale.x * (1f + fieldMargin);
+            Vector3 gridMin = new(-half, -half * depthRatio, -half * widthRatio);
+            Vector3 gridMax = new(half, half * depthRatio, half * widthRatio);
 
             int perAxis = gridCount * gridCount;
             int perLine = samplesPerLine * sides;

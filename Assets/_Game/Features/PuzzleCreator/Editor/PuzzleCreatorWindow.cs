@@ -62,21 +62,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         private void DrawBake()
         {
-            bool ready = planets != null && settings != null;
-            using (new EditorGUI.DisabledScope(!ready))
-            {
-                if (GUILayout.Button("Generate"))
-                    Generate();
-            }
-
             using (new EditorGUI.DisabledScope(seed == null || settings == null))
             {
+                if (GUILayout.Button("Generate (rebuild)"))
+                    Generate();
+
                 if (GUILayout.Button($"Find working seed (from {CurrentSeed()})"))
                     FindSeed();
-            }
 
-            using (new EditorGUI.DisabledScope(!ready))
-            {
                 if (GUILayout.Button("Save variants"))
                     Save();
             }
@@ -86,6 +79,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         private void Generate()
         {
+            shape = PuzzleArtifactExporter.ExportShape(seed, settings);
+            planets = PuzzleArtifactExporter.ExportPlanets(shape);
             generated = PuzzleFieldBake.BakeVariants(
                 planets, PuzzleSimSettings.From(settings), windowTightness, variants, out status);
             Repaint();
@@ -168,7 +163,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             if (status == PuzzleBakeStatus.Unverified)
                 return "A solution was found but it did not verify inside the window/budget.";
 
-            return "Set the seed + settings, export the shape and planets, then Generate.";
+            return "Set the seed + settings, then Generate (it rebuilds the shape and planets first).";
         }
 
         private static int Stars(PuzzleVerification run, PuzzleData puzzle)

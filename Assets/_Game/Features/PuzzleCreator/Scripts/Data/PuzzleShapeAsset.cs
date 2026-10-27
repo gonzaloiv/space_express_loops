@@ -8,6 +8,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     {
         public int seed = 1;
         public float distance = 8f;
+        public float clearance = 0.06f;
         public SectorShapeData shape = new();
     }
 }

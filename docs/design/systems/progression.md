@@ -4,7 +4,7 @@
 **Date:** 2026-10-23.
 
 **Related:** [vision](../vision.md) · [core loop](../core-loop.md) · [resources](resources.md) ·
-[lore](../world/lore.md)
+[lore](../world/lore.md) · [jobs](../jobs.md)
 
 ## Goal
 
@@ -45,17 +45,18 @@ The **level selector** is needed: a field of cubes, one per job.
 One new idea at a time, so the player never faces two at once:
 
 The scale has **two faces** — **space** (a shortcut / the path) and **time** (the ship's clock) —
-driven by the **same factor** ([the cube](cube.md)). The player learns **space first, then time**.
+driven by the **same factor** ([the cube](cube.md)). The **space face** is the metric stretch; the
+**time face** is the field: growing a planet deepens its well (`mass ∝ radius³`). The player learns
+**space first, then time**.
 
 1. **Jobs 1–2 — the fixed cube, one zone.** A fixed region; the only move is the **grab-inside
    scale** (the **space face**: the shortcut and the spread). One lever, one planet, a generous
    window.
 2. **Job 3 — several zones.** The player places and scales **several zones**; the soft brush blends
    them, so "where do I scale" enters. The cube stays **fixed**.
-3. **The time tutorial — a planetless level.** The scale still works, but with no planets only the
-   **time face** shows: the grid pulses at the clock rate and the arrival slides on the window gauge.
-   The player learns the clock before path and clock compete. (Recurring planetless levels are a later
-   variation.)
+3. **The time tutorial — a planet off the trajectory.** The scale changes the planet's mass and so the
+   clock, but not the path (the ship never passes near it). The player learns the clock before path and
+   clock compete. (Recurring off-path levels are a later variation.)
 4. **Then — the movable cube.** The region can be **moved** (translatable), so "where the cube sits"
    enters.
 5. **Then — the resizable frame.** The region can be **resized** — the aperture becomes the player's
@@ -79,28 +80,25 @@ creator bakes to them ([improvements plan](../../plans/in-progress/puzzle-creato
 - **`rotate`** — the spin gesture is available (later puzzles).
 - **`scalable`** is **always true** — scaling the content is the verb; there is no locked-scale level.
 
-### The puzzle map (one row per job)
+### The puzzle map
 
-What each job teaches and its variations. The counts are a **stretch goal** — prove 3–5 first.
-
-| # | Teaches | Brief (translatable · moves · resizable · rotate) | Field (planets · layout · well) | Dials (window · entropy) | Why |
-|---|---|---|---|---|---|
-| 1–2 | the scale | fixed · 1 · no · no | 1 · single · medium | generous · loose→tight | first contact: one lever, one planet |
-| 3 | several zones | fixed · 2+ · no · no | 2–3 · multi-well | medium · medium | "where do I scale" enters |
-| time | the clock (no planets) | fixed · 1 · no · no | 0 · — · none | generous · loose | the **time face** alone: the grid pulses at the clock rate |
-| 4 | move the cube | **yes** · 1+ · no · no | 3 · multi-well | medium · medium | "where the cube sits" enters |
-| 5 | resize the frame | yes · 1+ · **yes** · no | 3–4 · multi-well | tight · tight | the aperture is the player's |
-| 6–8 | combine | yes · 2+ · yes · no | 3–4 · mixed · deep | tight · tight | mastery: read the field, edit little |
-| later | rotate | yes · 1+ · yes · **yes** | 3+ · multi-well · deep | razor · tight | direction, not just position |
+The **concrete run** — one row per job, with its brief, field, dials and lore skin — is in
+[jobs](../jobs.md). This doc sets the shape; jobs is the specific development of it.
 
 **The slice.** Jobs 1–8 are the full run, ~1 minute each. The curve rises by **planet count** and
 **window tightness**; rotate waits for later puzzles. The last jobs **combine** every verb the player
 has learned — that is the capstone, not a locked cube.
 
+Each job is defined on its **seed** — the band, the brief conditions and the dials — and the **level** is
+the baked result of that seed ([improvements plan](../../plans/in-progress/puzzle-creator-improvements.md)
+§5). The seed is the recipe; the level is what the creator bakes from it, once.
+
 ### The company is lore only
 
 No economy, no ships, no unlocks. Money is **flavour** ([lore](../world/lore.md)); progression is
 the **lit cubes + stars**. Reputation / ships / systems are the wrapper, once the core loop is fun.
+The fiction for all of this — why the cubes are numbered, why the order, what the stars mean — is in
+[lore §The progression](../world/lore.md).
 
 ## Feedback
 

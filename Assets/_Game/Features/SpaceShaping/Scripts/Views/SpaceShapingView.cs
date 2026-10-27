@@ -9,24 +9,24 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private SpaceSourceView prototype;
         [SerializeField] private Transform sourceParent;
         [SerializeField] private SpacetimeMeshView mesh;
-        [SerializeField] private SpaceZoneView zone;
-        [SerializeField] private Transform origin;
-        [SerializeField] private Transform destination;
+        [SerializeField] private SpaceZoneView cubePrototype;
+        [SerializeField] private Transform cubeParent;
 
         private readonly List<SpaceSourceView> pool = new();
+        private SpaceZoneView cube;
         private SpaceZone lastZone;
         private bool hasSnapshot;
 
-        public SpaceZone Zone => zone.Zone;
+        public SpaceZone Zone => Cube().Zone;
 
-        public bool IsScaling => zone.IsScaling;
+        public bool IsScaling => Cube().IsScaling;
 
         public bool HasChanged()
         {
             if (!hasSnapshot)
                 return true;
 
-            SpaceZone current = zone.Zone;
+            SpaceZone current = Cube().Zone;
             return current.Centre != lastZone.Centre
                 || current.HalfExtents != lastZone.HalfExtents
                 || current.Scale != lastZone.Scale
@@ -35,8 +35,6 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void ApplyFromSession(SpaceShapingSession session)
         {
-            SetEndpoints(session.Origin, session.Destination);
-
             int count = session.SourceCount;
             for (int i = 0; i < count; i++)
                 Source(i).SetLocal(session.GetPosition(i), session.GetScale(i));
@@ -45,32 +43,29 @@ namespace DigitalLove.Game.SpaceShaping
                 pool[i].Hide();
         }
 
-        public void SetEndpoints(Vector3 originPosition, Vector3 destinationPosition)
+        public void SetZoneFrame(Vector3 centre, Vector3 size, float falloff)
         {
-            origin.localPosition = originPosition;
-            destination.localPosition = destinationPosition;
-        }
-
-        public void SetZoneFrame(Vector3 size, float falloff)
-        {
-            zone.SetFrame(Vector3.zero, size);
-            zone.SetFalloff(falloff);
+            Cube().SetFrame(centre, size);
+            Cube().SetFalloff(falloff);
         }
 
         public void Snapshot()
         {
-            lastZone = zone.Zone;
+            lastZone = Cube().Zone;
             hasSnapshot = true;
         }
 
-        public void Render(SpacetimeField field, IReadOnlyList<SpaceZone> zones) =>
-            mesh.Render(field, zones, Vector3.Distance(origin.position, destination.position) * 0.5f);
+        public void Render(SpacetimeField field, IReadOnlyList<SpaceZone> zones, float radius) =>
+            mesh.Render(field, zones, radius);
 
         public void ResetZone()
         {
-            zone.ResetScale();
+            Cube().ResetScale();
             hasSnapshot = false;
         }
+
+        private SpaceZoneView Cube() =>
+            cube != null ? cube : cube = Instantiate(cubePrototype, cubeParent);
 
         private SpaceSourceView Source(int index)
         {

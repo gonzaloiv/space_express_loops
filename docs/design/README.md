@@ -13,6 +13,7 @@ these docs describe the intended game, not what is shipped.
 | [Resources](systems/resources.md) | Time (window), fuel (brief), entropy (score). |
 | [Relativity](systems/relativity.md) | The effect menu the cube instruments. |
 | [Progression](systems/progression.md) | How the game advances: the cube map, stars, the learning path. |
+| [Jobs](jobs.md) | The concrete run: one row per job — brief, field, dials, and lore skin. |
 | [Presentation](presentation.md) | Look, sound, HUD. |
 | [Lore](world/lore.md) | The fiction frame. |
 | [Glossary](glossary.md) | The fixed terms. |

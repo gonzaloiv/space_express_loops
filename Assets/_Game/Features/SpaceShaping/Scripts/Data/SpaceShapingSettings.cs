@@ -10,14 +10,14 @@ namespace DigitalLove.Game.SpaceShaping
         public float runDistance = 1f;
 
         [Tooltip("The cube (the lens): the region the player scales, in metres. A fraction of the run; a shrunk cube is a shortcut.")]
-        public float cubeSize = 0.15f;
+        public float cubeSize = 0.25f;
 
         [Header("Simulation")]
-        [Tooltip("Integrator step, in seconds.")]
-        public float stepSecs = 0.008333333f;
+        [Tooltip("Integrator step, in seconds. The step budget is derived from the run and the nominal speed, so the budget can never drift from the run.")]
+        public float stepSecs = 0.0008333333f;
 
-        [Tooltip("Step budget. maxSteps x stepSecs is the time budget, and the baked launch is derived from it so the bare start just misses.")]
-        public int maxSteps = 1200;
+        [Tooltip("Nominal crossing speed, in m/s. The time budget is runDistance / nominalSpeed, and the baked launch is a fraction of it, so the bare start just misses however long the run is.")]
+        public float nominalSpeed = 1f;
 
         [Header("Field")]
         [Tooltip("Planet radius, in metres. Sets the field planets (with a small spread) and the arrival sphere around the destination, so touching the goal planet is an arrival.")]
@@ -35,7 +35,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         [Header("Zone")]
         [Tooltip("The cube's soft edge, as a fraction of its half-size (0 = hard edge). Shared with the view so a found solution reproduces.")]
-        public float zoneFalloff = 0.5f;
+        public float zoneFalloff = 0.25f;
 
         [Header("Reachable scale")]
         [Tooltip("Smallest scale the player can reach (0.4 = shrink to 40%).")]

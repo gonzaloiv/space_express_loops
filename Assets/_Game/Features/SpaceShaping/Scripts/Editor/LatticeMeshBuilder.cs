@@ -11,23 +11,46 @@ namespace DigitalLove.Game.SpaceShaping.EditorTools
         private const int SamplesPerLine = 32;
         private const int Sides = 6;
         private const float Radius = 0.05f;
-        private static readonly Vector3 Min = new(-6f, -4f, -3f);
-        private static readonly Vector3 Max = new(6f, 4f, 3f);
+        private static readonly Vector3 Min = new(-6f, -6f, -6f);
+        private static readonly Vector3 Max = new(6f, 6f, 6f);
         private const string AssetPath = "Assets/_Game/Features/SpaceShaping/Models/LatticeMesh.asset";
 
         [MenuItem("DigitalLove/Space Shaping/Build Lattice Mesh")]
         public static void Build()
         {
-            Mesh mesh = BuildMesh(GridCount, SamplesPerLine, Sides, Min, Max, Radius);
+            Build(GridCount, Sides, Radius, null);
+        }
+
+        public static void Build(int gridCount, int sides, float radius, MeshFilter meshFilter)
+        {
+            string path = ResolvePath(meshFilter);
             EnsureFolder();
-            if (AssetDatabase.LoadAssetAtPath<Mesh>(AssetPath) != null)
-                AssetDatabase.DeleteAsset(AssetPath);
-            AssetDatabase.CreateAsset(mesh, AssetPath);
+
+            Mesh mesh = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            if (mesh == null)
+            {
+                mesh = new Mesh();
+                AssetDatabase.CreateAsset(mesh, path);
+            }
+
+            FillMesh(mesh, gridCount, SamplesPerLine, sides, Min, Max, radius);
+            EditorUtility.SetDirty(mesh);
             AssetDatabase.SaveAssets();
-            Debug.Log($"[LatticeMeshBuilder] Built lattice mesh ({mesh.vertexCount} verts) at {AssetPath}");
+
+            if (meshFilter != null)
+                meshFilter.sharedMesh = mesh;
+
+            Debug.Log($"[LatticeMeshBuilder] Built lattice mesh ({mesh.vertexCount} verts) at {path}");
         }
 
         public static Mesh BuildMesh(int n, int samples, int sides, Vector3 min, Vector3 max, float radius)
+        {
+            Mesh mesh = new();
+            FillMesh(mesh, n, samples, sides, min, max, radius);
+            return mesh;
+        }
+
+        public static void FillMesh(Mesh mesh, int n, int samples, int sides, Vector3 min, Vector3 max, float radius)
         {
             List<Vector3> vertices = new();
             List<Vector3> normals = new();
@@ -44,12 +67,23 @@ namespace DigitalLove.Game.SpaceShaping.EditorTools
                 }
             }
 
-            Mesh mesh = new();
+            mesh.Clear();
             mesh.SetVertices(vertices);
             mesh.SetNormals(normals);
             mesh.SetTriangles(triangles, 0);
             mesh.RecalculateBounds();
-            return mesh;
+        }
+
+        private static string ResolvePath(MeshFilter meshFilter)
+        {
+            if (meshFilter != null && meshFilter.sharedMesh != null)
+            {
+                string path = AssetDatabase.GetAssetPath(meshFilter.sharedMesh);
+                if (!string.IsNullOrEmpty(path))
+                    return path;
+            }
+
+            return AssetPath;
         }
 
         private static void AddTube(

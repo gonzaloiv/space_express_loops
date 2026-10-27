@@ -5,7 +5,7 @@ namespace DigitalLove.Game.SpaceShaping
         public float RunDistance;
         public float CubeSize;
         public float StepSecs;
-        public int MaxSteps;
+        public float NominalSpeed;
         public float SourceStrengthScale;
         public float SeparationScale;
         public float DilationScale;
@@ -19,7 +19,7 @@ namespace DigitalLove.Game.SpaceShaping
             RunDistance = settings.runDistance,
             CubeSize = settings.cubeSize,
             StepSecs = settings.stepSecs,
-            MaxSteps = settings.maxSteps,
+            NominalSpeed = settings.nominalSpeed,
             SourceStrengthScale = settings.sourceStrengthScale,
             SeparationScale = settings.separationScale,
             DilationScale = settings.dilationScale,

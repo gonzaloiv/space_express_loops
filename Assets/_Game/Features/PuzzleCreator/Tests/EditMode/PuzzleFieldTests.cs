@@ -41,7 +41,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void Build_FillsTheRun()
+        public void Build_SpansTheRun()
         {
             PuzzleSeed seed = Seed();
             SpaceShapingSettings settings = Settings();
@@ -50,8 +50,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             for (int i = 0; i < planets.Length; i++)
                 outer = Mathf.Max(outer, planets[i].position.magnitude + planets[i].radius);
 
-            Assert.Greater(outer, settings.runDistance * 0.5f - settings.planetRadius - 1f);
-            Assert.LessOrEqual(outer, settings.runDistance * 0.5f - settings.planetRadius);
+            Assert.Greater(outer, settings.runDistance * 0.5f);
+            Assert.Less(outer, settings.runDistance * 0.75f);
         }
 
         [Test]
@@ -97,18 +97,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void Cluster_FitsInsideTheRun()
-        {
-            PuzzleSeed seed = Seed();
-            SpaceShapingSettings settings = Settings();
-            PuzzleFieldPlanet[] planets = Planets(seed, settings);
-            float half = settings.runDistance * 0.5f;
-
-            for (int i = 0; i < planets.Length; i++)
-                Assert.Less(planets[i].position.magnitude + planets[i].radius + settings.planetRadius, half);
-        }
-
-        [Test]
         public void ShapeAsset_CarriesSeedAndDistance()
         {
             PuzzleSeed seed = Seed();
@@ -129,7 +117,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void Bake_UsesTheConstantRun()
+        public void Bake_PicksTheRunFromTheField()
         {
             PuzzleSeed seed = Seed();
             SpaceShapingSettings settings = Settings();
@@ -140,8 +128,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleFieldBake.Apply(puzzle, planets, PuzzleSimSettings.From(settings));
 
             Assert.AreEqual(planets.planets.Length, puzzle.sources.Length);
-            Assert.AreEqual(settings.runDistance, puzzle.distance, 1e-4f);
-            Assert.AreEqual(settings.runDistance * 0.5f, puzzle.Destination.x, 1e-4f);
+            Assert.Greater(puzzle.Distance, settings.runDistance * 0.5f);
+            Assert.Less(puzzle.Distance, settings.runDistance * 1.5f);
+            Assert.Less(Vector3.Distance((puzzle.origin + puzzle.destination) * 0.5f, puzzle.zoneCentre), 1e-4f);
             Assert.Greater(puzzle.launchSpeed, 0f);
         }
 

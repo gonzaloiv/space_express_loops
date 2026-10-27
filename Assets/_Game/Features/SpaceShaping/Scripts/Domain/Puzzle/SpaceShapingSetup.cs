@@ -24,7 +24,7 @@ namespace DigitalLove.Game.SpaceShaping
             Destination = puzzle.Destination,
             CaptureRadius = settings.CaptureRadius,
             StepSecs = settings.StepSecs,
-            MaxSteps = settings.MaxSteps,
+            MaxSteps = BudgetSteps(puzzle, settings),
             LaunchSpeed = puzzle.launchSpeed,
             SourceStrengthScale = settings.SourceStrengthScale,
             SeparationScale = settings.SeparationScale,
@@ -34,5 +34,14 @@ namespace DigitalLove.Game.SpaceShaping
             EntropyBudget = puzzle.entropyBudget,
             Sources = SourceSpecs.From(puzzle.sources, settings)
         };
+
+        private static int BudgetSteps(PuzzleData puzzle, PuzzleSimSettings settings)
+        {
+            if (settings.NominalSpeed <= 0f || settings.StepSecs <= 0f)
+                return 1;
+
+            float run = Vector3.Distance(puzzle.Origin, puzzle.Destination);
+            return Mathf.Max(1, Mathf.CeilToInt(run / settings.NominalSpeed / settings.StepSecs));
+        }
     }
 }

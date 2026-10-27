@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: SpaceShapingSettings
   m_EditorClassIdentifier: 
   runDistance: 1
-  cubeSize: 0.15
-  stepSecs: 0.008333333
-  maxSteps: 1200
+  cubeSize: 0.25
+  stepSecs: 0.0008333333
+  nominalSpeed: 1
   sourceStrengthScale: 0.02
   separationScale: 1.2
   dilationScale: 0.2
   planetRadius: 0.06
-  zoneFalloff: 0.5
+  zoneFalloff: 0.25
   minScaleFactor: 0.4
   maxScaleFactor: 2.5

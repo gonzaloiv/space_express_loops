@@ -13,6 +13,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         private static readonly Color SolvedPath = new(0.35f, 1f, 0.5f, 1f);
         private static readonly Color Endpoint = new(1f, 0.8f, 0.3f, 1f);
         private static readonly Color ZoneLine = new(0.6f, 0.85f, 1f, 0.9f);
+        private static readonly Color Height = new(0.35f, 0.35f, 0.4f, 0.9f);
 
         public static void Draw(Rect rect, PuzzleData puzzle, PuzzleVerification run)
         {
@@ -30,8 +31,23 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         private static float Scale(Rect rect, PuzzleData puzzle)
         {
-            float extent = Mathf.Max(Mathf.Abs(puzzle.Origin.x), 0.01f);
+            float extent = Mathf.Max(FieldExtent(puzzle), 0.01f);
             return Mathf.Min(rect.width, rect.height) * 0.5f / (extent * Margin);
+        }
+
+        private static float FieldExtent(PuzzleData puzzle)
+        {
+            float extent = puzzle.Distance * 0.5f;
+            if (puzzle.sources == null)
+                return extent;
+
+            for (int i = 0; i < puzzle.sources.Length; i++)
+            {
+                PuzzleSource source = puzzle.sources[i];
+                extent = Mathf.Max(extent, source.home.magnitude + source.scale * 0.5f);
+            }
+
+            return extent;
         }
 
         private static Vector2 ToGui(Vector3 world, float scale, Vector2 centre) =>
@@ -39,8 +55,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         private static void Disc(Vector3 world, float scale, Vector2 centre, Color color, float radius)
         {
+            Vector2 point = ToGui(world, scale, centre);
             Handles.color = color;
-            Handles.DrawSolidDisc(ToGui(world, scale, centre), Vector3.forward, radius);
+            Handles.DrawSolidDisc(point, Vector3.forward, radius);
+
+            if (Mathf.Abs(world.y) < 0.0001f)
+                return;
+
+            Handles.color = Height;
+            Handles.DrawAAPolyLine(1.5f, point, point + new Vector2(0f, -world.y * scale));
         }
 
         private static void DrawSources(PuzzleData puzzle, float scale, Vector2 centre)

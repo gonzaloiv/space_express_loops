@@ -35,7 +35,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             float[] scales = Scales(settings, Mathf.Max(MinSamples, samples));
             for (int i = 0; i < scales.Length && found.Count < max; i++)
             {
-                PuzzleZone zone = Zone(Cube(settings.CubeSize), scales[i], settings.ZoneFalloff);
+                PuzzleZone zone = Zone(
+                    puzzle.zoneCentre, Cube(settings.CubeSize), scales[i], settings.ZoneFalloff);
                 SpaceShapingSession session = new(SpaceShapingSetup.Build(puzzle, settings));
                 if (Arrives(session, puzzle, zone, inWindow, out PuzzleSolution solution))
                     found.Add(solution);
@@ -56,9 +57,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         private static Vector3 Cube(float size) => new(size, size, size);
 
-        private static PuzzleZone Zone(Vector3 size, float scale, float falloff) => new()
+        private static PuzzleZone Zone(Vector3 centre, Vector3 size, float scale, float falloff) => new()
         {
-            centre = Vector3.zero,
+            centre = centre,
             size = size,
             scale = scale,
             falloff = falloff

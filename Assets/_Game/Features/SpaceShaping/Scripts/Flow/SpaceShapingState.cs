@@ -43,8 +43,7 @@ namespace DigitalLove.Game.SpaceShaping
         public void PreviewField()
         {
             SpaceShapingSession preview = new(BuildSetup());
-            view.SetEndpoints(preview.Origin, preview.Destination);
-            view.Render(preview.BuildField(), preview.Zones);
+            view.Render(preview.BuildField(), preview.Zones, RunRadius(preview.Origin, preview.Destination));
         }
 
         private void LateUpdate()
@@ -91,7 +90,8 @@ namespace DigitalLove.Game.SpaceShaping
         {
             view.ResetZone();
             float size = settings.cubeSize;
-            view.SetZoneFrame(new Vector3(size, size, size), settings.zoneFalloff);
+            view.SetZoneFrame(
+                puzzles[puzzleIndex].zoneCentre, new Vector3(size, size, size), settings.zoneFalloff);
         }
 
         private void StartPuzzle()
@@ -109,10 +109,13 @@ namespace DigitalLove.Game.SpaceShaping
 
             SpacetimeField field = session.BuildField();
             TrajectoryResult result = session.Simulate(field, integrator, launch);
-            view.Render(field, session.Zones);
+            view.Render(field, session.Zones, RunRadius(session.Origin, session.Destination));
             view.Snapshot();
             return result;
         }
+
+        private static float RunRadius(Vector3 origin, Vector3 destination) =>
+            Vector3.Distance(origin, destination) * 0.5f;
 
         private SpaceShapingSetup BuildSetup() =>
             SpaceShapingSetup.Build(puzzles[puzzleIndex], PuzzleSimSettings.From(settings));

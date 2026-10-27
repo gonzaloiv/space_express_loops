@@ -36,7 +36,7 @@ The player's **modifications** — moving and scaling the cube over the sources
 | Effect | Basis | Game verb | Cost | Legibility |
 |---|---|---|---|---|
 | Curved space (have) | potential well / geodesic | move mass to bend the path | done | high |
-| **Time dilation** | clocks slow deep in a well, when fast, and where the metric is scaled | route the ship to **spend or save ship-time**; hit the **window**; the score is **entropy left** | low | high — a clock is readable |
+| **Time dilation** | clocks slow deep in a well and when fast; the scale deepens the well | route the ship to **spend or save ship-time**; hit the **window**; the score is **entropy left** | low | high — a clock is readable |
 | **Frame dragging** | a spinning mass twists spacetime | **spinning planets swirl** the path; adds direction, not just position | low | high — visible spiral |
 | **Event horizon** | a point of no return | a hazard — a launch that crosses it is a *wrong* check (it costs an edit), not a run-ending fail | low | very high |
 | Gravitational lensing | light bends around mass | route a signal/beacon around an occluder | medium | medium-high |
@@ -50,9 +50,10 @@ The single best relativity idea for this game: it turns geometry into **geometry
 relativity *the* mechanic.
 
 - A **ship clock** ticks slower the deeper the ship sits in a well **and the faster it moves**:
-  `dτ = dt · √(max(0, 1 + 2Φ/c² − v²/c²))` (**two-term**: GR depth + SR speed), times the Wrap's scale
-  (`· g(scale)`, the **time face**). The launch is fixed, but the ship's speed along the path still
-  varies with the wells.
+  `dτ = dt · √(max(0, 1 + 2Φ/c² − v²/c²))` (**two-term**: GR depth + SR speed). There is **no separate
+  scale term** — the scale changes the clock **through the field**: growing a planet deepens its well
+  (`mass ∝ radius³`). The launch is fixed, but the ship's speed along the path still varies with the
+  wells.
 - Track proper time by accumulating one scalar in the existing loop
   (`TrajectoryIntegrator.Integrate`) — no new math path, no allocations.
 - New objective: **arrive within the window `[Tmin, Tmax]`**, then be graded on **entropy left**
@@ -60,9 +61,11 @@ relativity *the* mechanic.
 - Why it works: the *shortest* path and the *cheapest-time* path differ. Diving deep past a planet
   is short but the clock crawls; swinging wide is long but the clock races — a real choice the
   player can *see* and *reason about*.
-- **One verb, two faces.** The scale changes the metric: **space** (a shortcut / the path) and
-  **time** (the clock), driven by the **same factor** ([the cube](cube.md) §Feedback). A **planetless**
-  level strips the space face and leaves the clock — the **time tutorial**.
+- **One verb, two faces.** The scale changes the metric (**space**: a shortcut / the path) and the
+  content (**mass**: the planets spread and grow), and the mass deepens the wells — which is the
+  **time** face. Same factor, two readings ([the cube](cube.md) §Feedback). A level with a planet
+  **off the trajectory** isolates the time face: the scale changes its mass and the clock, but not the
+  path (the ship never passes near it) — the **time tutorial**.
 
 ### Frame dragging (variety mechanic)
 - Give `SpaceSource` a **spin** (a Vector3 angular velocity, or a scalar + axis).
@@ -95,7 +98,7 @@ so a launch that crosses it is a **wrong check** that costs an edit.
 
 ## Tuning
 
-- Dilation model: **two-term** — `dτ = dt · √(max(0, 1 + 2Φ/c² − v²/c²)) · g(scale)` (GR depth + SR speed).
+- Dilation model: **two-term** — `dτ = dt · √(max(0, 1 + 2Φ/c² − v²/c²))` (GR depth + SR speed); no separate scale term.
 - One mechanic in the first 8: time dilation is the core bet. Frame dragging (rotate) is the
   second, for **later puzzles**, after the core puzzle is proven.
 

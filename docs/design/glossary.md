@@ -15,7 +15,7 @@ One term per idea. In-game copy uses the plain terms; the physics names stay int
 | **zone** | The space inside the cube that a scale is applied to; the unit the scale acts on. |
 | **the scale** | The verb: a two-hand pinch *inside* the cube, scaling the space and the content. |
 | **space face** | The scale read as **space** — the metric stretch that is a **shortcut** and bends the path. |
-| **time face** | The scale read as **time** — the metric stretch that **moves the ship's clock**. Same factor as the space face. |
+| **time face** | The scale read as **time** — growing a planet deepens its well, so the clock slows. Same factor as the space face. |
 | **the region** | The cube's frame (edges/corners) — moving / resizing the cube; set separately from the scale. |
 | **the lens** | Alias for **the cube** — the instrument: the cube frame plus the grab-inside scale, taken together. |
 | **rotate** | The spin gesture — frame dragging; arrives in **later puzzles**, not the first 8. |
@@ -31,6 +31,7 @@ One term per idea. In-game copy uses the plain terms; the physics names stay int
 | **the field** | The derived acceleration/potential the ship flies through. |
 | **bubble** | The playfield: the miniature universe anchored in the room. |
 | **job / level** | One delivery — a cube on the map; ~1 minute each, 8–10 in the run. |
+| **the seed** | The authoring recipe for a job — its band, brief conditions and dials; the **level** is the baked result. |
 | **the map (level selector)** | The field of numbered cubes, one per job; solving lights them. |
 | **the grid** | The derived spacetime lattice the player's zones warp; flat until a zone is applied. |
 | **the company** | The lore wrapper (identity, contracts); flavour only, no economy. |

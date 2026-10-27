@@ -13,13 +13,14 @@ the bubble; the space **inside** it scales reality/the field — it transforms t
 There is no Map/Sculpt mode split, and the whole map stays visible in the background — overview and
 detail at once, no transition. **The cube's size is the aperture:** big reads wide and coarse, small
 reads narrow and fine. The scale has **two faces** — **space** (a shortcut / the path) and **time**
-(the ship's clock) — driven by the **same factor** ([relativity](relativity.md)).
+(the ship's clock) — driven by the **same factor** ([relativity](relativity.md)). It scales the space
+and the content.
 
 ## Inputs — the three gestures (taught in order)
 
 | Gesture | Trigger | Effect | Relativity |
 |---|---|---|---|
-| **The scale** | a two-hand pinch **inside** the cube | scales the space *and* the content: the metric stretches (a shrunk zone is a **shortcut**), the planets **spread** and **grow** (mass ∝ radius), and the metric stretch is also a **time stretch** (the clock) | time dilation |
+| **The scale** | a two-hand pinch **inside** the cube | scales the space *and* the content: the metric stretches (a shrunk zone is a **shortcut**), the planets **spread** and **grow** (`mass ∝ radius³`) — a grown planet deepens its well, which bends the path and slows the clock | time dilation |
 | **The region** *(job 3)* | grab the cube's **edges / corners** | **moves / resizes** the cube (the lens) — sets *where* you work — and you can scale **several** zones; the soft brush blends them | — |
 | **The rotate** *(later puzzles)* | spin the zone | **frame dragging** — a spinning zone swirls the path; adds direction for free | frame dragging |
 
@@ -36,7 +37,7 @@ from the scale** — coupling them is the bug. Rotate arrives in **later puzzles
   grid and trajectory are computed from the result.
 - **Planets stay the field's sources.** The *verb* changes, not the physics (`SpacetimeField`,
   `TrajectoryIntegrator` stand). Scaling the content changes the field for free through the existing
-  `mass ∝ radius` rule.
+  `mass ∝ radius³` rule.
 - **Planets cannot fuse.** The separation constraint (`SourceConstraints`, 1.2 × the sum of radii,
   applied on every recompute) pushes any overlapping pair apart, so a zone transform can never merge
   two planets — but the constraint can *fight* the cube's intent, so the player must see the planets

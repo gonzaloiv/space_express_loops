@@ -32,6 +32,7 @@ Design-only or deferred. Nothing here is scheduled.
 | [Universe — element pack](backlog/universe/universe-element-pack.md) | universe | Later ambient/decor set for the sector field: belts, moons, nebulae, stations… Not scheduled. |
 | [Hologram look](backlog/presentation/hologram-look.md) | presentation | Design only; hologram pass for the bubble view, then the edition view. Independent. |
 | [TTS voice panel](backlog/presentation/tts-voice-panel-personality.md) | presentation | Design only; camera-operator companion behavior for the TTS panel. |
+| [Space shaping — tech debt](backlog/gameplay/space-shaping-tech-debt.md) | space shaping | Code/authoring hygiene carried out of the creator improvements plan. |
 
 ## Open tails
 
@@ -52,5 +53,5 @@ Loose ends that still need a home. Close one by linking the plan that finishes i
 - `<area>` is one of `space shaping`, `universe`, `presentation`, `flow`.
 - Folders: `now` → `in-progress/`; `next` and `later` → `backlog/`. Move the file and update this
   board in the same change.
-- Run `docs/plans/check-plans.ps1` (or `/check-plans`) after moving files — it verifies links and
-  status/folder consistency.
+- Run `docs/check.ps1` after moving files — it runs `check-plans.ps1` (links, status/folder, board) and
+  `check-docs.ps1` (design docs).

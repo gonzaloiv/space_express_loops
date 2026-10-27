@@ -77,7 +77,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         public void FoundZone_IsTheConstantCube()
         {
             Assert.AreEqual(settings.CubeSize, solution.Zones[0].size.x, 1e-4f);
-            Assert.AreEqual(Vector3.zero, solution.Zones[0].centre);
+            Assert.Less(Vector3.Distance(puzzle.zoneCentre, solution.Zones[0].centre), 1e-4f);
         }
 
         [Test]
