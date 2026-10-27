@@ -9,9 +9,8 @@ it should land alongside the slices, not before them.
 
 ## Correctness
 
-- **The verifier accepts a crashing start.** `PuzzleVerification.StartFails` is `!= Arrive`, so a
-  `Crash` passes as "start fails". Require `Miss` and reject `Crash` — the bake path already requires
-  `Miss` (`PuzzleFieldBake.StartMisses`); this only tightens the verifier's report.
+- **The verifier accepts a crashing start — FIXED (2026-10-27).** `PuzzleVerification.StartFails` now
+  requires `Miss`, matching the bake's contract (`PuzzleFieldBake.StartMisses`).
 - **The creator's zone geometry vs the game's.** *(corrected 2026-10-27)* The view's physics zone is
   `new(Centre, Size × 0.5, scale, falloff)` — **no inset**; `contentInsetFraction` only shrinks the
   *content* visual / grab region. So the creator's `PuzzleZone.ToSpaceZone()` already matches it. The
@@ -23,10 +22,9 @@ it should land alongside the slices, not before them.
 
 ## Authoring hygiene
 
-- **`PuzzleArtifactExporter` churns GUIDs.** `DeleteAsset` + `CreateAsset` mints a new GUID on every
-  re-export, breaking references. Load-and-overwrite (`LoadAssetAtPath` + `EditorUtility.CopySerialized`)
-  or create only when absent. (The lattice builder already does this — see
-  [LatticeMeshBuilder](../../../../Assets/_Game/Features/SpaceShaping/Scripts/Editor/LatticeMeshBuilder.cs).)
+- **`PuzzleArtifactExporter` GUID churn — FIXED (2026-10-27).** It now loads and overwrites an existing
+  asset (`LoadAssetAtPath` + `EditorUtility.CopySerialized`), so re-exports preserve the GUID and keep
+  references. See `PuzzleArtifactExporter.cs:21-43`.
 - **Intermediates are committed and split across folders.** Keep intermediates under `Generated/` and
   commit only the final `PuzzleData`; stage 1 currently lives outside `Generated/`.
 

@@ -37,6 +37,7 @@
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Vendor.UnityGif.csproj" />
   <Project Path="DigitalLove.Game.Universe.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Analytics.csproj" />
   <Project Path="DigitalLove.VFX.Materials.Editor.csproj" />
   <Project Path="DigitalLove.XR.OVR.csproj" />
@@ -55,7 +56,6 @@
   <Project Path="DigitalLove.Casual.Levels.csproj" />
   <Project Path="DigitalLove.Theming.csproj" />
   <Project Path="DigitalLove.XR.Samples.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Game.SilentPlanets.csproj" />
   <Project Path="DigitalLove.DataAccess.Local.csproj" />
   <Project Path="DigitalLove.Timeline.Integrations.csproj" />

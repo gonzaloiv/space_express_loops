@@ -5,6 +5,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public TrajectoryResult Start;
         public TrajectoryResult SolvedRun;
         public float EntropySpent;
+        public float StartMargin;
         public bool Solved;
 
         public TrajectoryOutcome StartOutcome => Start.Outcome;
@@ -13,6 +14,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         public float ShipTime => SolvedRun.ShipTime;
 
-        public bool StartFails => Start.Outcome != TrajectoryOutcome.Arrive;
+        public bool StartFails => Start.Outcome == TrajectoryOutcome.Miss;
     }
 }

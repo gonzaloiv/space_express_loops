@@ -1,11 +1,11 @@
 # Space Shaping — Variations (Recorded)
 
-**Status:** later · space shaping · updated 2026-10-26 — recorded, design only. Aligned with the lens/entropy model
+**Status:** idea · space shaping · updated 2026-10-26 — recorded, design only. Aligned with the lens/entropy model
 (2026-10-24): the **verb is the cube scale**, not moving sources; the **score is entropy**,
 not move count; there is **one view**, not a Map/Sculpt split. This doc records the
 variations that sit *after* the validation.
 
-**Related:** [vision](../../../design/vision.md) · [resources](../../../design/systems/resources.md) · [progression](../../../design/systems/progression.md) · POC · [integration](space-shaping-integration.md)
+**Related:** [vision](../design/vision.md) · [resources](../design/systems/resources.md) · [progression](../design/systems/progression.md) · POC · [integration](../plans/backlog/gameplay/space-shaping-integration.md)
 
 **Wiring rule:** all visuals and interaction props stay authored in the scene/prefabs
 with serialized references. No runtime component lookup, mesh/material creation, or
@@ -14,11 +14,11 @@ hierarchy building.
 ## 1. The framing (aligned)
 
 - **One view, one instrument.** The cube is the tool and the level. There is no Map/Sculpt
-  split (see [vision](../../../design/vision.md) §4).
+  split (see [vision](../design/vision.md) §4).
 - **The verb is the scale.** The player scales zones (space + content); the field, grid and
   trajectory are derived. The grid is the *record of the player's zones*: it starts flat and warps
   only where a zone is applied — the planets' own wells are not drawn, so a bend always reads as
-  something the player did ([cube](../../../design/systems/cube.md)).
+  something the player did ([cube](../design/systems/cube.md)).
 - **The score is entropy.** A per-job budget drained by the scale interval; the grade is
   entropy left. No move counts.
 
@@ -54,7 +54,7 @@ staying off that cliff.
 - This maps onto the existing ordered-stops model (`LoopData` / `RouteLeg`): each leg is one
   launch, independently verifiable, and `RouteLeg.positions` holds the sampled path.
 - A job can be a **loop route** (A -> B -> C -> A) — see
-  [vision](../../../design/vision.md) §3.
+  [vision](../design/vision.md) §3.
 
 ### 2.3 Sequential-with-lock (fallback for many ships)
 
@@ -97,7 +97,7 @@ star thresholds (entropy par) are set from the secured solution's cost.
 ## 4. Data model
 
 - Source state is **baked into the puzzle asset** at author time (the seed generates the field
-  offline — see [puzzle creator improvements](../../in-progress/puzzle-creator-improvements.md)); the field
+  offline — see [puzzle creator improvements](../plans/in-progress/puzzle-creator-improvements.md)); the field
   is derived from the stored positions, and the grid from the player's zones — neither is stored.
 - Mass is coupled to size for now (`mass ∝ radius³`, constant density); a later element could decouple them (a
   small heavy planet).
@@ -107,8 +107,10 @@ star thresholds (entropy par) are set from the secured solution's cost.
 - The **definition** carries the **seed**, the window `[Tmin, Tmax]`, the launch speed (the
   narrative "fuel"), the **editing envelope** (`MinScale`/`MaxScale`/`MoveRange`), and the
   **entropy budget + entropy par** (the star target). No `solutionMoves`.
-- Snapshot: puzzle id + the scale commands + ship/route list + the entropy budget/par. The **seed**
-  is authoring-only (not shipped to the runtime puzzle loop).
+- **No in-level snapshot.** What saves is player progression — solved jobs + stars — never the scale
+  commands. A run is rebuilt from the baked field. If mid-level resume is ever added, its snapshot would
+  be puzzle id + the scale commands + ship/route list + the entropy budget/par. The **seed** is
+  authoring-only (not shipped to the runtime puzzle loop).
 
 ## 5. Campaign menu (level select)
 
@@ -124,7 +126,7 @@ star thresholds (entropy par) are set from the secured solution's cost.
 
 1. **Simultaneous ship cap.** Start at 2; raise only if generation stays feasible.
 2. **Region size.** How many planets per puzzle before the search space is too chaotic?
-3. **Level-gen cost.** Where does the automatic creator run — authored offline, or at load?
-   Keep it out of the player's frame budget.
-4. **Campaign transition.** Selecting a cube scales it up; leaving scales it back. Is the
-   *load* a Flow state and the scale-up a Mode? (See `_Modules/docs/standards/modes.md`.)
+3. **Level-gen cost — decided (2026-10-27).** The creator bakes offline; nothing generates at load.
+4. **Campaign transition — proposed.** The load is Flow (`CampaignState` → `SpaceShapingState`); the cube
+   scale-up is a presentation transition, not a mode. Navigation is direct pick only and cube positions are
+   authored (decided 2026-10-27). (See `_Modules/docs/standards/modes.md`.)

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleVerifier
@@ -18,6 +20,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Start = startResult,
                 SolvedRun = solvedResult,
                 EntropySpent = solved.EntropySpent,
+                StartMargin = ClosestApproach(startResult, setup.Destination),
                 Solved = solved.IsSolved(solvedResult) && solved.EntropySpent <= setup.EntropyBudget
             };
         }
@@ -32,6 +35,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             for (int i = 0; i < zones.Length; i++)
                 session.ApplyZone(zones[i].ToSpaceZone());
+        }
+
+        private static float ClosestApproach(TrajectoryResult result, Vector3 destination)
+        {
+            if (result.Points == null || result.Points.Count == 0)
+                return 0f;
+
+            float closest = float.MaxValue;
+            for (int i = 0; i < result.Points.Count; i++)
+                closest = Mathf.Min(closest, Vector3.Distance(result.Points[i], destination));
+
+            return closest;
         }
     }
 }

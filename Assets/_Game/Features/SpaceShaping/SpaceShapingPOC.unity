@@ -44574,7 +44574,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.SpaceShapingState
   puzzles:
-  - {fileID: 11400000, guid: 6620a5571ffbe6040852d41a8426ef6f, type: 2}
+  - {fileID: 11400000, guid: 0760c17bee9d2b1408949f1fe2e7bd1f, type: 2}
   settings: {fileID: 11400000, guid: 1000000000000000000000000000001a, type: 2}
   view: {fileID: 1095678997}
   ship: {fileID: 1688476328}
@@ -57440,10 +57440,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.SpacetimeMeshView
   fieldMargin: 0.05
-  depthRatio: 0.5
-  widthRatio: 0.5
+  depthRatio: 0.66
+  widthRatio: 1
   meshFilter: {fileID: 1402556517}
-  gridCount: 10
+  meshRenderer: {fileID: 1402556518}
+  gridCount: 8
   sides: 4
   radius: 0.005
   depthScale: 0.15
@@ -57463,7 +57464,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1402556515}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1

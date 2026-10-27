@@ -12,10 +12,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         [SerializeField] private SpaceShapingSettings settings;
         [SerializeField] private PuzzleShapeAsset shape;
         [SerializeField] private PuzzlePlanetListAsset planets;
-        [SerializeField] private int variants = 1;
-        [SerializeField] private float windowTightness = 1f;
 
-        private PuzzleData[] generated;
+        private PuzzleData generated;
         private PuzzleBakeStatus status;
         private Vector2 scroll;
 
@@ -41,8 +39,26 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 "Shape", shape, typeof(PuzzleShapeAsset), false);
             planets = (PuzzlePlanetListAsset)EditorGUILayout.ObjectField(
                 "Planets", planets, typeof(PuzzlePlanetListAsset), false);
-            variants = EditorGUILayout.IntSlider("Variants", variants, 1, 8);
-            windowTightness = EditorGUILayout.FloatField("Window tightness (s)", windowTightness);
+            DrawBrief();
+        }
+
+        private void DrawBrief()
+        {
+            if (seed == null)
+            {
+                EditorGUILayout.LabelField("Brief", "assign a seed");
+                return;
+            }
+
+            EditorGUILayout.LabelField("Brief", BriefText(seed));
+            EditorGUI.BeginChangeCheck();
+            float tightness = EditorGUILayout.Slider("Window tightness", seed.windowTightness, 0f, 1f);
+            if (!EditorGUI.EndChangeCheck())
+                return;
+
+            Undo.RecordObject(seed, "Window tightness");
+            seed.windowTightness = tightness;
+            EditorUtility.SetDirty(seed);
         }
 
         private void DrawExport()
@@ -70,7 +86,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 if (GUILayout.Button($"Find working seed (from {CurrentSeed()})"))
                     FindSeed();
 
-                if (GUILayout.Button("Save variants"))
+                if (GUILayout.Button("Save level"))
                     Save();
             }
         }
@@ -81,15 +97,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         {
             shape = PuzzleArtifactExporter.ExportShape(seed, settings);
             planets = PuzzleArtifactExporter.ExportPlanets(shape);
-            generated = PuzzleFieldBake.BakeVariants(
-                planets, PuzzleSimSettings.From(settings), windowTightness, variants, out status);
+            generated = PuzzleFieldBake.Bake(
+                planets, PuzzleSimSettings.From(settings), PuzzleBrief.From(seed), out status);
             Repaint();
         }
 
         private void FindSeed()
         {
-            PuzzleSeedScanResult result = PuzzleSeedScanner.Find(
-                seed, settings, windowTightness, variants, SeedAttempts);
+            PuzzleSeedScanResult result = PuzzleSeedScanner.Find(seed, settings, SeedAttempts);
 
             status = result.Status;
             if (!result.Found)
@@ -104,8 +119,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             EditorUtility.SetDirty(seed);
             shape = PuzzleArtifactExporter.ExportShape(seed, settings);
             planets = PuzzleArtifactExporter.ExportPlanets(shape);
-            generated = result.Variants;
-            Debug.Log($"Puzzle creator: seed {result.Seed} baked {generated.Length} variant(s).");
+            generated = result.Puzzle;
+            Debug.Log($"Puzzle creator: seed {result.Seed} baked a verified level.");
             Repaint();
         }
 
@@ -120,12 +135,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 return;
             }
 
-            PuzzleArtifactExporter.SaveVariants(generated, planets.name);
-            Debug.Log($"Puzzle creator: saved {generated.Length} verified variant(s).");
+            PuzzleArtifactExporter.SaveVariant(generated, planets.name);
+            Debug.Log("Puzzle creator: saved the verified level.");
         }
 
-        private bool HasGenerated() =>
-            generated != null && generated.Length > 0 && generated[0] != null;
+        private bool HasGenerated() => generated != null;
 
         private void DrawPreview()
         {
@@ -136,29 +150,45 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 return;
             }
 
-            PuzzleData puzzle = generated[0];
+            PuzzleData puzzle = generated;
             PuzzleVerification run = PuzzleVerifier.Verify(puzzle, PuzzleSimSettings.From(settings));
 
             Rect area = GUILayoutUtility.GetRect(0f, PreviewHeight, GUILayout.ExpandWidth(true));
             PuzzlePreviewDraw.Draw(area, puzzle, run);
 
-            EditorGUILayout.LabelField("Start", run.StartOutcome.ToString());
+            EditorGUILayout.LabelField("Brief", BriefText(puzzle));
+            EditorGUILayout.LabelField("Start", $"{run.StartOutcome} (margin {run.StartMargin:F3} m)");
             EditorGUILayout.LabelField("Solution", $"{run.SolvedOutcome} at {run.ShipTime:F2} s");
             EditorGUILayout.LabelField("Window", $"[{puzzle.tmin:F2}, {puzzle.tmax:F2}]");
             EditorGUILayout.LabelField(
                 "Entropy", $"{run.EntropySpent:F2} / {puzzle.entropyBudget:F2}  ({Stars(run, puzzle)}★)");
-            EditorGUILayout.LabelField("Variants", $"{generated.Length}");
+            EditorGUILayout.LabelField("Cube", $"{puzzle.cubeSize:F2} m");
         }
+
+        private static string BriefText(PuzzleSeed value) =>
+            BriefText(value.translatable, value.moves, value.resizable, value.rotate);
+
+        private static string BriefText(PuzzleData value) =>
+            BriefText(value.translatable, value.moves, value.resizable, value.rotate);
+
+        private static string BriefText(bool translatable, int moves, bool resizable, bool rotate) =>
+            $"{(translatable ? "movable" : "fixed")} · {Mathf.Max(1, moves)} zone(s) · "
+            + $"{(resizable ? "resizable" : "fixed size")} · {(rotate ? "rotate" : "no rotate")}";
 
         private static string Message(PuzzleBakeStatus status)
         {
+            if (status == PuzzleBakeStatus.UnsupportedBrief)
+                return "Rejected: this creator ships one zone and no rotate. Set moves to 1 and rotate off "
+                    + "on the seed.";
+
             if (status == PuzzleBakeStatus.StartNotMiss)
                 return "Rejected: the bare start does not near-miss — it arrives or crashes into a planet. "
                     + "Raise the seed's distance (the field needs room to spread) or lower planetCount, "
                     + "or use Find working seed.";
 
             if (status == PuzzleBakeStatus.NoSolution)
-                return "Rejected: no scale arrives. The field is too dense, or the run is too long for the launch speed.";
+                return "Rejected: no scale arrives inside the run window. The field is too dense, or the "
+                    + "window is too tight for this seed.";
 
             if (status == PuzzleBakeStatus.Unverified)
                 return "A solution was found but it did not verify inside the window/budget.";

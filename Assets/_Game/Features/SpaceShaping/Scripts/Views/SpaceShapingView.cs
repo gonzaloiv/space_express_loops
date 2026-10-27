@@ -43,6 +43,8 @@ namespace DigitalLove.Game.SpaceShaping
                 pool[i].Hide();
         }
 
+        public void SetConditions(ZoneConditions conditions) => Cube().SetConditions(conditions);
+
         public void SetZoneFrame(Vector3 centre, Vector3 size, float falloff)
         {
             Cube().SetFrame(centre, size);

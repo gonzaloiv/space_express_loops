@@ -10,6 +10,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private float scale = 1f;
         private bool scaling;
+        private ZoneConditions conditions;
 
         public SpaceZone Zone => new(Centre, Size * 0.5f, scale, falloff);
 
@@ -20,6 +21,10 @@ namespace DigitalLove.Game.SpaceShaping
         public float Scale => scale;
 
         public bool IsScaling => scaling;
+
+        public bool CanMove => conditions.Translatable;
+
+        public bool CanResize => conditions.Resizable;
 
         public Vector3 ContentSize
         {
@@ -45,6 +50,8 @@ namespace DigitalLove.Game.SpaceShaping
             transform.localScale = size;
             ApplyContentVisual();
         }
+
+        public void SetConditions(ZoneConditions value) => conditions = value;
 
         public void SetFalloff(float value) => falloff = Mathf.Max(value, 0f);
 

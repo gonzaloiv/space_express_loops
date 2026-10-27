@@ -21,13 +21,16 @@ and the content.
 | Gesture | Trigger | Effect | Relativity |
 |---|---|---|---|
 | **The scale** | a two-hand pinch **inside** the cube | scales the space *and* the content: the metric stretches (a shrunk zone is a **shortcut**), the planets **spread** and **grow** (`mass ∝ radius³`) — a grown planet deepens its well, which bends the path and slows the clock | time dilation |
-| **The region** *(job 3)* | grab the cube's **edges / corners** | **moves / resizes** the cube (the lens) — sets *where* you work — and you can scale **several** zones; the soft brush blends them | — |
+| **The region** *(jobs 3–5)* | grab the cube's **edges / corners** | **moves / resizes** the cube (the lens) — sets *where* you work — and from job 3 you can scale **several** zones; the soft brush blends them | — |
 | **The rotate** *(later puzzles)* | spin the zone | **frame dragging** — a spinning zone swirls the path; adds direction for free | frame dragging |
 
 **Multiple scales are the way.** The player scales **several** zones, and the soft brush blends them
 into one field — the core of the verb, not a later unlock. The region's size must stay **separate
 from the scale** — coupling them is the bug. Rotate arrives in **later puzzles**
 ([progression](progression.md) §4).
+
+**The brief selects the gestures.** A fixed level locks the move, a locked frame locks the resize, and
+the scale inside the cube is always available. The game never shows a move count.
 
 ## Rules
 

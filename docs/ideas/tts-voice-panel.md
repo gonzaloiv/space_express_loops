@@ -1,6 +1,6 @@
 # TTS Voice Panel - Camera Operator Companion
 
-**Status:** later · presentation · updated 2026-10-22 — design only. No runtime code is changed in this step.
+**Status:** idea · presentation · updated 2026-10-22 — design only. No runtime code is changed in this step.
 
 **Related:** `universe-views-and-interaction.md`, `universe-transform.md`
 

@@ -137,5 +137,6 @@ mid-flight (the seed is authoring-only).
 
 - **Star-gating?** No, in the demo — never block a run on a score. Stars feed a rating, or unlock
   *cosmetics / bonus* later.
-- **Map interaction:** pick a cube directly, or only "next"? (Sequential order suggests "next".)
-- **The numbers:** reset per act, or run 1 → N?
+- **Map interaction — decided (2026-10-27):** **direct pick only.** The map is the only navigation; there
+  is no “Next” shortcut. Solved and current cubes are pickable; locked cubes refuse visibly.
+- **The numbers:** reset per act, or run 1 → N? (The slice proposes one chapter, numbered 1 → N.)

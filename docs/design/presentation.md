@@ -19,13 +19,13 @@ built toward it.
 - **The time face reads on the lattice** — its cells **pulse at the local clock rate** (spacing = space,
   pulse = time), and the zone is **tinted cool/warm** (slower / faster clock)
   ([the cube](systems/cube.md)).
-- It could also ride the **TTS panel** screen ([voice panel plan](../plans/backlog/presentation/tts-voice-panel-personality.md)).
+- It could also ride the **TTS panel** screen ([voice panel idea](../ideas/tts-voice-panel.md)).
 
 ## Art direction
 
 - **Stylised** — not photoreal. Exact language still to be closed.
 - The **hologram** look (tinted, semi-transparent, fresnel-rimmed) is a recorded option for the
-  bubble ([hologram plan](../plans/backlog/presentation/hologram-look.md)).
+  bubble ([hologram idea](../ideas/hologram-look.md)).
 - The cube must read as a tangible instrument; the field must read (the mesh warp is the scale's
   only tell — [the cube](systems/cube.md)).
 

@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10000000000000000000000000000016, type: 3}
+  m_Name: PuzzleSeed_Shape_Planets_Puzzle
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.PuzzleData
+  id: 
+  prefab: {fileID: 0}
+  origin: {x: 0.09064652, y: 0.008377524, z: -0.21218435}
+  destination: {x: -0.3783977, y: 0.04048662, z: 0.28245723}
+  zoneCentre: {x: -0.1438756, y: 0.02443207, z: 0.03513644}
+  cubeSizeMin: 0.15
+  cubeSizeMax: 0.3
+  cubeSize: 0.15
+  translatable: 1
+  moves: 1
+  resizable: 0
+  rotate: 0
+  launchSpeed: 0.9
+  tmin: 0.34121248
+  tmax: 1.0236374
+  entropyBudget: 0.23225784
+  sources:
+  - home: {x: 0.09064652, y: 0.008377524, z: -0.21218435}
+    scale: 0.14257342
+  - home: {x: -0.23086499, y: -0.009135026, z: -0.032781795}
+    scale: 0.12290618
+  - home: {x: 0.07303347, y: -0.037368312, z: 0.1851801}
+    scale: 0.08733954
+  - home: {x: -0.29136166, y: -0.057967007, z: 0.16868998}
+    scale: 0.08561233
+  - home: {x: 0.5171175, y: 0.007687969, z: -0.091879465}
+    scale: 0.17279577
+  - home: {x: -0.49946702, y: -0.0254115, z: 0.116688624}
+    scale: 0.13298748
+  - home: {x: -0.07799321, y: -0.030390989, z: -0.18716533}
+    scale: 0.121648796
+  - home: {x: 0.1701445, y: -0.029274758, z: 0.31909037}
+    scale: 0.16359083
+  - home: {x: 0.2958619, y: 0.069259025, z: 0.2772671}
+    scale: 0.07876806
+  - home: {x: 0.2792173, y: -0.010412147, z: -0.44686174}
+    scale: 0.10305974
+  - home: {x: -0.2956155, y: 0.06055038, z: 0.06780007}
+    scale: 0.06286853
+  - home: {x: -0.4285164, y: -0.036806367, z: -0.034608416}
+    scale: 0.08537286
+  - home: {x: 0.29147485, y: 0.029008407, z: 0.08196004}
+    scale: 0.1758848
+  - home: {x: -0.012117394, y: 0.04912042, z: -0.4022157}
+    scale: 0.1579769
+  - home: {x: -0.07596218, y: 0.0256984, z: 0.24567446}
+    scale: 0.095196955
+  - home: {x: 0.33848035, y: -0.03494491, z: -0.116799265}
+    scale: 0.09165396
+  - home: {x: -0.20103803, y: 0.010247366, z: 0.4819615}
+    scale: 0.16922088
+  - home: {x: 0.32293802, y: -0.048476506, z: -0.2739306}
+    scale: 0.14697047
+  - home: {x: -0.39837828, y: 0.018839028, z: -0.23595555}
+    scale: 0.1696884
+  - home: {x: -0.27020958, y: -0.03947139, z: -0.41649738}
+    scale: 0.17662771
+  - home: {x: -0.07656409, y: -0.08385976, z: 0.12749884}
+    scale: 0.14896739
+  - home: {x: -0.3783977, y: 0.04048662, z: 0.28245723}
+    scale: 0.15888521
+  - home: {x: 0.11887332, y: 0.0042911717, z: 0.52702874}
+    scale: 0.11106341
+  - home: {x: 0.08988993, y: 0.11385985, z: 0.41981193}
+    scale: 0.12532341
+  solution:
+  - centre: {x: -0.3783977, y: 0.04048662, z: 0.28245723}
+    size: {x: 0.15, y: 0.15, z: 0.15}
+    scale: 1.0774193
+    falloff: 0.25

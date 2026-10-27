@@ -10,6 +10,13 @@ namespace DigitalLove.Game.SpaceShaping
         public Vector3 origin;
         public Vector3 destination;
         public Vector3 zoneCentre;
+        public float cubeSizeMin;
+        public float cubeSizeMax;
+        public float cubeSize;
+        public bool translatable;
+        public int moves = 1;
+        public bool resizable;
+        public bool rotate;
         public float launchSpeed;
         public float tmin;
         public float tmax = 12f;

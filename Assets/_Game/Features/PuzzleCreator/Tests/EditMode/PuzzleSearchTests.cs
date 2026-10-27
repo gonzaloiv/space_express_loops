@@ -9,6 +9,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
         private PuzzleData puzzle;
         private PuzzleSimSettings settings;
+        private PuzzleBrief brief;
         private PuzzleSolution solution;
         private int foundSeed;
 
@@ -16,15 +17,31 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         public void FindSolution()
         {
             settings = PuzzleSimSettings.From(Settings());
-            for (int seed = 1; seed <= SeedScan && solution.Zones == null; seed++)
+            PuzzleSeed source = ScriptableObject.CreateInstance<PuzzleSeed>();
+            brief = PuzzleBrief.From(source);
+            Object.DestroyImmediate(source);
+            for (int seed = 1; seed <= SeedScan; seed++)
             {
-                puzzle = Puzzle(seed);
-                PuzzleSolutionSearch.TryFind(puzzle, settings, out solution);
+                PuzzleData candidate = Puzzle(seed);
+                PuzzleSolutionSearch.TrySelect(candidate, settings, brief, out solution);
                 if (solution.Zones != null)
+                {
+                    puzzle = candidate;
                     foundSeed = seed;
+                    break;
+                }
+
+                Object.DestroyImmediate(candidate);
             }
 
             Assert.IsNotNull(solution.Zones, "no seed in the scan produced an arriving solution");
+        }
+
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            if (puzzle != null)
+                Object.DestroyImmediate(puzzle);
         }
 
         [Test]
@@ -34,25 +51,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             offWindow.tmin = 0f;
             offWindow.tmax = 0.0001f;
 
-            Assert.IsFalse(PuzzleSolutionSearch.TryFind(offWindow, settings, out _));
-        }
-
-        [Test]
-        public void Search_HonoursTheBudget()
-        {
-            PuzzleData noBudget = Puzzle(foundSeed);
-            noBudget.tmin = 0f;
-            noBudget.tmax = float.MaxValue;
-            noBudget.entropyBudget = 0f;
-
-            Assert.IsFalse(PuzzleSolutionSearch.TryFind(noBudget, settings, out _));
+            Assert.IsFalse(PuzzleSolutionSearch.TrySelect(offWindow, settings, brief, out _));
+            Object.DestroyImmediate(offWindow);
         }
 
         [Test]
         public void Search_IsDeterministic()
         {
-            PuzzleSolutionSearch.TryFind(puzzle, settings, out PuzzleSolution first);
-            PuzzleSolutionSearch.TryFind(puzzle, settings, out PuzzleSolution second);
+            PuzzleSolutionSearch.TrySelect(puzzle, settings, brief, out PuzzleSolution first);
+            PuzzleSolutionSearch.TrySelect(puzzle, settings, brief, out PuzzleSolution second);
 
             Assert.AreEqual(first.Zones.Length, second.Zones.Length);
             Assert.AreEqual(first.Zones[0].scale, second.Zones[0].scale, 1e-4f);
@@ -74,9 +81,16 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void FoundZone_IsTheConstantCube()
+        public void FoundZone_IsInTheAuthoredRange()
         {
-            Assert.AreEqual(settings.CubeSize, solution.Zones[0].size.x, 1e-4f);
+            Assert.GreaterOrEqual(solution.Zones[0].size.x, puzzle.cubeSizeMin - 1e-4f);
+            Assert.LessOrEqual(solution.Zones[0].size.x, puzzle.cubeSizeMax + 1e-4f);
+        }
+
+        [Test]
+        public void FixedBrief_KeepsTheZoneAtHome()
+        {
+            Assert.IsFalse(brief.Translatable);
             Assert.Less(Vector3.Distance(puzzle.zoneCentre, solution.Zones[0].centre), 1e-4f);
         }
 
@@ -99,6 +113,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             bare.tmax = 0.001f;
 
             Assert.IsFalse(PuzzleVerifier.Verify(bare, settings).Solved);
+            Object.DestroyImmediate(bare);
         }
 
         private static PuzzleData Puzzle(int seed)
@@ -107,10 +122,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleSeed source = ScriptableObject.CreateInstance<PuzzleSeed>();
             source.seed = seed;
             PuzzleData created = ScriptableObject.CreateInstance<PuzzleData>();
-            PuzzleFieldBake.Apply(
-                created,
-                PuzzleArtifactFactory.Planets(PuzzleArtifactFactory.Shape(source, asset)),
-                PuzzleSimSettings.From(asset));
+            PuzzleShapeAsset shape = PuzzleArtifactFactory.Shape(source, asset);
+            PuzzlePlanetListAsset planets = PuzzleArtifactFactory.Planets(shape);
+            PuzzleFieldBake.Apply(PuzzleBrief.From(source), created, planets, PuzzleSimSettings.From(asset));
+            created.tmin = 0f;
+            created.tmax = created.Distance / asset.nominalSpeed * 2f;
+            Object.DestroyImmediate(planets);
+            Object.DestroyImmediate(shape);
+            Object.DestroyImmediate(source);
             return created;
         }
 

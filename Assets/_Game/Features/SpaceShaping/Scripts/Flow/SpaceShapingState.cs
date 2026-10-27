@@ -43,7 +43,7 @@ namespace DigitalLove.Game.SpaceShaping
         public void PreviewField()
         {
             SpaceShapingSession preview = new(BuildSetup());
-            view.Render(preview.BuildField(), preview.Zones, RunRadius(preview.Origin, preview.Destination));
+            view.Render(preview.BuildField(), preview.Zones, FieldRadius(preview));
         }
 
         private void LateUpdate()
@@ -89,9 +89,10 @@ namespace DigitalLove.Game.SpaceShaping
         private void ResetView()
         {
             view.ResetZone();
-            float size = settings.cubeSize;
-            view.SetZoneFrame(
-                puzzles[puzzleIndex].zoneCentre, new Vector3(size, size, size), settings.zoneFalloff);
+            PuzzleData puzzle = puzzles[puzzleIndex];
+            view.SetConditions(ZoneConditions.From(puzzle));
+            float size = puzzle.cubeSize > 0f ? puzzle.cubeSize : settings.cubeSize;
+            view.SetZoneFrame(puzzle.zoneCentre, new Vector3(size, size, size), settings.zoneFalloff);
         }
 
         private void StartPuzzle()
@@ -109,13 +110,19 @@ namespace DigitalLove.Game.SpaceShaping
 
             SpacetimeField field = session.BuildField();
             TrajectoryResult result = session.Simulate(field, integrator, launch);
-            view.Render(field, session.Zones, RunRadius(session.Origin, session.Destination));
+            view.Render(field, session.Zones, FieldRadius(session));
             view.Snapshot();
             return result;
         }
 
-        private static float RunRadius(Vector3 origin, Vector3 destination) =>
-            Vector3.Distance(origin, destination) * 0.5f;
+        private static float FieldRadius(SpaceShapingSession session)
+        {
+            float outer = 0f;
+            for (int i = 0; i < session.SourceCount; i++)
+                outer = Mathf.Max(outer, session.GetPosition(i).magnitude + session.GetScale(i) * 0.5f);
+
+            return Mathf.Max(outer, 0.01f);
+        }
 
         private SpaceShapingSetup BuildSetup() =>
             SpaceShapingSetup.Build(puzzles[puzzleIndex], PuzzleSimSettings.From(settings));

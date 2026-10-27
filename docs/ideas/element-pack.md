@@ -1,8 +1,8 @@
 # Universe — Element Pack
 
-**Status:** later · universe · updated 2026-10-26 — the ambient/decor element set for the sector field. Not scheduled.
+**Status:** idea · universe · updated 2026-10-26 — the ambient/decor element set for the sector field. Not scheduled.
 
-**Related:** [integration](../gameplay/space-shaping-integration.md) · [progression](../../../design/systems/progression.md)
+**Related:** [integration](../plans/backlog/gameplay/space-shaping-integration.md) · [progression](../design/systems/progression.md)
 
 Belts/moons, then nebula billboards, stations, comets, gates, and black holes, in that order. Each
 element gets a perf budget and a decor/gameplay classification before art. Do not start with

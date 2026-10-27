@@ -7,10 +7,7 @@ namespace DigitalLove.Game.SpaceShaping.EditorTools
 {
     public static class LatticeMeshBuilder
     {
-        private const int GridCount = 4;
         private const int SamplesPerLine = 32;
-        private const int Sides = 6;
-        private const float Radius = 0.05f;
         private static readonly Vector3 Min = new(-6f, -6f, -6f);
         private static readonly Vector3 Max = new(6f, 6f, 6f);
         private const string AssetPath = "Assets/_Game/Features/SpaceShaping/Models/LatticeMesh.asset";
@@ -18,7 +15,19 @@ namespace DigitalLove.Game.SpaceShaping.EditorTools
         [MenuItem("DigitalLove/Space Shaping/Build Lattice Mesh")]
         public static void Build()
         {
-            Build(GridCount, Sides, Radius, null);
+            SpacetimeMeshView view = Selection.activeGameObject != null
+                ? Selection.activeGameObject.GetComponent<SpacetimeMeshView>()
+                : null;
+            if (view == null)
+                view = UnityEngine.Object.FindFirstObjectByType<SpacetimeMeshView>();
+
+            if (view == null)
+            {
+                Debug.LogError("[LatticeMeshBuilder] No SpacetimeMeshView in the open scene.");
+                return;
+            }
+
+            Build(view.GridCount, view.Sides, view.Radius, view.GetComponent<MeshFilter>());
         }
 
         public static void Build(int gridCount, int sides, float radius, MeshFilter meshFilter)

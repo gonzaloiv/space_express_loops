@@ -15,11 +15,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         public static PuzzlePlanetListAsset ExportPlanets(PuzzleShapeAsset shape) =>
             Write(PuzzleArtifactFactory.Planets(shape), $"{shape.name}_Planets");
 
-        public static void SaveVariants(PuzzleData[] variants, string name)
-        {
-            for (int i = 0; i < variants.Length; i++)
-                Write(variants[i], $"{name}_Puzzle_{i + 1}");
-        }
+        public static void SaveVariant(PuzzleData variant, string name) =>
+            Write(variant, $"{name}_Puzzle");
 
         private static T Write<T>(T asset, string name) where T : ScriptableObject
         {

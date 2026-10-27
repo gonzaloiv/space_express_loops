@@ -5,27 +5,25 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     public static class PuzzleSeedScanner
     {
         public static PuzzleSeedScanResult Find(
-            PuzzleSeed seed, SpaceShapingSettings settings, float windowTightness, int variants, int attempts)
+            PuzzleSeed seed, SpaceShapingSettings settings, int attempts)
         {
             PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
+            PuzzleBrief brief = PuzzleBrief.From(seed);
             PuzzleSeedScanResult result = new() { Seed = seed.seed };
             for (int i = 0; i < attempts; i++)
             {
                 int candidate = seed.seed + i;
                 PuzzlePlanetListAsset planets = Planets(seed, settings, candidate);
-                PuzzleData[] baked = PuzzleFieldBake.BakeVariants(
-                    planets, sim, windowTightness, variants, out PuzzleBakeStatus status);
-                if (baked.Length > 0)
-                {
-                    result.Found = true;
-                    result.Seed = candidate;
-                    result.Status = status;
-                    result.Variants = baked;
-                    return result;
-                }
-
+                PuzzleData baked = PuzzleFieldBake.Bake(planets, sim, brief, out PuzzleBakeStatus status);
                 Object.DestroyImmediate(planets);
                 result.Status = status;
+                if (baked == null)
+                    continue;
+
+                result.Found = true;
+                result.Seed = candidate;
+                result.Puzzle = baked;
+                return result;
             }
 
             return result;
@@ -34,10 +32,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static PuzzlePlanetListAsset Planets(
             PuzzleSeed seed, SpaceShapingSettings settings, int seedValue)
         {
-            PuzzleSeed probe = ScriptableObject.CreateInstance<PuzzleSeed>();
+            PuzzleSeed probe = Object.Instantiate(seed);
             probe.seed = seedValue;
-            probe.distance = seed.distance;
-            probe.planetCount = seed.planetCount;
             PuzzleShapeAsset shape = PuzzleArtifactFactory.Shape(probe, settings);
             PuzzlePlanetListAsset planets = PuzzleArtifactFactory.Planets(shape);
             Object.DestroyImmediate(shape);

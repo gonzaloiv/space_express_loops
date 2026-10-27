@@ -12,6 +12,7 @@ namespace DigitalLove.Game.SpaceShaping
         private float widthRatio = 0.5f;
 
         [SerializeField] private MeshFilter meshFilter;
+        [SerializeField] private MeshRenderer meshRenderer;
         [SerializeField] private int gridCount = 4;
         [SerializeField] private int sides = 6;
         [SerializeField] private float radius = 0.005f;
@@ -19,11 +20,24 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private float maxDisplacement = 0.08f;
 
         private Mesh mesh;
+        private Mesh source;
         private Vector3[] vertices;
         private int samplesPerLine;
+        private SpacetimeField lastField;
+        private IReadOnlyList<SpaceZone> lastZones;
+        private float lastExtent;
+
+        public int GridCount => gridCount;
+
+        public int Sides => sides;
+
+        public float Radius => radius;
 
         public void Render(SpacetimeField field, IReadOnlyList<SpaceZone> zones, float halfExtent)
         {
+            lastField = field;
+            lastZones = zones;
+            lastExtent = halfExtent;
             EnsureMesh();
 
             float half = halfExtent / transform.lossyScale.x * (1f + fieldMargin);
@@ -54,26 +68,50 @@ namespace DigitalLove.Game.SpaceShaping
             mesh.SetVertices(vertices);
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
+            meshRenderer.enabled = Application.isPlaying;
         }
 
         private void EnsureMesh()
         {
-            if (mesh != null)
+            if (source == null)
+                source = meshFilter.sharedMesh;
+
+            if (mesh != null && mesh.vertexCount == source.vertexCount)
                 return;
 
-            mesh = Instantiate(meshFilter.sharedMesh);
+            if (mesh != null)
+            {
+                if (Application.isPlaying)
+                    Destroy(mesh);
+                else
+                    DestroyImmediate(mesh);
+            }
+
+            mesh = Instantiate(source);
             mesh.MarkDynamic();
+            if (!Application.isPlaying)
+                mesh.hideFlags = HideFlags.HideAndDontSave;
+
             meshFilter.sharedMesh = mesh;
             vertices = new Vector3[mesh.vertexCount];
             samplesPerLine = mesh.vertexCount / (3 * gridCount * gridCount * sides);
         }
 
+        private void OnValidate()
+        {
+            if (mesh != null && lastExtent > 0f)
+                Render(lastField, lastZones, lastExtent);
+        }
+
         private void OnDestroy()
         {
-            if (mesh == null || !Application.isPlaying)
+            if (mesh == null)
                 return;
 
-            Destroy(mesh);
+            if (Application.isPlaying)
+                Destroy(mesh);
+            else
+                DestroyImmediate(mesh);
         }
     }
 }

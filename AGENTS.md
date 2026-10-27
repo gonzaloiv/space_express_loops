@@ -2,6 +2,19 @@
 
 These mirror the Unity scene/prefab wiring rules and feature validation checklist in the global `AGENTS.md`.
 
+## Plans are a morning
+
+A plan is **one sitting of work**, not a roadmap. Keep it to what one agent can land in a morning.
+
+- **A handful of slices, not a dozen.** Each slice says what lands and its exit — nothing more.
+- **No archaeology.** Don't restate the design docs, the history, or every rejected option.
+- **If it grows, split it.** A plan that needs a week is a project: break it into plans that each fit a
+  morning.
+- **The board stays small.** A plan that has outgrown its shape moves to its own plan; it does not keep
+  growing in place.
+- The **plans board** ([`docs/plans/README.md`](docs/plans/README.md)) is the entry point; run
+  `docs/check.ps1` after moving files.
+
 ## SerializeField wiring
 
 - Use serialized references for all scene, prefab, and same-GameObject collaborators.

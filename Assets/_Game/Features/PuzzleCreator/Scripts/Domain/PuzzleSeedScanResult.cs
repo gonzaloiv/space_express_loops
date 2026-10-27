@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public struct PuzzleSeedScanResult
@@ -7,6 +5,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public bool Found;
         public int Seed;
         public PuzzleBakeStatus Status;
-        public PuzzleData[] Variants;
+        public PuzzleData Puzzle;
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Creator
@@ -7,15 +6,21 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     {
         private const float StarBudgetFactor = 3f;
         private const float BareMissMargin = 0.9f;
-        private const int SearchSamples = 64;
         private const float MinRunFraction = 0.5f;
         private const float MaxRunFactor = 1.5f;
 
-        public static void Apply(PuzzleData puzzle, PuzzlePlanetListAsset planets, PuzzleSimSettings settings)
+        public static void Apply(
+            PuzzleBrief brief, PuzzleData puzzle, PuzzlePlanetListAsset planets, PuzzleSimSettings settings)
         {
             puzzle.sources = PuzzleSourceBridge.ToSources(planets.planets);
+            puzzle.cubeSizeMin = brief.MinCubeSize;
+            puzzle.cubeSizeMax = brief.MaxCubeSize;
+            puzzle.translatable = brief.Translatable;
+            puzzle.moves = brief.Moves;
+            puzzle.resizable = brief.Resizable;
+            puzzle.rotate = brief.Rotate;
             if (!TryPickRun(
-                planets.planets, settings.RunDistance, planets.clearance,
+                planets.planets, settings.RunDistance, brief.CorridorClearance,
                 out Vector3 origin, out Vector3 destination))
                 return;
 
@@ -25,87 +30,125 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.launchSpeed = LaunchSpeed(settings);
         }
 
-        public static PuzzleData[] BakeVariants(
-            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, float windowTightness, int variants) =>
-            BakeVariants(planets, settings, windowTightness, variants, out _);
-
-        public static PuzzleData[] BakeVariants(
-            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, float windowTightness, int variants,
+        public static PuzzleData Bake(
+            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief,
             out PuzzleBakeStatus status)
         {
             PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
-            Apply(field, planets, settings);
-            PuzzleData[] baked = BakeField(field, settings, windowTightness, variants, out status);
+            Apply(brief, field, planets, settings);
+            PuzzleData baked = BakeField(field, settings, brief, out status);
             Object.DestroyImmediate(field);
             return baked;
         }
 
-        private static PuzzleData[] BakeField(
-            PuzzleData field, PuzzleSimSettings settings, float windowTightness, int variants,
-            out PuzzleBakeStatus status)
+        private static PuzzleData BakeField(
+            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, out PuzzleBakeStatus status)
         {
+            status = PuzzleBakeStatus.UnsupportedBrief;
+            if (!brief.SupportsSingleZone)
+                return null;
+
             status = PuzzleBakeStatus.NoRun;
-            if (field.Distance <= 0f)
-                return System.Array.Empty<PuzzleData>();
+            if (!DeriveWindow(field, settings, brief.WindowTightness))
+                return null;
 
             status = PuzzleBakeStatus.StartNotMiss;
             if (!StartMisses(field, settings))
-                return System.Array.Empty<PuzzleData>();
+                return null;
 
-            PuzzleSolution[] reference = PuzzleSolutionSearch.Arrivals(field, settings, SearchSamples, 1);
-            if (reference.Length == 0)
+            status = PuzzleBakeStatus.NoSolution;
+            if (!PuzzleSolutionSearch.TrySelect(field, settings, brief, out PuzzleSolution solution))
+                return null;
+
+            return Verified(field, solution, brief, settings, out status);
+        }
+
+        private static PuzzleData Verified(
+            PuzzleData field, PuzzleSolution solution, PuzzleBrief brief, PuzzleSimSettings settings,
+            out PuzzleBakeStatus status)
+        {
+            field.entropyBudget = solution.EntropySpent * StarBudgetFactor;
+            PuzzleData variant = Variant(field, solution, brief);
+            if (PuzzleVerifier.Verify(variant, settings).Solved)
             {
-                status = PuzzleBakeStatus.NoSolution;
-                return System.Array.Empty<PuzzleData>();
+                status = PuzzleBakeStatus.Baked;
+                return variant;
             }
 
-            SetWindow(field, reference[0], windowTightness);
-            PuzzleSolution[] solutions = PuzzleSolutionSearch.Find(field, settings, SearchSamples, variants);
-            if (solutions.Length == 0)
-            {
-                status = PuzzleBakeStatus.NoSolution;
-                return System.Array.Empty<PuzzleData>();
-            }
+            Object.DestroyImmediate(variant);
+            status = PuzzleBakeStatus.Unverified;
+            return null;
+        }
 
-            List<PuzzleData> baked = BakeEach(field, solutions, settings);
-            status = baked.Count > 0 ? PuzzleBakeStatus.Baked : PuzzleBakeStatus.Unverified;
-            return baked.ToArray();
+        private static bool DeriveWindow(PuzzleData field, PuzzleSimSettings settings, float tightness)
+        {
+            if (settings.NominalSpeed <= 0f)
+                return false;
+
+            float cross = field.Distance / settings.NominalSpeed;
+            float fraction = Mathf.Clamp(tightness, 0f, 1f);
+            field.tmin = cross * (1f - fraction);
+            field.tmax = cross * (1f + fraction);
+            return true;
+        }
+
+        private static PuzzleData Variant(PuzzleData field, PuzzleSolution solution, PuzzleBrief brief)
+        {
+            PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
+            puzzle.origin = field.origin;
+            puzzle.destination = field.destination;
+            puzzle.zoneCentre = brief.Translatable ? field.zoneCentre : solution.Zones[0].centre;
+            puzzle.cubeSizeMin = field.cubeSizeMin;
+            puzzle.cubeSizeMax = field.cubeSizeMax;
+            puzzle.cubeSize = solution.Zones[0].size.x;
+            puzzle.translatable = field.translatable;
+            puzzle.moves = field.moves;
+            puzzle.resizable = field.resizable;
+            puzzle.rotate = field.rotate;
+            puzzle.launchSpeed = field.launchSpeed;
+            puzzle.sources = field.sources;
+            puzzle.solution = solution.Zones;
+            puzzle.tmin = field.tmin;
+            puzzle.tmax = field.tmax;
+            puzzle.entropyBudget = field.entropyBudget;
+            return puzzle;
         }
 
         private static bool TryPickRun(
             PuzzleFieldPlanet[] planets, float targetRun, float clearance,
             out Vector3 origin, out Vector3 destination)
         {
-            origin = default;
-            destination = default;
-            if (planets.Length < 2)
-                return false;
-
-            float best = float.MaxValue;
-            bool found = false;
+            RunChoice choice = new() { Best = float.MaxValue };
+            RunTarget target = new(targetRun, clearance);
             for (int i = 0; i < planets.Length; i++)
             {
                 for (int j = i + 1; j < planets.Length; j++)
-                {
-                    float run = Vector3.Distance(planets[i].position, planets[j].position);
-                    if (run < targetRun * MinRunFraction || run > targetRun * MaxRunFactor)
-                        continue;
-
-                    if (!CorridorIsClear(planets, i, j, clearance))
-                        continue;
-
-                    float delta = Mathf.Abs(run - targetRun);
-                    if (delta >= best)
-                        continue;
-
-                    best = delta;
-                    origin = planets[i].position;
-                    destination = planets[j].position;
-                    found = true;
-                }
+                    Consider(planets, i, j, target, ref choice);
             }
 
-            return found;
+            origin = choice.Origin;
+            destination = choice.Destination;
+            return choice.Found;
+        }
+
+        private static void Consider(
+            PuzzleFieldPlanet[] planets, int i, int j, RunTarget target, ref RunChoice choice)
+        {
+            float run = Vector3.Distance(planets[i].position, planets[j].position);
+            if (run < target.Distance * MinRunFraction || run > target.Distance * MaxRunFactor)
+                return;
+
+            if (!CorridorIsClear(planets, i, j, target.Clearance))
+                return;
+
+            float delta = Mathf.Abs(run - target.Distance);
+            if (delta >= choice.Best)
+                return;
+
+            choice.Best = delta;
+            choice.Origin = planets[i].position;
+            choice.Destination = planets[j].position;
+            choice.Found = true;
         }
 
         private static bool CorridorIsClear(PuzzleFieldPlanet[] planets, int a, int b, float clearance)
@@ -117,66 +160,38 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 if (k == a || k == b)
                     continue;
 
-                if (DistanceToSegment(planets[k].position, from, to) < clearance + planets[k].radius)
+                float distance = PuzzleRunGeometry.DistanceToSegment(planets[k].position, from, to);
+                if (distance < clearance + planets[k].radius)
                     return false;
             }
 
             return true;
         }
 
-        private static float DistanceToSegment(Vector3 point, Vector3 from, Vector3 to)
-        {
-            Vector3 segment = to - from;
-            float lengthSq = segment.sqrMagnitude;
-            if (lengthSq < 0.0000001f)
-                return Vector3.Distance(point, from);
-
-            float t = Mathf.Clamp01(Vector3.Dot(point - from, segment) / lengthSq);
-            return Vector3.Distance(point, from + segment * t);
-        }
-
-        private static void SetWindow(PuzzleData field, PuzzleSolution reference, float windowTightness)
-        {
-            field.tmin = reference.ShipTime - windowTightness * 0.5f;
-            field.tmax = reference.ShipTime + windowTightness * 0.5f;
-            field.entropyBudget = reference.EntropySpent * StarBudgetFactor;
-        }
-
         private static bool StartMisses(PuzzleData field, PuzzleSimSettings settings) =>
             PuzzleVerifier.Verify(field, settings).StartOutcome == TrajectoryOutcome.Miss;
 
-        private static List<PuzzleData> BakeEach(
-            PuzzleData field, PuzzleSolution[] solutions, PuzzleSimSettings settings)
-        {
-            List<PuzzleData> baked = new();
-            for (int i = 0; i < solutions.Length; i++)
-            {
-                PuzzleData variant = Variant(field, solutions[i]);
-                if (PuzzleVerifier.Verify(variant, settings).Solved)
-                    baked.Add(variant);
-                else
-                    Object.DestroyImmediate(variant);
-            }
-
-            return baked;
-        }
-
-        private static PuzzleData Variant(PuzzleData field, PuzzleSolution solution)
-        {
-            PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
-            puzzle.origin = field.origin;
-            puzzle.destination = field.destination;
-            puzzle.zoneCentre = field.zoneCentre;
-            puzzle.launchSpeed = field.launchSpeed;
-            puzzle.sources = field.sources;
-            puzzle.solution = solution.Zones;
-            puzzle.tmin = field.tmin;
-            puzzle.tmax = field.tmax;
-            puzzle.entropyBudget = field.entropyBudget;
-            return puzzle;
-        }
-
         private static float LaunchSpeed(PuzzleSimSettings settings) =>
             BareMissMargin * settings.NominalSpeed;
+
+        private readonly struct RunTarget
+        {
+            public readonly float Distance;
+            public readonly float Clearance;
+
+            public RunTarget(float distance, float clearance)
+            {
+                Distance = distance;
+                Clearance = clearance;
+            }
+        }
+
+        private struct RunChoice
+        {
+            public Vector3 Origin;
+            public Vector3 Destination;
+            public float Best;
+            public bool Found;
+        }
     }
 }

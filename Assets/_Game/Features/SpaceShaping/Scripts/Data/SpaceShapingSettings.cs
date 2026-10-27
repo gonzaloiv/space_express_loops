@@ -9,7 +9,7 @@ namespace DigitalLove.Game.SpaceShaping
         [Tooltip("The run: origin to destination, in metres. It also sizes the field, so keep planetRadius well under runDistance / 2.")]
         public float runDistance = 1f;
 
-        [Tooltip("The cube (the lens): the region the player scales, in metres. A fraction of the run; a shrunk cube is a shortcut.")]
+        [Tooltip("Fallback cube size, in metres — used only when a puzzle has no baked size. Per-level sizes come from the seed's authored range.")]
         public float cubeSize = 0.25f;
 
         [Header("Simulation")]

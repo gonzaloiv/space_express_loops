@@ -1,6 +1,6 @@
 # Hologram Look — Bubble view, then Edition view (Recorded)
 
-**Status:** later · presentation · updated 2026-10-23 — recorded, design only. Not started, and independent of the current work
+**Status:** idea · presentation · updated 2026-10-23 — recorded, design only. Not started, and independent of the current work
 streams. This is a self-contained idea captured for future context; nothing here is wired into
 other plans or in-progress work.
 

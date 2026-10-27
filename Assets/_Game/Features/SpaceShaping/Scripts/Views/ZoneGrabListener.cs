@@ -114,7 +114,11 @@ namespace DigitalLove.Game.SpaceShaping
             lastCount = 0;
         }
 
-        private void Move() => zone.SetFrame(HandLocal() + grabOffset, zone.Size);
+        private void Move()
+        {
+            if (zone.CanMove)
+                zone.SetFrame(HandLocal() + grabOffset, zone.Size);
+        }
 
         private void ScaleUniverse()
         {
@@ -130,7 +134,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void ResizeFrame()
         {
-            if (startHandDistance < 0.0001f)
+            if (!zone.CanResize || startHandDistance < 0.0001f)
                 return;
 
             float ratio = HandDistance() / startHandDistance;
@@ -159,8 +163,13 @@ namespace DigitalLove.Game.SpaceShaping
             SetColor(fillRenderer, ref fillBlock, hovering && hoverInside ? fillHover : fillIdle);
         }
 
-        private Color FrameActiveColor() =>
-            grabbable.SelectingPointsCount >= 2 ? frameResize : frameMove;
+        private Color FrameActiveColor()
+        {
+            if (grabbable.SelectingPointsCount >= 2)
+                return zone.CanResize ? frameResize : frameIdle;
+
+            return zone.CanMove ? frameMove : frameIdle;
+        }
 
         private Color ScaleColor() =>
             Color.Lerp(fillShrink, fillMagnify, Mathf.InverseLerp(

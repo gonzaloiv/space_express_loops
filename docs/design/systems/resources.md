@@ -91,6 +91,9 @@ This is the design insight: *the resource and the mechanic justify each other.*
   launch that would *fail* — and shaping is what makes it land. **Global** — one speed, the same for
   every job.
 - `time = Σ dτ` — proper time accumulated in `TrajectoryIntegrator`, carried in `TrajectoryResult`.
+- **The window is derived from the run:** `Tcross = runDistance / nominalSpeed`, and the band is
+  `Tcross × [1 − t, 1 + t]`; `t` is the seed's `windowTightness`. The window and the entropy budget
+  therefore share the actual run, and the bake verifies reach (start outside, solution inside).
 - Per job: arrive inside `[Tmin, Tmax]` (the goal) and be graded on entropy left (stars / eco rating);
   run out of entropy first and the job fails.
 
@@ -98,8 +101,6 @@ All pure C#, deterministic, testable — no change to the architecture.
 
 ## Open questions
 
-- **The window from where?** A fixed per-job `[Tmin, Tmax]` (authored) or a function of network
-  distance? Fixed-per-job is simplest and most legible.
 - **Assists as an explicit tool?** Spin/horizon sources make assists deliberate; planets alone make
   them emergent. Start emergent.
 - **Eco rating persistence?** A company-wide green rating is a nice meta-goal; per-job stars are
