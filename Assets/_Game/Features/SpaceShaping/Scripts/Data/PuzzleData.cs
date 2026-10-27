@@ -13,6 +13,7 @@ namespace DigitalLove.Game.SpaceShaping
         public float cubeSizeMin;
         public float cubeSizeMax;
         public float cubeSize;
+        public float captureRadius;
         public bool translatable;
         public int moves = 1;
         public bool resizable;

@@ -128,7 +128,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
 
             PuzzleFieldBake.Apply(
-                PuzzleBrief.From(seed), puzzle, planets, PuzzleSimSettings.From(settings));
+                PuzzleBrief.From(seed, settings), puzzle, planets, PuzzleSimSettings.From(settings));
 
             Assert.AreEqual(planets.planets.Length, puzzle.sources.Length);
             Assert.Greater(puzzle.Distance, settings.runDistance * 0.5f);

@@ -6,11 +6,17 @@ namespace DigitalLove.Game.SpaceShaping
     public class SpaceShapingSettings : ScriptableObject
     {
         [Header("Puzzle")]
-        [Tooltip("The run: origin to destination, in metres. It also sizes the field, so keep planetRadius well under runDistance / 2.")]
+        [Tooltip("The run: origin to destination, in metres. It also sizes the field, so keep planetRadiusMax well under runDistance / 2.")]
         public float runDistance = 1f;
 
-        [Tooltip("Fallback cube size, in metres — used only when a puzzle has no baked size. Per-level sizes come from the seed's authored range.")]
+        [Tooltip("Fallback cube size, in metres — used only when a puzzle has no baked size.")]
         public float cubeSize = 0.25f;
+
+        [Tooltip("Smallest cube the creator may bake, in metres. Smaller is a sharper, more local edit.")]
+        public float cubeSizeMin = 0.15f;
+
+        [Tooltip("Largest cube the creator may bake, in metres. Bigger is a blunter, more forgiving lever.")]
+        public float cubeSizeMax = 0.3f;
 
         [Header("Simulation")]
         [Tooltip("Integrator step, in seconds. The step budget is derived from the run and the nominal speed, so the budget can never drift from the run.")]
@@ -20,8 +26,14 @@ namespace DigitalLove.Game.SpaceShaping
         public float nominalSpeed = 1f;
 
         [Header("Field")]
-        [Tooltip("Planet radius, in metres. Sets the field planets (with a small spread) and the arrival sphere around the destination, so touching the goal planet is an arrival.")]
-        public float planetRadius = 0.06f;
+        [Tooltip("Smallest planet radius, in metres. The field samples each planet between this and planetRadiusMax.")]
+        public float planetRadiusMin = 0.03f;
+
+        [Tooltip("Largest planet radius, in metres. Also sizes the field and sets the arrival sphere to the destination planet's radius.")]
+        public float planetRadiusMax = 0.09f;
+
+        [Tooltip("Minimum clearance between the run's endpoint planets and every other planet, in metres. Wider = a clearer corridor and a denser field is allowed.")]
+        public float corridorClearance = 0.05f;
 
         [Tooltip("Planet gravity per unit volume (mass = radius cubed). Tuned for the toy scale; a grown planet deepens its well fast.")]
         public float sourceStrengthScale = 5.5555553f;

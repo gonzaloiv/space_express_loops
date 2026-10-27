@@ -99,7 +99,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             shape = PuzzleArtifactExporter.ExportShape(seed, settings);
             planets = PuzzleArtifactExporter.ExportPlanets(shape);
             generated = PuzzleFieldBake.Bake(
-                planets, PuzzleSimSettings.From(settings), PuzzleBrief.From(seed), out status,
+                planets, PuzzleSimSettings.From(settings), PuzzleBrief.From(seed, settings), out status,
                 out generatedSolution);
             Repaint();
         }

@@ -15,11 +15,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         public bool SupportsSingleZone => Moves <= 1 && !Rotate;
 
-        public static PuzzleBrief From(PuzzleSeed seed) => new()
+        public static PuzzleBrief From(PuzzleSeed seed, SpaceShapingSettings settings) => new()
         {
-            MinCubeSize = seed.minCubeSize,
-            MaxCubeSize = seed.maxCubeSize,
-            CorridorClearance = seed.corridorClearance,
+            MinCubeSize = settings.cubeSizeMin,
+            MaxCubeSize = settings.cubeSizeMax,
+            CorridorClearance = settings.corridorClearance,
             WindowTightness = Mathf.Clamp01(seed.windowTightness),
             Translatable = seed.translatable,
             Moves = Mathf.Max(1, seed.moves),

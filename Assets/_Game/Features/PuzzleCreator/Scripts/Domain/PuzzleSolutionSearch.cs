@@ -23,23 +23,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return false;
             }
 
-            if (!brief.Translatable)
-                return TrySelectAtCentre(puzzle, settings, puzzle.zoneCentre, out solution);
-
-            return TrySelectMovable(puzzle, settings, brief, out solution);
-        }
-
-        private static bool TrySelectAtCentre(
-            PuzzleData puzzle, PuzzleSimSettings settings, Vector3 centre, out PuzzleSolution solution)
-        {
-            PuzzleSolution[] found = Scan(puzzle, settings, centre, DefaultSamples);
-            solution = Best(found, puzzle);
-            return found.Length > 0;
-        }
-
-        private static bool TrySelectMovable(
-            PuzzleData puzzle, PuzzleSimSettings settings, PuzzleBrief brief, out PuzzleSolution solution)
-        {
             CentreHit hit = BestCentre(puzzle, settings, Centres(puzzle, brief.MaxCubeSize));
             if (!hit.Found)
             {

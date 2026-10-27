@@ -14,18 +14,25 @@ namespace DigitalLove.Game.SpaceShaping
         public PuzzleSimSettings Sim;
         public SourceSpec[] Sources;
 
-        public static SpaceShapingSetup Build(PuzzleData puzzle, PuzzleSimSettings settings) => new()
+        public static SpaceShapingSetup Build(PuzzleData puzzle, PuzzleSimSettings settings)
         {
-            Origin = puzzle.Origin,
-            Destination = puzzle.Destination,
-            MaxSteps = BudgetSteps(puzzle, settings),
-            LaunchSpeed = puzzle.launchSpeed,
-            Tmin = puzzle.tmin,
-            Tmax = puzzle.tmax,
-            EntropyBudget = puzzle.entropyBudget,
-            Sim = settings,
-            Sources = SourceSpecs.From(puzzle.sources, settings)
-        };
+            PuzzleSimSettings sim = settings;
+            if (puzzle.captureRadius > 0f)
+                sim.CaptureRadius = puzzle.captureRadius;
+
+            return new SpaceShapingSetup
+            {
+                Origin = puzzle.Origin,
+                Destination = puzzle.Destination,
+                MaxSteps = BudgetSteps(puzzle, settings),
+                LaunchSpeed = puzzle.launchSpeed,
+                Tmin = puzzle.tmin,
+                Tmax = puzzle.tmax,
+                EntropyBudget = puzzle.entropyBudget,
+                Sim = sim,
+                Sources = SourceSpecs.From(puzzle.sources, settings)
+            };
+        }
 
         private static int BudgetSteps(PuzzleData puzzle, PuzzleSimSettings settings)
         {

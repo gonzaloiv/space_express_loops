@@ -26,6 +26,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             puzzle.origin = origin;
             puzzle.destination = destination;
+            puzzle.captureRadius = CaptureRadius(puzzle.sources, destination);
             puzzle.zoneCentre = (origin + destination) * 0.5f;
             puzzle.launchSpeed = LaunchSpeed(settings);
         }
@@ -104,6 +105,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.cubeSizeMin = field.cubeSizeMin;
             puzzle.cubeSizeMax = field.cubeSizeMax;
             puzzle.cubeSize = solution.Zones[0].halfExtents.x * 2f;
+            puzzle.captureRadius = field.captureRadius;
             puzzle.translatable = field.translatable;
             puzzle.moves = field.moves;
             puzzle.resizable = field.resizable;
@@ -172,6 +174,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         private static bool StartFails(PuzzleData field, PuzzleSimSettings settings) =>
             PuzzleVerifier.Verify(field, null, settings).StartFails;
+
+        private static float CaptureRadius(PuzzleSource[] sources, Vector3 destination)
+        {
+            for (int i = 0; i < sources.Length; i++)
+            {
+                if ((sources[i].home - destination).sqrMagnitude < 0.000001f)
+                    return sources[i].scale * 0.5f;
+            }
+
+            return 0.06f;
+        }
 
         private static float LaunchSpeed(PuzzleSimSettings settings) =>
             BareMissMargin * settings.NominalSpeed;

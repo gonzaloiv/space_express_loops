@@ -19,7 +19,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             sim = PuzzleSimSettings.From(settings);
             PuzzleSeed source = ScriptableObject.CreateInstance<PuzzleSeed>();
             source.seed = KnownSeed;
-            brief = PuzzleBrief.From(source);
+            brief = PuzzleBrief.From(source, settings);
             Object.DestroyImmediate(source);
 
             planets = Planets();
@@ -98,8 +98,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             authored.rotate = true;
             authored.windowTightness = 0.25f;
 
-            PuzzleBrief mapped = PuzzleBrief.From(authored);
+            PuzzleBrief mapped = PuzzleBrief.From(authored, settings);
 
+            Assert.AreEqual(settings.cubeSizeMin, mapped.MinCubeSize, 1e-4f);
+            Assert.AreEqual(settings.cubeSizeMax, mapped.MaxCubeSize, 1e-4f);
+            Assert.AreEqual(settings.corridorClearance, mapped.CorridorClearance, 1e-4f);
             Assert.IsTrue(mapped.Translatable);
             Assert.AreEqual(2, mapped.Moves);
             Assert.IsTrue(mapped.Resizable);
@@ -172,9 +175,24 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Assert.Greater(variant.entropyBudget, 0f);
             Assert.IsNotNull(solution);
             Assert.AreEqual(1, solution.Length);
+            Assert.IsTrue(ContainsSource(variant, solution[0]));
             Assert.GreaterOrEqual(variant.cubeSize, variant.cubeSizeMin - 1e-4f);
             Assert.LessOrEqual(variant.cubeSize, variant.cubeSizeMax + 1e-4f);
             Assert.LessOrEqual(check.EntropySpent, variant.entropyBudget / 3f + 1e-3f);
+        }
+
+        private static bool ContainsSource(PuzzleData variant, PuzzleZone zone)
+        {
+            for (int i = 0; i < variant.sources.Length; i++)
+            {
+                Vector3 offset = variant.sources[i].home - zone.centre;
+                if (Mathf.Abs(offset.x) <= zone.halfExtents.x
+                    && Mathf.Abs(offset.y) <= zone.halfExtents.y
+                    && Mathf.Abs(offset.z) <= zone.halfExtents.z)
+                    return true;
+            }
+
+            return false;
         }
 
         private static PuzzlePlanetListAsset Planets()

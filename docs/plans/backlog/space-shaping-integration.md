@@ -223,9 +223,9 @@ The working contract. The 2026-10-27 decisions are recorded in §6.6; the rest a
 
 | Scope | Fields |
 |---|---|
-| Per puzzle | `id`, origin, destination, `sources`, `tmin`, `tmax`, `entropyBudget`, `zoneCentre`, `cubeSize`, brief (`translatable`, `moves`, `resizable`, `rotate`) |
-| Global settings | **`launchSpeed`**, `stepSecs`, `nominalSpeed`, planet radius/capture, `sourceStrengthScale`, `separationScale`, `dilationScale`, `zoneFalloff`, scale envelope |
-| Creator-only | seed, `solution`, `cubeSizeMin`/`Max`, launch bake record, verification quality |
+| Per puzzle | `id`, origin, destination, `sources`, `captureRadius`, `tmin`, `tmax`, `entropyBudget`, `zoneCentre`, `cubeSize`, brief (`translatable`, `moves`, `resizable`, `rotate`) |
+| Global settings | **`launchSpeed`**, `stepSecs`, `nominalSpeed`, `planetRadiusMin`/`Max`, `corridorClearance`, `cubeSizeMin`/`Max`, `sourceStrengthScale`, `separationScale`, `lightSpeed`, `zoneFalloff`, scale envelope |
+| Creator-only | seed, bake record, verification quality |
 
 - `scalable` is always true; `moves` is authoring-only and never shown.
 - `solution` is removed from the shipped `PuzzleData`.

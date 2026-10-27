@@ -17,8 +17,10 @@ baking variants.
 - **Clock coefficient — decided.** `lightSpeed` is the coefficient (`c² = 2`, toy scale); real `c` makes
   `2Φ/c²` and `v²/c²` vanish at metre/s scale. The same `c` feeds both terms.
 - **Mass retune — decided.** `mass = radius³`; `sourceStrengthScale` is `5.5556` (the old nominal well at
-  `planetRadius = 0.06`). The band is narrowed to `0.6–1.8` (a `0.216–5.83×` strength range) and the
-  settings asset is migrated.
+  the old base `0.06`). The field now samples radii from `planetRadiusMin = 0.03` to
+  `planetRadiusMax = 0.09`; the scale band is narrowed to `0.6–1.8` (a `0.216–5.83×` strength range).
+  The catch is now the destination planet's radius: `PuzzleData.captureRadius` is baked from it, not a
+  global setting.
 - **Clock floor — decided.** `max(0, …)` stays. Zero is the horizon limit for a distant observer; in this
   stylized model it is a **clock stop**, and the window excludes zero.
 - **Window and bake — partially done.** Seed 1 re-bakes and verifies; the POC is re-baked. `Tcross` is

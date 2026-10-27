@@ -9,15 +9,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         [HideInInspector] public float distance = 1f;
         public int planetCount = 9;
 
-        [Tooltip("Minimum clearance between the run's endpoint planets and every other planet, in metres. Wider = a clearer corridor and a denser field is allowed.")]
-        public float corridorClearance = 0.05f;
-
-        [Tooltip("Smallest cube the creator may bake for this level, in metres. Smaller is a sharper, more local edit.")]
-        public float minCubeSize = 0.15f;
-
-        [Tooltip("Largest cube the creator may bake for this level, in metres. Bigger is a blunter, more forgiving lever.")]
-        public float maxCubeSize = 0.3f;
-
         [Header("Brief")]
         [Tooltip("The cube may be moved over the field. Fixed levels bake the cube where the solution sits.")]
         public bool translatable;

@@ -9,7 +9,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleShapeAsset asset = ScriptableObject.CreateInstance<PuzzleShapeAsset>();
             asset.seed = seed.seed;
             asset.distance = seed.distance;
-            asset.clearance = seed.corridorClearance;
+            asset.clearance = settings.corridorClearance;
             asset.shape = PuzzleFieldBuilder.Build(seed, settings);
             return asset;
         }

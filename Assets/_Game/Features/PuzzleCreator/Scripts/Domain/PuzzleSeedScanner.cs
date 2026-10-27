@@ -8,7 +8,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleSeed seed, SpaceShapingSettings settings, int attempts)
         {
             PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
-            PuzzleBrief brief = PuzzleBrief.From(seed);
+            PuzzleBrief brief = PuzzleBrief.From(seed, settings);
             PuzzleSeedScanResult result = new() { Seed = seed.seed };
             for (int i = 0; i < attempts; i++)
             {

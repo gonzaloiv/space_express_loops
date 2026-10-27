@@ -16,11 +16,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         {
             SpaceShapingSettings asset = Settings();
             settings = PuzzleSimSettings.From(asset);
-            Object.DestroyImmediate(asset);
             PuzzleSeed source = ScriptableObject.CreateInstance<PuzzleSeed>();
             source.seed = KnownSeed;
-            brief = PuzzleBrief.From(source);
+            brief = PuzzleBrief.From(source, asset);
             Object.DestroyImmediate(source);
+            Object.DestroyImmediate(asset);
 
             PuzzleData puzzle = Puzzle();
             bool found = PuzzleSolutionSearch.TrySelect(puzzle, settings, brief, out solution);
@@ -109,12 +109,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void FixedBrief_KeepsTheZoneAtHome()
+        public void FixedBrief_UsesAContentCentre()
         {
             PuzzleData puzzle = Puzzle();
 
             Assert.IsFalse(brief.Translatable);
-            Assert.Less(Vector3.Distance(puzzle.zoneCentre, solution.Zones[0].centre), 1e-4f);
+            Assert.IsTrue(ContainsSource(puzzle, solution.Zones[0]));
             Object.DestroyImmediate(puzzle);
         }
 
@@ -141,6 +141,20 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Object.DestroyImmediate(bare);
         }
 
+        private static bool ContainsSource(PuzzleData puzzle, PuzzleZone zone)
+        {
+            for (int i = 0; i < puzzle.sources.Length; i++)
+            {
+                Vector3 offset = puzzle.sources[i].home - zone.centre;
+                if (Mathf.Abs(offset.x) <= zone.halfExtents.x
+                    && Mathf.Abs(offset.y) <= zone.halfExtents.y
+                    && Mathf.Abs(offset.z) <= zone.halfExtents.z)
+                    return true;
+            }
+
+            return false;
+        }
+
         private static PuzzleData Synthetic()
         {
             PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
@@ -159,7 +173,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleData created = ScriptableObject.CreateInstance<PuzzleData>();
             PuzzleShapeAsset shape = PuzzleArtifactFactory.Shape(source, asset);
             PuzzlePlanetListAsset planets = PuzzleArtifactFactory.Planets(shape);
-            PuzzleFieldBake.Apply(PuzzleBrief.From(source), created, planets, PuzzleSimSettings.From(asset));
+            PuzzleFieldBake.Apply(brief, created, planets, PuzzleSimSettings.From(asset));
             created.tmin = 0f;
             created.tmax = created.Distance / asset.nominalSpeed * 2f;
             Object.DestroyImmediate(planets);

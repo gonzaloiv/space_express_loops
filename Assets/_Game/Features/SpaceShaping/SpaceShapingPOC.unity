@@ -57444,9 +57444,9 @@ MonoBehaviour:
   widthRatio: 1
   meshFilter: {fileID: 1402556517}
   meshRenderer: {fileID: 1402556518}
-  gridCount: 8
+  gridCount: 6
   sides: 4
-  radius: 0.005
+  radius: 0.001
   depthScale: 0.15
   maxDisplacement: 0.08
 --- !u!33 &1402556517
