@@ -55,7 +55,7 @@ foreach ($p in Get-ChildItem -Path $plansDir -Recurse -Filter *.md -File) {
     else {
         $state = ($m.Groups[1].Value -split '·')[0].Trim().ToLower().Split(' ')[0]
         if ($allowed -notcontains $state) {
-            $problems.Add("STATE MISMATCH {0}  (status '{1}', folder expects {2})" -f $rel, $state, ($allowed -join '/'))
+            $problems.Add(("STATE MISMATCH {0}  (status '{1}', folder expects {2})" -f $rel, $state, ($allowed -join '/')))
         }
     }
     if (-not $boardText.Contains($p.Name)) {

@@ -9,16 +9,19 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         {
             Origin = new Vector3(-4f, 0f, 0f),
             Destination = new Vector3(4f, 0f, 0f),
-            CaptureRadius = 0.6f,
-            StepSecs = 1f / 120f,
             MaxSteps = 1200,
             LaunchSpeed = 1f,
-            SourceStrengthScale = 2f,
-            SeparationScale = 1.2f,
-            DilationScale = 1f,
             Tmin = tmin,
             Tmax = tmax,
             EntropyBudget = 1f,
+            Sim = new PuzzleSimSettings
+            {
+                CaptureRadius = 0.6f,
+                StepSecs = 1f / 120f,
+                SourceStrengthScale = 2f,
+                SeparationScale = 1.2f,
+                DilationScale = 1f
+            },
             Sources = System.Array.Empty<SourceSpec>()
         };
 
@@ -76,7 +79,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             SpaceShapingSetup setup = Setup(0f, 9f);
             setup.Sources = new[]
             {
-                new SourceSpec { Home = Vector3.zero, InitialScale = 4f, MoveRange = 0f, MinScale = 1f, MaxScale = 4f }
+                new SourceSpec { Home = Vector3.zero, InitialScale = 4f, MinScale = 1f, MaxScale = 4f }
             };
             SpaceShapingSession session = new(setup);
             TrajectoryResult result = Simulate(session);

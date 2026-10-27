@@ -4,13 +4,13 @@
 **slice fusion** (I0–I1 = validation 2) and **campaign** (I2–I5). Gated on validation 1; do not start I0
 before it passes.
 
-**Related:** [vision](../../../design/vision.md) · [core loop](../../../design/core-loop.md) ·
-[progression](../../../design/systems/progression.md) · [jobs](../../../design/jobs.md) ·
-[resources](../../../design/systems/resources.md) · [cube](../../../design/systems/cube.md) ·
-[variations](../../../ideas/variations.md) ·
-[creator plan](../../in-progress/puzzle-creator-improvements.md) · [physics](space-shaping-physics.md) ·
-[feel](../presentation/space-shaping-feel.md) · [modes](../../../../Assets/_Modules/docs/standards/modes.md) ·
-[review](../../../reviews/integration-plan.md)
+**Related:** [vision](../../design/vision.md) · [core loop](../../design/core-loop.md) ·
+[progression](../../design/systems/progression.md) · [jobs](../../design/jobs.md) ·
+[resources](../../design/systems/resources.md) · [cube](../../design/systems/cube.md) ·
+[variations](../../ideas/variations.md) ·
+[creator plan](../in-progress/puzzle-creator-improvements.md) · [physics](space-shaping-physics.md) ·
+[feel](space-shaping-feel.md) · [modes](../../../Assets/_Modules/docs/standards/modes.md) ·
+[review](../../reviews/integration-plan.md)
 
 **Wiring rule:** authored scene/prefab objects and serialized refs only. When the legacy flow is removed,
 delete its scene objects, components, assets and asmdefs — do not leave them disabled.
@@ -28,7 +28,7 @@ but this plan does not.
 | Decision | Value |
 |---|---|
 | Replacement | **Full replacement.** One flow, one save, one map; no mode alongside the legacy loop. |
-| Scope | The **full run** — level selector and **3–5 jobs first**, 8–10 as stretch ([jobs](../../../design/jobs.md)). |
+| Scope | The **full run** — level selector and **3–5 jobs first**, 8–10 as stretch ([jobs](../../design/jobs.md)). |
 | Loop | **No commit** — the ship flies on every completed modification; a miss is a check, not a fail. |
 | Fail | **Entropy zero** before a solve; the grade is entropy left (1–3 stars). |
 | Persistence | **Player progression only** — solved jobs + stars; never in-level state. |
@@ -82,7 +82,7 @@ The **cube level selector is new.** `LevelsPanel` is a generic UI list, not a fi
 - Reuse the existing setup/splash states; replace only the game loop.
 - Flow vs mode (to define before I0): the map is the **Bubble view**; the puzzle lifecycle is a **Flow
   state** because it owns progression, panels and save; the cube scale-up is a view/mode transition. Follow
-  [modes](../../../../Assets/_Modules/docs/standards/modes.md).
+  [modes](../../../Assets/_Modules/docs/standards/modes.md).
 - I0–I1 is **validation 2**: one seated MR path from boot to a scored puzzle.
 
 ### 3.5 Save / load
@@ -106,14 +106,14 @@ The **cube level selector is new.** `LevelsPanel` is a generic UI list, not a fi
 - The POC has **no HUD and no readout events** today. `SpaceShapingState` must expose a read-only readout
   (entropy spent/left, ship time, window, solved, grade) and one result event; the HUD/result subscribes.
 - Remove the route/resource/store panels.
-- Locked-gesture refusal, the manual, and the tech voice remain in [feel](../presentation/space-shaping-feel.md).
+- Locked-gesture refusal, the manual, and the tech voice remain in [feel](space-shaping-feel.md).
 
 ### 3.7 Level catalogue
 
 - Integration consumes **baked** `PuzzleData`; authoring and the seed search are the
-  [creator plan’s](../../in-progress/puzzle-creator-improvements.md) work. **No runtime generation.**
+  [creator plan’s](../in-progress/puzzle-creator-improvements.md) work. **No runtime generation.**
 - The **seed + brief** is the source; fixed `sources` remain the hand-tuned fallback
-  ([variations](../../../ideas/variations.md) §3).
+  ([variations](../../ideas/variations.md) §3).
 - The catalogue is one ordered `ChapterData` list; `PuzzleData.id` uses the `XX_YY` shape the level
   cookies parse.
 - Prove **3–5 jobs** first; 8–10 is a stretch. The `moves = 2+` bands still depend on the creator’s
@@ -126,7 +126,7 @@ not scenery.
 
 - **The campaign field places cubes, one per job.** A picked cube **scales up into the play space**.
 - **The puzzle generates its own field from its seed.** The campaign field does **not** supply a puzzle’s
-  layout ([variations](../../../ideas/variations.md) §3); the two fields are independent.
+  layout ([variations](../../ideas/variations.md) §3); the two fields are independent.
 - **Aperture.** Raise `viewRadius` / `fieldRadius` in the **map slice (I1)** because the map needs the wide
   field — not because puzzle content moves onto the field. The wired field is deliberately room-local
   (`viewRadius 1.2`, `fieldRadius 1.8`).
@@ -149,13 +149,13 @@ the legacy flow (I3). Cutting first breaks the keepers.
 
 ## 4. Non-goals
 
-- Simultaneous multi-ship ([variations](../../../ideas/variations.md) §2.1).
+- Simultaneous multi-ship ([variations](../../ideas/variations.md) §2.1).
 - A sequential **loop route** — a later variation, not this slice
-  ([variations](../../../ideas/variations.md) §2.2).
+  ([variations](../../ideas/variations.md) §2.2).
 - Runtime/procedural generation; the field is baked.
 - Streaming and galaxies beyond the campaign selector’s field.
-- A demand/economy layer on the map ([element pack](../../../ideas/element-pack.md)).
-- Final art, audio and feel polish — the [feel plan](../presentation/space-shaping-feel.md) owns those.
+- A demand/economy layer on the map ([element pack](../../ideas/element-pack.md)).
+- Final art, audio and feel polish — the [feel plan](space-shaping-feel.md) owns those.
 
 ## 5. Phases
 
@@ -190,14 +190,14 @@ the legacy flow (I3). Cutting first breaks the keepers.
 
 ### I4 — Campaign catalogue
 
-- Author 3–5 baked puzzles first, then 8–10; briefs per [jobs](../../../design/jobs.md); selection by id.
+- Author 3–5 baked puzzles first, then 8–10; briefs per [jobs](../../design/jobs.md); selection by id.
 - No runtime generation; the creator bakes offline.
 - **Exit:** a library of puzzles is authored, ordered, selectable and star-bearing.
 
 ### I5 — Acceptance
 
 - Quest 3S 72 fps capture; boot → map → pick → solve → back → reload; legacy absent; onboarding/tuning.
-- Feel/presentation stays with [feel](../presentation/space-shaping-feel.md); not duplicated here.
+- Feel/presentation stays with [feel](space-shaping-feel.md); not duplicated here.
 
 ## 6. Definitions (proposed 2026-10-27)
 
@@ -231,7 +231,7 @@ The working contract. The 2026-10-27 decisions are recorded in §6.6; the rest a
 - `solution` is removed from the shipped `PuzzleData`.
 - **Launch — decided (2026-10-27): global.** `SpaceShapingSettings.launchSpeed` is the one given launch for
   every job; `PuzzleData.launchSpeed` becomes an authoring-only bake record and is not read at runtime.
-  This matches [resources](../../../design/systems/resources.md) (“Fuel = global”).
+  This matches [resources](../../design/systems/resources.md) (“Fuel = global”).
 - Falloff and the scale envelope stay global for the slice; add per-puzzle values only if a job needs them.
 
 ### 6.3 Run and readout
@@ -276,5 +276,5 @@ The working contract. The 2026-10-27 decisions are recorded in §6.6; the rest a
 - **Cube placement:** authored positions, one per job.
 - **Launch:** global; `SpaceShapingSettings.launchSpeed`, not `PuzzleData.launchSpeed`.
 
-The [review](../../../reviews/integration-plan.md) §6 has the prep order; none of it needs the editor or the
+The [review](../../reviews/integration-plan.md) §6 has the prep order; none of it needs the editor or the
 scene.

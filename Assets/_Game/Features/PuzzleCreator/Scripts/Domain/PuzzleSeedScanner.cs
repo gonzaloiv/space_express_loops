@@ -14,7 +14,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             {
                 int candidate = seed.seed + i;
                 PuzzlePlanetListAsset planets = Planets(seed, settings, candidate);
-                PuzzleData baked = PuzzleFieldBake.Bake(planets, sim, brief, out PuzzleBakeStatus status);
+                PuzzleData baked = PuzzleFieldBake.Bake(
+                    planets, sim, brief, out PuzzleBakeStatus status, out PuzzleZone[] solution);
                 Object.DestroyImmediate(planets);
                 result.Status = status;
                 if (baked == null)
@@ -23,6 +24,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 result.Found = true;
                 result.Seed = candidate;
                 result.Puzzle = baked;
+                result.Solution = solution;
                 return result;
             }
 

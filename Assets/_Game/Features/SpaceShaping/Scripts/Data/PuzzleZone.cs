@@ -6,10 +6,10 @@ namespace DigitalLove.Game.SpaceShaping
     public struct PuzzleZone
     {
         public Vector3 centre;
-        public Vector3 size;
+        public Vector3 halfExtents;
         public float scale;
         public float falloff;
 
-        public SpaceZone ToSpaceZone() => new(centre, size * 0.5f, scale, falloff);
+        public SpaceZone ToSpaceZone() => new(centre, halfExtents, scale, falloff);
     }
 }

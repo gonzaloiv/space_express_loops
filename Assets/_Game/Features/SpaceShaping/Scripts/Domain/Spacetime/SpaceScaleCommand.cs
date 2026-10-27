@@ -29,7 +29,6 @@ namespace DigitalLove.Game.SpaceShaping
         {
             Home = centre + (source.Home - centre) * factor,
             InitialScale = source.InitialScale * factor,
-            MoveRange = source.MoveRange * factor,
             MinScale = source.MinScale * factor,
             MaxScale = source.MaxScale * factor
         };

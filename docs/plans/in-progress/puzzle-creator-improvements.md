@@ -2,20 +2,23 @@
 
 **Status:** now · space shaping · updated 2026-10-27 — the **brief is complete**: conditions, the
 condition-aware search, the derived run window, one best level, and the **runtime gesture locks**. The
-next action is **Validation 1**. The constants, cube, density, budget and verifier have landed; the
-physics moved to [its own plan](../backlog/gameplay/space-shaping-physics.md).
+next action is the Next runway (physics, multi-zone, lab readout), then **Validation 1**. The constants,
+cube, density, budget and verifier have landed; the physics moved to
+[its own plan](../backlog/space-shaping-physics.md).
 
-**Related:** [physics](../backlog/gameplay/space-shaping-physics.md) ·
-[tech debt](../backlog/gameplay/space-shaping-tech-debt.md) · [cube](../../design/systems/cube.md) ·
+**Related:** [physics](../backlog/space-shaping-physics.md) ·
+[multi-zone](../backlog/space-shaping-multizone.md) ·
+[lab readout](../backlog/space-shaping-lab-readout.md) ·
+[tech debt](space-shaping-tech-debt.md) · [cube](../../design/systems/cube.md) ·
 [progression](../../design/systems/progression.md) §4 · [jobs](../../design/jobs.md) ·
 [vision](../../design/vision.md) §3, §4, §7
 
 ## Goal
 
 The creator bakes a solvable puzzle from a seed. The **brief** — what a solution **must** do (the
-conditions) and how **good** it is (the quality) — is authored on the seed and honoured by the bake.
-What remains is **runtime**: carry the conditions onto the level so the cube locks the gestures the
-level does not allow. One seed in, one **level** out.
+conditions) and how **good** it is (the quality) — is authored on the seed, honoured by the bake, and
+carried onto the level so the cube locks the gestures the level does not allow. One seed in, one **level**
+out.
 
 ## Landed (2026-10-27)
 
@@ -70,7 +73,7 @@ level does not allow. One seed in, one **level** out.
 | later (rotate) | yes | 1+ | yes | **yes** |
 
 **This slice ships the `moves = 1` bands** (jobs 1–2, 4, 5, time). The `moves = 2+` bands (job 3, jobs
-6–8) need the **multi-zone search**, which is a candidate below.
+6–8) are the separate [multi-zone plan](../backlog/space-shaping-multizone.md).
 
 **How it lands:**
 
@@ -98,7 +101,7 @@ per seed; the runtime locks the disallowed gestures.
 
 ## Candidates (unscheduled)
 
-- **Multi-zone (`moves ≥ 2`).** The search over several zones; the soft brush blends them.
+- **Multi-zone (`moves ≥ 2`)** — now a [separate plan](../backlog/space-shaping-multizone.md).
 - **Rotate.** The search grid adds rotation; frame dragging.
 - **Scored seed library.** The cross-seed half of the ranking: score variants, keep a ranked set.
 - **Batch / CLI bake** over a seed list, for reproducibility and CI.
@@ -110,7 +113,7 @@ per seed; the runtime locks the disallowed gestures.
 ## Out of scope
 
 - **Runtime generation** — the field is baked, never generated at load.
-- **The selection field / two-hand scale-out** — [integration](../backlog/gameplay/space-shaping-integration.md).
+- **The selection field / two-hand scale-out** — [integration](../backlog/space-shaping-integration.md).
 - **The validation** ([vision](../../design/vision.md) §7) — the creator stays offline/authoring.
 
 ## Decisions (closed 2026-10-27)
@@ -130,4 +133,4 @@ per seed; the runtime locks the disallowed gestures.
 
 ## Carried fixes
 
-See [tech debt](../backlog/gameplay/space-shaping-tech-debt.md).
+See [tech debt](space-shaping-tech-debt.md).

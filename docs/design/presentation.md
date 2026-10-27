@@ -4,7 +4,7 @@
 **Date:** 2026-10-23.
 
 **Related:** [vision](vision.md) · [core loop](core-loop.md) · [the cube](systems/cube.md) ·
-[feel plan](../plans/backlog/presentation/space-shaping-feel.md)
+[feel plan](../plans/backlog/space-shaping-feel.md)
 
 The **feel pass is last** ([vision](vision.md) §6) — this doc records the intent so the loop can be
 built toward it.

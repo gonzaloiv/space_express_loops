@@ -5,16 +5,16 @@
 None of these gate the mechanic; they are the polish that turns "works" into "wow". Not current work: the
 focus is **interesting puzzles**.
 
-**Related:** [vision](../../../design/vision.md) · [lore](../../../design/world/lore.md) ·
-[jobs](../../../design/jobs.md) · [progression](../../../design/systems/progression.md) ·
-[presentation](../../../design/presentation.md)
+**Related:** [vision](../../design/vision.md) · [lore](../../design/world/lore.md) ·
+[jobs](../../design/jobs.md) · [progression](../../design/systems/progression.md) ·
+[presentation](../../design/presentation.md)
 
 ## 1. The two faces (the core read)
 
 - **Space** is the mesh warp that already works — the lattice bends where the player scales.
 - **Time** reads on the **same lattice**: its cells **pulse at the local clock rate** (spacing = space,
   pulse = time), and the zone is **tinted cool/warm** (slower / faster clock)
-  ([cube](../../../design/systems/cube.md)).
+  ([cube](../../design/systems/cube.md)).
 - The **window gauge** is the payoff: the projected arrival slides as the player scales. That is how
   "this scale bought time" becomes visible.
 
@@ -29,7 +29,7 @@ focus is **interesting puzzles**.
 
 ## 3. The manual (the diegetic teaching)
 
-- The tip panel is the company's **onboarding manual for new employees** ([jobs](../../../design/jobs.md)):
+- The tip panel is the company's **onboarding manual for new employees** ([jobs](../../design/jobs.md)):
   one entry per verb, dry, corporate, slightly out of date. It carries the teaching *and* the fiction —
   never a tutorial box.
 - The arc: it opens warm and ends corporate-bleak; the "new employee" it keeps addressing never arrives.
@@ -37,37 +37,37 @@ focus is **interesting puzzles**.
 ## 4. The tech voice (one character)
 
 - **One voiced character** (the tech team) comments through the run — not a cast; a colleague. The arc:
-  pride → doubt ([lore](../../../design/world/lore.md) §The tech team).
+  pride → doubt ([lore](../../design/world/lore.md) §The tech team).
 
 ## 5. The window as a diegetic gauge (+ comedy)
 
 - The `[Tmin, Tmax]` window shown as a **green band** on the ship's clock, not two numbers.
 - Lean into the absurd precision as the *customer*: "arrive between 4:02 and 4:03 — not a minute early."
-  The joke is the point ([jobs](../../../design/jobs.md)).
+  The joke is the point ([jobs](../../design/jobs.md)).
 
 ## 6. Cargo / customer personality
 
 - Each job gets a **reason** — the absurd client, the cargo — one line of flavour per level, drawn from
-  [jobs](../../../design/jobs.md)' lore skin and [lore](../../../design/world/lore.md)'s deadpan tone.
+  [jobs](../../design/jobs.md)' lore skin and [lore](../../design/world/lore.md)'s deadpan tone.
 
 ## 7. Locked gestures (the cube says no)
 
 - When a job **locks** a gesture (`translatable` / `resizable`), the cube **refuses it visibly** — the
   frame flashes its locked colour and a short **thud** — never silently ignore the hand. The player has to
-  see *why* nothing happened ([progression](../../../design/systems/progression.md) §4).
+  see *why* nothing happened ([progression](../../design/systems/progression.md) §4).
 - The **manual** has a line for it.
 
 ## 8. Entropy + collapse (one meter)
 
 - As entropy drains, the universe visibly **wobbles / deforms** — the *world* is the meter, not a HUD
-  number ([resources](../../../design/systems/resources.md)). Start as pure feedback; optionally, later,
+  number ([resources](../../design/systems/resources.md)). Start as pure feedback; optionally, later,
   let the deformation push the path (a *mechanical* collapse).
 - Zero entropy is the **fail**: the bar depletes and a "you lose" beat plays; the full collapse is polish.
 
 ## 9. HUD / audio
 
 - The HUD sits **over the level** (world-anchored) — it works today; it could also ride the TTS panel
-  screen ([voice panel](../../../ideas/tts-voice-panel.md)).
+  screen ([voice panel](../../ideas/tts-voice-panel.md)).
 - **Music exists**; the **new SFX** (travel, scale, grade, collapse, locked) are the audio work to add.
 
 ## Order

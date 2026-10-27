@@ -4,7 +4,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleVerifier
     {
-        public static PuzzleVerification Verify(PuzzleData puzzle, PuzzleSimSettings settings)
+        public static PuzzleVerification Verify(
+            PuzzleData puzzle, PuzzleZone[] solution, PuzzleSimSettings settings)
         {
             SpaceShapingSetup setup = SpaceShapingSetup.Build(puzzle, settings);
 
@@ -12,13 +13,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             TrajectoryResult startResult = Simulate(start);
 
             SpaceShapingSession solved = new(setup);
-            Apply(solved, puzzle.solution);
+            Apply(solved, solution);
             TrajectoryResult solvedResult = Simulate(solved);
 
             return new PuzzleVerification
             {
                 Start = startResult,
                 SolvedRun = solvedResult,
+                Solution = solution,
                 EntropySpent = solved.EntropySpent,
                 StartMargin = ClosestApproach(startResult, setup.Destination),
                 Solved = solved.IsSolved(solvedResult) && solved.EntropySpent <= setup.EntropyBudget

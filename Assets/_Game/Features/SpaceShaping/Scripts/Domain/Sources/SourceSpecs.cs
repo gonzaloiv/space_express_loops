@@ -12,7 +12,6 @@ namespace DigitalLove.Game.SpaceShaping
                 {
                     Home = sources[i].home,
                     InitialScale = scale,
-                    MoveRange = scale,
                     MinScale = scale * settings.MinScaleFactor,
                     MaxScale = scale * settings.MaxScaleFactor
                 };

@@ -5,49 +5,34 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 {
     public class PuzzleSearchTests
     {
-        private const int SeedScan = 32;
+        private const int KnownSeed = 1;
 
-        private PuzzleData puzzle;
         private PuzzleSimSettings settings;
         private PuzzleBrief brief;
         private PuzzleSolution solution;
-        private int foundSeed;
 
         [OneTimeSetUp]
         public void FindSolution()
         {
-            settings = PuzzleSimSettings.From(Settings());
+            SpaceShapingSettings asset = Settings();
+            settings = PuzzleSimSettings.From(asset);
+            Object.DestroyImmediate(asset);
             PuzzleSeed source = ScriptableObject.CreateInstance<PuzzleSeed>();
+            source.seed = KnownSeed;
             brief = PuzzleBrief.From(source);
             Object.DestroyImmediate(source);
-            for (int seed = 1; seed <= SeedScan; seed++)
-            {
-                PuzzleData candidate = Puzzle(seed);
-                PuzzleSolutionSearch.TrySelect(candidate, settings, brief, out solution);
-                if (solution.Zones != null)
-                {
-                    puzzle = candidate;
-                    foundSeed = seed;
-                    break;
-                }
 
-                Object.DestroyImmediate(candidate);
-            }
+            PuzzleData puzzle = Puzzle();
+            bool found = PuzzleSolutionSearch.TrySelect(puzzle, settings, brief, out solution);
+            Object.DestroyImmediate(puzzle);
 
-            Assert.IsNotNull(solution.Zones, "no seed in the scan produced an arriving solution");
-        }
-
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            if (puzzle != null)
-                Object.DestroyImmediate(puzzle);
+            Assert.IsTrue(found, $"seed {KnownSeed} produced no arriving solution");
         }
 
         [Test]
         public void Search_HonoursTheWindow()
         {
-            PuzzleData offWindow = Puzzle(foundSeed);
+            PuzzleData offWindow = Puzzle();
             offWindow.tmin = 0f;
             offWindow.tmax = 0.0001f;
 
@@ -58,69 +43,80 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         [Test]
         public void Search_IsDeterministic()
         {
+            PuzzleData puzzle = Puzzle();
             PuzzleSolutionSearch.TrySelect(puzzle, settings, brief, out PuzzleSolution first);
             PuzzleSolutionSearch.TrySelect(puzzle, settings, brief, out PuzzleSolution second);
 
             Assert.AreEqual(first.Zones.Length, second.Zones.Length);
             Assert.AreEqual(first.Zones[0].scale, second.Zones[0].scale, 1e-4f);
             Assert.AreEqual(first.ShipTime, second.ShipTime, 1e-4f);
+            Object.DestroyImmediate(puzzle);
         }
 
         [Test]
         public void FoundSolution_VerifiesGreen()
         {
-            puzzle.solution = solution.Zones;
+            PuzzleData puzzle = Puzzle();
             puzzle.tmin = solution.ShipTime - 1f;
             puzzle.tmax = solution.ShipTime + 1f;
             puzzle.entropyBudget = solution.EntropySpent + 0.5f;
 
-            PuzzleVerification result = PuzzleVerifier.Verify(puzzle, settings);
+            PuzzleVerification result = PuzzleVerifier.Verify(puzzle, solution.Zones, settings);
 
             Assert.IsTrue(result.StartFails, $"start outcome {result.StartOutcome}");
             Assert.IsTrue(result.Solved, $"solved outcome {result.SolvedOutcome} at {result.ShipTime}");
+            Object.DestroyImmediate(puzzle);
         }
 
         [Test]
         public void FoundZone_IsInTheAuthoredRange()
         {
-            Assert.GreaterOrEqual(solution.Zones[0].size.x, puzzle.cubeSizeMin - 1e-4f);
-            Assert.LessOrEqual(solution.Zones[0].size.x, puzzle.cubeSizeMax + 1e-4f);
+            PuzzleData puzzle = Puzzle();
+            float size = solution.Zones[0].halfExtents.x * 2f;
+
+            Assert.GreaterOrEqual(size, puzzle.cubeSizeMin - 1e-4f);
+            Assert.LessOrEqual(size, puzzle.cubeSizeMax + 1e-4f);
+            Object.DestroyImmediate(puzzle);
         }
 
         [Test]
         public void FixedBrief_KeepsTheZoneAtHome()
         {
+            PuzzleData puzzle = Puzzle();
+
             Assert.IsFalse(brief.Translatable);
             Assert.Less(Vector3.Distance(puzzle.zoneCentre, solution.Zones[0].centre), 1e-4f);
+            Object.DestroyImmediate(puzzle);
         }
 
         [Test]
         public void Verify_OverBudget_IsNotSolved()
         {
-            puzzle.solution = solution.Zones;
+            PuzzleData puzzle = Puzzle();
             puzzle.tmin = solution.ShipTime - 1f;
             puzzle.tmax = solution.ShipTime + 1f;
             puzzle.entropyBudget = 0f;
 
-            Assert.IsFalse(PuzzleVerifier.Verify(puzzle, settings).Solved);
+            Assert.IsFalse(PuzzleVerifier.Verify(puzzle, solution.Zones, settings).Solved);
+            Object.DestroyImmediate(puzzle);
         }
 
         [Test]
         public void Verify_MissingSolution_DoesNotSolve()
         {
-            PuzzleData bare = Puzzle(1);
+            PuzzleData bare = Puzzle();
             bare.tmin = 0f;
             bare.tmax = 0.001f;
 
-            Assert.IsFalse(PuzzleVerifier.Verify(bare, settings).Solved);
+            Assert.IsFalse(PuzzleVerifier.Verify(bare, null, settings).Solved);
             Object.DestroyImmediate(bare);
         }
 
-        private static PuzzleData Puzzle(int seed)
+        private PuzzleData Puzzle()
         {
             SpaceShapingSettings asset = Settings();
             PuzzleSeed source = ScriptableObject.CreateInstance<PuzzleSeed>();
-            source.seed = seed;
+            source.seed = KnownSeed;
             PuzzleData created = ScriptableObject.CreateInstance<PuzzleData>();
             PuzzleShapeAsset shape = PuzzleArtifactFactory.Shape(source, asset);
             PuzzlePlanetListAsset planets = PuzzleArtifactFactory.Planets(shape);
@@ -130,6 +126,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Object.DestroyImmediate(planets);
             Object.DestroyImmediate(shape);
             Object.DestroyImmediate(source);
+            Object.DestroyImmediate(asset);
             return created;
         }
 

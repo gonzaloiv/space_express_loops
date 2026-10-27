@@ -21,7 +21,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             float scale = Scale(rect, puzzle);
             Vector2 centre = rect.center;
 
-            DrawZone(puzzle, scale, centre);
+            DrawZone(run.Solution, scale, centre);
             DrawSources(puzzle, scale, centre);
             DrawPath(run.Start, scale, centre, StartPath);
             DrawPath(run.SolvedRun, scale, centre, SolvedPath);
@@ -86,17 +86,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 Handles.DrawLine(ToGui(run.Points[i - 1], scale, centre), ToGui(run.Points[i], scale, centre));
         }
 
-        private static void DrawZone(PuzzleData puzzle, float scale, Vector2 centre)
+        private static void DrawZone(PuzzleZone[] solution, float scale, Vector2 centre)
         {
-            if (puzzle.solution == null)
+            if (solution == null)
                 return;
 
             Handles.color = ZoneLine;
-            for (int i = 0; i < puzzle.solution.Length; i++)
+            for (int i = 0; i < solution.Length; i++)
             {
-                PuzzleZone zone = puzzle.solution[i];
+                PuzzleZone zone = solution[i];
                 Vector2 point = ToGui(zone.centre, scale, centre);
-                Vector2 half = new(zone.size.x * 0.5f * scale, zone.size.z * 0.5f * scale);
+                Vector2 half = new(zone.halfExtents.x * scale, zone.halfExtents.z * scale);
                 Handles.DrawAAPolyLine(
                     1.5f,
                     (Vector3)(point + new Vector2(-half.x, -half.y)),

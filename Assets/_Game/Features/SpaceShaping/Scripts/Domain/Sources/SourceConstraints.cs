@@ -6,21 +6,14 @@ namespace DigitalLove.Game.SpaceShaping
     {
         public static void Apply(Vector3[] positions, float[] scales, SourceSpec[] specs, float separationScale)
         {
-            ClampRangeAndScale(positions, scales, specs);
+            ClampScale(scales, specs);
             Separate(positions, scales, separationScale);
         }
 
-        private static void ClampRangeAndScale(Vector3[] positions, float[] scales, SourceSpec[] specs)
+        private static void ClampScale(float[] scales, SourceSpec[] specs)
         {
-            for (int i = 0; i < positions.Length; i++)
-            {
-                SourceSpec spec = specs[i];
-                Vector3 offset = positions[i] - spec.Home;
-                if (offset.magnitude > spec.MoveRange)
-                    positions[i] = spec.Home + offset.normalized * spec.MoveRange;
-
-                scales[i] = Mathf.Clamp(scales[i], spec.MinScale, spec.MaxScale);
-            }
+            for (int i = 0; i < scales.Length; i++)
+                scales[i] = Mathf.Clamp(scales[i], specs[i].MinScale, specs[i].MaxScale);
         }
 
         private static void Separate(Vector3[] positions, float[] scales, float separationScale)

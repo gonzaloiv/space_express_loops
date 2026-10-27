@@ -37,7 +37,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             SectorShapeData shape = PuzzleFieldBuilder.Build(seed, settings);
 
             Assert.AreEqual(seed.planetCount, shape.planetCount.max);
-            Assert.Less(shape.radius.max, settings.runDistance);
+            float extent = shape.radius.max + shape.planetRadius.max;
+            Assert.Greater(extent, settings.runDistance * 0.5f);
+            Assert.Less(extent, settings.runDistance);
         }
 
         [Test]

@@ -6,5 +6,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public int Seed;
         public PuzzleBakeStatus Status;
         public PuzzleData Puzzle;
+        public PuzzleZone[] Solution;
     }
 }

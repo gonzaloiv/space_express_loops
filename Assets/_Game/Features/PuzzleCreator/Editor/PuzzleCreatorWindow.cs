@@ -14,6 +14,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         [SerializeField] private PuzzlePlanetListAsset planets;
 
         private PuzzleData generated;
+        private PuzzleZone[] generatedSolution;
         private PuzzleBakeStatus status;
         private Vector2 scroll;
 
@@ -98,7 +99,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             shape = PuzzleArtifactExporter.ExportShape(seed, settings);
             planets = PuzzleArtifactExporter.ExportPlanets(shape);
             generated = PuzzleFieldBake.Bake(
-                planets, PuzzleSimSettings.From(settings), PuzzleBrief.From(seed), out status);
+                planets, PuzzleSimSettings.From(settings), PuzzleBrief.From(seed), out status,
+                out generatedSolution);
             Repaint();
         }
 
@@ -110,6 +112,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             if (!result.Found)
             {
                 generated = null;
+                generatedSolution = null;
                 Debug.LogWarning(
                     $"Puzzle creator: no working seed in {SeedAttempts} from {CurrentSeed()} ({result.Status}).");
                 return;
@@ -120,6 +123,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             shape = PuzzleArtifactExporter.ExportShape(seed, settings);
             planets = PuzzleArtifactExporter.ExportPlanets(shape);
             generated = result.Puzzle;
+            generatedSolution = result.Solution;
             Debug.Log($"Puzzle creator: seed {result.Seed} baked a verified level.");
             Repaint();
         }
@@ -151,7 +155,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             }
 
             PuzzleData puzzle = generated;
-            PuzzleVerification run = PuzzleVerifier.Verify(puzzle, PuzzleSimSettings.From(settings));
+            PuzzleVerification run = PuzzleVerifier.Verify(
+                puzzle, generatedSolution, PuzzleSimSettings.From(settings));
 
             Rect area = GUILayoutUtility.GetRect(0f, PreviewHeight, GUILayout.ExpandWidth(true));
             PuzzlePreviewDraw.Draw(area, puzzle, run);

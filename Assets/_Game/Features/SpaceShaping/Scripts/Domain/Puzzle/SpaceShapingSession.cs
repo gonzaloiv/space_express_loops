@@ -107,7 +107,7 @@ namespace DigitalLove.Game.SpaceShaping
             for (int i = 0; i < positions.Length; i++)
             {
                 float radius = scales[i] * 0.5f;
-                field.Add(new SpaceSource(positions[i], radius, radius * setup.SourceStrengthScale));
+                field.Add(new SpaceSource(positions[i], radius, radius * setup.Sim.SourceStrengthScale));
             }
 
             return field;
@@ -119,10 +119,10 @@ namespace DigitalLove.Game.SpaceShaping
             TrajectorySettings settings = new()
             {
                 Destination = setup.Destination,
-                CaptureRadius = setup.CaptureRadius,
-                StepSecs = setup.StepSecs,
+                CaptureRadius = setup.Sim.CaptureRadius,
+                StepSecs = setup.Sim.StepSecs,
                 MaxSteps = StepBudget(),
-                DilationScale = setup.DilationScale,
+                DilationScale = setup.Sim.DilationScale,
                 Zones = zones
             };
 
@@ -134,7 +134,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             RestorePristine();
             ApplyCommands();
-            SourceConstraints.Apply(positions, scales, specs, setup.SeparationScale);
+            SourceConstraints.Apply(positions, scales, specs, setup.Sim.SeparationScale);
             RebuildZones();
             RecomputeEntropy();
         }

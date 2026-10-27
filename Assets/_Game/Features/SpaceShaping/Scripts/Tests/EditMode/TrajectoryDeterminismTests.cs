@@ -64,16 +64,19 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             {
                 Origin = new Vector3(-4f, 0f, 0f),
                 Destination = new Vector3(4f, 0f, 0f),
-                CaptureRadius = 0.6f,
-                StepSecs = 1f / 120f,
                 MaxSteps = 1200,
                 LaunchSpeed = 1f,
-                SourceStrengthScale = 2f,
-                SeparationScale = 1.2f,
+                Sim = new PuzzleSimSettings
+                {
+                    CaptureRadius = 0.6f,
+                    StepSecs = 1f / 120f,
+                    SourceStrengthScale = 2f,
+                    SeparationScale = 1.2f
+                },
                 Sources = new[]
                 {
-                    new SourceSpec { Home = new Vector3(-1f, 1.2f, 0.8f), InitialScale = 2.4f, MoveRange = 2.5f, MinScale = 1.2f, MaxScale = 3.5f },
-                    new SourceSpec { Home = new Vector3(1.5f, -1.2f, -0.8f), InitialScale = 2.4f, MoveRange = 2.5f, MinScale = 1.2f, MaxScale = 3.5f }
+                    new SourceSpec { Home = new Vector3(-1f, 1.2f, 0.8f), InitialScale = 2.4f, MinScale = 1.2f, MaxScale = 3.5f },
+                    new SourceSpec { Home = new Vector3(1.5f, -1.2f, -0.8f), InitialScale = 2.4f, MinScale = 1.2f, MaxScale = 3.5f }
                 }
             };
 

@@ -75,7 +75,4 @@ None. The tool has no fail state; the only hard fail is **running out of entropy
 
 - **Mesh-only future:** dropping planets entirely would be a purer tool, but it discards the
   verified puzzles — **not the slice**.
-- **`SourceSpec.MoveRange` is vestigial** — `SourceSpecs.From` sets it to the planet's scale, and the
-  zone scale moves `Home` with the planet, so `SourceConstraints`' clamp never binds. Drop it, or give
-  it a real meaning (a per-planet move limit).
 - Rotate (later puzzles) timing, and the region/scale decoupling under multiple zones.

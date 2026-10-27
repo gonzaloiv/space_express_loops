@@ -32,18 +32,20 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         public static PuzzleData Bake(
             PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief,
-            out PuzzleBakeStatus status)
+            out PuzzleBakeStatus status, out PuzzleZone[] solution)
         {
             PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
             Apply(brief, field, planets, settings);
-            PuzzleData baked = BakeField(field, settings, brief, out status);
+            PuzzleData baked = BakeField(field, settings, brief, out status, out solution);
             Object.DestroyImmediate(field);
             return baked;
         }
 
         private static PuzzleData BakeField(
-            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, out PuzzleBakeStatus status)
+            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief,
+            out PuzzleBakeStatus status, out PuzzleZone[] solution)
         {
+            solution = null;
             status = PuzzleBakeStatus.UnsupportedBrief;
             if (!brief.SupportsSingleZone)
                 return null;
@@ -57,10 +59,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return null;
 
             status = PuzzleBakeStatus.NoSolution;
-            if (!PuzzleSolutionSearch.TrySelect(field, settings, brief, out PuzzleSolution solution))
+            if (!PuzzleSolutionSearch.TrySelect(field, settings, brief, out PuzzleSolution found))
                 return null;
 
-            return Verified(field, solution, brief, settings, out status);
+            solution = found.Zones;
+            return Verified(field, found, brief, settings, out status);
         }
 
         private static PuzzleData Verified(
@@ -69,7 +72,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             field.entropyBudget = solution.EntropySpent * StarBudgetFactor;
             PuzzleData variant = Variant(field, solution, brief);
-            if (PuzzleVerifier.Verify(variant, settings).Solved)
+            if (PuzzleVerifier.Verify(variant, solution.Zones, settings).Solved)
             {
                 status = PuzzleBakeStatus.Baked;
                 return variant;
@@ -100,14 +103,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.zoneCentre = brief.Translatable ? field.zoneCentre : solution.Zones[0].centre;
             puzzle.cubeSizeMin = field.cubeSizeMin;
             puzzle.cubeSizeMax = field.cubeSizeMax;
-            puzzle.cubeSize = solution.Zones[0].size.x;
+            puzzle.cubeSize = solution.Zones[0].halfExtents.x * 2f;
             puzzle.translatable = field.translatable;
             puzzle.moves = field.moves;
             puzzle.resizable = field.resizable;
             puzzle.rotate = field.rotate;
             puzzle.launchSpeed = field.launchSpeed;
             puzzle.sources = field.sources;
-            puzzle.solution = solution.Zones;
             puzzle.tmin = field.tmin;
             puzzle.tmax = field.tmax;
             puzzle.entropyBudget = field.entropyBudget;
@@ -169,7 +171,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         }
 
         private static bool StartMisses(PuzzleData field, PuzzleSimSettings settings) =>
-            PuzzleVerifier.Verify(field, settings).StartOutcome == TrajectoryOutcome.Miss;
+            PuzzleVerifier.Verify(field, null, settings).StartOutcome == TrajectoryOutcome.Miss;
 
         private static float LaunchSpeed(PuzzleSimSettings settings) =>
             BareMissMargin * settings.NominalSpeed;
