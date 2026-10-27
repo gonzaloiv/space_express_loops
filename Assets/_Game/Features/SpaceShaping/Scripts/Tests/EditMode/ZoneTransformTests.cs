@@ -18,7 +18,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             CaptureRadius = 0.6f,
             StepSecs = 1f / 120f,
             MaxSteps = maxSteps,
-            DilationScale = 1f,
+            LightSpeed = 3.1622777f,
             Zones = zones
         };
 
@@ -83,12 +83,24 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
                 CaptureRadius = 0.6f,
                 StepSecs = 1f,
                 MaxSteps = 20,
-                DilationScale = 1f
+                LightSpeed = 3.1622777f
             };
 
             TrajectoryResult result = integrator.Integrate(field, new Vector3(-4.5f, 0f, 0f), Launch(), settings);
 
             Assert.AreEqual(TrajectoryOutcome.Crash, result.Outcome);
+        }
+
+        [Test]
+        public void Mass_ScalesWithRadiusCubed()
+        {
+            SpaceShapingSession session = new(ContentSetup());
+            float baseStrength = session.BuildField().Sources[0].Strength;
+
+            session.ApplyZone(new SpaceZone(new Vector3(-2f, 0f, 0f), new Vector3(2f, 2f, 2f), 2f, 0f));
+            float scaledStrength = session.BuildField().Sources[0].Strength;
+
+            Assert.AreEqual(baseStrength * 8f, scaledStrength, 1e-4f);
         }
 
         [Test]
@@ -211,7 +223,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
                 StepSecs = 1f / 120f,
                 SourceStrengthScale = 2f,
                 SeparationScale = 1.2f,
-                DilationScale = 1f
+                LightSpeed = 3.1622777f
             },
             Sources = System.Array.Empty<SourceSpec>()
         };
@@ -228,7 +240,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
                 StepSecs = 1f / 120f,
                 SourceStrengthScale = 2f,
                 SeparationScale = 1.2f,
-                DilationScale = 1f
+                LightSpeed = 3.1622777f
             },
             Sources = new[]
             {

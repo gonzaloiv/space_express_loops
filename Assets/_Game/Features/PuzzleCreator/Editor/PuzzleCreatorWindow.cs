@@ -186,10 +186,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 return "Rejected: this creator ships one zone and no rotate. Set moves to 1 and rotate off "
                     + "on the seed.";
 
-            if (status == PuzzleBakeStatus.StartNotMiss)
-                return "Rejected: the bare start does not near-miss — it arrives or crashes into a planet. "
-                    + "Raise the seed's distance (the field needs room to spread) or lower planetCount, "
-                    + "or use Find working seed.";
+            if (status == PuzzleBakeStatus.StartNotFailed)
+                return "Rejected: the bare start already solves or crashes. The level needs a failing "
+                    + "start (a miss, or an arrival outside the window); use Find working seed.";
 
             if (status == PuzzleBakeStatus.NoSolution)
                 return "Rejected: no scale arrives inside the run window. The field is too dense, or the "

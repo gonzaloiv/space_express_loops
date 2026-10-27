@@ -20,13 +20,25 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
                 StepSecs = 1f / 120f,
                 SourceStrengthScale = 2f,
                 SeparationScale = 1.2f,
-                DilationScale = 1f
+                LightSpeed = 3.1622777f
             },
             Sources = System.Array.Empty<SourceSpec>()
         };
 
         private static TrajectoryResult Simulate(SpaceShapingSession session) =>
             session.Simulate(session.BuildField(), new TrajectoryIntegrator(), new ShipLaunch());
+
+        [Test]
+        public void Clock_MatchesTheTwoTermForm()
+        {
+            SpaceShapingSession session = new(Setup(0f, 9f));
+            TrajectoryResult result = Simulate(session);
+
+            float c2 = 3.1622777f * 3.1622777f;
+            float travel = 8f - 0.6f;
+            float expected = travel * Mathf.Sqrt(1f - 1f / c2);
+            Assert.AreEqual(expected, result.ShipTime, 0.02f);
+        }
 
         [Test]
         public void Arrival_InsideWindow_IsSolved()

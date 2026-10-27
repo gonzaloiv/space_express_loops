@@ -7,6 +7,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public PuzzleZone[] Solution;
         public float EntropySpent;
         public float StartMargin;
+        public bool StartFails;
         public bool Solved;
 
         public TrajectoryOutcome StartOutcome => Start.Outcome;
@@ -14,7 +15,5 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public TrajectoryOutcome SolvedOutcome => SolvedRun.Outcome;
 
         public float ShipTime => SolvedRun.ShipTime;
-
-        public bool StartFails => Start.Outcome == TrajectoryOutcome.Miss;
     }
 }

@@ -54,6 +54,35 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
+        public void StartArrivingOutsideTheWindow_Fails()
+        {
+            PuzzleData puzzle = Synthetic();
+            puzzle.tmin = 0f;
+            puzzle.tmax = 1f;
+
+            PuzzleVerification check = PuzzleVerifier.Verify(puzzle, null, settings);
+
+            Assert.AreEqual(TrajectoryOutcome.Arrive, check.StartOutcome);
+            Assert.IsTrue(check.StartFails);
+            Object.DestroyImmediate(puzzle);
+        }
+
+        [Test]
+        public void StartCrashing_DoesNotFail()
+        {
+            PuzzleData puzzle = Synthetic();
+            puzzle.sources = new[] { new PuzzleSource { home = Vector3.zero, scale = 1f } };
+            puzzle.tmin = 0f;
+            puzzle.tmax = 10f;
+
+            PuzzleVerification check = PuzzleVerifier.Verify(puzzle, null, settings);
+
+            Assert.AreEqual(TrajectoryOutcome.Crash, check.StartOutcome);
+            Assert.IsFalse(check.StartFails);
+            Object.DestroyImmediate(puzzle);
+        }
+
+        [Test]
         public void FoundSolution_VerifiesGreen()
         {
             PuzzleData puzzle = Puzzle();
@@ -110,6 +139,16 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
             Assert.IsFalse(PuzzleVerifier.Verify(bare, null, settings).Solved);
             Object.DestroyImmediate(bare);
+        }
+
+        private static PuzzleData Synthetic()
+        {
+            PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
+            puzzle.origin = new Vector3(-4f, 0f, 0f);
+            puzzle.destination = new Vector3(4f, 0f, 0f);
+            puzzle.launchSpeed = 1f;
+            puzzle.sources = System.Array.Empty<PuzzleSource>();
+            return puzzle;
         }
 
         private PuzzleData Puzzle()

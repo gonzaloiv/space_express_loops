@@ -107,7 +107,8 @@ namespace DigitalLove.Game.SpaceShaping
             for (int i = 0; i < positions.Length; i++)
             {
                 float radius = scales[i] * 0.5f;
-                field.Add(new SpaceSource(positions[i], radius, radius * setup.Sim.SourceStrengthScale));
+                float mass = radius * radius * radius;
+                field.Add(new SpaceSource(positions[i], radius, mass * setup.Sim.SourceStrengthScale));
             }
 
             return field;
@@ -122,7 +123,7 @@ namespace DigitalLove.Game.SpaceShaping
                 CaptureRadius = setup.Sim.CaptureRadius,
                 StepSecs = setup.Sim.StepSecs,
                 MaxSteps = StepBudget(),
-                DilationScale = setup.Sim.DilationScale,
+                LightSpeed = setup.Sim.LightSpeed,
                 Zones = zones
             };
 

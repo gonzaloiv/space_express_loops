@@ -5,7 +5,6 @@ ship time, result and grade. **Not** the final HUD.
 
 **Related:** [vision](../../design/vision.md) §7 · [core loop](../../design/core-loop.md) ·
 [resources](../../design/systems/resources.md) ·
-[creator brief](../in-progress/puzzle-creator-improvements.md) ·
 [multi-zone](space-shaping-multizone.md) · [integration](space-shaping-integration.md) ·
 [feel](space-shaping-feel.md)
 

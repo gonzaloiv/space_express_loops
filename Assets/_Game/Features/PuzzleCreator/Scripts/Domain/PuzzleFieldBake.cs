@@ -54,8 +54,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (!DeriveWindow(field, settings, brief.WindowTightness))
                 return null;
 
-            status = PuzzleBakeStatus.StartNotMiss;
-            if (!StartMisses(field, settings))
+            status = PuzzleBakeStatus.StartNotFailed;
+            if (!StartFails(field, settings))
                 return null;
 
             status = PuzzleBakeStatus.NoSolution;
@@ -170,8 +170,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return true;
         }
 
-        private static bool StartMisses(PuzzleData field, PuzzleSimSettings settings) =>
-            PuzzleVerifier.Verify(field, null, settings).StartOutcome == TrajectoryOutcome.Miss;
+        private static bool StartFails(PuzzleData field, PuzzleSimSettings settings) =>
+            PuzzleVerifier.Verify(field, null, settings).StartFails;
 
         private static float LaunchSpeed(PuzzleSimSettings settings) =>
             BareMissMargin * settings.NominalSpeed;

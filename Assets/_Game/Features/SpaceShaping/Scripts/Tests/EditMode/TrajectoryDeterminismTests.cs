@@ -16,7 +16,8 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             Destination = new Vector3(4f, 0f, 0f),
             CaptureRadius = 0.6f,
             StepSecs = 1f / 120f,
-            MaxSteps = 1200
+            MaxSteps = 1200,
+            LightSpeed = 3.1622777f
         };
 
         private static SpacetimeField Field()
@@ -71,7 +72,8 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
                     CaptureRadius = 0.6f,
                     StepSecs = 1f / 120f,
                     SourceStrengthScale = 2f,
-                    SeparationScale = 1.2f
+                    SeparationScale = 1.2f,
+                    LightSpeed = 3.1622777f
                 },
                 Sources = new[]
                 {

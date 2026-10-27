@@ -4,7 +4,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     {
         Baked,
         NoRun,
-        StartNotMiss,
+        StartNotFailed,
         NoSolution,
         Unverified,
         UnsupportedBrief

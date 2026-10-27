@@ -8,7 +8,7 @@ before it passes.
 [progression](../../design/systems/progression.md) · [jobs](../../design/jobs.md) ·
 [resources](../../design/systems/resources.md) · [cube](../../design/systems/cube.md) ·
 [variations](../../ideas/variations.md) ·
-[creator plan](../in-progress/puzzle-creator-improvements.md) · [physics](space-shaping-physics.md) ·
+[physics](../in-progress/space-shaping-physics.md) ·
 [feel](space-shaping-feel.md) · [modes](../../../Assets/_Modules/docs/standards/modes.md) ·
 [review](../../reviews/integration-plan.md)
 
@@ -110,8 +110,8 @@ The **cube level selector is new.** `LevelsPanel` is a generic UI list, not a fi
 
 ### 3.7 Level catalogue
 
-- Integration consumes **baked** `PuzzleData`; authoring and the seed search are the
-  [creator plan’s](../in-progress/puzzle-creator-improvements.md) work. **No runtime generation.**
+- Integration consumes **baked** `PuzzleData`; authoring and the seed search are the creator’s work.
+  **No runtime generation.**
 - The **seed + brief** is the source; fixed `sources` remain the hand-tuned fallback
   ([variations](../../ideas/variations.md) §3).
 - The catalogue is one ordered `ChapterData` list; `PuzzleData.id` uses the `XX_YY` shape the level

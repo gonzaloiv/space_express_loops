@@ -86,7 +86,7 @@ This is the design insight: *the resource and the mechanic justify each other.*
 - `entropy` = a per-job **budget**. Each modification drains it; the grade is the entropy **left**.
 - **The bar and the star grade come from the puzzle creator:** the budget is set from the solution's
   **continuous cost** (`Σ|Δscale|`, not a move count), charged when each edit completes, and the
-  creator derives it ([puzzle creator improvements](../../plans/in-progress/puzzle-creator-improvements.md)).
+  creator derives it.
 - `fuel` = the **given** launch → the launch speed. **Narrative, not a stat**: the launch is fixed — a
   launch that would *fail* — and shaping is what makes it land. **Global** — one speed, the same for
   every job.

@@ -19,7 +19,7 @@ MonoBehaviour:
   zoneCentre: {x: 0.21144845, y: -0.09783967, z: 0.015582651}
   cubeSizeMin: 0.15
   cubeSizeMax: 0.3
-  cubeSize: 0.15
+  cubeSize: 0.3
   translatable: 1
   moves: 1
   resizable: 0
@@ -27,7 +27,7 @@ MonoBehaviour:
   launchSpeed: 0.9
   tmin: 0.36744624
   tmax: 1.1023388
-  entropyBudget: 0.23225784
+  entropyBudget: 0.1935482
   sources:
   - home: {x: 0.089799374, y: 0.0095661795, z: 0.23034081}
     scale: 0.061113317

@@ -97,8 +97,8 @@ star thresholds (entropy par) are set from the secured solution's cost.
 ## 4. Data model
 
 - Source state is **baked into the puzzle asset** at author time (the seed generates the field
-  offline — see [puzzle creator improvements](../plans/in-progress/puzzle-creator-improvements.md)); the field
-  is derived from the stored positions, and the grid from the player's zones — neither is stored.
+  offline); the field is derived from the stored positions, and the grid from the player's zones —
+  neither is stored.
 - Mass is coupled to size for now (`mass ∝ radius³`, constant density); a later element could decouple them (a
   small heavy planet).
 - Each ship carries origin, ordered destinations, and its launch — the existing

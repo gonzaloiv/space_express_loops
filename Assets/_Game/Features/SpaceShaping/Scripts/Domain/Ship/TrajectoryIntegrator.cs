@@ -17,7 +17,7 @@ namespace DigitalLove.Game.SpaceShaping
             for (int step = 0; step < settings.MaxSteps; step++)
             {
                 Vector3 acceleration = field.Acceleration(position);
-                shipTime += settings.StepSecs * Dilation(field, position, settings.DilationScale);
+                shipTime += settings.StepSecs * Dilation(field, position, velocity, settings.LightSpeed);
                 velocity += acceleration * settings.StepSecs;
                 Vector3 from = position;
                 position += velocity * settings.StepSecs / StepDivisor(settings.Zones, position);
@@ -31,8 +31,14 @@ namespace DigitalLove.Game.SpaceShaping
             return new TrajectoryResult(TrajectoryOutcome.Miss, points, shipTime);
         }
 
-        private static float Dilation(SpacetimeField field, Vector3 position, float scale) =>
-            Mathf.Clamp(1f + scale * field.Potential(position), 0.05f, 1f);
+        private static float Dilation(
+            SpacetimeField field, Vector3 position, Vector3 velocity, float lightSpeed)
+        {
+            float c2 = Mathf.Max(lightSpeed * lightSpeed, 0.000001f);
+            float depth = 2f * field.Potential(position) / c2;
+            float speedTerm = -velocity.sqrMagnitude / c2;
+            return Mathf.Sqrt(Mathf.Max(0f, 1f + depth + speedTerm));
+        }
 
         private static float StepDivisor(IReadOnlyList<SpaceZone> zones, Vector3 position)
         {

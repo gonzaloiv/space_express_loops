@@ -10,18 +10,16 @@ scale the space, scale the content; the ship flies the deformed spacetime.
 
 | Plan | Area | Why here |
 |---|---|---|
-| [Space shaping — puzzle creator: the brief](in-progress/puzzle-creator-improvements.md) | space shaping | Complete: conditions, condition-aware bake, derived window, one best level, runtime gesture locks. The next action is the Next runway below, then Validation 1 ([vision](../design/vision.md) §7). |
-| [Space shaping — tech debt](in-progress/space-shaping-tech-debt.md) | space shaping | Landed: solution off the player asset, intermediates removed, setup holds the sim snapshot, half-extents, `MoveRange` dropped, tests pinned. |
+| [Space shaping — physics (clock + mass)](in-progress/space-shaping-physics.md) | space shaping | Core landed: two-term clock with toy `c`, `mass ∝ radius³`, out-of-window start allowed, POC re-baked. The off-path level needs a start-margin dial + off-path cube; proper-time window remains. |
 
 ## Next
 
-The runway after Now: the remaining sim work (physics, multi-zone), the lab readout, then the
+The runway after Now: the remaining sim work (multi-zone), the lab readout, then the
 **validation** (the criteria are in [vision](../design/vision.md) §7). Only if it passes: the fused slice
 (validation 2), then the campaign.
 
 | Plan | Area | Why here |
 |---|---|---|
-| [Space shaping — physics (clock + mass)](backlog/space-shaping-physics.md) | space shaping | The two-term clock and `mass ∝ radius³`; the bakes search the sim, so land before baking variants. |
 | [Space shaping — multi-zone solutions](backlog/space-shaping-multizone.md) | space shaping | `moves = 2+` bakes for jobs 3 and 6–8; needed before the full run can be authored. |
 | [Space shaping — lab readout](backlog/space-shaping-lab-readout.md) | presentation | The validation-1 readout (entropy, window, result); separate from the final HUD. |
 | [Space shaping — integration into the game](backlog/space-shaping-integration.md) | space shaping | **Full replacement.** Two stages: fuse the slice (I0–I1 = validation 2), then the campaign (I2–I5). **Gated on validation 1.** |

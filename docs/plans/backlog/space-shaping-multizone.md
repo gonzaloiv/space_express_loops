@@ -1,11 +1,11 @@
 # Space Shaping — Multi-Zone Solutions
 
 **Status:** next · space shaping · updated 2026-10-27 — bake `moves = 2+` solutions so jobs 3 and 6–8 can
-be authored. Depends on [physics](space-shaping-physics.md) and the
-[brief’s runtime locks](../in-progress/puzzle-creator-improvements.md).
+be authored. Depends on [physics](../in-progress/space-shaping-physics.md) and the creator’s runtime
+locks (landed 2026-10-27).
 
-**Related:** [creator brief](../in-progress/puzzle-creator-improvements.md) ·
-[physics](space-shaping-physics.md) · [integration](space-shaping-integration.md) ·
+**Related:** [physics](../in-progress/space-shaping-physics.md) ·
+[integration](space-shaping-integration.md) ·
 [progression](../../design/systems/progression.md) · [jobs](../../design/jobs.md) ·
 [cube](../../design/systems/cube.md) · [lab readout](space-shaping-lab-readout.md) ·
 [review](../../reviews/integration-plan.md)

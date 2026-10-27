@@ -7,7 +7,7 @@ namespace DigitalLove.Game.SpaceShaping
         public float NominalSpeed;
         public float SourceStrengthScale;
         public float SeparationScale;
-        public float DilationScale;
+        public float LightSpeed;
         public float CaptureRadius;
         public float ZoneFalloff;
         public float MinScaleFactor;
@@ -20,7 +20,7 @@ namespace DigitalLove.Game.SpaceShaping
             NominalSpeed = settings.nominalSpeed,
             SourceStrengthScale = settings.sourceStrengthScale,
             SeparationScale = settings.separationScale,
-            DilationScale = settings.dilationScale,
+            LightSpeed = settings.lightSpeed,
             CaptureRadius = settings.planetRadius,
             ZoneFalloff = settings.zoneFalloff,
             MinScaleFactor = settings.minScaleFactor,

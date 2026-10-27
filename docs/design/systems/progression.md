@@ -72,7 +72,7 @@ A **tutorial** will be needed for this, but not yet — get the loop working fir
 ### The brief — the conditions a solution must meet
 
 Each job's puzzle carries a **brief**; the per-level conditions are the source of truth here, and the
-creator bakes to them ([improvements plan](../../plans/in-progress/puzzle-creator-improvements.md) Slice 4):
+creator bakes to them:
 
 - **`translatable`** — the cube may be **moved** (its centre changes) or is **fixed** at home.
 - **`moves`** — how many **zones** the solution scales (the cube edits `N` places, up or down).
@@ -90,8 +90,7 @@ The **concrete run** — one row per job, with its brief, field, dials and lore 
 has learned — that is the capstone, not a locked cube.
 
 Each job is defined on its **seed** — the band, the brief conditions and the dials — and the **level** is
-the baked result of that seed ([improvements plan](../../plans/in-progress/puzzle-creator-improvements.md)
-§5). The seed is the recipe; the level is what the creator bakes from it, once.
+the baked result of that seed. The seed is the recipe; the level is what the creator bakes from it, once.
 
 ### The company is lore only
 

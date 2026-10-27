@@ -23,12 +23,19 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Solution = solution,
                 EntropySpent = solved.EntropySpent,
                 StartMargin = ClosestApproach(startResult, setup.Destination),
+                StartFails = StartFailed(startResult, puzzle),
                 Solved = solved.IsSolved(solvedResult) && solved.EntropySpent <= setup.EntropyBudget
             };
         }
 
         private static TrajectoryResult Simulate(SpaceShapingSession session) =>
             session.Simulate(session.BuildField(), new TrajectoryIntegrator(), new ShipLaunch());
+
+        private static bool StartFailed(TrajectoryResult result, PuzzleData puzzle) =>
+            result.Outcome != TrajectoryOutcome.Crash
+            && !(result.Outcome == TrajectoryOutcome.Arrive
+                && result.ShipTime >= puzzle.tmin
+                && result.ShipTime <= puzzle.tmax);
 
         private static void Apply(SpaceShapingSession session, PuzzleZone[] zones)
         {

@@ -16,10 +16,10 @@ MonoBehaviour:
   cubeSize: 0.25
   stepSecs: 0.0008333333
   nominalSpeed: 1
-  sourceStrengthScale: 0.02
+  sourceStrengthScale: 5.5555553
   separationScale: 1.2
-  dilationScale: 0.2
+  lightSpeed: 1.4142135
   planetRadius: 0.06
   zoneFalloff: 0.25
-  minScaleFactor: 0.4
-  maxScaleFactor: 2.5
+  minScaleFactor: 0.6
+  maxScaleFactor: 1.8
