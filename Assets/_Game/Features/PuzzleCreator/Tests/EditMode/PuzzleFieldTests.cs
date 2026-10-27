@@ -33,10 +33,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         public void Build_FieldFitsThePlaySpace()
         {
             PuzzleSeed seed = Seed();
-            SectorShapeData shape = PuzzleFieldBuilder.Build(seed, Settings());
+            SpaceShapingSettings settings = Settings();
+            SectorShapeData shape = PuzzleFieldBuilder.Build(seed, settings);
 
             Assert.AreEqual(seed.planetCount, shape.planetCount.max);
-            Assert.Less(shape.radius.max, seed.distance);
+            Assert.Less(shape.radius.max, settings.runDistance);
         }
 
         [Test]
@@ -49,8 +50,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             for (int i = 0; i < planets.Length; i++)
                 outer = Mathf.Max(outer, planets[i].position.magnitude + planets[i].radius);
 
-            Assert.Greater(outer, seed.distance * 0.5f - settings.captureRadius - 1f);
-            Assert.LessOrEqual(outer, seed.distance * 0.5f - settings.captureRadius);
+            Assert.Greater(outer, settings.runDistance * 0.5f - settings.planetRadius - 1f);
+            Assert.LessOrEqual(outer, settings.runDistance * 0.5f - settings.planetRadius);
         }
 
         [Test]
@@ -101,10 +102,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleSeed seed = Seed();
             SpaceShapingSettings settings = Settings();
             PuzzleFieldPlanet[] planets = Planets(seed, settings);
-            float half = seed.distance * 0.5f;
+            float half = settings.runDistance * 0.5f;
 
             for (int i = 0; i < planets.Length; i++)
-                Assert.Less(planets[i].position.magnitude + planets[i].radius + settings.captureRadius, half);
+                Assert.Less(planets[i].position.magnitude + planets[i].radius + settings.planetRadius, half);
         }
 
         [Test]
@@ -128,25 +129,20 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void Bake_DerivesTheRunFromTheField()
+        public void Bake_UsesTheConstantRun()
         {
             PuzzleSeed seed = Seed();
             SpaceShapingSettings settings = Settings();
-            PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
             PuzzlePlanetListAsset planets = PuzzleArtifactFactory.Planets(
                 PuzzleArtifactFactory.Shape(seed, settings));
             PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
 
-            PuzzleFieldBake.Apply(puzzle, planets, sim);
-
-            float outer = 0f;
-            for (int i = 0; i < planets.planets.Length; i++)
-                outer = Mathf.Max(outer, planets.planets[i].position.magnitude + planets.planets[i].radius);
+            PuzzleFieldBake.Apply(puzzle, planets, PuzzleSimSettings.From(settings));
 
             Assert.AreEqual(planets.planets.Length, puzzle.sources.Length);
+            Assert.AreEqual(settings.runDistance, puzzle.distance, 1e-4f);
+            Assert.AreEqual(settings.runDistance * 0.5f, puzzle.Destination.x, 1e-4f);
             Assert.Greater(puzzle.launchSpeed, 0f);
-            Assert.Greater(puzzle.Destination.x, outer);
-            Assert.Less(puzzle.Destination.x, outer + sim.CaptureRadius + 0.5f);
         }
 
         [Test]
@@ -158,15 +154,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             SpaceShapingSetup setup = SpaceShapingSetup.Build(puzzle, PuzzleSimSettings.From(Settings()));
 
             Assert.AreEqual(2f, setup.LaunchSpeed, 1e-4f);
-        }
-
-        [Test]
-        public void BuildSetup_FallsBackToSettingsLaunch()
-        {
-            PuzzleData puzzle = Bare();
-            PuzzleSimSettings sim = PuzzleSimSettings.From(Settings());
-
-            Assert.AreEqual(sim.LaunchSpeed, SpaceShapingSetup.Build(puzzle, sim).LaunchSpeed, 1e-4f);
         }
 
         private static PuzzleData Bare()

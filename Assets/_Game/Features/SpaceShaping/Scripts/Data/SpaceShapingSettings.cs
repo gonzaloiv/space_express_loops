@@ -5,28 +5,43 @@ namespace DigitalLove.Game.SpaceShaping
     [CreateAssetMenu(fileName = "SpaceShapingSettings", menuName = "DigitalLove/Game/SpaceShaping Settings")]
     public class SpaceShapingSettings : ScriptableObject
     {
+        [Header("Puzzle")]
+        [Tooltip("The run: origin to destination, in metres. It also sizes the field, so keep planetRadius well under runDistance / 2.")]
+        public float runDistance = 1f;
+
+        [Tooltip("The cube (the lens): the region the player scales, in metres. A fraction of the run; a shrunk cube is a shortcut.")]
+        public float cubeSize = 0.15f;
+
         [Header("Simulation")]
+        [Tooltip("Integrator step, in seconds.")]
         public float stepSecs = 0.008333333f;
+
+        [Tooltip("Step budget. maxSteps x stepSecs is the time budget, and the baked launch is derived from it so the bare start just misses.")]
         public int maxSteps = 1200;
 
-        [Header("Launch")]
-        public float launchSpeed = 1f;
-
         [Header("Field")]
-        public float sourceStrengthScale = 2f;
+        [Tooltip("Planet radius, in metres. Sets the field planets (with a small spread) and the arrival sphere around the destination, so touching the goal planet is an arrival.")]
+        public float planetRadius = 0.06f;
+
+        [Tooltip("Planet gravity strength = radius x this. How hard the planets bend the path.")]
+        public float sourceStrengthScale = 0.02f;
+
+        [Tooltip("Planet spacing, as a multiple of the summed radii. The field builder spaces the sector 1.1x wider so the first constraint pass never moves a baked planet.")]
         public float separationScale = 1.2f;
 
         [Header("Time")]
-        public float dilationScale = 1f;
-
-        [Header("Sources")]
-        public float captureRadius = 0.6f;
+        [Tooltip("How much a gravity well slows the ship's clock.")]
+        public float dilationScale = 0.2f;
 
         [Header("Zone")]
+        [Tooltip("The cube's soft edge, as a fraction of its half-size (0 = hard edge). Shared with the view so a found solution reproduces.")]
         public float zoneFalloff = 0.5f;
 
         [Header("Reachable scale")]
+        [Tooltip("Smallest scale the player can reach (0.4 = shrink to 40%).")]
         public float minScaleFactor = 0.4f;
+
+        [Tooltip("Largest scale the player can reach (2.5 = magnify 2.5x).")]
         public float maxScaleFactor = 2.5f;
     }
 }

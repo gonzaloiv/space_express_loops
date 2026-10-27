@@ -10,16 +10,16 @@ scale the space, scale the content; the ship flies the deformed spacetime.
 
 | Plan | Area | Why here |
 |---|---|---|
-| [Space shaping — puzzle creator](in-progress/space-shaping-puzzle-creator.md) | space shaping | Seed → verified `PuzzleData` variants, editor/offline. Builds its own `SectorShapeData`; the `PuzzleFieldPlanet → PuzzleSource` bridge. |
+| [Space shaping — puzzle creator improvements](in-progress/puzzle-creator-improvements.md) | space shaping | Creator follow-ons: pin the constants, spawn the cube, fill the run (density), define the brief (conditions + quality). |
 
 ## Next
 
-The runway after Now: the **device gate** (the gate criteria are in
+The runway after Now: the **validation** (the criteria are in
 [vision](../design/vision.md) §7), then — only if it passes — integration.
 
 | Plan | Area | Why here |
 |---|---|---|
-| [Space shaping — integration into the game](backlog/gameplay/space-shaping-integration.md) | space shaping | The largest, last slice: the puzzle loop replaces the legacy route/round/economy flow. **Gated on the device gate.** |
+| [Space shaping — integration into the game](backlog/gameplay/space-shaping-integration.md) | space shaping | The largest, last slice: the puzzle loop replaces the legacy route/round/economy flow. **Gated on the validation.** |
 
 ## Later
 
@@ -27,8 +27,8 @@ Design-only or deferred. Nothing here is scheduled.
 
 | Plan | Area | Why here |
 |---|---|---|
-| [Space shaping — feel & presentation polish](backlog/presentation/space-shaping-feel.md) | presentation | The *feel* beats after the gate: travel payoff, collapse feedback, window gauge, cargo personality. |
-| [Space shaping — variations](backlog/gameplay/space-shaping-future.md) | space shaping | Recorded: multi-ship cap, loop route, level generation. After the gate. |
+| [Space shaping — feel & presentation polish](backlog/presentation/space-shaping-feel.md) | presentation | The *feel* beats after the validation: travel payoff, collapse feedback, window gauge, cargo personality. |
+| [Space shaping — variations](backlog/gameplay/space-shaping-future.md) | space shaping | Recorded: multi-ship cap, loop route, level generation. After the validation. |
 | [Universe — element pack](backlog/universe/universe-element-pack.md) | universe | Later ambient/decor set for the sector field: belts, moons, nebulae, stations… Not scheduled. |
 | [Hologram look](backlog/presentation/hologram-look.md) | presentation | Design only; hologram pass for the bubble view, then the edition view. Independent. |
 | [TTS voice panel](backlog/presentation/tts-voice-panel-personality.md) | presentation | Design only; camera-operator companion behavior for the TTS panel. |
@@ -42,7 +42,7 @@ Loose ends that still need a home. Close one by linking the plan that finishes i
 | Silent planets — persistence/restore validation | A future cross-feature restart pass |
 | Silent planets — migrate the decor pool into the field's ambient sectors | [Element pack](backlog/universe/universe-element-pack.md) |
 | Sector field — raise `viewRadius`/aperture | Trigger: when gameplay content moves onto the field → [integration](backlog/gameplay/space-shaping-integration.md) |
-| The lens — surface the session `Undo`; **rotate** (job 4) | [Feel](backlog/presentation/space-shaping-feel.md) / [variations](backlog/gameplay/space-shaping-future.md) |
+| The lens — surface the session `Undo`; **rotate** (later puzzles) | [Feel](backlog/presentation/space-shaping-feel.md) / [variations](backlog/gameplay/space-shaping-future.md) |
 
 ## Conventions
 

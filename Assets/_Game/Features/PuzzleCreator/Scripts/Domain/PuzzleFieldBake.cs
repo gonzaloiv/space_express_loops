@@ -5,7 +5,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleFieldBake
     {
-        private const float RunMargin = 0.02f;
         private const float StarBudgetFactor = 3f;
         private const float BareMissMargin = 0.9f;
         private const int SearchSamples = 64;
@@ -13,7 +12,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public static void Apply(PuzzleData puzzle, PuzzlePlanetListAsset planets, PuzzleSimSettings settings)
         {
             puzzle.sources = PuzzleSourceBridge.ToSources(planets.planets);
-            puzzle.distance = RunLength(planets.planets, settings.CaptureRadius);
+            puzzle.distance = settings.RunDistance;
             puzzle.launchSpeed = LaunchSpeed(puzzle.distance, settings);
         }
 
@@ -99,19 +98,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return puzzle;
         }
 
-        private static float RunLength(PuzzleFieldPlanet[] planets, float captureRadius)
-        {
-            float outer = 0f;
-            for (int i = 0; i < planets.Length; i++)
-                outer = Mathf.Max(outer, planets[i].position.magnitude + planets[i].radius);
-
-            return 2f * (outer + captureRadius + RunMargin);
-        }
-
         private static float LaunchSpeed(float run, PuzzleSimSettings settings)
         {
             float budget = settings.MaxSteps * settings.StepSecs;
-            return budget > 0f ? BareMissMargin * run / budget : settings.LaunchSpeed;
+            return budget > 0f ? BareMissMargin * run / budget : 0f;
         }
     }
 }

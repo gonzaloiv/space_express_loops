@@ -6,7 +6,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     public class PuzzleSeed : ScriptableObject
     {
         public int seed = 1;
-        public float distance = 12f;
+        [HideInInspector] public float distance = 1f;
         public int planetCount = 3;
     }
 }

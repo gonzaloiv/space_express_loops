@@ -1,7 +1,7 @@
 # Space Shaping — Integration into the Game
 
 **Status:** next · space shaping · updated 2026-10-26 — design sketch. The largest and last slice;
-**gated on Gate B** (the lens must prove the game first).
+**gated on the validation** (the lens must prove the game first).
 
 **Related:** Spike · POC · [Variations](space-shaping-future.md) · View frame · Sector generation
 

@@ -8,22 +8,24 @@
 
 ## Goal
 
-One instrument, one view. The cube is a tangible MR tool you move over the bubble; it transforms the
-zone it covers. There is no Map/Sculpt mode split, and the whole map stays visible in the background
-— overview and detail at once, no transition. **The cube's size is the aperture:** big reads wide and
-coarse, small reads narrow and fine.
+One instrument, one view. The cube is the **lens**: a tangible MR tool you **move and resize** over
+the bubble; the space **inside** it scales reality/the field — it transforms the zone it covers.
+There is no Map/Sculpt mode split, and the whole map stays visible in the background — overview and
+detail at once, no transition. **The cube's size is the aperture:** big reads wide and coarse, small
+reads narrow and fine. The scale has **two faces** — **space** (a shortcut / the path) and **time**
+(the ship's clock) — driven by the **same factor** ([relativity](relativity.md)).
 
 ## Inputs — the three gestures (taught in order)
 
 | Gesture | Trigger | Effect | Relativity |
 |---|---|---|---|
-| **The scale** | a two-hand pinch **inside** the cube | scales the space *and* the content: the metric stretches (a shrunk zone is a **shortcut**) and the planets **spread** and **grow** (mass ∝ radius) | time dilation |
-| **The region** *(job 3)* | grab the cube's **edges / corners** | sets *where* you work — and you can scale **several** zones; the soft brush blends them | — |
-| **The rotate** *(job 4)* | spin the zone | **frame dragging** — a spinning zone swirls the path; adds direction for free | frame dragging |
+| **The scale** | a two-hand pinch **inside** the cube | scales the space *and* the content: the metric stretches (a shrunk zone is a **shortcut**), the planets **spread** and **grow** (mass ∝ radius), and the metric stretch is also a **time stretch** (the clock) | time dilation |
+| **The region** *(job 3)* | grab the cube's **edges / corners** | **moves / resizes** the cube (the lens) — sets *where* you work — and you can scale **several** zones; the soft brush blends them | — |
+| **The rotate** *(later puzzles)* | spin the zone | **frame dragging** — a spinning zone swirls the path; adds direction for free | frame dragging |
 
 **Multiple scales are the way.** The player scales **several** zones, and the soft brush blends them
 into one field — the core of the verb, not a later unlock. The region's size must stay **separate
-from the scale** — coupling them is the bug. Rotate unlocks at **job 4**
+from the scale** — coupling them is the bug. Rotate arrives in **later puzzles**
 ([progression](progression.md) §4).
 
 ## Rules
@@ -48,13 +50,17 @@ from the scale** — coupling them is the bug. Rotate unlocks at **job 4**
   so any bend reads as something the player did; the lattice spans the run (sized from
   `origin`→`destination`).
 - The planets visibly **spread and grow**.
+- **The time face reads on the same lattice** — its cells **pulse at the local clock rate** (spacing =
+  space, pulse = time), and the zone is **tinted cool/warm** (slower / faster clock). The window gauge
+  is the payoff: the projected arrival slides as the player scales ([relativity](relativity.md)).
 - The ship **launches on each modification** and flies the current trajectory — the flight is the
   read; the trajectory visual updates at launch (no separate prediction line)
   ([core loop](../core-loop.md) §1).
 
 ## Failure
 
-None. The tool has no fail state; the **window** is the only hard fail ([resources](resources.md)).
+None. The tool has no fail state; the only hard fail is **running out of entropy** before a solve
+([resources](resources.md)).
 
 ## Tuning
 
@@ -68,4 +74,4 @@ None. The tool has no fail state; the **window** is the only hard fail ([resourc
 - **`SourceSpec.MoveRange` is vestigial** — `SourceSpecs.From` sets it to the planet's scale, and the
   zone scale moves `Home` with the planet, so `SourceConstraints`' clamp never binds. Drop it, or give
   it a real meaning (a per-planet move limit).
-- Rotate (job 4) timing, and the region/scale decoupling under multiple zones.
+- Rotate (later puzzles) timing, and the region/scale decoupling under multiple zones.

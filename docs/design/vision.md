@@ -14,7 +14,7 @@ hand-tracking first-class.
 
 **Our Space** is a seated mixed-reality game where a miniature universe floats in
 your real room. You run an interstellar transport company: each job is a delivery
-from one star to another, with a **window** and an **eco grade**. Your one tool is
+from one star to another, with a **window** and an **eco rating**. Your one tool is
 **the cube** — a tangible instrument you move over the bubble. **Grab inside it and scale**:
 the space stretches (a shrunk zone is a shortcut) and the planets spread and grow. Both
 change **time**, the ship's clock, so you deform the spacetime the ship flies through until
@@ -33,10 +33,12 @@ Build status lives on the [plans board](../plans/README.md); this doc does not t
 2. **The cube is the product.** The one tool, and the signature moment — "the cube
    deforms the universe". It gets the polish budget (feel, sound, haptics, the visible
    field-warp).
-3. **Scale the space and the content together.** One gesture does both; the region is the
-   second gesture (job 3), rotate the third (job 4). The field is derived, never edited.
-4. **One hard fail, one score.** Time is the window; entropy is the eco grade (the launch is given,
-   not a lever).
+3. **Scale the space and the content together.** One gesture does both; moving / resizing the
+   cube (the region) is the second gesture (job 3); rotate arrives in **later puzzles**, not the
+   first 8. The field is derived, never edited.
+4. **One budget, one score.** Entropy is the budget: spend it all before you solve and the job
+   **fails**. Entropy left is the **eco rating**; the **window** `[Tmin, Tmax]` is the target — the launch
+   is only a check. The launch itself is given, not a lever.
 5. **Discrete jobs.** ~1 minute each; a **10-minute experience**, about **8–10 levels**.
    Nothing live-ticking.
 6. **Relativity is the language.** Not a skin — the cube instruments it.
@@ -51,14 +53,15 @@ Build status lives on the [plans board](../plans/README.md); this doc does not t
   (`UniverseView.roomAnchor` / `bubbleAnchor`).
 - **Legacy (cut):** room-scale *gameplay* — planets scattered around your physical
   room, walking to them. A seated player does not walk to a planet.
-- **One view, one instrument: the cube.** There is no Map/Sculpt mode split. The cube
-  is a tangible MR tool you move over the bubble; it transforms the zone it covers
-  ([the cube](systems/cube.md)). **The cube's size is the aperture** — a big cube reads
-  wide and coarse, a small cube reads narrow and fine. The whole map stays visible in the
-  background, so you get overview and detail at once, with no transition.
+- **One view, one instrument: the cube (the lens).** There is no Map/Sculpt mode split. The cube
+  is a tangible MR tool you **move and resize** over the bubble; the space **inside** it scales
+  reality/the field — it transforms the zone it covers ([the cube](systems/cube.md)). **The cube's
+  size is the aperture** — a big cube reads wide and coarse, a small cube reads narrow and fine.
+  The whole map stays visible in the background, so you get overview and detail at once, with no
+  transition.
 
 So: the *room* is the backdrop and the anchor; the *bubble* is the playfield; the
-*cube* is how you touch it.
+*cube* (the lens) is how you touch it.
 
 ## 4. The scale is physical (a deliberate guardrail)
 
@@ -89,25 +92,27 @@ routes; keep the economy *between* jobs. Then the management layer is a wrapper
 
 - **In:** the **full run** — the bubble, the cube, the **level selector** and **8–10 jobs**, the
   grade, and player progression ([core loop](core-loop.md), [progression](systems/progression.md)).
-- **Out until proven:** sectors, multi-ship, procedural level generation, rotate, the tutorial, and
-  the whole feel pass.
+- **Out of the first 8:** rotate (arrives in **later puzzles**), the tutorial, and the whole feel
+  pass. **Out until proven:** sectors, multi-ship, runtime/procedural level generation.
 - **Technical target:** Meta Quest 3S, **72 fps**.
-- **Gate first:** do not invest past the gate (§7) until it passes.
+- **Validation first:** do not invest past the validation (§7) until it passes.
 
-## 7. The gate
+## 7. The validation
 
-1. **Test in the lab, seated, hand-tracked** (no MR/bubble): does the mechanic survive a
-   goal and a cost?
-2. **Only if the gate passes:** fuse the lab puzzle into the bubble (one seated MR
+The go/no-go test. **Validation 1** is the lab (editor/play-mode) test; **Validation 2** is on device.
+
+1. **Validation 1 — lab, in the editor, seated, hand-tracked** (no MR/bubble): does the mechanic
+   survive a goal and a cost?
+2. **Validation 2 — only if 1 passes:** fuse the lab puzzle into the bubble (one seated MR
    experience), add the cube, and author more jobs.
 
-**Gate:** if the tester solves the puzzles, can say *why*, and wants the next job —
+**Validation:** if the tester solves the puzzles, can say *why*, and wants the next job —
 invest in integration, polish, and the identity. If they fiddle blindly, revisit the
 mechanic before writing another plan.
 
 ## 8. What not to do
 
-- No sectors, multi-ship, or level generation before the §7 gate.
+- No sectors, multi-ship, or level generation before the §7 validation.
 - No further investment in room-scale gameplay or the legacy idle economy; freeze and
   plan the cut.
 - No co-equal live-ticking economy under the puzzle.
@@ -120,8 +125,8 @@ mechanic before writing another plan.
 
 | Risk | Status / mitigation |
 |---|---|
-| Toy, not game (no stake) | **Addressed** by the window + entropy grade ([resources](systems/resources.md)). |
-| The cube is "just a group drag" | Resolved: the cube scale is a **metric stretch** (a shortcut), not a content move — see [the cube](systems/cube.md). |
+| Toy, not game (no stake) | **Addressed** by the entropy budget — run out before solving and the job fails — plus the window target and the grade ([resources](systems/resources.md)). |
+| The cube is "just a group drag" | Resolved: the cube scale is a **metric stretch** (a shortcut), not a drag — it spreads and grows the content too. See [the cube](systems/cube.md). |
 | Field illegibility | Make the map *read the field* (straight-line reference, accel arrows); the bubble already shows the warped sheet. |
 | Ship-zone legibility | The ship is map-size; show which zone it is in (tint, trail). |
 | Prediction trust | Scale is now physical; show the result live, before the ship travels. |

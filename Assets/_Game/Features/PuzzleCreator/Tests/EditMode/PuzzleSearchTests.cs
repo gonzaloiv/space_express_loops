@@ -74,13 +74,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void FoundZone_CoversTheField()
+        public void FoundZone_IsTheConstantCube()
         {
-            float outer = 0f;
-            for (int i = 0; i < puzzle.sources.Length; i++)
-                outer = Mathf.Max(outer, puzzle.sources[i].home.magnitude + puzzle.sources[i].scale * 0.5f);
-
-            Assert.Greater(solution.Zones[0].size.x * 0.5f, outer);
+            Assert.AreEqual(settings.CubeSize, solution.Zones[0].size.x, 1e-4f);
+            Assert.AreEqual(Vector3.zero, solution.Zones[0].centre);
         }
 
         [Test]

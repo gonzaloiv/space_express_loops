@@ -9,7 +9,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private const float FieldMarginFraction = 0.02f;
         private const float Spread = 0.7f;
         private const float Thickness = 0.08f;
-        private const float PlanetRadiusFraction = 0.06f;
         private const float PlanetRadiusSpread = 0.3f;
         private const int PlanetsPerRing = 6;
         private const float SeparationMargin = 1.1f;
@@ -17,22 +16,22 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         public static SectorShapeData Build(PuzzleSeed seed, SpaceShapingSettings settings)
         {
-            float sectorRadius = SectorRadius(seed, settings);
+            float sectorRadius = SectorRadius(settings);
             return BuildShape(seed, settings, sectorRadius);
         }
 
-        private static float PlanetRadius(PuzzleSeed seed) => seed.distance * PlanetRadiusFraction;
+        private static float PlanetRadius(SpaceShapingSettings settings) => settings.planetRadius;
 
-        private static float PlanetRadiusMax(PuzzleSeed seed) =>
-            PlanetRadius(seed) * (1f + PlanetRadiusSpread);
+        private static float PlanetRadiusMax(SpaceShapingSettings settings) =>
+            PlanetRadius(settings) * (1f + PlanetRadiusSpread);
 
-        private static float SectorRadius(PuzzleSeed seed, SpaceShapingSettings settings) =>
+        private static float SectorRadius(SpaceShapingSettings settings) =>
             Mathf.Max(
                 MinSectorRadius,
-                (seed.distance * 0.5f
-                    - PlanetRadiusMax(seed)
-                    - settings.captureRadius
-                    - seed.distance * FieldMarginFraction)
+                (settings.runDistance * 0.5f
+                    - PlanetRadiusMax(settings)
+                    - settings.planetRadius
+                    - settings.runDistance * FieldMarginFraction)
                     / (Spread - Thickness));
 
         private static SectorShapeData BuildShape(
@@ -43,7 +42,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             anchorScale = new MinMaxFloat(1f, 1f),
             planetCount = new MinMaxInt { min = seed.planetCount, max = seed.planetCount },
             planetRadius = new MinMaxFloat(
-                PlanetRadius(seed) * (1f - PlanetRadiusSpread), PlanetRadiusMax(seed)),
+                PlanetRadius(settings) * (1f - PlanetRadiusSpread), PlanetRadiusMax(settings)),
             ringCount = new MinMaxInt { min = Rings(seed), max = Rings(seed) },
             armCount = new MinMaxInt { min = 2, max = 3 },
             spread = Spread,

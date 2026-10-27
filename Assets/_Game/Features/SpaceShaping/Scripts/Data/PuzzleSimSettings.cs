@@ -2,9 +2,10 @@ namespace DigitalLove.Game.SpaceShaping
 {
     public struct PuzzleSimSettings
     {
+        public float RunDistance;
+        public float CubeSize;
         public float StepSecs;
         public int MaxSteps;
-        public float LaunchSpeed;
         public float SourceStrengthScale;
         public float SeparationScale;
         public float DilationScale;
@@ -15,13 +16,14 @@ namespace DigitalLove.Game.SpaceShaping
 
         public static PuzzleSimSettings From(SpaceShapingSettings settings) => new()
         {
+            RunDistance = settings.runDistance,
+            CubeSize = settings.cubeSize,
             StepSecs = settings.stepSecs,
             MaxSteps = settings.maxSteps,
-            LaunchSpeed = settings.launchSpeed,
             SourceStrengthScale = settings.sourceStrengthScale,
             SeparationScale = settings.separationScale,
             DilationScale = settings.dilationScale,
-            CaptureRadius = settings.captureRadius,
+            CaptureRadius = settings.planetRadius,
             ZoneFalloff = settings.zoneFalloff,
             MinScaleFactor = settings.minScaleFactor,
             MaxScaleFactor = settings.maxScaleFactor

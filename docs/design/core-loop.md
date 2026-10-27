@@ -10,12 +10,16 @@ Three loops, nested. The product *is* the loop; everything else supports it.
 
 ## 1. Moment-to-moment (seconds)
 
-Read the field → move the cube → scale a zone → the ship flies the result.
+Read the field → (move / resize the cube) → scale a zone → the ship flies the result.
 
 - **Read:** the warped sheet, the planets, the straight-line reference.
 - **Act:** grab inside the cube and pinch to scale the covered zone ([the cube](systems/cube.md)).
 - **See:** the flight — the ship launches on each modification and flies the current trajectory, and
-  the trajectory visual updates at launch. There is **no commit step** and **no prediction line**.
+  the trajectory visual updates at launch. There is **no prediction line**, and **no separate commit
+  action** — finishing the edit *is* the commit.
+
+Jobs 1–2 use a **fixed** cube: the only move is the grab-inside scale. Moving / resizing the cube
+enters at job 3 ([progression](systems/progression.md) §4).
 
 The beat is tight: the modification *is* the check.
 
@@ -23,12 +27,14 @@ The beat is tight: the modification *is* the check.
 
 Modify → the ship flies the current trajectory (a check) → keep shaping → pass.
 
-1. **Modify:** every committed pinch launches the ship along the resulting trajectory
-   ([the cube](systems/cube.md)) — no separate commit.
-2. **Check:** the flight **lands inside the window** `[Tmin, Tmax]` (pass) or **misses / crashes**
-   (fail).
-3. **Keep shaping:** a fail does **not** end the job — the player edits on, and a new modification
-   **interrupts** the flight. The launch is only a trajectory check.
+1. **Modify:** every completed pinch launches the ship along the resulting trajectory
+   ([the cube](systems/cube.md)) — the finished edit *is* the commit; there is no separate commit
+   button.
+2. **Check:** the flight **lands inside the window** `[Tmin, Tmax]` — that is the solve — or
+   **misses / crashes**, which is only a *wrong* answer, not a fail.
+3. **Keep shaping:** a miss does **not** end the job — the player edits on, and a new modification
+   **interrupts** the flight. The launch is only a check; the job ends when a solve lands or
+   **entropy runs out** (the fail).
 4. **Pass:** a landing in the window passes the job, graded on **entropy left** → 1–3 stars
    ([resources](systems/resources.md)).
 
@@ -45,10 +51,11 @@ Solve jobs in order; the map fills; stars accumulate ([progression](systems/prog
 
 ## 4. What the loop must do
 
-- **A goal:** the window `[Tmin, Tmax]` — one hard fail.
-- **A cost:** entropy — one score.
+- **A goal:** the window `[Tmin, Tmax]` — the target you must reach.
+- **A budget:** entropy — spend it all before you solve and the job **fails**; what is left is the
+  score.
 - **A legible read:** the field, so the player can *predict* the cube's effect.
 - **A payoff:** the ship-travel moment (the demo beat).
 
-If any of these is missing the loop reads as a toy. The gate ([vision](vision.md) §7) tests exactly
+If any of these is missing the loop reads as a toy. The validation ([vision](vision.md) §7) tests exactly
 this.

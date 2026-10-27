@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10000000000000000000000000000019, type: 3}
   m_Name: SpaceShapingSettings
   m_EditorClassIdentifier: 
+  runDistance: 1
+  cubeSize: 0.15
   stepSecs: 0.008333333
   maxSteps: 1200
-  launchSpeed: 1.068
   sourceStrengthScale: 0.02
   separationScale: 1.2
   dilationScale: 0.2
-  captureRadius: 0.06
+  planetRadius: 0.06
   zoneFalloff: 0.5
   minScaleFactor: 0.4
   maxScaleFactor: 2.5

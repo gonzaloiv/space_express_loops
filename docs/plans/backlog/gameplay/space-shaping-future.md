@@ -3,7 +3,7 @@
 **Status:** later · space shaping · updated 2026-10-26 — recorded, design only. Aligned with the lens/entropy model
 (2026-10-24): the **verb is the cube scale**, not moving sources; the **score is entropy**,
 not move count; there is **one view**, not a Map/Sculpt split. This doc records the
-variations that sit *after* the lens gate.
+variations that sit *after* the validation.
 
 **Related:** [vision](../../../design/vision.md) · [resources](../../../design/systems/resources.md) · [progression](../../../design/systems/progression.md) · POC · [integration](space-shaping-integration.md)
 
@@ -97,7 +97,7 @@ star thresholds (entropy par) are set from the secured solution's cost.
 ## 4. Data model
 
 - Source state is **baked into the puzzle asset** at author time (the seed generates the field
-  offline — see the [puzzle creator](../../in-progress/space-shaping-puzzle-creator.md)); the field
+  offline — see [puzzle creator improvements](../../in-progress/puzzle-creator-improvements.md)); the field
   is derived from the stored positions, and the grid from the player's zones — neither is stored.
 - Mass is coupled to size for now (`mass ∝ radius`); a later element could decouple them (a
   small heavy planet).

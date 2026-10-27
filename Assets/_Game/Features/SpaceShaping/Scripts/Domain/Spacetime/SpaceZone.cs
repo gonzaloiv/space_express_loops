@@ -28,7 +28,9 @@ namespace DigitalLove.Game.SpaceShaping
             float margin = Mathf.Min(inset.x, Mathf.Min(inset.y, inset.z));
             if (Falloff <= 0f)
                 return margin >= 0f ? 1f : 0f;
-            return Mathf.Clamp01(margin / Falloff);
+
+            float extent = Mathf.Min(HalfExtents.x, Mathf.Min(HalfExtents.y, HalfExtents.z));
+            return Mathf.Clamp01(margin / (Falloff * extent));
         }
 
         private static Vector3 Abs(Vector3 value) =>

@@ -22,20 +22,24 @@ than incidental.** Structure them asymmetrically:
 
 | Resource | Basis | Role | Failure mode |
 |---|---|---|---|
-| **Time** | ship proper time; dilation deep in a well | the **window** `[Tmin, Tmax]` | hard fail (outside it) |
+| **Time** | ship proper time; dilation deep in a well | the **window** `[Tmin, Tmax]` — the goal | none (a miss is only a wrong check) |
 | **Fuel** | the job's **given** launch fuel | the **brief** — make it work, or no money | (the job's difficulty) |
-| **Entropy** | the **Wrap's** cost — the modifications | the **eco rating** (pay) | soft (lower score) |
+| **Entropy** | the **Wrap's** cost — the modifications | the **budget** (fail) + the **eco rating** (score) | **hard fail** when it hits zero before a solve |
 
 - **Time = the window.** Relativity: the ship's proper-time clock ([relativity](relativity.md)).
 - **Fuel = the brief.** The launch you are *given*; make it work, or the money does not add up. Not a
-  lever. **Global for now** (`SpaceShapingSettings.launchSpeed`); per-job is deferred.
-- **Entropy = the score.** Every **modification** burns it; the grade is the entropy you *did not*
-  spend. **Retrying is free** — only modifications cost.
+  lever. **Global** (`SpaceShapingSettings.launchSpeed`) — the speed does not need to vary per job.
+- **Entropy = the budget and the score.** Every **completed modification** burns it (the cost is the
+  continuous scale delta, charged when the edit finishes); the grade is the entropy you *did not*
+  spend. **Retrying is free** — only modifications cost — but **running out before you solve fails
+  the job** (no budget left to find a solve).
 - **Reading the field reconciles them** — the field's natural assists are *free*, so you can edit
   little *and* arrive in the window.
 
-Why asymmetric: one hard fail keeps the puzzle crisp; a second hard fail doubles the frustration.
-Time is legible (a clock); entropy is a score (a grade). Fuel is the job's *given* — not a lever.
+Why asymmetric: **one hard fail** keeps the puzzle crisp — and it is entropy, not time. A miss is
+only a *wrong* answer (the launch is a check), so the player keeps shaping; the run ends only when a
+solve lands or the entropy is gone. Time is legible (a clock) and is the target; entropy is a budget
+*and* a score. Fuel is the job's *given* — not a lever.
 
 ### Why the modifications cost entropy
 
@@ -63,29 +67,32 @@ This is the design insight: *the resource and the mechanic justify each other.*
 
 - **Entropy is a surfaced bar.** It drains with each modification; what remains is the order the
   Wrap has not yet spent.
-- **Zero entropy (for now):** the bar is depleted and a simple "you lose" feedback plays. The
+- **Zero entropy:** the bar is depleted — the **fail**; a simple "you lose" feedback plays. The
   *visual* collapse is polish, deferred ([vision](../vision.md) §6).
 - The path, the ship's clock, and the entropy cost read live on the flight
   ([core loop](../core-loop.md)).
 
 ## Failure
 
-- **A miss or a crash** (outside `[Tmin, Tmax]`, or hitting a planet) reports a **fail**. For now
-  that is all — no destroy visual; the player **keeps shaping** ([core loop](../core-loop.md) §2).
-- **Soft:** spend too much entropy — a lower grade. Zero entropy does **not** fail the run on its
-  own; entropy is a score, not a cap.
-- **Money is flavour only** — failing costs nothing but the entropy the modifications already spent.
+- **A miss or a crash** (outside `[Tmin, Tmax]`, or hitting a planet) is only a **check** — the
+  launch says right/wrong. It does **not** end the job; the player **keeps shaping**
+  ([core loop](../core-loop.md) §2).
+- **The one hard fail:** entropy reaches **zero** before a solve — the player has no budget left to
+  find one. Entropy spent is what costs; the grade is what remains.
+- **Money is flavour only** — a failed job costs nothing but the entropy already spent.
 
 ## Tuning
 
 - `entropy` = a per-job **budget**. Each modification drains it; the grade is the entropy **left**.
-- **The bar and the star par come from the puzzle creator:** the budget is based on the **number of
-  modifications** the level's solution needs, and the creator derives it ([puzzle creator](../../plans/in-progress/space-shaping-puzzle-creator.md)).
+- **The bar and the star grade come from the puzzle creator:** the budget is set from the solution's
+  **continuous cost** (`Σ|Δscale|`, not a move count), charged when each edit completes, and the
+  creator derives it ([puzzle creator improvements](../../plans/in-progress/puzzle-creator-improvements.md)).
 - `fuel` = the **given** launch → the launch speed. **Narrative, not a stat**: the launch is fixed — a
-  launch that would *fail* — and shaping is what makes it land. **Global for now**; per-job is
-  deferred.
+  launch that would *fail* — and shaping is what makes it land. **Global** — one speed, the same for
+  every job.
 - `time = Σ dτ` — proper time accumulated in `TrajectoryIntegrator`, carried in `TrajectoryResult`.
-- Per job: arrive inside `[Tmin, Tmax]` (hard) and be graded on entropy left (stars / eco rating).
+- Per job: arrive inside `[Tmin, Tmax]` (the goal) and be graded on entropy left (stars / eco rating);
+  run out of entropy first and the job fails.
 
 All pure C#, deterministic, testable — no change to the architecture.
 

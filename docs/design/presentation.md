@@ -16,13 +16,16 @@ built toward it.
 - Readouts: **pass / fail**, the **ship's clock**, the **window** `[Tmin, Tmax]`, the **entropy
   bar**, and the **stars** ([resources](systems/resources.md)).
 - The **trajectory line is removed** — the flight is the reveal, and the visual updates at launch.
+- **The time face reads on the lattice** — its cells **pulse at the local clock rate** (spacing = space,
+  pulse = time), and the zone is **tinted cool/warm** (slower / faster clock)
+  ([the cube](systems/cube.md)).
 - It could also ride the **TTS panel** screen ([voice panel plan](../plans/backlog/presentation/tts-voice-panel-personality.md)).
 
 ## Art direction
 
 - **Stylised** — not photoreal. Exact language still to be closed.
 - The **hologram** look (tinted, semi-transparent, fresnel-rimmed) is a recorded option for the
-  bubble then the edition view ([hologram plan](../plans/backlog/presentation/hologram-look.md)).
+  bubble ([hologram plan](../plans/backlog/presentation/hologram-look.md)).
 - The cube must read as a tangible instrument; the field must read (the mesh warp is the scale's
   only tell — [the cube](systems/cube.md)).
 
@@ -34,8 +37,8 @@ built toward it.
 
 ## Mixed reality
 
-- The **bubble is present** in the slice — the playfield is anchored in the room; Room/Bubble are
-  the two MR views ([vision](vision.md) §3).
+- The **bubble is present** in the slice — the playfield is anchored in the room; the room-scale
+  **Room** view is **legacy (cut)** ([vision](vision.md) §3).
 
 ## Tuning
 

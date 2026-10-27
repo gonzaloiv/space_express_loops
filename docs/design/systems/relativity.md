@@ -36,9 +36,9 @@ The player's **modifications** — moving and scaling the cube over the sources
 | Effect | Basis | Game verb | Cost | Legibility |
 |---|---|---|---|---|
 | Curved space (have) | potential well / geodesic | move mass to bend the path | done | high |
-| **Time dilation** | clocks slow deep in a well (and when fast) | route the ship to **spend or save ship-time**; hit the **window**; the score is **entropy left** | low | high — a clock is readable |
+| **Time dilation** | clocks slow deep in a well, when fast, and where the metric is scaled | route the ship to **spend or save ship-time**; hit the **window**; the score is **entropy left** | low | high — a clock is readable |
 | **Frame dragging** | a spinning mass twists spacetime | **spinning planets swirl** the path; adds direction, not just position | low | high — visible spiral |
-| **Event horizon** | a point of no return | a hazard that is a *true* fail, not a UI label | low | very high |
+| **Event horizon** | a point of no return | a hazard — a launch that crosses it is a *wrong* check (it costs an edit), not a run-ending fail | low | very high |
 | Gravitational lensing | light bends around mass | route a signal/beacon around an occluder | medium | medium-high |
 | Geodesic motion | freely-falling = straightest line in curved space | makes motion feel "purer"; subtle | medium | medium |
 | Gravitational waves | moving masses ripple spacetime | launch-timing puzzles | high | low — likely cut |
@@ -49,9 +49,10 @@ The player's **modifications** — moving and scaling the cube over the sources
 The single best relativity idea for this game: it turns geometry into **geometry + time** and makes
 relativity *the* mechanic.
 
-- A **ship clock** ticks slower the deeper the ship sits in a well (and, optionally, the faster it
-  moves): `dτ = dt · f(Φ, |v|)`. Stylized: `dτ ≈ dt · sqrt(max(0, 1 - |v|²/c²)) · sqrt(1 + 2Φ/c²)`,
-  or a game-tuned linear clamp `dτ ≈ dt · clamp(1 + kΦ·Φ - kv·|v|²)`.
+- A **ship clock** ticks slower the deeper the ship sits in a well **and the faster it moves**:
+  `dτ = dt · √(max(0, 1 + 2Φ/c² − v²/c²))` (**two-term**: GR depth + SR speed), times the Wrap's scale
+  (`· g(scale)`, the **time face**). The launch is fixed, but the ship's speed along the path still
+  varies with the wells.
 - Track proper time by accumulating one scalar in the existing loop
   (`TrajectoryIntegrator.Integrate`) — no new math path, no allocations.
 - New objective: **arrive within the window `[Tmin, Tmax]`**, then be graded on **entropy left**
@@ -59,6 +60,9 @@ relativity *the* mechanic.
 - Why it works: the *shortest* path and the *cheapest-time* path differ. Diving deep past a planet
   is short but the clock crawls; swinging wide is long but the clock races — a real choice the
   player can *see* and *reason about*.
+- **One verb, two faces.** The scale changes the metric: **space** (a shortcut / the path) and
+  **time** (the clock), driven by the **same factor** ([the cube](cube.md) §Feedback). A **planetless**
+  level strips the space face and leaves the clock — the **time tutorial**.
 
 ### Frame dragging (variety mechanic)
 - Give `SpaceSource` a **spin** (a Vector3 angular velocity, or a scalar + axis).
@@ -66,14 +70,16 @@ relativity *the* mechanic.
 - The first source property that adds **direction**, not just position/scale — more variety, no new UI.
 - Cheap: one tangential term in `Acceleration`; deterministic. Legible: the path visibly spirals.
 
-### Event horizon (the missing stake)
-The game's core risk is that it has **no stake**. A black hole is a horizon the ship can never
-leave — a genuine fail, not a UI colour.
+### Event horizon (a hazard, not the stake)
+The stake is the **entropy budget** ([resources](resources.md)) — the run ends when the budget does,
+not when the ship dies. A black hole is then a strong *hazard*: a horizon the ship can never leave,
+so a launch that crosses it is a **wrong check** that costs an edit.
 
-- Add a source kind with a horizon radius: crossing it ends the attempt.
+- Add a source kind with a horizon radius: crossing it wastes the launch (and its entropy).
 - Cheap: reuse the crash classification in `TrajectoryIntegrator.Classify`, distinguishing
   "inescapable" from "bumped a planet".
-- Visually the strongest element on the menu, and the honest source of tension.
+- Visually the strongest element on the menu; it raises the cost of a bad read without adding a
+  second fail state.
 
 ## Feedback
 
@@ -83,18 +89,18 @@ leave — a genuine fail, not a UI colour.
 
 ## Failure
 
-- **Event horizon** = a true fail (attempt over) — the stake. (Hard fail vs a soft "cannot pass"
-  wall is open.)
+- **The one hard fail is entropy** ([resources](resources.md)); a horizon is a **hazard** — a wrong
+  check that costs an edit, not a run-ending fail. (Whether crossing it ends the launch outright or
+  is a soft "cannot pass" wall is open.)
 
 ## Tuning
 
-- Dilation model: depth-only `dτ = dt · clamp(1 + kΦ·Φ)` (recommended) vs depth + speed.
-- One or two mechanics in the competition slice: time dilation is the core bet; frame dragging is
-  the second, *after* the core puzzle is proven.
+- Dilation model: **two-term** — `dτ = dt · √(max(0, 1 + 2Φ/c² − v²/c²)) · g(scale)` (GR depth + SR speed).
+- One mechanic in the first 8: time dilation is the core bet. Frame dragging (rotate) is the
+  second, for **later puzzles**, after the core puzzle is proven.
 
 ## Open questions
 
-- Time dilation from **depth only**, **speed only**, or both? Depth-only reads cleanly as "gravity
-  slows time"; adding speed muddies the choice.
-- Is the horizon a **hard fail** or a soft wall?
+- Does crossing the horizon end the launch outright, or is it a soft "cannot pass" wall? (Either
+  way it is a hazard, not the run-ending fail — that is entropy.)
 - Does spin belong on planets (a spun-up planet) or a new body (a neutron-star-like spinner)?

@@ -7,7 +7,7 @@ these docs describe the intended game, not what is shipped.
 
 | Doc | Concern |
 |---|---|
-| [Vision](vision.md) | The pitch, the pillars, the scope, the gate, what not to do. |
+| [Vision](vision.md) | The pitch, the pillars, the scope, the validation, what not to do. |
 | [Core loop](core-loop.md) | What the player does: moment-to-moment, a job, the company. |
 | [The cube](systems/cube.md) | The one instrument, end to end. |
 | [Resources](systems/resources.md) | Time (window), fuel (brief), entropy (score). |

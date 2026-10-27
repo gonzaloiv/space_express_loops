@@ -1,7 +1,7 @@
 # Space Shaping — Feel & Presentation Polish (backlog)
 
 **Status:** later · presentation · updated 2026-10-26 — collected, design only, **saved for later**. These are the *feel* beats that
-make the core loop land, after the lens gate passes and
+make the core loop land, after the validation passes and
 the puzzle content exists — a working game first. None of these gate the mechanic; they are the
 polish that turns "works" into "wow". Not current work: the focus is **interesting puzzles**.
 
