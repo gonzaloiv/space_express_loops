@@ -69,7 +69,7 @@ restore; `GameStartState` owns the resume path.
 - The sector field and `SectorFieldSpawner` as the campaign map substrate.
 - The generic level plumbing: `LevelSelector`, `LevelCompleteCookie`, `PlayerData` (order, current id,
   stars). These exist in `_Modules/Casual` but are **not wired into `_Game`** yet.
-- The shared planet view (`SilentPlanetBehaviour` + `NodeBody` variants and spin) — **already unified
+- The shared planet view (`FieldPlanetBehaviour` + `NodeBody` variants and spin) — **already unified
   (2026-10-28):** the POC spawns it from the shared prefab and `SpaceSourceView` is removed.
 - XR rig/hands, the cube two-hand scale gesture, and the POC's lattice, zone, trajectory and ship-travel
   views.
@@ -130,7 +130,7 @@ not scenery.
 - **The puzzle generates its own field from its seed.** The campaign field does **not** supply a puzzle’s
   layout ([variations](../../ideas/variations.md) §3); the two fields are independent.
 - **The planet presentation is shared.** Both fields spawn the same pooled planet view
-  (`SilentPlanetBehaviour`); only the layout source differs. Do not add a puzzle-only planet view.
+  (`FieldPlanetBehaviour`); only the layout source differs. Do not add a puzzle-only planet view.
 - **Aperture.** Raise `viewRadius` / `fieldRadius` in the **map slice (I1)** because the map needs the wide
   field — not because puzzle content moves onto the field. The wired field is deliberately room-local
   (`viewRadius 1.2`, `fieldRadius 1.8`).
@@ -148,7 +148,7 @@ not scenery.
 | `GameStartState` | boot into the campaign map | new boot/map Flow |
 | `GameSnapshot` | `bubbleOffsetLocal` / `bubbleYawDegrees`, `silentPlanetSeed` | placement/campaign snapshot |
 | `UniverseView` | bubble mode, room anchor, restore | keep; do not delete with the level container |
-| `Decoration` | shared planet view + prefab (`SilentPlanetBehaviour`, `SilentPlanet.prefab`) | `Nodes` — **done 2026-10-28** |
+| `Decoration` | shared planet view + prefab (`FieldPlanetBehaviour`, `FieldPlanet.prefab`) | `Nodes` — **done 2026-10-28** |
 
 **Cut order:** extract the keepers → land the puzzle flow (I0) → map/HUD (I1) → progression (I2) → delete
 the legacy flow (I3). Cutting first breaks the keepers.

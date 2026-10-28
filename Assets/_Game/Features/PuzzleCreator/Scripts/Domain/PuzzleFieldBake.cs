@@ -46,40 +46,65 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             out PuzzleBakeStatus status, out PuzzleZone[] solution)
         {
             solution = null;
-            status = PuzzleBakeStatus.UnsupportedBrief;
             if (!brief.SupportsSingleZone)
-                return null;
+                return Fail(PuzzleBakeStatus.UnsupportedBrief, out status);
 
-            status = PuzzleBakeStatus.NoRun;
-            if (!PuzzleWindow.TryCrossing(field, settings, out float crossing))
-                return null;
+            if (!PrepareField(field, settings, brief, out float crossing))
+                return Fail(PuzzleBakeStatus.NoRun, out status);
+
+            if (!brief.OffPath && !StartFails(field, settings))
+                return Fail(PuzzleBakeStatus.StartNotFailed, out status);
+
+            if (!Solve(field, settings, brief, crossing, out PuzzleSolution found, out bool startRejected))
+                return Fail(PuzzleBakeStatus.NoSolution, out status);
+
+            if (startRejected)
+                return Fail(PuzzleBakeStatus.StartNotFailed, out status);
+
+            solution = found.Zones;
+            return Verified(field, found, brief, settings, out status);
+        }
+
+        private static PuzzleData Fail(PuzzleBakeStatus value, out PuzzleBakeStatus status)
+        {
+            status = value;
+            return null;
+        }
+
+        private static bool PrepareField(
+            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, out float crossing)
+        {
+            if (!PuzzleWindow.TryCrossing(field, settings, out crossing))
+                return false;
 
             if (!brief.OffPath)
                 PuzzleWindow.SetCrossing(field, crossing, brief.WindowTightness);
 
-            status = PuzzleBakeStatus.StartNotFailed;
-            if (!brief.OffPath && !StartFails(field, settings))
-                return null;
+            return true;
+        }
 
-            status = PuzzleBakeStatus.NoSolution;
-            if (!PuzzleSolutionSearch.TrySelect(field, settings, brief, out PuzzleSolution found))
-                return null;
+        private static bool Solve(
+            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, float crossing,
+            out PuzzleSolution found, out bool startRejected)
+        {
+            startRejected = false;
+            if (!PuzzleSolutionSearch.TrySelect(field, settings, brief, out found))
+                return false;
 
-            if (brief.OffPath
-                && !PuzzleWindow.SetSolution(field, crossing, brief.WindowTightness, found.ShipTime))
-            {
-                status = PuzzleBakeStatus.NoSolution;
-                return null;
-            }
+            if (!SettleWindow(field, settings, brief, crossing, found.ShipTime))
+                return false;
 
-            if (!StartFails(field, settings))
-            {
-                status = PuzzleBakeStatus.StartNotFailed;
-                return null;
-            }
+            startRejected = !StartFails(field, settings);
+            return true;
+        }
 
-            solution = found.Zones;
-            return Verified(field, found, brief, settings, out status);
+        private static bool SettleWindow(
+            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, float crossing, float shipTime)
+        {
+            if (!brief.OffPath)
+                return true;
+
+            return PuzzleWindow.SetSolution(field, crossing, brief.WindowTightness, shipTime);
         }
 
         private static PuzzleData Verified(

@@ -10,7 +10,7 @@ scale the space, scale the content; the ship flies the deformed spacetime.
 
 | Plan | Area | Why here |
 |---|---|---|
-| [Space shaping — physics (clock + mass)](in-progress/space-shaping-physics.md) | space shaping | Clock, mass, proper-time window, and the off-path clock bake are landed; the POC re-bake + headset pass remain. |
+| [Space shaping — physics (clock + mass)](in-progress/space-shaping-physics.md) | space shaping | Landed and 57/57 green; the POC carries the off-path clock level. Headset pass only, then retire. |
 
 ## Next
 

@@ -13,7 +13,7 @@ corrections, the selector/HUD/cut-depth notes and the validation-gate split are 
 (direct pick only), cube placement (authored) and launch (global) were also decided. The remaining §6
 contracts are the campaign shape, progression record, runtime puzzle contract, run/readout and ownership.
 
-**Applied 2026-10-28:** the POC now spawns the shared planet view (`SilentPlanetBehaviour`) from the shared
+**Applied 2026-10-28:** the POC now spawns the shared planet view (`FieldPlanetBehaviour`) from the shared
 prefab; `SpaceSourceView` and the POC-only `PuzzlePlanet.prefab` are removed, so I0 reuses the view as-is.
 
 ## 1. Close now (settled elsewhere)

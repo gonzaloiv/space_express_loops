@@ -1,8 +1,8 @@
 # Space Shaping — Physics (clock + mass)
 
-**Status:** now · space shaping · updated 2026-10-28 — the two-term clock and `mass ∝ radius³` are
-landed; the creator now bakes the off-path clock level (start margin + off-path cube) on a
-**proper-time** window. What remains is the POC re-bake and the headset pass.
+**Status:** now · space shaping · updated 2026-10-28 — the two-term clock, `mass ∝ radius³`, the
+proper-time window, and the off-path clock bake are landed; the POC now carries a freshly baked clock
+level; EditMode is **57/57 green**. What remains is the headset pass.
 
 **Related:** [cube](../../design/systems/cube.md) · [relativity](../../design/systems/relativity.md) ·
 [progression](../../design/systems/progression.md) §4
@@ -73,13 +73,17 @@ baking variants.
   `0.005`), so a tight window is finally reachable.
 - **Tests.** `PuzzleClockBakeTests` covers the clock bake (bare arrives outside the window, the
   solution arrives inside, the cube sits off-path); `PuzzleBakeTests` covers the proper-crossing
-  window, the start-margin bake, and the expanded brief.
+  window, the start-margin bake, and the expanded brief. **57/57 EditMode green.**
+- **POC.** `PuzzleSeed_Clock_Puzzle.asset` is baked from seed 1 (8 planets, `1.05×` launch,
+  `0.005` window) and added to `SpaceShapingPOC.unity`; `PuzzleSeed_Clock.asset` records the seed's
+  dials. The baked window is `[0.5662, 0.5726]` s and the clock solution scales the off-path planet
+  to `1.335×`. The existing job-1 asset is untouched and still verifies.
 
 ## Exit
 
 The clock uses the two-term form; mass is `∝ radius³`; a puzzle re-bakes and verifies with the retuned
 field; an off-path level reads as a pure clock puzzle.
 
-**Met:** clock, mass, proper-time window, re-bake, and the broader `StartFails`. **Met in code:**
-the off-path clock level (start margin + off-path cube) and its EditMode coverage. **Remaining:** the
-POC re-bake with the new window and the headset pass.
+**Met:** clock, mass, proper-time window, a verified re-bake, the broader `StartFails`, and the
+off-path clock level in code, tests, and the POC. **Remaining:** the headset pass (the manual
+checklist is in the hand-off), then retire this plan.
