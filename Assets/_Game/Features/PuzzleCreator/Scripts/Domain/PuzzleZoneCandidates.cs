@@ -16,7 +16,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public static Vector3[] Centres(PuzzleData puzzle, float maxCubeSize)
         {
             List<Vector3> centres = new();
-            AddSources(centres, puzzle.sources, puzzle);
+            AddSources(centres, puzzle.sources);
             AddPairs(centres, puzzle.sources, maxCubeSize);
             centres.Sort((a, b) => RunDistance(a, puzzle).CompareTo(RunDistance(b, puzzle)));
             return Trim(centres, MaxCentres);
@@ -48,9 +48,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             for (int i = 0; i < puzzle.sources.Length; i++)
             {
-                if (IsAnchor(puzzle.sources[i].home, puzzle))
-                    continue;
-
                 if (IsInside(zone, puzzle.sources[i].home))
                     return true;
             }
@@ -107,13 +104,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             falloff = falloff
         };
 
-        private static void AddSources(List<Vector3> centres, PuzzleSource[] sources, PuzzleData puzzle)
+        private static void AddSources(List<Vector3> centres, PuzzleSource[] sources)
         {
             for (int i = 0; i < sources.Length; i++)
-            {
-                if (!IsAnchor(sources[i].home, puzzle))
-                    Add(centres, sources[i].home);
-            }
+                Add(centres, sources[i].home);
         }
 
         private static void AddPairs(List<Vector3> centres, PuzzleSource[] sources, float maxCubeSize)
@@ -150,9 +144,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static bool IsEndpoint(Vector3 home, PuzzleData puzzle) =>
             Vector3.Distance(home, puzzle.origin) < MergeDistance
             || Vector3.Distance(home, puzzle.destination) < MergeDistance;
-
-        private static bool IsAnchor(Vector3 home, PuzzleData puzzle) =>
-            Vector3.Distance(home, puzzle.origin) < MergeDistance;
 
         private static bool IsInside(PuzzleZone zone, Vector3 point)
         {

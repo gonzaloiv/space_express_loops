@@ -38,6 +38,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (solution == null || solution.Length != puzzle.moves)
                 return false;
 
+            if (!MatchesFixed(solution, puzzle))
+                return false;
+
             for (int i = 0; i < solution.Length; i++)
             {
                 float size = solution[i].halfExtents.x * 2f;
@@ -57,6 +60,28 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         private static bool SameSize(PuzzleZone a, PuzzleZone b) =>
             Mathf.Abs(a.halfExtents.x - b.halfExtents.x) <= Tolerance;
+
+        private static bool MatchesFixed(PuzzleZone[] solution, PuzzleData puzzle)
+        {
+            if (puzzle.fixedZones == null || puzzle.fixedZones.Length == 0)
+                return true;
+
+            if (solution.Length != puzzle.fixedZones.Length)
+                return false;
+
+            for (int i = 0; i < solution.Length; i++)
+            {
+                if ((solution[i].centre - puzzle.fixedZones[i].centre).sqrMagnitude
+                    > Tolerance * Tolerance)
+                    return false;
+
+                if ((solution[i].halfExtents - puzzle.fixedZones[i].halfExtents).sqrMagnitude
+                    > Tolerance * Tolerance)
+                    return false;
+            }
+
+            return true;
+        }
 
         private static TrajectoryResult Simulate(SpaceShapingSession session) =>
             session.Simulate(session.BuildField(), new TrajectoryIntegrator(), new ShipLaunch());

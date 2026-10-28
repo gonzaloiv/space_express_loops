@@ -13,12 +13,23 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public PuzzleFieldShape fieldShape = PuzzleFieldShape.Auto;
 
         [Header("Brief")]
-        [Tooltip("The cube may be moved over the field. Fixed levels bake the cube where the solution sits.")]
+        [Tooltip("The cube may be moved over the field. With this off, a multi-zone level uses the fixed cubes below.")]
         public bool translatable;
 
-        [Tooltip("How many zones the solution scales (1–3). Multi-zone needs translatable; the cube moves between zones.")]
+        [Tooltip("How many zones the solution scales (1–3). With translatable off, moves 2 means two fixed cubes.")]
         [Min(1)]
         public int moves = 1;
+
+        [Header("Fixed cubes")]
+        [Tooltip("The two fixed cube centres for a fixed two-zone level. Place each on a field source.")]
+        public Vector3 fixedZoneA;
+        public Vector3 fixedZoneB;
+        [Tooltip("The fixed cube size, in metres.")]
+        [Min(0.01f)]
+        public float fixedZoneSize = 0.105f;
+
+        [Tooltip("POC only: keep a fixed two-zone bake even when one fixed cube alone solves.")]
+        public bool proof;
 
         [Tooltip("The frame may be resized at runtime (1x to 2x).")]
         public bool resizable;

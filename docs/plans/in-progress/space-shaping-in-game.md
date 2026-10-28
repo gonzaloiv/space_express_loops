@@ -1,7 +1,7 @@
 # Space Shaping — In the Game (one puzzle)
 
 **Status:** next · space shaping · updated 2026-10-28 — boot `Game.unity` into one baked puzzle: the
-puzzle flow, the result seam and the job card. First of six integration plans; **gated on validation 1**.
+puzzle flow and the result seam. First of six integration plans; **gated on validation 1**.
 
 **Related:** [campaign map](space-shaping-campaign-map.md) · [HUD + validation 2](space-shaping-hud-validation.md) ·
 [progression](space-shaping-progression.md) · [legacy cut](space-shaping-legacy-cut.md) ·
@@ -30,7 +30,7 @@ left is the grade), **no in-level persistence**, Quest 3S **72 fps**.
 | Boot entry | A temporary **`PuzzleBootState`** after setup/splash awaits the room, then enters `SpaceShapingState`. | Skips the legacy round spawn and the welcome TTS; becomes `CampaignState` in the [map plan](space-shaping-campaign-map.md) instead of being thrown away. |
 | Puzzle wiring | One serialized **`PuzzleData`** field, set to `PuzzleSeed_Shape_Planets_Puzzle.asset`; drop the `puzzles[]` array and `puzzleIndex`. | The POC's array is a test harness; the map plan turns the field into a catalogue lookup. |
 | Puzzle placement | The puzzle rig is parented under the **room-anchored bubble parent** the map will use, with an authored local pose. | The POC's root sits at world `(0,0,0)`; in `Game.unity` the puzzle would land at floor height. The map's scale-up then becomes a transform change, not a re-parent. |
-| Puzzle id | Set `id: 01_01` on the test asset. | Both baked assets ship `id:` empty, so `LevelData.IntroKey` resolves to `level__init`; the job card and the cookies need a real id. |
+| Puzzle id | Set `id: 01_01` on the test asset. | Both baked assets ship `id:` empty, so `LevelData.IntroKey` resolves to `level__init`; the campaign map and the cookies need a real id. |
 | Result surface | **Temporary** — lab panel / debug line. | The real result panel is the [HUD plan](space-shaping-hud-validation.md); building it twice is waste. |
 | Run owner | **No `PuzzleRun` type in this plan** — `SpaceShapingState` keeps ownership of setup, session, integrator and launch. | The type does not exist; adding it now is one caller and no seam. The [map plan](space-shaping-campaign-map.md) introduces it only if it needs per-job runs. |
 | Legacy states | Remove the legacy states we no longer route to from `Main.states` (files stay for the [cut](space-shaping-legacy-cut.md)). | `StateMachineFactory.Create` calls `Init` on **every** state (`StateMachineFactory.cs:18-27`), and `GameStartState.Init` calls `levelContainer.Init()` (`GameStartState.cs:34`) → `HideAll()` + the legacy view-mode fanout. |
@@ -68,18 +68,6 @@ alive, the second skips setup/splash and breaks the validation-2 path.
   [HUD plan](space-shaping-hud-validation.md); do not build it here.
 - **Exit:** solve → result fires with 1–3 stars; a miss keeps shaping; a crash with no flight still fires
   its result; budget exhaustion fires Failed; an edit after a result does not resurrect it.
-
-### G3 — Job card
-
-- The job's **manual entry** and **tech-voice line** play as two entries on the TTS card, read from the
-  job's localization keys (`LevelData.IntroKey` → `level_{id}_init`). The helper is single-entry
-  (`Say(key, onComplete)`), so the two entries are chained calls; wire the card on the puzzle state and set
-  it in front of the camera on enter, or it speaks from its authored spot.
-- The test job's keys are authored here (the full set per job is the
-  [catalogue](space-shaping-catalogue.md)); if a key is missing the card speaks the generic text rather than
-  going silent.
-- **Exit:** entering the puzzle plays both entries in order, once per entry; no card on unrelated state
-  changes.
 
 ## 3. Runtime puzzle contract
 
@@ -132,4 +120,5 @@ alive, the second skips setup/splash and breaks the validation-2 path.
 - Save, stars, reset semantics — [progression](space-shaping-progression.md).
 - Deleting the legacy flow or scene objects — [legacy cut](space-shaping-legacy-cut.md).
 - Authoring more than the one puzzle — [catalogue](space-shaping-catalogue.md).
+- Job card intro/TTS — moved to [campaign map](space-shaping-campaign-map.md) M3.
 - Multi-zone solutions — [multi-zone](../in-progress/space-shaping-multizone.md).

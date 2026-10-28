@@ -20,8 +20,8 @@ campaign.
 
 | Plan | Area | Why here |
 |---|---|---|
-| [Space shaping — in the game (one puzzle)](backlog/space-shaping-in-game.md) | space shaping | Boot `Game.unity` into one baked puzzle: flow, result seam, job card. **Gated on validation 1.** |
-| [Space shaping — campaign map](backlog/space-shaping-campaign-map.md) | space shaping | Cube map, pick → scale up → play → back; keeper moves out of `LevelContainer`. |
+| [Space shaping — in the game (one puzzle)](backlog/space-shaping-in-game.md) | space shaping | Boot `Game.unity` into one baked puzzle: flow, result seam. **Gated on validation 1.** |
+| [Space shaping — campaign map](backlog/space-shaping-campaign-map.md) | space shaping | Cube map, pick → brief → scale up → play → back; keeper moves out of `LevelContainer`. |
 | [Space shaping — HUD + validation 2](backlog/space-shaping-hud-validation.md) | space shaping | Entropy, clock window, result/fail; **this exit is the gate** for the campaign. |
 | [Space shaping — progression save](backlog/space-shaping-progression.md) | space shaping | Solved jobs + stars, reset, placement carve-out. After the gate. |
 | [Space shaping — legacy cut](backlog/space-shaping-legacy-cut.md) | space shaping | Delete the route/round/economy flow once the keepers are out. After the gate. |

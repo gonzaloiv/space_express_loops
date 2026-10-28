@@ -34,6 +34,17 @@ built toward it.
 - The per-job **manual and tech voice ride the TTS card** ([jobs](jobs.md)); the HUD itself stays
   world-anchored ([voice panel idea](../ideas/tts-voice-panel.md)).
 
+## Readout look — data terminal
+
+The lab readout borrows the **data-dashboard** language ([opencode.ai/data](https://opencode.ai/data)):
+a flat `#161616` pane, hairline neutrals (`#D4D4D4` values, `#A3A3A3` labels, `#707070` faint), tabular
+figures on a 0.55 em grid, and one indigo accent `#3B5CF6` for the live/pending value. Red `#FF4D40` is
+reserved for a fault (overflow, crash, out of entropy); `#808080` is the committed bar. Unchecked rows
+stay muted, a checked row takes the accent. The reset control is `#242424` idle / `#303030` hover /
+accent pressed.
+
+This is the lab panel first; the main HUD and store panels take the same tokens in a later pass.
+
 ## Art direction
 
 - **Stylised** — not photoreal. Exact language still to be closed.
@@ -60,5 +71,5 @@ built toward it.
 ## Open questions
 
 - Final art language and the bubble/planet/cube look.
-- Final HUD placement and look.
+- Final HUD placement; the readout look is settled (above).
 - The SFX list (travel, scale, grade) — [feel polish](../ideas/feel-polish.md).

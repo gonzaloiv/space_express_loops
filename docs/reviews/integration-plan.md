@@ -26,6 +26,10 @@ view as-is.
 campaign map, HUD + validation 2, progression, legacy cut, catalogue + acceptance. The gate moved to the end
 of the HUD plan; each contract (§6) now lives in the plan that consumes it.
 
+**Applied 2026-10-28 (reduce):** the job card moved from [in the game](../plans/backlog/space-shaping-in-game.md)
+to [campaign map](../plans/backlog/space-shaping-campaign-map.md) M3; the in-the-game plan is the puzzle
+flow and result seam only.
+
 ## 1. Close now (settled elsewhere)
 
 | Item | Decision | Evidence |
@@ -72,8 +76,8 @@ of the HUD plan; each contract (§6) now lives in the plan that consumes it.
 
 This was a project, not a morning. It is now six plans, each one sitting, with the gate kept:
 
-- **In the game** — one puzzle in `Game.unity`, the flow, the result seam, the job card.
-- **Campaign map** — cube map, pick → scale up → play → back; keeper moves.
+- **In the game** — one puzzle in `Game.unity`, the flow, the result seam.
+- **Campaign map** — cube map, pick → brief → scale up → play → back; keeper moves.
 - **HUD + validation 2** — entropy, clock window, result/fail. **Its exit is the gate.**
 - **Progression, legacy cut, catalogue + acceptance** — only after the gate.
 

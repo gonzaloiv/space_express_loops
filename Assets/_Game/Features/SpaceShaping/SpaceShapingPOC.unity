@@ -269,8 +269,8 @@ MonoBehaviour:
   committedFill: {fileID: 25731442}
   pendingFill: {fileID: 1398640557}
   pendingRenderer: {fileID: 1398640558}
-  pendingColor: {r: 1, g: 0.62, b: 0.2, a: 1}
-  overflowColor: {r: 1, g: 0.3, b: 0.25, a: 1}
+  pendingColor: {r: 0.23137255, g: 0.36078432, b: 0.9647059, a: 1}
+  overflowColor: {r: 1, g: 0.3019608, b: 0.2509804, a: 1}
 --- !u!1 &4146020
 GameObject:
   m_ObjectHideFlags: 0
@@ -14970,9 +14970,9 @@ MonoBehaviour:
   panel: {fileID: 3589735}
   grabbable: {fileID: 365629132}
   face: {fileID: 1734411859}
-  idleColor: {r: 0.16, g: 0.22, b: 0.32, a: 1}
-  hoverColor: {r: 0.24, g: 0.4, b: 0.55, a: 1}
-  pressedColor: {r: 1, g: 0.62, b: 0.2, a: 1}
+  idleColor: {r: 0.14117648, g: 0.14117648, b: 0.14117648, a: 1}
+  hoverColor: {r: 0.1882353, g: 0.1882353, b: 0.1882353, a: 1}
+  pressedColor: {r: 0.23137255, g: 0.36078432, b: 0.9647059, a: 1}
   pressedSecs: 0.12
 --- !u!1 &365867168
 GameObject:
@@ -45034,9 +45034,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1000000000000000000000000000001c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.SpaceShapingState
-  puzzles:
-  - {fileID: 11400000, guid: 0760c17bee9d2b1408949f1fe2e7bd1f, type: 2}
-  - {fileID: 11400000, guid: 84d1f75a343c5954e8f8fb10ec8e707a, type: 2}
+  puzzles: []
   settings: {fileID: 11400000, guid: 1000000000000000000000000000001a, type: 2}
   view: {fileID: 1095678997}
   ship: {fileID: 1688476328}

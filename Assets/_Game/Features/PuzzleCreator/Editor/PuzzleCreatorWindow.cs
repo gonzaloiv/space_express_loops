@@ -33,7 +33,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         private void DrawInputs()
         {
-            seed = (PuzzleSeed)EditorGUILayout.ObjectField("Seed", seed, typeof(PuzzleSeed), false);
+            seed = (PuzzleSeed)EditorGUILayout.ObjectField(
+                "Seed asset", seed, typeof(PuzzleSeed), false);
             settings = (SpaceShapingSettings)EditorGUILayout.ObjectField(
                 "Settings", settings, typeof(SpaceShapingSettings), false);
             shape = (PuzzleShapeAsset)EditorGUILayout.ObjectField(
@@ -53,19 +54,58 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
             EditorGUILayout.LabelField("Brief", BriefText(seed));
             EditorGUI.BeginChangeCheck();
+            int seedValue = EditorGUILayout.IntField("Seed value", seed.seed);
+            int planetCount = EditorGUILayout.IntField("Planet count", seed.planetCount);
             PuzzleFieldShape fieldShape =
                 (PuzzleFieldShape)EditorGUILayout.EnumPopup("Field shape", seed.fieldShape);
+            bool translatable = EditorGUILayout.Toggle("Translatable", seed.translatable);
+            int moves = EditorGUILayout.IntSlider("Moves", seed.moves, 1, 3);
+            bool resizable = EditorGUILayout.Toggle("Resizable", seed.resizable);
+            bool rotate = EditorGUILayout.Toggle("Rotate", seed.rotate);
             float margin = EditorGUILayout.Slider("Start margin", seed.startMargin, 0.5f, 1.5f);
             bool offPath = EditorGUILayout.Toggle("Off-path clock", seed.offPath);
             float tightness = EditorGUILayout.Slider("Window tightness", seed.windowTightness, 0f, 1f);
+            bool fixedLevel = moves > 1 && !translatable;
+            Vector3 zoneA = seed.fixedZoneA;
+            Vector3 zoneB = seed.fixedZoneB;
+            float zoneSize = seed.fixedZoneSize;
+            bool proof = seed.proof;
+            if (fixedLevel)
+            {
+                EditorGUILayout.LabelField("Fixed two zones", EditorStyles.boldLabel);
+                zoneA = EditorGUILayout.Vector3Field("Zone A", zoneA);
+                zoneB = EditorGUILayout.Vector3Field("Zone B", zoneB);
+                zoneSize = EditorGUILayout.FloatField("Zone size", zoneSize);
+                proof = EditorGUILayout.Toggle("Proof (skip minimality)", proof);
+                if (GUILayout.Button("Use two wells") && planets != null && planets.planets.Length >= 3)
+                {
+                    zoneA = planets.planets[0].position;
+                    zoneB = planets.planets[2].position;
+                }
+
+                EditorGUILayout.HelpBox(
+                    "Each fixed cube must sit on a field source. The bake searches the two scales.",
+                    MessageType.Info);
+            }
+
             if (!EditorGUI.EndChangeCheck())
                 return;
 
             Undo.RecordObject(seed, "Puzzle brief");
+            seed.seed = Mathf.Max(0, seedValue);
+            seed.planetCount = Mathf.Max(1, planetCount);
             seed.fieldShape = fieldShape;
+            seed.translatable = translatable;
+            seed.moves = moves;
+            seed.resizable = resizable;
+            seed.rotate = rotate;
             seed.startMargin = margin;
             seed.offPath = offPath;
             seed.windowTightness = tightness;
+            seed.fixedZoneA = zoneA;
+            seed.fixedZoneB = zoneB;
+            seed.fixedZoneSize = zoneSize;
+            seed.proof = fixedLevel && proof;
             EditorUtility.SetDirty(seed);
         }
 
@@ -91,8 +131,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 if (GUILayout.Button("Generate (rebuild)"))
                     Generate();
 
-                if (GUILayout.Button($"Find working seed (from {CurrentSeed()})"))
-                    FindSeed();
+                bool fixedLevel = seed != null && seed.moves > 1 && !seed.translatable;
+                using (new EditorGUI.DisabledScope(fixedLevel))
+                {
+                    if (GUILayout.Button($"Find working seed (from {CurrentSeed()})"))
+                        FindSeed();
+                }
 
                 if (GUILayout.Button("Save level"))
                     Save();
@@ -107,7 +151,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             planets = PuzzleArtifactExporter.ExportPlanets(shape);
             generated = PuzzleFieldBake.Bake(
                 planets, PuzzleSimSettings.From(settings), PuzzleBrief.From(seed, settings), out status,
-                out generatedSolution);
+                out generatedSolution, requireMinimal: !seed.proof);
             Repaint();
         }
 
@@ -193,8 +237,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         private static string Message(PuzzleBakeStatus status)
         {
             if (status == PuzzleBakeStatus.UnsupportedBrief)
-                return "Rejected: this creator supports 1–3 zones and no rotate. Multi-zone needs "
-                    + "translatable on; off-path levels stay single-zone; rotate must be off.";
+                return "Rejected: this creator supports 1–3 zones and no rotate. Multi-zone can be "
+                    + "translatable (moving cube) or fixed two-zone (authored zones); off-path levels "
+                    + "stay single-zone; rotate must be off.";
 
             if (status == PuzzleBakeStatus.StartNotFailed)
                 return "Rejected: the bare start already solves or crashes. The level needs a failing "

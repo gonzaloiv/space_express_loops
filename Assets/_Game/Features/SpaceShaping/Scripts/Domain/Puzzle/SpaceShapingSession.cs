@@ -188,7 +188,7 @@ namespace DigitalLove.Game.SpaceShaping
         private void ApplyZones()
         {
             for (int i = 0; i < zones.Count; i++)
-                zones[i].ApplyTo(positions, scales, specs, setup.AnchorSource);
+                zones[i].ApplyTo(positions, scales, specs);
         }
 
         private void RecomputeEntropy()

@@ -13,7 +13,6 @@ namespace DigitalLove.Game.SpaceShaping
         public float EntropyBudget;
         public PuzzleSimSettings Sim;
         public SourceSpec[] Sources;
-        public int AnchorSource = -1;
 
         public static SpaceShapingSetup Build(PuzzleData puzzle, PuzzleSimSettings settings)
         {
@@ -21,7 +20,6 @@ namespace DigitalLove.Game.SpaceShaping
             if (puzzle.captureRadius > 0f)
                 sim.CaptureRadius = puzzle.captureRadius;
 
-            SourceSpec[] sources = SourceSpecs.From(puzzle.sources, settings);
             return new SpaceShapingSetup
             {
                 Origin = puzzle.Origin,
@@ -32,20 +30,8 @@ namespace DigitalLove.Game.SpaceShaping
                 Tmax = puzzle.tmax,
                 EntropyBudget = puzzle.entropyBudget,
                 Sim = sim,
-                Sources = sources,
-                AnchorSource = Anchor(sources, puzzle.Origin)
+                Sources = SourceSpecs.From(puzzle.sources, settings)
             };
-        }
-
-        private static int Anchor(SourceSpec[] sources, Vector3 origin)
-        {
-            for (int i = 0; i < sources.Length; i++)
-            {
-                if ((sources[i].Home - origin).sqrMagnitude < 0.000001f)
-                    return i;
-            }
-
-            return -1;
         }
 
         private static int BudgetSteps(PuzzleData puzzle, PuzzleSimSettings settings)

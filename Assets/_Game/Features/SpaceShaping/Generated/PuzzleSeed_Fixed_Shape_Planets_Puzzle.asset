@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10000000000000000000000000000016, type: 3}
+  m_Name: PuzzleSeed_Fixed_Shape_Planets_Puzzle
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.PuzzleData
+  id: 
+  prefab: {fileID: 0}
+  origin: {x: -0.20395319, y: -0.040576905, z: 0.11808301}
+  destination: {x: 0.3619823, y: 0.0053815786, z: -0.06431564}
+  zoneCentre: {x: 0.06345257, y: 0.005864267, z: -0.14852907}
+  cubeSizeMin: 0.105
+  cubeSizeMax: 0.21
+  cubeSize: 0.105
+  captureRadius: 0.06047852
+  translatable: 0
+  moves: 2
+  resizable: 0
+  rotate: 0
+  launchSpeed: 0.9
+  tmin: 0.18657354
+  tmax: 0.55972064
+  entropyBudget: 0.61935496
+  sources:
+  - home: {x: 0.06345257, y: 0.005864267, z: -0.14852907}
+    scale: 0.0998014
+  - home: {x: -0.16160549, y: -0.006394518, z: -0.022947257}
+    scale: 0.08603433
+  - home: {x: 0.05459256, y: -0.025764171, z: 0.13456824}
+    scale: 0.06113768
+  - home: {x: -0.20395319, y: -0.040576905, z: 0.11808301}
+    scale: 0.05992863
+  - home: {x: 0.3619823, y: 0.0053815786, z: -0.06431564}
+    scale: 0.12095704
+  - home: {x: -0.349627, y: -0.01778805, z: 0.081682056}
+    scale: 0.09309124
+  - home: {x: -0.05459525, y: -0.021273693, z: -0.13101575}
+    scale: 0.08515416
+  - home: {x: 0.107759535, y: -0.007620689, z: 0.23665047}
+    scale: 0.11451359
+  - home: {x: 0.20710339, y: 0.048481315, z: 0.19408701}
+    scale: 0.05513764
+  fixedZones:
+  - centre: {x: 0.06345257, y: 0.005864267, z: -0.14852907}
+    halfExtents: {x: 0.0525, y: 0.0525, z: 0.0525}
+    scale: 1
+    falloff: 0.25
+  - centre: {x: 0.05459256, y: -0.025764171, z: 0.13456824}
+    halfExtents: {x: 0.0525, y: 0.0525, z: 0.0525}
+    scale: 1
+    falloff: 0.25

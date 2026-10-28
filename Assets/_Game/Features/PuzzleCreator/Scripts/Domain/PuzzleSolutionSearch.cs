@@ -17,6 +17,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return false;
             }
 
+            if (brief.Moves > 1 && !brief.Translatable)
+                return PuzzleFixedSearch.TrySolve(
+                    puzzle, settings, puzzle.fixedZones, out solution);
+
             if (brief.Moves > 1)
                 return PuzzleBeamSearch.TrySelect(puzzle, settings, brief, out solution);
 

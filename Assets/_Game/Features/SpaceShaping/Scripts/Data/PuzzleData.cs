@@ -23,6 +23,7 @@ namespace DigitalLove.Game.SpaceShaping
         public float tmax = 12f;
         public float entropyBudget = 1f;
         public PuzzleSource[] sources;
+        public PuzzleZone[] fixedZones;
 
         public Vector3 Origin => origin;
 

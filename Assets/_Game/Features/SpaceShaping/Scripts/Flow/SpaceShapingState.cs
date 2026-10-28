@@ -14,6 +14,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private readonly TrajectoryIntegrator integrator = new();
         private readonly ShipLaunch launch = new();
+        private readonly FixedZoneGesture fixedGesture = new();
 
         private SpaceShapingSession session;
         private TrajectoryResult lastResult;
@@ -28,6 +29,9 @@ namespace DigitalLove.Game.SpaceShaping
         public event Action<PuzzleReadout> ReadoutChanged;
 
         public PuzzleReadout Readout => readout;
+
+        private bool IsFixed =>
+            puzzles[puzzleIndex].fixedZones != null && puzzles[puzzleIndex].fixedZones.Length > 0;
 
         public override void Enter()
         {
@@ -45,6 +49,7 @@ namespace DigitalLove.Game.SpaceShaping
         public void ResetPuzzle()
         {
             wasScaling = false;
+            fixedGesture.Reset();
             ResetView();
             session.Reset();
             ship.Reset(session.Origin);
@@ -62,12 +67,12 @@ namespace DigitalLove.Game.SpaceShaping
             SpaceShapingSession preview = new(BuildSetup());
             view.Render(
                 preview.BuildField(), preview.Zones, preview.Origin, preview.Destination,
-                LatticeCrossHalf(preview));
+                view.CrossHalf(preview, puzzles[puzzleIndex], settings.cubeSize));
         }
 
         public float DebugApplySolvedCube()
         {
-            if (session == null)
+            if (session == null || IsFixed)
                 return 0f;
 
             ResetPuzzle();
@@ -109,6 +114,12 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void TrackGesture()
         {
+            if (IsFixed)
+            {
+                TrackFixedGesture();
+                return;
+            }
+
             if (view.IsScaling)
             {
                 if (!wasScaling && session.IsOverBudget)
@@ -141,6 +152,15 @@ namespace DigitalLove.Game.SpaceShaping
             PushField();
         }
 
+        private void TrackFixedGesture()
+        {
+            bool changed = fixedGesture.Track(session, view.FixedCubes, out bool commit);
+            if (commit)
+                ship.Travel(PushField());
+            else if (changed)
+                PushField();
+        }
+
         private void TrackFlight()
         {
             if (!ship.IsFlying || !hasResult || Time.unscaledTime < nextClockPublish)
@@ -160,8 +180,15 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void ResetView()
         {
-            view.ResetZone();
             PuzzleData puzzle = puzzles[puzzleIndex];
+            if (IsFixed)
+            {
+                view.ShowFixedZones(puzzle.fixedZones, settings.zoneFalloff);
+                return;
+            }
+
+            view.HideFixedZones();
+            view.ResetZone();
             view.SetConditions(ZoneConditions.From(puzzle));
             float size = puzzle.cubeSize > 0f ? puzzle.cubeSize : settings.cubeSize;
             view.SetZoneFrame(puzzle.zoneCentre, new Vector3(size, size, size), settings.zoneFalloff);
@@ -170,6 +197,7 @@ namespace DigitalLove.Game.SpaceShaping
         private void StartPuzzle()
         {
             wasScaling = false;
+            fixedGesture.Reset();
             isChecked = false;
             ResetView();
             session = new SpaceShapingSession(BuildSetup());
@@ -185,11 +213,17 @@ namespace DigitalLove.Game.SpaceShaping
             SpacetimeField field = session.BuildField();
             TrajectoryResult result = session.Simulate(field, integrator, launch);
             bool solved = session.IsSolved(result);
-            view.SetPrediction(solved, result.Outcome);
+            if (IsFixed)
+                view.SetFixedPrediction(solved, result.Outcome);
+            else
+                view.SetPrediction(solved, result.Outcome);
+
             view.Render(
-                field, session.Zones, session.Origin, session.Destination, LatticeCrossHalf(session));
+                field, session.Zones, session.Origin, session.Destination,
+                view.CrossHalf(session, puzzles[puzzleIndex], settings.cubeSize));
             view.ShowTrajectory(result, solved);
-            view.Snapshot();
+            if (!IsFixed)
+                view.Snapshot();
 
             lastResult = result;
             hasResult = true;
@@ -218,53 +252,7 @@ namespace DigitalLove.Game.SpaceShaping
             ReadoutChanged?.Invoke(readout);
         }
 
-        private float LatticeCrossHalf(SpaceShapingSession session)
-        {
-            Vector3 run = session.Destination - session.Origin;
-            float length = run.magnitude;
-            Vector3 direction = length > 0.0001f ? run / length : Vector3.forward;
-            float half = 0f;
-            for (int i = 0; i < session.SourceCount; i++)
-            {
-                Vector3 offset = session.GetPosition(i) - session.Origin;
-                Vector3 perpendicular = offset - direction * Vector3.Dot(offset, direction);
-                half = Mathf.Max(half, perpendicular.magnitude + session.GetScale(i) * 0.5f);
-            }
-
-            PuzzleData puzzle = puzzles[puzzleIndex];
-            float cube = puzzle.cubeSize > 0f ? puzzle.cubeSize : settings.cubeSize;
-            return Mathf.Max(half, cube * 0.5f);
-        }
-
         private SpaceShapingSetup BuildSetup() =>
             SpaceShapingSetup.Build(puzzles[puzzleIndex], PuzzleSimSettings.From(settings));
-    }
-
-    internal static class PuzzleDebugSolution
-    {
-        public static float Find(SpaceShapingSetup setup, SpaceZone zone, float minScale, float maxScale)
-        {
-            const float step = 0.001f;
-            SpaceShapingSession scratch = new(setup);
-            TrajectoryIntegrator integrator = new();
-            ShipLaunch launch = new();
-            float bestScale = 0f;
-            float bestCost = float.MaxValue;
-            for (float scale = minScale; scale <= maxScale + step; scale += step)
-            {
-                scratch.Reset();
-                scratch.ApplyZone(new SpaceZone(zone.Centre, zone.HalfExtents, scale, zone.Falloff));
-                TrajectoryResult result = scratch.Simulate(scratch.BuildField(), integrator, launch);
-                if (!scratch.IsSolved(result) || scratch.IsOverBudget)
-                    continue;
-                float cost = scratch.EntropyCommitted;
-                if (cost >= bestCost)
-                    continue;
-                bestCost = cost;
-                bestScale = scale;
-            }
-
-            return bestScale;
-        }
     }
 }

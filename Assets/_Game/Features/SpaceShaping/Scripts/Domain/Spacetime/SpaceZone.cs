@@ -23,13 +23,10 @@ namespace DigitalLove.Game.SpaceShaping
             (Centre - other.Centre).sqrMagnitude < 0.000001f
             && (HalfExtents - other.HalfExtents).sqrMagnitude < 0.000001f;
 
-        public void ApplyTo(Vector3[] positions, float[] scales, SourceSpec[] specs, int skipIndex = -1)
+        public void ApplyTo(Vector3[] positions, float[] scales, SourceSpec[] specs)
         {
             for (int i = 0; i < positions.Length; i++)
             {
-                if (i == skipIndex)
-                    continue;
-
                 float factor = Mathf.Lerp(1f, Scale, InsideFactor(positions[i]));
                 positions[i] = Centre + (positions[i] - Centre) * factor;
                 scales[i] *= factor;

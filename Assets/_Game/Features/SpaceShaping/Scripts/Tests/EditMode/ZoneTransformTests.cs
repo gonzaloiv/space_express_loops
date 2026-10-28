@@ -160,18 +160,6 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         }
 
         [Test]
-        public void Session_AnchorSourceIsNotScaled()
-        {
-            SpaceShapingSetup setup = ContentSetup();
-            setup.AnchorSource = 0;
-            SpaceShapingSession session = new(setup);
-            session.ApplyZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 2f, 0f));
-
-            Assert.AreEqual(new Vector3(-2f, 0f, 0f), session.GetPosition(0));
-            Assert.AreEqual(2f, session.GetScale(0), 0.0001f);
-        }
-
-        [Test]
         public void Rescale_ReplacesTheZoneInsteadOfCompounding()
         {
             SpaceShapingSession session = new(ContentSetup());

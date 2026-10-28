@@ -1,7 +1,7 @@
 # Space Shaping — Campaign Map
 
 **Status:** next · space shaping · updated 2026-10-28 — the cube map over the sector field: pick a job,
-scale up into the play space, come back. Part of validation 2 (with the
+play its brief, scale up into the play space, come back. Part of validation 2 (with the
 [HUD plan](space-shaping-hud-validation.md)); after the [puzzle boots](space-shaping-in-game.md) and before
 [progression](space-shaping-progression.md).
 
@@ -42,11 +42,14 @@ the later cut is deletion only.
 - **Exit:** the map shows the authored cubes with correct visual states; a locked cube refuses visibly; the
   number matches the catalogue order.
 
-### M3 — Pick, scale up, play, back
+### M3 — Pick, brief, scale up, play, back
 
 - Pick a cube → it **scales up into the play space** (a presentation transition, not a Flow state) →
   `SpaceShapingState` loads that job's `PuzzleData` → result → back to the map at the same bubble
   placement.
+- The **job card** plays the job's manual entry and tech-voice line as two chained TTS entries on entering
+  the puzzle (`TTSHelper.Say(key, onComplete)`); author the test job's keys here and fall back to the
+  generic text if a key is missing.
 - Flow: `CampaignState` (boot + map) → `SpaceShapingState` (play + result) → back to the map. Setup/splash
   stay. The map is `UniverseViewMode.Bubble`; **no new map mode**.
 - Aperture for the map: `miniBubbleRadius 0.45`, `bubbleDistance 0.75`, `viewRadius 12.5`,
@@ -56,8 +59,8 @@ the later cut is deletion only.
   raised for the map, not for puzzle content. Both fields spawn the same pooled `FieldPlanetBehaviour` —
   no puzzle-only planet view.
 - Derived grid stays flat until the player scales.
-- **Exit:** pick → scale up → solve → back to the map; the map field and the bubble placement survive the
-  round trip; 72 fps target held in the map (measured with FrameTiming, device pass is
+- **Exit:** pick → brief → scale up → solve → back to the map; the map field and the bubble placement
+  survive the round trip; 72 fps target held in the map (measured with FrameTiming, device pass is
   [later](space-shaping-catalogue.md)).
 
 ## 3. Map contract

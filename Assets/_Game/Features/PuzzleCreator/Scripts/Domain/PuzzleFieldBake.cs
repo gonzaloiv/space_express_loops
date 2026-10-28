@@ -8,7 +8,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private const float MinRunFraction = 0.5f;
         private const float MaxRunFactor = 1.5f;
 
-        public static void Apply(
+        public static bool Apply(
             PuzzleBrief brief, PuzzleData puzzle, PuzzlePlanetListAsset planets, PuzzleSimSettings settings)
         {
             puzzle.sources = PuzzleSourceBridge.ToSources(planets.planets);
@@ -21,28 +21,36 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (!TryPickRun(
                 planets.planets, settings.RunDistance, brief.CorridorClearance,
                 out Vector3 origin, out Vector3 destination))
-                return;
+                return false;
 
             puzzle.origin = origin;
             puzzle.destination = destination;
             puzzle.captureRadius = CaptureRadius(puzzle.sources, destination);
             puzzle.zoneCentre = (origin + destination) * 0.5f;
             puzzle.launchSpeed = LaunchSpeed(settings, brief);
+            return true;
         }
 
         public static PuzzleData Bake(
             PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief,
-            out PuzzleBakeStatus status, out PuzzleZone[] solution)
+            out PuzzleBakeStatus status, out PuzzleZone[] solution, bool requireMinimal = true)
         {
             PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
-            Apply(brief, field, planets, settings);
-            PuzzleData baked = BakeField(field, settings, brief, out status, out solution);
+            if (!Apply(brief, field, planets, settings))
+            {
+                Object.DestroyImmediate(field);
+                solution = null;
+                return Fail(PuzzleBakeStatus.NoRun, out status);
+            }
+
+            PuzzleData baked = BakeField(
+                field, settings, brief, requireMinimal, out status, out solution);
             Object.DestroyImmediate(field);
             return baked;
         }
 
         private static PuzzleData BakeField(
-            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief,
+            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, bool requireMinimal,
             out PuzzleBakeStatus status, out PuzzleZone[] solution)
         {
             solution = null;
@@ -55,17 +63,74 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (!brief.OffPath && !StartFails(field, settings))
                 return Fail(PuzzleBakeStatus.StartNotFailed, out status);
 
+            if (brief.Moves > 1 && !brief.Translatable)
+                return BakeFixed(field, settings, brief, requireMinimal, out status, out solution);
+
             if (!Solve(field, settings, brief, crossing, out PuzzleSolution found, out bool startRejected))
                 return Fail(PuzzleBakeStatus.NoSolution, out status);
 
             if (startRejected)
                 return Fail(PuzzleBakeStatus.StartNotFailed, out status);
 
-            if (HasShorterSolution(field, settings, brief, found))
+            if (requireMinimal && HasShorterSolution(field, settings, brief, found))
                 return Fail(PuzzleBakeStatus.FewerZones, out status);
 
             solution = found.Zones;
             return Verified(field, found, brief, settings, out status);
+        }
+
+        private static PuzzleData BakeFixed(
+            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, bool requireMinimal,
+            out PuzzleBakeStatus status, out PuzzleZone[] solution)
+        {
+            solution = null;
+            if (!PuzzleFixedSearch.TryFind(
+                field, brief, settings, out PuzzleZone[] regions, out PuzzleSolution found))
+                return Fail(PuzzleBakeStatus.NoSolution, out status);
+
+            field.fixedZones = regions;
+            if (requireMinimal && PuzzleFixedSearch.HasShorter(field, settings, regions, found))
+                return Fail(PuzzleBakeStatus.FewerZones, out status);
+
+            if (requireMinimal && !Readable(field, settings, found))
+                return Fail(PuzzleBakeStatus.Unverified, out status);
+
+            solution = found.Zones;
+            return Verified(field, found, brief, settings, out status);
+        }
+
+        private static bool Readable(
+            PuzzleData puzzle, PuzzleSimSettings settings, PuzzleSolution found)
+        {
+            float span = puzzle.tmax - puzzle.tmin;
+            float margin = span * 0.1f;
+            if (found.ShipTime < puzzle.tmin + margin || found.ShipTime > puzzle.tmax - margin)
+                return false;
+
+            for (int i = 0; i < found.Zones.Length; i++)
+            {
+                if (Mathf.Abs(found.Zones[i].scale - 1f) < 0.1f)
+                    return false;
+            }
+
+            int combinations = 1 << found.Zones.Length;
+            for (int mask = 0; mask < combinations; mask++)
+            {
+                PuzzleZone[] zones = new PuzzleZone[found.Zones.Length];
+                for (int i = 0; i < zones.Length; i++)
+                {
+                    float offset = (mask & (1 << i)) != 0 ? 0.02f : -0.02f;
+                    zones[i] = found.Zones[i];
+                    zones[i].scale = Mathf.Clamp(
+                        found.Zones[i].scale + offset, settings.MinScaleFactor, settings.MaxScaleFactor);
+                }
+
+                if (!PuzzleZoneRun.TryArrive(puzzle, settings, zones, out PuzzleSolution nudged)
+                    || !PuzzleWindow.Contains(puzzle, nudged.ShipTime))
+                    return false;
+            }
+
+            return true;
         }
 
         private static bool HasShorterSolution(
@@ -152,13 +217,25 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
             puzzle.origin = field.origin;
             puzzle.destination = field.destination;
-            puzzle.zoneCentre = brief.Translatable ? field.zoneCentre : solution.Zones[0].centre;
+            if (field.fixedZones != null && field.fixedZones.Length > 0)
+            {
+                puzzle.fixedZones = field.fixedZones;
+                puzzle.zoneCentre = field.fixedZones[0].centre;
+                puzzle.cubeSize = field.fixedZones[0].halfExtents.x * 2f;
+                puzzle.moves = field.fixedZones.Length;
+                puzzle.translatable = false;
+            }
+            else
+            {
+                puzzle.zoneCentre = brief.Translatable ? field.zoneCentre : solution.Zones[0].centre;
+                puzzle.cubeSize = solution.Zones[0].halfExtents.x * 2f;
+                puzzle.moves = solution.Zones.Length;
+                puzzle.translatable = field.translatable;
+            }
+
             puzzle.cubeSizeMin = field.cubeSizeMin;
             puzzle.cubeSizeMax = field.cubeSizeMax;
-            puzzle.cubeSize = solution.Zones[0].halfExtents.x * 2f;
             puzzle.captureRadius = field.captureRadius;
-            puzzle.translatable = field.translatable;
-            puzzle.moves = solution.Zones.Length;
             puzzle.resizable = field.resizable;
             puzzle.rotate = field.rotate;
             puzzle.launchSpeed = field.launchSpeed;

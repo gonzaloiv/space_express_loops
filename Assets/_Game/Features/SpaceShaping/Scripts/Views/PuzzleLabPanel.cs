@@ -7,6 +7,12 @@ namespace DigitalLove.Game.SpaceShaping
 {
     public class PuzzleLabPanel : MonoBehaviour
     {
+        private const string LabelColor = "#A3A3A3";
+        private const string ValueColor = "#D4D4D4";
+        private const string FaintColor = "#707070";
+        private const string AccentColor = "#3B5CF6";
+        private const string DangerColor = "#FF4D40";
+
         private static readonly string[] Stars = { "-", "★", "★★", "★★★" };
 
         [SerializeField] private SpaceShapingState state;
@@ -14,8 +20,8 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private Transform committedFill;
         [SerializeField] private Transform pendingFill;
         [SerializeField] private Renderer pendingRenderer;
-        [SerializeField] private Color pendingColor = new(1f, 0.62f, 0.2f, 1f);
-        [SerializeField] private Color overflowColor = new(1f, 0.3f, 0.25f, 1f);
+        [SerializeField] private Color pendingColor = new(0.23137255f, 0.36078432f, 0.9647059f, 1f);
+        [SerializeField] private Color overflowColor = new(1f, 0.3019608f, 0.2509804f, 1f);
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");
@@ -48,18 +54,79 @@ namespace DigitalLove.Game.SpaceShaping
         private void Render(PuzzleReadout readout)
         {
             text.Clear();
-            text.Append("ENTROPY ").Append(F(readout.EntropySpent));
-            if (readout.EntropyPending > 0.00005f)
-                text.Append(" +").Append(F(readout.EntropyPending));
-            text.Append(" / ").Append(F(readout.EntropyBudget))
-                .Append("\nWINDOW  ").Append(F(readout.Tmin)).Append(" - ").Append(F(readout.Tmax)).Append(" s")
-                .Append("\nSHIP    ").Append(F(readout.ShipTime)).Append(" s")
-                .Append("\nRESULT  ").Append(Result(readout))
-                .Append("\nGRADE   ").Append(Stars[readout.Grade])
-                .Append("\nCOMMANDS ").Append(readout.CommandCount);
+            AppendEntropyRow(readout);
+            AppendWindowRow(readout);
+            AppendShipRow(readout);
+            AppendResultRow(readout);
+            AppendGradeRow(readout);
+            AppendCommandsRow(readout);
             label.SetText(text);
             SetBar(readout);
         }
+
+        private void AppendEntropyRow(PuzzleReadout readout)
+        {
+            BeginRow("ENTROPY ");
+            AppendTint(ValueColor, F(readout.EntropySpent));
+            if (readout.EntropyPending > 0.00005f)
+            {
+                text.Append("<color=").Append(AccentColor).Append("> +");
+                text.Append(F(readout.EntropyPending)).Append("</color>");
+            }
+            AppendTint(FaintColor, " / " + F(readout.EntropyBudget));
+            EndRow();
+        }
+
+        private void AppendWindowRow(PuzzleReadout readout)
+        {
+            BeginRow("WINDOW  ");
+            AppendTint(ValueColor, F(readout.Tmin) + " - " + F(readout.Tmax));
+            AppendTint(FaintColor, " s");
+            EndRow();
+        }
+
+        private void AppendShipRow(PuzzleReadout readout)
+        {
+            BeginRow("SHIP    ");
+            AppendTint(ValueColor, F(readout.ShipTime));
+            AppendTint(FaintColor, " s");
+            EndRow();
+        }
+
+        private void AppendResultRow(PuzzleReadout readout)
+        {
+            BeginRow("RESULT  ");
+            AppendTint(ResultColor(readout), Result(readout));
+            EndRow();
+        }
+
+        private void AppendGradeRow(PuzzleReadout readout)
+        {
+            BeginRow("GRADE   ");
+            AppendTint(readout.Grade > 0 ? ValueColor : FaintColor, Stars[readout.Grade]);
+            EndRow();
+        }
+
+        private void AppendCommandsRow(PuzzleReadout readout)
+        {
+            BeginRow("COMMANDS");
+            AppendTint(FaintColor, readout.CommandCount.ToString(CultureInfo.InvariantCulture));
+            EndRow();
+        }
+
+        private void BeginRow(string name)
+        {
+            if (text.Length > 0)
+                text.Append('\n');
+
+            text.Append("<mspace=0.55em><color=").Append(LabelColor).Append('>')
+                .Append(name).Append("</color>");
+        }
+
+        private void EndRow() => text.Append("</mspace>");
+
+        private void AppendTint(string hex, string value) =>
+            text.Append("<color=").Append(hex).Append('>').Append(value).Append("</color>");
 
         private void SetBar(PuzzleReadout readout)
         {
@@ -96,23 +163,33 @@ namespace DigitalLove.Game.SpaceShaping
         private static string Result(PuzzleReadout readout)
         {
             if (!readout.IsChecked)
-            {
-                if (readout.PredictedSolved)
-                    return "PREDICTED: IN WINDOW";
-
-                return readout.Outcome == TrajectoryOutcome.Crash
-                    ? "PREDICTED: CRASH"
-                    : "PREDICTED: MISS";
-            }
+                return readout.PredictedSolved ? "PREDICTED IN WINDOW" : "PREDICTED " + Outcome(readout);
 
             if (readout.IsSolved)
-                return "CHECKED: IN WINDOW";
+                return "CHECKED IN WINDOW";
 
             if (readout.IsFailed)
-                return "CHECKED: OUT OF ENTROPY";
+                return "CHECKED OUT OF ENTROPY";
 
-            return readout.Outcome == TrajectoryOutcome.Crash ? "CHECKED: CRASH" : "CHECKED: MISS";
+            return "CHECKED " + Outcome(readout);
         }
+
+        private static string ResultColor(PuzzleReadout readout)
+        {
+            if (!readout.IsChecked)
+                return LabelColor;
+
+            if (readout.IsSolved)
+                return AccentColor;
+
+            if (readout.IsFailed || readout.Outcome == TrajectoryOutcome.Crash)
+                return DangerColor;
+
+            return FaintColor;
+        }
+
+        private static string Outcome(PuzzleReadout readout) =>
+            readout.Outcome == TrajectoryOutcome.Crash ? "CRASH" : "MISS";
 
         private static string F(float value) => value.ToString("0.0000", CultureInfo.InvariantCulture);
 
@@ -123,7 +200,7 @@ namespace DigitalLove.Game.SpaceShaping
             && a.ShipTime == b.ShipTime
             && a.Tmin == b.Tmin
             && a.Tmax == b.Tmax
-            &&             a.Outcome == b.Outcome
+            && a.Outcome == b.Outcome
             && a.PredictedSolved == b.PredictedSolved
             && a.IsChecked == b.IsChecked
             && a.IsSolved == b.IsSolved
