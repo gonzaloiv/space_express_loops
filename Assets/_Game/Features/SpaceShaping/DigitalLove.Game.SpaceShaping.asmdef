@@ -7,6 +7,7 @@
         "DigitalLove.Casual.Levels",
         "DigitalLove.FlowControl",
         "DigitalLove.Input",
+        "Unity.TextMeshPro",
         "Oculus.Interaction"
     ],
     "includePlatforms": [],

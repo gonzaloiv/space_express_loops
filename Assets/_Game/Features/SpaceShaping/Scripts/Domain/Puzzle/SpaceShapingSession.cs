@@ -18,6 +18,7 @@ namespace DigitalLove.Game.SpaceShaping
         private SpaceScaleCommand preview;
         private float previewLastScale;
         private float entropySpent;
+        private float entropyCommitted;
 
         public SpaceShapingSession(SpaceShapingSetup setup)
         {
@@ -40,6 +41,18 @@ namespace DigitalLove.Game.SpaceShaping
 
         public float EntropySpent => entropySpent;
 
+        public float EntropyCommitted => entropyCommitted;
+
+        public float PendingEntropy => entropySpent - entropyCommitted;
+
+        public float EntropyBudget => setup.EntropyBudget;
+
+        public float Tmin => setup.Tmin;
+
+        public float Tmax => setup.Tmax;
+
+        public bool IsOverBudget => setup.EntropyBudget > 0f && entropyCommitted >= setup.EntropyBudget;
+
         public Vector3 GetPosition(int index) => positions[index];
 
         public float GetScale(int index) => scales[index];
@@ -49,9 +62,11 @@ namespace DigitalLove.Game.SpaceShaping
             && result.ShipTime >= setup.Tmin
             && result.ShipTime <= setup.Tmax;
 
+        public bool IsFailed(TrajectoryResult result) => IsOverBudget && !IsSolved(result);
+
         public int Grade()
         {
-            float fraction = setup.EntropyBudget > 0f ? entropySpent / setup.EntropyBudget : 0f;
+            float fraction = setup.EntropyBudget > 0f ? entropyCommitted / setup.EntropyBudget : 0f;
             if (fraction <= ThreeStarUse)
                 return 3;
 
@@ -74,7 +89,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void PreviewZone(SpaceZone zone)
         {
-            float reference = preview != null ? previewLastScale : LastCommittedScale();
+            float reference = preview != null ? previewLastScale : ReferenceScale(zone);
             float cost = (preview != null ? preview.EntropyCost : 0f) + Mathf.Abs(zone.Scale - reference);
             previewLastScale = zone.Scale;
             preview = new SpaceScaleCommand(zone, cost);
@@ -134,9 +149,9 @@ namespace DigitalLove.Game.SpaceShaping
         private void Recompute()
         {
             RestorePristine();
-            ApplyCommands();
-            SourceConstraints.Apply(positions, scales, specs, setup.Sim.SeparationScale);
             RebuildZones();
+            ApplyZones();
+            SourceConstraints.Apply(positions, scales, specs, setup.Sim.SeparationScale);
             RecomputeEntropy();
         }
 
@@ -150,36 +165,56 @@ namespace DigitalLove.Game.SpaceShaping
             }
         }
 
-        private void ApplyCommands()
-        {
-            for (int c = 0; c < commands.Count; c++)
-                commands[c].Apply(positions, scales, specs);
-
-            if (preview != null)
-                preview.Apply(positions, scales, specs);
-        }
-
         private void RebuildZones()
         {
             zones.Clear();
             for (int c = 0; c < commands.Count; c++)
-                zones.Add(commands[c].Zone);
+                UpsertZone(commands[c].Zone);
 
             if (preview != null)
-                zones.Add(preview.Zone);
+                UpsertZone(preview.Zone);
+        }
+
+        private void UpsertZone(SpaceZone zone)
+        {
+            for (int i = 0; i < zones.Count; i++)
+            {
+                if (!zones[i].SameRegion(zone))
+                    continue;
+
+                zones[i] = zone;
+                return;
+            }
+
+            zones.Add(zone);
+        }
+
+        private void ApplyZones()
+        {
+            for (int i = 0; i < zones.Count; i++)
+                zones[i].ApplyTo(positions, scales, specs);
         }
 
         private void RecomputeEntropy()
         {
-            float total = preview != null ? preview.EntropyCost : 0f;
+            float committed = 0f;
             for (int c = 0; c < commands.Count; c++)
-                total += commands[c].EntropyCost;
+                committed += commands[c].EntropyCost;
 
-            entropySpent = total;
+            entropyCommitted = committed;
+            entropySpent = committed + (preview != null ? preview.EntropyCost : 0f);
         }
 
-        private float LastCommittedScale() =>
-            commands.Count > 0 ? commands[commands.Count - 1].Zone.Scale : 1f;
+        private float ReferenceScale(SpaceZone zone)
+        {
+            for (int c = commands.Count - 1; c >= 0; c--)
+            {
+                if (commands[c].Zone.SameRegion(zone))
+                    return commands[c].Zone.Scale;
+            }
+
+            return 1f;
+        }
 
         private int StepBudget()
         {

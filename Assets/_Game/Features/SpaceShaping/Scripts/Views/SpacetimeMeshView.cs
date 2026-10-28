@@ -6,13 +6,10 @@ namespace DigitalLove.Game.SpaceShaping
     public class SpacetimeMeshView : MonoBehaviour
     {
         [SerializeField] private float fieldMargin = 0.05f;
-        [SerializeField, Tooltip("Depth (Y) as a fraction of the run half-length. Set to 1 (with Width 1) for a cube.")]
-        private float depthRatio = 0.6f;
-        [SerializeField, Tooltip("Width (Z) as a fraction of the run half-length. Set to 1 (with Depth 1) for a cube.")]
-        private float widthRatio = 0.5f;
 
         [SerializeField] private MeshFilter meshFilter;
         [SerializeField] private MeshRenderer meshRenderer;
+        [SerializeField] private Mesh sourceMesh;
         [SerializeField] private int gridCount = 4;
         [SerializeField] private int sides = 6;
         [SerializeField] private float radius = 0.005f;
@@ -20,7 +17,6 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private float maxDisplacement = 0.08f;
 
         private Mesh mesh;
-        private Mesh source;
         private Vector3[] vertices;
         private int samplesPerLine;
         private SpacetimeField lastField;
@@ -41,8 +37,8 @@ namespace DigitalLove.Game.SpaceShaping
             EnsureMesh();
 
             float half = halfExtent / transform.lossyScale.x * (1f + fieldMargin);
-            Vector3 gridMin = new(-half, -half * depthRatio, -half * widthRatio);
-            Vector3 gridMax = new(half, half * depthRatio, half * widthRatio);
+            Vector3 gridMin = new(-half, -half, -half);
+            Vector3 gridMax = new(half, half, half);
 
             int perAxis = gridCount * gridCount;
             int perLine = samplesPerLine * sides;
@@ -73,10 +69,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void EnsureMesh()
         {
-            if (source == null)
-                source = meshFilter.sharedMesh;
-
-            if (mesh != null && mesh.vertexCount == source.vertexCount)
+            if (mesh != null && mesh.vertexCount == sourceMesh.vertexCount)
                 return;
 
             if (mesh != null)
@@ -87,7 +80,7 @@ namespace DigitalLove.Game.SpaceShaping
                     DestroyImmediate(mesh);
             }
 
-            mesh = Instantiate(source);
+            mesh = Instantiate(sourceMesh);
             mesh.MarkDynamic();
             if (!Application.isPlaying)
                 mesh.hideFlags = HideFlags.HideAndDontSave;

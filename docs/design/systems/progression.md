@@ -2,14 +2,15 @@
 
 **Status:** design · system · progression.
 **Date:** 2026-10-23.
+**Revised:** 2026-10-28.
 
 **Related:** [vision](../vision.md) · [core loop](../core-loop.md) · [resources](resources.md) ·
 [lore](../world/lore.md) · [jobs](../jobs.md)
 
 ## Goal
 
-How the game advances across jobs — and what gates it. The competition slice is the **full run**
-(8–10 jobs), not a single job, so progression is **in scope**.
+How the game advances across jobs — and what gates it. The competition slice is the **full run** —
+**3–5 jobs first**, 8–10 as the stretch — not a single job, so progression is **in scope**.
 
 ## Inputs
 
@@ -39,10 +40,12 @@ The **level selector** is needed: a field of cubes, one per job.
 - **A level is a cube on the map:** picking it brings the cube/lens into the play space, and its
   number/seed generates (offline) the puzzle's **own field** — the campaign map is the backdrop, the
   puzzle field is the play space.
+- **Direct pick only (decided 2026-10-27):** the map is the only navigation; the result offers
+  Map/Retry, not Next. Solved and current cubes are pickable; locked cubes refuse visibly.
 
 ### The learning path — the cube grows
 
-One new idea at a time, so the player never faces two at once:
+One new lesson at a time, so the player never faces two unrelated ideas at once:
 
 The scale has **two faces** — **space** (a shortcut / the path) and **time** (the ship's clock) —
 driven by the **same factor** ([the cube](cube.md)). The **space face** is the metric stretch; the
@@ -52,19 +55,24 @@ driven by the **same factor** ([the cube](cube.md)). The **space face** is the m
 1. **Jobs 1–2 — the fixed cube, one zone.** A fixed region; the only move is the **grab-inside
    scale** (the **space face**: the shortcut and the spread). One lever, one planet, a generous
    window.
-2. **Job 3 — several zones.** The player places and scales **several zones**; the soft brush blends
-   them, so "where do I scale" enters. The cube stays **fixed**.
-3. **The time tutorial — a planet off the trajectory.** The scale changes the planet's mass and so the
-   clock, but not the path (the ship never passes near it). The player learns the clock before path and
-   clock compete. (Recurring off-path levels are a later variation.)
-4. **Then — the movable cube.** The region can be **moved** (translatable), so "where the cube sits"
-   enters.
-5. **Then — the resizable frame.** The region can be **resized** — the aperture becomes the player's
+2. **Job 3 — several zones, and the cube moves.** The player places and scales **several zones**,
+   and moves the lens between them; the soft brush blends them. "Where do I scale" and "where does
+   the lens sit" are one lesson. A fixed cube cannot reach two zones, so the move arrives here:
+   `moves ≥ 2` requires `translatable`
+   (see [the brief](#the-brief--the-conditions-a-solution-must-meet)).
+3. **Job 4 — the time tutorial.** A planet off the trajectory. The scale changes its mass and so the
+   clock, but not the path (the ship never passes near it). The player learns the clock before path
+   and clock compete. (Recurring off-path levels are a later variation.)
+4. **Job 5 — the resizable frame.** The region can be **resized** — the aperture becomes the player's
    to choose.
-6. **Later puzzles — rotate.** The spin gesture (frame dragging) arrives in **later puzzles**, not
+5. **Later puzzles — rotate.** The spin gesture (frame dragging) arrives in **later puzzles**, not
    the first 8, adding *direction* to the scale.
 
-So the first-8 order is **scale → several zones → time → move → resize**; rotate comes later.
+So the first-8 order is **scale → several zones + move → time → resize**; rotate comes later.
+
+**Job 3 is translatable (2026-10-28).** The multi-zone plan's §1 option (a): a fixed cube cannot reach
+two zones, so the move enters with several zones and the time tutorial becomes job 4
+([multi-zone plan](../../plans/backlog/space-shaping-multizone.md) §1).
 
 A **tutorial** will be needed for this, but not yet — get the loop working first
 ([vision](../vision.md) §6).
@@ -76,6 +84,7 @@ creator bakes to them:
 
 - **`translatable`** — the cube may be **moved** (its centre changes) or is **fixed** at home.
 - **`moves`** — how many **zones** the solution scales (the cube edits `N` places, up or down).
+  **`moves ≥ 2` requires `translatable`** — a fixed cube covers one region and cannot reach two zones.
 - **`resizable`** — the frame may be **resized** (`[1×, 2×]`) or is locked.
 - **`rotate`** — the spin gesture is available (later puzzles).
 - **`scalable`** is **always true** — scaling the content is the verb; there is no locked-scale level.
@@ -110,7 +119,8 @@ None — progression never blocks a run on a score (see Open).
 
 ## Tuning — the 10-minute shape
 
-About **8–10 cubes**, ~1 minute each. The curve rises by **planet count** and **window tightness**.
+About **8–10 cubes** (3–5 first), ~1 minute each. The curve rises by **planet count** and **window
+tightness**.
 
 ### Variation axes (enough for ~10 distinct jobs)
 
@@ -123,8 +133,9 @@ The verb is always the **scale**, so variety comes from the field and the brief:
 5. **Layout** — single well vs multi-well; where the shortcut sits vs the natural path.
 6. **Scramble** — how far the authored start sits from the solved arrangement (the difficulty dial).
 
-Jobs 1–2 teach the scale on one planet; job 3 adds multiple scales and planet count; rotate arrives
-in later puzzles. Ten jobs is the stretch goal — prove 3–5 first, then extend only if the axes hold.
+Jobs 1–2 teach the scale on one planet; job 3 adds multiple scales, the move and planet count; job 4
+turns to the clock; resize follows. Rotate arrives in later puzzles. Ten jobs is the stretch goal —
+prove 3–5 first, then extend only if the axes hold.
 
 ## Persistence
 
@@ -136,6 +147,4 @@ mid-flight (the seed is authoring-only).
 
 - **Star-gating?** No, in the demo — never block a run on a score. Stars feed a rating, or unlock
   *cosmetics / bonus* later.
-- **Map interaction — decided (2026-10-27):** **direct pick only.** The map is the only navigation; there
-  is no “Next” shortcut. Solved and current cubes are pickable; locked cubes refuse visibly.
 - **The numbers:** reset per act, or run 1 → N? (The slice proposes one chapter, numbered 1 → N.)

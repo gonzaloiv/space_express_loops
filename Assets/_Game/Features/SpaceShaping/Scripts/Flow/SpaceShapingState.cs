@@ -1,3 +1,4 @@
+using System;
 using DigitalLove.FlowControl;
 using UnityEngine;
 
@@ -14,16 +15,29 @@ namespace DigitalLove.Game.SpaceShaping
         private readonly ShipLaunch launch = new();
 
         private SpaceShapingSession session;
+        private TrajectoryResult lastResult;
+        private PuzzleReadout readout;
         private int puzzleIndex;
         private bool wasScaling;
+        private bool hasResult;
+        private bool isChecked;
+
+        public event Action<PuzzleReadout> ReadoutChanged;
+
+        public PuzzleReadout Readout => readout;
 
         public override void Enter()
         {
+            ship.Completed += OnFlightCompleted;
             puzzleIndex = 0;
             StartPuzzle();
         }
 
-        public override void Exit() => session = null;
+        public override void Exit()
+        {
+            ship.Completed -= OnFlightCompleted;
+            session = null;
+        }
 
         public void ResetPuzzle()
         {
@@ -46,6 +60,47 @@ namespace DigitalLove.Game.SpaceShaping
             view.Render(preview.BuildField(), preview.Zones, FieldRadius(preview));
         }
 
+        public float DebugApplySolvedCube()
+        {
+            if (session == null)
+                return 0f;
+
+            ResetPuzzle();
+            float scale = FindDebugSolution(view.Zone);
+            if (scale <= 0f)
+                return 0f;
+
+            view.SetZoneScale(scale);
+            session.ApplyZone(view.Zone);
+            ship.Travel(PushField());
+            return scale;
+        }
+
+        private float FindDebugSolution(SpaceZone zone)
+        {
+            const float step = 0.001f;
+            SpaceShapingSession scratch = new(BuildSetup());
+            float bestScale = 0f;
+            float bestCost = float.MaxValue;
+            for (float scale = settings.minScaleFactor; scale <= settings.maxScaleFactor + step; scale += step)
+            {
+                scratch.Reset();
+                scratch.ApplyZone(new SpaceZone(zone.Centre, zone.HalfExtents, scale, zone.Falloff));
+                TrajectoryResult result = scratch.Simulate(scratch.BuildField(), integrator, launch);
+                if (!scratch.IsSolved(result) || scratch.IsOverBudget)
+                    continue;
+
+                float cost = scratch.EntropyCommitted;
+                if (cost >= bestCost)
+                    continue;
+
+                bestCost = cost;
+                bestScale = scale;
+            }
+
+            return bestScale;
+        }
+
         private void LateUpdate()
         {
             if (session == null || !parent.IsCurrentState<SpaceShapingState>())
@@ -58,6 +113,9 @@ namespace DigitalLove.Game.SpaceShaping
         {
             if (view.IsScaling)
             {
+                if (!wasScaling && session.IsOverBudget)
+                    return;
+
                 BeginScale();
                 return;
             }
@@ -67,6 +125,9 @@ namespace DigitalLove.Game.SpaceShaping
                 CommitScale();
                 return;
             }
+
+            if (session.IsOverBudget)
+                return;
 
             if (view.HasChanged())
                 PushField();
@@ -98,6 +159,7 @@ namespace DigitalLove.Game.SpaceShaping
         private void StartPuzzle()
         {
             wasScaling = false;
+            isChecked = false;
             ResetView();
             session = new SpaceShapingSession(BuildSetup());
             ship.Reset(session.Origin);
@@ -106,13 +168,38 @@ namespace DigitalLove.Game.SpaceShaping
 
         private TrajectoryResult PushField()
         {
+            ship.Stop();
             view.ApplyFromSession(session);
 
             SpacetimeField field = session.BuildField();
             TrajectoryResult result = session.Simulate(field, integrator, launch);
             view.Render(field, session.Zones, FieldRadius(session));
+            view.ShowTrajectory(result);
             view.Snapshot();
+
+            lastResult = result;
+            hasResult = true;
+            isChecked = false;
+            PublishReadout();
             return result;
+        }
+
+        private void OnFlightCompleted()
+        {
+            if (session == null || !hasResult)
+                return;
+
+            isChecked = true;
+            PublishReadout();
+        }
+
+        private void PublishReadout()
+        {
+            if (!hasResult)
+                return;
+
+            readout = PuzzleReadout.From(session, lastResult, isChecked);
+            ReadoutChanged?.Invoke(readout);
         }
 
         private static float FieldRadius(SpaceShapingSession session)

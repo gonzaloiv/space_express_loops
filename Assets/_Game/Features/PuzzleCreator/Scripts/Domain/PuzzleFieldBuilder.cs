@@ -43,8 +43,19 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             minSeparation = settings.separationScale * SeparationMargin
         };
 
-        private static SectorShapeKind Shape(PuzzleSeed seed) =>
-            (SectorShapeKind)(((seed.seed % 3) + 3) % 3);
+        private static SectorShapeKind Shape(PuzzleSeed seed)
+        {
+            if (seed.fieldShape == PuzzleFieldShape.Ring)
+                return SectorShapeKind.Ring;
+
+            if (seed.fieldShape == PuzzleFieldShape.Spiral)
+                return SectorShapeKind.Spiral;
+
+            if (seed.fieldShape == PuzzleFieldShape.Cluster)
+                return SectorShapeKind.Cluster;
+
+            return (SectorShapeKind)(((seed.seed % 3) + 3) % 3);
+        }
 
         private static int Rings(PuzzleSeed seed) =>
             Mathf.Max(1, (seed.planetCount + PlanetsPerRing - 1) / PlanetsPerRing);

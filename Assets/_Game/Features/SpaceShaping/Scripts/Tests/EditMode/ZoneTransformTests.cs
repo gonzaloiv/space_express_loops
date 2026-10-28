@@ -160,16 +160,16 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         }
 
         [Test]
-        public void Accumulate_AppliesZonesInOrder()
+        public void Rescale_ReplacesTheZoneInsteadOfCompounding()
         {
             SpaceShapingSession session = new(ContentSetup());
             session.ApplyZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 2f, 0f));
             session.ApplyZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 0.5f, 0f));
 
-            Assert.AreEqual(-2f, session.GetPosition(0).x, 0.0001f);
-            Assert.AreEqual(2f, session.GetScale(0), 0.0001f);
+            Assert.AreEqual(-1f, session.GetPosition(0).x, 0.0001f);
+            Assert.AreEqual(1f, session.GetScale(0), 0.0001f);
             Assert.AreEqual(2, session.CommandCount);
-            Assert.AreEqual(2, session.Zones.Count);
+            Assert.AreEqual(1, session.Zones.Count);
         }
 
         [Test]

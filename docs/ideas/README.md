@@ -13,3 +13,5 @@ The detailed notes live beside this file; this is the index.
   coherent bubble look, cheap on the existing colour scope.
 - **[TTS voice companion](tts-voice-panel.md)** — the panel as a camera-operator companion. *Why:* the
   tech voice feels present.
+- **[Feel polish](feel-polish.md)** — lattice tint, locked-gesture refusal, haptics, SFX. *Why:* the polish
+  after the mechanic proves itself.

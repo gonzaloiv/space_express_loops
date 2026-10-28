@@ -15,8 +15,11 @@ MonoBehaviour:
   seed: 1
   distance: 1
   planetCount: 8
+  fieldShape: 3
   translatable: 0
   moves: 1
   resizable: 0
   rotate: 0
+  startMargin: 0.9
+  offPath: 0
   windowTightness: 0.5

@@ -53,6 +53,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
             EditorGUILayout.LabelField("Brief", BriefText(seed));
             EditorGUI.BeginChangeCheck();
+            PuzzleFieldShape fieldShape =
+                (PuzzleFieldShape)EditorGUILayout.EnumPopup("Field shape", seed.fieldShape);
             float margin = EditorGUILayout.Slider("Start margin", seed.startMargin, 0.5f, 1.5f);
             bool offPath = EditorGUILayout.Toggle("Off-path clock", seed.offPath);
             float tightness = EditorGUILayout.Slider("Window tightness", seed.windowTightness, 0f, 1f);
@@ -60,6 +62,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 return;
 
             Undo.RecordObject(seed, "Puzzle brief");
+            seed.fieldShape = fieldShape;
             seed.startMargin = margin;
             seed.offPath = offPath;
             seed.windowTightness = tightness;
@@ -177,7 +180,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         private static string BriefText(PuzzleSeed value) =>
             BriefText(value.translatable, value.moves, value.resizable, value.rotate)
-            + $" · start {value.startMargin:F2}× · {(value.offPath ? "clock" : "path")}";
+            + $" · {value.fieldShape} · start {value.startMargin:F2}× · {(value.offPath ? "clock" : "path")}";
 
         private static string BriefText(PuzzleData value) =>
             BriefText(value.translatable, value.moves, value.resizable, value.rotate)

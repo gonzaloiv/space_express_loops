@@ -9,6 +9,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         [HideInInspector] public float distance = 1f;
         public int planetCount = 9;
 
+        [Tooltip("Planet arrangement. Auto keeps the seed-derived shape (Ring, Spiral, Cluster).")]
+        public PuzzleFieldShape fieldShape = PuzzleFieldShape.Auto;
+
         [Header("Brief")]
         [Tooltip("The cube may be moved over the field. Fixed levels bake the cube where the solution sits.")]
         public bool translatable;

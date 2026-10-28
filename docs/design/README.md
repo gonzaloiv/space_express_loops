@@ -22,6 +22,9 @@ these docs describe the intended game, not what is shipped.
 
 - **Vision** is the stable overview; the **systems/** docs are the feature units; **presentation**
   and **world/lore** are the feel and the fiction.
+- The docs describe the intended game. When a plan settles a rule, the design doc follows it in the
+  same change; the [plans board](../plans/README.md) owns build status.
 - Each `systems/*.md` shares one template — **Goal · Inputs · Rules · Feedback · Failure · Tuning ·
   Open questions** — so they read the same way.
-- Every doc's status line is `**Status:** design · <concern>.`
+- Every doc's status line is `**Status:** design · <concern>.` Substantive passes add a
+  `**Revised:** <yyyy-mm-dd>.` line.

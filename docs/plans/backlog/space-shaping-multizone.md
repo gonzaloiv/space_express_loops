@@ -1,29 +1,34 @@
 # Space Shaping — Multi-Zone Solutions
 
-**Status:** next · space shaping · updated 2026-10-27 — bake `moves = 2+` solutions so jobs 3 and 6–8 can
-be authored. Depends on [physics](../in-progress/space-shaping-physics.md) and the creator’s runtime
-locks (landed 2026-10-27).
+**Status:** next · space shaping · updated 2026-10-28 — bake `moves = 2+` solutions so jobs 3 and 6–8 can
+be authored. Job 3 is translatable (decided 2026-10-28). Depends on the physics slice (landed 2026-10-28)
+and the creator’s runtime locks (landed 2026-10-27).
 
-**Related:** [physics](../in-progress/space-shaping-physics.md) ·
-[integration](space-shaping-integration.md) ·
+**Related:** [integration](space-shaping-integration.md) ·
 [progression](../../design/systems/progression.md) · [jobs](../../design/jobs.md) ·
-[cube](../../design/systems/cube.md) · [lab readout](space-shaping-lab-readout.md) ·
+[cube](../../design/systems/cube.md) ·
 [review](../../reviews/integration-plan.md)
 
-## 1. The blocker (read first)
+## 1. The fixed-cube constraint (read first)
 
-`jobs.md` says job 3 is **fixed · 2+**, but a fixed cube cannot reach two distinct zones. The brief defines
-`translatable` as “the cube may be moved”; `moves` is how many zones the solution scales. The current
-model can only satisfy `moves ≥ 2` if one of these is true:
+`jobs.md` used to say job 3 is **fixed · 2+**, but a fixed cube cannot reach two distinct zones. The brief
+defines `translatable` as “the cube may be moved”; `moves` is how many zones the solution scales.
+
+**Decided 2026-10-28 — (a).** `moves ≥ 2` requires `translatable`. Job 3 becomes the movable /
+several-zones step; the time tutorial becomes job 4. It keeps the cube model honest.
+
+The model could only satisfy `moves ≥ 2` with one of these; (a) is the choice:
 
 - **(a) `moves ≥ 2` requires `translatable`** — job 3 becomes the movable/several-zones step, and job 4
-  needs a different new verb. Recommended: it keeps the cube model honest.
+  becomes the time tutorial. **Decided.**
 - **(b) `moves` counts repeated scales at the same fixed zone** — preserves job 3 but does not teach
   “where do I scale”, which is the point of job 3.
 - **(c) Multiple fixed sub-zones** — a new mechanic; not this plan.
 
-Until this is settled, the search rejects `Moves > 1 && !Translatable` as `UnsupportedBrief`. The slices
-below land the search on translatable 2–3 zone puzzles; job 3’s row must be updated to match (a) if chosen.
+The search rejects `Moves > 1 && !Translatable` as `UnsupportedBrief`. The slices below land the search on
+translatable 2–3 zone puzzles; [jobs](../../design/jobs.md) and
+[progression](../../design/systems/progression.md) now carry job 3 as translatable and the time tutorial
+as job 4.
 
 ## 2. Approach — bounded beam search
 
@@ -103,13 +108,14 @@ zone in `puzzle.solution`; only the creator search is single-zone. Add a forward
 
 - Rotate and `moves > 3`.
 - Multi-ship and loop routes.
-- Final HUD/readout — the [lab readout](space-shaping-lab-readout.md) is separate.
+- Final HUD/readout is separate; the lab readout landed 2026-10-28.
 - Runtime generation; the catalogue is baked offline.
 - Authoring the full 8–10 jobs.
 
 ## 8. Risks
 
 - **Search cost** grows with `moves`; cap the width/evaluations and measure a seed scan.
-- **Fixed-cube contradiction** (§1) blocks job 3 as written; resolve before authoring the band.
+- **Fixed-cube contradiction** (§1) — **resolved 2026-10-28:** job 3 is translatable. The search still
+  rejects fixed multi-zone.
 - **Rebake:** a physics change invalidates every multi-zone bake; land physics first.
 - **Legibility:** two zones are only visible as lattice warp; validate in the POC before the catalogue.

@@ -38,7 +38,7 @@ prefab; `SpaceSourceView` and the POC-only `PuzzlePlanet.prefab` are removed, so
 3. **§3.3 implied the level selector exists.** `LevelSelector`/`LevelsPanel` are generic `_Modules/Casual`
    code, not wired in `_Game`; the cube selector is new work.
 4. **§3.6 HUD is not built.** `SpaceShapingState` exposes no readout and the POC has no HUD. The plan now
-   names the surface and adds the separate [lab readout plan](../plans/backlog/space-shaping-lab-readout.md).
+   names the surface; the separate lab readout landed 2026-10-28.
 5. **§4 contradicted the run.** The loop route is deferred; “Map View” is a retired concept.
 6. **I3 was too shallow for a delete step.** `LevelContainer` owns both `SectorFieldSpawner` and bubble
    restore; `GameStartState` owns mid-level resume. The keepers move first.

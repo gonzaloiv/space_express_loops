@@ -47,7 +47,17 @@ namespace DigitalLove.Game.SpaceShaping.EditorTools
             AssetDatabase.SaveAssets();
 
             if (meshFilter != null)
+            {
                 meshFilter.sharedMesh = mesh;
+
+                SpacetimeMeshView view = meshFilter.GetComponent<SpacetimeMeshView>();
+                if (view != null)
+                {
+                    SerializedObject serialized = new(view);
+                    serialized.FindProperty("sourceMesh").objectReferenceValue = mesh;
+                    serialized.ApplyModifiedPropertiesWithoutUndo();
+                }
+            }
 
             Debug.Log($"[LatticeMeshBuilder] Built lattice mesh ({mesh.vertexCount} verts) at {path}");
         }

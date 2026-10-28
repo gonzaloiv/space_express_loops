@@ -9,6 +9,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private FieldPlanetBehaviour prototype;
         [SerializeField] private Transform sourceParent;
         [SerializeField] private SpacetimeMeshView mesh;
+        [SerializeField] private TrajectoryLineView trajectory;
         [SerializeField] private SpaceZoneView cubePrototype;
         [SerializeField] private Transform cubeParent;
 
@@ -51,6 +52,8 @@ namespace DigitalLove.Game.SpaceShaping
             Cube().SetFalloff(falloff);
         }
 
+        public void SetZoneScale(float scale) => Cube().SetScale(scale);
+
         public void Snapshot()
         {
             lastZone = Cube().Zone;
@@ -60,14 +63,21 @@ namespace DigitalLove.Game.SpaceShaping
         public void Render(SpacetimeField field, IReadOnlyList<SpaceZone> zones, float radius) =>
             mesh.Render(field, zones, radius);
 
+        public void ShowTrajectory(TrajectoryResult result) => trajectory.Show(result);
+
         public void ResetZone()
         {
             Cube().ResetScale();
             hasSnapshot = false;
         }
 
-        private SpaceZoneView Cube() =>
-            cube != null ? cube : cube = Instantiate(cubePrototype, cubeParent);
+        private SpaceZoneView Cube()
+        {
+            if (cube == null && Application.isPlaying)
+                cube = Instantiate(cubePrototype, cubeParent);
+
+            return cube;
+        }
 
         private FieldPlanetBehaviour Source(int index)
         {

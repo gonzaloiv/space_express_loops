@@ -7,9 +7,9 @@ before it passes.
 **Related:** [vision](../../design/vision.md) · [core loop](../../design/core-loop.md) ·
 [progression](../../design/systems/progression.md) · [jobs](../../design/jobs.md) ·
 [resources](../../design/systems/resources.md) · [cube](../../design/systems/cube.md) ·
+[relativity](../../design/systems/relativity.md) ·
 [variations](../../ideas/variations.md) ·
-[physics](../in-progress/space-shaping-physics.md) ·
-[feel](space-shaping-feel.md) · [modes](../../../Assets/_Modules/docs/standards/modes.md) ·
+[feel polish](../../ideas/feel-polish.md) · [modes](../../../Assets/_Modules/docs/standards/modes.md) ·
 [review](../../reviews/integration-plan.md)
 
 **Wiring rule:** authored scene/prefab objects and serialized refs only. When the legacy flow is removed,
@@ -30,7 +30,7 @@ but this plan does not.
 | Replacement | **Full replacement.** One flow, one save, one map; no mode alongside the legacy loop. |
 | Scope | The **full run** — level selector and **3–5 jobs first**, 8–10 as stretch ([jobs](../../design/jobs.md)). |
 | Loop | **No commit** — the ship flies on every completed modification; a miss is a check, not a fail. |
-| Fail | **Entropy zero** before a solve; the grade is entropy left (1–3 stars). |
+| Fail | **Committed spend reaches the budget** before a solve; the grade is entropy left (1–3 stars). |
 | Persistence | **Player progression only** — solved jobs + stars; never in-level state. |
 | Target | Meta Quest 3S, **72 fps**. |
 | UI | The HUD sits **over the level** (world-anchored). |
@@ -54,7 +54,8 @@ Delete (not disable) the pieces the replacement drops:
   `Resources/Chapters/*` assets, round/chapter configuration.
 - **Route/ship:** hubs/stations, ship grab, destination selection, `SplineContainerWrapper`,
   `SplineLegSampler`, `TravellerRouteRunner`, `SpaceshipRouteSession`, and the spaceship/hub prefabs and
-  scene objects.
+  scene objects. The puzzle's copied `ShipVisual` is a keeper (§3.3) — do not delete it with the legacy
+  ship.
 - **UI:** route/resource/store panels, their prefabs, and their localization keys.
 - **Persistence:** the route/round/economy fields of `GameSnapshot`; the legacy cookie is ignored on first
   boot (reset-to-fresh, no migration).
@@ -71,9 +72,12 @@ restore; `GameStartState` owns the resume path.
   stars). These exist in `_Modules/Casual` but are **not wired into `_Game`** yet.
 - The shared planet view (`FieldPlanetBehaviour` + `NodeBody` variants and spin) — **already unified
   (2026-10-28):** the POC spawns it from the shared prefab and `SpaceSourceView` is removed.
+- The **ship visual** (`SpaceShaping/Models/Ship/ShipVisual.prefab`, model + trail), **copied out of the
+  legacy `Spaceships` feature on 2026-10-28** with its own mesh, hull material, trail material and
+  textures. It carries no `Spaceships` scripts; `ShipTravelView` flies it.
 - XR rig/hands, the cube two-hand scale gesture, and the POC's lattice, zone, trajectory and ship-travel
   views.
-- Setup/splash, analytics, TTS framework, lore.
+- Setup/splash, analytics, the TTS framework (its card is the per-job manual/tech-voice surface), lore.
 
 The **cube level selector is new.** `LevelsPanel` is a generic UI list, not a field of cubes.
 
@@ -103,12 +107,15 @@ The **cube level selector is new.** `LevelsPanel` is a generic UI list, not a fi
 
 ### 3.6 UI
 
-- The HUD sits **over the level** (world-anchored): entropy left / grade, window `[Tmin, Tmax]`,
-  result/fail, reset, map/retry.
-- The POC has **no HUD and no readout events** today. `SpaceShapingState` must expose a read-only readout
-  (entropy spent/left, ship time, window, solved, grade) and one result event; the HUD/result subscribes.
+- The HUD sits **over the level** (world-anchored): entropy left / grade, the window as a band on the ship
+  clock, result/fail, reset, map/retry.
+- The **lab readout** (landed 2026-10-28: R1 + panel v1) exposes the read-only `PuzzleReadout` and one
+  `ReadoutChanged` event. Integration still needs the final HUD/result surface over the level; the
+  readout is the seam it subscribes to.
 - Remove the route/resource/store panels.
-- Locked-gesture refusal, the manual, and the tech voice remain in [feel](space-shaping-feel.md).
+- The per-job manual entry and tech voice play on the TTS card as two entries (the job's localization keys,
+  `LevelData.IntroKey`); wired here. Locked-gesture refusal is a
+  [feel polish](../../ideas/feel-polish.md) candidate.
 
 ### 3.7 Level catalogue
 
@@ -161,7 +168,8 @@ the legacy flow (I3). Cutting first breaks the keepers.
 - Runtime/procedural generation; the field is baked.
 - Streaming and galaxies beyond the campaign selector’s field.
 - A demand/economy layer on the map ([element pack](../../ideas/element-pack.md)).
-- Final art, audio and feel polish — the [feel plan](space-shaping-feel.md) owns those.
+- Final art, audio and feel polish — [feel polish](../../ideas/feel-polish.md) candidates; I5 owns the
+  device tuning.
 
 ## 5. Phases
 
@@ -172,16 +180,18 @@ the legacy flow (I3). Cutting first breaks the keepers.
 ### I0 — Puzzle flow + one real puzzle
 
 - The puzzle Flow state and one baked puzzle in `Game.unity`, selected directly for the test.
-- Reuse the POC session/views; add the read-only readout and result seam.
-- **Exit:** the game boots into one puzzle; solve → grade → reset; a miss keeps shaping; entropy zero
-  fails.
+- Reuse the POC session/views and the `PuzzleReadout`; add the result seam.
+- Play the job's manual entry and tech-voice line as two entries on the TTS card (the job's localization
+  keys, `LevelData.IntroKey`).
+- **Exit:** the game boots into one puzzle; the job card plays; solve → grade → reset; a miss keeps shaping;
+  committed spend reaching the budget fails.
 
 ### I1 — Campaign map + selector + HUD
 
 - One-view map over the sector field: one numbered cube per job, lit/locked/current, pick → scale up into
   the play space, back out.
 - Raise the aperture for the map; derived grid flat until the player scales.
-- Entropy bar, window gauge, result/fail and reset/map over the level.
+- Entropy bar, the window band on the ship clock, result/fail and reset/map over the level.
 - **Exit:** the player picks a cube, scales up, solves and returns to the map; validation 2 runs.
 
 ### I2 — Progression save
@@ -197,13 +207,16 @@ the legacy flow (I3). Cutting first breaks the keepers.
 ### I4 — Campaign catalogue
 
 - Author 3–5 baked puzzles first, then 8–10; briefs per [jobs](../../design/jobs.md); selection by id.
+- Author each job's manual entry and tech-voice line with its bake (the card reads the job's keys).
 - No runtime generation; the creator bakes offline.
-- **Exit:** a library of puzzles is authored, ordered, selectable and star-bearing.
+- **Exit:** a library of puzzles is authored, ordered, selectable, star-bearing, with each job card
+  playing.
 
 ### I5 — Acceptance
 
 - Quest 3S 72 fps capture; boot → map → pick → solve → back → reload; legacy absent; onboarding/tuning.
-- Feel/presentation stays with [feel](space-shaping-feel.md); not duplicated here.
+- Tune `travelSecs` on device; run the SFX pass (travel, scale, grade) or explicitly cut it.
+- Feel polish stays in [feel polish](../../ideas/feel-polish.md); not duplicated here.
 
 ## 6. Definitions (proposed 2026-10-27)
 
@@ -248,8 +261,8 @@ The working contract. The 2026-10-27 decisions are recorded in §6.6; the rest a
 - `Commit` simulates and starts the flight. The result fires when the flight ends **and** is still the
   current commit; a new edit cancels the pending result.
 - Outcomes: **Solved** (arrive inside the window), **Miss** (arrive outside, miss, crash, step overrun),
-  **Failed** (entropy zero and not solved). If the same commit both solves and empties the budget, the
-  solve wins; a fail is shown after the miss flight.
+  **Failed** (committed spend reaches the budget and not solved). If the same commit both solves and
+  empties the budget, the solve wins; a fail is shown after the miss flight.
 - Readout: entropy spent/left/budget, ship time, `[Tmin, Tmax]`, solved, grade, command count.
 - `Reset` is free and clears commands/entropy; `Undo` refunds; no Undo UI in this slice.
 

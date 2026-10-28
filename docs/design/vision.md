@@ -5,6 +5,7 @@
 **Target:** Meta VR Start Developer Competition 2026 · **seated mixed reality** ·
 hand-tracking first-class.
 **Date:** 2026-10-23.
+**Revised:** 2026-10-28.
 
 **Related:** [core loop](core-loop.md) · [the cube](systems/cube.md) · [resources](systems/resources.md) ·
 [relativity](systems/relativity.md) · [progression](systems/progression.md) · [presentation](presentation.md) ·
@@ -33,13 +34,14 @@ Build status lives on the [plans board](../plans/README.md); this doc does not t
 2. **The cube is the product.** The one tool, and the signature moment — "the cube
    deforms the universe". It gets the polish budget (feel, sound, haptics, the visible
    field-warp).
-3. **Scale the space and the content together.** One gesture does both; moving / resizing the
-   cube (the region) is the second gesture (job 3); rotate arrives in **later puzzles**, not the
-   first 8. The field is derived, never edited.
+3. **Scale the space and the content together.** One gesture does both; moving the cube (the region)
+   enters at job 3, resizing at job 5; rotate arrives in **later puzzles**, not the first 8. The
+   field is derived, never edited.
 4. **One budget, one score.** Entropy is the budget: spend it all before you solve and the job
    **fails**. Entropy left is the **eco rating**; the **window** `[Tmin, Tmax]` is the target — the launch
    is only a check. The launch itself is given, not a lever.
-5. **Discrete jobs.** ~1 minute each; a **10-minute experience**, about **8–10 levels**.
+5. **Discrete jobs.** ~1 minute each; a **10-minute experience**, about **8–10 levels** — **3–5
+   first**, extended only if the variation axes hold.
    Nothing live-ticking.
 6. **Relativity is the language.** Not a skin — the cube instruments it.
 
@@ -90,10 +92,12 @@ routes; keep the economy *between* jobs. Then the management layer is a wrapper
 
 ## 6. Scope: the competition slice
 
-- **In:** the **full run** — the bubble, the cube, the **level selector** and **8–10 jobs**, the
-  grade, and player progression ([core loop](core-loop.md), [progression](systems/progression.md)).
-- **Out of the first 8:** rotate (arrives in **later puzzles**), the tutorial, and the whole feel
-  pass. **Out until proven:** sectors, multi-ship, runtime/procedural level generation.
+- **In:** the **full run** — the bubble, the cube, the **level selector** and **3–5 jobs first
+  (8–10 as the stretch)**, the grade, and player progression ([core loop](core-loop.md),
+  [progression](systems/progression.md)).
+- **Out of the first 8:** rotate (arrives in **later puzzles**), a separate tutorial flow (the per-job
+  manual card is in — [jobs](jobs.md)), and the whole feel pass. **Out until proven:** sectors, multi-ship,
+  runtime/procedural level generation.
 - **Technical target:** Meta Quest 3S, **72 fps**.
 - **Validation first:** do not invest past the validation (§7) until it passes.
 

@@ -2,6 +2,7 @@
 
 **Status:** design · content · jobs.
 **Date:** 2026-10-27.
+**Revised:** 2026-10-28.
 
 **Related:** [progression](systems/progression.md) · [lore](world/lore.md) · [resources](systems/resources.md) ·
 [cube](systems/cube.md) · [glossary](glossary.md)
@@ -17,27 +18,29 @@ general system; this is the specific development of it. Counts are a **stretch g
 | # | Teaches | Brief (translatable · moves · resizable · rotate) | Field (planets · layout · well) | Dials (window · entropy) | Why |
 |---|---|---|---|---|---|
 | 1–2 | the scale | fixed · 1 · no · no | 1 · single · medium | generous · loose→tight | first contact: one lever, one planet |
-| 3 | several zones | fixed · 2+ · no · no | 2–3 · multi-well | medium · medium | "where do I scale" enters |
-| time | the clock (off-path planet) | fixed · 1 · no · no | 1 (off-path) · — · medium | generous · loose | the time face alone |
-| 4 | move the cube | **yes** · 1+ · no · no | 3 · multi-well | medium · medium | "where the cube sits" enters |
+| 3 | several zones + move | **yes** · 2+ · no · no | 2–3 · multi-well | medium · medium | "where do I scale" and "where does the lens sit" enter |
+| 4 | the clock (off-path planet) | fixed · 1 · no · no | 1 (off-path) · — · medium | generous · loose | the time face alone |
 | 5 | resize the frame | yes · 1+ · **yes** · no | 3–4 · multi-well | tight · tight | the aperture is the player's |
 | 6–8 | combine | yes · 2+ · yes · no | 3–4 · mixed · deep | tight · tight | mastery: read the field, edit little |
 | later | rotate | yes · 1+ · yes · **yes** | 3+ · multi-well · deep | razor · tight | direction, not just position |
+
+**The job-3 fold.** A fixed cube covers one region and cannot reach two zones, so `moves ≥ 2` requires
+`translatable`. Job 3 folds in the move; the time tutorial becomes job 4
+([multi-zone plan](../plans/backlog/space-shaping-multizone.md) §1).
 
 **The slice.** Jobs 1–8 are the full run, ~1 minute each; rotate waits for later puzzles.
 
 ## The run — the lore skin
 
-Each job is a **contract**: a client, a cargo, a window, and the manual entry that teaches its verb. One
-line each; never exposition ([lore](world/lore.md)).
+Each job is a **contract**: a client, a cargo, a window, and the manual entry that teaches its lesson.
+One line each; never exposition ([lore](world/lore.md)).
 
 | # | Client | Cargo | Tech voice | Manual entry |
 |---|---|---|---|---|
 | 1 | Blödmeyer & Sons (no sons) | a pallet of valves | "One pinch. You'll be fine." | "Welcome. Your Wrap does one thing. Do that one thing." |
 | 2 | The Third Best Bakery | a wedding cake, still warm | "Same again — but the cake's on a clock." | "Most deliveries are urgent. None of them are our fault." |
-| 3 | Two Guys, One Moon | spare pump parts | "Two zones now. Don't overthink it." | "The Wrap scales where you put it. *Where* is a choice. Make it." |
-| time | The Bureau of Unnecessary Paperwork | one vital form | "Off to the side — nothing to bend. Just the clock." | "Some cargo is only ever late. Watch the clock, not the path." |
-| 4 | Slightly Used Stars Ltd. | a load of seeds | "You can move it now. That's new." | "The lens goes where you need it. The field does not care where you stand." |
+| 3 | Two Guys, One Moon | spare pump parts | "Two zones now — and the lens moves. Don't overthink it." | "The Wrap scales where you put it. *Where* is a choice. Move it. Make it." |
+| 4 | The Bureau of Unnecessary Paperwork | one vital form | "Off to the side — nothing to bend. Just the clock." | "Some cargo is only ever late. Watch the clock, not the path." |
 | 5 | Madame Fink's Discount Gravity | a piano | "Bigger, smaller — your call." | "The aperture is yours. Size is a promise you make to yourself." |
 | 6 | Nobody & Co. | a body (a funeral) | "Tight. Really tight. Sorry." | "Every edit costs. The customer only ever sees the arrival." |
 | 7 | The Very Small Opera | a live animal | "I'd have done it differently. I'm not here." | "Efficiency is a virtue until it is a cost. You will decide which." |
@@ -46,10 +49,11 @@ line each; never exposition ([lore](world/lore.md)).
 
 ## The manual's arc
 
-The tip panel is the company's **onboarding manual for new employees** ([lore](world/lore.md) §The tech
-team): short, dry, corporate, slightly out of date. Each entry introduces **one verb**, so it carries the
-teaching *and* the fiction. It opens warm and ends corporate-bleak; the "new employee" it keeps
-addressing never arrives. Two beats to keep:
+The tip card is the company's **onboarding manual for new employees** ([lore](world/lore.md) §The tech
+team): short, dry, corporate, slightly out of date. It plays on the TTS card as the job's intro — the
+manual entry and the tech-voice line, two entries keyed from the job's id (`LevelData.IntroKey`). Each
+entry introduces **one idea**, so it carries the teaching *and* the fiction. It opens warm and ends
+corporate-bleak; the "new employee" it keeps addressing never arrives. Two beats to keep:
 
 - The opening line: *"Welcome, new employee."*
 - A late note: *there has not been a new employee in eleven years.*
@@ -62,4 +66,5 @@ names stay absurd** — the tonal relief.
 - **Per-job launch lines.** Once the launch is per-job, each job's *given* launch becomes a beat — a
   launch that would fail, made to land.
 - **The manual as a findable object.** The full manual in the office, with the entries the run skipped.
-- **Client callbacks.** An absurd name returns in a later job, with a grudge.
+- **Client callbacks.** An absurd name returns in a later job, with a grudge. **Slightly Used Stars
+  Ltd.** is the first: the move lesson folded into job 3 outgrew its "You can move it now" contract.

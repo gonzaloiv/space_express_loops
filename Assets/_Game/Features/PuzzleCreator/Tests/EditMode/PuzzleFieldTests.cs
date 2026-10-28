@@ -66,6 +66,19 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
+        public void Build_PinsTheAuthoredFieldShape()
+        {
+            PuzzleSeed seed = Seed();
+            SpaceShapingSettings settings = Settings();
+
+            seed.fieldShape = PuzzleFieldShape.Cluster;
+            Assert.AreEqual(SectorShapeKind.Cluster, PuzzleFieldBuilder.Build(seed, settings).kind);
+
+            seed.fieldShape = PuzzleFieldShape.Auto;
+            Assert.AreEqual(SectorShapeKind.Spiral, PuzzleFieldBuilder.Build(seed, settings).kind);
+        }
+
+        [Test]
         public void Bridge_MapsRadiusToDoubleScale()
         {
             PuzzleFieldPlanet[] planets = { new(new Vector3(1f, 2f, 3f), 0.5f) };

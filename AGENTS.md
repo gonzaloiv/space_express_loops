@@ -12,8 +12,20 @@ A plan is **one sitting of work**, not a roadmap. Keep it to what one agent can 
   morning.
 - **The board stays small.** A plan that has outgrown its shape moves to its own plan; it does not keep
   growing in place.
+- **Done plans are removed.** When a plan lands, delete its file and its board row; the code and tests
+  are the record. Do not archive it in a `done/` folder.
 - The **plans board** ([`docs/plans/README.md`](docs/plans/README.md)) is the entry point; run
   `docs/check.ps1` after moving files.
+
+## Reviews
+
+The common source is [`docs/reviews/README.md`](docs/reviews/README.md): the checklist, the recurring
+findings, and the review template.
+
+- **Read the playbook first.** Run both passes — contract, then hygiene — and cite `file:line` or a commit.
+- **Promote, then delete.** A review is transient: when its plan lands, delete the review, but add any new
+  *class* of finding to the playbook first. Never archive a review.
+- **No duplicate lessons.** If a finding already has an entry, add its evidence there instead of a new one.
 
 ## SerializeField wiring
 

@@ -8,32 +8,24 @@ scale the space, scale the content; the ship flies the deformed spacetime.
 
 ## Now
 
-| Plan | Area | Why here |
-|---|---|---|
-| [Space shaping — physics (clock + mass)](in-progress/space-shaping-physics.md) | space shaping | Landed and 57/57 green; the POC carries the off-path clock level. Headset pass only, then retire. |
+No plans in progress. The lab readout landed 2026-10-28; the next runway is below.
 
 ## Next
 
-The runway after Now: the remaining sim work (multi-zone), the lab readout, then the
-**validation** (the criteria are in [vision](../design/vision.md) §7). Only if it passes: the fused slice
-(validation 2), then the campaign.
+The runway after Now: the remaining sim work (multi-zone), then the **validation** (the criteria are in
+[vision](../design/vision.md) §7). Only if it passes: the fused slice (validation 2), then the campaign.
 
 | Plan | Area | Why here |
 |---|---|---|
 | [Space shaping — multi-zone solutions](backlog/space-shaping-multizone.md) | space shaping | `moves = 2+` bakes for jobs 3 and 6–8; needed before the full run can be authored. |
-| [Space shaping — lab readout](backlog/space-shaping-lab-readout.md) | presentation | The validation-1 readout (entropy, window, result); separate from the final HUD. |
 | [Space shaping — integration into the game](backlog/space-shaping-integration.md) | space shaping | **Full replacement.** Two stages: fuse the slice (I0–I1 = validation 2), then the campaign (I2–I5). **Gated on validation 1.** |
 
 ## Later
 
 Design-only or deferred. Nothing here is scheduled.
 
-| Plan | Area | Why here |
-|---|---|---|
-| [Space shaping — feel & presentation polish](backlog/space-shaping-feel.md) | presentation | The *feel* beats after the validation: travel payoff, collapse feedback, window gauge, cargo personality. |
-
-Candidate ideas (not plans) live in [docs/ideas](../ideas/README.md): variations, element pack, hologram
-look, TTS companion.
+No plans. Candidate ideas (not plans) live in [docs/ideas](../ideas/README.md): variations, element pack,
+hologram look, TTS companion, feel polish.
 
 ## Open tails
 
@@ -43,7 +35,8 @@ Loose ends that still need a home. Close one by linking the plan that finishes i
 |---|---|
 | Silent planets — persistence/restore validation | A future cross-feature restart pass |
 | Sector field — raise `viewRadius`/aperture | Trigger: the campaign map slice (I1) → [integration](backlog/space-shaping-integration.md) |
-| The lens — surface the session `Undo`; **rotate** (later puzzles) | [Feel](backlog/space-shaping-feel.md) / [variations](../ideas/variations.md) |
+| The lens — **Undo** UI (the session `Undo` exists; no surface) | Later; not this slice — [integration](backlog/space-shaping-integration.md) §6.3 |
+| The lens — **rotate** (later puzzles) | Not scheduled; a later-puzzles plan ([cube](../design/systems/cube.md)) |
 
 ## Conventions
 
@@ -53,5 +46,7 @@ Loose ends that still need a home. Close one by linking the plan that finishes i
 - `<area>` is one of `space shaping`, `universe`, `presentation`, `flow`.
 - Folders: `now` → `in-progress/`; `next` and `later` → `backlog/`. Move the file and update this
   board in the same change.
+- **Done plans are removed.** When a plan lands, delete its file and its board row; the code and tests
+  are the record. Do not archive it in a `done/` folder.
 - Run `docs/check.ps1` after moving files — it runs `check-plans.ps1` (links, status/folder, board) and
   `check-docs.ps1` (design docs).

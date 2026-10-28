@@ -19,6 +19,21 @@ namespace DigitalLove.Game.SpaceShaping
 
         public bool IsActive => Scale > 0f && (HalfExtents.x > 0f || HalfExtents.y > 0f || HalfExtents.z > 0f);
 
+        public bool SameRegion(SpaceZone other) =>
+            (Centre - other.Centre).sqrMagnitude < 0.000001f
+            && (HalfExtents - other.HalfExtents).sqrMagnitude < 0.000001f;
+
+        public void ApplyTo(Vector3[] positions, float[] scales, SourceSpec[] specs)
+        {
+            for (int i = 0; i < positions.Length; i++)
+            {
+                float factor = Mathf.Lerp(1f, Scale, InsideFactor(positions[i]));
+                positions[i] = Centre + (positions[i] - Centre) * factor;
+                scales[i] *= factor;
+                specs[i] = specs[i].Scaled(Centre, factor);
+            }
+        }
+
         public float StepDivisor(Vector3 position) =>
             IsActive ? Mathf.Lerp(1f, Scale, InsideFactor(position)) : 1f;
 

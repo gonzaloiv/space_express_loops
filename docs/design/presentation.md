@@ -2,9 +2,10 @@
 
 **Status:** design · presentation — how the game looks, sounds and reads.
 **Date:** 2026-10-23.
+**Revised:** 2026-10-28.
 
 **Related:** [vision](vision.md) · [core loop](core-loop.md) · [the cube](systems/cube.md) ·
-[feel plan](../plans/backlog/space-shaping-feel.md)
+[feel polish](../ideas/feel-polish.md)
 
 The **feel pass is last** ([vision](vision.md) §6) — this doc records the intent so the loop can be
 built toward it.
@@ -12,14 +13,22 @@ built toward it.
 ## HUD / readouts
 
 - **Over the level**, world-anchored — the readouts sit in the play space, not a screen-space overlay.
-  This is how it works today.
-- Readouts: **pass / fail**, the **ship's clock**, the **window** `[Tmin, Tmax]`, the **entropy
-  bar**, and the **stars** ([resources](systems/resources.md)).
-- The **trajectory line is removed** — the flight is the reveal, and the visual updates at launch.
-- **The time face reads on the lattice** — its cells **pulse at the local clock rate** (spacing = space,
-  pulse = time), and the zone is **tinted cool/warm** (slower / faster clock)
+  The **lab readout panel** is the first authored version; the final HUD is not built.
+- Readouts: the **result** (pending / in window / miss / crash / out of entropy), the **ship's clock**,
+  the **window** `[Tmin, Tmax]`, the **entropy bar** (committed + pending), and the **stars**
+  ([resources](systems/resources.md)). The lab panel also shows a **command count** as a diagnostic;
+  the shipped HUD never shows a move count ([the cube](systems/cube.md)).
+- The readout is **unchecked (pending)** while shaping. The flight is the check: when it ends the
+  readout becomes **checked**, and a new edit cancels the pending check. A miss or crash is a check,
+  not a fail; the fail is **out of entropy** ([resources](systems/resources.md)).
+- The **live trajectory line** is part of the read: it updates on every edit, and the ship flies it
+  on release. The flight is the payoff, not the only reveal ([core loop](core-loop.md) §1).
+- The lab read uses four decimals; the final HUD may round for legibility.
+- **The time face reads on the lattice** — the zone is **tinted cool/warm** (slower / faster clock); the
+  pulse at the local clock rate is a [candidate](../ideas/feel-polish.md) (the lattice is a wireframe)
   ([the cube](systems/cube.md)).
-- It could also ride the **TTS panel** screen ([voice panel idea](../ideas/tts-voice-panel.md)).
+- The per-job **manual and tech voice ride the TTS card** ([jobs](jobs.md)); the HUD itself stays
+  world-anchored ([voice panel idea](../ideas/tts-voice-panel.md)).
 
 ## Art direction
 
@@ -27,7 +36,7 @@ built toward it.
 - The **hologram** look (tinted, semi-transparent, fresnel-rimmed) is a recorded option for the
   bubble ([hologram idea](../ideas/hologram-look.md)).
 - The cube must read as a tangible instrument; the field must read (the mesh warp is the scale's
-  only tell — [the cube](systems/cube.md)).
+  tell — [the cube](systems/cube.md)).
 
 ## Audio
 
@@ -47,5 +56,5 @@ built toward it.
 ## Open questions
 
 - Final art language and the bubble/planet/cube look.
-- Final HUD placement and whether it rides the TTS panel.
-- The SFX list (travel, scale, grade, collapse).
+- Final HUD placement and look.
+- The SFX list (travel, scale, grade) — [feel polish](../ideas/feel-polish.md).
