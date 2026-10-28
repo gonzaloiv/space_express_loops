@@ -1,6 +1,6 @@
 # Space Shaping — Integration into the Game
 
-**Status:** next · space shaping · updated 2026-10-27 — **full replacement confirmed**. Two stages:
+**Status:** next · space shaping · updated 2026-10-28 — **full replacement confirmed**. Two stages:
 **slice fusion** (I0–I1 = validation 2) and **campaign** (I2–I5). Gated on validation 1; do not start I0
 before it passes.
 
@@ -69,8 +69,10 @@ restore; `GameStartState` owns the resume path.
 - The sector field and `SectorFieldSpawner` as the campaign map substrate.
 - The generic level plumbing: `LevelSelector`, `LevelCompleteCookie`, `PlayerData` (order, current id,
   stars). These exist in `_Modules/Casual` but are **not wired into `_Game`** yet.
-- The planet prefab/visual, XR rig/hands, the cube two-hand scale gesture.
-- The POC's lattice, zone, trajectory and ship-travel views.
+- The shared planet view (`SilentPlanetBehaviour` + `NodeBody` variants and spin) — **already unified
+  (2026-10-28):** the POC spawns it from the shared prefab and `SpaceSourceView` is removed.
+- XR rig/hands, the cube two-hand scale gesture, and the POC's lattice, zone, trajectory and ship-travel
+  views.
 - Setup/splash, analytics, TTS framework, lore.
 
 The **cube level selector is new.** `LevelsPanel` is a generic UI list, not a field of cubes.
@@ -127,13 +129,16 @@ not scenery.
 - **The campaign field places cubes, one per job.** A picked cube **scales up into the play space**.
 - **The puzzle generates its own field from its seed.** The campaign field does **not** supply a puzzle’s
   layout ([variations](../../ideas/variations.md) §3); the two fields are independent.
+- **The planet presentation is shared.** Both fields spawn the same pooled planet view
+  (`SilentPlanetBehaviour`); only the layout source differs. Do not add a puzzle-only planet view.
 - **Aperture.** Raise `viewRadius` / `fieldRadius` in the **map slice (I1)** because the map needs the wide
   field — not because puzzle content moves onto the field. The wired field is deliberately room-local
   (`viewRadius 1.2`, `fieldRadius 1.8`).
 - **Color scope.** It does not use `viewRadius`; out-of-frame content is grayed. The hide band is
   `hideRadiusFactor 1.5`; raise `fieldRadius` and `softSectorBudget` together.
 - **Decor migration is done.** `SectorFieldSpawner` already spawns the field’s ambient sectors; there is
-  no separate silent-planet pool left to migrate. Only the `SilentPlanets` naming/ownership moves in §3.9.
+  no separate silent-planet pool left to migrate. The shared view and prefab live in
+  `DigitalLove.Game.Nodes`; only the `SilentPlanets` spawner naming/ownership moves in §3.9.
 
 ### 3.9 What must move before the cut
 
@@ -143,6 +148,7 @@ not scenery.
 | `GameStartState` | boot into the campaign map | new boot/map Flow |
 | `GameSnapshot` | `bubbleOffsetLocal` / `bubbleYawDegrees`, `silentPlanetSeed` | placement/campaign snapshot |
 | `UniverseView` | bubble mode, room anchor, restore | keep; do not delete with the level container |
+| `Decoration` | shared planet view + prefab (`SilentPlanetBehaviour`, `SilentPlanet.prefab`) | `Nodes` — **done 2026-10-28** |
 
 **Cut order:** extract the keepers → land the puzzle flow (I0) → map/HUD (I1) → progression (I2) → delete
 the legacy flow (I3). Cutting first breaks the keepers.

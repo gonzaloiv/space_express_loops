@@ -6,13 +6,13 @@ namespace DigitalLove.Game.SpaceShaping
 {
     public class SpaceShapingView : MonoBehaviour
     {
-        [SerializeField] private SpaceSourceView prototype;
+        [SerializeField] private SilentPlanetBehaviour prototype;
         [SerializeField] private Transform sourceParent;
         [SerializeField] private SpacetimeMeshView mesh;
         [SerializeField] private SpaceZoneView cubePrototype;
         [SerializeField] private Transform cubeParent;
 
-        private readonly List<SpaceSourceView> pool = new();
+        private readonly List<SilentPlanetBehaviour> pool = new();
         private SpaceZoneView cube;
         private SpaceZone lastZone;
         private bool hasSnapshot;
@@ -37,7 +37,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             int count = session.SourceCount;
             for (int i = 0; i < count; i++)
-                Source(i).SetLocal(session.GetPosition(i), session.GetScale(i));
+                Source(i).Spawn(session.GetPosition(i), session.GetScale(i), i);
 
             for (int i = count; i < pool.Count; i++)
                 pool[i].Hide();
@@ -69,7 +69,7 @@ namespace DigitalLove.Game.SpaceShaping
         private SpaceZoneView Cube() =>
             cube != null ? cube : cube = Instantiate(cubePrototype, cubeParent);
 
-        private SpaceSourceView Source(int index)
+        private SilentPlanetBehaviour Source(int index)
         {
             if (pool.Count == 0)
                 pool.AcquireInactive(prototype, sourceParent, created => created.Initialize());

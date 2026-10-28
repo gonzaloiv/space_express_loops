@@ -8,7 +8,7 @@ namespace DigitalLove.Game.SilentPlanets
     public class SectorFieldSpawner : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private SilentPlanetBehaviour prototype;
+        [SerializeField] private FieldPlanetBehaviour prototype;
         [SerializeField] private SectorFieldData field = new();
         [SerializeField] private Transform viewTransform;
 
@@ -20,7 +20,7 @@ namespace DigitalLove.Game.SilentPlanets
         private static readonly int ScopeRadiiId = Shader.PropertyToID("_ColorScopeRadii");
         private static readonly int ScopeStrengthId = Shader.PropertyToID("_ColorScopeStrength");
 
-        private readonly List<SilentPlanetBehaviour> planets = new();
+        private readonly List<FieldPlanetBehaviour> planets = new();
         private bool hasSpawned;
         private bool isBubbleView;
 
@@ -89,7 +89,7 @@ namespace DigitalLove.Game.SilentPlanets
 
             for (int i = 0; i < planets.Count; i++)
             {
-                SilentPlanetBehaviour planet = planets[i];
+                FieldPlanetBehaviour planet = planets[i];
                 if (planet == null || !planet.IsActive)
                     continue;
 
@@ -110,7 +110,7 @@ namespace DigitalLove.Game.SilentPlanets
             float sqrRadius = roomVisibleRadius * roomVisibleRadius;
             for (int i = 0; i < planets.Count; i++)
             {
-                SilentPlanetBehaviour planet = planets[i];
+                FieldPlanetBehaviour planet = planets[i];
                 if (planet == null || !planet.IsActive)
                     continue;
 
@@ -130,7 +130,7 @@ namespace DigitalLove.Game.SilentPlanets
             hasSpawned = false;
         }
 
-        private SilentPlanetBehaviour Acquire() =>
+        private FieldPlanetBehaviour Acquire() =>
             planets.AcquireInactive(prototype, transform, created =>
             {
                 created.Initialize();

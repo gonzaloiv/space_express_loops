@@ -53,11 +53,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
             EditorGUILayout.LabelField("Brief", BriefText(seed));
             EditorGUI.BeginChangeCheck();
+            float margin = EditorGUILayout.Slider("Start margin", seed.startMargin, 0.5f, 1.5f);
+            bool offPath = EditorGUILayout.Toggle("Off-path clock", seed.offPath);
             float tightness = EditorGUILayout.Slider("Window tightness", seed.windowTightness, 0f, 1f);
             if (!EditorGUI.EndChangeCheck())
                 return;
 
-            Undo.RecordObject(seed, "Window tightness");
+            Undo.RecordObject(seed, "Puzzle brief");
+            seed.startMargin = margin;
+            seed.offPath = offPath;
             seed.windowTightness = tightness;
             EditorUtility.SetDirty(seed);
         }
@@ -162,8 +166,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             PuzzlePreviewDraw.Draw(area, puzzle, run);
 
             EditorGUILayout.LabelField("Brief", BriefText(puzzle));
-            EditorGUILayout.LabelField("Start", $"{run.StartOutcome} (margin {run.StartMargin:F3} m)");
-            EditorGUILayout.LabelField("Solution", $"{run.SolvedOutcome} at {run.ShipTime:F2} s");
+            EditorGUILayout.LabelField(
+                "Start", $"{run.StartOutcome} at {run.Start.ShipTime:F3} s (margin {run.StartMargin:F3} m)");
+            EditorGUILayout.LabelField("Solution", $"{run.SolvedOutcome} at {run.ShipTime:F3} s");
             EditorGUILayout.LabelField("Window", $"[{puzzle.tmin:F2}, {puzzle.tmax:F2}]");
             EditorGUILayout.LabelField(
                 "Entropy", $"{run.EntropySpent:F2} / {puzzle.entropyBudget:F2}  ({Stars(run, puzzle)}★)");
@@ -171,10 +176,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         }
 
         private static string BriefText(PuzzleSeed value) =>
-            BriefText(value.translatable, value.moves, value.resizable, value.rotate);
+            BriefText(value.translatable, value.moves, value.resizable, value.rotate)
+            + $" · start {value.startMargin:F2}× · {(value.offPath ? "clock" : "path")}";
 
         private static string BriefText(PuzzleData value) =>
-            BriefText(value.translatable, value.moves, value.resizable, value.rotate);
+            BriefText(value.translatable, value.moves, value.resizable, value.rotate)
+            + $" · launch {value.launchSpeed:F2} m/s";
 
         private static string BriefText(bool translatable, int moves, bool resizable, bool rotate) =>
             $"{(translatable ? "movable" : "fixed")} · {Mathf.Max(1, moves)} zone(s) · "
@@ -191,8 +198,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                     + "start (a miss, or an arrival outside the window); use Find working seed.";
 
             if (status == PuzzleBakeStatus.NoSolution)
-                return "Rejected: no scale arrives inside the run window. The field is too dense, or the "
-                    + "window is too tight for this seed.";
+                return "Rejected: no solution inside the window. For a clock level, the bare launch must "
+                    + "arrive and one scale must move the clock clear of it; for a path level the field may "
+                    + "be too dense or the window too tight. Use Find working seed.";
 
             if (status == PuzzleBakeStatus.Unverified)
                 return "A solution was found but it did not verify inside the window/budget.";

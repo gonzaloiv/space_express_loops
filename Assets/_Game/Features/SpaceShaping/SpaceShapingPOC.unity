@@ -44619,7 +44619,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1000000000000000000000000000001b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.SpaceShapingView
-  prototype: {fileID: 928840115074057839, guid: 3351e7bdf9c6f7d4fa53569a5288df51, type: 3}
+  prototype: {fileID: 1432176000000000001, guid: 6a1a9c1cd3694b11946468f943f46cd8, type: 3}
   sourceParent: {fileID: 1529374044}
   mesh: {fileID: 1402556516}
   cubePrototype: {fileID: 5572121854155305578, guid: 77bfd046ac9cfc04b9b6b681c2b86f03, type: 3}

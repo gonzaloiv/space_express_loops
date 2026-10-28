@@ -18,8 +18,8 @@ MonoBehaviour:
   cubeSizeMax: 0.3
   stepSecs: 0.0008333333
   nominalSpeed: 1
-  planetRadiusMin: 0.01
-  planetRadiusMax: 0.125
+  planetRadiusMin: 0.03
+  planetRadiusMax: 0.09
   corridorClearance: 0.05
   sourceStrengthScale: 5.5555553
   separationScale: 1.2

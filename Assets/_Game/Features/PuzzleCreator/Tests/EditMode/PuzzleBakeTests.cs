@@ -62,20 +62,21 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void Bake_DerivesTheWindowFromTheRun()
+        public void Bake_DerivesTheWindowFromTheProperCrossing()
         {
             PuzzleData variant = Bake(out PuzzleZone[] solution);
-            float cross = variant.Distance / sim.NominalSpeed;
-            float tightness = brief.WindowTightness;
 
-            Assert.AreEqual(cross * (1f - tightness), variant.tmin, 1e-3f);
-            Assert.AreEqual(cross * (1f + tightness), variant.tmax, 1e-3f);
+            Assert.IsTrue(PuzzleWindow.TryCrossing(variant, sim, out float crossing));
+            float halfWidth = brief.WindowTightness * crossing;
+            Assert.AreEqual(crossing - halfWidth, variant.tmin, 1e-3f);
+            Assert.AreEqual(crossing + halfWidth, variant.tmax, 1e-3f);
 
             PuzzleVerification run = PuzzleVerifier.Verify(variant, solution, sim);
             Assert.GreaterOrEqual(run.ShipTime, variant.tmin - 1e-3f);
             Assert.LessOrEqual(run.ShipTime, variant.tmax + 1e-3f);
             Object.DestroyImmediate(variant);
         }
+
 
         [Test]
         public void Bake_FixedAtTheBakedZone()
@@ -96,6 +97,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             authored.moves = 2;
             authored.resizable = true;
             authored.rotate = true;
+            authored.startMargin = 1.05f;
+            authored.offPath = true;
             authored.windowTightness = 0.25f;
 
             PuzzleBrief mapped = PuzzleBrief.From(authored, settings);
@@ -107,6 +110,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Assert.AreEqual(2, mapped.Moves);
             Assert.IsTrue(mapped.Resizable);
             Assert.IsTrue(mapped.Rotate);
+            Assert.AreEqual(1.05f, mapped.StartMargin, 1e-4f);
+            Assert.IsTrue(mapped.OffPath);
             Assert.AreEqual(0.25f, mapped.WindowTightness, 1e-4f);
             Assert.IsFalse(mapped.SupportsSingleZone);
             Object.DestroyImmediate(authored);
@@ -163,6 +168,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Assert.IsNotNull(variant);
             return variant;
         }
+
 
         private static void AssertVariant(PuzzleData variant, PuzzleZone[] solution)
         {

@@ -1,8 +1,8 @@
 # Space Shaping — Physics (clock + mass)
 
-**Status:** now · space shaping · updated 2026-10-27 — the two-term clock and `mass ∝ radius³` are
-landed; the POC re-bakes and verifies. What remains is the **off-path time level** and its window
-tuning. Split out of the creator brief (retired 2026-10-27) so each plan is a morning.
+**Status:** now · space shaping · updated 2026-10-28 — the two-term clock and `mass ∝ radius³` are
+landed; the creator now bakes the off-path clock level (start margin + off-path cube) on a
+**proper-time** window. What remains is the POC re-bake and the headset pass.
 
 **Related:** [cube](../../design/systems/cube.md) · [relativity](../../design/systems/relativity.md) ·
 [progression](../../design/systems/progression.md) §4
@@ -49,19 +49,37 @@ baking variants.
 
 ## Landed (2026-10-27)
 
-- **Two-term clock** in `TrajectoryIntegrator`: `√(max(0, 1 + 2Φ/c² − v²/c²))`, with the ship's velocity
-  per step and a toy `lightSpeed` of `1.414`.
+- **Two-term clock** in `TrajectoryIntegrator`: `√(max(0, 1 + 2Φ/c² − v²/c²))`, with the ship's
+  velocity per step and a toy `lightSpeed` of `1.414`.
 - **`mass ∝ radius³`** in `SpaceShapingSession.BuildField`; `sourceStrengthScale` retuned to `5.5556`,
   with the scale band narrowed to `0.6–1.8`.
 - **`StartFails`** accepts a miss or an arrival outside the window, and rejects a crash; the time-only
   start is no longer required to miss.
-- **Tests**: clock form, mass cube law, out-of-window start and crash-start cases; 55/55 green.
+- **Tests**: clock form, mass cube law, out-of-window start and crash-start cases.
 - **POC re-baked** with the retuned field; the asset verifies.
+
+## Landed (2026-10-28)
+
+- **Per-level start margin.** `PuzzleSeed.startMargin` (0.5–1.5× nominal) is baked into
+  `PuzzleData.launchSpeed`. The time seed runs at `1.05×`, so the bare start **arrives** instead of
+  exhausting the `run / nominal` step budget; path levels keep the `0.9×` miss.
+- **Off-path clock level.** `PuzzleSeed.offPath` makes the bake scan every source at least `0.35 ×`
+  the run from the trajectory, keep a cube that contains only that planet, and require a scale whose
+  proper-time shift clears the bare arrival by `1.5 ×` the window. The fixed cube is baked at the
+  found planet (`zoneCentre` = the solution centre); `PuzzleData` is unchanged.
+- **Proper-time window.** `PuzzleWindow` simulates the pristine field at nominal speed and centres a
+  path level's window on that **proper** crossing; a clock level's window is centred on the found
+  clock solution. `windowTightness` is a fraction of the proper crossing (the time seed uses
+  `0.005`), so a tight window is finally reachable.
+- **Tests.** `PuzzleClockBakeTests` covers the clock bake (bare arrives outside the window, the
+  solution arrives inside, the cube sits off-path); `PuzzleBakeTests` covers the proper-crossing
+  window, the start-margin bake, and the expanded brief.
 
 ## Exit
 
 The clock uses the two-term form; mass is `∝ radius³`; a puzzle re-bakes and verifies with the retuned
 field; an off-path level reads as a pure clock puzzle.
 
-**Met so far:** clock, mass, re-bake, and the broader `StartFails`. **Remaining:** the off-path level
-(fixed-centre authoring or a translatable clock level) and the proper-time window tuning.
+**Met:** clock, mass, proper-time window, re-bake, and the broader `StartFails`. **Met in code:**
+the off-path clock level (start margin + off-path cube) and its EditMode coverage. **Remaining:** the
+POC re-bake with the new window and the headset pass.

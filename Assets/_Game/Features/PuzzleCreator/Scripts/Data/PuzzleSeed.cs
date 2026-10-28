@@ -23,7 +23,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         [Tooltip("The spin gesture is available. Reserved for later puzzles.")]
         public bool rotate;
 
-        [Tooltip("Window half-width as a fraction of the crossing time. 0.5 is a +/-50% band around run / nominalSpeed.")]
+        [Tooltip("Launch speed as a fraction of nominal. Below 1 the bare start runs out of step budget and misses; 1 arrives on the nominal crossing.")]
+        [Range(0.5f, 1.5f)]
+        public float startMargin = 0.9f;
+
+        [Tooltip("The time tutorial: the fixed cube sits on a planet off the trajectory, so the scale moves the clock without bending the path. The window is baked around the found clock solution.")]
+        public bool offPath;
+
+        [Tooltip("Window half-width as a fraction of the nominal proper crossing. 0.5 is a +/-50% band around the ship-clock crossing at nominal speed; a clock level needs a much tighter band.")]
         [Range(0f, 1f)]
         public float windowTightness = 0.5f;
     }

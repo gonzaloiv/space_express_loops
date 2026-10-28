@@ -21,9 +21,12 @@ namespace DigitalLove.Game.Nodes
 
         public void Init(float radius, int variantSeed)
         {
-            body.localScale = new Vector3(radius, radius, radius);
+            SetRadius(radius);
             SetActiveRendererBySeed(variantSeed);
         }
+
+        public void SetRadius(float radius) =>
+            body.localScale = new Vector3(radius, radius, radius);
 
         public void SetVisible(bool visible)
         {

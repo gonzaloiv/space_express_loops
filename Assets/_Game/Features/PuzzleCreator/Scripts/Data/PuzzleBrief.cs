@@ -12,6 +12,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public int Moves;
         public bool Resizable;
         public bool Rotate;
+        public float StartMargin;
+        public bool OffPath;
 
         public bool SupportsSingleZone => Moves <= 1 && !Rotate;
 
@@ -24,7 +26,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             Translatable = seed.translatable,
             Moves = Mathf.Max(1, seed.moves),
             Resizable = seed.resizable,
-            Rotate = seed.rotate
+            Rotate = seed.rotate,
+            StartMargin = Mathf.Clamp(seed.startMargin, 0.1f, 2f),
+            OffPath = seed.offPath
         };
     }
 }

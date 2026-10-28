@@ -10,7 +10,7 @@ scale the space, scale the content; the ship flies the deformed spacetime.
 
 | Plan | Area | Why here |
 |---|---|---|
-| [Space shaping — physics (clock + mass)](in-progress/space-shaping-physics.md) | space shaping | Core landed: two-term clock with toy `c`, `mass ∝ radius³`, out-of-window start allowed, POC re-baked. The off-path level needs a start-margin dial + off-path cube; proper-time window remains. |
+| [Space shaping — physics (clock + mass)](in-progress/space-shaping-physics.md) | space shaping | Clock, mass, proper-time window, and the off-path clock bake are landed; the POC re-bake + headset pass remain. |
 
 ## Next
 

@@ -5,7 +5,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     public static class PuzzleFieldBake
     {
         private const float StarBudgetFactor = 3f;
-        private const float BareMissMargin = 0.9f;
         private const float MinRunFraction = 0.5f;
         private const float MaxRunFactor = 1.5f;
 
@@ -28,7 +27,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.destination = destination;
             puzzle.captureRadius = CaptureRadius(puzzle.sources, destination);
             puzzle.zoneCentre = (origin + destination) * 0.5f;
-            puzzle.launchSpeed = LaunchSpeed(settings);
+            puzzle.launchSpeed = LaunchSpeed(settings, brief);
         }
 
         public static PuzzleData Bake(
@@ -52,16 +51,32 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return null;
 
             status = PuzzleBakeStatus.NoRun;
-            if (!DeriveWindow(field, settings, brief.WindowTightness))
+            if (!PuzzleWindow.TryCrossing(field, settings, out float crossing))
                 return null;
 
+            if (!brief.OffPath)
+                PuzzleWindow.SetCrossing(field, crossing, brief.WindowTightness);
+
             status = PuzzleBakeStatus.StartNotFailed;
-            if (!StartFails(field, settings))
+            if (!brief.OffPath && !StartFails(field, settings))
                 return null;
 
             status = PuzzleBakeStatus.NoSolution;
             if (!PuzzleSolutionSearch.TrySelect(field, settings, brief, out PuzzleSolution found))
                 return null;
+
+            if (brief.OffPath
+                && !PuzzleWindow.SetSolution(field, crossing, brief.WindowTightness, found.ShipTime))
+            {
+                status = PuzzleBakeStatus.NoSolution;
+                return null;
+            }
+
+            if (!StartFails(field, settings))
+            {
+                status = PuzzleBakeStatus.StartNotFailed;
+                return null;
+            }
 
             solution = found.Zones;
             return Verified(field, found, brief, settings, out status);
@@ -82,18 +97,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             Object.DestroyImmediate(variant);
             status = PuzzleBakeStatus.Unverified;
             return null;
-        }
-
-        private static bool DeriveWindow(PuzzleData field, PuzzleSimSettings settings, float tightness)
-        {
-            if (settings.NominalSpeed <= 0f)
-                return false;
-
-            float cross = field.Distance / settings.NominalSpeed;
-            float fraction = Mathf.Clamp(tightness, 0f, 1f);
-            field.tmin = cross * (1f - fraction);
-            field.tmax = cross * (1f + fraction);
-            return true;
         }
 
         private static PuzzleData Variant(PuzzleData field, PuzzleSolution solution, PuzzleBrief brief)
@@ -186,8 +189,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return 0.06f;
         }
 
-        private static float LaunchSpeed(PuzzleSimSettings settings) =>
-            BareMissMargin * settings.NominalSpeed;
+        private static float LaunchSpeed(PuzzleSimSettings settings, PuzzleBrief brief) =>
+            brief.StartMargin * settings.NominalSpeed;
 
         private readonly struct RunTarget
         {

@@ -1,14 +1,15 @@
-using DigitalLove.Game.Nodes;
 using UnityEngine;
 
-namespace DigitalLove.Game.SilentPlanets
+namespace DigitalLove.Game.Nodes
 {
-    public class SilentPlanetBehaviour : MonoBehaviour, IPoolableNode
+    public class FieldPlanetBehaviour : MonoBehaviour, IPoolableNode
     {
         [SerializeField] private NodeBody nodeBody;
 
         private bool isVisible = true;
+        private bool hasVariant;
         private float radius = 0.1f;
+        private int variantSeed;
 
         public bool IsActive => gameObject.activeInHierarchy;
         public Vector3 LocalPosition => transform.localPosition;
@@ -18,16 +19,22 @@ namespace DigitalLove.Game.SilentPlanets
         public void Initialize()
         {
             radius = 0.1f;
+            hasVariant = false;
             nodeBody.Init(radius, 0);
             isVisible = false;
             nodeBody.SetVisible(false);
         }
 
-        public void Spawn(Vector3 localPosition, float spawnRadius, int variantSeed)
+        public void Spawn(Vector3 localPosition, float spawnRadius, int seed)
         {
             radius = spawnRadius;
             transform.localPosition = localPosition;
-            nodeBody.Init(radius, variantSeed);
+
+            if (hasVariant && variantSeed == seed)
+                nodeBody.SetRadius(spawnRadius);
+            else
+                SpawnWithVariant(spawnRadius, seed);
+
             gameObject.SetActive(true);
             SetVisible(true);
         }
@@ -45,6 +52,13 @@ namespace DigitalLove.Game.SilentPlanets
 
             isVisible = visible;
             nodeBody.SetVisible(visible);
+        }
+
+        private void SpawnWithVariant(float spawnRadius, int seed)
+        {
+            hasVariant = true;
+            variantSeed = seed;
+            nodeBody.Init(spawnRadius, seed);
         }
     }
 }
