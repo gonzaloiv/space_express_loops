@@ -118,7 +118,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void Bake_RejectsMultiZone()
+        public void Bake_RejectsFixedMultiZone()
         {
             PuzzleBrief multi = brief;
             multi.Moves = 2;

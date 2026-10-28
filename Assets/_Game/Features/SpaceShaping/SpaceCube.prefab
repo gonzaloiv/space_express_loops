@@ -169,13 +169,16 @@ MonoBehaviour:
   frameResize: {r: 1, g: 0.55, b: 0.15, a: 1}
   frameGain: 1.5
   frameGrowRatio: 2
-  fillIdle: {r: 0.55, g: 0.65, b: 0.95, a: 0.1}
+  fillIdle: {r: 0.55, g: 0.65, b: 0.95, a: 0.16}
   fillHover: {r: 0.7, g: 0.82, b: 1, a: 0.22}
   fillShrink: {r: 0.2, g: 0.6, b: 1, a: 0.28}
   fillMagnify: {r: 1, g: 0.45, b: 0.2, a: 0.28}
   settings: {fileID: 11400000, guid: 1000000000000000000000000000001a, type: 2}
   scaleGain: 2
   scaleSmoothSecs: 0.08
+  frameSolved: {r: 0.35, g: 1, b: 0.55, a: 1}
+  frameMiss: {r: 0.75, g: 0.85, b: 1, a: 1}
+  frameCrash: {r: 1, g: 0.35, b: 0.3, a: 1}
 --- !u!1 &6340765332551876216
 GameObject:
   m_ObjectHideFlags: 0
@@ -284,6 +287,7 @@ MonoBehaviour:
   falloff: 0.5
   contentInsetFraction: 0.05
   contentVisual: {fileID: 929135511502200135}
+  listener: {fileID: 5660060481010103316}
 --- !u!1 &6637559019825712861
 GameObject:
   m_ObjectHideFlags: 0

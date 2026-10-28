@@ -2,7 +2,7 @@
 
 **Status:** idea · universe · updated 2026-10-26 — the ambient/decor element set for the sector field. Not scheduled.
 
-**Related:** [integration](../plans/backlog/space-shaping-integration.md) · [progression](../design/systems/progression.md)
+**Related:** [campaign map](../plans/backlog/space-shaping-campaign-map.md) · [progression](../design/systems/progression.md)
 
 Belts/moons, then nebula billboards, stations, comets, gates, and black holes, in that order. Each
 element gets a perf budget and a decor/gameplay classification before art. Do not start with

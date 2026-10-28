@@ -54,16 +54,23 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void SetZoneScale(float scale) => Cube().SetScale(scale);
 
+        public void SetPrediction(bool solved, TrajectoryOutcome outcome) =>
+            Cube().SetPrediction(solved, outcome);
+
         public void Snapshot()
         {
             lastZone = Cube().Zone;
             hasSnapshot = true;
         }
 
-        public void Render(SpacetimeField field, IReadOnlyList<SpaceZone> zones, float radius) =>
-            mesh.Render(field, zones, radius);
+        public void Render(
+            SpacetimeField field, IReadOnlyList<SpaceZone> zones, Vector3 origin, Vector3 destination,
+            float crossHalf) =>
+            mesh.Render(field, zones, origin, destination, crossHalf);
 
         public void ShowTrajectory(TrajectoryResult result) => trajectory.Show(result);
+
+        public void PulseTrajectory() => trajectory.Pulse();
 
         public void ResetZone()
         {

@@ -22,6 +22,12 @@ namespace DigitalLove.Game.SpaceShaping.EditorTools
                         ? $"[SpaceShaping] Applied solved cube at scale {scale:0.0000}."
                         : "[SpaceShaping] No solution found in the reachable scale band.");
                 }
+
+                if (GUILayout.Button("Reset puzzle"))
+                    ((SpaceShapingState)target).ResetPuzzle();
+
+                if (GUILayout.Button("Next puzzle"))
+                    ((SpaceShapingState)target).NextPuzzle();
             }
 
             if (!Application.isPlaying)

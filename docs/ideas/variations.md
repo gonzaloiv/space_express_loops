@@ -5,7 +5,7 @@
 not move count; there is **one view**, not a Map/Sculpt split. This doc records the
 variations that sit *after* the validation.
 
-**Related:** [vision](../design/vision.md) · [resources](../design/systems/resources.md) · [progression](../design/systems/progression.md) · POC · [integration](../plans/backlog/space-shaping-integration.md)
+**Related:** [vision](../design/vision.md) · [resources](../design/systems/resources.md) · [progression](../design/systems/progression.md) · POC · [catalogue](../plans/backlog/space-shaping-catalogue.md)
 
 **Wiring rule:** all visuals and interaction props stay authored in the scene/prefabs
 with serialized references. No runtime component lookup, mesh/material creation, or

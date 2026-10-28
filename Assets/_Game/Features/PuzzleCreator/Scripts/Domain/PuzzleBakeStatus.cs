@@ -6,6 +6,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         NoRun,
         StartNotFailed,
         NoSolution,
+        FewerZones,
         Unverified,
         UnsupportedBrief
     }

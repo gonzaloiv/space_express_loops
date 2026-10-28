@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10000000000000000000000000000016, type: 3}
+  m_Name: Multizone_Seed1_Puzzle
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.PuzzleData
+  id: 
+  prefab: {fileID: 0}
+  origin: {x: 0.3554318, y: 0.037354182, z: 0.20520867}
+  destination: {x: -0.38203958, y: -0.05890008, z: -0.3820397}
+  zoneCentre: {x: -0.013303891, y: -0.010772949, z: -0.08841551}
+  cubeSizeMin: 0.15
+  cubeSizeMax: 0.3
+  cubeSize: 0.3
+  captureRadius: 0.03801596
+  translatable: 0
+  moves: 2
+  resizable: 0
+  rotate: 0
+  launchSpeed: 0.9
+  tmin: 0.3182755
+  tmax: 0.95482653
+  entropyBudget: 0.5142857
+  sources:
+  - home: {x: 0.07261138, y: -0.009063597, z: 0.27098945}
+    scale: 0.14353107
+  - home: {x: -0.27098942, y: 0.065962836, z: -0.07261141}
+    scale: 0.123488426
+  - home: {x: 0.19837809, y: 0.043646857, z: -0.19837797}
+    scale: 0.105005115
+  - home: {x: -0.35543185, y: -0.054142576, z: 0.20520857}
+    scale: 0.14638832
+  - home: {x: 0.000000004894177, y: 0.054448713, z: -0.4104173}
+    scale: 0.085634686
+  - home: {x: 0.3554318, y: 0.037354182, z: 0.20520867}
+    scale: 0.07574896
+  - home: {x: -0.38203958, y: -0.05890008, z: -0.3820397}
+    scale: 0.07603192
+  - home: {x: 0.52187586, y: -0.022266325, z: -0.1398361}
+    scale: 0.06854407
+  - home: {x: -0.13983612, y: 0.045711115, z: 0.52187586}
+    scale: 0.17476304

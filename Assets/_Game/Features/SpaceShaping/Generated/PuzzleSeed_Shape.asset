@@ -14,21 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Creator::DigitalLove.Game.SpaceShaping.Creator.PuzzleShapeAsset
   seed: 1
   distance: 1
-  clearance: 0.05
+  clearance: 0.035
   shape:
     kind: 2
     anchorScale:
       min: 1
       max: 1
     radius:
-      min: 0.87142855
-      max: 0.87142855
+      min: 0.61
+      max: 0.61
     planetCount:
       min: 8
       max: 8
     planetRadius:
-      min: 0.03
-      max: 0.09
+      min: 0.021
+      max: 0.063
     ringCount:
       min: 2
       max: 2

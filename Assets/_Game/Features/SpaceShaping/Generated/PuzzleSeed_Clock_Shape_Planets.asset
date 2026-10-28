@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b09b8d5cd9a9d142a7b285eea85e9e8, type: 3}
+  m_Name: PuzzleSeed_Clock_Shape_Planets
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Creator::DigitalLove.Game.SpaceShaping.Creator.PuzzlePlanetListAsset
+  distance: 1
+  clearance: 0.035
+  planets:
+  - position: {x: 0.050827965, y: -0.006344517, z: 0.18969263}
+    radius: 0.050235875
+  - position: {x: -0.18969262, y: 0.046173982, z: -0.05082799}
+    radius: 0.04322095
+  - position: {x: 0.13886468, y: 0.030552799, z: -0.13886459}
+    radius: 0.03675179
+  - position: {x: -0.24880233, y: -0.0378998, z: 0.14364603}
+    radius: 0.05123591
+  - position: {x: 0.0000000034259247, y: 0.038114097, z: -0.28729215}
+    radius: 0.02997214
+  - position: {x: 0.2488023, y: 0.026147928, z: 0.14364609}
+    radius: 0.026512135
+  - position: {x: -0.26742774, y: -0.041230056, z: -0.26742783}
+    radius: 0.026611172
+  - position: {x: 0.3653132, y: -0.0155864265, z: -0.09788529}
+    radius: 0.023990422

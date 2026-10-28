@@ -12,6 +12,7 @@ namespace DigitalLove.Game.SpaceShaping
         public float Tmin { get; }
         public float Tmax { get; }
         public TrajectoryOutcome Outcome { get; }
+        public bool PredictedSolved { get; }
         public bool IsChecked { get; }
         public bool IsSolved { get; }
         public bool IsFailed { get; }
@@ -29,6 +30,7 @@ namespace DigitalLove.Game.SpaceShaping
             Tmin = session.Tmin;
             Tmax = session.Tmax;
             Outcome = result.Outcome;
+            PredictedSolved = session.IsSolved(result);
             IsChecked = isChecked;
             IsSolved = solved;
             IsFailed = isChecked && session.IsFailed(result);

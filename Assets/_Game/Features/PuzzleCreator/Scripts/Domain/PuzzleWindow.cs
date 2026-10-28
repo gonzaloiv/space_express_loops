@@ -39,6 +39,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public static float HalfWidth(float crossing, float tightness) =>
             crossing <= 0f ? 0f : Mathf.Clamp01(tightness) * crossing;
 
+        internal static bool Contains(PuzzleData field, float shipTime) =>
+            shipTime >= field.tmin && shipTime <= field.tmax;
+
         private static void Set(PuzzleData field, float centre, float halfWidth)
         {
             field.tmin = centre - halfWidth;

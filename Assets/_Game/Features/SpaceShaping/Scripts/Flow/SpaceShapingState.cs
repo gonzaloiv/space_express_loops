@@ -18,6 +18,7 @@ namespace DigitalLove.Game.SpaceShaping
         private TrajectoryResult lastResult;
         private PuzzleReadout readout;
         private int puzzleIndex;
+        private float[] debugSolvedScales;
         private bool wasScaling;
         private bool hasResult;
         private bool isChecked;
@@ -57,7 +58,9 @@ namespace DigitalLove.Game.SpaceShaping
         public void PreviewField()
         {
             SpaceShapingSession preview = new(BuildSetup());
-            view.Render(preview.BuildField(), preview.Zones, FieldRadius(preview));
+            view.Render(
+                preview.BuildField(), preview.Zones, preview.Origin, preview.Destination,
+                LatticeCrossHalf(preview));
         }
 
         public float DebugApplySolvedCube()
@@ -66,13 +69,27 @@ namespace DigitalLove.Game.SpaceShaping
                 return 0f;
 
             ResetPuzzle();
-            float scale = FindDebugSolution(view.Zone);
+            float scale = DebugScale(puzzleIndex);
             if (scale <= 0f)
                 return 0f;
 
             view.SetZoneScale(scale);
             session.ApplyZone(view.Zone);
             ship.Travel(PushField());
+            return scale;
+        }
+
+        private float DebugScale(int index)
+        {
+            if (debugSolvedScales == null)
+                debugSolvedScales = new float[puzzles.Length];
+
+            float scale = debugSolvedScales[index];
+            if (scale > 0f)
+                return scale;
+
+            scale = FindDebugSolution(view.Zone);
+            debugSolvedScales[index] = scale;
             return scale;
         }
 
@@ -173,7 +190,9 @@ namespace DigitalLove.Game.SpaceShaping
 
             SpacetimeField field = session.BuildField();
             TrajectoryResult result = session.Simulate(field, integrator, launch);
-            view.Render(field, session.Zones, FieldRadius(session));
+            view.SetPrediction(session.IsSolved(result), result.Outcome);
+            view.Render(
+                field, session.Zones, session.Origin, session.Destination, LatticeCrossHalf(session));
             view.ShowTrajectory(result);
             view.Snapshot();
 
@@ -191,6 +210,7 @@ namespace DigitalLove.Game.SpaceShaping
 
             isChecked = true;
             PublishReadout();
+            view.PulseTrajectory();
         }
 
         private void PublishReadout()
@@ -202,13 +222,22 @@ namespace DigitalLove.Game.SpaceShaping
             ReadoutChanged?.Invoke(readout);
         }
 
-        private static float FieldRadius(SpaceShapingSession session)
+        private float LatticeCrossHalf(SpaceShapingSession session)
         {
-            float outer = 0f;
+            Vector3 run = session.Destination - session.Origin;
+            float length = run.magnitude;
+            Vector3 direction = length > 0.0001f ? run / length : Vector3.forward;
+            float half = 0f;
             for (int i = 0; i < session.SourceCount; i++)
-                outer = Mathf.Max(outer, session.GetPosition(i).magnitude + session.GetScale(i) * 0.5f);
+            {
+                Vector3 offset = session.GetPosition(i) - session.Origin;
+                Vector3 perpendicular = offset - direction * Vector3.Dot(offset, direction);
+                half = Mathf.Max(half, perpendicular.magnitude + session.GetScale(i) * 0.5f);
+            }
 
-            return Mathf.Max(outer, 0.01f);
+            PuzzleData puzzle = puzzles[puzzleIndex];
+            float cube = puzzle.cubeSize > 0f ? puzzle.cubeSize : settings.cubeSize;
+            return Mathf.Max(half, cube * 0.5f);
         }
 
         private SpaceShapingSetup BuildSetup() =>

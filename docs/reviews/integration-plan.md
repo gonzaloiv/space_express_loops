@@ -1,7 +1,12 @@
 # Review — space-shaping integration plan
 
 **Date:** 2026-10-27.
-**Scope:** [space-shaping-integration.md](../plans/backlog/space-shaping-integration.md) against the design
+**Scope:** the integration plan (now split into six: [in the game](../plans/backlog/space-shaping-in-game.md),
+[campaign map](../plans/backlog/space-shaping-campaign-map.md),
+[HUD + validation 2](../plans/backlog/space-shaping-hud-validation.md),
+[progression](../plans/backlog/space-shaping-progression.md),
+[legacy cut](../plans/backlog/space-shaping-legacy-cut.md),
+[catalogue](../plans/backlog/space-shaping-catalogue.md)) against the design
 docs and the code (`Assets/_Game`).
 **Verdict:** the direction is right, but the plan was **stale in five places**, **oversized for one plan**,
 and **most of its open questions were already settled** by [variations](../ideas/variations.md),
@@ -14,7 +19,12 @@ corrections, the selector/HUD/cut-depth notes and the validation-gate split are 
 contracts are the campaign shape, progression record, runtime puzzle contract, run/readout and ownership.
 
 **Applied 2026-10-28:** the POC now spawns the shared planet view (`FieldPlanetBehaviour`) from the shared
-prefab; `SpaceSourceView` and the POC-only `PuzzlePlanet.prefab` are removed, so I0 reuses the view as-is.
+prefab; `SpaceSourceView` and the POC-only `PuzzlePlanet.prefab` are removed, so the in-game plan reuses the
+view as-is.
+
+**Applied 2026-10-28 (split):** the oversized plan was replaced by six one-morning plans — in the game,
+campaign map, HUD + validation 2, progression, legacy cut, catalogue + acceptance. The gate moved to the end
+of the HUD plan; each contract (§6) now lives in the plan that consumes it.
 
 ## 1. Close now (settled elsewhere)
 
@@ -55,16 +65,17 @@ prefab; `SpaceSourceView` and the POC-only `PuzzlePlanet.prefab` are removed, so
 - **Result/fail UX** — window, entropy-zero fail, grade, retry/map.
 - **Performance gate** — 72 fps on Quest 3S, map/puzzle budgets, device capture.
 - **Content dependency** — the brief’s `moves = 2+` work is now the
-  [multi-zone plan](../plans/backlog/space-shaping-multizone.md); physics must land before bakes.
+  [multi-zone plan](../plans/in-progress/space-shaping-multizone.md); physics must land before bakes.
 - **Test/device pass** — boot → map → pick → solve → back → reload; no legacy route/hub/round content.
 
 ## 4. Plan shape
 
-This was a project, not a morning. The plan is now two stages with a hard gate:
+This was a project, not a morning. It is now six plans, each one sitting, with the gate kept:
 
-- **A — fuse the slice (I0–I1).** One puzzle in `Game.unity`, the puzzle flow, the minimal HUD, the
-  map→puzzle handoff. **This is validation 2.**
-- **B — campaign (I2–I5).** Progression save, legacy cut, catalogue, acceptance.
+- **In the game** — one puzzle in `Game.unity`, the flow, the result seam, the job card.
+- **Campaign map** — cube map, pick → scale up → play → back; keeper moves.
+- **HUD + validation 2** — entropy, clock window, result/fail. **Its exit is the gate.**
+- **Progression, legacy cut, catalogue + acceptance** — only after the gate.
 
 No legacy deletion or progression work before validation 2 passes.
 
@@ -89,4 +100,7 @@ These are contracts and seams, not flow or scene work:
    `GameStartState`.
 8. **Performance budget.** 72 fps per-frame budget and the device pass.
 
-The [plan](../plans/backlog/space-shaping-integration.md) §6 has the current proposed definitions.
+Each contract now lives in the plan that consumes it: runtime puzzle + run/readout in
+[in the game](../plans/backlog/space-shaping-in-game.md) §3–§4, map/flow/ownership in
+[campaign map](../plans/backlog/space-shaping-campaign-map.md) §3, the record in
+[progression](../plans/backlog/space-shaping-progression.md) §3.

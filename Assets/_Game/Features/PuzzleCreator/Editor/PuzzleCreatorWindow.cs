@@ -193,12 +193,16 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         private static string Message(PuzzleBakeStatus status)
         {
             if (status == PuzzleBakeStatus.UnsupportedBrief)
-                return "Rejected: this creator ships one zone and no rotate. Set moves to 1 and rotate off "
-                    + "on the seed.";
+                return "Rejected: this creator supports 1–3 zones and no rotate. Multi-zone needs "
+                    + "translatable on; off-path levels stay single-zone; rotate must be off.";
 
             if (status == PuzzleBakeStatus.StartNotFailed)
                 return "Rejected: the bare start already solves or crashes. The level needs a failing "
                     + "start (a miss, or an arrival outside the window); use Find working seed.";
+
+            if (status == PuzzleBakeStatus.FewerZones)
+                return "Rejected: a solution with fewer zones still arrives inside the window at the same "
+                    + "cube size, so this seed does not teach the extra zone. Use Find working seed.";
 
             if (status == PuzzleBakeStatus.NoSolution)
                 return "Rejected: no solution inside the window. For a clock level, the bare launch must "

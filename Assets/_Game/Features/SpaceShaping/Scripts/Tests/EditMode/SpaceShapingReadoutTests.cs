@@ -16,6 +16,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             Assert.IsFalse(readout.IsChecked);
             Assert.IsFalse(readout.IsSolved);
             Assert.IsFalse(readout.IsFailed);
+            Assert.IsTrue(readout.PredictedSolved);
             Assert.AreEqual(0, readout.Grade);
             Assert.AreEqual(0f, readout.EntropySpent, 0.0001f);
             Assert.AreEqual(0.5f, readout.EntropyPending, 0.0001f);

@@ -16,7 +16,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         [Tooltip("The cube may be moved over the field. Fixed levels bake the cube where the solution sits.")]
         public bool translatable;
 
-        [Tooltip("How many zones the solution scales. The creator ships one zone; multi-zone bands wait for the multi-zone search.")]
+        [Tooltip("How many zones the solution scales (1–3). Multi-zone needs translatable; the cube moves between zones.")]
         [Min(1)]
         public int moves = 1;
 

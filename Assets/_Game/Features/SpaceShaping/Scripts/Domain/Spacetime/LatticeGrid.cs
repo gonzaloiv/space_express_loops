@@ -18,7 +18,8 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         public static Vector3 Warp(
-            Vector3 node, SpacetimeField field, float depthScale, float maxDisplacement, IReadOnlyList<SpaceZone> zones)
+            Vector3 node, SpacetimeField field, float depthScale, float maxDisplacement,
+            IReadOnlyList<SpaceZone> zones, float zoneShells)
         {
             Vector3 warped = node;
             if (zones != null)
@@ -29,7 +30,7 @@ namespace DigitalLove.Game.SpaceShaping
                     if (!zone.IsActive)
                         continue;
 
-                    float inside = zone.InsideFactor(node);
+                    float inside = VisualInsideFactor(zone, node, zoneShells);
                     warped = Vector3.Lerp(warped, zone.Centre + (warped - zone.Centre) * zone.Scale, inside);
                 }
             }
@@ -42,6 +43,19 @@ namespace DigitalLove.Game.SpaceShaping
                 pull = pull.normalized * maxDisplacement;
 
             return warped + pull;
+        }
+
+        private static float VisualInsideFactor(SpaceZone zone, Vector3 node, float shells)
+        {
+            Vector3 offset = node - zone.Centre;
+            Vector3 inset = zone.HalfExtents - new Vector3(
+                Mathf.Abs(offset.x), Mathf.Abs(offset.y), Mathf.Abs(offset.z));
+            float margin = Mathf.Min(inset.x, Mathf.Min(inset.y, inset.z));
+            float extent = Mathf.Min(zone.HalfExtents.x, Mathf.Min(zone.HalfExtents.y, zone.HalfExtents.z));
+            float edge = Mathf.Max(zone.Falloff * extent, 0.0001f);
+            float outside = edge * Mathf.Max(shells, 0f);
+            float t = Mathf.Clamp01((margin + outside) / (edge + outside));
+            return t * t * (3f - 2f * t);
         }
 
         public static Vector3 RingOffset(int axis, int side, int sides)

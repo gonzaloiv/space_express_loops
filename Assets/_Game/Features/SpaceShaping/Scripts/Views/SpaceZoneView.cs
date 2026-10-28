@@ -7,6 +7,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private float falloff = 0.5f;
         [SerializeField] private float contentInsetFraction = 0.05f;
         [SerializeField] private Transform contentVisual;
+        [SerializeField] private ZoneGrabListener listener;
 
         private float scale = 1f;
         private bool scaling;
@@ -56,6 +57,9 @@ namespace DigitalLove.Game.SpaceShaping
         public void SetFalloff(float value) => falloff = Mathf.Max(value, 0f);
 
         public void SetScale(float value) => scale = Mathf.Max(value, 0.01f);
+
+        public void SetPrediction(bool solved, TrajectoryOutcome outcome) =>
+            listener.SetPrediction(solved, outcome);
 
         public void SetScaling(bool value) => scaling = value;
 

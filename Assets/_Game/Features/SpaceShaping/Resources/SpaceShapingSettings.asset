@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10000000000000000000000000000019, type: 3}
   m_Name: SpaceShapingSettings
   m_EditorClassIdentifier: 
-  runDistance: 1
-  cubeSize: 0.25
-  cubeSizeMin: 0.15
-  cubeSizeMax: 0.3
+  runDistance: 0.7
+  cubeSize: 0.175
+  cubeSizeMin: 0.105
+  cubeSizeMax: 0.21
   stepSecs: 0.0008333333
   nominalSpeed: 1
-  planetRadiusMin: 0.03
-  planetRadiusMax: 0.09
-  corridorClearance: 0.05
+  planetRadiusMin: 0.021
+  planetRadiusMax: 0.063
+  corridorClearance: 0.035
   sourceStrengthScale: 5.5555553
   separationScale: 1.2
   lightSpeed: 1.4142135

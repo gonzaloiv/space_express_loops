@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
 {
-    public class SpacetimeMeshView : MonoBehaviour
+    public class SpacetimeMeshView : MonoBehaviour, ISerializationCallbackReceiver
     {
         [SerializeField] private float fieldMargin = 0.05f;
 
@@ -15,13 +15,17 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private float radius = 0.005f;
         [SerializeField] private float depthScale = 0.15f;
         [SerializeField] private float maxDisplacement = 0.08f;
+        [SerializeField] private float zoneShells = 3f;
+        [SerializeField] private float latticePadding = 0.02f;
 
         private Mesh mesh;
         private Vector3[] vertices;
         private int samplesPerLine;
         private SpacetimeField lastField;
         private IReadOnlyList<SpaceZone> lastZones;
-        private float lastExtent;
+        private Vector3 lastOrigin;
+        private Vector3 lastDestination;
+        private float lastCrossHalf;
 
         public int GridCount => gridCount;
 
@@ -29,16 +33,27 @@ namespace DigitalLove.Game.SpaceShaping
 
         public float Radius => radius;
 
-        public void Render(SpacetimeField field, IReadOnlyList<SpaceZone> zones, float halfExtent)
+        public void Render(
+            SpacetimeField field, IReadOnlyList<SpaceZone> zones, Vector3 origin, Vector3 destination,
+            float crossHalf)
         {
             lastField = field;
             lastZones = zones;
-            lastExtent = halfExtent;
+            lastOrigin = origin;
+            lastDestination = destination;
+            lastCrossHalf = crossHalf;
             EnsureMesh();
 
-            float half = halfExtent / transform.lossyScale.x * (1f + fieldMargin);
-            Vector3 gridMin = new(-half, -half, -half);
-            Vector3 gridMax = new(half, half, half);
+            Vector3 run = destination - origin;
+            float length = run.magnitude;
+            Vector3 forward = length > 0.0001f ? run / length : Vector3.forward;
+            transform.localPosition = (origin + destination) * 0.5f;
+            transform.localRotation = Quaternion.LookRotation(forward, Vector3.up);
+
+            float halfLength = length * 0.5f + fieldMargin * length;
+            float halfWidth = crossHalf + latticePadding;
+            Vector3 gridMin = new(-halfLength, -halfWidth, -halfWidth);
+            Vector3 gridMax = new(halfLength, halfWidth, halfWidth);
 
             int perAxis = gridCount * gridCount;
             int perLine = samplesPerLine * sides;
@@ -57,8 +72,11 @@ namespace DigitalLove.Game.SpaceShaping
                 int j = line % gridCount;
                 float nodeIndex = (float)sample / (samplesPerLine - 1) * (gridCount - 1);
                 Vector3 node = LatticeGrid.Node(axis, nodeIndex, i, j, gridCount, gridMin, gridMax);
-                Vector3 warped = LatticeGrid.Warp(node, field, depthScale, maxDisplacement, zones);
-                vertices[v] = warped + LatticeGrid.RingOffset(axis, side, sides) * radius;
+                Vector3 puzzleNode = transform.parent.InverseTransformPoint(transform.TransformPoint(node));
+                Vector3 warped = LatticeGrid.Warp(
+                    puzzleNode, field, depthScale, maxDisplacement, zones, zoneShells);
+                Vector3 localWarped = transform.InverseTransformPoint(transform.parent.TransformPoint(warped));
+                vertices[v] = localWarped + LatticeGrid.RingOffset(axis, side, sides) * radius;
             }
 
             mesh.SetVertices(vertices);
@@ -70,7 +88,12 @@ namespace DigitalLove.Game.SpaceShaping
         private void EnsureMesh()
         {
             if (mesh != null && mesh.vertexCount == sourceMesh.vertexCount)
+            {
+                if (meshFilter.sharedMesh != mesh)
+                    meshFilter.sharedMesh = mesh;
+
                 return;
+            }
 
             if (mesh != null)
             {
@@ -92,8 +115,9 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void OnValidate()
         {
-            if (mesh != null && lastExtent > 0f)
-                Render(lastField, lastZones, lastExtent);
+            if (mesh != null && lastCrossHalf > 0f
+                && (lastDestination - lastOrigin).sqrMagnitude > 0.000001f)
+                Render(lastField, lastZones, lastOrigin, lastDestination, lastCrossHalf);
         }
 
         private void OnDestroy()
@@ -101,10 +125,23 @@ namespace DigitalLove.Game.SpaceShaping
             if (mesh == null)
                 return;
 
+            if (meshFilter.sharedMesh == mesh)
+                meshFilter.sharedMesh = sourceMesh;
+
             if (Application.isPlaying)
                 Destroy(mesh);
             else
                 DestroyImmediate(mesh);
+        }
+
+        public void OnBeforeSerialize()
+        {
+            if (meshFilter.sharedMesh == mesh)
+                meshFilter.sharedMesh = sourceMesh;
+        }
+
+        public void OnAfterDeserialize()
+        {
         }
     }
 }

@@ -1,16 +1,18 @@
 # Feel polish — candidates
 
 **Status:** idea · presentation · updated 2026-10-28 — candidates, **not plans**. The decided presentation
-work moved to [integration](../plans/backlog/space-shaping-integration.md).
+work moved to [HUD + validation 2](../plans/backlog/space-shaping-hud-validation.md).
 **Related:** [presentation](../design/presentation.md) · [the cube](../design/systems/cube.md) ·
-[jobs](../design/jobs.md) · [integration](../plans/backlog/space-shaping-integration.md)
+[jobs](../design/jobs.md) · [HUD + validation 2](../plans/backlog/space-shaping-hud-validation.md)
 
 ## Why this exists
 
-The later presentation items lost their single owner: the window gauge and the fail beat are I1, the
-per-job manual and tech voice are I0/I4, and the flight is already in the code (`ShipTravelView`). What is
-left is undecided polish. None of it gates the mechanic, and the time already reads numerically
-(`PuzzleLabPanel.cs:44-46`).
+The later presentation items lost their single owner: the window gauge and the fail beat are
+[HUD + validation 2](../plans/backlog/space-shaping-hud-validation.md), the
+per-job manual and tech voice are [in the game](../plans/backlog/space-shaping-in-game.md) /
+[catalogue](../plans/backlog/space-shaping-catalogue.md), and the flight is already in the code
+(`ShipTravelView`). What is left is undecided polish. None of it gates the mechanic, and the time already
+reads numerically (`PuzzleLabPanel.cs:44-46`).
 
 ## 1. Lattice time tint
 

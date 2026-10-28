@@ -11,11 +11,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public static bool TrySelect(
             PuzzleData puzzle, PuzzleSimSettings settings, PuzzleBrief brief, out PuzzleSolution solution)
         {
-            if (!brief.SupportsSingleZone)
+            if (!brief.SupportsMoves)
             {
                 solution = default;
                 return false;
             }
+
+            if (brief.Moves > 1)
+                return PuzzleBeamSearch.TrySelect(puzzle, settings, brief, out solution);
 
             if (brief.OffPath)
                 return PuzzleClockSearch.TrySelect(puzzle, settings, brief, out solution);
@@ -32,6 +35,49 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 puzzle, settings, hit.Centre, PuzzleZoneCandidates.DefaultSamples);
             solution = fine.Length > 0 ? Best(fine, puzzle) : hit.Solution;
             return true;
+        }
+
+        internal static bool TryFindAtWidth(
+            PuzzleData puzzle, PuzzleSimSettings settings, PuzzleBrief brief, float width,
+            out PuzzleSolution solution)
+        {
+            if (brief.Moves <= 1)
+                return TryBestSingleAtWidth(puzzle, settings, width, out solution);
+
+            return PuzzleBeamSearch.TrySelect(puzzle, settings, brief, width, out solution);
+        }
+
+        private static bool TryBestSingleAtWidth(
+            PuzzleData puzzle, PuzzleSimSettings settings, float width, out PuzzleSolution solution)
+        {
+            solution = default;
+            bool found = false;
+            Vector3[] centres = PuzzleZoneCandidates.Centres(puzzle, Mathf.Max(width, 0.01f));
+            float[] scales = PuzzleZoneCandidates.Scales(settings, PuzzleZoneCandidates.DefaultSamples);
+            for (int c = 0; c < centres.Length; c++)
+            {
+                for (int i = 0; i < scales.Length; i++)
+                {
+                    PuzzleZone zone = PuzzleZoneCandidates.Zone(
+                        centres[c], width, scales[i], settings.ZoneFalloff);
+                    if (!PuzzleZoneCandidates.ContainsSource(zone, puzzle))
+                        continue;
+
+                    if (!PuzzleZoneRun.TryArrive(puzzle, settings, zone, out PuzzleSolution candidate))
+                        continue;
+
+                    if (!PuzzleWindow.Contains(puzzle, candidate.ShipTime))
+                        continue;
+
+                    if (!found || candidate.EntropySpent < solution.EntropySpent)
+                    {
+                        solution = candidate;
+                        found = true;
+                    }
+                }
+            }
+
+            return found;
         }
 
         private static CentreHit BestCentre(

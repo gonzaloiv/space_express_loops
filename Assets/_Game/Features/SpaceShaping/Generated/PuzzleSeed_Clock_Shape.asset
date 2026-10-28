@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da5e29851b2b964ea174ae86cea47af, type: 3}
+  m_Name: PuzzleSeed_Clock_Shape
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Creator::DigitalLove.Game.SpaceShaping.Creator.PuzzleShapeAsset
+  seed: 1
+  distance: 1
+  clearance: 0.035
+  shape:
+    kind: 1
+    anchorScale:
+      min: 1
+      max: 1
+    radius:
+      min: 0.61
+      max: 0.61
+    planetCount:
+      min: 8
+      max: 8
+    planetRadius:
+      min: 0.021
+      max: 0.063
+    ringCount:
+      min: 2
+      max: 2
+    armCount:
+      min: 2
+      max: 3
+    spread: 0.7
+    inclination: 0.08
+    minSeparation: 1.32

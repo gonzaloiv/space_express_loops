@@ -13,8 +13,15 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private TMP_Text label;
         [SerializeField] private Transform committedFill;
         [SerializeField] private Transform pendingFill;
+        [SerializeField] private Renderer pendingRenderer;
+        [SerializeField] private Color pendingColor = new(1f, 0.62f, 0.2f, 1f);
+        [SerializeField] private Color overflowColor = new(1f, 0.3f, 0.25f, 1f);
+
+        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+        private static readonly int ColorId = Shader.PropertyToID("_Color");
 
         private readonly StringBuilder text = new();
+        private MaterialPropertyBlock pendingBlock;
         private PuzzleReadout lastReadout;
         private bool hasRendered;
 
@@ -41,7 +48,10 @@ namespace DigitalLove.Game.SpaceShaping
         private void Render(PuzzleReadout readout)
         {
             text.Clear();
-            text.Append("ENTROPY ").Append(F(readout.EntropySpent)).Append(" / ").Append(F(readout.EntropyBudget))
+            text.Append("ENTROPY ").Append(F(readout.EntropySpent));
+            if (readout.EntropyPending > 0.00005f)
+                text.Append(" +").Append(F(readout.EntropyPending));
+            text.Append(" / ").Append(F(readout.EntropyBudget))
                 .Append("\nWINDOW  ").Append(F(readout.Tmin)).Append(" - ").Append(F(readout.Tmax)).Append(" s")
                 .Append("\nSHIP    ").Append(F(readout.ShipTime)).Append(" s")
                 .Append("\nRESULT  ").Append(Result(readout))
@@ -56,8 +66,20 @@ namespace DigitalLove.Game.SpaceShaping
             float budget = Mathf.Max(readout.EntropyBudget, 0.0001f);
             float committed = Mathf.Clamp01(readout.EntropySpent / budget);
             float pending = Mathf.Min(Mathf.Clamp01(readout.EntropyPending / budget), 1f - committed);
+            bool overflow = readout.EntropyBudget > 0f
+                && readout.EntropySpent + readout.EntropyPending > readout.EntropyBudget;
+            SetPendingColor(overflow ? overflowColor : pendingColor);
             SetSegment(committedFill, 0f, committed);
             SetSegment(pendingFill, committed, pending);
+        }
+
+        private void SetPendingColor(Color color)
+        {
+            pendingBlock ??= new MaterialPropertyBlock();
+            pendingRenderer.GetPropertyBlock(pendingBlock);
+            pendingBlock.SetColor(BaseColorId, color);
+            pendingBlock.SetColor(ColorId, color);
+            pendingRenderer.SetPropertyBlock(pendingBlock);
         }
 
         private static void SetSegment(Transform segment, float from, float width)
@@ -74,15 +96,22 @@ namespace DigitalLove.Game.SpaceShaping
         private static string Result(PuzzleReadout readout)
         {
             if (!readout.IsChecked)
-                return "PENDING";
+            {
+                if (readout.PredictedSolved)
+                    return "PREDICTED: IN WINDOW";
+
+                return readout.Outcome == TrajectoryOutcome.Crash
+                    ? "PREDICTED: CRASH"
+                    : "PREDICTED: MISS";
+            }
 
             if (readout.IsSolved)
-                return "IN WINDOW";
+                return "CHECKED: IN WINDOW";
 
             if (readout.IsFailed)
-                return "OUT OF ENTROPY";
+                return "CHECKED: OUT OF ENTROPY";
 
-            return readout.Outcome == TrajectoryOutcome.Crash ? "CRASH" : "MISS";
+            return readout.Outcome == TrajectoryOutcome.Crash ? "CHECKED: CRASH" : "CHECKED: MISS";
         }
 
         private static string F(float value) => value.ToString("0.0000", CultureInfo.InvariantCulture);
@@ -94,7 +123,8 @@ namespace DigitalLove.Game.SpaceShaping
             && a.ShipTime == b.ShipTime
             && a.Tmin == b.Tmin
             && a.Tmax == b.Tmax
-            && a.Outcome == b.Outcome
+            &&             a.Outcome == b.Outcome
+            && a.PredictedSolved == b.PredictedSolved
             && a.IsChecked == b.IsChecked
             && a.IsSolved == b.IsSolved
             && a.IsFailed == b.IsFailed

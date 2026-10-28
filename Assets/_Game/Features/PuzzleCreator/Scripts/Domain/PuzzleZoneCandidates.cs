@@ -44,6 +44,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return centres.ToArray();
         }
 
+        internal static bool ContainsSource(PuzzleZone zone, PuzzleData puzzle)
+        {
+            for (int i = 0; i < puzzle.sources.Length; i++)
+            {
+                if (IsInside(zone, puzzle.sources[i].home))
+                    return true;
+            }
+
+            return false;
+        }
+
         public static bool ContainsOnlySource(PuzzleZone zone, PuzzleData puzzle, Vector3 target)
         {
             int inside = 0;

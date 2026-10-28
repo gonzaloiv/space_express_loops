@@ -8,17 +8,24 @@ scale the space, scale the content; the ship flies the deformed spacetime.
 
 ## Now
 
-No plans in progress. The lab readout landed 2026-10-28; the next runway is below.
+| Plan | Area | Why here |
+|---|---|---|
+| [Space shaping — multi-zone solutions](in-progress/space-shaping-multizone.md) | space shaping | `moves = 2+` bakes for jobs 3 and 6–8; needed before the full run can be authored. |
 
 ## Next
 
-The runway after Now: the remaining sim work (multi-zone), then the **validation** (the criteria are in
-[vision](../design/vision.md) §7). Only if it passes: the fused slice (validation 2), then the campaign.
+The runway after Now: the **validation** (the criteria are in
+[vision](../design/vision.md) §7). Only if it passes: the integration, one morning per plan, then the
+campaign.
 
 | Plan | Area | Why here |
 |---|---|---|
-| [Space shaping — multi-zone solutions](backlog/space-shaping-multizone.md) | space shaping | `moves = 2+` bakes for jobs 3 and 6–8; needed before the full run can be authored. |
-| [Space shaping — integration into the game](backlog/space-shaping-integration.md) | space shaping | **Full replacement.** Two stages: fuse the slice (I0–I1 = validation 2), then the campaign (I2–I5). **Gated on validation 1.** |
+| [Space shaping — in the game (one puzzle)](backlog/space-shaping-in-game.md) | space shaping | Boot `Game.unity` into one baked puzzle: flow, result seam, job card. **Gated on validation 1.** |
+| [Space shaping — campaign map](backlog/space-shaping-campaign-map.md) | space shaping | Cube map, pick → scale up → play → back; keeper moves out of `LevelContainer`. |
+| [Space shaping — HUD + validation 2](backlog/space-shaping-hud-validation.md) | space shaping | Entropy, clock window, result/fail; **this exit is the gate** for the campaign. |
+| [Space shaping — progression save](backlog/space-shaping-progression.md) | space shaping | Solved jobs + stars, reset, placement carve-out. After the gate. |
+| [Space shaping — legacy cut](backlog/space-shaping-legacy-cut.md) | space shaping | Delete the route/round/economy flow once the keepers are out. After the gate. |
+| [Space shaping — catalogue + acceptance](backlog/space-shaping-catalogue.md) | space shaping | Baked jobs 3–5 then 8–10, and the Quest 3S acceptance pass. |
 
 ## Later
 
@@ -34,8 +41,8 @@ Loose ends that still need a home. Close one by linking the plan that finishes i
 | Open tail | Lands in |
 |---|---|
 | Silent planets — persistence/restore validation | A future cross-feature restart pass |
-| Sector field — raise `viewRadius`/aperture | Trigger: the campaign map slice (I1) → [integration](backlog/space-shaping-integration.md) |
-| The lens — **Undo** UI (the session `Undo` exists; no surface) | Later; not this slice — [integration](backlog/space-shaping-integration.md) §6.3 |
+| Sector field — raise `viewRadius`/aperture | Trigger: the campaign map slice → [campaign map](backlog/space-shaping-campaign-map.md) |
+| The lens — **Undo** UI (the session `Undo` exists; no surface) | Later; not this slice — [in the game](backlog/space-shaping-in-game.md) §4 |
 | The lens — **rotate** (later puzzles) | Not scheduled; a later-puzzles plan ([cube](../design/systems/cube.md)) |
 
 ## Conventions

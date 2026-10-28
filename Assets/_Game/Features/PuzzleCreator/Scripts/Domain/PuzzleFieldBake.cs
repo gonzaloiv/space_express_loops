@@ -46,7 +46,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             out PuzzleBakeStatus status, out PuzzleZone[] solution)
         {
             solution = null;
-            if (!brief.SupportsSingleZone)
+            if (!brief.SupportsMoves)
                 return Fail(PuzzleBakeStatus.UnsupportedBrief, out status);
 
             if (!PrepareField(field, settings, brief, out float crossing))
@@ -61,8 +61,31 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (startRejected)
                 return Fail(PuzzleBakeStatus.StartNotFailed, out status);
 
+            if (HasShorterSolution(field, settings, brief, found))
+                return Fail(PuzzleBakeStatus.FewerZones, out status);
+
             solution = found.Zones;
             return Verified(field, found, brief, settings, out status);
+        }
+
+        private static bool HasShorterSolution(
+            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, PuzzleSolution found)
+        {
+            if (brief.Moves <= 1)
+                return false;
+
+            float width = found.Zones[0].Width;
+            float budget = found.EntropySpent * StarBudgetFactor;
+            PuzzleBrief shorter = brief;
+            for (int moves = 1; moves < brief.Moves; moves++)
+            {
+                shorter.Moves = moves;
+                if (PuzzleSolutionSearch.TryFindAtWidth(field, settings, shorter, width, out PuzzleSolution candidate)
+                    && candidate.EntropySpent <= budget)
+                    return true;
+            }
+
+            return false;
         }
 
         private static PuzzleData Fail(PuzzleBakeStatus value, out PuzzleBakeStatus status)
@@ -135,7 +158,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.cubeSize = solution.Zones[0].halfExtents.x * 2f;
             puzzle.captureRadius = field.captureRadius;
             puzzle.translatable = field.translatable;
-            puzzle.moves = field.moves;
+            puzzle.moves = solution.Zones.Length;
             puzzle.resizable = field.resizable;
             puzzle.rotate = field.rotate;
             puzzle.launchSpeed = field.launchSpeed;

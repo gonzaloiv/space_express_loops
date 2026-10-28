@@ -4,6 +4,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleVerifier
     {
+        private const float Tolerance = 0.0001f;
+
         public static PuzzleVerification Verify(
             PuzzleData puzzle, PuzzleZone[] solution, PuzzleSimSettings settings)
         {
@@ -24,9 +26,37 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 EntropySpent = solved.EntropySpent,
                 StartMargin = ClosestApproach(startResult, setup.Destination),
                 StartFails = StartFailed(startResult, puzzle),
-                Solved = solved.IsSolved(solvedResult) && solved.EntropySpent <= setup.EntropyBudget
+                Solved = solved.IsSolved(solvedResult)
+                    && solved.EntropySpent <= setup.EntropyBudget
+                    && Fits(solution, puzzle, settings)
             };
         }
+
+        private static bool Fits(
+            PuzzleZone[] solution, PuzzleData puzzle, PuzzleSimSettings settings)
+        {
+            if (solution == null || solution.Length != puzzle.moves)
+                return false;
+
+            for (int i = 0; i < solution.Length; i++)
+            {
+                float size = solution[i].halfExtents.x * 2f;
+                if (size < puzzle.cubeSizeMin - Tolerance || size > puzzle.cubeSizeMax + Tolerance)
+                    return false;
+
+                if (solution[i].scale < settings.MinScaleFactor - Tolerance
+                    || solution[i].scale > settings.MaxScaleFactor + Tolerance)
+                    return false;
+
+                if (!puzzle.resizable && !SameSize(solution[0], solution[i]))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static bool SameSize(PuzzleZone a, PuzzleZone b) =>
+            Mathf.Abs(a.halfExtents.x - b.halfExtents.x) <= Tolerance;
 
         private static TrajectoryResult Simulate(SpaceShapingSession session) =>
             session.Simulate(session.BuildField(), new TrajectoryIntegrator(), new ShipLaunch());

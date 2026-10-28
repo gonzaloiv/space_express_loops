@@ -7,16 +7,16 @@ namespace DigitalLove.Game.SpaceShaping
     {
         [Header("Puzzle")]
         [Tooltip("The run: origin to destination, in metres. It also sizes the field, so keep planetRadiusMax well under runDistance / 2.")]
-        public float runDistance = 1f;
+        public float runDistance = 0.7f;
 
         [Tooltip("Fallback cube size, in metres — used only when a puzzle has no baked size.")]
-        public float cubeSize = 0.25f;
+        public float cubeSize = 0.175f;
 
         [Tooltip("Smallest cube the creator may bake, in metres. Smaller is a sharper, more local edit.")]
-        public float cubeSizeMin = 0.15f;
+        public float cubeSizeMin = 0.105f;
 
         [Tooltip("Largest cube the creator may bake, in metres. Bigger is a blunter, more forgiving lever.")]
-        public float cubeSizeMax = 0.3f;
+        public float cubeSizeMax = 0.21f;
 
         [Header("Simulation")]
         [Tooltip("Integrator step, in seconds. The step budget is derived from the run and the nominal speed, so the budget can never drift from the run.")]
@@ -27,13 +27,13 @@ namespace DigitalLove.Game.SpaceShaping
 
         [Header("Field")]
         [Tooltip("Smallest planet radius, in metres. The field samples each planet between this and planetRadiusMax.")]
-        public float planetRadiusMin = 0.03f;
+        public float planetRadiusMin = 0.021f;
 
         [Tooltip("Largest planet radius, in metres. Also sizes the field and sets the arrival sphere to the destination planet's radius.")]
-        public float planetRadiusMax = 0.09f;
+        public float planetRadiusMax = 0.063f;
 
         [Tooltip("Minimum clearance between the run's endpoint planets and every other planet, in metres. Wider = a clearer corridor and a denser field is allowed.")]
-        public float corridorClearance = 0.05f;
+        public float corridorClearance = 0.035f;
 
         [Tooltip("Planet gravity per unit volume (mass = radius cubed). Tuned for the toy scale; a grown planet deepens its well fast.")]
         public float sourceStrengthScale = 5.5555553f;

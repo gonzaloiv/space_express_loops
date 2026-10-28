@@ -27,11 +27,20 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private float scaleGain = 2f;
         [SerializeField] private float scaleSmoothSecs = 0.08f;
 
+        [Header("Prediction")]
+        [SerializeField] private Color frameSolved = new(0.35f, 1f, 0.55f, 1f);
+        [SerializeField] private Color frameMiss = new(0.75f, 0.85f, 1f, 1f);
+        [SerializeField] private Color frameCrash = new(1f, 0.35f, 0.3f, 1f);
+
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");
 
         private MaterialPropertyBlock frameBlock;
         private MaterialPropertyBlock fillBlock;
+
+        private bool hasPrediction;
+        private bool predictedSolved;
+        private TrajectoryOutcome predictedOutcome;
 
         private bool classified;
         private bool frameGrab;
@@ -47,6 +56,13 @@ namespace DigitalLove.Game.SpaceShaping
         private void OnEnable() => grabbable.WhenPointerEventRaised += OnPointerEvent;
 
         private void OnDisable() => grabbable.WhenPointerEventRaised -= OnPointerEvent;
+
+        public void SetPrediction(bool solved, TrajectoryOutcome outcome)
+        {
+            hasPrediction = true;
+            predictedSolved = solved;
+            predictedOutcome = outcome;
+        }
 
         private void OnPointerEvent(PointerEvent evt)
         {
@@ -151,9 +167,20 @@ namespace DigitalLove.Game.SpaceShaping
             }
 
             bool scaling = grabbable.SelectingPointsCount >= 2 && !frameGrab;
-            Color frameColor = scaling ? frameIdle : FrameActiveColor();
+            Color frameColor = scaling ? PredictionColor() : FrameActiveColor();
             SetColor(frameRenderer, ref frameBlock, frameColor);
             SetColor(fillRenderer, ref fillBlock, scaling ? ScaleColor() : fillIdle);
+        }
+
+        private Color PredictionColor()
+        {
+            if (!hasPrediction)
+                return frameIdle;
+
+            if (predictedSolved)
+                return frameSolved;
+
+            return predictedOutcome == TrajectoryOutcome.Crash ? frameCrash : frameMiss;
         }
 
         private void ApplyIdleFeedback()

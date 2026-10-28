@@ -17,6 +17,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         public bool SupportsSingleZone => Moves <= 1 && !Rotate;
 
+        public bool SupportsMoves =>
+            Moves <= 3 && !Rotate && (Moves <= 1 || (Translatable && !OffPath));
+
         public static PuzzleBrief From(PuzzleSeed seed, SpaceShapingSettings settings) => new()
         {
             MinCubeSize = settings.cubeSizeMin,

@@ -72,7 +72,7 @@ So the first-8 order is **scale → several zones + move → time → resize**; 
 
 **Job 3 is translatable (2026-10-28).** The multi-zone plan's §1 option (a): a fixed cube cannot reach
 two zones, so the move enters with several zones and the time tutorial becomes job 4
-([multi-zone plan](../../plans/backlog/space-shaping-multizone.md) §1).
+([multi-zone plan](../../plans/in-progress/space-shaping-multizone.md) §1).
 
 A **tutorial** will be needed for this, but not yet — get the loop working first
 ([vision](../vision.md) §6).
