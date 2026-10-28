@@ -99,13 +99,16 @@ own plan instead of growing the board.
 *Tell:* file names, field names or "still to do" items that the code no longer matches.
 *Fix:* review the code, not the plan's account of it; update the plan in the same change that lands the
 work.
-*Seen:* creator review (2026-10-27) found six stale lines; integration review found five.
+*Seen:* creator review (2026-10-27) found six stale lines; integration review found five. `fb80e70` still
+claimed the 2-zone POC asset was wired while the same commit cleared `SpaceShapingState.puzzles`; fixed
+2026-10-28.
 
 **Settled questions are re-opened.**
 *Tell:* an "open question" already answered by vision, variations or progression.
 *Fix:* search the design docs first; record the decision with its evidence, then keep only the genuinely
 open questions.
-*Seen:* integration review §1 (`variations`, `progression`, `vision`).
+*Seen:* integration review §1 (`variations`, `progression`, `vision`). `fb80e70` added two-fixed-cube
+levels after `68e9b31` had settled `moves ≥ 2 ⟹ translatable`; removed 2026-10-28.
 
 **Only the wrong things are in scope.**
 *Tell:* no flow/mode contract, no save policy, no performance budget, no device pass.
@@ -174,6 +177,14 @@ settings, and test the formula itself.
 *Fix:* assert the meaningful extent (`radius.max + planetRadius.max` inside the run) or delete the test.
 *Seen:* creator review "test hygiene"; fixed in `b512667`.
 
+**The commit leaves the suite pinning the old rule.**
+*Tell:* code flips a domain rule, the tests still assert the previous one, and the corrected assertions sit
+uncommitted — so `HEAD` is red while the branch is dirty.
+*Fix:* run the suite before the commit and update the assertion in the same change; a rule change and its
+test are one slice.
+*Seen:* `fb80e70` (`PuzzleBrief.SupportsMoves` vs `PuzzleMultiZoneTests` / `PuzzleBakeTests`); fixed in
+the 2026-10-28 working tree.
+
 **Shared mutable fixtures make tests order-dependent.**
 *Tell:* a puzzle built in `OneTimeSetUp` and mutated by several tests.
 *Fix:* build per test; pin the seed inside the fixture; destroy the asset in the same test.
@@ -203,6 +214,15 @@ and give `Bake` one small step per method.
 is a design signal, not a bug.
 *Seen:* `ccc28f6`–`96b0b31` (2026-04 → 05), unified in `ecbe16f` (2026-10-20).
 
+**The method outgrows the limit as the slice lands.**
+*Tell:* a new `Render`, `Search`, `Update` or gesture method at 30–47 lines, usually a whole pipeline in
+one body.
+*Fix:* one step per method (`BuildVertices`, `Evaluate`, `ApplyFeedback`); the size limit is the signal
+that a second question arrived.
+*Seen:* `68e9b31`–`515e07c`: `SpacetimeMeshView.Render` (47), `FixedZoneGesture.Track` (38, since deleted),
+`PuzzleFixedSearch.Search` (34, since deleted), `PuzzleSolutionSearch.TryBestSingleAtWidth` (32),
+`TrajectoryIntegrator.Integrate` (28).
+
 ### Assets and data
 
 **The POC invents its own view.**
@@ -220,6 +240,15 @@ rewire.
 *Tell:* `DeleteAsset` + `CreateAsset` on every export; references break silently.
 *Fix:* `LoadAssetAtPath` + `EditorUtility.CopySerialized`; create only when absent.
 *Seen:* creator review "Improvements"; fixed in `PuzzleArtifactExporter.Write`.
+
+**A code commit empties a serialized reference.**
+*Tell:* `puzzles: []` in the scene, an empty list where the scene used to point at assets; it compiles and
+throws on `Enter`/`Start`, so nothing catches it until Play mode.
+*Fix:* re-assign the scene refs in the same change that renames or removes a serialized field, and
+smoke-test Play mode before committing. The missing reference is a broken scene, not a case for a null
+check.
+*Seen:* `fb80e70` (`SpaceShapingPOC.unity` `puzzles: []` after `2fc1172` had wired it); restored
+2026-10-28.
 
 ### Platform and device
 
@@ -255,12 +284,15 @@ breaks links.
 *Fix:* one board (`docs/plans/README.md`) and this playbook; delete done plans; never a parallel knowledge
 folder that will itself be deleted.
 *Seen:* `047a6dd` created `backlog/` and `done/`; `73c6489` deleted `done/`; `f65b806` deleted
-`docs/solutions/`; `b512667` flattened `backlog/`.
+`docs/solutions/`; `b512667` flattened `backlog/`. `fb80e70` moved `space-shaping-in-game.md` to
+`in-progress/` without touching its 30 inbound links or its `next` status, leaving `docs/check.ps1` with
+32 problems; moved back 2026-10-28.
 
 **The commit mixes slices.**
 *Tell:* one commit carrying plan work, several slices, scene edits and cleanup (30–84 files).
 *Fix:* one slice per commit; docs moves in the same change as the code they describe.
-*Seen:* `9489959` (P1/P2 + plan + scene cleanup); `996b034` (84 files).
+*Seen:* `9489959` (P1/P2 + plan + scene cleanup); `996b034` (84 files); `68e9b31` (71 files: six-plan split
++ POC wiring + bakes); `2fc1172` (722-line scene plus a `link.xml` deletion later restored).
 
 ## Template
 

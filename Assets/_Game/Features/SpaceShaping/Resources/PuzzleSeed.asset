@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Creator::DigitalLove.Game.SpaceShaping.Creator.PuzzleSeed
   seed: 1
   distance: 1
-  planetCount: 8
-  fieldShape: 3
-  translatable: 0
-  moves: 1
+  planetCount: 9
+  fieldShape: 0
+  translatable: 1
+  moves: 2
   resizable: 0
   rotate: 0
   startMargin: 0.9

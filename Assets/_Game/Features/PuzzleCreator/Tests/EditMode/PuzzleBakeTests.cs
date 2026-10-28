@@ -113,7 +113,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Assert.AreEqual(1.05f, mapped.StartMargin, 1e-4f);
             Assert.IsTrue(mapped.OffPath);
             Assert.AreEqual(0.25f, mapped.WindowTightness, 1e-4f);
-            Assert.IsFalse(mapped.SupportsSingleZone);
             Object.DestroyImmediate(authored);
         }
 

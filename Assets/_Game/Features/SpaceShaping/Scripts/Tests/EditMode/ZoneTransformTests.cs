@@ -94,7 +94,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         [Test]
         public void Mass_ScalesWithRadiusCubed()
         {
-            SpaceShapingSession session = new(ContentSetup());
+            SpaceShapingSession session = new(TestSetups.Content());
             float baseStrength = session.BuildField().Sources[0].Strength;
 
             session.ApplyZone(new SpaceZone(new Vector3(-2f, 0f, 0f), new Vector3(2f, 2f, 2f), 2f, 0f));
@@ -122,9 +122,9 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         [Test]
         public void Session_AppliesSetupZone()
         {
-            SpaceShapingSession session = new(SessionSetup(4000));
+            SpaceShapingSession session = new(TestSetups.Session(4000));
             session.ApplyZone(Covering(2f));
-            TrajectoryResult result = session.Simulate(session.BuildField(), new TrajectoryIntegrator(), new ShipLaunch());
+            TrajectoryResult result = session.Simulate();
 
             Assert.Greater(result.ShipTime, 10f);
         }
@@ -132,9 +132,9 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         [Test]
         public void MagnifiedZone_RaisesStepBudget()
         {
-            SpaceShapingSession session = new(SessionSetup(950));
+            SpaceShapingSession session = new(TestSetups.Session(950));
             session.ApplyZone(Covering(2f));
-            TrajectoryResult result = session.Simulate(session.BuildField(), new TrajectoryIntegrator(), new ShipLaunch());
+            TrajectoryResult result = session.Simulate();
 
             Assert.AreEqual(TrajectoryOutcome.Arrive, result.Outcome);
         }
@@ -142,7 +142,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         [Test]
         public void Session_ZoneSpreadsAndGrowsContent()
         {
-            SpaceShapingSession session = new(ContentSetup());
+            SpaceShapingSession session = new(TestSetups.Content());
             session.ApplyZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 2f, 0f));
 
             Assert.AreEqual(new Vector3(-4f, 0f, 0f), session.GetPosition(0));
@@ -152,124 +152,11 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         [Test]
         public void Session_OutsideZone_IsUnchanged()
         {
-            SpaceShapingSession session = new(ContentSetup());
+            SpaceShapingSession session = new(TestSetups.Content());
             session.ApplyZone(new SpaceZone(Vector3.zero, new Vector3(1f, 1f, 1f), 2f, 0f));
 
             Assert.AreEqual(new Vector3(-2f, 0f, 0f), session.GetPosition(0));
             Assert.AreEqual(2f, session.GetScale(0), 0.0001f);
         }
-
-        [Test]
-        public void Rescale_ReplacesTheZoneInsteadOfCompounding()
-        {
-            SpaceShapingSession session = new(ContentSetup());
-            session.ApplyZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 2f, 0f));
-            session.ApplyZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 0.5f, 0f));
-
-            Assert.AreEqual(-1f, session.GetPosition(0).x, 0.0001f);
-            Assert.AreEqual(1f, session.GetScale(0), 0.0001f);
-            Assert.AreEqual(2, session.CommandCount);
-            Assert.AreEqual(1, session.Zones.Count);
-        }
-
-        [Test]
-        public void Undo_RemovesLastCommandAndRestoresContent()
-        {
-            SpaceShapingSession session = new(ContentSetup());
-            session.ApplyZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 2f, 0f));
-            Assert.AreEqual(4f, session.GetScale(0), 0.0001f);
-
-            Assert.IsTrue(session.Undo());
-            Assert.AreEqual(2f, session.GetScale(0), 0.0001f);
-            Assert.AreEqual(0, session.CommandCount);
-            Assert.IsFalse(session.Undo());
-        }
-
-        [Test]
-        public void Gesture_PreviewChargesNetScaleDelta()
-        {
-            SpaceShapingSession session = new(ContentSetup());
-            session.PreviewZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 1f, 0f));
-            session.PreviewZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 1.5f, 0f));
-            session.PreviewZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 2f, 0f));
-
-            Assert.AreEqual(1f, session.EntropySpent, 0.0001f);
-
-            session.CommitPreview();
-            Assert.AreEqual(1, session.CommandCount);
-            Assert.AreEqual(1f, session.EntropySpent, 0.0001f);
-        }
-
-        [Test]
-        public void Gesture_ReturningToReferenceRefundsThePreview()
-        {
-            SpaceShapingSession session = new(ContentSetup());
-            session.PreviewZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 1.5f, 0f));
-            Assert.AreEqual(0.5f, session.EntropySpent, 0.0001f);
-
-            session.PreviewZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 1f, 0f));
-            Assert.AreEqual(0f, session.EntropySpent, 0.0001f);
-        }
-
-        [Test]
-        public void Gesture_ReturningToCommittedScaleCostsNothing()
-        {
-            SpaceShapingSession session = new(ContentSetup());
-            session.ApplyZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 1.5f, 0f));
-
-            session.PreviewZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 1.2f, 0f));
-            Assert.AreEqual(0.8f, session.EntropySpent, 0.0001f);
-
-            session.PreviewZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 1.5f, 0f));
-            Assert.AreEqual(0.5f, session.EntropySpent, 0.0001f);
-        }
-
-        [Test]
-        public void Undo_RefundsEntropySpent()
-        {
-            SpaceShapingSession session = new(ContentSetup());
-            session.ApplyZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 2f, 0f));
-            Assert.AreEqual(1f, session.EntropySpent, 0.0001f);
-
-            session.Undo();
-            Assert.AreEqual(0f, session.EntropySpent, 0.0001f);
-        }
-
-        private static SpaceShapingSetup SessionSetup(int maxSteps) => new()
-        {
-            Origin = new Vector3(-4f, 0f, 0f),
-            Destination = new Vector3(4f, 0f, 0f),
-            MaxSteps = maxSteps,
-            LaunchSpeed = 1f,
-            Sim = new PuzzleSimSettings
-            {
-                CaptureRadius = 0.6f,
-                StepSecs = 1f / 120f,
-                SourceStrengthScale = 2f,
-                SeparationScale = 1.2f,
-                LightSpeed = 3.1622777f
-            },
-            Sources = System.Array.Empty<SourceSpec>()
-        };
-
-        private static SpaceShapingSetup ContentSetup() => new()
-        {
-            Origin = new Vector3(-4f, 0f, 0f),
-            Destination = new Vector3(4f, 0f, 0f),
-            MaxSteps = 4000,
-            LaunchSpeed = 1f,
-            Sim = new PuzzleSimSettings
-            {
-                CaptureRadius = 0.6f,
-                StepSecs = 1f / 120f,
-                SourceStrengthScale = 2f,
-                SeparationScale = 1.2f,
-                LightSpeed = 3.1622777f
-            },
-            Sources = new[]
-            {
-                new SourceSpec { Home = new Vector3(-2f, 0f, 0f), InitialScale = 2f, MinScale = 1f, MaxScale = 4f }
-            }
-        };
     }
 }

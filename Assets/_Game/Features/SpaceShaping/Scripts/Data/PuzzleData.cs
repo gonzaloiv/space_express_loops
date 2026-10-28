@@ -23,12 +23,25 @@ namespace DigitalLove.Game.SpaceShaping
         public float tmax = 12f;
         public float entropyBudget = 1f;
         public PuzzleSource[] sources;
-        public PuzzleZone[] fixedZones;
 
         public Vector3 Origin => origin;
 
         public Vector3 Destination => destination;
 
         public float Distance => Vector3.Distance(origin, destination);
+
+        public float CaptureRadiusAtDestination()
+        {
+            if (sources == null)
+                return 0f;
+
+            for (int i = 0; i < sources.Length; i++)
+            {
+                if ((sources[i].home - destination).sqrMagnitude < 0.000001f)
+                    return sources[i].scale * 0.5f;
+            }
+
+            return 0f;
+        }
     }
 }

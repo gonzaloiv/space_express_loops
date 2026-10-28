@@ -19,6 +19,14 @@ namespace DigitalLove.Game.SpaceShaping
 
         public bool IsActive => Scale > 0f && (HalfExtents.x > 0f || HalfExtents.y > 0f || HalfExtents.z > 0f);
 
+        public float Extent => Mathf.Min(HalfExtents.x, Mathf.Min(HalfExtents.y, HalfExtents.z));
+
+        public float Margin(Vector3 position)
+        {
+            Vector3 inset = HalfExtents - Abs(position - Centre);
+            return Mathf.Min(inset.x, Mathf.Min(inset.y, inset.z));
+        }
+
         public bool SameRegion(SpaceZone other) =>
             (Centre - other.Centre).sqrMagnitude < 0.000001f
             && (HalfExtents - other.HalfExtents).sqrMagnitude < 0.000001f;
@@ -39,13 +47,11 @@ namespace DigitalLove.Game.SpaceShaping
 
         public float InsideFactor(Vector3 position)
         {
-            Vector3 inset = HalfExtents - Abs(position - Centre);
-            float margin = Mathf.Min(inset.x, Mathf.Min(inset.y, inset.z));
+            float margin = Margin(position);
             if (Falloff <= 0f)
                 return margin >= 0f ? 1f : 0f;
 
-            float extent = Mathf.Min(HalfExtents.x, Mathf.Min(HalfExtents.y, HalfExtents.z));
-            return Mathf.Clamp01(margin / (Falloff * extent));
+            return Mathf.Clamp01(margin / (Falloff * Extent));
         }
 
         private static Vector3 Abs(Vector3 value) =>

@@ -16,7 +16,7 @@ MonoBehaviour:
   distance: 1
   clearance: 0.035
   shape:
-    kind: 2
+    kind: 1
     anchorScale:
       min: 1
       max: 1
@@ -24,8 +24,8 @@ MonoBehaviour:
       min: 0.61
       max: 0.61
     planetCount:
-      min: 8
-      max: 8
+      min: 9
+      max: 9
     planetRadius:
       min: 0.021
       max: 0.063

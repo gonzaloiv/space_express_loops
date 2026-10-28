@@ -3,6 +3,7 @@
   <Project Path="DigitalLove.Player.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Editor.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Creator.csproj" />
   <Project Path="MegaFiers.csproj" />
   <Project Path="DigitalLove.TTS.csproj" />
   <Project Path="DigitalLove.Interactables.Core.csproj" />
@@ -42,7 +43,6 @@
   <Project Path="DigitalLove.VFX.Materials.Editor.csproj" />
   <Project Path="DigitalLove.XR.OVR.csproj" />
   <Project Path="DigitalLove.Game.Sectors.Tests.EditMode.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.Creator.csproj" />
   <Project Path="DigitalLove.Localization.csproj" />
   <Project Path="DigitalLove.VFX.Fader.csproj" />
   <Project Path="DigitalLove.TTS.Samples.csproj" />
@@ -69,7 +69,6 @@
   <Project Path="DigitalLove.XR.ARFoundation.csproj" />
   <Project Path="DigitalLove.Game.Flow.EditionState.csproj" />
   <Project Path="DigitalLove.Audio.TheRadio.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.Creator.Editor.csproj" />
   <Project Path="Unity.XR.Hands.Samples.VisualizerSample.csproj" />
   <Project Path="DigitalLove.VFX.MegaFiers.csproj" />
   <Project Path="DigitalLove.VFX.ShadowLike.csproj" />
@@ -77,6 +76,7 @@
   <Project Path="DigitalLove.Game.Flow.csproj" />
   <Project Path="ChrisNolet.QuickOutline.csproj" />
   <Project Path="DigitalLove.Interactables.MRUK.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Creator.Editor.csproj" />
   <Project Path="DigitalLove.Player.integrations.csproj" />
   <Project Path="DigitalLove.Timeline.Samples.csproj" />
   <Project Path="DigitalLove.Casual.Flow.csproj" />

@@ -17,8 +17,11 @@ namespace DigitalLove.Game.SpaceShaping
         public static SpaceShapingSetup Build(PuzzleData puzzle, PuzzleSimSettings settings)
         {
             PuzzleSimSettings sim = settings;
-            if (puzzle.captureRadius > 0f)
-                sim.CaptureRadius = puzzle.captureRadius;
+            float capture = puzzle.captureRadius > 0f
+                ? puzzle.captureRadius
+                : puzzle.CaptureRadiusAtDestination();
+            if (capture > 0f)
+                sim.CaptureRadius = capture;
 
             return new SpaceShapingSetup
             {

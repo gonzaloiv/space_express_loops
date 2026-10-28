@@ -39,7 +39,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         public void Brief_SupportsTranslatableMultiZone()
         {
             Assert.IsTrue(brief.SupportsMoves);
-            Assert.IsFalse(brief.SupportsSingleZone);
 
             PuzzleBrief fixedMulti = brief;
             fixedMulti.Translatable = false;

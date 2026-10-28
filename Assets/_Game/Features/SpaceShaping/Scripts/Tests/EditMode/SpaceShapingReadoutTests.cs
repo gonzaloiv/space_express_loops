@@ -161,7 +161,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         };
 
         private static TrajectoryResult Simulate(SpaceShapingSession session) =>
-            session.Simulate(session.BuildField(), new TrajectoryIntegrator(), new ShipLaunch());
+            session.Simulate();
 
         private static SpaceZone Zone(float scale) => new(Vector3.zero, Vector3.one, scale, 0f);
 

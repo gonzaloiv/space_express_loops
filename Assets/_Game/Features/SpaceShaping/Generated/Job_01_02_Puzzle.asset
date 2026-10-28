@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10000000000000000000000000000016, type: 3}
+  m_Name: Job_01_02_Puzzle
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.PuzzleData
+  id: 01_02
+  prefab: {fileID: 0}
+  origin: {x: -0.26742774, y: -0.006344517, z: -0.26742783}
+  destination: {x: 0.3653132, y: 0.046173982, z: -0.09788529}
+  zoneCentre: {x: 0.3653132, y: 0.046173982, z: -0.09788529}
+  cubeSizeMin: 0.105
+  cubeSizeMax: 0.21
+  cubeSize: 0.105
+  captureRadius: 0.04322095
+  translatable: 0
+  moves: 1
+  resizable: 0
+  rotate: 0
+  launchSpeed: 0.9
+  tmin: 0.3339092
+  tmax: 0.5565154
+  entropyBudget: 0.1935482
+  sources:
+  - home: {x: -0.26742774, y: -0.006344517, z: -0.26742783}
+    scale: 0.10047175
+  - home: {x: 0.3653132, y: 0.046173982, z: -0.09788529}
+    scale: 0.0864419
+  - home: {x: -0.0978853, y: 0.030552799, z: 0.3653132}
+    scale: 0.07350358

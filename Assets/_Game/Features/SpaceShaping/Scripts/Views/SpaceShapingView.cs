@@ -14,12 +14,9 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private Transform cubeParent;
 
         private readonly List<FieldPlanetBehaviour> pool = new();
-        private readonly List<SpaceZoneView> fixedCubes = new();
         private SpaceZoneView cube;
         private SpaceZone lastZone;
         private bool hasSnapshot;
-
-        public IReadOnlyList<SpaceZoneView> FixedCubes => fixedCubes;
 
         public SpaceZone Zone => Cube().Zone;
 
@@ -79,49 +76,10 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void ResetZone()
         {
-            Cube().ResetScale();
+            SpaceZoneView view = Cube();
+            view.gameObject.SetActive(true);
+            view.ResetScale();
             hasSnapshot = false;
-        }
-
-        public void ShowFixedZones(PuzzleZone[] zones, float falloff)
-        {
-            if (cube != null)
-                cube.gameObject.SetActive(false);
-
-            for (int i = 0; i < zones.Length; i++)
-            {
-                SpaceZoneView cube = FixedCube(i);
-                cube.gameObject.SetActive(true);
-                cube.SetConditions(new ZoneConditions(false, false));
-                cube.SetFrame(zones[i].centre, zones[i].halfExtents * 2f);
-                cube.SetFalloff(zones[i].falloff > 0f ? zones[i].falloff : falloff);
-                cube.SetScale(1f);
-                cube.SetPrediction(false, TrajectoryOutcome.Miss);
-            }
-
-            for (int i = zones.Length; i < fixedCubes.Count; i++)
-                fixedCubes[i].gameObject.SetActive(false);
-        }
-
-        public void HideFixedZones()
-        {
-            for (int i = 0; i < fixedCubes.Count; i++)
-                fixedCubes[i].gameObject.SetActive(false);
-        }
-
-        public void ResetFixedZones()
-        {
-            for (int i = 0; i < fixedCubes.Count; i++)
-                fixedCubes[i].ResetScale();
-        }
-
-        public void SetFixedPrediction(bool solved, TrajectoryOutcome outcome)
-        {
-            for (int i = 0; i < fixedCubes.Count; i++)
-            {
-                if (fixedCubes[i].gameObject.activeSelf)
-                    fixedCubes[i].SetPrediction(solved, outcome);
-            }
         }
 
         public float CrossHalf(SpaceShapingSession session, PuzzleData puzzle, float fallbackCube)
@@ -137,36 +95,14 @@ namespace DigitalLove.Game.SpaceShaping
                 half = Mathf.Max(half, perpendicular.magnitude + session.GetScale(i) * 0.5f);
             }
 
-            if (puzzle.fixedZones != null && puzzle.fixedZones.Length > 0)
-            {
-                for (int i = 0; i < puzzle.fixedZones.Length; i++)
-                {
-                    Vector3 extent = puzzle.fixedZones[i].halfExtents;
-                    half = Mathf.Max(half, Mathf.Max(extent.x, Mathf.Max(extent.y, extent.z)));
-                }
-
-                return half;
-            }
-
             float cube = puzzle.cubeSize > 0f ? puzzle.cubeSize : fallbackCube;
             return Mathf.Max(half, cube * 0.5f);
-        }
-
-        private SpaceZoneView FixedCube(int index)
-        {
-            while (fixedCubes.Count <= index)
-                fixedCubes.Add(Instantiate(cubePrototype, cubeParent));
-
-            return fixedCubes[index];
         }
 
         private SpaceZoneView Cube()
         {
             if (cube == null && Application.isPlaying)
                 cube = Instantiate(cubePrototype, cubeParent);
-
-            if (cube != null)
-                cube.gameObject.SetActive(true);
 
             return cube;
         }

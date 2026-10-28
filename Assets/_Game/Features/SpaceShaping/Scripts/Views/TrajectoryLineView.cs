@@ -16,10 +16,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private Color crashColor = new(1f, 0.35f, 0.3f, 1f);
         [SerializeField] private Color missColor = new(0.75f, 0.85f, 1f, 1f);
 
-        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
-        private static readonly int ColorId = Shader.PropertyToID("_Color");
-
-        private MaterialPropertyBlock markerBlock;
+        private RendererTint markerTint;
         private Coroutine pulse;
         private Vector3 markerBaseScale;
         private bool hasMarkerScale;
@@ -127,13 +124,6 @@ namespace DigitalLove.Game.SpaceShaping
             line.endColor = color;
         }
 
-        private void SetMarkerColor(Color color)
-        {
-            markerBlock ??= new MaterialPropertyBlock();
-            endMarkerRenderer.GetPropertyBlock(markerBlock);
-            markerBlock.SetColor(BaseColorId, color);
-            markerBlock.SetColor(ColorId, color);
-            endMarkerRenderer.SetPropertyBlock(markerBlock);
-        }
+        private void SetMarkerColor(Color color) => markerTint.Set(endMarkerRenderer, color);
     }
 }

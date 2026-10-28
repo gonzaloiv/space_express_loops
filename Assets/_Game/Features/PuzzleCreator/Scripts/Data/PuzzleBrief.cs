@@ -14,14 +14,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public bool Rotate;
         public float StartMargin;
         public bool OffPath;
-        public Vector3 FixedZoneA;
-        public Vector3 FixedZoneB;
-        public float FixedZoneSize;
-
-        public bool SupportsSingleZone => Moves <= 1 && !Rotate;
 
         public bool SupportsMoves =>
-            Moves <= 3 && !Rotate && (Moves <= 1 || !OffPath);
+            Moves <= 3 && !Rotate && (Moves <= 1 || (Translatable && !OffPath));
 
         public static PuzzleBrief From(PuzzleSeed seed, SpaceShapingSettings settings) => new()
         {
@@ -34,10 +29,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             Resizable = seed.resizable,
             Rotate = seed.rotate,
             StartMargin = Mathf.Clamp(seed.startMargin, 0.1f, 2f),
-            OffPath = seed.offPath,
-            FixedZoneA = seed.fixedZoneA,
-            FixedZoneB = seed.fixedZoneB,
-            FixedZoneSize = Mathf.Max(seed.fixedZoneSize, 0.01f)
+            OffPath = seed.offPath
         };
     }
 }

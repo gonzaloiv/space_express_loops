@@ -47,14 +47,9 @@ namespace DigitalLove.Game.SpaceShaping
 
         private static float VisualInsideFactor(SpaceZone zone, Vector3 node, float shells)
         {
-            Vector3 offset = node - zone.Centre;
-            Vector3 inset = zone.HalfExtents - new Vector3(
-                Mathf.Abs(offset.x), Mathf.Abs(offset.y), Mathf.Abs(offset.z));
-            float margin = Mathf.Min(inset.x, Mathf.Min(inset.y, inset.z));
-            float extent = Mathf.Min(zone.HalfExtents.x, Mathf.Min(zone.HalfExtents.y, zone.HalfExtents.z));
-            float edge = Mathf.Max(zone.Falloff * extent, 0.0001f);
+            float edge = Mathf.Max(zone.Falloff * zone.Extent, 0.0001f);
             float outside = edge * Mathf.Max(shells, 0f);
-            float t = Mathf.Clamp01((margin + outside) / (edge + outside));
+            float t = Mathf.Clamp01((zone.Margin(node) + outside) / (edge + outside));
             return t * t * (3f - 2f * t);
         }
 

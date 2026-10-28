@@ -37,9 +37,10 @@ only open gate.
 
 ## Open
 
-- **M3 is not proven until the headset pass.** The 2-zone asset is baked and wired as
-  `SpaceShapingState.puzzles[0]` in `SpaceShapingPOC.unity` (`Generated/Multizone_Seed2_Puzzle.asset`),
-  but nobody has played it. The plan's M3 checklist still owns "reproduce it with two moved zones".
+- **M3 is not proven until the headset pass.** The scene has no puzzle assigned: `fb80e70` left
+  `puzzles: []` in `SpaceShapingPOC.unity` (the array `2fc1172` had wired), and the current bake is a fixed
+  two-zone level that this plan now rejects. Re-bake a translatable 2-zone seed (seed 2), assign it, then
+  run the M3 checklist.
 - **The beam's first step is a heuristic.** One chain per centre + size, ranked by closest approach
   (`PuzzleBeamSearch.cs:44`). Seed 1 bakes on the first attempt, but a job with no margin-competitive prefix
   needs the beam widened (or two slots per centre + size), not another special case.
@@ -60,7 +61,7 @@ only open gate.
 - **One size per chain** — job 3 is `resizable = no` (`jobs.md` row 3), so the frame gesture cannot change
   size; the baked cube size is the chain size.
 - **No solution array ships.** The bake returns `PuzzleZone[]` and persists only zone 0's frame
-  (`PuzzleFieldBake.cs:129`); `moves` is the only zone metadata in `PuzzleData`, and the game never shows
+  (`PuzzleFieldBake.cs:150`); `moves` is the only zone metadata in `PuzzleData`, and the game never shows
   it (`cube.md:36`).
 - **Offline cost is acceptable.** Seed 1's two-zone bake is found on the first attempt; the 16-attempt
   probe took about five seconds. No pruning was added for speed.
@@ -75,3 +76,8 @@ only open gate.
   `PuzzleMultiZoneTests` (2-zone bake, determinism, midpoint frame, 3-zone search, runner overload,
   overlap rule, shorter-zone rejection). Verified: 39/39 creator tests, 123/123 EditMode,
   `docs/check.ps1` green.
+- 2026-10-28 (later) — removed the fixed two-cube path `fb80e70` had added (`PuzzleFixedSearch`,
+  `FixedZoneGesture`, `PuzzleReadability`, `PuzzleData.fixedZones`, the seed/brief fixed fields and
+  `seed.proof`): it contradicted §1 and shipped the zone array in the runtime asset. `SupportsMoves` now
+  requires `Translatable` for `Moves > 1`; the creator tests assert that rule again; `Bake` dropped to
+  five parameters. The POC still needs a translatable re-bake and scene wiring.

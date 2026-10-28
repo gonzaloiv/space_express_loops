@@ -46,9 +46,8 @@ namespace DigitalLove.Game.SpaceShaping
 
             Vector3 run = destination - origin;
             float length = run.magnitude;
-            Vector3 forward = length > 0.0001f ? run / length : Vector3.forward;
             transform.localPosition = (origin + destination) * 0.5f;
-            transform.localRotation = Quaternion.LookRotation(forward, Vector3.up);
+            transform.localRotation = PuzzleViewFrame.Rotation(origin, destination);
 
             float halfLength = length * 0.5f + fieldMargin * length;
             float halfWidth = crossHalf + latticePadding;

@@ -4,8 +4,10 @@
 be authored. Job 3 is translatable (decided 2026-10-28). Depends on the physics slice (landed 2026-10-28)
 and the creator’s runtime locks (landed 2026-10-27).
 
-**Progress:** M1–M2 landed 2026-10-28 (beam search, bake/verifier, minimality rejection, 39/39 creator
-tests); the 2-zone POC asset (seed 2) is wired; the M3 headset pass is pending.
+**Progress:** M1–M2 landed 2026-10-28 (beam search, bake/verifier, minimality rejection). M3 is blocked:
+`fb80e70` left `SpaceShapingState.puzzles` empty in `SpaceShapingPOC.unity`, and the current POC bake is a
+fixed two-zone level, which §1 rejects. Re-bake a translatable 2-zone seed, assign it, then run the headset
+pass.
 
 **Related:** [catalogue](../backlog/space-shaping-catalogue.md) ·
 [in the game](../backlog/space-shaping-in-game.md) ·
@@ -33,6 +35,11 @@ The search rejects `Moves > 1 && !Translatable` as `UnsupportedBrief`. The slice
 translatable 2–3 zone puzzles; [jobs](../../design/jobs.md) and
 [progression](../../design/systems/progression.md) now carry job 3 as translatable and the time tutorial
 as job 4.
+
+**Reverted 2026-10-28 (later).** `fb80e70` shipped a two-fixed-cube path that contradicted this decision
+(`PuzzleFixedSearch`, `PuzzleData.fixedZones`, authored fixed seeds). It is removed: `Moves > 1` with
+`Translatable == false` is `UnsupportedBrief` again, and the fixed single-zone levels (jobs 1–2, 4) keep
+their authored zone.
 
 ## 2. Approach — bounded beam search
 

@@ -18,8 +18,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             for (int i = 0; i < zones.Length; i++)
                 session.ApplyZone(zones[i].ToSpaceZone());
 
-            result = session.Simulate(
-                session.BuildField(), new TrajectoryIntegrator(), new ShipLaunch());
+            result = session.Simulate();
             solution = new PuzzleSolution
             {
                 Zones = zones,

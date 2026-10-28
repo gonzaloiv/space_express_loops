@@ -43,7 +43,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Assert.AreEqual(1.05f * sim.NominalSpeed, baked.launchSpeed, 1e-4f);
             Assert.Less(Vector3.Distance(baked.zoneCentre, solution[0].centre), 1e-4f);
             float run = Vector3.Distance(baked.origin, baked.destination);
-            Assert.GreaterOrEqual(DistanceToRun(solution[0].centre, baked), 0.25f * run);
+            Assert.GreaterOrEqual(
+                PuzzleRunGeometry.DistanceToSegment(
+                    solution[0].centre, baked.origin, baked.destination),
+                0.25f * run);
             Object.DestroyImmediate(baked);
         }
 
@@ -69,17 +72,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleBrief brief = PuzzleBrief.From(seed, settings);
             Object.DestroyImmediate(seed);
             return brief;
-        }
-
-        private static float DistanceToRun(Vector3 point, PuzzleData puzzle)
-        {
-            Vector3 segment = puzzle.destination - puzzle.origin;
-            float lengthSq = segment.sqrMagnitude;
-            if (lengthSq < 0.0000001f)
-                return Vector3.Distance(point, puzzle.origin);
-
-            float t = Mathf.Clamp01(Vector3.Dot(point - puzzle.origin, segment) / lengthSq);
-            return Vector3.Distance(point, puzzle.origin + segment * t);
         }
 
         private PuzzlePlanetListAsset Planets()

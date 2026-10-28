@@ -5,7 +5,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     public static class PuzzleClockSearch
     {
         private const float ShiftFactor = 1.5f;
-        private const float CostEpsilon = 0.0001f;
 
         public static bool TrySelect(
             PuzzleData puzzle, PuzzleSimSettings settings, PuzzleBrief brief, out PuzzleSolution solution)
@@ -44,7 +43,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                     if (!IsClockCandidate(scan, zone, centre, out PuzzleSolution candidate))
                         continue;
 
-                    if (!found || Precedes(candidate, solution, scan.BareTime))
+                    if (!found || PuzzleSolutionOrdering.Precedes(candidate, solution, scan.BareTime))
                     {
                         solution = candidate;
                         found = true;
@@ -71,21 +70,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static bool TryBareTime(PuzzleData puzzle, PuzzleSimSettings settings, out float shipTime)
         {
             SpaceShapingSession session = new(SpaceShapingSetup.Build(puzzle, settings));
-            TrajectoryResult result = session.Simulate(
-                session.BuildField(), new TrajectoryIntegrator(), new ShipLaunch());
+            TrajectoryResult result = session.Simulate();
             shipTime = result.ShipTime;
             return result.Outcome == TrajectoryOutcome.Arrive;
-        }
-
-        private static bool Precedes(PuzzleSolution a, PuzzleSolution b, float bareTime)
-        {
-            if (a.EntropySpent < b.EntropySpent - CostEpsilon)
-                return true;
-
-            if (a.EntropySpent > b.EntropySpent + CostEpsilon)
-                return false;
-
-            return Mathf.Abs(a.ShipTime - bareTime) > Mathf.Abs(b.ShipTime - bareTime);
         }
 
         private readonly struct ClockScan

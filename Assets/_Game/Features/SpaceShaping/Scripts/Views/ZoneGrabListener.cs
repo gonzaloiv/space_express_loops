@@ -224,7 +224,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void ApplyIdleFeedback()
         {
-            bool hoverInside = hovering && ZoneGesture.InsideContent(zone, hoverWorld);
+            bool hoverInside = hovering && zone.ContentContains(hoverWorld);
             Color fallback = hovering && !hoverInside ? frameHover : frameIdle;
             frameTint.Set(frameRenderer, PredictionColor(fallback, fallback));
             fillTint.Set(fillRenderer, hovering && hoverInside ? fillHover : fillIdle);
@@ -243,77 +243,5 @@ namespace DigitalLove.Game.SpaceShaping
                 settings.minScaleFactor, settings.maxScaleFactor, zone.Scale));
 
         private Vector3 HandLocal() => ZoneGesture.HandLocal(zone, grabbable);
-    }
-
-    internal static class ZoneGesture
-    {
-        public static bool InsideContent(SpaceZoneView zone, Vector3 world)
-        {
-            Vector3 local = ToParentLocal(zone, world) - zone.Centre;
-            Vector3 half = zone.ContentHalfExtents;
-            return Mathf.Abs(local.x) <= half.x
-                && Mathf.Abs(local.y) <= half.y
-                && Mathf.Abs(local.z) <= half.z;
-        }
-
-        public static bool HandInsideContent(SpaceZoneView zone, Grabbable grabbable) =>
-            InsideContent(zone, HandWorld(zone, grabbable));
-
-        public static bool AllHandsInside(SpaceZoneView zone, Grabbable grabbable)
-        {
-            for (int i = 0; i < grabbable.GrabPoints.Count; i++)
-            {
-                if (!InsideContent(zone, grabbable.GrabPoints[i].position))
-                    return false;
-            }
-
-            return true;
-        }
-
-        public static Vector3 HandWorld(SpaceZoneView zone, Grabbable grabbable) =>
-            grabbable.GrabPoints.Count > 0 ? grabbable.GrabPoints[0].position : zone.transform.position;
-
-        public static Vector3 HandLocal(SpaceZoneView zone, Grabbable grabbable) =>
-            ToParentLocal(zone, HandWorld(zone, grabbable));
-
-        public static float HandDistance(Grabbable grabbable)
-        {
-            if (grabbable.GrabPoints.Count < 2)
-                return 0f;
-
-            return Vector3.Distance(grabbable.GrabPoints[0].position, grabbable.GrabPoints[1].position);
-        }
-
-        public static float ScaleTarget(float startScale, float ratio, float gain, float min, float max) =>
-            Mathf.Clamp(startScale * Mathf.Pow(ratio, gain), min, max);
-
-        public static float ResizeFactor(float ratio, float gain, float maxGrow) =>
-            Mathf.Clamp(Mathf.Pow(ratio, gain), 1f, maxGrow);
-
-        private static Vector3 ToParentLocal(SpaceZoneView zone, Vector3 world)
-        {
-            Transform parent = zone.transform.parent;
-            return parent != null ? parent.InverseTransformPoint(world) : world;
-        }
-    }
-
-    internal struct RendererTint
-    {
-        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
-        private static readonly int ColorId = Shader.PropertyToID("_Color");
-
-        private MaterialPropertyBlock block;
-
-        public void Set(Renderer target, Color color)
-        {
-            if (target == null)
-                return;
-
-            block ??= new MaterialPropertyBlock();
-            target.GetPropertyBlock(block);
-            block.SetColor(BaseColorId, color);
-            block.SetColor(ColorId, color);
-            target.SetPropertyBlock(block);
-        }
     }
 }

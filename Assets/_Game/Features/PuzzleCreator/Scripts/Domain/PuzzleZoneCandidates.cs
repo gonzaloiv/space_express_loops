@@ -7,6 +7,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     {
         public const int DefaultSamples = 32;
         public const int CoarseSamples = 24;
+        public const float ZoneGapFactor = 0.25f;
 
         private const int SizeSamples = 3;
         private const int MaxCentres = 8;
@@ -48,7 +49,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             for (int i = 0; i < puzzle.sources.Length; i++)
             {
-                if (IsInside(zone, puzzle.sources[i].home))
+                if (zone.Contains(puzzle.sources[i].home))
                     return true;
             }
 
@@ -60,7 +61,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             int inside = 0;
             for (int i = 0; i < puzzle.sources.Length; i++)
             {
-                if (!IsInside(zone, puzzle.sources[i].home))
+                if (!zone.Contains(puzzle.sources[i].home))
                     continue;
 
                 if (Vector3.Distance(puzzle.sources[i].home, target) > MergeDistance)
@@ -144,14 +145,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static bool IsEndpoint(Vector3 home, PuzzleData puzzle) =>
             Vector3.Distance(home, puzzle.origin) < MergeDistance
             || Vector3.Distance(home, puzzle.destination) < MergeDistance;
-
-        private static bool IsInside(PuzzleZone zone, Vector3 point)
-        {
-            Vector3 offset = point - zone.centre;
-            return Mathf.Abs(offset.x) <= zone.halfExtents.x
-                && Mathf.Abs(offset.y) <= zone.halfExtents.y
-                && Mathf.Abs(offset.z) <= zone.halfExtents.z;
-        }
 
         private static Vector3[] Trim(List<Vector3> centres, int max)
         {

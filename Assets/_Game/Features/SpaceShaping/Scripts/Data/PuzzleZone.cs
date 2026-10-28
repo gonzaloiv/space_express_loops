@@ -14,6 +14,14 @@ namespace DigitalLove.Game.SpaceShaping
 
         public SpaceZone ToSpaceZone() => new(centre, halfExtents, scale, falloff);
 
+        public bool Contains(Vector3 point)
+        {
+            Vector3 offset = Abs(point - centre);
+            return offset.x <= halfExtents.x
+                && offset.y <= halfExtents.y
+                && offset.z <= halfExtents.z;
+        }
+
         public bool Overlaps(PuzzleZone other, float gapFactor)
         {
             float gap = Mathf.Max(gapFactor, 0f) * Mathf.Min(Width, other.Width);

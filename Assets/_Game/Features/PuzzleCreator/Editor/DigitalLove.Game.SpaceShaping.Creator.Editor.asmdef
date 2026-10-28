@@ -5,7 +5,10 @@
         "DigitalLove.Game.SpaceShaping.Creator",
         "DigitalLove.Game.SpaceShaping",
         "DigitalLove.Game.Sectors",
-        "DigitalLove.Casual.Levels"
+        "DigitalLove.Casual.Levels",
+        "DigitalLove.FlowControl",
+        "Oculus.Interaction",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [
         "Editor"

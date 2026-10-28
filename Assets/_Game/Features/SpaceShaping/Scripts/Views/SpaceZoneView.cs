@@ -27,7 +27,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         public bool CanResize => conditions.Resizable;
 
-        public Vector3 ContentSize
+        private Vector3 ContentSize
         {
             get
             {
@@ -39,7 +39,16 @@ namespace DigitalLove.Game.SpaceShaping
             }
         }
 
-        public Vector3 ContentHalfExtents => ContentSize * 0.5f;
+        public bool ContentContains(Vector3 world)
+        {
+            Transform parent = transform.parent;
+            Vector3 local = parent != null ? parent.InverseTransformPoint(world) : world;
+            Vector3 offset = local - Centre;
+            Vector3 half = ContentSize * 0.5f;
+            return Mathf.Abs(offset.x) <= half.x
+                && Mathf.Abs(offset.y) <= half.y
+                && Mathf.Abs(offset.z) <= half.z;
+        }
 
         private void Awake() => ApplyContentVisual();
 

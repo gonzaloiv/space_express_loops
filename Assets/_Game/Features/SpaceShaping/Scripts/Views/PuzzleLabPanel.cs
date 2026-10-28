@@ -23,11 +23,8 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private Color pendingColor = new(0.23137255f, 0.36078432f, 0.9647059f, 1f);
         [SerializeField] private Color overflowColor = new(1f, 0.3019608f, 0.2509804f, 1f);
 
-        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
-        private static readonly int ColorId = Shader.PropertyToID("_Color");
-
         private readonly StringBuilder text = new();
-        private MaterialPropertyBlock pendingBlock;
+        private RendererTint pendingTint;
         private PuzzleReadout lastReadout;
         private bool hasRendered;
 
@@ -40,6 +37,8 @@ namespace DigitalLove.Game.SpaceShaping
         private void OnDisable() => state.ReadoutChanged -= OnReadoutChanged;
 
         public void ResetPuzzle() => state.ResetPuzzle();
+
+        public void NextPuzzle() => state.NextPuzzle();
 
         private void OnReadoutChanged(PuzzleReadout readout)
         {
@@ -140,14 +139,7 @@ namespace DigitalLove.Game.SpaceShaping
             SetSegment(pendingFill, committed, pending);
         }
 
-        private void SetPendingColor(Color color)
-        {
-            pendingBlock ??= new MaterialPropertyBlock();
-            pendingRenderer.GetPropertyBlock(pendingBlock);
-            pendingBlock.SetColor(BaseColorId, color);
-            pendingBlock.SetColor(ColorId, color);
-            pendingRenderer.SetPropertyBlock(pendingBlock);
-        }
+        private void SetPendingColor(Color color) => pendingTint.Set(pendingRenderer, color);
 
         private static void SetSegment(Transform segment, float from, float width)
         {

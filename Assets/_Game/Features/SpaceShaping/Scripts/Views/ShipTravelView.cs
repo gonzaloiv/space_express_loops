@@ -23,7 +23,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         public float Clock { get; private set; }
 
-        public void Reset(Vector3 origin)
+        public void SoftReset(Vector3 origin)
         {
             Stop();
             transform.localPosition = origin;

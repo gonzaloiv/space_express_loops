@@ -6,7 +6,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     public static class PuzzleSolutionSearch
     {
         private const int MinSamples = 2;
-        private const float CostEpsilon = 0.0001f;
 
         public static bool TrySelect(
             PuzzleData puzzle, PuzzleSimSettings settings, PuzzleBrief brief, out PuzzleSolution solution)
@@ -16,10 +15,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 solution = default;
                 return false;
             }
-
-            if (brief.Moves > 1 && !brief.Translatable)
-                return PuzzleFixedSearch.TrySolve(
-                    puzzle, settings, puzzle.fixedZones, out solution);
 
             if (brief.Moves > 1)
                 return PuzzleBeamSearch.TrySelect(puzzle, settings, brief, out solution);
@@ -119,7 +114,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                     PuzzleZone zone = PuzzleZoneCandidates.Zone(
                         centre, sizes[s], scales[i], settings.ZoneFalloff);
                     if (PuzzleZoneRun.TryArrive(puzzle, settings, zone, out PuzzleSolution solution)
-                        && WithinWindow(solution.ShipTime, puzzle))
+                        && PuzzleWindow.Contains(puzzle, solution.ShipTime))
                         found.Add(solution);
                 }
             }
@@ -142,20 +137,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return best;
         }
 
-        private static bool Precedes(PuzzleSolution a, PuzzleSolution b, PuzzleData puzzle)
-        {
-            if (a.EntropySpent < b.EntropySpent - CostEpsilon)
-                return true;
-
-            if (a.EntropySpent > b.EntropySpent + CostEpsilon)
-                return false;
-
-            float centre = (puzzle.tmin + puzzle.tmax) * 0.5f;
-            return Mathf.Abs(a.ShipTime - centre) < Mathf.Abs(b.ShipTime - centre);
-        }
-
-        private static bool WithinWindow(float shipTime, PuzzleData puzzle) =>
-            shipTime >= puzzle.tmin && shipTime <= puzzle.tmax;
+        private static bool Precedes(PuzzleSolution a, PuzzleSolution b, PuzzleData puzzle) =>
+            PuzzleSolutionOrdering.Precedes(a, b, PuzzleSolutionOrdering.WindowCentre(puzzle));
 
         private struct CentreHit
         {

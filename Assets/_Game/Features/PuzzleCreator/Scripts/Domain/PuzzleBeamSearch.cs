@@ -7,8 +7,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     {
         private const int Width = 8;
         private const int MaxEvaluations = 5000;
-        private const float CostEpsilon = 0.0001f;
-        private const float MinGapFactor = 0.25f;
+        private const float MarginEpsilon = 0.0001f;
         private const float SizeTolerance = 0.0001f;
 
         public static bool TrySelect(
@@ -62,7 +61,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 if (!TryCandidate(context, centre, size, context.Scales[i], out PuzzleChain chain))
                     continue;
 
-                if (!found || Precedes(chain, best, context.Puzzle, false))
+                if (!found || Precedes(chain, best, context.Puzzle, true))
                 {
                     best = chain;
                     found = true;
@@ -96,8 +95,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             for (int b = 0; b < beam.Count; b++)
                 ExpandChain(context, next, beam[b], final);
 
-            next.Sort((a, b) => Order(a, b, context.Puzzle, final));
-            return Trim(next);
+            return Ordered(next, context.Puzzle, final);
         }
 
         private static void ExpandChain(
@@ -156,7 +154,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 if (!chain.Arrived || !PuzzleWindow.Contains(puzzle, chain.Solution.ShipTime))
                     continue;
 
-                if (!found || Precedes(chain, best, puzzle, true))
+                if (!found || Precedes(chain, best, puzzle, false))
                 {
                     best = chain;
                     found = true;
@@ -174,34 +172,21 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (!final && a.Margin != b.Margin)
                 return a.Margin < b.Margin ? -1 : 1;
 
-            int cost = a.Solution.EntropySpent.CompareTo(b.Solution.EntropySpent);
-            if (cost != 0)
-                return cost;
-
-            float centre = (puzzle.tmin + puzzle.tmax) * 0.5f;
-            return Mathf.Abs(a.Solution.ShipTime - centre).CompareTo(Mathf.Abs(b.Solution.ShipTime - centre));
+            return PuzzleSolutionOrdering.Order(
+                a.Solution, b.Solution, PuzzleSolutionOrdering.WindowCentre(puzzle));
         }
 
-        private static bool Precedes(PuzzleChain a, PuzzleChain b, PuzzleData puzzle, bool final)
+        private static bool Precedes(PuzzleChain a, PuzzleChain b, PuzzleData puzzle, bool marginFirst)
         {
-            if (!final && !SameMargin(a, b))
+            if (marginFirst && !SameMargin(a, b))
                 return a.Margin < b.Margin;
 
-            return Cheaper(a, b, puzzle);
+            return PuzzleSolutionOrdering.Precedes(
+                a.Solution, b.Solution, PuzzleSolutionOrdering.WindowCentre(puzzle));
         }
 
         private static bool SameMargin(PuzzleChain a, PuzzleChain b) =>
-            Mathf.Abs(a.Margin - b.Margin) <= CostEpsilon;
-
-        private static bool Cheaper(PuzzleChain a, PuzzleChain b, PuzzleData puzzle)
-        {
-            float delta = a.Solution.EntropySpent - b.Solution.EntropySpent;
-            if (Mathf.Abs(delta) > CostEpsilon)
-                return delta < 0f;
-
-            float centre = (puzzle.tmin + puzzle.tmax) * 0.5f;
-            return Mathf.Abs(a.Solution.ShipTime - centre) < Mathf.Abs(b.Solution.ShipTime - centre);
-        }
+            Mathf.Abs(a.Margin - b.Margin) <= MarginEpsilon;
 
         private static PuzzleZone[] Append(PuzzleZone[] zones, PuzzleZone zone)
         {
@@ -217,11 +202,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             for (int i = 0; i < zones.Length; i++)
             {
-                if (zone.Overlaps(zones[i], MinGapFactor))
+                if (zone.Overlaps(zones[i], PuzzleZoneCandidates.ZoneGapFactor))
                     return true;
             }
 
             return false;
+        }
+
+        private static List<PuzzleChain> Ordered(List<PuzzleChain> chains, PuzzleData puzzle, bool final)
+        {
+            chains.Sort((a, b) => Order(a, b, puzzle, final));
+            return Trim(chains);
         }
 
         private static List<PuzzleChain> Trim(List<PuzzleChain> chains)
@@ -236,16 +227,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return trimmed;
         }
 
-        private static float Margin(TrajectoryResult result, Vector3 destination)
-        {
-            if (result.Points == null || result.Points.Count == 0)
-                return float.MaxValue;
-
-            float closest = float.MaxValue;
-            for (int i = 0; i < result.Points.Count; i++)
-                closest = Mathf.Min(closest, Vector3.Distance(result.Points[i], destination));
-
-            return closest;
-        }
+        private static float Margin(TrajectoryResult result, Vector3 destination) =>
+            result.HasPoints ? result.ClosestApproach(destination) : float.MaxValue;
     }
 }

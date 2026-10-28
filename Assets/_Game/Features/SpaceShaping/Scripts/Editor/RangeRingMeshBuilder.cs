@@ -16,17 +16,30 @@ namespace DigitalLove.Game.SpaceShaping.EditorTools
         [MenuItem("DigitalLove/Space Shaping/Build Range Rings")]
         public static void Build()
         {
-            Mesh mesh = BuildMesh();
             if (!AssetDatabase.IsValidFolder(ModelsFolder))
                 AssetDatabase.CreateFolder("Assets/_Game/Features/SpaceShaping", "Models");
-            if (AssetDatabase.LoadAssetAtPath<Mesh>(AssetPath) != null)
-                AssetDatabase.DeleteAsset(AssetPath);
-            AssetDatabase.CreateAsset(mesh, AssetPath);
+
+            Mesh mesh = AssetDatabase.LoadAssetAtPath<Mesh>(AssetPath);
+            if (mesh == null)
+            {
+                mesh = new Mesh();
+                AssetDatabase.CreateAsset(mesh, AssetPath);
+            }
+
+            FillMesh(mesh);
+            EditorUtility.SetDirty(mesh);
             AssetDatabase.SaveAssets();
             Debug.Log($"[RangeRingMeshBuilder] Built range rings ({mesh.vertexCount} verts) at {AssetPath}");
         }
 
         public static Mesh BuildMesh()
+        {
+            Mesh mesh = new();
+            FillMesh(mesh);
+            return mesh;
+        }
+
+        private static void FillMesh(Mesh mesh)
         {
             List<Vector3> vertices = new();
             List<Vector3> normals = new();
@@ -35,12 +48,11 @@ namespace DigitalLove.Game.SpaceShaping.EditorTools
             AddRing(vertices, normals, triangles, Vector3.up);
             AddRing(vertices, normals, triangles, Vector3.right);
 
-            Mesh mesh = new();
+            mesh.Clear();
             mesh.SetVertices(vertices);
             mesh.SetNormals(normals);
             mesh.SetTriangles(triangles, 0);
             mesh.RecalculateBounds();
-            return mesh;
         }
 
         private static void AddRing(

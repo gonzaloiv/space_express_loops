@@ -21,7 +21,7 @@ namespace DigitalLove.Game.SpaceShaping
             SourceStrengthScale = settings.sourceStrengthScale,
             SeparationScale = settings.separationScale,
             LightSpeed = settings.lightSpeed,
-            CaptureRadius = settings.planetRadiusMin,
+            CaptureRadius = settings.planetRadiusMax,
             ZoneFalloff = settings.zoneFalloff,
             MinScaleFactor = settings.minScaleFactor,
             MaxScaleFactor = settings.maxScaleFactor

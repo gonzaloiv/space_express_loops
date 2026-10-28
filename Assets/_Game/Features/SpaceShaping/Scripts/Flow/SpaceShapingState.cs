@@ -14,13 +14,11 @@ namespace DigitalLove.Game.SpaceShaping
 
         private readonly TrajectoryIntegrator integrator = new();
         private readonly ShipLaunch launch = new();
-        private readonly FixedZoneGesture fixedGesture = new();
 
         private SpaceShapingSession session;
         private TrajectoryResult lastResult;
         private PuzzleReadout readout;
         private int puzzleIndex;
-        private float[] debugSolvedScales;
         private bool wasScaling;
         private bool hasResult;
         private bool isChecked;
@@ -30,8 +28,12 @@ namespace DigitalLove.Game.SpaceShaping
 
         public PuzzleReadout Readout => readout;
 
-        private bool IsFixed =>
-            puzzles[puzzleIndex].fixedZones != null && puzzles[puzzleIndex].fixedZones.Length > 0;
+        public SpaceZone Zone => view.Zone;
+
+        public PuzzleData CurrentPuzzle =>
+            puzzles != null && puzzleIndex >= 0 && puzzleIndex < puzzles.Length
+                ? puzzles[puzzleIndex]
+                : null;
 
         public override void Enter()
         {
@@ -49,10 +51,9 @@ namespace DigitalLove.Game.SpaceShaping
         public void ResetPuzzle()
         {
             wasScaling = false;
-            fixedGesture.Reset();
             ResetView();
             session.Reset();
-            ship.Reset(session.Origin);
+            ship.SoftReset(session.Origin);
             PushField();
         }
 
@@ -70,38 +71,17 @@ namespace DigitalLove.Game.SpaceShaping
                 view.CrossHalf(preview, puzzles[puzzleIndex], settings.cubeSize));
         }
 
-        public float DebugApplySolvedCube()
+        public bool ApplySolvedScale(float scale)
         {
-            if (session == null || IsFixed)
-                return 0f;
+            if (session == null || scale <= 0f)
+                return false;
 
             ResetPuzzle();
-            float scale = DebugScale(puzzleIndex);
-            if (scale <= 0f)
-                return 0f;
-
             view.SetZoneScale(scale);
             session.ApplyZone(view.Zone);
             ship.Travel(PushField());
-            return scale;
+            return true;
         }
-
-        private float DebugScale(int index)
-        {
-            if (debugSolvedScales == null)
-                debugSolvedScales = new float[puzzles.Length];
-
-            float scale = debugSolvedScales[index];
-            if (scale > 0f)
-                return scale;
-
-            scale = FindDebugSolution(view.Zone);
-            debugSolvedScales[index] = scale;
-            return scale;
-        }
-
-        private float FindDebugSolution(SpaceZone zone) =>
-            PuzzleDebugSolution.Find(BuildSetup(), zone, settings.minScaleFactor, settings.maxScaleFactor);
 
         private void LateUpdate()
         {
@@ -114,12 +94,6 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void TrackGesture()
         {
-            if (IsFixed)
-            {
-                TrackFixedGesture();
-                return;
-            }
-
             if (view.IsScaling)
             {
                 if (!wasScaling && session.IsOverBudget)
@@ -138,27 +112,14 @@ namespace DigitalLove.Game.SpaceShaping
                 return;
             }
 
-            if (session.IsOverBudget)
-                return;
-
-            if (view.HasChanged())
+            if (!session.IsOverBudget && view.HasChanged())
                 PushField();
         }
-
         private void BeginScale()
         {
             session.PreviewZone(view.Zone);
             wasScaling = true;
             PushField();
-        }
-
-        private void TrackFixedGesture()
-        {
-            bool changed = fixedGesture.Track(session, view.FixedCubes, out bool commit);
-            if (commit)
-                ship.Travel(PushField());
-            else if (changed)
-                PushField();
         }
 
         private void TrackFlight()
@@ -181,13 +142,6 @@ namespace DigitalLove.Game.SpaceShaping
         private void ResetView()
         {
             PuzzleData puzzle = puzzles[puzzleIndex];
-            if (IsFixed)
-            {
-                view.ShowFixedZones(puzzle.fixedZones, settings.zoneFalloff);
-                return;
-            }
-
-            view.HideFixedZones();
             view.ResetZone();
             view.SetConditions(ZoneConditions.From(puzzle));
             float size = puzzle.cubeSize > 0f ? puzzle.cubeSize : settings.cubeSize;
@@ -197,11 +151,10 @@ namespace DigitalLove.Game.SpaceShaping
         private void StartPuzzle()
         {
             wasScaling = false;
-            fixedGesture.Reset();
             isChecked = false;
             ResetView();
             session = new SpaceShapingSession(BuildSetup());
-            ship.Reset(session.Origin);
+            ship.SoftReset(session.Origin);
             PushField();
         }
 
@@ -213,17 +166,13 @@ namespace DigitalLove.Game.SpaceShaping
             SpacetimeField field = session.BuildField();
             TrajectoryResult result = session.Simulate(field, integrator, launch);
             bool solved = session.IsSolved(result);
-            if (IsFixed)
-                view.SetFixedPrediction(solved, result.Outcome);
-            else
-                view.SetPrediction(solved, result.Outcome);
+            view.SetPrediction(solved, result.Outcome);
 
             view.Render(
                 field, session.Zones, session.Origin, session.Destination,
                 view.CrossHalf(session, puzzles[puzzleIndex], settings.cubeSize));
             view.ShowTrajectory(result, solved);
-            if (!IsFixed)
-                view.Snapshot();
+            view.Snapshot();
 
             lastResult = result;
             hasResult = true;
@@ -252,7 +201,7 @@ namespace DigitalLove.Game.SpaceShaping
             ReadoutChanged?.Invoke(readout);
         }
 
-        private SpaceShapingSetup BuildSetup() =>
+        public SpaceShapingSetup BuildSetup() =>
             SpaceShapingSetup.Build(puzzles[puzzleIndex], PuzzleSimSettings.From(settings));
     }
 }

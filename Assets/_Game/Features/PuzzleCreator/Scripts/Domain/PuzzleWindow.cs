@@ -14,8 +14,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             SpaceShapingSetup setup = SpaceShapingSetup.Build(field, settings);
             setup.LaunchSpeed = settings.NominalSpeed;
             SpaceShapingSession session = new(setup);
-            TrajectoryResult result = session.Simulate(
-                session.BuildField(), new TrajectoryIntegrator(), new ShipLaunch());
+            TrajectoryResult result = session.Simulate();
             shipTime = result.ShipTime;
             return result.Outcome == TrajectoryOutcome.Arrive;
         }

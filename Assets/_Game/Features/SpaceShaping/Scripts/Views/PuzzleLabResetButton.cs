@@ -5,7 +5,7 @@ namespace DigitalLove.Game.SpaceShaping
 {
     public class PuzzleLabResetButton : MonoBehaviour
     {
-        [SerializeField] private PuzzleLabPanel panel;
+        [SerializeField] protected PuzzleLabPanel panel;
         [SerializeField] private Grabbable grabbable;
         [SerializeField] private Renderer face;
         [SerializeField] private Color idleColor = new(0.14117648f, 0.14117648f, 0.14117648f, 1f);
@@ -18,25 +18,25 @@ namespace DigitalLove.Game.SpaceShaping
         private bool hovered;
         private float pressedUntil;
 
-        private void Awake() => home = transform.localPosition;
+        protected virtual void Awake() => home = transform.localPosition;
 
-        private void OnEnable() => grabbable.WhenPointerEventRaised += OnPointerEvent;
+        protected virtual void OnEnable() => grabbable.WhenPointerEventRaised += OnPointerEvent;
 
-        private void OnDisable() => grabbable.WhenPointerEventRaised -= OnPointerEvent;
+        protected virtual void OnDisable() => grabbable.WhenPointerEventRaised -= OnPointerEvent;
 
-        private void Update()
+        protected virtual void Update()
         {
             bool pressed = Time.unscaledTime < pressedUntil;
             tint.Set(face, pressed ? pressedColor : hovered ? hoverColor : idleColor);
         }
 
-        private void LateUpdate()
+        protected virtual void LateUpdate()
         {
             transform.localPosition = home;
             transform.localRotation = Quaternion.identity;
         }
 
-        private void OnPointerEvent(PointerEvent evt)
+        protected virtual void OnPointerEvent(PointerEvent evt)
         {
             switch (evt.Type)
             {
@@ -49,9 +49,11 @@ namespace DigitalLove.Game.SpaceShaping
                     break;
                 case PointerEventType.Select:
                     pressedUntil = Time.unscaledTime + pressedSecs;
-                    panel.ResetPuzzle();
+                    Activate();
                     break;
             }
         }
+
+        protected virtual void Activate() => panel.ResetPuzzle();
     }
 }
