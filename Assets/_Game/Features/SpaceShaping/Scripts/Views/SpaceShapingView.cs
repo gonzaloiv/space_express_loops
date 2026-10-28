@@ -38,7 +38,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             int count = session.SourceCount;
             for (int i = 0; i < count; i++)
-                Source(i).Spawn(session.GetPosition(i), session.GetScale(i), i);
+                Source(i).Spawn(session.GetPosition(i), session.GetScale(i) * 0.5f, i);
 
             for (int i = count; i < pool.Count; i++)
                 pool[i].Hide();
@@ -68,7 +68,9 @@ namespace DigitalLove.Game.SpaceShaping
             float crossHalf) =>
             mesh.Render(field, zones, origin, destination, crossHalf);
 
-        public void ShowTrajectory(TrajectoryResult result) => trajectory.Show(result);
+        public void ShowTrajectory(TrajectoryResult result, bool solved) => trajectory.Show(result, solved);
+
+        public void Refuse() => Cube().Refuse();
 
         public void PulseTrajectory() => trajectory.Pulse();
 

@@ -19,14 +19,15 @@ namespace DigitalLove.Game.SpaceShaping
         public int Grade { get; }
         public int CommandCount { get; }
 
-        private PuzzleReadout(SpaceShapingSession session, TrajectoryResult result, bool isChecked)
+        private PuzzleReadout(
+            SpaceShapingSession session, TrajectoryResult result, bool isChecked, float shipTime)
         {
             bool solved = isChecked && session.IsSolved(result);
             EntropySpent = session.EntropyCommitted;
             EntropyPending = session.PendingEntropy;
             EntropyBudget = session.EntropyBudget;
             EntropyLeft = Mathf.Max(0f, EntropyBudget - EntropySpent);
-            ShipTime = result.ShipTime;
+            ShipTime = shipTime;
             Tmin = session.Tmin;
             Tmax = session.Tmax;
             Outcome = result.Outcome;
@@ -40,6 +41,10 @@ namespace DigitalLove.Game.SpaceShaping
 
         public static PuzzleReadout From(
             SpaceShapingSession session, TrajectoryResult result, bool isChecked) =>
-            new(session, result, isChecked);
+            From(session, result, isChecked, result.ShipTime);
+
+        public static PuzzleReadout From(
+            SpaceShapingSession session, TrajectoryResult result, bool isChecked, float shipTime) =>
+            new(session, result, isChecked, shipTime);
     }
 }

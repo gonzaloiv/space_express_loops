@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
@@ -25,7 +26,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void Awake() => CaptureMarkerScale();
 
-        public void Show(TrajectoryResult result)
+        public void Show(TrajectoryResult result, bool solved)
         {
             StopPulse();
             int count = result.Points != null ? result.Points.Count : 0;
@@ -35,6 +36,16 @@ namespace DigitalLove.Game.SpaceShaping
                 return;
             }
 
+            FillLine(result.Points);
+            Color color = solved ? arriveColor : ColorFor(result.Outcome);
+            SetColor(color);
+            ShowMarker(result.Points[count - 1], color);
+            line.enabled = true;
+        }
+
+        private void FillLine(IReadOnlyList<Vector3> points)
+        {
+            int count = points.Count;
             int stride = Mathf.Max(1, Mathf.CeilToInt((count - 1) / (float)(MaxLinePoints - 1)));
             int shown = (count - 1 + stride - 1) / stride + 1;
             line.positionCount = shown;
@@ -42,17 +53,18 @@ namespace DigitalLove.Game.SpaceShaping
             int index = 0;
             for (int i = 0; i < count - 1; i += stride)
             {
-                line.SetPosition(index, result.Points[i]);
+                line.SetPosition(index, points[i]);
                 index++;
             }
 
-            line.SetPosition(index, result.Points[count - 1]);
-            Color color = ColorFor(result.Outcome);
-            SetColor(color);
+            line.SetPosition(index, points[count - 1]);
+        }
+
+        private void ShowMarker(Vector3 position, Color color)
+        {
             SetMarkerColor(color);
-            endMarker.localPosition = result.Points[count - 1];
+            endMarker.localPosition = position;
             endMarker.gameObject.SetActive(true);
-            line.enabled = true;
         }
 
         public void Hide()
@@ -106,12 +118,8 @@ namespace DigitalLove.Game.SpaceShaping
             hasMarkerScale = true;
         }
 
-        private Color ColorFor(TrajectoryOutcome outcome) => outcome switch
-        {
-            TrajectoryOutcome.Arrive => arriveColor,
-            TrajectoryOutcome.Crash => crashColor,
-            _ => missColor
-        };
+        private Color ColorFor(TrajectoryOutcome outcome) =>
+            outcome == TrajectoryOutcome.Crash ? crashColor : missColor;
 
         private void SetColor(Color color)
         {

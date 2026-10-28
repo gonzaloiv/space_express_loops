@@ -61,6 +61,8 @@ namespace DigitalLove.Game.SpaceShaping
         public void SetPrediction(bool solved, TrajectoryOutcome outcome) =>
             listener.SetPrediction(solved, outcome);
 
+        public void Refuse() => listener.Refuse();
+
         public void SetScaling(bool value) => scaling = value;
 
         public void ResetScale()

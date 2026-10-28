@@ -31,11 +31,12 @@ than incidental.** Structure them asymmetrically:
 - **Fuel = the brief.** The launch you are *given*; make it work, or the money does not add up. Not a
   lever. **Global** (`SpaceShapingSettings.launchSpeed`) — the speed does not need to vary per job.
 - **Entropy = the budget and the score.** Every **completed modification** burns it (the cost is the
-  continuous scale delta, charged when the edit finishes); the grade is the entropy you *did not*
-  spend, awarded only on a solve. **Reset/retry is free** and **Undo refunds** the last edit — only
-  committed modifications cost. The budget is exhausted when committed spend **reaches** it: new
-  edits are refused, and an unsolved job **fails**. If the same commit both solves and empties the
-  budget, the solve wins.
+  **net** scale change from the last committed value for that zone, charged when the edit finishes — the
+  same cost the bake budgets, so returning the hands to where they started costs nothing); the grade is
+  the entropy you *did not* spend, awarded only on a solve. **Reset/retry is free** and **Undo refunds**
+  the last edit — only committed modifications cost. The budget is exhausted when committed spend
+  **reaches** it: new edits are refused, and an unsolved job **fails**. If the same commit both solves and
+  empties the budget, the solve wins.
 - **Reading the field reconciles them** — the field's natural assists are *free*, so you can edit
   little *and* arrive in the window.
 

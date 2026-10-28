@@ -9,10 +9,12 @@ namespace DigitalLove.Game.SpaceShaping
             SpacetimeField field, Vector3 start, LaunchSettings launch, TrajectorySettings settings)
         {
             List<Vector3> points = new(settings.MaxSteps + 1);
+            List<float> times = new(settings.MaxSteps + 1);
             Vector3 position = start;
             Vector3 velocity = launch.Direction * launch.Speed;
             float shipTime = 0f;
             points.Add(position);
+            times.Add(shipTime);
 
             for (int step = 0; step < settings.MaxSteps; step++)
             {
@@ -22,13 +24,14 @@ namespace DigitalLove.Game.SpaceShaping
                 Vector3 from = position;
                 position += velocity * settings.StepSecs / StepDivisor(settings.Zones, position);
                 points.Add(position);
+                times.Add(shipTime);
 
                 TrajectoryOutcome outcome = Classify(field, from, position, start, settings);
                 if (outcome != TrajectoryOutcome.Miss)
-                    return new TrajectoryResult(outcome, points, shipTime);
+                    return new TrajectoryResult(outcome, points, times, shipTime);
             }
 
-            return new TrajectoryResult(TrajectoryOutcome.Miss, points, shipTime);
+            return new TrajectoryResult(TrajectoryOutcome.Miss, points, times, shipTime);
         }
 
         private static float Dilation(

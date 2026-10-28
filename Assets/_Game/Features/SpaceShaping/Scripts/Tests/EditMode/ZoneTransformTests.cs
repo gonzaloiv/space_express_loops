@@ -160,6 +160,18 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         }
 
         [Test]
+        public void Session_AnchorSourceIsNotScaled()
+        {
+            SpaceShapingSetup setup = ContentSetup();
+            setup.AnchorSource = 0;
+            SpaceShapingSession session = new(setup);
+            session.ApplyZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 2f, 0f));
+
+            Assert.AreEqual(new Vector3(-2f, 0f, 0f), session.GetPosition(0));
+            Assert.AreEqual(2f, session.GetScale(0), 0.0001f);
+        }
+
+        [Test]
         public void Rescale_ReplacesTheZoneInsteadOfCompounding()
         {
             SpaceShapingSession session = new(ContentSetup());
@@ -186,7 +198,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         }
 
         [Test]
-        public void Gesture_AccumulatesEntropySpentPerFrame()
+        public void Gesture_PreviewChargesNetScaleDelta()
         {
             SpaceShapingSession session = new(ContentSetup());
             session.PreviewZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 1f, 0f));
@@ -198,6 +210,30 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             session.CommitPreview();
             Assert.AreEqual(1, session.CommandCount);
             Assert.AreEqual(1f, session.EntropySpent, 0.0001f);
+        }
+
+        [Test]
+        public void Gesture_ReturningToReferenceRefundsThePreview()
+        {
+            SpaceShapingSession session = new(ContentSetup());
+            session.PreviewZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 1.5f, 0f));
+            Assert.AreEqual(0.5f, session.EntropySpent, 0.0001f);
+
+            session.PreviewZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 1f, 0f));
+            Assert.AreEqual(0f, session.EntropySpent, 0.0001f);
+        }
+
+        [Test]
+        public void Gesture_ReturningToCommittedScaleCostsNothing()
+        {
+            SpaceShapingSession session = new(ContentSetup());
+            session.ApplyZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 1.5f, 0f));
+
+            session.PreviewZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 1.2f, 0f));
+            Assert.AreEqual(0.8f, session.EntropySpent, 0.0001f);
+
+            session.PreviewZone(new SpaceZone(Vector3.zero, new Vector3(6f, 6f, 6f), 1.5f, 0f));
+            Assert.AreEqual(0.5f, session.EntropySpent, 0.0001f);
         }
 
         [Test]

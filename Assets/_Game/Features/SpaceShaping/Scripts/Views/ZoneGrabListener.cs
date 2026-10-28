@@ -26,21 +26,23 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private SpaceShapingSettings settings;
         [SerializeField] private float scaleGain = 2f;
         [SerializeField] private float scaleSmoothSecs = 0.08f;
+        [SerializeField] private float moveRefuseDistance = 0.02f;
+        [SerializeField] private float resizeRefuseRatio = 0.03f;
 
         [Header("Prediction")]
         [SerializeField] private Color frameSolved = new(0.35f, 1f, 0.55f, 1f);
         [SerializeField] private Color frameMiss = new(0.75f, 0.85f, 1f, 1f);
         [SerializeField] private Color frameCrash = new(1f, 0.35f, 0.3f, 1f);
+        [SerializeField] private Color frameRefused = new(1f, 0.25f, 0.2f, 1f);
+        [SerializeField] private float refuseSecs = 0.18f;
 
-        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
-        private static readonly int ColorId = Shader.PropertyToID("_Color");
-
-        private MaterialPropertyBlock frameBlock;
-        private MaterialPropertyBlock fillBlock;
+        private RendererTint frameTint;
+        private RendererTint fillTint;
 
         private bool hasPrediction;
         private bool predictedSolved;
         private TrajectoryOutcome predictedOutcome;
+        private float refusedUntil;
 
         private bool classified;
         private bool frameGrab;
@@ -49,6 +51,7 @@ namespace DigitalLove.Game.SpaceShaping
         private float startScale;
         private Vector3 startSize;
         private Vector3 grabOffset;
+        private Vector3 grabOrigin;
 
         private bool hovering;
         private Vector3 hoverWorld;
@@ -63,6 +66,10 @@ namespace DigitalLove.Game.SpaceShaping
             predictedSolved = solved;
             predictedOutcome = outcome;
         }
+
+        public void Refuse() => refusedUntil = Time.unscaledTime + refuseSecs;
+
+        private bool IsRefusing => Time.unscaledTime < refusedUntil;
 
         private void OnPointerEvent(PointerEvent evt)
         {
@@ -85,26 +92,46 @@ namespace DigitalLove.Game.SpaceShaping
             int count = grabbable.SelectingPointsCount;
             if (count == 0)
             {
-                zone.SetScaling(false);
-                ResetGesture();
-                ApplyFeedback();
+                EndGesture();
                 return;
             }
 
             if (!classified)
                 BeginGesture();
 
+            TrackCount(count);
+            ApplyGesture(count);
+            ApplyFeedback();
+            lastCount = count;
+        }
+
+        private void EndGesture()
+        {
+            zone.SetScaling(false);
+            classified = false;
+            lastCount = 0;
+            ApplyFeedback();
+        }
+
+        private void TrackCount(int count)
+        {
             if (count >= 2 && lastCount < 2)
             {
-                startHandDistance = HandDistance();
+                startHandDistance = ZoneGesture.HandDistance(grabbable);
                 startScale = zone.Scale;
                 startSize = zone.Size;
-                frameGrab = !AllInside();
+                frameGrab = !ZoneGesture.AllHandsInside(zone, grabbable);
             }
 
             if (count == 1 && lastCount != 1)
+            {
                 grabOffset = zone.Centre - HandLocal();
+                grabOrigin = HandLocal();
+            }
+        }
 
+        private void ApplyGesture(int count)
+        {
             if (count == 1)
                 Move();
             else if (frameGrab)
@@ -113,27 +140,26 @@ namespace DigitalLove.Game.SpaceShaping
                 ScaleUniverse();
 
             zone.SetScaling(count >= 2 && !frameGrab);
-            ApplyFeedback();
-            lastCount = count;
         }
 
         private void BeginGesture()
         {
             classified = true;
-            frameGrab = !InsideContent(HandWorld());
+            frameGrab = !ZoneGesture.HandInsideContent(zone, grabbable);
             grabOffset = zone.Centre - HandLocal();
-        }
-
-        private void ResetGesture()
-        {
-            classified = false;
-            lastCount = 0;
+            grabOrigin = HandLocal();
         }
 
         private void Move()
         {
-            if (zone.CanMove)
-                zone.SetFrame(HandLocal() + grabOffset, zone.Size);
+            if (!zone.CanMove)
+            {
+                if ((HandLocal() - grabOrigin).sqrMagnitude > moveRefuseDistance * moveRefuseDistance)
+                    Refuse();
+                return;
+            }
+
+            zone.SetFrame(HandLocal() + grabOffset, zone.Size);
         }
 
         private void ScaleUniverse()
@@ -141,25 +167,38 @@ namespace DigitalLove.Game.SpaceShaping
             if (startHandDistance < 0.0001f)
                 return;
 
-            float ratio = HandDistance() / startHandDistance;
-            float target = Mathf.Clamp(
-                startScale * Mathf.Pow(ratio, scaleGain), settings.minScaleFactor, settings.maxScaleFactor);
+            float target = ZoneGesture.ScaleTarget(
+                startScale, ZoneGesture.HandDistance(grabbable) / startHandDistance, scaleGain,
+                settings.minScaleFactor, settings.maxScaleFactor);
             float blend = 1f - Mathf.Exp(-Time.deltaTime / Mathf.Max(scaleSmoothSecs, 0.001f));
             zone.SetScale(Mathf.Lerp(zone.Scale, target, blend));
         }
 
         private void ResizeFrame()
         {
-            if (!zone.CanResize || startHandDistance < 0.0001f)
+            if (startHandDistance < 0.0001f)
                 return;
 
-            float ratio = HandDistance() / startHandDistance;
-            float factor = Mathf.Clamp(Mathf.Pow(ratio, frameGain), 1f, frameGrowRatio);
-            zone.SetFrame(zone.Centre, startSize * factor);
+            float ratio = ZoneGesture.HandDistance(grabbable) / startHandDistance;
+            if (!zone.CanResize)
+            {
+                if (Mathf.Abs(ratio - 1f) > resizeRefuseRatio)
+                    Refuse();
+                return;
+            }
+
+            zone.SetFrame(zone.Centre, startSize * ZoneGesture.ResizeFactor(ratio, frameGain, frameGrowRatio));
         }
 
         private void ApplyFeedback()
         {
+            if (IsRefusing)
+            {
+                frameTint.Set(frameRenderer, frameRefused);
+                fillTint.Set(fillRenderer, fillIdle);
+                return;
+            }
+
             if (grabbable.SelectingPointsCount == 0)
             {
                 ApplyIdleFeedback();
@@ -167,27 +206,28 @@ namespace DigitalLove.Game.SpaceShaping
             }
 
             bool scaling = grabbable.SelectingPointsCount >= 2 && !frameGrab;
-            Color frameColor = scaling ? PredictionColor() : FrameActiveColor();
-            SetColor(frameRenderer, ref frameBlock, frameColor);
-            SetColor(fillRenderer, ref fillBlock, scaling ? ScaleColor() : fillIdle);
+            Color frameColor = scaling ? PredictionColor(frameMiss, frameIdle) : FrameActiveColor();
+            frameTint.Set(frameRenderer, frameColor);
+            fillTint.Set(fillRenderer, scaling ? ScaleColor() : fillIdle);
         }
 
-        private Color PredictionColor()
+        private Color PredictionColor(Color miss, Color none)
         {
             if (!hasPrediction)
-                return frameIdle;
+                return none;
 
             if (predictedSolved)
                 return frameSolved;
 
-            return predictedOutcome == TrajectoryOutcome.Crash ? frameCrash : frameMiss;
+            return predictedOutcome == TrajectoryOutcome.Crash ? frameCrash : miss;
         }
 
         private void ApplyIdleFeedback()
         {
-            bool hoverInside = hovering && InsideContent(hoverWorld);
-            SetColor(frameRenderer, ref frameBlock, hovering && !hoverInside ? frameHover : frameIdle);
-            SetColor(fillRenderer, ref fillBlock, hovering && hoverInside ? fillHover : fillIdle);
+            bool hoverInside = hovering && ZoneGesture.InsideContent(zone, hoverWorld);
+            Color fallback = hovering && !hoverInside ? frameHover : frameIdle;
+            frameTint.Set(frameRenderer, PredictionColor(fallback, fallback));
+            fillTint.Set(fillRenderer, hovering && hoverInside ? fillHover : fillIdle);
         }
 
         private Color FrameActiveColor()
@@ -202,7 +242,69 @@ namespace DigitalLove.Game.SpaceShaping
             Color.Lerp(fillShrink, fillMagnify, Mathf.InverseLerp(
                 settings.minScaleFactor, settings.maxScaleFactor, zone.Scale));
 
-        private void SetColor(Renderer target, ref MaterialPropertyBlock block, Color color)
+        private Vector3 HandLocal() => ZoneGesture.HandLocal(zone, grabbable);
+    }
+
+    internal static class ZoneGesture
+    {
+        public static bool InsideContent(SpaceZoneView zone, Vector3 world)
+        {
+            Vector3 local = ToParentLocal(zone, world) - zone.Centre;
+            Vector3 half = zone.ContentHalfExtents;
+            return Mathf.Abs(local.x) <= half.x
+                && Mathf.Abs(local.y) <= half.y
+                && Mathf.Abs(local.z) <= half.z;
+        }
+
+        public static bool HandInsideContent(SpaceZoneView zone, Grabbable grabbable) =>
+            InsideContent(zone, HandWorld(zone, grabbable));
+
+        public static bool AllHandsInside(SpaceZoneView zone, Grabbable grabbable)
+        {
+            for (int i = 0; i < grabbable.GrabPoints.Count; i++)
+            {
+                if (!InsideContent(zone, grabbable.GrabPoints[i].position))
+                    return false;
+            }
+
+            return true;
+        }
+
+        public static Vector3 HandWorld(SpaceZoneView zone, Grabbable grabbable) =>
+            grabbable.GrabPoints.Count > 0 ? grabbable.GrabPoints[0].position : zone.transform.position;
+
+        public static Vector3 HandLocal(SpaceZoneView zone, Grabbable grabbable) =>
+            ToParentLocal(zone, HandWorld(zone, grabbable));
+
+        public static float HandDistance(Grabbable grabbable)
+        {
+            if (grabbable.GrabPoints.Count < 2)
+                return 0f;
+
+            return Vector3.Distance(grabbable.GrabPoints[0].position, grabbable.GrabPoints[1].position);
+        }
+
+        public static float ScaleTarget(float startScale, float ratio, float gain, float min, float max) =>
+            Mathf.Clamp(startScale * Mathf.Pow(ratio, gain), min, max);
+
+        public static float ResizeFactor(float ratio, float gain, float maxGrow) =>
+            Mathf.Clamp(Mathf.Pow(ratio, gain), 1f, maxGrow);
+
+        private static Vector3 ToParentLocal(SpaceZoneView zone, Vector3 world)
+        {
+            Transform parent = zone.transform.parent;
+            return parent != null ? parent.InverseTransformPoint(world) : world;
+        }
+    }
+
+    internal struct RendererTint
+    {
+        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+        private static readonly int ColorId = Shader.PropertyToID("_Color");
+
+        private MaterialPropertyBlock block;
+
+        public void Set(Renderer target, Color color)
         {
             if (target == null)
                 return;
@@ -212,45 +314,6 @@ namespace DigitalLove.Game.SpaceShaping
             block.SetColor(BaseColorId, color);
             block.SetColor(ColorId, color);
             target.SetPropertyBlock(block);
-        }
-
-        private bool InsideContent(Vector3 world)
-        {
-            Vector3 local = ToParentLocal(world) - zone.Centre;
-            Vector3 half = zone.ContentHalfExtents;
-            return Mathf.Abs(local.x) <= half.x
-                && Mathf.Abs(local.y) <= half.y
-                && Mathf.Abs(local.z) <= half.z;
-        }
-
-        private bool AllInside()
-        {
-            for (int i = 0; i < grabbable.GrabPoints.Count; i++)
-            {
-                if (!InsideContent(grabbable.GrabPoints[i].position))
-                    return false;
-            }
-
-            return true;
-        }
-
-        private Vector3 HandLocal() => ToParentLocal(HandWorld());
-
-        private Vector3 ToParentLocal(Vector3 world)
-        {
-            Transform parent = zone.transform.parent;
-            return parent != null ? parent.InverseTransformPoint(world) : world;
-        }
-
-        private Vector3 HandWorld() =>
-            grabbable.GrabPoints.Count > 0 ? grabbable.GrabPoints[0].position : zone.transform.position;
-
-        private float HandDistance()
-        {
-            if (grabbable.GrabPoints.Count < 2)
-                return 0f;
-
-            return Vector3.Distance(grabbable.GrabPoints[0].position, grabbable.GrabPoints[1].position);
         }
     }
 }

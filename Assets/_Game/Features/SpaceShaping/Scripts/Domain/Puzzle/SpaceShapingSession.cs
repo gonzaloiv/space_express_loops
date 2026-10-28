@@ -16,7 +16,6 @@ namespace DigitalLove.Game.SpaceShaping
         private readonly List<SpaceZone> zones = new();
 
         private SpaceScaleCommand preview;
-        private float previewLastScale;
         private float entropySpent;
         private float entropyCommitted;
 
@@ -77,7 +76,6 @@ namespace DigitalLove.Game.SpaceShaping
         {
             commands.Clear();
             preview = null;
-            previewLastScale = 0f;
             Recompute();
         }
 
@@ -89,9 +87,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void PreviewZone(SpaceZone zone)
         {
-            float reference = preview != null ? previewLastScale : ReferenceScale(zone);
-            float cost = (preview != null ? preview.EntropyCost : 0f) + Mathf.Abs(zone.Scale - reference);
-            previewLastScale = zone.Scale;
+            float cost = Mathf.Abs(zone.Scale - ReferenceScale(zone));
             preview = new SpaceScaleCommand(zone, cost);
             Recompute();
         }
@@ -192,7 +188,7 @@ namespace DigitalLove.Game.SpaceShaping
         private void ApplyZones()
         {
             for (int i = 0; i < zones.Count; i++)
-                zones[i].ApplyTo(positions, scales, specs);
+                zones[i].ApplyTo(positions, scales, specs, setup.AnchorSource);
         }
 
         private void RecomputeEntropy()

@@ -7,13 +7,24 @@ namespace DigitalLove.Game.SpaceShaping
     {
         public TrajectoryOutcome Outcome;
         public List<Vector3> Points;
+        public List<float> Times;
         public float ShipTime;
 
-        public TrajectoryResult(TrajectoryOutcome outcome, List<Vector3> points, float shipTime)
+        public TrajectoryResult(
+            TrajectoryOutcome outcome, List<Vector3> points, List<float> times, float shipTime)
         {
             Outcome = outcome;
             Points = points;
+            Times = times;
             ShipTime = shipTime;
+        }
+
+        public float SampleTime(float index)
+        {
+            int last = Times.Count - 1;
+            int lower = Mathf.Clamp(Mathf.FloorToInt(index), 0, last);
+            int upper = Mathf.Min(lower + 1, last);
+            return Mathf.Lerp(Times[lower], Times[upper], index - lower);
         }
     }
 }

@@ -63,6 +63,9 @@ The game never shows a move count; the lab readout may show a command count as a
   the pulse at the local clock rate is a [candidate](../../ideas/feel-polish.md) (the lattice is a
   wireframe). The window gauge is the payoff: the projected arrival slides as the player scales
   ([relativity](relativity.md)).
+- The cube keeps a **committed check lamp** after release — green while the last check is in the window, red
+  on a crash — until the next edit. A locked gesture or an over-budget scale **flashes the frame red**
+  instead of failing silently.
 - The ship **launches on each completed pinch** and flies the current trajectory. The **live trajectory
   line** is the prediction while shaping — it updates on every edit, before release — and the flight
   repeats it ([core loop](../core-loop.md) §1).

@@ -7,7 +7,9 @@ namespace DigitalLove.Game.SpaceShaping
 {
     public class ShipTravelView : MonoBehaviour
     {
-        [SerializeField] private float travelSecs = 1.5f;
+        [SerializeField] private float minTravelSecs = 0.8f;
+        [SerializeField] private float maxTravelSecs = 3.5f;
+        [SerializeField] private float travelSecsPerShipSecond = 4f;
         [SerializeField] private float turnDegPerSec = 720f;
         [SerializeField] private TrailRenderer trail;
 
@@ -16,6 +18,10 @@ namespace DigitalLove.Game.SpaceShaping
         public event Action Completed;
 
         public bool IsFlying { get; private set; }
+
+        public float Progress { get; private set; }
+
+        public float Clock { get; private set; }
 
         public void Reset(Vector3 origin)
         {
@@ -35,7 +41,7 @@ namespace DigitalLove.Game.SpaceShaping
             trail.Clear();
             trail.emitting = true;
             IsFlying = true;
-            flight = StartCoroutine(Fly(points));
+            flight = StartCoroutine(Fly(result, TravelSecs(result)));
         }
 
         public void Stop()
@@ -44,24 +50,37 @@ namespace DigitalLove.Game.SpaceShaping
                 StopCoroutine(flight);
             flight = null;
             IsFlying = false;
+            Progress = 0f;
+            Clock = 0f;
             trail.emitting = false;
             trail.Clear();
         }
 
-        private IEnumerator Fly(List<Vector3> points)
+        private float TravelSecs(TrajectoryResult result) =>
+            Mathf.Clamp(
+                result.ShipTime * Mathf.Max(travelSecsPerShipSecond, 0f),
+                Mathf.Max(minTravelSecs, 0.0001f),
+                Mathf.Max(maxTravelSecs, minTravelSecs));
+
+        private IEnumerator Fly(TrajectoryResult result, float travel)
         {
+            List<Vector3> points = result.Points;
             int last = points.Count - 1;
-            float travel = Mathf.Max(0.0001f, travelSecs);
             float progress = 0f;
             while (progress < 1f)
             {
-                progress += Time.deltaTime / travel;
-                float index = Mathf.Clamp01(progress) * last;
+                progress = Mathf.Min(progress + Time.deltaTime / travel, 1f);
+                float eased = Mathf.SmoothStep(0f, 1f, progress);
+                float index = eased * last;
+                Progress = eased;
+                Clock = result.SampleTime(index);
                 MoveTo(Sample(points, index), Heading(points, index), Time.deltaTime);
                 yield return null;
             }
 
             transform.localPosition = points[last];
+            Progress = 1f;
+            Clock = result.ShipTime;
             IsFlying = false;
             flight = null;
             trail.emitting = false;

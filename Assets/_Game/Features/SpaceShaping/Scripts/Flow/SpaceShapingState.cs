@@ -10,6 +10,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private SpaceShapingSettings settings;
         [SerializeField] private SpaceShapingView view;
         [SerializeField] private ShipTravelView ship;
+        [SerializeField] private float clockPublishSecs = 0.1f;
 
         private readonly TrajectoryIntegrator integrator = new();
         private readonly ShipLaunch launch = new();
@@ -22,6 +23,7 @@ namespace DigitalLove.Game.SpaceShaping
         private bool wasScaling;
         private bool hasResult;
         private bool isChecked;
+        private float nextClockPublish;
 
         public event Action<PuzzleReadout> ReadoutChanged;
 
@@ -93,30 +95,8 @@ namespace DigitalLove.Game.SpaceShaping
             return scale;
         }
 
-        private float FindDebugSolution(SpaceZone zone)
-        {
-            const float step = 0.001f;
-            SpaceShapingSession scratch = new(BuildSetup());
-            float bestScale = 0f;
-            float bestCost = float.MaxValue;
-            for (float scale = settings.minScaleFactor; scale <= settings.maxScaleFactor + step; scale += step)
-            {
-                scratch.Reset();
-                scratch.ApplyZone(new SpaceZone(zone.Centre, zone.HalfExtents, scale, zone.Falloff));
-                TrajectoryResult result = scratch.Simulate(scratch.BuildField(), integrator, launch);
-                if (!scratch.IsSolved(result) || scratch.IsOverBudget)
-                    continue;
-
-                float cost = scratch.EntropyCommitted;
-                if (cost >= bestCost)
-                    continue;
-
-                bestCost = cost;
-                bestScale = scale;
-            }
-
-            return bestScale;
-        }
+        private float FindDebugSolution(SpaceZone zone) =>
+            PuzzleDebugSolution.Find(BuildSetup(), zone, settings.minScaleFactor, settings.maxScaleFactor);
 
         private void LateUpdate()
         {
@@ -124,6 +104,7 @@ namespace DigitalLove.Game.SpaceShaping
                 return;
 
             TrackGesture();
+            TrackFlight();
         }
 
         private void TrackGesture()
@@ -131,7 +112,10 @@ namespace DigitalLove.Game.SpaceShaping
             if (view.IsScaling)
             {
                 if (!wasScaling && session.IsOverBudget)
+                {
+                    view.Refuse();
                     return;
+                }
 
                 BeginScale();
                 return;
@@ -155,6 +139,16 @@ namespace DigitalLove.Game.SpaceShaping
             session.PreviewZone(view.Zone);
             wasScaling = true;
             PushField();
+        }
+
+        private void TrackFlight()
+        {
+            if (!ship.IsFlying || !hasResult || Time.unscaledTime < nextClockPublish)
+                return;
+
+            nextClockPublish = Time.unscaledTime + Mathf.Max(clockPublishSecs, 0.01f);
+            readout = PuzzleReadout.From(session, lastResult, false, ship.Clock);
+            ReadoutChanged?.Invoke(readout);
         }
 
         private void CommitScale()
@@ -190,15 +184,17 @@ namespace DigitalLove.Game.SpaceShaping
 
             SpacetimeField field = session.BuildField();
             TrajectoryResult result = session.Simulate(field, integrator, launch);
-            view.SetPrediction(session.IsSolved(result), result.Outcome);
+            bool solved = session.IsSolved(result);
+            view.SetPrediction(solved, result.Outcome);
             view.Render(
                 field, session.Zones, session.Origin, session.Destination, LatticeCrossHalf(session));
-            view.ShowTrajectory(result);
+            view.ShowTrajectory(result, solved);
             view.Snapshot();
 
             lastResult = result;
             hasResult = true;
             isChecked = false;
+            nextClockPublish = 0f;
             PublishReadout();
             return result;
         }
@@ -242,5 +238,33 @@ namespace DigitalLove.Game.SpaceShaping
 
         private SpaceShapingSetup BuildSetup() =>
             SpaceShapingSetup.Build(puzzles[puzzleIndex], PuzzleSimSettings.From(settings));
+    }
+
+    internal static class PuzzleDebugSolution
+    {
+        public static float Find(SpaceShapingSetup setup, SpaceZone zone, float minScale, float maxScale)
+        {
+            const float step = 0.001f;
+            SpaceShapingSession scratch = new(setup);
+            TrajectoryIntegrator integrator = new();
+            ShipLaunch launch = new();
+            float bestScale = 0f;
+            float bestCost = float.MaxValue;
+            for (float scale = minScale; scale <= maxScale + step; scale += step)
+            {
+                scratch.Reset();
+                scratch.ApplyZone(new SpaceZone(zone.Centre, zone.HalfExtents, scale, zone.Falloff));
+                TrajectoryResult result = scratch.Simulate(scratch.BuildField(), integrator, launch);
+                if (!scratch.IsSolved(result) || scratch.IsOverBudget)
+                    continue;
+                float cost = scratch.EntropyCommitted;
+                if (cost >= bestCost)
+                    continue;
+                bestCost = cost;
+                bestScale = scale;
+            }
+
+            return bestScale;
+        }
     }
 }

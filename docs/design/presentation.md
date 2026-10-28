@@ -18,9 +18,13 @@ built toward it.
   the **window** `[Tmin, Tmax]`, the **entropy bar** (committed + pending), and the **stars**
   ([resources](systems/resources.md)). The lab panel also shows a **command count** as a diagnostic;
   the shipped HUD never shows a move count ([the cube](systems/cube.md)).
-- The readout is **unchecked (pending)** while shaping. The flight is the check: when it ends the
-  readout becomes **checked**, and a new edit cancels the pending check. A miss or crash is a check,
-  not a fail; the fail is **out of entropy** ([resources](systems/resources.md)).
+- The readout is **unchecked (pending)** while shaping. The flight is the check: the ship clock **runs during
+  the flight** and the readout becomes **checked** on landing; a new edit cancels the pending check. A miss or
+  crash is a check, not a fail; the fail is **out of entropy** ([resources](systems/resources.md)).
+- The trajectory is **green only when the arrival is inside the window** — arriving outside it reads as a
+  miss, not a success.
+- The flight runs at **4× the ship clock** (clamped 0.8–3.5 s) and eases with a smoothstep, so a slower
+  clock visibly takes longer.
 - The **live trajectory line** is part of the read: it updates on every edit, and the ship flies it
   on release. The flight is the payoff, not the only reveal ([core loop](core-loop.md) §1).
 - The lab read uses four decimals; the final HUD may round for legibility.

@@ -59,6 +59,22 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         }
 
         [Test]
+        public void Clock_SamplesPerPointShipTime()
+        {
+            TrajectoryResult result = new TrajectoryIntegrator().Integrate(
+                new SpacetimeField(), new Vector3(-4f, 0f, 0f), Launch(), Settings());
+
+            Assert.AreEqual(result.Points.Count, result.Times.Count);
+            Assert.AreEqual(0f, result.Times[0], 0.00001f);
+            Assert.AreEqual(result.ShipTime, result.Times[result.Times.Count - 1], 0.00001f);
+            for (int i = 1; i < result.Times.Count; i++)
+                Assert.GreaterOrEqual(result.Times[i], result.Times[i - 1]);
+
+            Assert.AreEqual(0f, result.SampleTime(0f), 0.00001f);
+            Assert.AreEqual(result.ShipTime, result.SampleTime(result.Points.Count - 1), 0.00001f);
+        }
+
+        [Test]
         public void SessionPath_MatchesDirectRun()
         {
             SpaceShapingSetup setup = new()

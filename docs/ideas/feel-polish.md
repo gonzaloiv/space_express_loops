@@ -31,14 +31,12 @@ reads numerically (`PuzzleLabPanel.cs:44-46`).
   tubes cannot be compared across the grid, and it needs an animated shader.
 - **Reopen only if** the tint proves out and testers ask for rate.
 
-## 3. Locked-gesture refusal
+## 3. Locked-gesture refusal — flash built
 
-- **What:** flash the frame and play a short thud when a locked move/resize is attempted.
-- **Why not now:** the frame already withholds the move/resize highlight when locked
-  (`ZoneGrabListener.cs:166-172`), and the per-job card teaches the one verb. The “refuse visibly” rule is
-  about map cubes ([progression](../design/systems/progression.md)), not gestures.
-- **Trigger:** a playtest of job 4/5 shows a player repeatedly trying a locked gesture. The thud needs a
-  new audio/haptic seam; the flash can reuse the material-property-block path.
+- **What:** flash the frame when a locked move/resize is attempted or a scale is refused at the budget.
+- **Built 2026-10-28:** the frame turns red for 0.18 s (`ZoneGrabListener.Refuse`, thresholded so resting
+  a hand on a locked cube does not flash). A short thud would ride the audio seam in item 5.
+- **Still open:** the sound/haptic cue, and a matching flash on the entropy bar at the budget.
 
 ## 4. Haptics + pitch
 
