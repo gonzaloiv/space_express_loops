@@ -89,6 +89,49 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         }
 
         [Test]
+        public void Result_SolvedWinsWhenTheSameCommitExhaustsBudget()
+        {
+            SpaceShapingSession session = new(Setup());
+            session.ApplyZone(Zone(3f));
+
+            PuzzleResult result = PuzzleResult.From(session, Simulate(session));
+
+            Assert.IsTrue(session.IsOverBudget);
+            Assert.AreEqual(PuzzleResultOutcome.Solved, result.Outcome);
+            Assert.AreEqual(1, result.Grade);
+        }
+
+        [Test]
+        public void Result_MissKeepsCommittedCommands()
+        {
+            SpaceShapingSetup setup = Setup();
+            setup.Destination = new Vector3(400f, 0f, 0f);
+            SpaceShapingSession session = new(setup);
+            session.ApplyZone(Zone(1.5f));
+
+            PuzzleResult result = PuzzleResult.From(session, Simulate(session));
+
+            Assert.AreEqual(PuzzleResultOutcome.Miss, result.Outcome);
+            Assert.AreEqual(0, result.Grade);
+            Assert.AreEqual(1, session.CommandCount);
+        }
+
+        [Test]
+        public void Result_ExhaustedBudgetFails()
+        {
+            SpaceShapingSetup setup = Setup();
+            setup.Destination = new Vector3(400f, 0f, 0f);
+            SpaceShapingSession session = new(setup);
+            session.ApplyZone(Zone(3f));
+
+            PuzzleResult result = PuzzleResult.From(session, Simulate(session));
+
+            Assert.AreEqual(PuzzleResultOutcome.Failed, result.Outcome);
+            Assert.AreEqual(0, result.Grade);
+            Assert.AreEqual(1, session.CommandCount);
+        }
+
+        [Test]
         public void Pending_BecomesCommittedOnCommit()
         {
             SpaceShapingSession session = new(Setup());

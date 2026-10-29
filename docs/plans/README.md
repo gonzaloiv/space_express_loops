@@ -24,6 +24,7 @@ legacy cut and the catalogue start.
 |---|---|---|
 | [Space shaping — campaign map](backlog/space-shaping-campaign-map.md) | space shaping | Cube map, pick → brief → play in the same Bubble view → back; keeper moves out of `LevelContainer`. |
 | [Space shaping — HUD + validation 2](backlog/space-shaping-hud-validation.md) | space shaping | Entropy, clock window, result/fail; **this exit is the gate** for the campaign. |
+| [Space shaping — creator simplification](backlog/space-shaping-creator-simplify.md) | space shaping | Route-first, hand-designed bake replaces the random-field seed search. Does not block the gate. |
 | [Space shaping — progression save](backlog/space-shaping-progression.md) | space shaping | Solved jobs + stars, reset, placement carve-out. After the gate. |
 | [Space shaping — legacy cut](backlog/space-shaping-legacy-cut.md) | space shaping | Delete the route/round/economy flow once the keepers are out. After the gate. |
 | [Space shaping — catalogue + acceptance](backlog/space-shaping-catalogue.md) | space shaping | Re-bake the catalogue with the `routes` field and author 3–5, then 8–10, jobs; then the Quest 3S acceptance pass. |

@@ -112,23 +112,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void ShapeAsset_CarriesSeedAndDistance()
+        public void ShapeAsset_CarriesSeed()
         {
             PuzzleSeed seed = Seed();
             PuzzleShapeAsset asset = PuzzleArtifactFactory.Shape(seed, Settings());
 
             Assert.AreEqual(seed.seed, asset.seed);
-            Assert.AreEqual(seed.distance, asset.distance, 1e-4f);
-        }
-
-        [Test]
-        public void PlanetList_CarriesDistance()
-        {
-            PuzzleSeed seed = Seed();
-            PuzzlePlanetListAsset asset = PuzzleArtifactFactory.Planets(
-                PuzzleArtifactFactory.Shape(seed, Settings()));
-
-            Assert.AreEqual(seed.distance, asset.distance, 1e-4f);
         }
 
         [Test]
@@ -151,14 +140,16 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void BuildSetup_PrefersThePuzzleLaunch()
+        public void BuildSetup_UsesTheGlobalLaunchSpeed()
         {
             PuzzleData puzzle = Bare();
             puzzle.launchSpeed = 2f;
+            SpaceShapingSettings settings = Settings();
+            settings.launchSpeed = 1.25f;
 
-            SpaceShapingSetup setup = SpaceShapingSetup.Build(puzzle, PuzzleSimSettings.From(Settings()));
+            SpaceShapingSetup setup = SpaceShapingSetup.Build(puzzle, PuzzleSimSettings.From(settings));
 
-            Assert.AreEqual(2f, setup.LaunchSpeed, 1e-4f);
+            Assert.AreEqual(1.25f, setup.LaunchSpeed, 1e-4f);
         }
 
         private static PuzzleData Bare()

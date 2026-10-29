@@ -6,7 +6,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     public class PuzzleSeed : ScriptableObject
     {
         public int seed = 1;
-        [HideInInspector] public float distance = 1f;
         public int planetCount = 9;
 
         [Tooltip("Planet arrangement. Auto keeps the seed-derived shape (Ring, Spiral, Cluster).")]

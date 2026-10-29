@@ -120,6 +120,19 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
+        public void Bake_RejectsRotate()
+        {
+            PuzzleBrief rotating = brief;
+            rotating.Rotate = true;
+
+            PuzzleData rejected = PuzzleFieldBake.Bake(
+                planets, sim, rotating, out PuzzleBakeStatus status, out _);
+
+            Assert.IsNull(rejected);
+            Assert.AreEqual(PuzzleBakeStatus.UnsupportedBrief, status);
+        }
+
+        [Test]
         public void Apply_UsesDeterministicSeededRandomAngle()
         {
             PuzzleBrief angled = brief;
@@ -159,19 +172,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
             PuzzleData rejected = PuzzleFieldBake.Bake(
                 planets, sim, multi, out PuzzleBakeStatus status, out _);
-
-            Assert.IsNull(rejected);
-            Assert.AreEqual(PuzzleBakeStatus.UnsupportedBrief, status);
-        }
-
-        [Test]
-        public void Bake_RejectsRotate()
-        {
-            PuzzleBrief rotating = brief;
-            rotating.Rotate = true;
-
-            PuzzleData rejected = PuzzleFieldBake.Bake(
-                planets, sim, rotating, out PuzzleBakeStatus status, out _);
 
             Assert.IsNull(rejected);
             Assert.AreEqual(PuzzleBakeStatus.UnsupportedBrief, status);

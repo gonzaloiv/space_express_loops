@@ -19,6 +19,9 @@ namespace DigitalLove.Game.SpaceShaping
         public float cubeSizeMax = 0.21f;
 
         [Header("Simulation")]
+        [Tooltip("Given launch speed, shared by every puzzle, in metres per second.")]
+        public float launchSpeed = 0.9f;
+
         [Tooltip("Integrator step, in seconds. The step budget is derived from the run and the nominal speed, so the budget can never drift from the run.")]
         public float stepSecs = 0.0008333333f;
 

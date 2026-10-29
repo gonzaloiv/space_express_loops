@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10000000000000000000000000000016, type: 3}
+  m_Name: Job_01_01_OnePlanet_Puzzle
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.PuzzleData
+  id: 01_01
+  prefab: {fileID: 0}
+  origin: {x: -0.35, y: 0, z: 0}
+  destination: {x: 0.35, y: 0, z: 0}
+  zoneCentre: {x: 0, y: 0.1, z: 0}
+  cubeSizeMin: 0.105
+  cubeSizeMax: 0.21
+  cubeSize: 0.21
+  captureRadius: 0.045
+  translatable: 0
+  moves: 1
+  routes: 1
+  resizable: 0
+  rotate: 0
+  launchSpeed: 0.9
+  launchAngleDegs: 0
+  tmin: 0.4
+  tmax: 0.46
+  entropyBudget: 0.65
+  sources:
+  - home: {x: 0, y: 0.1, z: 0}
+    scale: 0.09

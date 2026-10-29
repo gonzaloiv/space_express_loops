@@ -28,9 +28,6 @@ namespace DigitalLove.Game.SpaceShaping.EditorTools
 
                 if (GUILayout.Button("Reset puzzle"))
                     state.ResetPuzzle();
-
-                if (GUILayout.Button("Next puzzle"))
-                    state.NextPuzzle();
             }
 
             if (!Application.isPlaying)
