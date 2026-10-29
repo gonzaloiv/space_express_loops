@@ -1,0 +1,18 @@
+{
+    "name": "DigitalLove.Game.Flow.PuzzleBootState",
+    "rootNamespace": "",
+    "references": [
+        "DigitalLove.FlowControl",
+        "DigitalLove.Game.Levels",
+        "DigitalLove.Game.SpaceShaping"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

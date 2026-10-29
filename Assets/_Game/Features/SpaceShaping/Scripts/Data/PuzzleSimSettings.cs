@@ -3,6 +3,7 @@ namespace DigitalLove.Game.SpaceShaping
     public struct PuzzleSimSettings
     {
         public float RunDistance;
+        public float LaunchSpeed;
         public float StepSecs;
         public float NominalSpeed;
         public float SourceStrengthScale;
@@ -16,6 +17,7 @@ namespace DigitalLove.Game.SpaceShaping
         public static PuzzleSimSettings From(SpaceShapingSettings settings) => new()
         {
             RunDistance = settings.runDistance,
+            LaunchSpeed = settings.launchSpeed,
             StepSecs = settings.stepSecs,
             NominalSpeed = settings.nominalSpeed,
             SourceStrengthScale = settings.sourceStrengthScale,

@@ -10,6 +10,8 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private Transform sourceParent;
         [SerializeField] private SpacetimeMeshView mesh;
         [SerializeField] private TrajectoryLineView trajectory;
+        [SerializeField] private SpaceZoneView authoredCube;
+        [SerializeField] private bool useCubePrototype = true;
         [SerializeField] private SpaceZoneView cubePrototype;
         [SerializeField] private Transform cubeParent;
 
@@ -24,7 +26,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void Awake()
         {
-            cube = Instantiate(cubePrototype, cubeParent);
+            cube = useCubePrototype ? Instantiate(cubePrototype, cubeParent) : authoredCube;
         }
 
         public bool HasChanged()

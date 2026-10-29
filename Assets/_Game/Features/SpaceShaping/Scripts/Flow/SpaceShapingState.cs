@@ -6,7 +6,7 @@ namespace DigitalLove.Game.SpaceShaping
 {
     public class SpaceShapingState : MonoState
     {
-        [SerializeField] private PuzzleData[] puzzles;
+        [SerializeField] private PuzzleData puzzle;
         [SerializeField] private SpaceShapingSettings settings;
         [SerializeField] private SpaceShapingView view;
         [SerializeField] private ShipTravelView ship;
@@ -18,33 +18,35 @@ namespace DigitalLove.Game.SpaceShaping
         private SpaceShapingSession session;
         private TrajectoryResult lastResult;
         private PuzzleReadout readout;
-        private int puzzleIndex;
         private bool wasScaling;
         private bool hasResult;
         private bool isChecked;
         private float nextClockPublish;
+        private int resultRevision;
+        private int pendingResultRevision;
 
         public event Action<PuzzleReadout> ReadoutChanged;
+        public event Action<PuzzleResult> ResultChanged;
 
         public PuzzleReadout Readout => readout;
 
+        public PuzzleResult Result { get; private set; }
+
         public SpaceZone Zone => view.Zone;
 
-        public PuzzleData CurrentPuzzle =>
-            puzzles != null && puzzleIndex >= 0 && puzzleIndex < puzzles.Length
-                ? puzzles[puzzleIndex]
-                : null;
+        public PuzzleData CurrentPuzzle => puzzle;
 
         public override void Enter()
         {
             ship.Completed += OnFlightCompleted;
-            puzzleIndex = 0;
             StartPuzzle();
         }
 
         public override void Exit()
         {
             ship.Completed -= OnFlightCompleted;
+            ship.Stop();
+            InvalidateResult();
             session = null;
         }
 
@@ -57,18 +59,14 @@ namespace DigitalLove.Game.SpaceShaping
             PushField();
         }
 
-        public void NextPuzzle()
-        {
-            puzzleIndex = (puzzleIndex + 1) % puzzles.Length;
-            StartPuzzle();
-        }
+        internal void NextPuzzle() => StartPuzzle();
 
         public void PreviewField()
         {
             SpaceShapingSession preview = new(BuildSetup());
             view.Render(
                 preview.BuildField(), preview.Zones, preview.Origin, preview.Destination,
-                view.CrossHalf(preview, puzzles[puzzleIndex], settings.cubeSize));
+                view.CrossHalf(preview, puzzle, settings.cubeSize));
         }
 
         public bool ApplySolvedScale(float scale)
@@ -79,7 +77,7 @@ namespace DigitalLove.Game.SpaceShaping
             ResetPuzzle();
             view.SetZoneScale(scale);
             session.ApplyZone(view.Zone);
-            ship.Travel(PushField());
+            Launch(PushField());
             return true;
         }
 
@@ -115,6 +113,7 @@ namespace DigitalLove.Game.SpaceShaping
             if (!session.IsOverBudget && view.HasChanged())
                 PushField();
         }
+
         private void BeginScale()
         {
             session.PreviewZone(view.Zone);
@@ -136,12 +135,11 @@ namespace DigitalLove.Game.SpaceShaping
         {
             wasScaling = false;
             session.CommitPreview();
-            ship.Travel(PushField());
+            Launch(PushField());
         }
 
         private void ResetView()
         {
-            PuzzleData puzzle = puzzles[puzzleIndex];
             view.ResetZone();
             view.SetConditions(ZoneConditions.From(puzzle));
             float size = puzzle.cubeSize > 0f ? puzzle.cubeSize : settings.cubeSize;
@@ -152,6 +150,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             wasScaling = false;
             isChecked = false;
+            InvalidateResult();
             ResetView();
             session = new SpaceShapingSession(BuildSetup());
             ship.SoftReset(session.Origin);
@@ -160,6 +159,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private TrajectoryResult PushField()
         {
+            InvalidateResult();
             ship.Stop();
             view.ApplyFromSession(session);
 
@@ -170,7 +170,7 @@ namespace DigitalLove.Game.SpaceShaping
 
             view.Render(
                 field, session.Zones, session.Origin, session.Destination,
-                view.CrossHalf(session, puzzles[puzzleIndex], settings.cubeSize));
+                view.CrossHalf(session, puzzle, settings.cubeSize));
             view.ShowTrajectory(result, solved);
             view.Snapshot();
 
@@ -184,12 +184,42 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void OnFlightCompleted()
         {
-            if (session == null || !hasResult)
+            if (session == null || pendingResultRevision == 0
+                || pendingResultRevision != resultRevision)
                 return;
 
-            isChecked = true;
-            PublishReadout();
+            PublishResult();
             view.PulseTrajectory();
+        }
+
+        private void Launch(TrajectoryResult result)
+        {
+            pendingResultRevision = resultRevision;
+            ship.Travel(result);
+            if (!ship.IsFlying)
+                PublishResult();
+        }
+
+        private void PublishResult()
+        {
+            pendingResultRevision = 0;
+            isChecked = true;
+            PuzzleResult result = PuzzleResult.From(session, lastResult);
+            Result = result;
+            PublishReadout();
+            ResultChanged?.Invoke(result);
+            Debug.Log($"[SpaceShaping] {result.Outcome}; grade {result.Grade}.");
+        }
+
+        private void InvalidateResult()
+        {
+            resultRevision++;
+            pendingResultRevision = 0;
+            if (Result == null)
+                return;
+
+            Result = null;
+            ResultChanged?.Invoke(null);
         }
 
         private void PublishReadout()
@@ -202,6 +232,6 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         public SpaceShapingSetup BuildSetup() =>
-            SpaceShapingSetup.Build(puzzles[puzzleIndex], PuzzleSimSettings.From(settings));
+            SpaceShapingSetup.Build(puzzle, PuzzleSimSettings.From(settings));
     }
 }
