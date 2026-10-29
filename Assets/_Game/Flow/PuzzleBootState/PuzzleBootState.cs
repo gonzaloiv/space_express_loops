@@ -8,7 +8,7 @@ namespace DigitalLove.Game.Flow
     public class PuzzleBootState : MonoState
     {
         [SerializeField] private LevelContainer levelContainer;
-        [SerializeField] private SpaceShapingState puzzleState;
+        [SerializeField] private SpaceShapingController puzzleState;
 
         public override void Enter() => levelContainer.SetRoomBasedPose(EnterPuzzle);
 

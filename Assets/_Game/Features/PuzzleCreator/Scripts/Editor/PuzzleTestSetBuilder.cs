@@ -25,37 +25,30 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             public readonly int PlanetCount;
             public readonly bool Translatable;
             public readonly int Moves;
-            public readonly bool OffPath;
-            public readonly float Window;
-            public readonly float Margin;
             public readonly int Attempts;
 
             public Job(
-                string id, int seed, int planetCount, bool translatable, int moves, bool offPath,
-                float window, float margin, int attempts)
+                string id, int seed, int planetCount, bool translatable, int moves, int attempts)
             {
                 Id = id;
                 Seed = seed;
                 PlanetCount = planetCount;
                 Translatable = translatable;
                 Moves = moves;
-                OffPath = offPath;
-                Window = window;
-                Margin = margin;
                 Attempts = attempts;
             }
         }
 
         private static readonly Job[] Jobs =
         {
-            new Job("01_01", 1, 3, false, 1, false, 0.50f, 0.90f, 4),
-            new Job("01_02", 1, 3, false, 1, false, 0.25f, 0.90f, 6),
-            new Job("01_03", 1, 4, true, 1, false, 0.50f, 0.90f, 4),
-            new Job("01_04", 1, 5, false, 1, true, 0.005f, 1.05f, 4),
-            new Job("01_05", 2, 5, true, 2, false, 0.50f, 0.90f, 4),
-            new Job("01_06", 3, 5, true, 2, false, 0.50f, 0.90f, 4),
-            new Job("01_07", 4, 5, true, 2, false, 0.50f, 0.90f, 4),
-            new Job("01_08", 5, 6, true, 2, false, 0.50f, 0.90f, 4),
+            new Job("01_01", 1, 3, false, 1, 4),
+            new Job("01_02", 1, 3, false, 1, 6),
+            new Job("01_03", 1, 4, true, 1, 4),
+            new Job("01_04", 1, 5, false, 1, 4),
+            new Job("01_05", 2, 5, true, 2, 4),
+            new Job("01_06", 3, 5, true, 2, 4),
+            new Job("01_07", 4, 5, true, 2, 4),
+            new Job("01_08", 5, 6, true, 2, 4),
         };
 
         [MenuItem("DigitalLove/Space Shaping/Build 8-Job Test Set")]
@@ -80,15 +73,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 seed.translatable = job.Translatable;
                 seed.moves = job.Moves;
                 seed.resizable = false;
-                seed.offPath = job.OffPath;
-                seed.startMargin = job.Margin;
-                seed.windowTightness = job.Window;
 
                 PuzzleSeedScanResult result = PuzzleSeedScanner.Find(seed, settings, job.Attempts);
                 Object.DestroyImmediate(seed);
 
                 PuzzleData baked = result.Found ? result.Puzzle : null;
-                if (baked == null && job.Moves > 1 && !job.OffPath)
+                if (baked == null && job.Moves > 1)
                 {
                     baked = TryBakeLoose(job, settings, out PuzzleBakeStatus looseStatus);
                     if (baked != null)
@@ -121,7 +111,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                     fallback = saved;
 
                 Debug.Log(
-                    $"Test set: {job.Id} {result.Status} (seed {result.Seed}) -> " +
+                    $"Test set: {job.Id} {result.Status} (seed {result.Seed}, {baked.moves} step(s)) -> " +
                     (saved != null ? "saved" : "MISSING"));
             }
 
@@ -148,9 +138,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             seed.translatable = false;
             seed.moves = 1;
             seed.resizable = false;
-            seed.offPath = false;
-            seed.startMargin = 0.9f;
-            seed.windowTightness = 0.5f;
 
             PuzzleSeedScanResult result = PuzzleSeedScanner.Find(seed, settings, MazeAttempts);
             Object.DestroyImmediate(seed);
@@ -175,7 +162,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             WireScene(new[] { saved });
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log($"Maze test: baked Maze_01 (seed {result.Seed}) and wired into SpaceShapingPOC.");
+            Debug.Log($"Maze test: baked Maze_01 (seed {result.Seed}, {baked.moves} step(s)) and wired into SpaceShapingPOC.");
         }
 
         private static PuzzleData TryBakeLoose(
@@ -188,9 +175,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             seed.translatable = job.Translatable;
             seed.moves = job.Moves;
             seed.resizable = false;
-            seed.offPath = job.OffPath;
-            seed.startMargin = job.Margin;
-            seed.windowTightness = job.Window;
 
             PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
             PuzzleBrief brief = PuzzleBrief.From(seed, settings);
@@ -206,15 +190,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 return null;
             }
 
-            if (!PuzzleWindow.TryCrossing(field, sim, out float crossing))
-            {
-                status = PuzzleBakeStatus.NoRun;
-                Object.DestroyImmediate(field);
-                Object.DestroyImmediate(seed);
-                return null;
-            }
-
-            PuzzleWindow.SetCrossing(field, crossing, brief.WindowTightness);
             if (!PuzzleSolutionSearch.TrySelect(field, sim, brief, out PuzzleSolution found))
             {
                 Object.DestroyImmediate(field);
@@ -263,7 +238,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             if (scene.path != ScenePath)
                 scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
 
-            SpaceShapingState state = FindState(scene);
+            SpaceShapingController state = FindState(scene);
             if (state == null)
             {
                 Debug.LogError("Test set: no SpaceShapingState in the POC scene.");
@@ -282,12 +257,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             EditorSceneManager.SaveScene(scene);
         }
 
-        private static SpaceShapingState FindState(Scene scene)
+        private static SpaceShapingController FindState(Scene scene)
         {
             GameObject[] roots = scene.GetRootGameObjects();
             for (int i = 0; i < roots.Length; i++)
             {
-                SpaceShapingState state = roots[i].GetComponentInChildren<SpaceShapingState>(true);
+                SpaceShapingController state = roots[i].GetComponentInChildren<SpaceShapingController>(true);
                 if (state != null)
                     return state;
             }

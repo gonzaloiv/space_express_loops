@@ -17,12 +17,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             puzzle = ScriptableObject.CreateInstance<PuzzleData>();
             puzzle.origin = new Vector3(-0.35f, 0f, 0f);
             puzzle.destination = new Vector3(0.35f, 0f, 0f);
-            puzzle.launchSpeed = 1f;
-            puzzle.cubeSizeMin = settings.cubeSizeMin;
-            puzzle.cubeSizeMax = settings.cubeSizeMax;
+            puzzle.cubeSizeMin = 0.1f;
+            puzzle.cubeSizeMax = 0.5f;
             puzzle.cubeSize = 0.21f;
-            puzzle.tmin = 0f;
-            puzzle.tmax = 100f;
             puzzle.entropyBudget = 100f;
             puzzle.sources = new[]
             {

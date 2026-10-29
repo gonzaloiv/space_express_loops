@@ -65,7 +65,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         private static bool Arrives(PuzzleData puzzle, PuzzleSimSettings settings, PuzzleZone[] zones) =>
             PuzzleZoneRun.TryArrive(puzzle, settings, zones, out PuzzleSolution solution)
-            && PuzzleWindow.Contains(puzzle, solution.ShipTime)
             && solution.EntropySpent <= puzzle.entropyBudget;
 
         private static PuzzleZone[] Replace(PuzzleZone[] zones, int index, PuzzleZone value)

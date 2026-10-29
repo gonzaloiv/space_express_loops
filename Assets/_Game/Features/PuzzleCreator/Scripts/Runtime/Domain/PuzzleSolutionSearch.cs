@@ -19,11 +19,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (brief.Moves > 1)
                 return PuzzleBeamSearch.TrySelect(puzzle, settings, brief, out solution);
 
-            if (brief.OffPath)
-                return PuzzleClockSearch.TrySelect(puzzle, settings, brief, out solution);
-
             CentreHit hit = BestCentre(
-                puzzle, settings, PuzzleZoneCandidates.Centres(puzzle, brief.MaxCubeSize));
+                puzzle, settings, PuzzleZoneCandidates.Centres(puzzle, puzzle.cubeSizeMax));
             if (!hit.Found)
             {
                 solution = default;
@@ -32,7 +29,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             PuzzleSolution[] fine = Scan(
                 puzzle, settings, hit.Centre, PuzzleZoneCandidates.DefaultSamples);
-            solution = fine.Length > 0 ? Best(fine, puzzle) : hit.Solution;
+            solution = fine.Length > 0 ? Best(fine) : hit.Solution;
             return true;
         }
 
@@ -101,8 +98,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (!PuzzleZoneCandidates.ContainsSource(zone, puzzle))
                 return false;
 
-            return PuzzleZoneRun.TryArrive(puzzle, settings, zone, out solution)
-                && PuzzleWindow.Contains(puzzle, solution.ShipTime);
+            return PuzzleZoneRun.TryArrive(puzzle, settings, zone, out solution);
         }
 
         private static CentreHit BestCentre(
@@ -112,11 +108,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             for (int i = 0; i < centres.Length; i++)
             {
                 PuzzleSolution candidate = Best(
-                    Scan(puzzle, settings, centres[i], PuzzleZoneCandidates.CoarseSamples), puzzle);
+                    Scan(puzzle, settings, centres[i], PuzzleZoneCandidates.CoarseSamples));
                 if (candidate.Zones == null)
                     continue;
 
-                if (!hit.Found || Precedes(candidate, hit.Solution, puzzle))
+                if (!hit.Found || Precedes(candidate, hit.Solution))
                 {
                     hit.Found = true;
                     hit.Centre = centres[i];
@@ -147,7 +143,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return found.ToArray();
         }
 
-        private static PuzzleSolution Best(PuzzleSolution[] solutions, PuzzleData puzzle)
+        private static PuzzleSolution Best(PuzzleSolution[] solutions)
         {
             if (solutions.Length == 0)
                 return default;
@@ -155,15 +151,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleSolution best = solutions[0];
             for (int i = 1; i < solutions.Length; i++)
             {
-                if (Precedes(solutions[i], best, puzzle))
+                if (Precedes(solutions[i], best))
                     best = solutions[i];
             }
 
             return best;
         }
 
-        private static bool Precedes(PuzzleSolution a, PuzzleSolution b, PuzzleData puzzle) =>
-            PuzzleSolutionOrdering.Precedes(a, b, PuzzleSolutionOrdering.WindowCentre(puzzle));
+        private static bool Precedes(PuzzleSolution a, PuzzleSolution b) =>
+            PuzzleSolutionOrdering.Precedes(a, b);
 
         private struct CentreHit
         {

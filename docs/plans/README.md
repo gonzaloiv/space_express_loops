@@ -8,7 +8,11 @@ the ship flies the deformed spacetime.
 
 ## Now
 
-_Empty._
+Active work. The one thing being built.
+
+| Plan | Area | Why now |
+|---|---|---|
+| [Space shaping — several zones](in-progress/space-shaping-several-zones.md) | space shaping | **2026-10-29:** the "several zones" rung — a fixed level places cubes and the player scales each, split from the move. |
 
 ## Next
 
@@ -18,9 +22,7 @@ _Empty._
 
 Design-only or deferred. Nothing here is scheduled.
 
-| Plan | Area | Why here |
-|---|---|---|
-| [Space shaping — shape the path](backlog/space-shaping-shape-the-path.md) | space shaping | **Direction 2026-10-29:** the field becomes a maze and the trajectory is molded between planets with the cube; the time window is retired and arrival replaces it. Pre-validation (re-runs Validation 1). |
+_Empty._
 
 Candidate ideas (not plans) live in [docs/ideas](../ideas/README.md): variations, element pack,
 hologram look, TTS companion, feel polish.
@@ -29,7 +31,8 @@ hologram look, TTS companion, feel polish.
 
 Loose ends that still need a home. Close one by linking the plan that finishes it.
 
-_Empty._
+- **Re-run Validation 1 on the maze.** The shape-the-path change retired the window/clock, so the
+  timing pass no longer applies; the maze mechanic needs a fresh validation pass.
 
 ## Conventions
 

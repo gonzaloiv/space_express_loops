@@ -9,7 +9,8 @@
         "DigitalLove.Input",
         "Unity.TextMeshPro",
         "Oculus.Interaction",
-        "DigitalLove.Game.SpaceShaping.Zone"
+        "DigitalLove.Game.SpaceShaping.Zone",
+        "DigitalLove.Game.SpaceShaping.Grid"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

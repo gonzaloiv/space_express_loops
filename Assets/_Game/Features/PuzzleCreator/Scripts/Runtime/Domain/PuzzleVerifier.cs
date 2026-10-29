@@ -31,7 +31,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 StartMargin = startResult.HasPoints
                     ? startResult.ClosestApproach(setup.Destination)
                     : 0f,
-                StartFails = StartFailed(startResult, puzzle),
+                StartFails = StartFailed(startResult),
                 Solved = solved.IsSolved(solvedResult)
                     && solved.EntropySpent <= setup.EntropyBudget
                     && Fits(solution, puzzle, settings)
@@ -68,9 +68,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static bool SameSize(PuzzleZone a, PuzzleZone b) =>
             Mathf.Abs(a.halfExtents.x - b.halfExtents.x) <= Tolerance;
 
-        private static bool StartFailed(TrajectoryResult result, PuzzleData puzzle) =>
-            !(result.Outcome == TrajectoryOutcome.Arrive
-                && PuzzleWindow.Contains(puzzle, result.ShipTime));
+        private static bool StartFailed(TrajectoryResult result) =>
+            result.Outcome != TrajectoryOutcome.Arrive;
 
         private static void Apply(SpaceShapingSession session, PuzzleZone[] zones)
         {

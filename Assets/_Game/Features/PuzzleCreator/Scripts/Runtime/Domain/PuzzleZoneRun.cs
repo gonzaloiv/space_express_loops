@@ -22,7 +22,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             solution = new PuzzleSolution
             {
                 Zones = zones,
-                ShipTime = result.ShipTime,
                 EntropySpent = session.EntropySpent
             };
 

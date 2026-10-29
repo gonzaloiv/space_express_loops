@@ -5,7 +5,7 @@
 **Target:** Meta VR Start Developer Competition 2026 · **seated mixed reality** ·
 hand-tracking first-class.
 **Date:** 2026-10-23.
-**Revised:** 2026-10-28.
+**Revised:** 2026-10-29.
 
 **Related:** [core loop](core-loop.md) · [the cube](systems/cube.md) · [resources](systems/resources.md) ·
 [relativity](systems/relativity.md) · [progression](systems/progression.md) · [presentation](presentation.md) ·
@@ -34,9 +34,9 @@ Build status lives on the [plans board](../plans/README.md); this doc does not t
 2. **The cube is the product.** The one tool, and the signature moment — "the cube
    deforms the universe". It gets the polish budget (feel, sound, haptics, the visible
    field-warp).
-3. **Scale the space and the content together.** One gesture does both; moving the cube (the region)
-   enters at job 3, resizing at job 5; rotate arrives in **later puzzles**, not the first 8. The
-   field is derived, never edited.
+3. **Scale the space and the content together.** One gesture does both; several placed zones enter at
+   job 3, moving the cube (the region) at job 4, resizing at job 6; rotate arrives in **later puzzles**,
+   not the first 8. The field is derived, never edited.
 4. **One budget, one score.** Entropy is the budget: spend it all before you solve and the job
    **fails**. Entropy left is the **eco rating**; the **window** `[Tmin, Tmax]` is the target — the launch
    is only a check. The launch itself is given, not a lever.

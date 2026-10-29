@@ -30,17 +30,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void Search_HonoursTheWindow()
-        {
-            PuzzleData offWindow = Puzzle();
-            offWindow.tmin = 0f;
-            offWindow.tmax = 0.0001f;
-
-            Assert.IsFalse(PuzzleSolutionSearch.TrySelect(offWindow, settings, brief, out _));
-            Object.DestroyImmediate(offWindow);
-        }
-
-        [Test]
         public void Search_IsDeterministic()
         {
             PuzzleData puzzle = Puzzle();
@@ -49,36 +38,19 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
             Assert.AreEqual(first.Zones.Length, second.Zones.Length);
             Assert.AreEqual(first.Zones[0].scale, second.Zones[0].scale, 1e-4f);
-            Assert.AreEqual(first.ShipTime, second.ShipTime, 1e-4f);
             Object.DestroyImmediate(puzzle);
         }
 
         [Test]
-        public void StartArrivingOutsideTheWindow_Fails()
-        {
-            PuzzleData puzzle = Synthetic();
-            puzzle.tmin = 0f;
-            puzzle.tmax = 1f;
-
-            PuzzleVerification check = PuzzleVerifier.Verify(puzzle, null, settings);
-
-            Assert.AreEqual(TrajectoryOutcome.Arrive, check.StartOutcome);
-            Assert.IsTrue(check.StartFails);
-            Object.DestroyImmediate(puzzle);
-        }
-
-        [Test]
-        public void StartCrashing_DoesNotFail()
+        public void StartCrashing_Fails()
         {
             PuzzleData puzzle = Synthetic();
             puzzle.sources = new[] { new PuzzleSource { home = Vector3.zero, scale = 1f } };
-            puzzle.tmin = 0f;
-            puzzle.tmax = 10f;
 
             PuzzleVerification check = PuzzleVerifier.Verify(puzzle, null, settings);
 
             Assert.AreEqual(TrajectoryOutcome.Crash, check.StartOutcome);
-            Assert.IsFalse(check.StartFails);
+            Assert.IsTrue(check.StartFails);
             Object.DestroyImmediate(puzzle);
         }
 
@@ -86,14 +58,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         public void FoundSolution_VerifiesGreen()
         {
             PuzzleData puzzle = Puzzle();
-            puzzle.tmin = solution.ShipTime - 1f;
-            puzzle.tmax = solution.ShipTime + 1f;
             puzzle.entropyBudget = solution.EntropySpent + 0.5f;
 
             PuzzleVerification result = PuzzleVerifier.Verify(puzzle, solution.Zones, settings);
 
             Assert.IsTrue(result.StartFails, $"start outcome {result.StartOutcome}");
-            Assert.IsTrue(result.Solved, $"solved outcome {result.SolvedOutcome} at {result.ShipTime}");
+            Assert.IsTrue(result.Solved, $"solved outcome {result.SolvedOutcome}");
             Object.DestroyImmediate(puzzle);
         }
 
@@ -122,8 +92,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         public void Verify_OverBudget_IsNotSolved()
         {
             PuzzleData puzzle = Puzzle();
-            puzzle.tmin = solution.ShipTime - 1f;
-            puzzle.tmax = solution.ShipTime + 1f;
             puzzle.entropyBudget = 0f;
 
             Assert.IsFalse(PuzzleVerifier.Verify(puzzle, solution.Zones, settings).Solved);
@@ -134,8 +102,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         public void Verify_MissingSolution_DoesNotSolve()
         {
             PuzzleData bare = Puzzle();
-            bare.tmin = 0f;
-            bare.tmax = 0.001f;
 
             Assert.IsFalse(PuzzleVerifier.Verify(bare, null, settings).Solved);
             Object.DestroyImmediate(bare);
@@ -160,7 +126,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
             puzzle.origin = new Vector3(-4f, 0f, 0f);
             puzzle.destination = new Vector3(4f, 0f, 0f);
-            puzzle.launchSpeed = 1f;
             puzzle.sources = System.Array.Empty<PuzzleSource>();
             return puzzle;
         }
@@ -174,8 +139,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleShapeAsset shape = PuzzleArtifactFactory.Shape(source, asset);
             PuzzlePlanetListAsset planets = PuzzleArtifactFactory.Planets(shape);
             PuzzleFieldBake.Apply(brief, created, planets, PuzzleSimSettings.From(asset));
-            created.tmin = 0f;
-            created.tmax = created.Distance / asset.nominalSpeed * 2f;
             Object.DestroyImmediate(planets);
             Object.DestroyImmediate(shape);
             Object.DestroyImmediate(source);

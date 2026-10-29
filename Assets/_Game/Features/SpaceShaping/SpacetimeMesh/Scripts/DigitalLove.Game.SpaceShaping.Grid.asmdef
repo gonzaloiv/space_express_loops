@@ -1,0 +1,16 @@
+{
+    "name": "DigitalLove.Game.SpaceShaping.Grid",
+    "rootNamespace": "",
+    "references": [
+        "DigitalLove.Global"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -14,33 +14,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.PuzzleData
   id: 
   prefab: {fileID: 0}
-  origin: {x: -0.55225706, y: -0.0007114161, z: 0.12454195}
-  destination: {x: -0.4395643, y: -0.016296677, z: -0.35639402}
-  zoneCentre: {x: 0.035640206, y: -0.02613097, z: -0.56439877}
+  origin: {x: -0.30168375, y: -0.17499277, z: -0.66124254}
+  destination: {x: -0.49094138, y: 0.06929904, z: -0.55951}
+  zoneCentre: {x: -0.7258633, y: -0.02736967, z: -0.1767785}
   cubeSizeMin: 0.15
   cubeSizeMax: 0.35
   cubeSize: 0.15
-  captureRadius: 0.10945168
+  captureRadius: 0.044186756
   translatable: 0
   moves: 1
-  routes: 4
+  routes: 5
   resizable: 0
-  rotate: 0
-  launchSpeed: 0.9
-  launchAngleDegs: 0
-  tmin: 0.045564458
-  tmax: 0.13669337
-  entropyBudget: 0.30967748
+  entropyBudget: 0.1935482
   sources:
-  - home: {x: -0.55225706, y: -0.0007114161, z: 0.12454195}
-    scale: 0.17361464
-  - home: {x: -0.4395643, y: -0.016296677, z: -0.35639402}
-    scale: 0.21890336
-  - home: {x: 0.035640206, y: -0.02613097, z: -0.56439877}
-    scale: 0.56744283
-  - home: {x: 0.5586907, y: 0.03772931, z: -0.083308056}
-    scale: 0.51404595
-  - home: {x: 0.29841277, y: -0.021799235, z: 0.48059723}
-    scale: 0.4316095
-  - home: {x: -0.2450289, y: 0.0053743823, z: 0.5103244}
-    scale: 0.39416257
+  - home: {x: -0.7258633, y: -0.02736967, z: -0.1767785}
+    scale: 0.60772604
+  - home: {x: 0.3041988, y: 0.1385805, z: 0.6686821}
+    scale: 0.32055566
+  - home: {x: 0.69400114, y: -0.07141228, z: -0.26858893}
+    scale: 0.531822
+  - home: {x: -0.30168375, y: -0.17499277, z: -0.66124254}
+    scale: 0.39360863
+  - home: {x: -0.20615418, y: -0.11867071, z: 0.7087277}
+    scale: 0.54797024
+  - home: {x: 0.6492333, y: -0.054473076, z: 0.3666144}
+    scale: 0.43368396
+  - home: {x: 0.31113192, y: -0.40938947, z: -0.54265505}
+    scale: 0.34641007
+  - home: {x: -0.62778133, y: 0.06539858, z: 0.4006132}
+    scale: 0.29114717
+  - home: {x: 0.13998488, y: 0.377858, z: -0.6296863}
+    scale: 0.67975533
+  - home: {x: -0.49094138, y: 0.06929904, z: -0.55951}
+    scale: 0.08837351

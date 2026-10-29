@@ -119,7 +119,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             generated = result.Puzzle;
             generatedSolution = result.Solution;
             Debug.Log($"Puzzle creator: seed {result.Seed} baked a verified level "
-                + $"({result.Routes} route(s)).");
+                + $"({result.Puzzle.moves} step(s), {result.Routes} route(s)).");
             Repaint();
         }
 
@@ -158,24 +158,21 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
             EditorGUILayout.LabelField("Brief", BriefText(puzzle));
             EditorGUILayout.LabelField(
-                "Start", $"{run.StartOutcome} at {run.Start.ShipTime:F3} s (margin {run.StartMargin:F3} m)");
-            EditorGUILayout.LabelField("Solution", $"{run.SolvedOutcome} at {run.ShipTime:F3} s");
-            EditorGUILayout.LabelField("Window", $"[{puzzle.tmin:F2}, {puzzle.tmax:F2}]");
+                "Start", $"{run.StartOutcome} (margin {run.StartMargin:F3} m)");
+            EditorGUILayout.LabelField("Solution", run.SolvedOutcome.ToString());
             EditorGUILayout.LabelField(
                 "Entropy", $"{run.EntropySpent:F2} / {puzzle.entropyBudget:F2}  ({PuzzleGrade.Stars(run.EntropySpent, puzzle.entropyBudget)}★)");
             EditorGUILayout.LabelField("Cube", $"{puzzle.cubeSize:F2} m");
+            EditorGUILayout.LabelField("Steps", puzzle.moves.ToString());
             EditorGUILayout.LabelField("Routes", puzzle.routes.ToString());
         }
 
         private static string BriefText(PuzzleSeed value) =>
             BriefText(value.translatable, value.moves, value.resizable)
-            + $" · {value.fieldShape} · start {value.startMargin:F2}×"
-            + $" · {(value.offPath ? "clock" : "path")}"
-            + (value.applyRandomAngle ? " · random launch angle" : string.Empty);
+            + $" · {value.fieldShape}";
 
         private static string BriefText(PuzzleData value) =>
-            BriefText(value.translatable, value.moves, value.resizable)
-            + $" · launch {value.launchSpeed:F2} m/s, {value.launchAngleDegs:F1} deg";
+            BriefText(value.translatable, value.moves, value.resizable);
 
         private static string BriefText(bool translatable, int moves, bool resizable) =>
             $"{(translatable ? "movable" : "fixed")} · {Mathf.Max(1, moves)} zone(s) · "
@@ -184,28 +181,26 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         private static string Message(PuzzleBakeStatus status)
         {
             if (status == PuzzleBakeStatus.UnsupportedBrief)
-                return "Rejected: this creator supports 1–3 zones. Two or more zones need a movable "
-                    + "cube; off-path levels stay single-zone.";
+                return "Rejected: this creator supports 1–3 zones. Two or more zones need a movable cube.";
 
             if (status == PuzzleBakeStatus.StartNotFailed)
-                return "Rejected: the bare start already solves or crashes. The level needs a failing "
-                    + "start (a miss, or an arrival outside the window); use Find working seed.";
+                return "Rejected: the bare start already arrives. The level needs a failing start "
+                    + "(a crash or a miss); use Find working seed.";
 
             if (status == PuzzleBakeStatus.FewerZones)
-                return "Rejected: a solution with fewer zones still arrives inside the window at the same "
-                    + "cube size, so this seed does not teach the extra zone. Use Find working seed.";
+                return "Rejected: a solution with fewer zones still arrives at the same cube size, so this "
+                    + "seed does not teach the extra zone. Use Find working seed.";
 
             if (status == PuzzleBakeStatus.SingleRoute)
                 return "Rejected: a movable level needs at least two routes so the player can choose. "
                     + "Use Find working seed.";
 
             if (status == PuzzleBakeStatus.NoSolution)
-                return "Rejected: no solution inside the window. For a clock level, the bare launch must "
-                    + "arrive and one scale must move the clock clear of it; for a path level the field may "
-                    + "be too dense or the window too tight. Use Find working seed.";
+                return "Rejected: no zone bends the bare run onto the destination. The field may be too "
+                    + "dense. Use Find working seed.";
 
             if (status == PuzzleBakeStatus.Unverified)
-                return "A solution was found but it did not verify inside the window/budget.";
+                return "A solution was found but it did not verify inside the budget.";
 
             return "Set the seed + settings, then Generate (it rebuilds the shape and planets first).";
         }

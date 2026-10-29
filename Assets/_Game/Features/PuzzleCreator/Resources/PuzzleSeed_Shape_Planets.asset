@@ -13,13 +13,15 @@ MonoBehaviour:
   m_Name: PuzzleSeed_Shape_Planets
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Creator::DigitalLove.Game.SpaceShaping.Creator.PuzzlePlanetListAsset
   planets:
-  - position: {x: 0.20289437, y: 0.0026509217, z: 0.59566975}
-    radius: 0.375006
-  - position: {x: 0.10659606, y: -0.0064415396, z: -0.6201543}
-    radius: 0.1361662
-  - position: {x: -0.48657677, y: 0.006423836, z: 0.3989955}
-    radius: 0.16817467
-  - position: {x: 0.54494476, y: -0.0065340893, z: -0.3146238}
-    radius: 0.13052903
-  - position: {x: -0.5304846, y: -0.0009927233, z: -0.33849776}
-    radius: 0.3915614
+  - position: {x: 0.41007048, y: 0.020425063, z: -0.34708178}
+    radius: 0.22940306
+  - position: {x: 0.10827146, y: -0.0047358247, z: -0.5265887}
+    radius: 0.06154738
+  - position: {x: -0.336473, y: -0.0049586245, z: -0.41928768}
+    radius: 0.2493223
+  - position: {x: 0.106994875, y: -0.0060144453, z: 0.5268365}
+    radius: 0.1042275
+  - position: {x: 0.472676, y: -0.01942692, z: 0.25542277}
+    radius: 0.2722988
+  - position: {x: -0.5258079, y: -0.0036389423, z: 0.11204286}
+    radius: 0.19949119

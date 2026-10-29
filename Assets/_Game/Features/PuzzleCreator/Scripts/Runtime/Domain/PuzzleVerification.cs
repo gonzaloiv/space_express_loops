@@ -13,7 +13,5 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public TrajectoryOutcome StartOutcome => Start.Outcome;
 
         public TrajectoryOutcome SolvedOutcome => SolvedRun.Outcome;
-
-        public float ShipTime => SolvedRun.ShipTime;
     }
 }

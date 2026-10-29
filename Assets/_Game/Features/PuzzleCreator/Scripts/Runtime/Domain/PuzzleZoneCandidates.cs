@@ -12,7 +12,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private const int SizeSamples = 3;
         private const int MaxCentres = 8;
         private const float MergeDistance = 0.0001f;
-        private const float OffPathFactor = 0.35f;
 
         public static Vector3[] Centres(PuzzleData puzzle, float maxCubeSize)
         {
@@ -21,28 +20,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             AddPairs(centres, puzzle.sources, maxCubeSize);
             centres.Sort((a, b) => RunDistance(a, puzzle).CompareTo(RunDistance(b, puzzle)));
             return Trim(centres, MaxCentres);
-        }
-
-        public static Vector3[] ClockCentres(PuzzleData puzzle)
-        {
-            float run = Vector3.Distance(puzzle.origin, puzzle.destination);
-            float minDistance = OffPathFactor * run;
-            List<Vector3> centres = new();
-            for (int i = 0; i < puzzle.sources.Length; i++)
-            {
-                Vector3 home = puzzle.sources[i].home;
-                if (IsEndpoint(home, puzzle))
-                    continue;
-
-                float distance = PuzzleRunGeometry.DistanceToSegment(
-                    home, puzzle.origin, puzzle.destination);
-                if (distance < minDistance)
-                    continue;
-
-                Add(centres, home);
-            }
-
-            return centres.ToArray();
         }
 
         internal static bool ContainsSource(PuzzleZone zone, PuzzleData puzzle)
@@ -60,23 +37,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         public static bool ContainsEndpoint(PuzzleZone zone, PuzzleData puzzle) =>
             zone.Influences(puzzle.origin) || zone.Influences(puzzle.destination);
-
-        public static bool ContainsOnlySource(PuzzleZone zone, PuzzleData puzzle, Vector3 target)
-        {
-            int inside = 0;
-            for (int i = 0; i < puzzle.sources.Length; i++)
-            {
-                if (!zone.Contains(puzzle.sources[i].home))
-                    continue;
-
-                if (Vector3.Distance(puzzle.sources[i].home, target) > MergeDistance)
-                    return false;
-
-                inside++;
-            }
-
-            return inside == 1;
-        }
 
         public static float[] Sizes(PuzzleData puzzle)
         {

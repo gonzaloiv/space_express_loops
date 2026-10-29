@@ -13,11 +13,11 @@ namespace DigitalLove.Game.Sectors
             int half = HalfCells(data);
             int layers = Mathf.Max(1, data.layers);
 
-            for (int x = -half; x <= half && sectors.Count < data.softSectorBudget; x++)
+            for (int x = -half; x <= half && !IsFull(sectors, data); x++)
             {
-                for (int z = -half; z <= half && sectors.Count < data.softSectorBudget; z++)
+                for (int z = -half; z <= half && !IsFull(sectors, data); z++)
                 {
-                    for (int y = 0; y < layers && sectors.Count < data.softSectorBudget; y++)
+                    for (int y = 0; y < layers && !IsFull(sectors, data); y++)
                     {
                         SectorCell cell = new(x, y - layers / 2, z);
                         if (IsOccupied(data, cell))
@@ -28,6 +28,9 @@ namespace DigitalLove.Game.Sectors
 
             return sectors.ToArray();
         }
+
+        private static bool IsFull(List<SectorPlacement> sectors, SectorFieldData data) =>
+            sectors.Count >= data.softSectorBudget;
 
         public static bool FitsInCells(SectorFieldData data) =>
             SectorGrid.FitsInCell(data.shape.radius.max, data.gap, data.cellSize);

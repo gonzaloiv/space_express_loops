@@ -22,7 +22,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             int moves = Mathf.Clamp(brief.Moves, 2, 3);
             PuzzleSearchContext context = new(
                 puzzle, settings,
-                PuzzleZoneCandidates.Centres(puzzle, brief.MaxCubeSize),
+                PuzzleZoneCandidates.Centres(puzzle, puzzle.cubeSizeMax),
                 PuzzleZoneCandidates.Scales(settings, moves == 2 ? 8 : 6));
 
             List<PuzzleChain> beam = FirstStep(
@@ -30,7 +30,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             for (int depth = 2; depth <= moves && beam.Count > 0; depth++)
                 beam = Expand(context, beam, depth == moves);
 
-            return Choose(beam, puzzle, out solution);
+            return Choose(beam, out solution);
         }
 
         private static List<PuzzleChain> FirstStep(
@@ -61,7 +61,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 if (!TryCandidate(context, centre, size, context.Scales[i], out PuzzleChain chain))
                     continue;
 
-                if (!found || Precedes(chain, best, context.Puzzle, true))
+                if (!found || Precedes(chain, best, true))
                 {
                     best = chain;
                     found = true;
@@ -96,7 +96,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             for (int b = 0; b < beam.Count; b++)
                 ExpandChain(context, next, beam[b], final);
 
-            return Ordered(next, context.Puzzle, final);
+            return Ordered(next, final);
         }
 
         private static void ExpandChain(
@@ -127,8 +127,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             context.Evaluations++;
             PuzzleChain candidate = Evaluate(context, Append(prefix.Zones, zone));
-            if (final && (!candidate.Arrived
-                || !PuzzleWindow.Contains(context.Puzzle, candidate.Solution.ShipTime)))
+            if (final && !candidate.Arrived)
                 return;
 
             next.Add(candidate);
@@ -149,7 +148,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 result.Outcome == TrajectoryOutcome.Arrive);
         }
 
-        private static bool Choose(List<PuzzleChain> beam, PuzzleData puzzle, out PuzzleSolution solution)
+        private static bool Choose(List<PuzzleChain> beam, out PuzzleSolution solution)
         {
             solution = default;
             PuzzleChain best = default;
@@ -157,10 +156,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             for (int i = 0; i < beam.Count; i++)
             {
                 PuzzleChain chain = beam[i];
-                if (!chain.Arrived || !PuzzleWindow.Contains(puzzle, chain.Solution.ShipTime))
+                if (!chain.Arrived)
                     continue;
 
-                if (!found || Precedes(chain, best, puzzle, false))
+                if (!found || Precedes(chain, best, false))
                 {
                     best = chain;
                     found = true;
@@ -173,22 +172,20 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return found;
         }
 
-        private static int Order(PuzzleChain a, PuzzleChain b, PuzzleData puzzle, bool final)
+        private static int Order(PuzzleChain a, PuzzleChain b, bool final)
         {
             if (!final && a.Margin != b.Margin)
                 return a.Margin < b.Margin ? -1 : 1;
 
-            return PuzzleSolutionOrdering.Order(
-                a.Solution, b.Solution, PuzzleSolutionOrdering.WindowCentre(puzzle));
+            return PuzzleSolutionOrdering.Order(a.Solution, b.Solution);
         }
 
-        private static bool Precedes(PuzzleChain a, PuzzleChain b, PuzzleData puzzle, bool marginFirst)
+        private static bool Precedes(PuzzleChain a, PuzzleChain b, bool marginFirst)
         {
             if (marginFirst && !SameMargin(a, b))
                 return a.Margin < b.Margin;
 
-            return PuzzleSolutionOrdering.Precedes(
-                a.Solution, b.Solution, PuzzleSolutionOrdering.WindowCentre(puzzle));
+            return PuzzleSolutionOrdering.Precedes(a.Solution, b.Solution);
         }
 
         private static bool SameMargin(PuzzleChain a, PuzzleChain b) =>
@@ -215,9 +212,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return false;
         }
 
-        private static List<PuzzleChain> Ordered(List<PuzzleChain> chains, PuzzleData puzzle, bool final)
+        private static List<PuzzleChain> Ordered(List<PuzzleChain> chains, bool final)
         {
-            chains.Sort((a, b) => Order(a, b, puzzle, final));
+            chains.Sort((a, b) => Order(a, b, final));
             return Trim(chains);
         }
 

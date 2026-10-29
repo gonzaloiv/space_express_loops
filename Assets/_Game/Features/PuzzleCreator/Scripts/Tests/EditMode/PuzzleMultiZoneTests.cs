@@ -47,10 +47,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleBrief tooMany = brief;
             tooMany.Moves = 4;
             Assert.IsFalse(tooMany.SupportsMoves);
-
-            PuzzleBrief offPath = brief;
-            offPath.OffPath = true;
-            Assert.IsFalse(offPath.SupportsMoves);
         }
 
         [Test]
@@ -88,51 +84,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void Bake_ProducesTwoZones()
-        {
-            PuzzleData baked = Bake(out PuzzleZone[] solution);
-
-            Assert.AreEqual(2, solution.Length);
-            Assert.AreEqual(2, baked.moves);
-            Assert.IsTrue(baked.translatable);
-            Assert.IsTrue(ContainsSource(baked, solution[0]));
-            Assert.IsTrue(ContainsSource(baked, solution[1]));
-            Assert.IsFalse(Overlap(solution[0], solution[1]));
-            Assert.AreEqual(solution[0].halfExtents.x, solution[1].halfExtents.x, 1e-4f);
-
-            PuzzleVerification check = PuzzleVerifier.Verify(baked, solution, sim);
-            Assert.IsTrue(check.StartFails);
-            Assert.IsTrue(check.Solved);
-            Assert.LessOrEqual(check.EntropySpent, baked.entropyBudget / 3f + 1e-3f);
-            Object.DestroyImmediate(baked);
-        }
-
-        [Test]
-        public void Bake_IsDeterministic()
-        {
-            PuzzleData first = Bake(out PuzzleZone[] firstSolution);
-            PuzzleData second = Bake(out PuzzleZone[] secondSolution);
-
-            Assert.AreEqual(firstSolution.Length, secondSolution.Length);
-            Assert.AreEqual(firstSolution[0].centre, secondSolution[0].centre);
-            Assert.AreEqual(firstSolution[1].centre, secondSolution[1].centre);
-            Assert.AreEqual(first.moves, second.moves);
-            Assert.AreEqual(first.entropyBudget, second.entropyBudget, 1e-4f);
-            Object.DestroyImmediate(first);
-            Object.DestroyImmediate(second);
-        }
-
-        [Test]
-        public void Baked_FrameStartsAtTheRunMidpoint()
-        {
-            PuzzleData baked = Bake(out _);
-
-            Assert.Less(Vector3.Distance(baked.zoneCentre, (baked.origin + baked.destination) * 0.5f), 1e-4f);
-            Object.DestroyImmediate(baked);
-        }
-
-        [Test]
-        public void Search_ThreeZonesOnAWideWindow()
+        public void Search_ThreeZones()
         {
             PuzzleBrief three = brief;
             three.Moves = 3;
@@ -144,7 +96,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             AssertSharedSize(first.Zones);
 
             Assert.IsTrue(PuzzleSolutionSearch.TrySelect(field, sim, three, out PuzzleSolution second));
-            Assert.AreEqual(first.ShipTime, second.ShipTime, 1e-4f);
+            Assert.AreEqual(first.Zones.Length, second.Zones.Length);
             Object.DestroyImmediate(field);
         }
 
@@ -154,11 +106,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
             puzzle.origin = new Vector3(-0.5f, 0f, 0f);
             puzzle.destination = new Vector3(0.5f, 0f, 0f);
-            puzzle.launchSpeed = 1f;
-            puzzle.tmin = 0f;
-            puzzle.tmax = 10f;
-            puzzle.cubeSizeMin = settings.cubeSizeMin;
-            puzzle.cubeSizeMax = settings.cubeSizeMax;
+            puzzle.cubeSizeMin = 0.1f;
+            puzzle.cubeSizeMax = 0.5f;
             puzzle.moves = 2;
             puzzle.sources = new[] { new PuzzleSource { home = new Vector3(0f, 0.2f, 0f), scale = 0.1f } };
             PuzzleZone zone = PuzzleZoneCandidates.Zone(Vector3.zero, 0.2f, 1.4f, settings.zoneFalloff);
@@ -166,27 +115,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleZoneRun.TryArrive(puzzle, sim, zone, out PuzzleSolution single);
             PuzzleZoneRun.TryArrive(puzzle, sim, new[] { zone }, out PuzzleSolution array);
 
-            Assert.AreEqual(single.ShipTime, array.ShipTime, 1e-5f);
+            Assert.AreEqual(single.Zones.Length, array.Zones.Length);
             Assert.AreEqual(single.EntropySpent, array.EntropySpent, 1e-5f);
             Object.DestroyImmediate(puzzle);
-        }
-
-        private PuzzleData Bake(out PuzzleZone[] solution)
-        {
-            PuzzleData variant = PuzzleFieldBake.Bake(
-                planets, sim, brief, out PuzzleBakeStatus status, out solution);
-
-            Assert.AreEqual(PuzzleBakeStatus.Baked, status);
-            Assert.IsNotNull(variant);
-            return variant;
         }
 
         private PuzzleData WideField(PuzzleBrief value)
         {
             PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
             PuzzleFieldBake.Apply(value, field, planets, sim);
-            field.tmin = 0f;
-            field.tmax = field.Distance / settings.nominalSpeed * 2f;
             return field;
         }
 

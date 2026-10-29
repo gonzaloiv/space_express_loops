@@ -2,7 +2,7 @@
 
 **Status:** design · system · progression.
 **Date:** 2026-10-23.
-**Revised:** 2026-10-28.
+**Revised:** 2026-10-29.
 
 **Related:** [vision](../vision.md) · [core loop](../core-loop.md) · [resources](resources.md) ·
 [lore](../world/lore.md) · [jobs](../jobs.md)
@@ -55,23 +55,27 @@ driven by the **same factor** ([the cube](cube.md)). The **space face** is the m
 1. **Jobs 1–2 — the fixed cube, one zone.** A fixed region; the only move is the **grab-inside
    scale** (the **space face**: the shortcut and the spread). One lever, one planet, a generous
    window.
-2. **Job 3 — several zones, and the cube moves.** The player places and scales **several zones**,
-   and moves the lens between them; the soft brush blends them. "Where do I scale" and "where does
-   the lens sit" are one lesson. A fixed cube cannot reach two zones, so the move arrives here:
-   `moves ≥ 2` requires `translatable`
-   (see [the brief](#the-brief--the-conditions-a-solution-must-meet)).
-3. **Job 4 — the time tutorial.** A planet off the trajectory. The scale changes its mass and so the
+2. **Job 3 — several zones.** The level places **several fixed cubes**; the player scales each and the
+   soft brush blends them. No move — "where do I scale" is the lesson on its own, learned before the
+   lens can be placed.
+3. **Job 4 — the lens moves.** The cube becomes **translatable**: the player chooses *where* to work,
+   not just how much. "Where does the lens sit" is its own lesson, split from "several zones".
+4. **Job 5 — the time tutorial.** A planet off the trajectory. The scale changes its mass and so the
    clock, but not the path (the ship never passes near it). The player learns the clock before path
    and clock compete. (Recurring off-path levels are a later variation.)
-4. **Job 5 — the resizable frame.** The region can be **resized** — the aperture becomes the player's
+5. **Job 6 — the resizable frame.** The region can be **resized** — the aperture becomes the player's
    to choose.
-5. **Later puzzles — rotate.** The spin gesture (frame dragging) arrives in **later puzzles**, not
+6. **Later puzzles — rotate.** The spin gesture (frame dragging) arrives in **later puzzles**, not
    the first 8, adding *direction* to the scale.
 
-So the first-8 order is **scale → several zones + move → time → resize**; rotate comes later.
+So the run order is **scale → several zones → move → time → resize**; rotate comes later.
 
-**Job 3 is translatable (2026-10-28).** A fixed cube cannot reach two zones, so the move enters with
-several zones and the time tutorial becomes job 4.
+**Several zones is its own rung (2026-10-29).** The old rule — a fixed cube covers one region, so
+`moves ≥ 2` implies `translatable` — was a limitation of the retired window/time win condition. With
+arrival-only, a level can simply **place several fixed cubes**, so "several zones" (job 3) and "the cube
+moves" (job 4) split into two lessons
+(see [the brief](#the-brief--the-conditions-a-solution-must-meet)). The placed-zone condition may recur
+in later jobs; for now it is job 3 only.
 
 A **tutorial** will be needed for this, but not yet — get the loop working first
 ([vision](../vision.md) §6).
@@ -83,7 +87,8 @@ creator bakes to them:
 
 - **`translatable`** — the cube may be **moved** (its centre changes) or is **fixed** at home.
 - **`moves`** — how many **zones** the solution scales (the cube edits `N` places, up or down).
-  **`moves ≥ 2` requires `translatable`** — a fixed cube covers one region and cannot reach two zones.
+  **`moves ≥ 2` holds with `translatable` either way** — a **fixed** level places several cubes for the
+  player to scale, a **translatable** one has the player move a single lens between zones.
 - **`resizable`** — the frame may be **resized** (`[1×, 2×]`) or is locked.
 - **`rotate`** — the spin gesture is available (later puzzles).
 - **`scalable`** is **always true** — scaling the content is the verb; there is no locked-scale level.
@@ -141,9 +146,11 @@ a layout.
 | Archetype | Brief | Lesson | Jobs |
 |---|---|---|---|
 | **Shortcut** | `moves 1`, fixed cube, on-path | scale one zone; the space face | 1–2 |
-| **Multi-zone** | `moves ≥ 2`, `translatable` | place and blend several zones | 3, 6–8 |
-| **Clock** | `offPath` | the time face: mass moves the clock, not the path | 4 |
-| **Resize** | `resizable` | the aperture is the player's | 5 |
+| **Several zones** | `moves ≥ 2`, fixed cubes | scale and blend the placed zones | 3 |
+| **Move** | `translatable`, `moves 1` | place the lens yourself | 4 |
+| **Multi-zone** | `moves ≥ 2`, `translatable` | place and blend several zones | 7–8 |
+| **Clock** | `offPath` | the time face: mass moves the clock, not the path | 5 |
+| **Resize** | `resizable` | the aperture is the player's | 6 |
 | **Bottleneck** *(later)* | several routes share one planet | one edit fixes many routes | later |
 
 Layout is a second axis, from `fieldShape`: **Ring**, **Spiral**, **Cluster**. A job is e.g. *Multi-zone ·
@@ -155,9 +162,9 @@ polish plan). A job with one route is a single answer, not a variation.
 *Automatic labelling from the brief is possible (a pure function of the brief) and is deferred; the labels
 are design-only until then.*
 
-Jobs 1–2 teach the scale on one planet; job 3 adds multiple scales, the move and planet count; job 4
-turns to the clock; resize follows. Rotate arrives in later puzzles. Ten jobs is the stretch goal —
-prove 3–5 first, then extend only if the axes hold.
+Jobs 1–2 teach the scale on one planet; job 3 adds several zones; job 4 adds the move; job 5 turns to
+the clock; resize follows. Rotate arrives in later puzzles. Ten jobs is the stretch goal — prove 3–5
+first, then extend only if the axes hold.
 
 ## Persistence
 

@@ -2,7 +2,7 @@
 
 **Status:** design · system · cube.
 **Date:** 2026-10-23.
-**Revised:** 2026-10-28.
+**Revised:** 2026-10-29.
 
 **Related:** [vision](../vision.md) §3 · [resources](resources.md) · [relativity](relativity.md) ·
 [progression](progression.md) §The brief · [glossary](../glossary.md)
@@ -22,7 +22,7 @@ and the content.
 | Gesture | Trigger | Effect | Relativity |
 |---|---|---|---|
 | **The scale** | a two-hand pinch **inside** the cube | scales the space *and* the content: the metric stretches (a shrunk zone is a **shortcut**), the planets **spread** and **grow** (`mass ∝ radius³`) — a grown planet deepens its well, which bends the path and slows the clock | time dilation |
-| **The region** *(move at job 3, resize at job 5)* | grab the cube's **edges / corners** | **moves / resizes** the cube (the lens) — sets *where* you work — and from job 3 you can scale **several** zones; the soft brush blends them | — |
+| **The region** *(move at job 4, resize at job 6)* | grab the cube's **edges / corners** | **moves / resizes** the cube (the lens) — sets *where* you work; the soft brush blends several zones | — |
 | **The rotate** *(later puzzles)* | spin the zone | **frame dragging** — a spinning zone swirls the path; adds direction for free | frame dragging |
 
 **Multiple scales are the way.** The player scales **several** zones, and the soft brush blends them
@@ -31,9 +31,11 @@ from the scale** — coupling them is the bug. Rotate arrives in **later puzzles
 ([progression](progression.md) §The learning path).
 
 **The brief selects the gestures.** A fixed level locks the move, a locked frame locks the resize, and
-the scale inside the cube is always available. **Several zones require a movable cube:** a fixed cube
-covers one region, so `moves ≥ 2` implies `translatable` ([progression](progression.md) §The brief).
-The game never shows a move count; the lab readout may show a command count as a diagnostic.
+the scale inside the cube is always available. **Several zones do not require a movable cube:** a level
+may place **several fixed cubes** for the player to scale, so `moves ≥ 2` holds with `translatable`
+either way — the level pre-places the zones, or the player moves a single lens between them
+([progression](progression.md) §The brief). The game never shows a move count; the lab readout may show
+a command count as a diagnostic.
 
 ## Rules
 

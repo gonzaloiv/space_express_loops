@@ -5,15 +5,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleFieldBake
     {
-        private const float WideSearchBand = 0.35f;
-        private const float MazeWindow = 1000f;
-
         public static bool Apply(
             PuzzleBrief brief, PuzzleData puzzle, PuzzlePlanetListAsset planets, PuzzleSimSettings settings)
         {
             puzzle.sources = PuzzleSourceBridge.ToSources(planets.planets);
-            puzzle.cubeSizeMin = brief.MinCubeSize;
-            puzzle.cubeSizeMax = brief.MaxCubeSize;
+            CubeRange(planets, out float min, out float max);
+            puzzle.cubeSizeMin = min;
+            puzzle.cubeSizeMax = max;
             puzzle.translatable = brief.Translatable;
             puzzle.moves = brief.Moves;
             puzzle.resizable = brief.Resizable;
@@ -26,9 +24,26 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.destination = destination;
             puzzle.captureRadius = puzzle.CaptureRadiusAtDestination();
             puzzle.zoneCentre = (origin + destination) * 0.5f;
-            puzzle.launchSpeed = LaunchSpeed(settings, brief);
-            puzzle.launchAngleDegs = LaunchAngleDegs(brief);
             return true;
+        }
+
+        private const float CubeMargin = 1.1f;
+
+        // The cube must enclose the planet it covers, so the range spans the field's planets with a
+        // margin: the smallest planet for the floor, the largest for the ceiling.
+        private static void CubeRange(PuzzlePlanetListAsset planets, out float min, out float max)
+        {
+            float smallest = float.MaxValue;
+            float largest = 0f;
+            for (int i = 0; i < planets.planets.Length; i++)
+            {
+                float radius = planets.planets[i].radius;
+                smallest = Mathf.Min(smallest, radius);
+                largest = Mathf.Max(largest, radius);
+            }
+
+            min = Mathf.Max(smallest, 0.01f) * 2f * CubeMargin;
+            max = Mathf.Max(largest, 0.01f) * 2f * CubeMargin;
         }
 
         public static PuzzleData Bake(
@@ -56,10 +71,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (!brief.SupportsMoves)
                 return Fail(PuzzleBakeStatus.UnsupportedBrief, out status);
 
-            if (!PrepareField(field, settings, brief, out float crossing))
-                return Fail(PuzzleBakeStatus.NoRun, out status);
-
-            if (!Solve(field, settings, brief, crossing, out PuzzleSolution found))
+            if (!PuzzleSolutionSearch.TrySelect(field, settings, brief, out PuzzleSolution found))
                 return Fail(PuzzleBakeStatus.NoSolution, out status);
 
             if (!StartFails(field, settings))
@@ -92,7 +104,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.routes = PuzzleRouteCount.Count(puzzle, settings, zones);
 
             // A movable single-zone level must offer a choice of where to scale. A multi-zone chain is
-            // already pinned by the anchored window, so it is allowed to have exactly one route.
+            // already pinned by the baked solution, so it is allowed to have exactly one route.
             return !brief.Translatable || brief.Moves > 1 || puzzle.routes >= PuzzleRouteCount.MinRoutes;
         }
 
@@ -120,50 +132,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             status = value;
             return null;
-        }
-
-        private static bool PrepareField(
-            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, out float crossing)
-        {
-            if (!PuzzleWindow.TryCrossing(field, settings, out crossing))
-            {
-                // No straight crossing: the field blocks the run (a maze). Acceptance is
-                // arrival-only, so leave the window open and skip the crossing derivation.
-                crossing = 0f;
-                field.tmin = 0f;
-                field.tmax = MazeWindow;
-                return true;
-            }
-
-            if (!brief.OffPath)
-            {
-                float search = brief.Moves > 1
-                    ? Mathf.Max(brief.WindowTightness, WideSearchBand)
-                    : brief.WindowTightness;
-                PuzzleWindow.SetCrossing(field, crossing, search);
-            }
-
-            return true;
-        }
-
-        private static bool Solve(
-            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, float crossing,
-            out PuzzleSolution found)
-        {
-            found = default;
-            if (!PuzzleSolutionSearch.TrySelect(field, settings, brief, out found))
-                return false;
-
-            return SettleWindow(field, settings, brief, crossing, found.ShipTime);
-        }
-
-        private static bool SettleWindow(
-            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, float crossing, float shipTime)
-        {
-            if (!brief.OffPath && brief.Moves <= 1)
-                return true;
-
-            return PuzzleWindow.SetSolution(field, crossing, brief.WindowTightness, shipTime);
         }
 
         private static PuzzleData Verified(
@@ -194,18 +162,5 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         private static bool StartFails(PuzzleData field, PuzzleSimSettings settings) =>
             PuzzleVerifier.Verify(field, null, settings).StartFails;
-
-        private static float LaunchSpeed(PuzzleSimSettings settings, PuzzleBrief brief) =>
-            brief.StartMargin * settings.NominalSpeed;
-
-        private static float LaunchAngleDegs(PuzzleBrief brief)
-        {
-            if (!brief.ApplyRandomAngle)
-                return 0f;
-
-            SeededRandom random = new(brief.Seed);
-            float magnitude = random.Range(6f, 12f);
-            return random.NextInt() % 2 == 0 ? magnitude : -magnitude;
-        }
     }
 }

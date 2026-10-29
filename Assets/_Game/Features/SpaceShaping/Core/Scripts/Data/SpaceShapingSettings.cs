@@ -1,0 +1,49 @@
+using UnityEngine;
+
+namespace DigitalLove.Game.SpaceShaping
+{
+    [CreateAssetMenu(fileName = "SpaceShapingSettings", menuName = "DigitalLove/Game/SpaceShaping Settings")]
+    public class SpaceShapingSettings : ScriptableObject
+    {
+        [Header("Puzzle")]
+        [Tooltip("The run: origin to destination, in metres. It also sizes the field, so keep planetRadiusMax well under runDistance / 2.")]
+        public float runDistance = 0.7f;
+
+        [Header("Simulation")]
+        [Tooltip("Given launch speed, shared by every puzzle, in metres per second.")]
+        public float launchSpeed = 0.9f;
+
+        [Tooltip("Integrator step, in seconds. The step budget is derived from the run and the nominal speed, so the budget can never drift from the run.")]
+        public float stepSecs = 0.0008333333f;
+
+        [Tooltip("Reference speed, in m/s. The step budget is derived from the run and this speed, so it scales with the field instead of being hand-tuned.")]
+        public float nominalSpeed = 1f;
+
+        [Header("Field")]
+        [Tooltip("Smallest planet radius, in metres. The field samples each planet between this and planetRadiusMax.")]
+        public float planetRadiusMin = 0.021f;
+
+        [Tooltip("Largest planet radius, in metres. Also sizes the field and sets the arrival sphere to the destination planet's radius.")]
+        public float planetRadiusMax = 0.063f;
+
+        [Tooltip("Minimum clearance between the run's endpoint planets and every other planet, in metres. Wider = a clearer corridor and a denser field is allowed.")]
+        public float corridorClearance = 0.035f;
+
+        [Tooltip("Planet gravity per unit volume (mass = radius cubed). Tuned for the toy scale; a grown planet deepens its well fast.")]
+        public float sourceStrengthScale = 5.5555553f;
+
+        [Tooltip("Planet spacing, as a multiple of the summed radii. The field builder spaces the sector 1.1x wider so the first constraint pass never moves a baked planet.")]
+        public float separationScale = 1.2f;
+
+        [Header("Zone")]
+        [Tooltip("The cube's soft edge, as a fraction of its half-size (0 = hard edge). Shared with the view so a found solution reproduces.")]
+        public float zoneFalloff = 0.25f;
+
+        [Header("Reachable scale")]
+        [Tooltip("Smallest scale the player can reach (0.6 = shrink to 60%).")]
+        public float minScaleFactor = 0.6f;
+
+        [Tooltip("Largest scale the player can reach (1.8 = magnify 1.8x).")]
+        public float maxScaleFactor = 1.8f;
+    }
+}

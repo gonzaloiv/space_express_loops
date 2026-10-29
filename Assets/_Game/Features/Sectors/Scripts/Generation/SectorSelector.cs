@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace DigitalLove.Game.Sectors
             int start = Mathf.Clamp(offset, 0, order.Length);
             int wanted = Mathf.Clamp(count, 0, order.Length - start);
             if (wanted == 0)
-                return System.Array.Empty<SectorSelection>();
+                return Array.Empty<SectorSelection>();
 
             SectorSelection[] selections = new SectorSelection[wanted];
             for (int i = 0; i < wanted; i++)
@@ -67,19 +68,19 @@ namespace DigitalLove.Game.Sectors
             for (int i = 0; i < eligible.Count; i++)
             {
                 int placement = eligible[i];
-                keys[i] = Mix(SectorGrid.CellSeed(field.worldSeed, placements[placement].Cell), levelSeed);
+                keys[i] = OrderKey(SectorGrid.CellSeed(field.worldSeed, placements[placement].Cell), levelSeed);
                 order[i] = placement;
             }
 
-            System.Array.Sort(keys, order);
+            Array.Sort(keys, order);
             return order;
         }
 
-        private static int Mix(int value, int salt)
+        private static int OrderKey(int cellSeed, int levelSeed)
         {
             unchecked
             {
-                int hash = value * 486187739 ^ salt;
+                int hash = cellSeed * 486187739 ^ levelSeed;
                 hash ^= hash >> 15;
                 hash *= unchecked((int)0x85EBCA6B);
                 hash ^= hash >> 13;

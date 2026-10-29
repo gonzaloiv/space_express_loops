@@ -34,7 +34,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             int seedValue)
         {
             PuzzlePlanetListAsset planets = Planets(seed, settings, seedValue);
-            brief.Seed = seedValue;
             PuzzleData baked = PuzzleFieldBake.Bake(
                 planets, sim, brief, out PuzzleBakeStatus status, out PuzzleZone[] solution);
             Object.DestroyImmediate(planets);

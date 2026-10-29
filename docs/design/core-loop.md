@@ -2,7 +2,7 @@
 
 **Status:** design · core loop — what the player actually does.
 **Date:** 2026-10-23.
-**Revised:** 2026-10-28.
+**Revised:** 2026-10-29.
 
 **Related:** [vision](vision.md) · [the cube](systems/cube.md) · [resources](systems/resources.md) ·
 [progression](systems/progression.md) · [glossary](glossary.md)
@@ -19,8 +19,9 @@ Read the field → (move / resize the cube) → scale a zone → the ship flies 
   flight: the ship launches on each modification and flies that same trajectory. There is **no separate
   commit action** — finishing the edit *is* the commit.
 
-Jobs 1–2 use a **fixed** cube: the only move is the grab-inside scale. Moving the cube enters at job 3
-and resizing at job 5 ([progression](systems/progression.md) §The learning path).
+Jobs 1–2 use a **fixed** cube: the only move is the grab-inside scale. Several placed zones enter at
+job 3, moving the cube at job 4, and resizing at job 6
+([progression](systems/progression.md) §The learning path).
 
 The beat is tight: the modification *is* the check.
 

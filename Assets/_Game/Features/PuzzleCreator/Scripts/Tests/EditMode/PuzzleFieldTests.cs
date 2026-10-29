@@ -137,14 +137,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Assert.Greater(puzzle.Distance, settings.runDistance * 0.5f);
             Assert.Less(puzzle.Distance, settings.runDistance * 1.5f);
             Assert.Less(Vector3.Distance((puzzle.origin + puzzle.destination) * 0.5f, puzzle.zoneCentre), 1e-4f);
-            Assert.Greater(puzzle.launchSpeed, 0f);
         }
 
         [Test]
         public void BuildSetup_UsesTheGlobalLaunchSpeed()
         {
             PuzzleData puzzle = Bare();
-            puzzle.launchSpeed = 2f;
             SpaceShapingSettings settings = Settings();
             settings.launchSpeed = 1.25f;
 

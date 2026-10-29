@@ -79,8 +79,8 @@ namespace DigitalLove.Game.Sectors
             for (int i = 0; i < planets.Length; i++)
             {
                 float radius = SampleRadius(request, random);
-                planets[i] = new SectorPlanet(Vector3.zero, radius);
-                planets[i] = new SectorPlanet(SampleClusterPoint(request, random, planets, i), radius);
+                Vector3 position = SampleClusterPoint(request, random, planets, i, radius);
+                planets[i] = new SectorPlanet(position, radius);
             }
         }
 
@@ -88,14 +88,15 @@ namespace DigitalLove.Game.Sectors
             SectorShapeRequest request,
             SeededRandom random,
             SectorPlanet[] planets,
-            int index)
+            int index,
+            float radius)
         {
             float inner = InnerRadius(request);
             float outer = Mathf.Max(inner, SafeRadius(request));
             for (int attempt = 0; attempt < ClusterAttempts; attempt++)
             {
                 Vector3 candidate = SampleAnnulus(request, random, inner, outer);
-                if (IsClear(request, planets, index, candidate))
+                if (IsClear(request, planets, index, radius, candidate))
                     return candidate;
             }
 
@@ -121,9 +122,9 @@ namespace DigitalLove.Game.Sectors
             SectorShapeRequest request,
             SectorPlanet[] planets,
             int index,
+            float radius,
             Vector3 candidate)
         {
-            float radius = planets[index].Radius;
             if (candidate.magnitude < InnerRadius(request))
                 return false;
 
