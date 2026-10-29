@@ -62,8 +62,7 @@ a command count as a diagnostic.
   `origin`→`destination`).
 - The planets visibly **spread and grow**.
 - **The time face reads on the same lattice** — the zone is **tinted cool/warm** (slower / faster clock);
-  the pulse at the local clock rate is a [candidate](../../ideas/feel-polish.md) (the lattice is a
-  wireframe). The window gauge is the payoff: the projected arrival slides as the player scales
+  the pulse at the local clock rate is a candidate (the lattice is a wireframe). The window gauge is the payoff: the projected arrival slides as the player scales
   ([relativity](relativity.md)).
 - The cube keeps a **committed check lamp** after release — green while the last check is in the window, red
   on a crash — until the next edit. A locked gesture or an over-budget scale **flashes the frame red**

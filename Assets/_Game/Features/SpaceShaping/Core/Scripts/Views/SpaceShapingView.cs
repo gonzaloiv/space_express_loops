@@ -20,6 +20,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         private readonly List<FieldPlanetBehaviour> pool = new();
         private SpaceZoneView cube;
+        private Vector3 frameCentre;
+        private float frameHalf;
         private FieldPlanetBehaviour destinationPlanet;
         private SpaceZone lastZone;
         private bool hasSnapshot;
@@ -112,9 +114,9 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void Render(SpacetimeField field, SpaceShapingSession session)
         {
-            Frame(session, out Vector3 centre, out float half);
+            Frame(session, out frameCentre, out frameHalf);
             LatticeWarp warp = new(field, session.Zones);
-            mesh.Render(warp.Warp, WarpStrength(session.Zones), centre, half);
+            mesh.Render(warp.Warp, WarpStrength(session.Zones), frameCentre, frameHalf);
         }
 
         private static float WarpStrength(IReadOnlyList<SpaceZone> zones)
@@ -153,7 +155,8 @@ namespace DigitalLove.Game.SpaceShaping
             max = Vector3.Max(max, point);
         }
 
-        public void ShowTrajectory(TrajectoryResult result, bool solved) => trajectory.Show(result, solved);
+        public void ShowTrajectory(TrajectoryResult result, bool solved) =>
+            trajectory.Show(result, solved, frameCentre, frameHalf);
 
         public void Refuse() => cube.Refuse();
 

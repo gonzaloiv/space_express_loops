@@ -80,7 +80,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
             PuzzleBrief mapped = PuzzleBrief.From(authored, settings);
 
-            Assert.AreEqual(settings.corridorClearance, mapped.CorridorClearance, 1e-4f);
+            Assert.AreEqual(settings.endpointClearance, mapped.EndpointClearance, 1e-4f);
             Assert.IsTrue(mapped.Translatable);
             Assert.AreEqual(2, mapped.Moves);
             Assert.IsTrue(mapped.Resizable);

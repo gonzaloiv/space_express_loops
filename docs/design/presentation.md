@@ -4,8 +4,7 @@
 **Date:** 2026-10-23.
 **Revised:** 2026-10-28.
 
-**Related:** [vision](vision.md) · [core loop](core-loop.md) · [the cube](systems/cube.md) ·
-[feel polish](../ideas/feel-polish.md)
+**Related:** [vision](vision.md) · [core loop](core-loop.md) · [the cube](systems/cube.md)
 
 The **feel pass is last** ([vision](vision.md) §6) — this doc records the intent so the loop can be
 built toward it.
@@ -29,7 +28,7 @@ built toward it.
   on release. The flight is the payoff, not the only reveal ([core loop](core-loop.md) §1).
 - The lab read uses four decimals; the final HUD may round for legibility.
 - **The time face reads on the lattice** — the zone is **tinted cool/warm** (slower / faster clock); the
-  pulse at the local clock rate is a [candidate](../ideas/feel-polish.md) (the lattice is a wireframe)
+  pulse at the local clock rate is a candidate (the lattice is a wireframe)
   ([the cube](systems/cube.md)).
 - The per-job **manual and tech voice ride the TTS card** ([jobs](jobs.md)); the HUD itself stays
   world-anchored ([voice panel idea](../ideas/tts-voice-panel.md)).
@@ -72,4 +71,4 @@ This is the lab panel first; the main HUD and store panels take the same tokens 
 
 - Final art language and the bubble/planet/cube look.
 - Final HUD placement; the readout look is settled (above).
-- The SFX list (travel, scale, grade) — [feel polish](../ideas/feel-polish.md).
+- The SFX list (travel, scale, grade) — a later polish pass.

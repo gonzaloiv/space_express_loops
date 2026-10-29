@@ -78,6 +78,8 @@ are where it shows up as a number.
   — through the run. Not a cast; a colleague.
 - **Anonymous tip panels** carry the rest: short, in-world hints when the player needs them,
   unattributed and diegetic (a console readout, not a tutorial box).
+- **Their roadmap slogan:** *"Today the space, tomorrow the time."* The Wrap wraps **space** today;
+  wrapping **time** is the team's next promise — a future feature (or DLC), not this run.
 
 ## "Revenue is relative"
 

@@ -4,8 +4,7 @@
 player scales each. The "several zones" rung (job 3), split from the move.
 
 **Related:** [progression](../../design/systems/progression.md) §The learning path ·
-[the cube](../../design/systems/cube.md) §Inputs · [jobs](../../design/jobs.md) ·
-folds in the per-zone legibility the shape-the-path plan left open.
+[the cube](../../design/systems/cube.md) §Inputs · [jobs](../../design/jobs.md).
 
 ## 1. Why
 
@@ -20,11 +19,20 @@ the placed-cube path end to end.
 
 ### S1 — Creator + data · open
 
-- `PuzzleBrief.SupportsMoves` allows `Moves > 1` when fixed (today it requires `Translatable`).
-- `PuzzleData` carries the cube frames (position + size) from the bake; the solved **scales** are not
-  shipped. The search is unchanged — it already finds each zone's centre, size and scale.
-- `PuzzleVerifier.Fits` accepts per-cube sizes for fixed multi-zone (relax the shared-size rule).
-- **Exit:** a fixed 2-cube seed bakes, verifies and saves; a creator test pins it.
+- `PuzzleBrief.SupportsMoves` allows `Moves > 1` when fixed (today it requires `Translatable`); the
+  property then reduces to a bare `Moves <= 3`, so inline it at the bake's call site.
+- `PuzzleData` carries the cube frames (position + size) from the bake, replacing `zoneCentre` +
+  `cubeSize`; the solved **scales** are not shipped. The search is unchanged — it already finds each
+  zone's centre, size and scale. The frame count is the move count: `Fits` pins
+  `solution.Length == puzzle.moves`.
+- `PuzzleVerifier.Fits` needs no change: a chain shares one width (`PuzzleBeamSearch` uses `prefix.Size`),
+  so the shared-size rule already holds for fixed multi-zone.
+- The bake guarantees **distinct regions**: `SpaceShapingSession.UpsertZone` merges zones with the same
+  centre and half-extents (`SpaceZone.SameRegion`), so two cubes at the same place and size would
+  collapse into one zone.
+- **Exit:** a fixed 2-cube seed bakes, verifies and saves; a creator test pins it. The exit leans on the
+  field and the settings asset (`planetRadiusMax` well under `runDistance / 2`), so name the seed and the
+  settings the test uses rather than scanning.
 
 ### S2 — Runtime: the placed cubes · open
 
@@ -37,7 +45,8 @@ the placed-cube path end to end.
 ### S3 — Legibility · open
 
 - Each cube reads as its own zone so the player knows which to scale (per-zone tint/label); the bend is
-  diffuse under gravity-global, so the feedback carries it. Absorbs the parked shape-the-path tail.
+  diffuse under gravity-global, so the feedback carries it. Absorbs the per-zone legibility left open when
+  the window/clock were retired.
 - **Exit:** headset pass — the player can tell the cubes apart and see each one's effect.
 
 ## 3. Decisions
@@ -47,8 +56,9 @@ the placed-cube path end to end.
    **scale** at each cube. The solved scales are not shipped. Job 3 is a **tutorial**, so the visible
    geometry is the lesson, not a leak — the player still does the verb: scaling the field. The scale may
    go **either way** — a cube's solution can magnify (`scale > 1`) or shrink (`scale < 1`).
-2. **Per-cube size, as today.** Each cube's size is calculated like now, per zone, so the cubes may
-   differ — the verifier's shared-size rule relaxes for fixed multi-zone.
+2. **Uniform cube size.** A baked chain shares one width (`PuzzleBeamSearch` uses `prefix.Size`), so a
+   fixed multi-zone level's cubes are all the same size and the verifier's shared-size rule already
+   passes — no relaxation. Differing per-cube sizes would need beam changes and are out of scope.
 3. **Two cubes to start, editable.** The count defaults to 2 and is a per-level knob (up to the 2–3 in
    `jobs.md`).
 4. **All cubes at once.** The runtime holds a cube per frame, all visible and independently scalable —

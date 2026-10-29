@@ -91477,6 +91477,22 @@ PrefabInstance:
       value: 0.101960786
       objectReference: {fileID: 0}
     - target: {fileID: 6964858309247313497, guid: 15ed6a44587d95f44993614d770685df, type: 3}
+      propertyPath: idleColor.a
+      value: 0.101960786
+      objectReference: {fileID: 0}
+    - target: {fileID: 6964858309247313497, guid: 15ed6a44587d95f44993614d770685df, type: 3}
+      propertyPath: idleColor.b
+      value: 0.6377357
+      objectReference: {fileID: 0}
+    - target: {fileID: 6964858309247313497, guid: 15ed6a44587d95f44993614d770685df, type: 3}
+      propertyPath: idleColor.g
+      value: 0.6377357
+      objectReference: {fileID: 0}
+    - target: {fileID: 6964858309247313497, guid: 15ed6a44587d95f44993614d770685df, type: 3}
+      propertyPath: idleColor.r
+      value: 0.6377357
+      objectReference: {fileID: 0}
+    - target: {fileID: 6964858309247313497, guid: 15ed6a44587d95f44993614d770685df, type: 3}
       propertyPath: slowColor.a
       value: 0.101960786
       objectReference: {fileID: 0}

@@ -16,7 +16,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.moves = brief.Moves;
             puzzle.resizable = brief.Resizable;
             if (!PuzzleRunChoice.TryPick(
-                planets.planets, settings.RunDistance, brief.CorridorClearance,
+                planets.planets, settings.RunDistance, brief.EndpointClearance,
                 out Vector3 origin, out Vector3 destination))
                 return false;
 

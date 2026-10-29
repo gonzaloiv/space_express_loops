@@ -63,10 +63,14 @@ namespace DigitalLove.Game.SpaceShaping
             StartPuzzle();
         }
 
+        [ContextMenu("Preview field")]
         public void PreviewField()
         {
             SpaceShapingSession preview = new(BuildSetup());
-            view.Render(preview.BuildField(), preview);
+            SpacetimeField field = preview.BuildField();
+            TrajectoryResult result = preview.Simulate(field, integrator, launch);
+            view.Render(field, preview);
+            view.ShowTrajectory(result, preview.IsSolved(result));
         }
 
         public bool ApplySolvedScale(float scale)
@@ -131,8 +135,17 @@ namespace DigitalLove.Game.SpaceShaping
             PuzzleData puzzle = puzzles[puzzleIndex];
             view.ResetZone();
             view.SetConditions(puzzle.ToZoneConditions());
-            float size = puzzle.cubeSize;
-            view.SetZoneFrame(puzzle.zoneCentre, new Vector3(size, size, size), settings.zoneFalloff);
+            PuzzleFrame frame = FirstFrame(puzzle);
+            view.SetZoneFrame(frame.centre, frame.BoxSize, settings.zoneFalloff);
+        }
+
+        // One cube until S2 places a cube per frame; the first frame is the level's lead cube.
+        private static PuzzleFrame FirstFrame(PuzzleData puzzle)
+        {
+            if (puzzle.frames != null && puzzle.frames.Length > 0)
+                return puzzle.frames[0];
+
+            return new PuzzleFrame { centre = puzzle.zoneCentre, size = puzzle.cubeSizeMin };
         }
 
         private void StartPuzzle()

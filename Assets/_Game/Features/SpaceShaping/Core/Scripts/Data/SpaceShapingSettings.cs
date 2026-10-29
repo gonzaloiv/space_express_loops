@@ -26,8 +26,8 @@ namespace DigitalLove.Game.SpaceShaping
         [Tooltip("Largest planet radius, in metres. Also sizes the field and sets the arrival sphere to the destination planet's radius.")]
         public float planetRadiusMax = 0.063f;
 
-        [Tooltip("Minimum clearance between the run's endpoint planets and every other planet, in metres. Wider = a clearer corridor and a denser field is allowed.")]
-        public float corridorClearance = 0.035f;
+        [Tooltip("Minimum clearance between the run's endpoint planets and every other planet, in metres. Wider keeps the launch and arrival points clear of their neighbours.")]
+        public float endpointClearance = 0.035f;
 
         [Tooltip("Planet gravity per unit volume (mass = radius cubed). Tuned for the toy scale; a grown planet deepens its well fast.")]
         public float sourceStrengthScale = 5.5555553f;

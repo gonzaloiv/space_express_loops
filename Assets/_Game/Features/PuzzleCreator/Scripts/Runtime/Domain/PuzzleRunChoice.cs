@@ -9,11 +9,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private const float BlockBandFactor = 2f;
 
         public static bool TryPick(
-            PuzzleFieldPlanet[] planets, float targetRun, float clearance,
+            PuzzleFieldPlanet[] planets, float targetRun, float endpointClearance,
             out Vector3 origin, out Vector3 destination)
         {
             RunChoice choice = new() { Best = float.MaxValue };
-            RunTarget target = new(targetRun, clearance);
+            RunTarget target = new(targetRun, endpointClearance);
             for (int i = 0; i < planets.Length; i++)
             {
                 for (int j = i + 1; j < planets.Length; j++)
@@ -32,7 +32,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (run < target.Distance * MinRunFraction || run > target.Distance * MaxRunFactor)
                 return;
 
-            if (!RunIsBlocked(planets, i, j, target.Clearance))
+            if (!RunIsBlocked(planets, i, j, target.EndpointClearance))
                 return;
 
             float delta = Mathf.Abs(run - target.Distance);
@@ -72,12 +72,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private readonly struct RunTarget
         {
             public readonly float Distance;
-            public readonly float Clearance;
+            public readonly float EndpointClearance;
 
-            public RunTarget(float distance, float clearance)
+            public RunTarget(float distance, float endpointClearance)
             {
                 Distance = distance;
-                Clearance = clearance;
+                EndpointClearance = endpointClearance;
             }
         }
 

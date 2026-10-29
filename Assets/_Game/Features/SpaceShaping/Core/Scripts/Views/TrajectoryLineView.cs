@@ -9,14 +9,13 @@ namespace DigitalLove.Game.SpaceShaping
     {
         private const int MaxLinePoints = 400;
         private const float PulseSecs = 0.35f;
-        private const float HeadingEpsilon = 0.000001f;
+        private const float HeadingEpsilon = 1e-10f;
 
         [SerializeField] private LineRenderer line;
         [SerializeField] private LineRenderer headingLine;
         [SerializeField] private Transform endMarker;
         [SerializeField] private Renderer endMarkerRenderer;
         [SerializeField] private float lineWidth = 0.008f;
-        [SerializeField] private float headingLength = 3f;
         [SerializeField] private Color arriveColor = new(0.35f, 1f, 0.55f, 1f);
         [SerializeField] private Color crashColor = new(1f, 0.35f, 0.3f, 1f);
         [SerializeField] private Color missColor = new(0.75f, 0.85f, 1f, 1f);
@@ -33,7 +32,7 @@ namespace DigitalLove.Game.SpaceShaping
             headingLine.widthMultiplier = lineWidth;
         }
 
-        public void Show(TrajectoryResult result, bool solved)
+        public void Show(TrajectoryResult result, bool solved, Vector3 fieldCentre, float fieldHalf)
         {
             StopPulse();
             int count = result.Points != null ? result.Points.Count : 0;
@@ -47,9 +46,9 @@ namespace DigitalLove.Game.SpaceShaping
             Color color = solved ? arriveColor : ColorFor(result.Outcome);
             SetColor(color);
             Vector3 end = result.Points[count - 1];
-            Vector3 heading = Heading(result.Points[count - 2], end);
+            Vector3 heading = Heading(result.Points);
             ShowMarker(end, heading, color);
-            ShowHeading(end, heading, color);
+            ShowHeading(end, heading, color, DistanceToBox(end, heading, fieldCentre, fieldHalf));
             line.enabled = true;
         }
 
@@ -79,9 +78,9 @@ namespace DigitalLove.Game.SpaceShaping
             endMarker.gameObject.SetActive(true);
         }
 
-        private void ShowHeading(Vector3 end, Vector3 heading, Color color)
+        private void ShowHeading(Vector3 end, Vector3 heading, Color color, float length)
         {
-            if (heading.sqrMagnitude < HeadingEpsilon)
+            if (heading.sqrMagnitude < HeadingEpsilon || length <= 0f)
             {
                 headingLine.enabled = false;
                 return;
@@ -89,15 +88,36 @@ namespace DigitalLove.Game.SpaceShaping
 
             headingLine.positionCount = 2;
             headingLine.SetPosition(0, end);
-            headingLine.SetPosition(1, end + heading * headingLength);
+            headingLine.SetPosition(1, end + heading * length);
             headingLine.startColor = color;
             headingLine.endColor = color;
             headingLine.enabled = true;
         }
 
-        private static Vector3 Heading(Vector3 from, Vector3 to)
+        // The heading reaches the field's edge: from a point inside the frame cube, along a direction,
+        // out to the boundary.
+        private static float DistanceToBox(Vector3 origin, Vector3 direction, Vector3 centre, float half)
         {
-            Vector3 delta = to - from;
+            float far = float.MaxValue;
+            for (int axis = 0; axis < 3; axis++)
+            {
+                float component = direction[axis];
+                if (Mathf.Abs(component) < 1e-6f)
+                    continue;
+
+                float low = (centre[axis] - half - origin[axis]) / component;
+                float high = (centre[axis] + half - origin[axis]) / component;
+                far = Mathf.Min(far, Mathf.Max(low, high));
+            }
+
+            return far == float.MaxValue || far < 0f ? 0f : far;
+        }
+
+        // The overall run direction (start to end), so a trajectory too short for a last-two-point
+        // delta — a first-step crash — still has a heading.
+        private static Vector3 Heading(IReadOnlyList<Vector3> points)
+        {
+            Vector3 delta = points[points.Count - 1] - points[0];
             return delta.sqrMagnitude < HeadingEpsilon ? Vector3.zero : delta.normalized;
         }
 

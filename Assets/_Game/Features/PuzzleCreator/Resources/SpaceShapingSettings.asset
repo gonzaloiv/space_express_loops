@@ -16,11 +16,11 @@ MonoBehaviour:
   launchSpeed: 0.9
   stepSecs: 0.0008333333
   nominalSpeed: 1
-  planetRadiusMin: 0.02
-  planetRadiusMax: 0.3
-  corridorClearance: 0.01
+  planetRadiusMin: 0.05
+  planetRadiusMax: 0.2
+  endpointClearance: 0.01
   sourceStrengthScale: 6
-  separationScale: 1.1
+  separationScale: 0.5
   zoneFalloff: 0.333
   minScaleFactor: 0.6
   maxScaleFactor: 1.8

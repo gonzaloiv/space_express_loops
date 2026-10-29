@@ -4,7 +4,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public struct PuzzleBrief
     {
-        public float CorridorClearance;
+        public float EndpointClearance;
         public bool Translatable;
         public int Moves;
         public bool Resizable;
@@ -14,7 +14,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         public static PuzzleBrief From(PuzzleSeed seed, SpaceShapingSettings settings) => new()
         {
-            CorridorClearance = settings.corridorClearance,
+            EndpointClearance = settings.endpointClearance,
             Translatable = seed.translatable,
             Moves = Mathf.Max(1, seed.moves),
             Resizable = seed.resizable
