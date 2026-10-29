@@ -98,6 +98,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             authored.resizable = true;
             authored.rotate = true;
             authored.startMargin = 1.05f;
+            authored.applyRandomAngle = true;
             authored.offPath = true;
             authored.windowTightness = 0.25f;
 
@@ -111,9 +112,43 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Assert.IsTrue(mapped.Resizable);
             Assert.IsTrue(mapped.Rotate);
             Assert.AreEqual(1.05f, mapped.StartMargin, 1e-4f);
+            Assert.IsTrue(mapped.ApplyRandomAngle);
+            Assert.AreEqual(authored.seed, mapped.Seed);
             Assert.IsTrue(mapped.OffPath);
             Assert.AreEqual(0.25f, mapped.WindowTightness, 1e-4f);
             Object.DestroyImmediate(authored);
+        }
+
+        [Test]
+        public void Apply_UsesDeterministicSeededRandomAngle()
+        {
+            PuzzleBrief angled = brief;
+            angled.ApplyRandomAngle = true;
+            angled.Seed = KnownSeed;
+            PuzzleData first = ScriptableObject.CreateInstance<PuzzleData>();
+            PuzzleData second = ScriptableObject.CreateInstance<PuzzleData>();
+
+            PuzzleFieldBake.Apply(angled, first, planets, sim);
+            PuzzleFieldBake.Apply(angled, second, planets, sim);
+
+            Assert.AreEqual(first.launchAngleDegs, second.launchAngleDegs, 1e-4f);
+            Assert.GreaterOrEqual(Mathf.Abs(first.launchAngleDegs), 6f);
+            Assert.LessOrEqual(Mathf.Abs(first.launchAngleDegs), 12f);
+            Assert.AreEqual(first.launchAngleDegs, SpaceShapingSetup.Build(first, sim).LaunchAngleDegs, 1e-4f);
+            Object.DestroyImmediate(first);
+            Object.DestroyImmediate(second);
+        }
+
+        [Test]
+        public void Apply_DisablesRandomAngleWhenSeedToggleIsOff()
+        {
+            PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
+            puzzle.launchAngleDegs = 9f;
+
+            PuzzleFieldBake.Apply(brief, puzzle, planets, sim);
+
+            Assert.AreEqual(0f, puzzle.launchAngleDegs, 1e-4f);
+            Object.DestroyImmediate(puzzle);
         }
 
         [Test]

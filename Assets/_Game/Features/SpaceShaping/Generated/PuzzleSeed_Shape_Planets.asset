@@ -13,23 +13,15 @@ MonoBehaviour:
   m_Name: PuzzleSeed_Shape_Planets
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Creator::DigitalLove.Game.SpaceShaping.Creator.PuzzlePlanetListAsset
   distance: 1
-  clearance: 0.035
+  clearance: 0.02
   planets:
-  - position: {x: 0.050827965, y: -0.006344517, z: 0.18969263}
-    radius: 0.050235875
-  - position: {x: -0.18969262, y: 0.046173982, z: -0.05082799}
-    radius: 0.04322095
-  - position: {x: 0.13886468, y: 0.030552799, z: -0.13886459}
-    radius: 0.03675179
-  - position: {x: -0.24880233, y: -0.0378998, z: 0.14364603}
-    radius: 0.05123591
-  - position: {x: 0.0000000034259247, y: 0.038114097, z: -0.28729215}
-    radius: 0.02997214
-  - position: {x: 0.2488023, y: 0.026147928, z: 0.14364609}
-    radius: 0.026512135
-  - position: {x: -0.26742774, y: -0.041230056, z: -0.26742783}
-    radius: 0.026611172
-  - position: {x: 0.3653132, y: -0.0155864265, z: -0.09788529}
-    radius: 0.023990422
-  - position: {x: -0.0978853, y: 0.03199778, z: 0.3653132}
-    radius: 0.06116706
+  - position: {x: -0.5494751, y: -0.0050797216, z: 0.08293692}
+    radius: 0.21385661
+  - position: {x: -0.24867408, y: -0.0052559907, z: -0.49695152}
+    radius: 0.22857378
+  - position: {x: 0.36344773, y: -0.0039005263, z: -0.42037812}
+    radius: 0.21529132
+  - position: {x: 0.47905242, y: -0.0077000977, z: 0.28156114}
+    radius: 0.32365212
+  - position: {x: -0.1058344, y: 0.000983665, z: 0.54555047}
+    radius: 0.16253121

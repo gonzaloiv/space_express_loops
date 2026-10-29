@@ -38,7 +38,8 @@ one-zone stand-in.
 
 ### K3 — Acceptance
 
-- Quest 3S: 72 fps capture across boot → map → pick → scale up → solve → back → reload.
+- Quest 3S: 72 fps capture across boot → map → pick → shape/fly/check in the same Bubble view → solve →
+  back → reload.
 - Legacy route/hub/round content absent; setup/splash untouched; reset behaves as specified in
   [progression](space-shaping-progression.md).
 - Tune `travelSecs` on device; run the SFX pass (travel, scale, grade) **or explicitly cut it**.

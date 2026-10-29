@@ -42,8 +42,8 @@ ship arrives relative to the window, and whether the job is solved, missed or fa
 
 ### H3 — Validation 2
 
-- Run the one seated MR path end to end: boot → map → pick → scale up → shape/fly/check → solve → back to
-  the map.
+- Run the one seated MR path end to end: boot → map → pick → shape/fly/check in the same Bubble view →
+  solve → back to the map.
 - Fix what it exposes inside this plan's scope; anything outside it goes back to its plan.
 - **Exit:** the path completes in the headset with a scored puzzle; the result is recorded against the
   [vision](../../design/vision.md) §7 criteria; frame timing sampled on device.

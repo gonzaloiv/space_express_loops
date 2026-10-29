@@ -7,6 +7,8 @@ namespace DigitalLove.Game.Nodes
         private readonly PlanetRefs refs;
         private bool isDestination;
         private bool isOnRoute;
+        private Color defaultOutlineColor;
+        private float defaultOutlineWidth;
 
         public bool IsDestination => isDestination;
         public bool IsOnRoute => isOnRoute;
@@ -14,6 +16,8 @@ namespace DigitalLove.Game.Nodes
         public PlanetRoutePresentation(PlanetRefs refs)
         {
             this.refs = refs;
+            defaultOutlineColor = refs.Outline.OutlineColor;
+            defaultOutlineWidth = refs.Outline.OutlineWidth;
         }
 
         public void Apply(RouteVisualState state, Color? routeColor = null)
@@ -29,15 +33,18 @@ namespace DigitalLove.Game.Nodes
                     isOnRoute = true;
                     isDestination = false;
                     refs.Outline.enabled = false;
+                    ResetDestinationOutline();
                     break;
                 case RouteVisualState.SelectingCandidate:
                     isOnRoute = false;
                     SetIsDestination(false);
                     refs.Outline.enabled = true;
+                    ResetDestinationOutline();
                     break;
                 case RouteVisualState.ConfirmedDestination:
                     SetIsDestination(true);
                     refs.Outline.enabled = false;
+                    ShowDestinationOutline();
                     break;
             }
         }
@@ -48,6 +55,7 @@ namespace DigitalLove.Game.Nodes
             SetIsDestination(false);
             refs.NodeBody.ResetRouteColor();
             refs.Outline.enabled = false;
+            ResetDestinationOutline();
         }
 
         private void SetIsDestination(bool value)
@@ -56,6 +64,19 @@ namespace DigitalLove.Game.Nodes
             isDestination = value;
             if (value && !wasDestination)
                 refs.ScalePunch.Animate();
+        }
+
+        private void ShowDestinationOutline()
+        {
+            refs.Outline.OutlineColor = refs.DestinationColor;
+            refs.Outline.OutlineWidth = refs.DestinationOutlineWidth;
+            refs.Outline.enabled = true;
+        }
+
+        private void ResetDestinationOutline()
+        {
+            refs.Outline.OutlineColor = defaultOutlineColor;
+            refs.Outline.OutlineWidth = defaultOutlineWidth;
         }
     }
 }

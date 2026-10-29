@@ -169,11 +169,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         private static string BriefText(PuzzleSeed value) =>
             BriefText(value.translatable, value.moves, value.resizable, value.rotate)
-            + $" · {value.fieldShape} · start {value.startMargin:F2}× · {(value.offPath ? "clock" : "path")}";
+            + $" · {value.fieldShape} · start {value.startMargin:F2}×"
+            + $" · {(value.offPath ? "clock" : "path")}"
+            + (value.applyRandomAngle ? " · random launch angle" : string.Empty);
 
         private static string BriefText(PuzzleData value) =>
             BriefText(value.translatable, value.moves, value.resizable, value.rotate)
-            + $" · launch {value.launchSpeed:F2} m/s";
+            + $" · launch {value.launchSpeed:F2} m/s, {value.launchAngleDegs:F1} deg";
 
         private static string BriefText(bool translatable, int moves, bool resizable, bool rotate) =>
             $"{(translatable ? "movable" : "fixed")} · {Mathf.Max(1, moves)} zone(s) · "

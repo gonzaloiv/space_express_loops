@@ -13,6 +13,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public bool Resizable;
         public bool Rotate;
         public float StartMargin;
+        public bool ApplyRandomAngle;
+        public int Seed;
         public bool OffPath;
 
         public bool SupportsMoves =>
@@ -29,6 +31,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             Resizable = seed.resizable,
             Rotate = seed.rotate,
             StartMargin = Mathf.Clamp(seed.startMargin, 0.1f, 2f),
+            ApplyRandomAngle = seed.applyRandomAngle,
+            Seed = seed.seed,
             OffPath = seed.offPath
         };
     }

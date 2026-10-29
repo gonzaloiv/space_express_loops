@@ -22,7 +22,7 @@ legacy cut and the catalogue start.
 
 | Plan | Area | Why here |
 |---|---|---|
-| [Space shaping — campaign map](backlog/space-shaping-campaign-map.md) | space shaping | Cube map, pick → brief → scale up → play → back; keeper moves out of `LevelContainer`. |
+| [Space shaping — campaign map](backlog/space-shaping-campaign-map.md) | space shaping | Cube map, pick → brief → play in the same Bubble view → back; keeper moves out of `LevelContainer`. |
 | [Space shaping — HUD + validation 2](backlog/space-shaping-hud-validation.md) | space shaping | Entropy, clock window, result/fail; **this exit is the gate** for the campaign. |
 | [Space shaping — progression save](backlog/space-shaping-progression.md) | space shaping | Solved jobs + stars, reset, placement carve-out. After the gate. |
 | [Space shaping — legacy cut](backlog/space-shaping-legacy-cut.md) | space shaping | Delete the route/round/economy flow once the keepers are out. After the gate. |

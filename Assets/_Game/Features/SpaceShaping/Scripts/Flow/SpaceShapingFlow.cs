@@ -9,7 +9,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private StateMachine machine;
 
-        private void Awake()
+        private void Start()
         {
             machine = new StateMachine();
             state.Init(machine);

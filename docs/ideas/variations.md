@@ -114,10 +114,10 @@ star thresholds (entropy par) are set from the secured solution's cost.
 
 ## 5. Campaign menu (level select)
 
-- A big universe — the company's network — shown as a field of **cubes, one per job**.
-  The player picks a cube; selecting it **scales it up** into the play space.
-- **The cube is the level.** The same cube is the puzzle's play space; the two gestures act
-  on it. "The cube is the instrument" and "the cube is the level" are one object.
+- A big universe — the company's network — shown as a field of **numbered cubes, one per job**.
+  The player picks a job; the map remains visible in the Bubble view while its puzzle loads.
+- **The cube is the level.** The cube is the instrument in the same play space; selecting a job does not
+  create a Map/Sculpt split or a scale-up transition ([vision](../design/vision.md) §3).
 - Cubes are **numbered**; the number is the order. The layout gives the spatial feel; the
   numbers give the sequence. Play 1 -> N.
 - **The company is lore only.** No economy, ships, or unlocks for now.
@@ -127,6 +127,6 @@ star thresholds (entropy par) are set from the secured solution's cost.
 1. **Simultaneous ship cap.** Start at 2; raise only if generation stays feasible.
 2. **Region size.** How many planets per puzzle before the search space is too chaotic?
 3. **Level-gen cost — decided (2026-10-27).** The creator bakes offline; nothing generates at load.
-4. **Campaign transition — proposed.** The load is Flow (`CampaignState` → `SpaceShapingState`); the cube
-   scale-up is a presentation transition, not a mode. Navigation is direct pick only and cube positions are
-   authored (decided 2026-10-27). (See `_Modules/docs/standards/modes.md`.)
+4. **Campaign handoff — proposed.** Loading a picked job is Flow (`CampaignState` → `SpaceShapingState`);
+   the map and puzzle share the Bubble view, with no scale-up transition. Navigation is direct pick only
+   and cube positions are authored (decided 2026-10-27). (See `_Modules/docs/standards/modes.md`.)

@@ -66,7 +66,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return solution.Zones != null;
         }
 
-        private static PuzzleSolution BestEntropyAtCentre(
+ private static PuzzleSolution BestEntropyAtCentre(
             PuzzleData puzzle, PuzzleSimSettings settings, Vector3 centre, float[] sizes,
             float[] scales)
         {
@@ -87,6 +87,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             return best;
         }
+
+
 
         private static bool TryZone(
             PuzzleData puzzle, PuzzleSimSettings settings, PuzzleZone zone,

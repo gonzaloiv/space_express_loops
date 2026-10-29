@@ -30,6 +30,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         [Range(0.5f, 1.5f)]
         public float startMargin = 0.9f;
 
+        [Tooltip("Bake a deterministic random launch offset of 6-12 degrees, signed by the puzzle seed.")]
+        public bool applyRandomAngle;
+
         [Tooltip("The time tutorial: the fixed cube sits on a planet off the trajectory, so the scale moves the clock without bending the path. The window is baked around the found clock solution.")]
         public bool offPath;
 

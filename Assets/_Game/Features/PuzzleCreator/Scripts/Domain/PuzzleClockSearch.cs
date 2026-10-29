@@ -29,7 +29,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return found;
         }
 
-        private static void ScanCentre(
+ private static void ScanCentre(
             ClockScan scan, Vector3 centre, ref PuzzleSolution solution, ref bool found)
         {
             float[] sizes = PuzzleZoneCandidates.Sizes(scan.Puzzle);
@@ -55,7 +55,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             }
         }
 
-        private static bool IsClockCandidate(
+ private static bool IsClockCandidate(
             ClockScan scan, PuzzleZone zone, Vector3 centre, out PuzzleSolution solution)
         {
             if (!PuzzleZoneCandidates.ContainsOnlySource(zone, scan.Puzzle, centre))

@@ -49,8 +49,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             for (int i = 0; i < puzzle.sources.Length; i++)
             {
-                if (zone.Contains(puzzle.sources[i].home))
-                    return true;
+                if (!zone.Contains(puzzle.sources[i].home))
+                    continue;
+
+                return true;
             }
 
             return false;

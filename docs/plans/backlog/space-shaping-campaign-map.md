@@ -1,7 +1,7 @@
 # Space Shaping — Campaign Map
 
-**Status:** next · space shaping · updated 2026-10-28 — the cube map over the sector field: pick a job,
-play its brief, scale up into the play space, come back. Part of validation 2 (with the
+**Status:** next · space shaping · updated 2026-10-29 — the cube map over the sector field: pick a job,
+play its brief in the same Bubble view, then return to the map. Part of validation 2 (with the
 [HUD plan](space-shaping-hud-validation.md)); after the [puzzle boots](../in-progress/space-shaping-in-game.md) and before
 [progression](space-shaping-progression.md).
 
@@ -42,11 +42,11 @@ the later cut is deletion only.
 - **Exit:** the map shows the authored cubes with correct visual states; a locked cube refuses visibly; the
   number matches the catalogue order.
 
-### M3 — Pick, brief, scale up, play, back
+### M3 — Pick, brief, play, back
 
-- Pick a cube → it **scales up into the play space** (a presentation transition, not a Flow state) →
-  `SpaceShapingState` loads that job's `PuzzleData` → result → back to the map at the same bubble
-  placement.
+- Pick a numbered job cube → `SpaceShapingState` loads that job's `PuzzleData` and brief while the same
+  Bubble view and map remain visible; there is no Map/Sculpt split or scale-up transition ([vision §3](../../design/vision.md#3-mixed-reality-why-the-bubble-is-the-point),
+  [cube](../../design/systems/cube.md)). On result, return to the map at the same bubble placement.
 - The **job card** plays the job's manual entry and tech-voice line as two chained TTS entries on entering
   the puzzle (`TTSHelper.Say(key, onComplete)`); author the test job's keys here and fall back to the
   generic text if a key is missing.
@@ -59,7 +59,7 @@ the later cut is deletion only.
   raised for the map, not for puzzle content. Both fields spawn the same pooled `FieldPlanetBehaviour` —
   no puzzle-only planet view.
 - Derived grid stays flat until the player scales.
-- **Exit:** pick → brief → scale up → solve → back to the map; the map field and the bubble placement
+- **Exit:** pick → brief → shape/fly/check → solve → back to the map; the map field and the bubble placement
   survive the round trip; 72 fps target held in the map (measured with FrameTiming, device pass is
   [later](space-shaping-catalogue.md)).
 

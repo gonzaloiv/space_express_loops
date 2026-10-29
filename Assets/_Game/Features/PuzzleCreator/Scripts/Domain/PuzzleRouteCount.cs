@@ -22,7 +22,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return routes.Count;
         }
 
-        private static void AddRoutes(
+ private static void AddRoutes(
             PuzzleData puzzle, PuzzleSimSettings settings, PuzzleZone[] solution, int zone,
             List<PuzzleZone[]> routes)
         {
@@ -44,7 +44,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             }
         }
 
-        private static bool Fits(
+ private static bool Fits(
             PuzzleData puzzle, PuzzleZone[] solution, int zone, PuzzleZone moved)
         {
             if ((moved.centre - solution[zone].centre).sqrMagnitude < MergeDistance * MergeDistance)

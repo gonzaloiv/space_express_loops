@@ -35,9 +35,9 @@ left is the grade), **no in-level persistence**, Quest 3S **72 fps**.
 | Decision | Value | Why |
 |---|---|---|
 | Boot entry | A temporary **`PuzzleBootState`** after setup/splash awaits the room, then enters `SpaceShapingState`. | Skips the legacy round spawn and the welcome TTS; becomes `CampaignState` in the [map plan](../backlog/space-shaping-campaign-map.md) instead of being thrown away. |
-| Puzzle wiring | One serialized **`PuzzleData`** field, set to `PuzzleSeed_Shape_Planets_Puzzle.asset`; drop the `puzzles[]` array and `puzzleIndex`. | The POC's array is a test harness; the map plan turns the field into a catalogue lookup. |
-| Puzzle placement | The puzzle rig is parented under the **room-anchored bubble parent** the map will use, with an authored local pose. | The POC's root sits at world `(0,0,0)`; in `Game.unity` the puzzle would land at floor height. The map's scale-up then becomes a transform change, not a re-parent. |
-| Puzzle id | Set `id: 01_01` on the test asset. | Both baked assets ship `id:` empty, so `LevelData.IntroKey` resolves to `level__init`; the campaign map and the cookies need a real id. |
+| Puzzle wiring | One serialized **`PuzzleData`** field, set to a baked job-01 puzzle with `id: 01_01`; drop the `puzzles[]` array and `puzzleIndex`. The asset must match [jobs](../../design/jobs.md): fixed cube, one zone, one planet. | The POC's array is a test harness; the map plan supplies catalogue selection. The checked-in `Generated/Job_01_01_Puzzle.asset` currently has three sources, so it must not be wired unchanged as job 01. |
+| Puzzle placement | Parent the puzzle rig under the **room-anchored bubble parent**, with an authored local pose. | The POC root sits at world `(0,0,0)`; in `Game.unity` the puzzle would land at floor height. This establishes stable Bubble-local placement only; it does not prescribe a map-to-puzzle transition. The campaign-map presentation must follow [vision §3](../../design/vision.md#3-mixed-reality-why-the-bubble-is-the-point): one Bubble view, whole map visible, no Map/Sculpt split. |
+| Puzzle id | Preserve `id: 01_01` on the baked job-01 asset. | Jobs and campaign order use `XX_YY` ids; the current generated asset already has this id. |
 | Result surface | **Temporary** — lab panel / debug line. | The real result panel is the [HUD plan](../backlog/space-shaping-hud-validation.md); building it twice is waste. |
 | Run owner | **No `PuzzleRun` type in this plan** — `SpaceShapingState` keeps ownership of setup, session, integrator and launch. | The type does not exist; adding it now is one caller and no seam. The [map plan](../backlog/space-shaping-campaign-map.md) introduces it only if it needs per-job runs. |
 | Legacy states | Remove the legacy states we no longer route to from `Main.states` (files stay for the [cut](../backlog/space-shaping-legacy-cut.md)). | `StateMachineFactory.Create` calls `Init` on **every** state (`StateMachineFactory.cs:18-27`), and `GameStartState.Init` calls `levelContainer.Init()` (`GameStartState.cs:34`) → `HideAll()` + the legacy view-mode fanout. |
@@ -50,16 +50,18 @@ alive, the second skips setup/splash and breaks the validation-2 path.
 ### G1 — Puzzle lifecycle in `Game.unity`
 
 - Author `SpaceShapingState` with `SpaceShapingView`, `SpaceZoneView`, `SpacetimeMeshView`,
-  `TrajectoryLineView` and `ShipTravelView`, plus `SpaceShapingSettings` and one serialized `PuzzleData`
-  (`PuzzleSeed_Shape_Planets_Puzzle`, `id: 01_01`).
+  `TrajectoryLineView` and `ShipTravelView`, plus `SpaceShapingSettings` and one serialized `PuzzleData`.
+  Bake the job-01 asset to match [jobs](../../design/jobs.md) (fixed cube, one zone, one planet, `id: 01_01`);
+  do not wire the current three-source `Generated/Job_01_01_Puzzle.asset` unchanged.
 - Parent the puzzle rig under the room-anchored bubble parent with an authored local pose; the ship is the
   copied `SpaceShaping/Models/Ship/ShipVisual.prefab`, not the legacy `Spaceships` ship.
 - Add the temporary `PuzzleBootState` between setup/splash and the puzzle (see the decisions above) and
   remove the legacy states from `Main.states`. The legacy files stay for the [cut](../backlog/space-shaping-legacy-cut.md).
-- Update `SpaceShapingStateEditor`: the "Next puzzle" button goes with `puzzles[]`; keep preview, reset and
-  the solved-cube debug button.
-- **Exit:** Play `Game.unity` → splash → one puzzle renders at hand height, the ship flies on every commit,
-  reset restores the field and commands, no legacy round spawns; console clean.
+- Update `SpaceShapingStateEditor`: remove the "Next puzzle" button with `puzzles[]`; keep preview, reset
+  and the solved-cube debug button.
+- **Exit:** Play `Game.unity` → splash → one puzzle renders at the authored Bubble placement; the live
+  trajectory updates while shaping and the ship flies that trajectory on every completed pinch (no separate
+  player commit action); reset restores the field and commands, no legacy round spawns; console clean.
 
 ### G2 — Result seam
 
@@ -73,8 +75,9 @@ alive, the second skips setup/splash and breaks the validation-2 path.
   outcome has to publish its result from the trajectory outcome instead of waiting on the ship.
 - Surface it **temporarily** — lab panel or debug line. The real HUD/result panel is the
   [HUD plan](../backlog/space-shaping-hud-validation.md); do not build it here.
-- **Exit:** solve → result fires with 1–3 stars; a miss keeps shaping; a crash with no flight still fires
-  its result; budget exhaustion fires Failed; an edit after a result does not resurrect it.
+- **Exit:** solve → result fires with 1–3 stars; a miss or crash keeps shaping and earns no stars; a crash
+  with no flight still fires its result; budget exhaustion fires Failed; an edit after a result does not
+  resurrect it.
 
 ## 3. Runtime puzzle contract
 
@@ -111,9 +114,9 @@ alive, the second skips setup/splash and breaks the validation-2 path.
 
 ## 6. Risks
 
-- **The test job is scale-only** (`moves: 1`, `translatable: 0`, `resizable: 0`, `cubeSize` at max). The exit
-  path proves scale + flight + result, not move/resize; a movable job needs a [catalogue](../backlog/space-shaping-catalogue.md)
-  bake before that claim is tested.
+- **The job-01 test is scale-only** (`moves: 1`, `translatable: 0`, `resizable: 0`, `cubeSize` at max) and
+  must match the one-planet brief in [jobs](../../design/jobs.md). The exit path proves scale + flight + result,
+  not move/resize; those claims need a matching [catalogue](../backlog/space-shaping-catalogue.md) bake.
 - **The legacy `Init` is neutralised by unwiring, not deleting.** If a legacy state is left in `Main.states`,
   `HideAll()` runs at boot and the fanout subscribes to `UniverseView` — inert now, destructive once the
   campaign field exists.

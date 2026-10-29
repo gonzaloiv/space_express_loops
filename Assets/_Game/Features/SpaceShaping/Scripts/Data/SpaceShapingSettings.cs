@@ -12,7 +12,7 @@ namespace DigitalLove.Game.SpaceShaping
         [Tooltip("Fallback cube size, in metres — used only when a puzzle has no baked size.")]
         public float cubeSize = 0.175f;
 
-        [Tooltip("Smallest cube the creator may bake, in metres. Smaller is a sharper, more local edit.")]
+        [Tooltip("Smallest cube the creator may bake, in metres. The search raises this for any planet it contains.")]
         public float cubeSizeMin = 0.105f;
 
         [Tooltip("Largest cube the creator may bake, in metres. Bigger is a blunter, more forgiving lever.")]

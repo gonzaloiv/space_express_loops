@@ -59,6 +59,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
                 if (PuzzleZoneCandidates.ContainsEndpoint(solution[i], puzzle))
                     return false;
+
             }
 
             return true;

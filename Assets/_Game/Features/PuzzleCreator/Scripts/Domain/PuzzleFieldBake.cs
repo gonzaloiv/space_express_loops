@@ -1,3 +1,4 @@
+using DigitalLove.Global;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Creator
@@ -26,6 +27,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.captureRadius = puzzle.CaptureRadiusAtDestination();
             puzzle.zoneCentre = (origin + destination) * 0.5f;
             puzzle.launchSpeed = LaunchSpeed(settings, brief);
+            puzzle.launchAngleDegs = LaunchAngleDegs(brief);
             return true;
         }
 
@@ -188,5 +190,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         private static float LaunchSpeed(PuzzleSimSettings settings, PuzzleBrief brief) =>
             brief.StartMargin * settings.NominalSpeed;
+
+        private static float LaunchAngleDegs(PuzzleBrief brief)
+        {
+            if (!brief.ApplyRandomAngle)
+                return 0f;
+
+            SeededRandom random = new(brief.Seed);
+            float magnitude = random.Range(6f, 12f);
+            return random.NextInt() % 2 == 0 ? magnitude : -magnitude;
+        }
     }
 }

@@ -72,7 +72,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 beam.Add(best);
         }
 
-        private static bool TryCandidate(
+ private static bool TryCandidate(
             PuzzleSearchContext context, Vector3 centre, float size, float scale, out PuzzleChain chain)
         {
             chain = default;
@@ -80,10 +80,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return false;
 
             PuzzleZone zone = PuzzleZoneCandidates.Zone(centre, size, scale, context.Settings.ZoneFalloff);
-            if (PuzzleZoneCandidates.ContainsEndpoint(zone, context.Puzzle))
-                return false;
-
-            if (!PuzzleZoneCandidates.ContainsSource(zone, context.Puzzle))
+            if (PuzzleZoneCandidates.ContainsEndpoint(zone, context.Puzzle)
+                || !PuzzleZoneCandidates.ContainsSource(zone, context.Puzzle))
                 return false;
 
             context.Evaluations++;
@@ -115,7 +113,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             }
         }
 
-        private static void AddExpansion(
+ private static void AddExpansion(
             PuzzleSearchContext context, List<PuzzleChain> next, PuzzleChain prefix, PuzzleZone zone,
             bool final)
         {
@@ -135,6 +133,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             next.Add(candidate);
         }
+
+
+
+
 
         private static PuzzleChain Evaluate(PuzzleSearchContext context, PuzzleZone[] zones)
         {
