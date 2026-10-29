@@ -4,7 +4,7 @@
 owns. Deletion only: keepers are already out, so this plan should not invent behaviour.
 
 **Related:** [progression](space-shaping-progression.md) · [campaign map](space-shaping-campaign-map.md) ·
-[in the game](space-shaping-in-game.md) · [jobs](../../design/jobs.md) · [vision](../../design/vision.md)
+[in the game](../in-progress/space-shaping-in-game.md) · [jobs](../../design/jobs.md) · [vision](../../design/vision.md)
 
 **Rule:** delete, do not disable. No `.meta` orphaning, no empty asmdefs, no dead serialized refs left in
 the scene, no commented-out code.

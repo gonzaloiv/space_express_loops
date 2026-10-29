@@ -10,14 +10,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleData puzzle, PuzzleZone[] solution, PuzzleSimSettings settings)
         {
             SpaceShapingSetup setup = SpaceShapingSetup.Build(puzzle, settings);
-
             SpaceShapingSession start = new(setup);
             TrajectoryResult startResult = start.Simulate();
+            return VerifyRun(puzzle, settings, setup, solution, startResult);
+        }
 
+        private static PuzzleVerification VerifyRun(
+            PuzzleData puzzle, PuzzleSimSettings settings, SpaceShapingSetup setup,
+            PuzzleZone[] solution, TrajectoryResult startResult)
+        {
             SpaceShapingSession solved = new(setup);
             Apply(solved, solution);
             TrajectoryResult solvedResult = solved.Simulate();
-
             return new PuzzleVerification
             {
                 Start = startResult,

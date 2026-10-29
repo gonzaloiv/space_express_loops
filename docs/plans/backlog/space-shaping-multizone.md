@@ -1,16 +1,36 @@
-# Space Shaping — Multi-Zone Solutions
+﻿# Space Shaping — Multi-Zone Solutions
 
-**Status:** now · space shaping · updated 2026-10-28 — bake `moves = 2+` solutions so jobs 3 and 6–8 can
-be authored. Job 3 is translatable (decided 2026-10-28). Depends on the physics slice (landed 2026-10-28)
-and the creator’s runtime locks (landed 2026-10-27).
+**Status:** later · space shaping · updated 2026-10-29 — parked. The bake cannot produce a level that
+*needs* two zones: every run is a straight shot at the destination, so a single zone can always tune the
+arrival. The search, bake and runtime locks landed; the mechanic is unproven.
 
-**Progress:** M1–M2 landed 2026-10-28 (beam search, bake/verifier, minimality rejection). M3 is blocked:
-`fb80e70` left `SpaceShapingState.puzzles` empty in `SpaceShapingPOC.unity`, and the current POC bake is a
-fixed two-zone level, which §1 rejects. Re-bake a translatable 2-zone seed, assign it, then run the headset
-pass.
+**Stalled 2026-10-29 — why.**
+
+- `ShipLaunch` aims at the destination and `PuzzleRunChoice` requires a clear straight corridor, so the bare
+  run always *reaches* the destination and only misses on time. Every level is a timing puzzle, and time is
+  one-dimensional: one zone tunes it.
+- Seed scan (seeds 1–12, `moves: 2`, translatable, no resize): tightness 0.25 rejects every seed as
+  `FewerZones`; tightness 0.18 and 0.10 find no two-zone solution at all.
+- Anchoring the window to the found solution (§3) does not help: at ±5%, ±2% and ±1% a one-zone solution
+  still lands inside the band, within 3.5 ms of the two-zone arrival.
+- Off-axis launch pilot (angle wired through `PuzzleData.launchAngleDegs` → `SpaceShapingSetup` →
+  `ShipLaunch`, 3 seeds × 6 angles): at 8–12° the bare shot misses by 0.10–0.17 m (capture radius 0.063 m)
+  but no two-zone solution exists; at 6–7° seed 2 finds two zones yet a one-zone solution also fits. Capping
+  the per-zone scale at 1.25× removes the two-zone solution entirely.
+- Conclusion: the angle is **necessary** — it removes the "straight shot arrives" degeneracy — but not
+  **sufficient**. Two zones are only required when the level has two spatial deficits; the generator has one
+  (one destination, one time window).
+- The four "two-zone" assets (`Job_01_05`–`01_08`) predate the minimality rule and are single-solution
+  levels: a player can solve them with one zone. They do not prove multi-zone play.
+
+**Way back in (needs a design decision and its own plan):** add a second spatial constraint — a mid-run gate
+the ship must pass through *before* arriving (two targets), or a required final approach direction. Then
+re-run the angle pilot, re-bake jobs 3 and 6–8, and replace `01_05`–`01_08`. The alternative is to cut the
+mechanic and keep single-zone translatable levels. The creator suite still fails on the four fake assets
+(`FewerZones` ×3 and the 3-zone search), so those tests stay red until this is decided.
 
 **Related:** [catalogue](../backlog/space-shaping-catalogue.md) ·
-[in the game](../backlog/space-shaping-in-game.md) ·
+[in the game](../in-progress/space-shaping-in-game.md) ·
 [progression](../../design/systems/progression.md) · [jobs](../../design/jobs.md) ·
 [cube](../../design/systems/cube.md) ·
 [review](../../reviews/multizone.md) · [integration review](../../reviews/integration-plan.md)
@@ -134,6 +154,8 @@ zone in the solution array it is handed; the creator now has the forward beam se
 - Wire the runtime conditions if needed; bake one 2-zone puzzle; play it in `SpaceShapingPOC.unity`.
 - **Exit:** the POC loads the 2-zone puzzle and the player can reproduce the solution with two moved zones;
   console clean; EditMode green. The manual pass is quick and stays in this plan.
+- **Status 2026-10-29:** not met — no seed bakes a level that needs two zones (see *Stalled*). The four
+  assets in the POC are single-solution levels.
 
 ## 6. Tests
 

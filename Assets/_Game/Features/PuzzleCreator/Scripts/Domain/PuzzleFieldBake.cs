@@ -4,6 +4,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleFieldBake
     {
+        private const float WideSearchBand = 0.35f;
+
         public static bool Apply(
             PuzzleBrief brief, PuzzleData puzzle, PuzzlePlanetListAsset planets, PuzzleSimSettings settings)
         {
@@ -65,8 +67,31 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return Fail(PuzzleBakeStatus.FewerZones, out status);
 
             PuzzleData verified = Verified(field, found, brief, settings, out status);
-            solution = verified != null ? found.Zones : null;
+            if (verified == null)
+            {
+                solution = null;
+                return null;
+            }
+
+            if (!HasRoutes(verified, settings, brief, found.Zones))
+            {
+                Object.DestroyImmediate(verified);
+                solution = null;
+                return Fail(PuzzleBakeStatus.SingleRoute, out status);
+            }
+
+            solution = found.Zones;
             return verified;
+        }
+
+        private static bool HasRoutes(
+            PuzzleData puzzle, PuzzleSimSettings settings, PuzzleBrief brief, PuzzleZone[] zones)
+        {
+            puzzle.routes = PuzzleRouteCount.Count(puzzle, settings, zones);
+
+            // A movable single-zone level must offer a choice of where to scale. A multi-zone chain is
+            // already pinned by the anchored window, so it is allowed to have exactly one route.
+            return !brief.Translatable || brief.Moves > 1 || puzzle.routes >= PuzzleRouteCount.MinRoutes;
         }
 
         private static bool HasShorterSolution(
@@ -102,7 +127,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return false;
 
             if (!brief.OffPath)
-                PuzzleWindow.SetCrossing(field, crossing, brief.WindowTightness);
+            {
+                float search = brief.Moves > 1
+                    ? Mathf.Max(brief.WindowTightness, WideSearchBand)
+                    : brief.WindowTightness;
+                PuzzleWindow.SetCrossing(field, crossing, search);
+            }
 
             return true;
         }
@@ -121,7 +151,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static bool SettleWindow(
             PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, float crossing, float shipTime)
         {
-            if (!brief.OffPath)
+            if (!brief.OffPath && brief.Moves <= 1)
                 return true;
 
             return PuzzleWindow.SetSolution(field, crossing, brief.WindowTightness, shipTime);

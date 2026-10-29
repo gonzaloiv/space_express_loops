@@ -56,8 +56,10 @@ namespace DigitalLove.Game.SpaceShaping
             AppendEntropyRow(readout);
             AppendWindowRow(readout);
             AppendShipRow(readout);
+            AppendArrivalRow(readout);
             AppendResultRow(readout);
             AppendGradeRow(readout);
+            AppendRewardRow(readout);
             AppendCommandsRow(readout);
             label.SetText(text);
             SetBar(readout);
@@ -92,6 +94,18 @@ namespace DigitalLove.Game.SpaceShaping
             EndRow();
         }
 
+        private void AppendArrivalRow(PuzzleReadout readout)
+        {
+            BeginRow("ARRIVAL ");
+            if (!readout.IsChecked)
+                AppendTint(FaintColor, "-");
+            else
+                AppendTint(
+                    readout.IsSolved ? AccentColor : DangerColor,
+                    PuzzleArrival.Describe(readout.ArrivalOffset));
+            EndRow();
+        }
+
         private void AppendResultRow(PuzzleReadout readout)
         {
             BeginRow("RESULT  ");
@@ -103,6 +117,13 @@ namespace DigitalLove.Game.SpaceShaping
         {
             BeginRow("GRADE   ");
             AppendTint(readout.Grade > 0 ? ValueColor : FaintColor, Stars[readout.Grade]);
+            EndRow();
+        }
+
+        private void AppendRewardRow(PuzzleReadout readout)
+        {
+            BeginRow("REWARD  ");
+            AppendTint(RewardColor(readout.Grade), PuzzleReward.Describe(readout.Grade));
             EndRow();
         }
 
@@ -165,6 +186,14 @@ namespace DigitalLove.Game.SpaceShaping
                 return "CHECKED OUT OF ENTROPY";
 
             return "CHECKED " + Outcome(readout);
+        }
+
+        private static string RewardColor(int grade)
+        {
+            if (grade >= 3)
+                return AccentColor;
+
+            return grade > 0 ? ValueColor : FaintColor;
         }
 
         private static string ResultColor(PuzzleReadout readout)

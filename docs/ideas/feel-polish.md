@@ -9,7 +9,7 @@ work moved to [HUD + validation 2](../plans/backlog/space-shaping-hud-validation
 
 The later presentation items lost their single owner: the window gauge and the fail beat are
 [HUD + validation 2](../plans/backlog/space-shaping-hud-validation.md), the
-per-job manual and tech voice are [in the game](../plans/backlog/space-shaping-in-game.md) /
+per-job manual and tech voice are [in the game](../plans/in-progress/space-shaping-in-game.md) /
 [catalogue](../plans/backlog/space-shaping-catalogue.md), and the flight is already in the code
 (`ShipTravelView`). What is left is undecided polish. None of it gates the mechanic, and the time already
 reads numerically (`PuzzleLabPanel.cs:44-46`).

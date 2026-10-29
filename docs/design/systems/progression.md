@@ -1,4 +1,4 @@
-# Progression — how the game advances
+﻿# Progression — how the game advances
 
 **Status:** design · system · progression.
 **Date:** 2026-10-23.
@@ -72,7 +72,7 @@ So the first-8 order is **scale → several zones + move → time → resize**; 
 
 **Job 3 is translatable (2026-10-28).** The multi-zone plan's §1 option (a): a fixed cube cannot reach
 two zones, so the move enters with several zones and the time tutorial becomes job 4
-([multi-zone plan](../../plans/in-progress/space-shaping-multizone.md) §1).
+([multi-zone plan](../../plans/backlog/space-shaping-multizone.md) §1).
 
 A **tutorial** will be needed for this, but not yet — get the loop working first
 ([vision](../vision.md) §6).
@@ -132,6 +132,29 @@ The verb is always the **scale**, so variety comes from the field and the brief:
 4. **Well depth** — shallow → deep (the clock crawls).
 5. **Layout** — single well vs multi-well; where the shortcut sits vs the natural path.
 6. **Scramble** — how far the authored start sits from the solved arrangement (the difficulty dial).
+
+### Archetypes — the named shape of a job
+
+An archetype names the lesson a job teaches. It is read from the brief and the field, so each job reads as
+one lesson and the set reads as a catalogue. Archetypes stack: a job has one primary archetype and may add
+a layout.
+
+| Archetype | Brief | Lesson | Jobs |
+|---|---|---|---|
+| **Shortcut** | `moves 1`, fixed cube, on-path | scale one zone; the space face | 1–2 |
+| **Multi-zone** | `moves ≥ 2`, `translatable` | place and blend several zones | 3, 6–8 |
+| **Clock** | `offPath` | the time face: mass moves the clock, not the path | 4 |
+| **Resize** | `resizable` | the aperture is the player's | 5 |
+| **Bottleneck** *(later)* | several routes share one planet | one edit fixes many routes | later |
+
+Layout is a second axis, from `fieldShape`: **Ring**, **Spiral**, **Cluster**. A job is e.g. *Multi-zone ·
+Spiral*.
+
+Each archetype should have **more than one route** where the brief allows (see the routes rule in the
+polish plan). A job with one route is a single answer, not a variation.
+
+*Automatic labelling from the brief is possible (a pure function of the brief) and is deferred; the labels
+are design-only until then.*
 
 Jobs 1–2 teach the scale on one planet; job 3 adds multiple scales, the move and planet count; job 4
 turns to the clock; resize follows. Rotate arrives in later puzzles. Ten jobs is the stretch goal —

@@ -131,6 +131,7 @@ namespace DigitalLove.Game.SpaceShaping
             };
 
             launch.LaunchSpeed = setup.LaunchSpeed;
+            launch.LaunchAngleDegs = setup.LaunchAngleDegs;
             return launch.Simulate(field, setup.Origin, setup.Destination, settings, integrator);
         }
 

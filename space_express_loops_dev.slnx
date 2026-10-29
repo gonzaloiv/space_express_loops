@@ -20,6 +20,7 @@
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.csproj" />
   <Project Path="DigitalLove.Game.States.Setup.csproj" />
   <Project Path="Vendor.GameAnalytics.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Interactables.XRI.csproj" />
   <Project Path="DigitalLove.Audio.Runtime.csproj" />
   <Project Path="DigitalLove.UI.Behaviours.csproj" />
@@ -38,10 +39,10 @@
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Vendor.UnityGif.csproj" />
   <Project Path="DigitalLove.Game.Universe.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Analytics.csproj" />
   <Project Path="DigitalLove.VFX.Materials.Editor.csproj" />
   <Project Path="DigitalLove.XR.OVR.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Game.Sectors.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Localization.csproj" />
   <Project Path="DigitalLove.VFX.Fader.csproj" />
@@ -50,7 +51,6 @@
   <Project Path="DigitalLove.Game.Sectors.csproj" />
   <Project Path="DigitalLove.Casual.Analytics.csproj" />
   <Project Path="DigitalLove.Timeline.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.HomeMenu.csproj" />
   <Project Path="DigitalLove.FlowControl.Samples.csproj" />
   <Project Path="DigitalLove.Casual.Levels.csproj" />

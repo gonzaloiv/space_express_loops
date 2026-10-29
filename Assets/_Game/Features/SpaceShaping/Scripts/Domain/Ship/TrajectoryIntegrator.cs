@@ -10,28 +10,35 @@ namespace DigitalLove.Game.SpaceShaping
         {
             List<Vector3> points = new(settings.MaxSteps + 1);
             List<float> times = new(settings.MaxSteps + 1);
-            Vector3 position = start;
-            Vector3 velocity = launch.Direction * launch.Speed;
-            float shipTime = 0f;
-            points.Add(position);
-            times.Add(shipTime);
+            StepState state = new(start, launch.Direction * launch.Speed, 0f);
+            points.Add(state.Position);
+            times.Add(state.ShipTime);
 
             for (int step = 0; step < settings.MaxSteps; step++)
             {
-                Vector3 acceleration = field.Acceleration(position);
-                shipTime += settings.StepSecs * Dilation(field, position, velocity, settings.LightSpeed);
-                velocity += acceleration * settings.StepSecs;
-                Vector3 from = position;
-                position += velocity * settings.StepSecs / StepDivisor(settings.Zones, position);
-                points.Add(position);
-                times.Add(shipTime);
-
-                TrajectoryOutcome outcome = Classify(field, from, position, start, settings);
+                StepState next = Step(field, settings, state);
+                points.Add(next.Position);
+                times.Add(next.ShipTime);
+                TrajectoryOutcome outcome = Classify(
+                    field, state.Position, next.Position, start, settings);
+                state = next;
                 if (outcome != TrajectoryOutcome.Miss)
-                    return new TrajectoryResult(outcome, points, times, shipTime);
+                    return new TrajectoryResult(outcome, points, times, state.ShipTime);
             }
 
-            return new TrajectoryResult(TrajectoryOutcome.Miss, points, times, shipTime);
+            return new TrajectoryResult(TrajectoryOutcome.Miss, points, times, state.ShipTime);
+        }
+
+        private static StepState Step(
+            SpacetimeField field, TrajectorySettings settings, StepState state)
+        {
+            Vector3 acceleration = field.Acceleration(state.Position);
+            float shipTime = state.ShipTime + settings.StepSecs
+                * Dilation(field, state.Position, state.Velocity, settings.LightSpeed);
+            Vector3 velocity = state.Velocity + acceleration * settings.StepSecs;
+            Vector3 position = state.Position
+                + velocity * settings.StepSecs / StepDivisor(settings.Zones, state.Position);
+            return new StepState(position, velocity, shipTime);
         }
 
         private static float Dilation(
@@ -88,6 +95,20 @@ namespace DigitalLove.Game.SpaceShaping
             float t = Mathf.Clamp01(Vector3.Dot(centre - from, segment) / lengthSq);
             Vector3 closest = from + segment * t;
             return (closest - centre).sqrMagnitude <= radius * radius;
+        }
+
+        private readonly struct StepState
+        {
+            public readonly Vector3 Position;
+            public readonly Vector3 Velocity;
+            public readonly float ShipTime;
+
+            public StepState(Vector3 position, Vector3 velocity, float shipTime)
+            {
+                Position = position;
+                Velocity = velocity;
+                ShipTime = shipTime;
+            }
         }
     }
 }

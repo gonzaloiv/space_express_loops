@@ -1,4 +1,4 @@
-# The Cube (the instrument)
+﻿# The Cube (the instrument)
 
 **Status:** design · system · cube.
 **Date:** 2026-10-23.
@@ -86,5 +86,5 @@ solve ([resources](resources.md)).
   verified puzzles — **not the slice**.
 - Rotate (later puzzles) timing.
 - Multi-zone solutions: the search and bake are the
-  [multi-zone plan](../../plans/in-progress/space-shaping-multizone.md); the region/scale decoupling is
+  [multi-zone plan](../../plans/backlog/space-shaping-multizone.md); the region/scale decoupling is
   settled — they stay separate.

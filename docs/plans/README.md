@@ -10,28 +10,33 @@ scale the space, scale the content; the ship flies the deformed spacetime.
 
 | Plan | Area | Why here |
 |---|---|---|
-| [Space shaping — multi-zone solutions](in-progress/space-shaping-multizone.md) | space shaping | `moves = 2+` bakes for jobs 3 and 6–8; needed before the full run can be authored. |
+| [Space shaping — in the game (one puzzle)](in-progress/space-shaping-in-game.md) | space shaping | Boot `Game.unity` into one baked puzzle: flow, result seam. **Unblocked — validation 1 passed on the Quest 3S POC (2026-10-29).** |
 
 ## Next
 
-The runway after Now: the **validation** (the criteria are in
-[vision](../design/vision.md) §7). Only if it passes: the integration, one morning per plan, then the
-campaign.
+The runway after Now, one morning per plan. **Validation 1** (the mechanic survives a goal and a cost)
+passed on the Quest 3S POC on 2026-10-29, so the integration is underway — the in-game slice is Now.
+**Validation 2** is still the gate: its criteria are in [vision](../design/vision.md) §7 and it lands at the
+exit of the [HUD plan](backlog/space-shaping-hud-validation.md); only after it pass do progression, the
+legacy cut and the catalogue start.
 
 | Plan | Area | Why here |
 |---|---|---|
-| [Space shaping — in the game (one puzzle)](backlog/space-shaping-in-game.md) | space shaping | Boot `Game.unity` into one baked puzzle: flow, result seam. **Gated on validation 1.** |
 | [Space shaping — campaign map](backlog/space-shaping-campaign-map.md) | space shaping | Cube map, pick → brief → scale up → play → back; keeper moves out of `LevelContainer`. |
 | [Space shaping — HUD + validation 2](backlog/space-shaping-hud-validation.md) | space shaping | Entropy, clock window, result/fail; **this exit is the gate** for the campaign. |
 | [Space shaping — progression save](backlog/space-shaping-progression.md) | space shaping | Solved jobs + stars, reset, placement carve-out. After the gate. |
 | [Space shaping — legacy cut](backlog/space-shaping-legacy-cut.md) | space shaping | Delete the route/round/economy flow once the keepers are out. After the gate. |
-| [Space shaping — catalogue + acceptance](backlog/space-shaping-catalogue.md) | space shaping | Baked jobs 3–5 then 8–10, and the Quest 3S acceptance pass. |
+| [Space shaping — catalogue + acceptance](backlog/space-shaping-catalogue.md) | space shaping | Re-bake the catalogue with the `routes` field and author 3–5, then 8–10, jobs; then the Quest 3S acceptance pass. |
 
 ## Later
 
 Design-only or deferred. Nothing here is scheduled.
 
-No plans. Candidate ideas (not plans) live in [docs/ideas](../ideas/README.md): variations, element pack,
+| Plan | Area | Why here |
+|---|---|---|
+| [Space shaping — multi-zone solutions](backlog/space-shaping-multizone.md) | space shaping | Parked 2026-10-29: a straight shot at the destination means one zone always tunes the arrival, so no seed bakes a level that *needs* two zones. Needs a second spatial constraint (mid-run gate) or the cut. |
+
+Candidate ideas (not plans) live in [docs/ideas](../ideas/README.md): variations, element pack,
 hologram look, TTS companion, feel polish.
 
 ## Open tails
@@ -42,7 +47,9 @@ Loose ends that still need a home. Close one by linking the plan that finishes i
 |---|---|
 | Silent planets — persistence/restore validation | A future cross-feature restart pass |
 | Sector field — raise `viewRadius`/aperture | Trigger: the campaign map slice → [campaign map](backlog/space-shaping-campaign-map.md) |
-| The lens — **Undo** UI (the session `Undo` exists; no surface) | Later; not this slice — [in the game](backlog/space-shaping-in-game.md) §4 |
+| Baked catalogue assets carry no `routes` field — re-bake so the movable jobs satisfy the ≥2-route gate | [catalogue](backlog/space-shaping-catalogue.md) (and the polish route count) |
+| Jobs 3 and 6–8 need two zones; `01_05`–`01_08` are single-solution levels | [multi-zone](backlog/space-shaping-multizone.md) — parked until it has a second spatial constraint |
+| The lens — **Undo** UI (the session `Undo` exists; no surface) | Later; not this slice — [in the game](in-progress/space-shaping-in-game.md) §4 |
 | The lens — **rotate** (later puzzles) | Not scheduled; a later-puzzles plan ([cube](../design/systems/cube.md)) |
 
 ## Conventions

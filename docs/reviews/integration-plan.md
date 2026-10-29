@@ -1,7 +1,7 @@
-# Review — space-shaping integration plan
+﻿# Review — space-shaping integration plan
 
 **Date:** 2026-10-27.
-**Scope:** the integration plan (now split into six: [in the game](../plans/backlog/space-shaping-in-game.md),
+**Scope:** the integration plan (now split into six: [in the game](../plans/in-progress/space-shaping-in-game.md),
 [campaign map](../plans/backlog/space-shaping-campaign-map.md),
 [HUD + validation 2](../plans/backlog/space-shaping-hud-validation.md),
 [progression](../plans/backlog/space-shaping-progression.md),
@@ -26,7 +26,7 @@ view as-is.
 campaign map, HUD + validation 2, progression, legacy cut, catalogue + acceptance. The gate moved to the end
 of the HUD plan; each contract (§6) now lives in the plan that consumes it.
 
-**Applied 2026-10-28 (reduce):** the job card moved from [in the game](../plans/backlog/space-shaping-in-game.md)
+**Applied 2026-10-28 (reduce):** the job card moved from [in the game](../plans/in-progress/space-shaping-in-game.md)
 to [campaign map](../plans/backlog/space-shaping-campaign-map.md) M3; the in-the-game plan is the puzzle
 flow and result seam only.
 
@@ -69,7 +69,7 @@ flow and result seam only.
 - **Result/fail UX** — window, entropy-zero fail, grade, retry/map.
 - **Performance gate** — 72 fps on Quest 3S, map/puzzle budgets, device capture.
 - **Content dependency** — the brief’s `moves = 2+` work is now the
-  [multi-zone plan](../plans/in-progress/space-shaping-multizone.md); physics must land before bakes.
+  [multi-zone plan](../plans/backlog/space-shaping-multizone.md); physics must land before bakes.
 - **Test/device pass** — boot → map → pick → solve → back → reload; no legacy route/hub/round content.
 
 ## 4. Plan shape
@@ -105,6 +105,6 @@ These are contracts and seams, not flow or scene work:
 8. **Performance budget.** 72 fps per-frame budget and the device pass.
 
 Each contract now lives in the plan that consumes it: runtime puzzle + run/readout in
-[in the game](../plans/backlog/space-shaping-in-game.md) §3–§4, map/flow/ownership in
+[in the game](../plans/in-progress/space-shaping-in-game.md) §3–§4, map/flow/ownership in
 [campaign map](../plans/backlog/space-shaping-campaign-map.md) §3, the record in
 [progression](../plans/backlog/space-shaping-progression.md) §3.

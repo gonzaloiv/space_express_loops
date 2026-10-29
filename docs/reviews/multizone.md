@@ -1,7 +1,7 @@
-# Review — Space shaping multi-zone
+﻿# Review — Space shaping multi-zone
 
 **Date:** 2026-10-28.
-**Scope:** [multi-zone plan](../plans/in-progress/space-shaping-multizone.md) against the code
+**Scope:** [multi-zone plan](../plans/backlog/space-shaping-multizone.md) against the code
 (`Assets/_Game/Features/PuzzleCreator`, `Assets/_Game/Features/SpaceShaping`) and
 [cube](../design/systems/cube.md), [progression](../design/systems/progression.md),
 [jobs](../design/jobs.md).
@@ -16,7 +16,7 @@ only open gate.
    (`PuzzleSeed.cs:19`). A fixed two-zone job-3 seed would be downgraded instead of made translatable.
    Fixed: the message now names the real rules, the tooltip says 1–3 zones and translatable.
 2. **The beam sorted with an epsilon comparator.** `Order` used `Precedes` with `SameMargin`/`Cheaper`
-   (`PuzzleBeamSearch.cs:159`), whose epsilon ties are not transitive; `List.Sort` may throw an
+   (`PuzzleBeamSearch.cs:209`), whose epsilon ties are not transitive; `List.Sort` may throw an
    inconsistent-comparer error or return an order-dependent beam. Fixed: `Order` compares exact margin,
    then exact cost, then window distance.
 3. **The disjoint rule lived in the search and had no negative test.** The overlap guard was private to
@@ -42,7 +42,7 @@ only open gate.
   two-zone level that this plan now rejects. Re-bake a translatable 2-zone seed (seed 2), assign it, then
   run the M3 checklist.
 - **The beam's first step is a heuristic.** One chain per centre + size, ranked by closest approach
-  (`PuzzleBeamSearch.cs:44`). Seed 1 bakes on the first attempt, but a job with no margin-competitive prefix
+  (`PuzzleBeamSearch.cs:39`). Seed 1 bakes on the first attempt, but a job with no margin-competitive prefix
   needs the beam widened (or two slots per centre + size), not another special case.
 - **The verifier does not re-check disjointness.** `Fits` checks count, size, shared size and scale
   (`PuzzleVerifier.cs:35`), not overlap. The search only ever emits disjoint chains, so this cannot go
@@ -50,8 +50,8 @@ only open gate.
 - **The baked asset has no `id`.** `LevelData.id` is empty, which is fine for the POC; set it when the
   level enters the campaign, before any save key is derived.
 - **The POC scene was saved for the wiring.** Keep that scene diff with the asset, not with unrelated
-  content, when it is committed. The superseded `Generated/Multizone_Seed1_Puzzle.asset` is on disk but
-  unreferenced; delete it with the commit.
+  content, when it is committed. The superseded `Generated/Multizone_Seed1_Puzzle.asset` was deleted; it was
+  never referenced.
 
 ## Settled
 

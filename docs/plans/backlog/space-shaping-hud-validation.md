@@ -4,7 +4,7 @@
 result/fail) and then validation 2. **Its exit is the gate** for progression, the legacy cut and the
 catalogue.
 
-**Related:** [in the game](space-shaping-in-game.md) · [campaign map](space-shaping-campaign-map.md) ·
+**Related:** [in the game](../in-progress/space-shaping-in-game.md) · [campaign map](space-shaping-campaign-map.md) ·
 [progression](space-shaping-progression.md) · [legacy cut](space-shaping-legacy-cut.md) ·
 [vision](../../design/vision.md) · [core loop](../../design/core-loop.md) ·
 [resources](../../design/systems/resources.md) · [feel polish](../../ideas/feel-polish.md)
@@ -51,7 +51,7 @@ ship arrives relative to the window, and whether the job is solved, missed or fa
 ## 3. Gate
 
 Validation 2 is the gate for the rest of the integration. If it fails, plans 4–6 do not start; the failure
-goes back into [in the game](space-shaping-in-game.md) or [campaign map](space-shaping-campaign-map.md),
+goes back into [in the game](../in-progress/space-shaping-in-game.md) or [campaign map](space-shaping-campaign-map.md),
 whichever owns it.
 
 ## 4. Out of scope

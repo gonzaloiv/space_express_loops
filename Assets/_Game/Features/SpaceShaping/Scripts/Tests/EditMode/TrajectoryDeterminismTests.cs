@@ -75,6 +75,40 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         }
 
         [Test]
+        public void Rate_IsTimePerPointAndMeanIsUnitProgress()
+        {
+            TrajectoryResult result = new(
+                TrajectoryOutcome.Arrive,
+                new System.Collections.Generic.List<Vector3>
+                {
+                    new(0f, 0f, 0f), new(1f, 0f, 0f), new(2f, 0f, 0f)
+                },
+                new System.Collections.Generic.List<float> { 0f, 1f, 3f },
+                3f);
+
+            Assert.AreEqual(1.5f, result.MeanRate, 0.0001f);
+            Assert.AreEqual(1f, result.Rate(0f), 0.0001f);
+            Assert.AreEqual(2f, result.Rate(1.5f), 0.0001f);
+            Assert.AreEqual(2f, result.Rate(2f), 0.0001f);
+        }
+
+        [Test]
+        public void TwoZones_ClockStillEndsAtShipTime()
+        {
+            SpaceShapingSession session = new(TestSetups.Content());
+            session.ApplyZone(new SpaceZone(
+                new Vector3(-2f, 0f, 0f), Vector3.one * 0.6f, 1.4f, 0.25f));
+            session.ApplyZone(new SpaceZone(
+                new Vector3(1.5f, 0.8f, 0f), Vector3.one * 0.6f, 0.7f, 0.25f));
+
+            TrajectoryResult result = session.Simulate();
+
+            Assert.Greater(result.Points.Count, 1);
+            Assert.AreEqual(result.ShipTime, result.SampleTime(result.Points.Count - 1), 0.00001f);
+            Assert.AreEqual(result.ShipTime, result.Times[result.Times.Count - 1], 0.00001f);
+        }
+
+        [Test]
         public void SessionPath_MatchesDirectRun()
         {
             SpaceShapingSetup setup = new()

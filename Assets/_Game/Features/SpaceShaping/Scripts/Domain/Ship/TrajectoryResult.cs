@@ -21,6 +21,19 @@ namespace DigitalLove.Game.SpaceShaping
 
         public bool HasPoints => Points != null && Points.Count > 0;
 
+        public float MeanRate => Times != null && Times.Count > 1
+            ? ShipTime / (Times.Count - 1)
+            : 0f;
+
+        public float Rate(float index)
+        {
+            int last = Times.Count - 1;
+            int lower = Mathf.Clamp(Mathf.FloorToInt(index), 0, last);
+            int upper = Mathf.Min(lower + 1, last);
+            int from = upper > lower ? lower : Mathf.Max(lower - 1, 0);
+            return Times[upper] - Times[from];
+        }
+
         public float SampleTime(float index)
         {
             int last = Times.Count - 1;

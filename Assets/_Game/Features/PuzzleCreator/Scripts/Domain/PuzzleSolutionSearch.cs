@@ -50,36 +50,57 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleData puzzle, PuzzleSimSettings settings, float width, out PuzzleSolution solution)
         {
             solution = default;
-            bool found = false;
             Vector3[] centres = PuzzleZoneCandidates.Centres(puzzle, Mathf.Max(width, 0.01f));
-            float[] scales = PuzzleZoneCandidates.Scales(settings, PuzzleZoneCandidates.DefaultSamples);
+            float[] sizes = { width };
+            float[] scales = PuzzleZoneCandidates.Scales(
+                settings, PuzzleZoneCandidates.DefaultSamples);
             for (int c = 0; c < centres.Length; c++)
+            {
+                PuzzleSolution candidate = BestEntropyAtCentre(
+                    puzzle, settings, centres[c], sizes, scales);
+                if (candidate.Zones != null
+                    && (solution.Zones == null || candidate.EntropySpent < solution.EntropySpent))
+                    solution = candidate;
+            }
+
+            return solution.Zones != null;
+        }
+
+        private static PuzzleSolution BestEntropyAtCentre(
+            PuzzleData puzzle, PuzzleSimSettings settings, Vector3 centre, float[] sizes,
+            float[] scales)
+        {
+            PuzzleSolution best = default;
+            for (int s = 0; s < sizes.Length; s++)
             {
                 for (int i = 0; i < scales.Length; i++)
                 {
                     PuzzleZone zone = PuzzleZoneCandidates.Zone(
-                        centres[c], width, scales[i], settings.ZoneFalloff);
-                    if (PuzzleZoneCandidates.ContainsEndpoint(zone, puzzle))
+                        centre, sizes[s], scales[i], settings.ZoneFalloff);
+                    if (!TryZone(puzzle, settings, zone, out PuzzleSolution candidate))
                         continue;
 
-                    if (!PuzzleZoneCandidates.ContainsSource(zone, puzzle))
-                        continue;
-
-                    if (!PuzzleZoneRun.TryArrive(puzzle, settings, zone, out PuzzleSolution candidate))
-                        continue;
-
-                    if (!PuzzleWindow.Contains(puzzle, candidate.ShipTime))
-                        continue;
-
-                    if (!found || candidate.EntropySpent < solution.EntropySpent)
-                    {
-                        solution = candidate;
-                        found = true;
-                    }
+                    if (best.Zones == null || candidate.EntropySpent < best.EntropySpent)
+                        best = candidate;
                 }
             }
 
-            return found;
+            return best;
+        }
+
+        private static bool TryZone(
+            PuzzleData puzzle, PuzzleSimSettings settings, PuzzleZone zone,
+            out PuzzleSolution solution)
+        {
+            solution = default;
+            if (PuzzleZoneCandidates.ContainsEndpoint(zone, puzzle))
+                return false;
+
+            if (!PuzzleZoneCandidates.ContainsSource(zone, puzzle))
+                return false;
+
+            return PuzzleZoneRun.TryArrive(puzzle, settings, zone, out solution)
+                && PuzzleWindow.Contains(puzzle, solution.ShipTime);
         }
 
         private static CentreHit BestCentre(
@@ -116,14 +137,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 {
                     PuzzleZone zone = PuzzleZoneCandidates.Zone(
                         centre, sizes[s], scales[i], settings.ZoneFalloff);
-                    if (PuzzleZoneCandidates.ContainsEndpoint(zone, puzzle))
-                        continue;
-
-                    if (!PuzzleZoneCandidates.ContainsSource(zone, puzzle))
-                        continue;
-
-                    if (PuzzleZoneRun.TryArrive(puzzle, settings, zone, out PuzzleSolution solution)
-                        && PuzzleWindow.Contains(puzzle, solution.ShipTime))
+                    if (TryZone(puzzle, settings, zone, out PuzzleSolution solution))
                         found.Add(solution);
                 }
             }

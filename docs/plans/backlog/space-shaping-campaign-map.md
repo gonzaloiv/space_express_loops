@@ -2,10 +2,10 @@
 
 **Status:** next · space shaping · updated 2026-10-28 — the cube map over the sector field: pick a job,
 play its brief, scale up into the play space, come back. Part of validation 2 (with the
-[HUD plan](space-shaping-hud-validation.md)); after the [puzzle boots](space-shaping-in-game.md) and before
+[HUD plan](space-shaping-hud-validation.md)); after the [puzzle boots](../in-progress/space-shaping-in-game.md) and before
 [progression](space-shaping-progression.md).
 
-**Related:** [in the game](space-shaping-in-game.md) · [HUD + validation 2](space-shaping-hud-validation.md) ·
+**Related:** [in the game](../in-progress/space-shaping-in-game.md) · [HUD + validation 2](space-shaping-hud-validation.md) ·
 [progression](space-shaping-progression.md) · [legacy cut](space-shaping-legacy-cut.md) ·
 [catalogue](space-shaping-catalogue.md) · [variations](../../ideas/variations.md) ·
 [progression](../../design/systems/progression.md) · [modes](../../../Assets/_Modules/docs/standards/modes.md)

@@ -8,6 +8,7 @@ namespace DigitalLove.Game.SpaceShaping
         public Vector3 Destination;
         public int MaxSteps;
         public float LaunchSpeed;
+        public float LaunchAngleDegs;
         public float Tmin;
         public float Tmax;
         public float EntropyBudget;
@@ -29,6 +30,7 @@ namespace DigitalLove.Game.SpaceShaping
                 Destination = puzzle.Destination,
                 MaxSteps = BudgetSteps(puzzle, settings),
                 LaunchSpeed = puzzle.launchSpeed,
+                LaunchAngleDegs = puzzle.launchAngleDegs,
                 Tmin = puzzle.tmin,
                 Tmax = puzzle.tmax,
                 EntropyBudget = puzzle.entropyBudget,

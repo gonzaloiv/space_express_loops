@@ -118,7 +118,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             planets = PuzzleArtifactExporter.ExportPlanets(shape);
             generated = result.Puzzle;
             generatedSolution = result.Solution;
-            Debug.Log($"Puzzle creator: seed {result.Seed} baked a verified level.");
+            Debug.Log($"Puzzle creator: seed {result.Seed} baked a verified level "
+                + $"({result.Routes} route(s)).");
             Repaint();
         }
 
@@ -163,6 +164,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             EditorGUILayout.LabelField(
                 "Entropy", $"{run.EntropySpent:F2} / {puzzle.entropyBudget:F2}  ({PuzzleGrade.Stars(run.EntropySpent, puzzle.entropyBudget)}★)");
             EditorGUILayout.LabelField("Cube", $"{puzzle.cubeSize:F2} m");
+            EditorGUILayout.LabelField("Routes", puzzle.routes.ToString());
         }
 
         private static string BriefText(PuzzleSeed value) =>
@@ -190,6 +192,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             if (status == PuzzleBakeStatus.FewerZones)
                 return "Rejected: a solution with fewer zones still arrives inside the window at the same "
                     + "cube size, so this seed does not teach the extra zone. Use Find working seed.";
+
+            if (status == PuzzleBakeStatus.SingleRoute)
+                return "Rejected: a movable level needs at least two routes so the player can choose. "
+                    + "Use Find working seed.";
 
             if (status == PuzzleBakeStatus.NoSolution)
                 return "Rejected: no solution inside the window. For a clock level, the bare launch must "

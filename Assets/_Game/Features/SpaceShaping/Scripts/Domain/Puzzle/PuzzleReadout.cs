@@ -11,6 +11,7 @@ namespace DigitalLove.Game.SpaceShaping
         public float ShipTime { get; }
         public float Tmin { get; }
         public float Tmax { get; }
+        public float ArrivalOffset { get; }
         public TrajectoryOutcome Outcome { get; }
         public bool PredictedSolved { get; }
         public bool IsChecked { get; }
@@ -30,6 +31,7 @@ namespace DigitalLove.Game.SpaceShaping
             ShipTime = shipTime;
             Tmin = session.Tmin;
             Tmax = session.Tmax;
+            ArrivalOffset = PuzzleArrival.Offset(shipTime, Tmin, Tmax);
             Outcome = result.Outcome;
             PredictedSolved = session.IsSolved(result);
             IsChecked = isChecked;

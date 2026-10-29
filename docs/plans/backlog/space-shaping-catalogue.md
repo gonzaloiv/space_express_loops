@@ -1,10 +1,10 @@
-# Space Shaping — Catalogue + Acceptance
+﻿# Space Shaping — Catalogue + Acceptance
 
 **Status:** next · space shaping · updated 2026-10-28 — author 3–5 baked jobs, then 8–10 as stretch, then the
 Quest 3S acceptance pass. Content work, not engine work; gated on validation 2 and the
-[multi-zone](../in-progress/space-shaping-multizone.md) bakes.
+[multi-zone](space-shaping-multizone.md) bakes.
 
-**Related:** [multi-zone](../in-progress/space-shaping-multizone.md) · [in the game](space-shaping-in-game.md) ·
+**Related:** [multi-zone](space-shaping-multizone.md) · [in the game](../in-progress/space-shaping-in-game.md) ·
 [campaign map](space-shaping-campaign-map.md) · [jobs](../../design/jobs.md) ·
 [progression](../../design/systems/progression.md) · [variations](../../ideas/variations.md) ·
 [cube](../../design/systems/cube.md)
@@ -16,7 +16,7 @@ seed + brief — fixed `sources` remain the hand-tuned fallback
 ([variations](../../ideas/variations.md) §3). The catalogue is one ordered `ChapterData` list; `PuzzleData.id`
 uses the `XX_YY` shape the level cookies parse, and the map number is the global index + 1.
 
-Dependency: `moves = 2+` jobs (job 3 and 6–8) need the [multi-zone](../in-progress/space-shaping-multizone.md) search. If a
+Dependency: `moves = 2+` jobs (job 3 and 6–8) need the [multi-zone](space-shaping-multizone.md) search. If a
 job needs a multi-zone bake that does not exist yet, it moves to the stretch slice rather than shipping a
 one-zone stand-in.
 
@@ -54,7 +54,7 @@ one-zone stand-in.
 
 ## 4. Out of scope
 
-- The multi-zone search itself — [multi-zone](../in-progress/space-shaping-multizone.md).
+- The multi-zone search itself — [multi-zone](space-shaping-multizone.md).
 - New mechanics (rotate, `moves > 3`).
 - Acts/chapters split beyond chapter `01`; streaming and galaxies.
 - Final art and audio direction.

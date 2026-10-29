@@ -4,31 +4,62 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleSeedScanner
     {
+        public static bool IsBetter(PuzzleSeedScanResult candidate, PuzzleSeedScanResult best) =>
+            candidate.Found && (!best.Found || candidate.Routes > best.Routes);
+
         public static PuzzleSeedScanResult Find(
             PuzzleSeed seed, SpaceShapingSettings settings, int attempts)
         {
             PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
             PuzzleBrief brief = PuzzleBrief.From(seed, settings);
-            PuzzleSeedScanResult result = new() { Seed = seed.seed };
+            PuzzleSeedScanResult best = new() { Seed = seed.seed };
             for (int i = 0; i < attempts; i++)
             {
-                int candidate = seed.seed + i;
-                PuzzlePlanetListAsset planets = Planets(seed, settings, candidate);
-                PuzzleData baked = PuzzleFieldBake.Bake(
-                    planets, sim, brief, out PuzzleBakeStatus status, out PuzzleZone[] solution);
-                Object.DestroyImmediate(planets);
-                result.Status = status;
-                if (baked == null)
+                PuzzleSeedScanResult candidate = Probe(seed, settings, sim, brief, seed.seed + i);
+                if (!candidate.Found)
+                {
+                    if (!best.Found)
+                        best.Status = candidate.Status;
                     continue;
+                }
 
-                result.Found = true;
-                result.Seed = candidate;
-                result.Puzzle = baked;
-                result.Solution = solution;
-                return result;
+                Keep(ref best, candidate);
             }
 
-            return result;
+            return best;
+        }
+
+        private static PuzzleSeedScanResult Probe(
+            PuzzleSeed seed, SpaceShapingSettings settings, PuzzleSimSettings sim, PuzzleBrief brief,
+            int seedValue)
+        {
+            PuzzlePlanetListAsset planets = Planets(seed, settings, seedValue);
+            PuzzleData baked = PuzzleFieldBake.Bake(
+                planets, sim, brief, out PuzzleBakeStatus status, out PuzzleZone[] solution);
+            Object.DestroyImmediate(planets);
+            return new PuzzleSeedScanResult
+            {
+                Found = baked != null,
+                Seed = seedValue,
+                Status = status,
+                Puzzle = baked,
+                Solution = solution,
+                Routes = baked != null ? baked.routes : 0
+            };
+        }
+
+        private static void Keep(ref PuzzleSeedScanResult best, PuzzleSeedScanResult candidate)
+        {
+            if (!IsBetter(candidate, best))
+            {
+                Object.DestroyImmediate(candidate.Puzzle);
+                return;
+            }
+
+            if (best.Found)
+                Object.DestroyImmediate(best.Puzzle);
+
+            best = candidate;
         }
 
         private static PuzzlePlanetListAsset Planets(
