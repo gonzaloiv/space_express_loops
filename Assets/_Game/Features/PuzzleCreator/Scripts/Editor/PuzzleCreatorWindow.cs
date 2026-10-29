@@ -168,24 +168,24 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         }
 
         private static string BriefText(PuzzleSeed value) =>
-            BriefText(value.translatable, value.moves, value.resizable, value.rotate)
+            BriefText(value.translatable, value.moves, value.resizable)
             + $" · {value.fieldShape} · start {value.startMargin:F2}×"
             + $" · {(value.offPath ? "clock" : "path")}"
             + (value.applyRandomAngle ? " · random launch angle" : string.Empty);
 
         private static string BriefText(PuzzleData value) =>
-            BriefText(value.translatable, value.moves, value.resizable, value.rotate)
+            BriefText(value.translatable, value.moves, value.resizable)
             + $" · launch {value.launchSpeed:F2} m/s, {value.launchAngleDegs:F1} deg";
 
-        private static string BriefText(bool translatable, int moves, bool resizable, bool rotate) =>
+        private static string BriefText(bool translatable, int moves, bool resizable) =>
             $"{(translatable ? "movable" : "fixed")} · {Mathf.Max(1, moves)} zone(s) · "
-            + $"{(resizable ? "resizable" : "fixed size")} · {(rotate ? "rotate" : "no rotate")}";
+            + $"{(resizable ? "resizable" : "fixed size")}";
 
         private static string Message(PuzzleBakeStatus status)
         {
             if (status == PuzzleBakeStatus.UnsupportedBrief)
-                return "Rejected: this creator supports 1–3 zones and no rotate. Two or more zones need "
-                    + "a movable cube; off-path levels stay single-zone; rotate must be off.";
+                return "Rejected: this creator supports 1–3 zones. Two or more zones need a movable "
+                    + "cube; off-path levels stay single-zone.";
 
             if (status == PuzzleBakeStatus.StartNotFailed)
                 return "Rejected: the bare start already solves or crashes. The level needs a failing "

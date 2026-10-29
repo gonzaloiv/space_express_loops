@@ -96,7 +96,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             authored.translatable = true;
             authored.moves = 2;
             authored.resizable = true;
-            authored.rotate = true;
             authored.startMargin = 1.05f;
             authored.applyRandomAngle = true;
             authored.offPath = true;
@@ -110,7 +109,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Assert.IsTrue(mapped.Translatable);
             Assert.AreEqual(2, mapped.Moves);
             Assert.IsTrue(mapped.Resizable);
-            Assert.IsTrue(mapped.Rotate);
             Assert.AreEqual(1.05f, mapped.StartMargin, 1e-4f);
             Assert.IsTrue(mapped.ApplyRandomAngle);
             Assert.AreEqual(authored.seed, mapped.Seed);
@@ -159,19 +157,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
             PuzzleData rejected = PuzzleFieldBake.Bake(
                 planets, sim, multi, out PuzzleBakeStatus status, out _);
-
-            Assert.IsNull(rejected);
-            Assert.AreEqual(PuzzleBakeStatus.UnsupportedBrief, status);
-        }
-
-        [Test]
-        public void Bake_RejectsRotate()
-        {
-            PuzzleBrief rotating = brief;
-            rotating.Rotate = true;
-
-            PuzzleData rejected = PuzzleFieldBake.Bake(
-                planets, sim, rotating, out PuzzleBakeStatus status, out _);
 
             Assert.IsNull(rejected);
             Assert.AreEqual(PuzzleBakeStatus.UnsupportedBrief, status);

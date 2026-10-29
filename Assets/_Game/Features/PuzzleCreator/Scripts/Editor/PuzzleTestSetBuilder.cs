@@ -80,7 +80,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 seed.translatable = job.Translatable;
                 seed.moves = job.Moves;
                 seed.resizable = false;
-                seed.rotate = false;
                 seed.offPath = job.OffPath;
                 seed.startMargin = job.Margin;
                 seed.windowTightness = job.Window;
@@ -149,7 +148,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             seed.translatable = false;
             seed.moves = 1;
             seed.resizable = false;
-            seed.rotate = false;
             seed.offPath = false;
             seed.startMargin = 0.9f;
             seed.windowTightness = 0.5f;
@@ -190,7 +188,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             seed.translatable = job.Translatable;
             seed.moves = job.Moves;
             seed.resizable = false;
-            seed.rotate = false;
             seed.offPath = job.OffPath;
             seed.startMargin = job.Margin;
             seed.windowTightness = job.Window;

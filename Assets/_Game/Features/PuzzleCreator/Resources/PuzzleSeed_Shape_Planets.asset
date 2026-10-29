@@ -12,16 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b09b8d5cd9a9d142a7b285eea85e9e8, type: 3}
   m_Name: PuzzleSeed_Shape_Planets
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Creator::DigitalLove.Game.SpaceShaping.Creator.PuzzlePlanetListAsset
-  distance: 1
-  clearance: 0.02
   planets:
-  - position: {x: -0.5494751, y: -0.0050797216, z: 0.08293692}
-    radius: 0.21385661
-  - position: {x: -0.24867408, y: -0.0052559907, z: -0.49695152}
-    radius: 0.22857378
-  - position: {x: 0.36344773, y: -0.0039005263, z: -0.42037812}
-    radius: 0.21529132
-  - position: {x: 0.47905242, y: -0.0077000977, z: 0.28156114}
-    radius: 0.32365212
-  - position: {x: -0.1058344, y: 0.000983665, z: 0.54555047}
-    radius: 0.16253121
+  - position: {x: 0.20289437, y: 0.0026509217, z: 0.59566975}
+    radius: 0.375006
+  - position: {x: 0.10659606, y: -0.0064415396, z: -0.6201543}
+    radius: 0.1361662
+  - position: {x: -0.48657677, y: 0.006423836, z: 0.3989955}
+    radius: 0.16817467
+  - position: {x: 0.54494476, y: -0.0065340893, z: -0.3146238}
+    radius: 0.13052903
+  - position: {x: -0.5304846, y: -0.0009927233, z: -0.33849776}
+    radius: 0.3915614

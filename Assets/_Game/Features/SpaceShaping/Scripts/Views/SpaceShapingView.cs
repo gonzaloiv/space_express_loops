@@ -14,6 +14,8 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private SpaceZoneView cubePrototype;
         [SerializeField] private Transform cubeParent;
 
+        private const float FramePadding = 0.02f;
+
         private readonly List<FieldPlanetBehaviour> pool = new();
         private SpaceZoneView cube;
         private SpaceZone lastZone;
@@ -79,10 +81,35 @@ namespace DigitalLove.Game.SpaceShaping
             hasSnapshot = true;
         }
 
-        public void Render(
-            SpacetimeField field, IReadOnlyList<SpaceZone> zones, Vector3 origin, Vector3 destination,
-            float crossHalf) =>
-            mesh.Render(field, zones, origin, destination, crossHalf);
+        public void Render(SpacetimeField field, SpaceShapingSession session)
+        {
+            Frame(session, out Vector3 centre, out float half);
+            mesh.Render(field, session.Zones, centre, half);
+        }
+
+        private static void Frame(SpaceShapingSession session, out Vector3 centre, out float half)
+        {
+            Vector3 min = session.Origin;
+            Vector3 max = session.Origin;
+            Encapsulate(ref min, ref max, session.Destination);
+            for (int i = 0; i < session.SourceCount; i++)
+            {
+                Vector3 position = session.GetPosition(i);
+                float radius = session.GetScale(i) * 0.5f;
+                Encapsulate(ref min, ref max, position - Vector3.one * radius);
+                Encapsulate(ref min, ref max, position + Vector3.one * radius);
+            }
+
+            centre = (min + max) * 0.5f;
+            Vector3 size = max - min;
+            half = Mathf.Max(Mathf.Max(size.x, size.y), size.z) * 0.5f + FramePadding;
+        }
+
+        private static void Encapsulate(ref Vector3 min, ref Vector3 max, Vector3 point)
+        {
+            min = Vector3.Min(min, point);
+            max = Vector3.Max(max, point);
+        }
 
         public void ShowTrajectory(TrajectoryResult result, bool solved) => trajectory.Show(result, solved);
 
@@ -95,23 +122,6 @@ namespace DigitalLove.Game.SpaceShaping
             cube.gameObject.SetActive(true);
             cube.ResetScale();
             hasSnapshot = false;
-        }
-
-        public float CrossHalf(SpaceShapingSession session, PuzzleData puzzle, float fallbackCube)
-        {
-            Vector3 run = session.Destination - session.Origin;
-            float length = run.magnitude;
-            Vector3 direction = length > 0.0001f ? run / length : Vector3.forward;
-            float half = 0f;
-            for (int i = 0; i < session.SourceCount; i++)
-            {
-                Vector3 offset = session.GetPosition(i) - session.Origin;
-                Vector3 perpendicular = offset - direction * Vector3.Dot(offset, direction);
-                half = Mathf.Max(half, perpendicular.magnitude + session.GetScale(i) * 0.5f);
-            }
-
-            float cube = puzzle.cubeSize > 0f ? puzzle.cubeSize : fallbackCube;
-            return Mathf.Max(half, cube * 0.5f);
         }
 
         private FieldPlanetBehaviour Source(int index)

@@ -242,7 +242,7 @@ Transform:
   m_GameObject: {fileID: 3589733}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.55, y: 0.15, z: 0.05}
+  m_LocalPosition: {x: 0.55, y: 0.45, z: 0.05}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -58480,7 +58480,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10000000000000000000000000000020, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.SpacetimeMeshView
-  fieldMargin: 0.05
   meshFilter: {fileID: 1402556517}
   meshRenderer: {fileID: 1402556518}
   sourceMesh: {fileID: 4300000, guid: 117a268f6de7fdd4ab3a48a6b24dc4ad, type: 2}
@@ -58490,9 +58489,8 @@ MonoBehaviour:
   depthScale: 0.15
   maxDisplacement: 0.08
   zoneShells: 3
-  latticePadding: 0.02
-  slowColor: {r: 0.45, g: 0.7, b: 1, a: 1}
-  fastColor: {r: 1, g: 0.65, b: 0.35, a: 1}
+  slowColor: {r: 0.45, g: 0.7, b: 1, a: 0.5019608}
+  fastColor: {r: 1, g: 0.65, b: 0.35, a: 0.5019608}
   clockTintStrength: 0.35
 --- !u!33 &1402556517
 MeshFilter:

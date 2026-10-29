@@ -9,9 +9,6 @@ namespace DigitalLove.Game.SpaceShaping
         [Tooltip("The run: origin to destination, in metres. It also sizes the field, so keep planetRadiusMax well under runDistance / 2.")]
         public float runDistance = 0.7f;
 
-        [Tooltip("Fallback cube size, in metres — used only when a puzzle has no baked size.")]
-        public float cubeSize = 0.175f;
-
         [Tooltip("Smallest cube the creator may bake, in metres. The search raises this for any planet it contains.")]
         public float cubeSizeMin = 0.105f;
 
@@ -19,6 +16,9 @@ namespace DigitalLove.Game.SpaceShaping
         public float cubeSizeMax = 0.21f;
 
         [Header("Simulation")]
+        [Tooltip("Given launch speed, shared by every puzzle, in metres per second.")]
+        public float launchSpeed = 0.9f;
+
         [Tooltip("Integrator step, in seconds. The step budget is derived from the run and the nominal speed, so the budget can never drift from the run.")]
         public float stepSecs = 0.0008333333f;
 

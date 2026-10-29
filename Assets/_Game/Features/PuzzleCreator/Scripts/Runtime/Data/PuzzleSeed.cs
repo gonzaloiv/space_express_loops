@@ -6,7 +6,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     public class PuzzleSeed : ScriptableObject
     {
         public int seed = 1;
-        [HideInInspector] public float distance = 1f;
         public int planetCount = 9;
 
         [Tooltip("Planet arrangement. Auto keeps the seed-derived shape (Ring, Spiral, Cluster).")]
@@ -22,9 +21,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         [Tooltip("The frame may be resized at runtime (1x to 2x).")]
         public bool resizable;
-
-        [Tooltip("The spin gesture is available. Reserved for later puzzles.")]
-        public bool rotate;
 
         [Tooltip("Launch speed as a fraction of nominal. Below 1 the bare start runs out of step budget and misses; 1 arrives on the nominal crossing.")]
         [Range(0.5f, 1.5f)]

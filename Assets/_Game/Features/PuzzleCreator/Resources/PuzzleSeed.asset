@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a653680055d8a644b9da0f0e6c7c3ee3, type: 3}
   m_Name: PuzzleSeed
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Creator::DigitalLove.Game.SpaceShaping.Creator.PuzzleSeed
-  seed: 15
-  distance: 1
+  seed: 4
   planetCount: 5
   fieldShape: 0
   translatable: 0
@@ -21,6 +20,6 @@ MonoBehaviour:
   resizable: 0
   rotate: 0
   startMargin: 0.9
-  applyRandomAngle: 1
+  applyRandomAngle: 0
   offPath: 0
   windowTightness: 0.5

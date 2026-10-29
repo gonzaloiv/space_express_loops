@@ -17,7 +17,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.translatable = brief.Translatable;
             puzzle.moves = brief.Moves;
             puzzle.resizable = brief.Resizable;
-            puzzle.rotate = brief.Rotate;
             if (!PuzzleRunChoice.TryPick(
                 planets.planets, settings.RunDistance, brief.CorridorClearance,
                 out Vector3 origin, out Vector3 destination))

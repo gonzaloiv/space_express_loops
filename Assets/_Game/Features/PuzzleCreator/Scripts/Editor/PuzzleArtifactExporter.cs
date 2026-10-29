@@ -5,8 +5,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 {
     public static class PuzzleArtifactExporter
     {
-        private const string SpaceShapingFolder = "Assets/_Game/Features/SpaceShaping";
-        private const string GeneratedName = "Generated";
+        private const string SpaceShapingFolder = "Assets/_Game/Features/PuzzleCreator";
+        private const string GeneratedName = "Resources";
         private const string GeneratedFolder = SpaceShapingFolder + "/" + GeneratedName;
 
         public static PuzzleShapeAsset ExportShape(PuzzleSeed seed, SpaceShapingSettings settings) =>

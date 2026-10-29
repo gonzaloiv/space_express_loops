@@ -30,7 +30,7 @@ namespace DigitalLove.Game.SpaceShaping
                 Origin = puzzle.Origin,
                 Destination = puzzle.Destination,
                 MaxSteps = BudgetSteps(puzzle, settings),
-                LaunchSpeed = puzzle.launchSpeed,
+                LaunchSpeed = settings.LaunchSpeed,
                 LaunchAngleDegs = puzzle.launchAngleDegs,
                 Tmin = puzzle.tmin,
                 Tmax = puzzle.tmax,

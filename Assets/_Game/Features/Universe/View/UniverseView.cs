@@ -25,7 +25,6 @@ namespace DigitalLove.Game.Universe
         public IModeController<UniverseViewMode> Mode => mode;
         public event Action BubbleTransformCommitted;
         public BubblePlacement BubblePlacement => rig.BuildPlacement();
-        public bool IsBubbleView => Mode.Current == UniverseViewMode.Bubble && !Mode.IsTransitioning;
         public Vector3 FrameCenterWorld => rig.CenterWorld;
         public Vector3 ContentPosition => rig.ContentPosition;
         public Quaternion FrameRotation => rig.HomeRotation;

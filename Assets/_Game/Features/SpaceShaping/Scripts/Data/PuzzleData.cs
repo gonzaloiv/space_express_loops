@@ -20,7 +20,6 @@ namespace DigitalLove.Game.SpaceShaping
         [Tooltip("Baked route clusters: distinct zone sets that arrive inside the window within budget.")]
         public int routes = 1;
         public bool resizable;
-        public bool rotate;
         public float launchSpeed;
         [Tooltip("Launch offset from the straight run, in degrees around up. 0 aims at the destination; a non-zero angle makes the bare shot miss so the cube has to bend it.")]
         public float launchAngleDegs;

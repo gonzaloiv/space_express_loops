@@ -68,9 +68,7 @@ namespace DigitalLove.Game.SpaceShaping
         public void PreviewField()
         {
             SpaceShapingSession preview = new(BuildSetup());
-            view.Render(
-                preview.BuildField(), preview.Zones, preview.Origin, preview.Destination,
-                view.CrossHalf(preview, puzzles[puzzleIndex], settings.cubeSize));
+            view.Render(preview.BuildField(), preview);
         }
 
         public bool ApplySolvedScale(float scale)
@@ -146,7 +144,7 @@ namespace DigitalLove.Game.SpaceShaping
             PuzzleData puzzle = puzzles[puzzleIndex];
             view.ResetZone();
             view.SetConditions(puzzle.ToZoneConditions());
-            float size = puzzle.cubeSize > 0f ? puzzle.cubeSize : settings.cubeSize;
+            float size = puzzle.cubeSize;
             view.SetZoneFrame(puzzle.zoneCentre, new Vector3(size, size, size), settings.zoneFalloff);
         }
 
@@ -170,9 +168,7 @@ namespace DigitalLove.Game.SpaceShaping
             bool solved = session.IsSolved(result);
             view.SetPrediction(solved, result.Outcome);
 
-            view.Render(
-                field, session.Zones, session.Origin, session.Destination,
-                view.CrossHalf(session, puzzles[puzzleIndex], settings.cubeSize));
+            view.Render(field, session);
             view.ShowTrajectory(result, solved);
             view.Snapshot();
 

@@ -7,8 +7,6 @@ namespace DigitalLove.Game.SpaceShaping
 {
     public class SpacetimeMeshView : MonoBehaviour, ISerializationCallbackReceiver
     {
-        [SerializeField] private float fieldMargin = 0.05f;
-
         [SerializeField] private MeshFilter meshFilter;
         [SerializeField] private MeshRenderer meshRenderer;
         [SerializeField] private Mesh sourceMesh;
@@ -18,7 +16,6 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private float depthScale = 0.15f;
         [SerializeField] private float maxDisplacement = 0.08f;
         [SerializeField] private float zoneShells = 3f;
-        [SerializeField] private float latticePadding = 0.02f;
         [SerializeField] private Color slowColor = new(0.45f, 0.7f, 1f, 1f);
         [SerializeField] private Color fastColor = new(1f, 0.65f, 0.35f, 1f);
         [SerializeField] private float clockTintStrength = 0.35f;
@@ -29,9 +26,8 @@ namespace DigitalLove.Game.SpaceShaping
         private RendererTint tint;
         private SpacetimeField lastField;
         private IReadOnlyList<SpaceZone> lastZones;
-        private Vector3 lastOrigin;
-        private Vector3 lastDestination;
-        private float lastCrossHalf;
+        private Vector3 lastCentre;
+        private float lastHalf;
 
         public int GridCount => gridCount;
 
@@ -40,13 +36,13 @@ namespace DigitalLove.Game.SpaceShaping
         public float Radius => radius;
 
         public void Render(
-            SpacetimeField field, IReadOnlyList<SpaceZone> zones, Vector3 origin, Vector3 destination,
-            float crossHalf)
+            SpacetimeField field, IReadOnlyList<SpaceZone> zones, Vector3 centre, float half)
         {
-            Remember(field, zones, origin, destination, crossHalf);
+            Remember(field, zones, centre, half);
             EnsureMesh();
-            Place(origin, destination);
-            WarpVertices(field, zones, HalfExtent(origin, destination, crossHalf));
+            transform.localPosition = centre;
+            transform.localRotation = Quaternion.identity;
+            WarpVertices(field, zones, half);
             CommitMesh();
             ApplyClockTint(zones);
         }
@@ -66,26 +62,12 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         private void Remember(
-            SpacetimeField field, IReadOnlyList<SpaceZone> zones, Vector3 origin, Vector3 destination,
-            float crossHalf)
+            SpacetimeField field, IReadOnlyList<SpaceZone> zones, Vector3 centre, float half)
         {
             lastField = field;
             lastZones = zones;
-            lastOrigin = origin;
-            lastDestination = destination;
-            lastCrossHalf = crossHalf;
-        }
-
-        private void Place(Vector3 origin, Vector3 destination)
-        {
-            transform.localPosition = (origin + destination) * 0.5f;
-            transform.localRotation = Quaternion.identity;
-        }
-
-        private float HalfExtent(Vector3 origin, Vector3 destination, float crossHalf)
-        {
-            float length = (destination - origin).magnitude;
-            return Mathf.Max(length * 0.5f + fieldMargin * length, crossHalf + latticePadding);
+            lastCentre = centre;
+            lastHalf = half;
         }
 
         private void WarpVertices(SpacetimeField field, IReadOnlyList<SpaceZone> zones, float half)
@@ -167,9 +149,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void OnValidate()
         {
-            if (mesh != null && lastCrossHalf > 0f
-                && (lastDestination - lastOrigin).sqrMagnitude > 0.000001f)
-                Render(lastField, lastZones, lastOrigin, lastDestination, lastCrossHalf);
+            if (mesh != null && lastHalf > 0f)
+                Render(lastField, lastZones, lastCentre, lastHalf);
         }
 
         private void OnDestroy()
