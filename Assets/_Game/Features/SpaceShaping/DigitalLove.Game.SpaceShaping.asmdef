@@ -8,7 +8,8 @@
         "DigitalLove.FlowControl",
         "DigitalLove.Input",
         "Unity.TextMeshPro",
-        "Oculus.Interaction"
+        "Oculus.Interaction",
+        "DigitalLove.Game.SpaceShaping.Zone"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

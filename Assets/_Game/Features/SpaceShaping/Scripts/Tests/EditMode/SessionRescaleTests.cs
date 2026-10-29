@@ -1,3 +1,4 @@
+using DigitalLove.Game.SpaceShaping.Cube;
 using NUnit.Framework;
 using UnityEngine;
 

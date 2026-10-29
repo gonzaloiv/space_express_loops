@@ -25,8 +25,7 @@ general system; this is the specific development of it. Counts are a **stretch g
 | later | rotate | yes · 1+ · yes · **yes** | 3+ · multi-well · deep | razor · tight | direction, not just position |
 
 **The job-3 fold.** A fixed cube covers one region and cannot reach two zones, so `moves ≥ 2` requires
-`translatable`. Job 3 folds in the move; the time tutorial becomes job 4
-([multi-zone plan](../plans/backlog/space-shaping-multizone.md) §1).
+`translatable`. Job 3 folds in the move; the time tutorial becomes job 4.
 
 **The slice.** Jobs 1–8 are the full run, ~1 minute each; rotate waits for later puzzles.
 

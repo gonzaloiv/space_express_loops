@@ -4,7 +4,8 @@
     "references": [
         "DigitalLove.Game.SpaceShaping",
         "DigitalLove.FlowControl",
-        "DigitalLove.Casual.Levels"
+        "DigitalLove.Casual.Levels",
+        "DigitalLove.Game.SpaceShaping.Zone"
     ],
     "includePlatforms": [
         "Editor"

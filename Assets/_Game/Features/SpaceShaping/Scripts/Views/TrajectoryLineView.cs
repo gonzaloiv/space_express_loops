@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DigitalLove.Global;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping

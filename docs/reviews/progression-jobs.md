@@ -3,7 +3,7 @@
 **Date:** 2026-10-28.
 **Scope:** [progression](../design/systems/progression.md), [jobs](../design/jobs.md),
 [core loop](../design/core-loop.md), [resources](../design/systems/resources.md),
-[cube](../design/systems/cube.md), and the [progression plan](../plans/backlog/space-shaping-progression.md)
+[cube](../design/systems/cube.md), and the progression plan
 against the code (`Assets/_Game/Features/SpaceShaping`, `Assets/_Game/Features/PuzzleCreator`,
 `Assets/_Modules/Casual`) and the saved assets/scenes.
 **Verdict:** the design is viable for a **3–5 job slice (jobs 1–4)** — the bake, session, readout and the
@@ -39,7 +39,7 @@ has no bake or gesture contract, and the progression/content layer is unbuilt.
    ([jobs.md:23–24](../design/jobs.md#L23)), and the design says the aperture is the player's
    ([progression.md:66–67](../design/systems/progression.md#L66)). But the bake starts the frame at the
    **solution** size (`PuzzleFieldBake.cs:147–154`) and the search uses one size per chain
-   ([multi-zone plan](../plans/backlog/space-shaping-multizone.md) §2), so the found solution never needs
+    (the multi-zone plan §2), so the found solution never needs
    the gesture. The runtime only **grows** the frame: `ResizeFactor` clamps to `[1, maxGrow]`
    (`ZoneGesture.cs:39–40`) with `frameGrowRatio = 2` (`ZoneGrabListener.cs:19`); job 5's "bigger, smaller"
    ([jobs.md:44](../design/jobs.md#L44)) is not true of the saved pose. The verifier only checks shared size
@@ -73,11 +73,11 @@ has no bake or gesture contract, and the progression/content layer is unbuilt.
    (`SpaceShapingPOC.unity:45037` — `puzzles: []`) while `SpaceShapingState.Enter` indexes `puzzles[0]`
    (`SpaceShapingState.cs:9,36–37`); no asset in the project matches the `PuzzleData` script GUID, and no
    `ChapterData`/`LevelSelector` asset exists. `Game.unity` has no puzzle wiring either, so none of this is
-   reachable from the game yet ([in the game](../plans/in-progress/space-shaping-in-game.md) §1). The multizone
+   reachable from the game yet (the in-game plan §1). The multizone
    review's "wired" claim ([multizone.md:40–42](multizone.md#L40)) is stale. The seed assets changed at 18:42 today, so this may be
    in-flight, but the saved scene cannot boot the 2-zone puzzle as it stands.
    **Fix:** bake one asset, wire it (or switch to the single `PuzzleData` field the in-game plan already
-   chose, [in the game](../plans/in-progress/space-shaping-in-game.md) §1), and run M3 on the headset.
+   chose, the in-game plan §1), and run M3 on the headset.
 
 6. **`offPath` is a real brief condition missing from the brief.** `PuzzleBrief.OffPath` exists and rejects
    multi-zone off-path bakes (`PuzzleBrief.cs:16–19`), and job 4 depends on it

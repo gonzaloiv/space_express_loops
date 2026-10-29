@@ -1,7 +1,7 @@
 ﻿# Review — Space shaping multi-zone
 
 **Date:** 2026-10-28.
-**Scope:** [multi-zone plan](../plans/backlog/space-shaping-multizone.md) against the code
+**Scope:** the multi-zone plan against the code
 (`Assets/_Game/Features/PuzzleCreator`, `Assets/_Game/Features/SpaceShaping`) and
 [cube](../design/systems/cube.md), [progression](../design/systems/progression.md),
 [jobs](../design/jobs.md).

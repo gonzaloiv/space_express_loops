@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using DigitalLove.Global;
 using TMPro;
 using UnityEngine;
 

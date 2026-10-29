@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DigitalLove.Game.Nodes;
+using DigitalLove.Game.SpaceShaping.Cube;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
@@ -59,8 +60,18 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void SetZoneScale(float scale) => cube.SetScale(scale);
 
+        public void SetScaleEnvelope(float min, float max) => cube.SetScaleEnvelope(min, max);
+
         public void SetPrediction(bool solved, TrajectoryOutcome outcome) =>
-            cube.SetPrediction(solved, outcome);
+            cube.SetPrediction(Verdict(solved, outcome));
+
+        private static ZoneVerdict Verdict(bool solved, TrajectoryOutcome outcome)
+        {
+            if (solved)
+                return ZoneVerdict.Solved;
+
+            return outcome == TrajectoryOutcome.Crash ? ZoneVerdict.Crash : ZoneVerdict.Miss;
+        }
 
         public void Snapshot()
         {

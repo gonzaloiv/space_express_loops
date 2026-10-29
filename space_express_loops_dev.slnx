@@ -1,9 +1,8 @@
 ﻿<Solution>
   <Project Path="DigitalLove.Casual.UI.csproj" />
   <Project Path="DigitalLove.Player.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.Editor.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Creator.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.csproj" />
   <Project Path="MegaFiers.csproj" />
   <Project Path="DigitalLove.TTS.csproj" />
   <Project Path="DigitalLove.Interactables.Core.csproj" />
@@ -35,6 +34,7 @@
   <Project Path="DigitalLove.XR.MRUK.csproj" />
   <Project Path="Klak.Motion.Editor.csproj" />
   <Project Path="DigitalLove.Interactables.OculusInteraction.Samples.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Zone.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.Hands.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Vendor.UnityGif.csproj" />
@@ -76,7 +76,6 @@
   <Project Path="DigitalLove.Game.Flow.csproj" />
   <Project Path="ChrisNolet.QuickOutline.csproj" />
   <Project Path="DigitalLove.Interactables.MRUK.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.Creator.Editor.csproj" />
   <Project Path="DigitalLove.Player.integrations.csproj" />
   <Project Path="DigitalLove.Timeline.Samples.csproj" />
   <Project Path="DigitalLove.Casual.Flow.csproj" />
@@ -87,8 +86,10 @@
   <Project Path="DigitalLove.Casual.Flow.Setup.MRUK.csproj" />
   <Project Path="DigitalLove.Input.csproj" />
   <Project Path="DigitalLove.Reflex.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Creator.Editor.csproj" />
   <Project Path="DigitalLove.Analytics.Integrations.csproj" />
   <Project Path="DigitalLove.FlowControl.Routes.Editor.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Editor.csproj" />
   <Project Path="DigitalLove.Audio.Samples.csproj" />
   <Project Path="DigitalLove.Interactables.Keypad.csproj" />
   <Project Path="DigitalLove.FlowControl.Tests.EditMode.csproj" />

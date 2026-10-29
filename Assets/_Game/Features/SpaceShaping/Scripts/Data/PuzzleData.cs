@@ -1,4 +1,5 @@
 using DigitalLove.Casual.Levels;
+using DigitalLove.Game.SpaceShaping.Cube;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
@@ -33,6 +34,9 @@ namespace DigitalLove.Game.SpaceShaping
         public Vector3 Destination => destination;
 
         public float Distance => Vector3.Distance(origin, destination);
+
+        public ZoneConditions ToZoneConditions() =>
+            new(translatable, resizable, origin, destination);
 
         public float CaptureRadiusAtDestination()
         {

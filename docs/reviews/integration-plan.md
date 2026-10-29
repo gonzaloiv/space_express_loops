@@ -1,12 +1,7 @@
 ﻿# Review — space-shaping integration plan
 
 **Date:** 2026-10-27.
-**Scope:** the integration plan (now split into six: [in the game](../plans/in-progress/space-shaping-in-game.md),
-[campaign map](../plans/backlog/space-shaping-campaign-map.md),
-[HUD + validation 2](../plans/backlog/space-shaping-hud-validation.md),
-[progression](../plans/backlog/space-shaping-progression.md),
-[legacy cut](../plans/backlog/space-shaping-legacy-cut.md),
-[catalogue](../plans/backlog/space-shaping-catalogue.md)) against the design
+**Scope:** the integration plan (split into six one-morning plans) against the design
 docs and the code (`Assets/_Game`).
 **Verdict:** the direction is right, but the plan was **stale in five places**, **oversized for one plan**,
 and **most of its open questions were already settled** by [variations](../ideas/variations.md),
@@ -26,9 +21,8 @@ view as-is.
 campaign map, HUD + validation 2, progression, legacy cut, catalogue + acceptance. The gate moved to the end
 of the HUD plan; each contract (§6) now lives in the plan that consumes it.
 
-**Applied 2026-10-28 (reduce):** the job card moved from [in the game](../plans/in-progress/space-shaping-in-game.md)
-to [campaign map](../plans/backlog/space-shaping-campaign-map.md) M3; the in-the-game plan is the puzzle
-flow and result seam only.
+**Applied 2026-10-28 (reduce):** the job card moved to the campaign-map plan M3; the in-the-game plan is
+the puzzle flow and result seam only.
 
 ## 1. Close now (settled elsewhere)
 
@@ -68,8 +62,8 @@ flow and result seam only.
 - **Legacy reset** — ignore `GameSnapshot`, keep bubble placement, first boot writes a fresh save.
 - **Result/fail UX** — window, entropy-zero fail, grade, retry/map.
 - **Performance gate** — 72 fps on Quest 3S, map/puzzle budgets, device capture.
-- **Content dependency** — the brief’s `moves = 2+` work is now the
-  [multi-zone plan](../plans/backlog/space-shaping-multizone.md); physics must land before bakes.
+- **Content dependency** — the brief’s `moves = 2+` work is the multi-zone plan; physics must land before
+  bakes.
 - **Test/device pass** — boot → map → pick → solve → back → reload; no legacy route/hub/round content.
 
 ## 4. Plan shape
@@ -104,7 +98,5 @@ These are contracts and seams, not flow or scene work:
    `GameStartState`.
 8. **Performance budget.** 72 fps per-frame budget and the device pass.
 
-Each contract now lives in the plan that consumes it: runtime puzzle + run/readout in
-[in the game](../plans/in-progress/space-shaping-in-game.md) §3–§4, map/flow/ownership in
-[campaign map](../plans/backlog/space-shaping-campaign-map.md) §3, the record in
-[progression](../plans/backlog/space-shaping-progression.md) §3.
+Each contract now lives in the plan that consumes it: runtime puzzle + run/readout in the in-game plan
+§3–§4, map/flow/ownership in the campaign-map plan §3, the record in the progression plan §3.

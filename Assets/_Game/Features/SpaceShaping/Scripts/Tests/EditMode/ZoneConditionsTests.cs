@@ -1,3 +1,4 @@
+using DigitalLove.Game.SpaceShaping.Cube;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -6,13 +7,13 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
     public class ZoneConditionsTests
     {
         [Test]
-        public void From_CarriesThePuzzleFlags()
+        public void ToZoneConditions_CarriesThePuzzleFlags()
         {
             PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
             puzzle.translatable = true;
             puzzle.resizable = false;
 
-            ZoneConditions conditions = ZoneConditions.From(puzzle);
+            ZoneConditions conditions = puzzle.ToZoneConditions();
 
             Assert.IsTrue(conditions.Translatable);
             Assert.IsFalse(conditions.Resizable);

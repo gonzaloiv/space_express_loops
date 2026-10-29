@@ -5,7 +5,8 @@
         "DigitalLove.Casual.Levels",
         "DigitalLove.Game.SpaceShaping",
         "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner"
+        "UnityEditor.TestRunner",
+        "DigitalLove.Game.SpaceShaping.Zone"
     ],
     "includePlatforms": [
         "Editor"

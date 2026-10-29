@@ -1,3 +1,5 @@
+using DigitalLove.Game.SpaceShaping.Cube;
+
 namespace DigitalLove.Game.SpaceShaping
 {
     public static class SourceSpecs

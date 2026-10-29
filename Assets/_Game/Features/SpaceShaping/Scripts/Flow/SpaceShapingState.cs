@@ -1,5 +1,6 @@
 using System;
 using DigitalLove.FlowControl;
+using DigitalLove.Game.SpaceShaping.Cube;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
@@ -38,6 +39,7 @@ namespace DigitalLove.Game.SpaceShaping
         public override void Enter()
         {
             ship.Completed += OnFlightCompleted;
+            view.SetScaleEnvelope(settings.minScaleFactor, settings.maxScaleFactor);
             puzzleIndex = 0;
             StartPuzzle();
         }
@@ -143,7 +145,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             PuzzleData puzzle = puzzles[puzzleIndex];
             view.ResetZone();
-            view.SetConditions(ZoneConditions.From(puzzle));
+            view.SetConditions(puzzle.ToZoneConditions());
             float size = puzzle.cubeSize > 0f ? puzzle.cubeSize : settings.cubeSize;
             view.SetZoneFrame(puzzle.zoneCentre, new Vector3(size, size, size), settings.zoneFalloff);
         }

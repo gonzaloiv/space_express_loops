@@ -70,9 +70,8 @@ driven by the **same factor** ([the cube](cube.md)). The **space face** is the m
 
 So the first-8 order is **scale → several zones + move → time → resize**; rotate comes later.
 
-**Job 3 is translatable (2026-10-28).** The multi-zone plan's §1 option (a): a fixed cube cannot reach
-two zones, so the move enters with several zones and the time tutorial becomes job 4
-([multi-zone plan](../../plans/backlog/space-shaping-multizone.md) §1).
+**Job 3 is translatable (2026-10-28).** A fixed cube cannot reach two zones, so the move enters with
+several zones and the time tutorial becomes job 4.
 
 A **tutorial** will be needed for this, but not yet — get the loop working first
 ([vision](../vision.md) §6).

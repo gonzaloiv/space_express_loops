@@ -85,6 +85,5 @@ solve ([resources](resources.md)).
 - **Mesh-only future:** dropping planets entirely would be a purer tool, but it discards the
   verified puzzles — **not the slice**.
 - Rotate (later puzzles) timing.
-- Multi-zone solutions: the search and bake are the
-  [multi-zone plan](../../plans/backlog/space-shaping-multizone.md); the region/scale decoupling is
+- Multi-zone solutions: the search and bake are a separate plan; the region/scale decoupling is
   settled — they stay separate.
