@@ -52,6 +52,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
                 if (!puzzle.resizable && !SameSize(solution[0], solution[i]))
                     return false;
+
+                if (PuzzleZoneCandidates.ContainsEndpoint(solution[i], puzzle))
+                    return false;
             }
 
             return true;

@@ -80,6 +80,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return false;
 
             PuzzleZone zone = PuzzleZoneCandidates.Zone(centre, size, scale, context.Settings.ZoneFalloff);
+            if (PuzzleZoneCandidates.ContainsEndpoint(zone, context.Puzzle))
+                return false;
+
             if (!PuzzleZoneCandidates.ContainsSource(zone, context.Puzzle))
                 return false;
 
@@ -119,7 +122,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (context.Evaluations >= MaxEvaluations)
                 return;
 
-            if (!PuzzleZoneCandidates.ContainsSource(zone, context.Puzzle)
+            if (PuzzleZoneCandidates.ContainsEndpoint(zone, context.Puzzle)
+                || !PuzzleZoneCandidates.ContainsSource(zone, context.Puzzle)
                 || Overlaps(prefix.Zones, zone))
                 return;
 

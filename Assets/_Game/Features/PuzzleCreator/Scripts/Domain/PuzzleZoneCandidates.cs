@@ -56,6 +56,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return false;
         }
 
+        public static bool ContainsEndpoint(PuzzleZone zone, PuzzleData puzzle) =>
+            zone.Influences(puzzle.origin) || zone.Influences(puzzle.destination);
+
         public static bool ContainsOnlySource(PuzzleZone zone, PuzzleData puzzle, Vector3 target)
         {
             int inside = 0;

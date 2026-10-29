@@ -59,6 +59,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 {
                     PuzzleZone zone = PuzzleZoneCandidates.Zone(
                         centres[c], width, scales[i], settings.ZoneFalloff);
+                    if (PuzzleZoneCandidates.ContainsEndpoint(zone, puzzle))
+                        continue;
+
                     if (!PuzzleZoneCandidates.ContainsSource(zone, puzzle))
                         continue;
 
@@ -113,6 +116,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 {
                     PuzzleZone zone = PuzzleZoneCandidates.Zone(
                         centre, sizes[s], scales[i], settings.ZoneFalloff);
+                    if (PuzzleZoneCandidates.ContainsEndpoint(zone, puzzle))
+                        continue;
+
+                    if (!PuzzleZoneCandidates.ContainsSource(zone, puzzle))
+                        continue;
+
                     if (PuzzleZoneRun.TryArrive(puzzle, settings, zone, out PuzzleSolution solution)
                         && PuzzleWindow.Contains(puzzle, solution.ShipTime))
                         found.Add(solution);

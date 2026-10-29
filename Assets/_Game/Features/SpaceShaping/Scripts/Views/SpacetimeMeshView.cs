@@ -47,12 +47,11 @@ namespace DigitalLove.Game.SpaceShaping
             Vector3 run = destination - origin;
             float length = run.magnitude;
             transform.localPosition = (origin + destination) * 0.5f;
-            transform.localRotation = PuzzleViewFrame.Rotation(origin, destination);
+            transform.localRotation = Quaternion.identity;
 
-            float halfLength = length * 0.5f + fieldMargin * length;
-            float halfWidth = crossHalf + latticePadding;
-            Vector3 gridMin = new(-halfLength, -halfWidth, -halfWidth);
-            Vector3 gridMax = new(halfLength, halfWidth, halfWidth);
+            float half = Mathf.Max(length * 0.5f + fieldMargin * length, crossHalf + latticePadding);
+            Vector3 gridMin = new(-half, -half, -half);
+            Vector3 gridMax = new(half, half, half);
 
             int perAxis = gridCount * gridCount;
             int perLine = samplesPerLine * sides;

@@ -27,6 +27,13 @@ namespace DigitalLove.Game.SpaceShaping
 
         public bool CanResize => conditions.Resizable;
 
+        public bool CanPlace(Vector3 centre, Vector3 size)
+        {
+            SpaceZone candidate = new(centre, size * 0.5f, scale, falloff);
+            return !candidate.Influences(conditions.Origin)
+                && !candidate.Influences(conditions.Destination);
+        }
+
         private Vector3 ContentSize
         {
             get

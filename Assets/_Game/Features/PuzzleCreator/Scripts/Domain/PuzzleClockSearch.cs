@@ -40,6 +40,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 {
                     PuzzleZone zone = PuzzleZoneCandidates.Zone(
                         centre, sizes[s], scales[i], scan.Settings.ZoneFalloff);
+                    if (PuzzleZoneCandidates.ContainsEndpoint(zone, scan.Puzzle))
+                        continue;
+
                     if (!IsClockCandidate(scan, zone, centre, out PuzzleSolution candidate))
                         continue;
 

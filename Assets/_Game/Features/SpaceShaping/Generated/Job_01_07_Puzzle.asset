@@ -19,7 +19,7 @@ MonoBehaviour:
   zoneCentre: {x: 0.000000007450581, y: -0.0026328582, z: 0.000000014901161}
   cubeSizeMin: 0.105
   cubeSizeMax: 0.21
-  cubeSize: 0.21
+  cubeSize: 0.105
   captureRadius: 0.025274064
   translatable: 1
   moves: 2

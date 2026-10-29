@@ -27,6 +27,9 @@ namespace DigitalLove.Game.SpaceShaping
             return Mathf.Min(inset.x, Mathf.Min(inset.y, inset.z));
         }
 
+        public bool Influences(Vector3 position) =>
+            Margin(position) + Mathf.Max(Falloff, 0f) * Extent > 0f;
+
         public bool SameRegion(SpaceZone other) =>
             (Centre - other.Centre).sqrMagnitude < 0.000001f
             && (HalfExtents - other.HalfExtents).sqrMagnitude < 0.000001f;

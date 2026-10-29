@@ -130,13 +130,14 @@ namespace DigitalLove.Game.SpaceShaping
         private void SetBar(PuzzleReadout readout)
         {
             float budget = Mathf.Max(readout.EntropyBudget, 0.0001f);
-            float committed = Mathf.Clamp01(readout.EntropySpent / budget);
-            float pending = Mathf.Min(Mathf.Clamp01(readout.EntropyPending / budget), 1f - committed);
+            float spent = Mathf.Clamp01(readout.EntropySpent / budget);
+            float pending = Mathf.Min(Mathf.Clamp01(readout.EntropyPending / budget), 1f - spent);
+            float remaining = 1f - spent;
             bool overflow = readout.EntropyBudget > 0f
                 && readout.EntropySpent + readout.EntropyPending > readout.EntropyBudget;
             SetPendingColor(overflow ? overflowColor : pendingColor);
-            SetSegment(committedFill, 0f, committed);
-            SetSegment(pendingFill, committed, pending);
+            SetSegment(committedFill, 0f, remaining);
+            SetSegment(pendingFill, remaining - pending, pending);
         }
 
         private void SetPendingColor(Color color) => pendingTint.Set(pendingRenderer, color);

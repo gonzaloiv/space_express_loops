@@ -16,7 +16,7 @@ MonoBehaviour:
   prefab: {fileID: 0}
   origin: {x: -0.26742774, y: -0.006344517, z: -0.26742783}
   destination: {x: 0.3653132, y: 0.046173982, z: -0.09788529}
-  zoneCentre: {x: 0.3653132, y: 0.046173982, z: -0.09788529}
+  zoneCentre: {x: -0.0978853, y: 0.030552799, z: 0.3653132}
   cubeSizeMin: 0.105
   cubeSizeMax: 0.21
   cubeSize: 0.105

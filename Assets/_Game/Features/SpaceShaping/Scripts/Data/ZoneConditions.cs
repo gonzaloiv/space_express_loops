@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace DigitalLove.Game.SpaceShaping
 {
     public readonly struct ZoneConditions
@@ -6,13 +8,24 @@ namespace DigitalLove.Game.SpaceShaping
 
         public bool Resizable { get; }
 
+        public Vector3 Origin { get; }
+
+        public Vector3 Destination { get; }
+
         public ZoneConditions(bool translatable, bool resizable)
+            : this(translatable, resizable, Vector3.zero, Vector3.zero)
+        {
+        }
+
+        public ZoneConditions(bool translatable, bool resizable, Vector3 origin, Vector3 destination)
         {
             Translatable = translatable;
             Resizable = resizable;
+            Origin = origin;
+            Destination = destination;
         }
 
         public static ZoneConditions From(PuzzleData puzzle) =>
-            new(puzzle.translatable, puzzle.resizable);
+            new(puzzle.translatable, puzzle.resizable, puzzle.origin, puzzle.destination);
     }
 }

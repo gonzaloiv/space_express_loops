@@ -159,7 +159,14 @@ namespace DigitalLove.Game.SpaceShaping
                 return;
             }
 
-            zone.SetFrame(HandLocal() + grabOffset, zone.Size);
+            Vector3 centre = HandLocal() + grabOffset;
+            if (!zone.CanPlace(centre, zone.Size))
+            {
+                Refuse();
+                return;
+            }
+
+            zone.SetFrame(centre, zone.Size);
         }
 
         private void ScaleUniverse()
@@ -187,7 +194,14 @@ namespace DigitalLove.Game.SpaceShaping
                 return;
             }
 
-            zone.SetFrame(zone.Centre, startSize * ZoneGesture.ResizeFactor(ratio, frameGain, frameGrowRatio));
+            Vector3 size = startSize * ZoneGesture.ResizeFactor(ratio, frameGain, frameGrowRatio);
+            if (!zone.CanPlace(zone.Centre, size))
+            {
+                Refuse();
+                return;
+            }
+
+            zone.SetFrame(zone.Centre, size);
         }
 
         private void ApplyFeedback()

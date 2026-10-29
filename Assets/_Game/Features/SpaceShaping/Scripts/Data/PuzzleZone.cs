@@ -12,7 +12,18 @@ namespace DigitalLove.Game.SpaceShaping
 
         public float Width => halfExtents.x * 2f;
 
+        public float Extent => Mathf.Min(halfExtents.x, Mathf.Min(halfExtents.y, halfExtents.z));
+
         public SpaceZone ToSpaceZone() => new(centre, halfExtents, scale, falloff);
+
+        public float Margin(Vector3 point)
+        {
+            Vector3 inset = halfExtents - Abs(point - centre);
+            return Mathf.Min(inset.x, Mathf.Min(inset.y, inset.z));
+        }
+
+        public bool Influences(Vector3 point) =>
+            Margin(point) + Mathf.Max(falloff, 0f) * Extent > 0f;
 
         public bool Contains(Vector3 point)
         {

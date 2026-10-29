@@ -28,7 +28,7 @@ MonoBehaviour:
   launchSpeed: 0.9
   tmin: 0.18802528
   tmax: 0.5640758
-  entropyBudget: 0.34285712
+  entropyBudget: 0.5142857
   sources:
   - home: {x: 0.06345257, y: 0.005864267, z: -0.14852907}
     scale: 0.0998014

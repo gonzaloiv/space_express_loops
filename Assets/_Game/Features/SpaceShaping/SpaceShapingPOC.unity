@@ -88721,9 +88721,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.PuzzleFieldPlacement
   head: {fileID: 395081174}
   state: {fileID: 1095678994}
-  distance: 0.6
+  distance: 0.5
   heightOffset: -0.1
-  scale: 0.8
+  scale: 0.5
 --- !u!1 &2089349800
 GameObject:
   m_ObjectHideFlags: 0
