@@ -1,6 +1,6 @@
 # Multi-ship spike — can one zone rescue two ships?
 
-**Status:** now · space shaping · updated 2026-10-30 — creator-side feasibility spike before any runtime work.
+**Status:** now · space shaping · updated 2026-10-30 — feasible: one zone rescues multiple runs, field-driven; margins thin.
 
 ## Why
 
@@ -39,6 +39,10 @@ no scene work.
   → `PuzzleFieldBake.Apply`), sweeping the candidate zones.
 - Report per field: the best zone, its rescued-pair count, and their margins; plus how many of K
   fields yield ≥2.
+- Separate **field-driven** from **time-driven** rescues. `SpaceShapingSession.StepBudget` inflates
+  `MaxSteps` globally by the largest zone scale, so a zone buys time for runs it never touches; a
+  rescued-pair count alone would overstate the shared-bottleneck effect. Re-measure with a fixed step
+  budget to isolate the field edit.
 - Exit: a logged report (counts + distribution) we can read.
 
 ### 3. Verdict
@@ -46,6 +50,23 @@ no scene work.
 - Read the report and record go / no-go in this file.
 - Exit: if go, a follow-up plan for bake + runtime (2 ships, N-ready); if no-go, widen to two moves
   (greedy zone cover) or stop.
+
+## Result
+
+Slices 1–2 landed. Sweep over 10 fields (seed 1, 9 planets, clearance 0):
+
+`fields=10 baked=10 fields>=2=10 fields>=2(field-driven)=10 best=35 best(field-driven)=8 bestMargin=0.0008`
+
+- **Feasible.** Every field has a single zone that rescues two or more runs, and every one survives
+  the fixed-budget test — so it is the field edit, not time dilation.
+- Time dilation inflates the count (35 vs 8), confirming the confound; the field-driven 8 is the
+  honest number.
+- **Open: margin.** Best clearance is 0.0008 against a capture radius near 0.0315 (~2.5%): arrivals
+  graze the sphere. At clearance 0 there is no robustness, so whether ≥2 survive a real clearance is
+  the next measurement.
+
+**Verdict:** go — one zone rescues multiple runs, field-driven. Before the bake + runtime plan, sweep
+clearance to find the margin the rescued sets actually hold.
 
 ## Exit
 

@@ -158,6 +158,9 @@ namespace DigitalLove.Game.SpaceShaping.Grid
 
         public void OnBeforeSerialize()
         {
+            if (mesh == null)
+                return;
+
             if (meshFilter.sharedMesh == mesh)
                 meshFilter.sharedMesh = sourceMesh;
         }

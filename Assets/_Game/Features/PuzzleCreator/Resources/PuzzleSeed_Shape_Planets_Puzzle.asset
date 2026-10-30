@@ -17,6 +17,7 @@ MonoBehaviour:
   origin: {x: 0.19508895, y: -0.014309261, z: -0.2634617}
   destination: {x: -0.30366153, y: -0.023950847, z: -0.122035116}
   zoneCentre: {x: -0.054286286, y: -0.019130055, z: -0.19274841}
+  sunCentre: {x: 0, y: 0.22, z: 0}
   cubeSizeMin: 0.17454474
   cubeSizeMax: 0.42954943
   frames:

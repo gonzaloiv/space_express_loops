@@ -61,6 +61,7 @@
   <Project Path="DigitalLove.Timeline.Integrations.csproj" />
   <Project Path="DigitalLove.Game.Persistence.csproj" />
   <Project Path="DigitalLove.XR.MetaPlatform.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Grid.Editor.csproj" />
   <Project Path="DigitalLove.Game.Flow.GameStartState.csproj" />
   <Project Path="DigitalLove.Analytics.GameAnalytics.csproj" />
   <Project Path="DigitalLove.Game.TTS.csproj" />
@@ -90,7 +91,6 @@
   <Project Path="DigitalLove.Reflex.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Creator.Editor.csproj" />
   <Project Path="DigitalLove.Analytics.Integrations.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.Grid.Editor.csproj" />
   <Project Path="DigitalLove.FlowControl.Routes.Editor.csproj" />
   <Project Path="DigitalLove.Audio.Samples.csproj" />
   <Project Path="DigitalLove.Interactables.Keypad.csproj" />
