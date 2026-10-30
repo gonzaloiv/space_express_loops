@@ -11,28 +11,28 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             SpaceShapingSetup setup = SpaceShapingSetup.Build(puzzle, settings);
             SpaceShapingSession start = new(setup);
-            TrajectoryResult startResult = start.Simulate();
-            return VerifyRun(puzzle, settings, setup, solution, startResult);
+            return VerifyRun(puzzle, settings, setup, solution, start.SimulateAll());
         }
 
         private static PuzzleVerification VerifyRun(
             PuzzleData puzzle, PuzzleSimSettings settings, SpaceShapingSetup setup,
-            PuzzleZone[] solution, TrajectoryResult startResult)
+            PuzzleZone[] solution, TrajectoryResult[] startResults)
         {
             SpaceShapingSession solved = new(setup);
             Apply(solved, solution);
-            TrajectoryResult solvedResult = solved.Simulate();
+            TrajectoryResult[] solvedResults = solved.SimulateAll();
+            TrajectoryResult startResult = startResults[0];
             return new PuzzleVerification
             {
                 Start = startResult,
-                SolvedRun = solvedResult,
+                SolvedRun = solvedResults[0],
                 Solution = solution,
                 EntropySpent = solved.EntropySpent,
                 StartMargin = startResult.HasPoints
                     ? startResult.ClosestApproach(setup.Destination)
                     : 0f,
-                StartFails = StartFailed(startResult),
-                Solved = solved.IsSolved(solvedResult)
+                StartFails = !startResults.AllArrived(),
+                Solved = solvedResults.AllArrived()
                     && solved.EntropySpent <= setup.EntropyBudget
                     && Fits(solution, puzzle, settings)
             };
@@ -41,7 +41,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static bool Fits(
             PuzzleZone[] solution, PuzzleData puzzle, PuzzleSimSettings settings)
         {
-            if (solution == null || solution.Length != puzzle.moves)
+            if (solution == null || solution.Length != puzzle.zones)
                 return false;
 
             for (int i = 0; i < solution.Length; i++)
@@ -67,9 +67,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         private static bool SameSize(PuzzleZone a, PuzzleZone b) =>
             Mathf.Abs(a.halfExtents.x - b.halfExtents.x) <= Tolerance;
-
-        private static bool StartFailed(TrajectoryResult result) =>
-            result.Outcome != TrajectoryOutcome.Arrive;
 
         private static void Apply(SpaceShapingSession session, PuzzleZone[] zones)
         {

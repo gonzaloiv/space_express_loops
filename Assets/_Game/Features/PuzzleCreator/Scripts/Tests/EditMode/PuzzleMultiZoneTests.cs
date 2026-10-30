@@ -18,7 +18,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleSeed seed = ScriptableObject.CreateInstance<PuzzleSeed>();
             seed.seed = 2;
             seed.translatable = true;
-            seed.moves = 2;
+            seed.zones = 2;
             seed.resizable = false;
             brief = PuzzleBrief.From(seed, settings);
             planets = Planets(seed);
@@ -38,15 +38,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         [Test]
         public void Brief_SupportsFixedAndMovableMultiZone()
         {
-            Assert.IsTrue(brief.SupportsMoves);
+            Assert.IsTrue(brief.SupportsZones);
 
             PuzzleBrief fixedMulti = brief;
             fixedMulti.Translatable = false;
-            Assert.IsTrue(fixedMulti.SupportsMoves);
+            Assert.IsTrue(fixedMulti.SupportsZones);
 
             PuzzleBrief tooMany = brief;
-            tooMany.Moves = 4;
-            Assert.IsFalse(tooMany.SupportsMoves);
+            tooMany.Zones = 4;
+            Assert.IsFalse(tooMany.SupportsZones);
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleSeed seed = ScriptableObject.CreateInstance<PuzzleSeed>();
             seed.seed = 1;
             seed.translatable = true;
-            seed.moves = 2;
+            seed.zones = 2;
             PuzzleBrief shorter = PuzzleBrief.From(seed, settings);
             PuzzlePlanetListAsset field = Planets(seed);
 
@@ -110,7 +110,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         public void Search_ThreeZones()
         {
             PuzzleBrief three = brief;
-            three.Moves = 3;
+            three.Zones = 3;
             PuzzleData field = WideField(three);
 
             Assert.IsTrue(PuzzleSolutionSearch.TrySelect(field, sim, three, out PuzzleSolution first));
@@ -131,7 +131,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             puzzle.destination = new Vector3(0.5f, 0f, 0f);
             puzzle.cubeSizeMin = 0.1f;
             puzzle.cubeSizeMax = 0.5f;
-            puzzle.moves = 2;
+            puzzle.zones = 2;
             puzzle.sources = new[] { new PuzzleSource { home = new Vector3(0f, 0.2f, 0f), scale = 0.1f } };
             PuzzleZone zone = PuzzleZoneCandidates.Zone(Vector3.zero, 0.2f, 1.4f, settings.zoneFalloff);
 

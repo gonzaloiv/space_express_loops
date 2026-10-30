@@ -10,12 +10,8 @@ namespace DigitalLove.Game.SpaceShaping
         private readonly Vector3[] positions;
         private readonly float[] scales;
         private readonly SourceSpec[] specs;
-        private readonly List<SpaceScaleCommand> commands = new();
-        private readonly List<SpaceZone> zones = new();
-
-        private SpaceScaleCommand preview;
-        private float entropySpent;
-        private float entropyCommitted;
+        private readonly ShipSpec[] ships;
+        private readonly ZoneCommandLog log = new();
 
         public SpaceShapingSession(SpaceShapingSetup setup)
         {
@@ -23,37 +19,53 @@ namespace DigitalLove.Game.SpaceShaping
             positions = new Vector3[setup.Sources.Length];
             scales = new float[setup.Sources.Length];
             specs = new SourceSpec[setup.Sources.Length];
+            ships = ShipSpecs.Resolve(setup);
             Reset();
         }
 
         public int SourceCount => positions.Length;
 
+        public int ShipCount => ships.Length;
+
+        public ShipSpec Ship(int index) => ships[index];
+
         public Vector3 Origin => setup.Origin;
 
         public Vector3 Destination => setup.Destination;
 
-        public float OriginRadius
+        // The source sitting at a point, or -1 when none does.
+        public int IndexOf(Vector3 point)
         {
-            get
+            for (int i = 0; i < positions.Length; i++)
             {
-                int origin = OriginIndex();
-                return origin >= 0 ? scales[origin] * 0.5f : 0f;
+                if ((setup.Sources[i].Home - point).sqrMagnitude < 0.000001f)
+                    return i;
             }
+
+            return -1;
         }
 
-        public IReadOnlyList<SpaceZone> Zones => zones;
+        // The planet radius at a point (0 if no planet sits there). A source's scale is its diameter:
+        // the sphere is scaled by the full source scale, matching the radius the field integrates with.
+        public float RadiusAt(Vector3 point)
+        {
+            int index = IndexOf(point);
+            return index >= 0 ? scales[index] * 0.5f : 0f;
+        }
 
-        public int CommandCount => commands.Count;
+        public IReadOnlyList<SpaceZone> Zones => log.Zones;
 
-        public float EntropySpent => entropySpent;
+        public int CommandCount => log.Count;
 
-        public float EntropyCommitted => entropyCommitted;
+        public float EntropySpent => log.Spent;
 
-        public float PendingEntropy => entropySpent - entropyCommitted;
+        public float EntropyCommitted => log.Committed;
+
+        public float PendingEntropy => log.Pending;
 
         public float EntropyBudget => setup.EntropyBudget;
 
-        public bool IsOverBudget => setup.EntropyBudget > 0f && entropyCommitted >= setup.EntropyBudget;
+        public bool IsOverBudget => setup.EntropyBudget > 0f && log.Committed >= setup.EntropyBudget;
 
         public Vector3 Home(int index) => setup.Sources[index].Home;
 
@@ -66,14 +78,16 @@ namespace DigitalLove.Game.SpaceShaping
         public bool IsSolved(TrajectoryResult result) =>
             result.Outcome == TrajectoryOutcome.Arrive;
 
-        public bool IsFailed(TrajectoryResult result) => IsOverBudget && !IsSolved(result);
+        public bool IsSolved(IReadOnlyList<TrajectoryResult> results) => results.AllArrived();
 
-        public int Grade() => PuzzleGrade.Stars(entropyCommitted, setup.EntropyBudget);
+        public bool IsFailed(IReadOnlyList<TrajectoryResult> results) =>
+            IsOverBudget && !results.AllArrived();
+
+        public int Grade() => PuzzleGrade.Stars(log.Committed, setup.EntropyBudget);
 
         public void Reset()
         {
-            commands.Clear();
-            preview = null;
+            log.Clear();
             Recompute();
         }
 
@@ -85,27 +99,21 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void PreviewZone(SpaceZone zone)
         {
-            float cost = Mathf.Abs(zone.Scale - ReferenceScale(zone));
-            preview = new SpaceScaleCommand(zone, cost);
+            log.Preview(zone);
             Recompute();
         }
 
         public void CommitPreview()
         {
-            if (preview == null)
-                return;
-
-            commands.Add(preview);
-            preview = null;
+            log.Commit();
             Recompute();
         }
 
         public bool Undo()
         {
-            if (commands.Count == 0)
+            if (!log.Undo())
                 return false;
 
-            commands.RemoveAt(commands.Count - 1);
             Recompute();
             return true;
         }
@@ -123,42 +131,51 @@ namespace DigitalLove.Game.SpaceShaping
             return field;
         }
 
+        // The primary run: the first ship. A single-ship puzzle has exactly this one.
         public TrajectoryResult Simulate() => Simulate(BuildField(), new TrajectoryIntegrator(), new ShipLaunch());
 
         public TrajectoryResult Simulate(
+            SpacetimeField field, TrajectoryIntegrator integrator, ShipLaunch launch) =>
+            SimulateShip(field, integrator, launch, ships[0], StepBudget());
+
+        // One result per ship, all sharing the budget of the longest run.
+        public TrajectoryResult[] SimulateAll() =>
+            SimulateAll(BuildField(), new TrajectoryIntegrator(), new ShipLaunch());
+
+        public TrajectoryResult[] SimulateAll(
             SpacetimeField field, TrajectoryIntegrator integrator, ShipLaunch launch)
+        {
+            TrajectoryResult[] results = new TrajectoryResult[ships.Length];
+            int budget = StepBudget();
+            for (int i = 0; i < ships.Length; i++)
+                results[i] = SimulateShip(field, integrator, launch, ships[i], budget);
+
+            return results;
+        }
+
+        private TrajectoryResult SimulateShip(
+            SpacetimeField field, TrajectoryIntegrator integrator, ShipLaunch launch,
+            ShipSpec ship, int budget)
         {
             TrajectorySettings settings = new()
             {
-                Destination = setup.Destination,
-                CaptureRadius = setup.Sim.CaptureRadius,
+                Destination = ship.Destination,
+                CaptureRadius = ship.CaptureRadius > 0f ? ship.CaptureRadius : setup.Sim.CaptureRadius,
                 StepSecs = setup.Sim.StepSecs,
-                MaxSteps = StepBudget(),
-                Zones = zones
+                MaxSteps = budget,
+                Zones = log.Zones
             };
 
             launch.LaunchSpeed = setup.LaunchSpeed;
-            return launch.Simulate(field, setup.Origin, setup.Destination, settings, integrator);
-        }
-
-        private int OriginIndex()
-        {
-            for (int i = 0; i < setup.Sources.Length; i++)
-            {
-                if ((setup.Sources[i].Home - setup.Origin).sqrMagnitude < 0.000001f)
-                    return i;
-            }
-
-            return -1;
+            return launch.Simulate(field, ship.Origin, ship.Destination, settings, integrator);
         }
 
         private void Recompute()
         {
             RestorePristine();
-            RebuildZones();
+            log.Rebuild(setup.Sim.ZoneEffectGain);
             ApplyZones();
             SourceConstraints.Apply(positions, scales, specs, setup.Sim.SeparationScale);
-            RecomputeEntropy();
         }
 
         private void RestorePristine()
@@ -171,61 +188,17 @@ namespace DigitalLove.Game.SpaceShaping
             }
         }
 
-        private void RebuildZones()
-        {
-            zones.Clear();
-            for (int c = 0; c < commands.Count; c++)
-                UpsertZone(commands[c].Zone);
-
-            if (preview != null)
-                UpsertZone(preview.Zone);
-        }
-
-        private void UpsertZone(SpaceZone zone)
-        {
-            SpaceZone effective = zone.Effective(setup.Sim.ZoneEffectGain);
-            for (int i = 0; i < zones.Count; i++)
-            {
-                if (!zones[i].SameRegion(zone))
-                    continue;
-
-                zones[i] = effective;
-                return;
-            }
-
-            zones.Add(effective);
-        }
-
         private void ApplyZones()
         {
+            IReadOnlyList<SpaceZone> zones = log.Zones;
             for (int i = 0; i < zones.Count; i++)
                 zones[i].ApplyTo(positions, scales, specs);
-        }
-
-        private void RecomputeEntropy()
-        {
-            float committed = 0f;
-            for (int c = 0; c < commands.Count; c++)
-                committed += commands[c].EntropyCost;
-
-            entropyCommitted = committed;
-            entropySpent = committed + (preview != null ? preview.EntropyCost : 0f);
-        }
-
-        private float ReferenceScale(SpaceZone zone)
-        {
-            for (int c = commands.Count - 1; c >= 0; c--)
-            {
-                if (commands[c].Zone.SameRegion(zone))
-                    return commands[c].Zone.Scale;
-            }
-
-            return 1f;
         }
 
         private int StepBudget()
         {
             float factor = 1f;
+            IReadOnlyList<SpaceZone> zones = log.Zones;
             for (int i = 0; i < zones.Count; i++)
             {
                 if (zones[i].IsActive)

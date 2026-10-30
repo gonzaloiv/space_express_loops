@@ -14,12 +14,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleSeed seed, SpaceShapingSettings settings, int fields, float clearance)
         {
             PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
-            PuzzleBrief brief = PuzzleBrief.From(seed, settings);
             PuzzleShipSweepReport report = new() { Fields = fields };
 
             for (int i = 0; i < fields; i++)
             {
-                PuzzleData field = Field(seed, settings, sim, brief, seed.seed + i);
+                PuzzleData field = PuzzleSeedField.Build(seed, settings, seed.seed + i);
                 if (field == null)
                     continue;
 
@@ -56,7 +55,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             float scale, ref FieldResult best)
         {
             PuzzleZone zone = PuzzleZoneCandidates.Zone(centre, size, scale, sim.ZoneFalloff);
-            if (!PuzzleZoneCandidates.ContainsSource(zone, field))
+            if (!PuzzleZoneCandidates.CoversSource(zone, field))
                 return;
 
             List<PuzzleShipRescue> rescued = scan.Rescued(zone);
@@ -93,26 +92,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             if (result.FixedCount >= 2)
                 report.FieldsWithTwoFixed++;
-        }
-
-        private static PuzzleData Field(
-            PuzzleSeed seed, SpaceShapingSettings settings, PuzzleSimSettings sim, PuzzleBrief brief,
-            int seedValue)
-        {
-            PuzzleSeed probe = Object.Instantiate(seed);
-            probe.seed = seedValue;
-            PuzzleShapeAsset shape = PuzzleArtifactFactory.Shape(probe, settings);
-            PuzzlePlanetListAsset planets = PuzzleArtifactFactory.Planets(shape);
-            PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
-            bool baked = PuzzleFieldBake.Apply(brief, field, planets, sim);
-            Object.DestroyImmediate(planets);
-            Object.DestroyImmediate(shape);
-            Object.DestroyImmediate(probe);
-            if (baked)
-                return field;
-
-            Object.DestroyImmediate(field);
-            return null;
         }
 
         private struct FieldResult

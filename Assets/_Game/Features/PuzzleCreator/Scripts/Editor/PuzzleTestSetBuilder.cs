@@ -24,17 +24,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             public readonly int Seed;
             public readonly int PlanetCount;
             public readonly bool Translatable;
-            public readonly int Moves;
+            public readonly int Zones;
             public readonly int Attempts;
 
             public Job(
-                string id, int seed, int planetCount, bool translatable, int moves, int attempts)
+                string id, int seed, int planetCount, bool translatable, int zones, int attempts)
             {
                 Id = id;
                 Seed = seed;
                 PlanetCount = planetCount;
                 Translatable = translatable;
-                Moves = moves;
+                Zones = zones;
                 Attempts = attempts;
             }
         }
@@ -71,14 +71,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 seed.seed = job.Seed;
                 seed.planetCount = job.PlanetCount;
                 seed.translatable = job.Translatable;
-                seed.moves = job.Moves;
+                seed.zones = job.Zones;
                 seed.resizable = false;
 
                 PuzzleSeedScanResult result = PuzzleSeedScanner.Find(seed, settings, job.Attempts);
                 Object.DestroyImmediate(seed);
 
                 PuzzleData baked = result.Found ? result.Puzzle : null;
-                if (baked == null && job.Moves > 1)
+                if (baked == null && job.Zones > 1)
                 {
                     baked = TryBakeLoose(job, settings, out PuzzleBakeStatus looseStatus);
                     if (baked != null)
@@ -111,7 +111,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                     fallback = saved;
 
                 Debug.Log(
-                    $"Test set: {job.Id} {result.Status} (seed {result.Seed}, {baked.moves} step(s)) -> " +
+                    $"Test set: {job.Id} {result.Status} (seed {result.Seed}, {baked.zones} zone(s)) -> " +
                     (saved != null ? "saved" : "MISSING"));
             }
 
@@ -136,7 +136,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             seed.seed = MazeSeed;
             seed.planetCount = MazePlanets;
             seed.translatable = false;
-            seed.moves = 1;
+            seed.zones = 1;
             seed.resizable = false;
 
             PuzzleSeedScanResult result = PuzzleSeedScanner.Find(seed, settings, MazeAttempts);
@@ -162,7 +162,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             WireScene(new[] { saved });
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log($"Maze test: baked Maze_01 (seed {result.Seed}, {baked.moves} step(s)) and wired into SpaceShapingPOC.");
+            Debug.Log($"Maze test: baked Maze_01 (seed {result.Seed}, {baked.zones} zone(s)) and wired into SpaceShapingPOC.");
         }
 
         private static PuzzleData TryBakeLoose(
@@ -173,7 +173,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             seed.seed = job.Seed;
             seed.planetCount = job.PlanetCount;
             seed.translatable = job.Translatable;
-            seed.moves = job.Moves;
+            seed.zones = job.Zones;
             seed.resizable = false;
 
             PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
@@ -200,7 +200,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             field.entropyBudget = found.EntropySpent * PuzzleGrade.BudgetFactor;
             PuzzleData variant = Object.Instantiate(field);
             variant.frames = PuzzleFieldBake.BuildFrames(field, found, brief);
-            variant.moves = found.Zones.Length;
+            variant.zones = found.Zones.Length;
             PuzzleVerification check = PuzzleVerifier.Verify(variant, found.Zones, sim);
             Object.DestroyImmediate(field);
             Object.DestroyImmediate(seed);

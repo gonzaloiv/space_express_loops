@@ -6,18 +6,23 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     {
         public float EndpointClearance;
         public bool Translatable;
-        public int Moves;
+        public int Zones;
         public bool Resizable;
+        public int Ships;
 
-        public bool SupportsMoves =>
-            Moves <= 3;
+        public bool SupportsZones =>
+            Zones <= 3;
+
+        public bool IsMultiShip =>
+            Ships > 1;
 
         public static PuzzleBrief From(PuzzleSeed seed, SpaceShapingSettings settings) => new()
         {
             EndpointClearance = settings.endpointClearance,
             Translatable = seed.translatable,
-            Moves = Mathf.Max(1, seed.moves),
-            Resizable = seed.resizable
+            Zones = Mathf.Max(1, seed.zones),
+            Resizable = seed.resizable,
+            Ships = Mathf.Max(1, seed.ships)
         };
     }
 }

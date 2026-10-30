@@ -9,8 +9,6 @@ namespace DigitalLove.Game.SpaceShaping
 
         public IReadOnlyList<SpaceSource> Sources => sources;
 
-        public void Clear() => sources.Clear();
-
         public void Add(SpaceSource source) => sources.Add(source);
 
         public float Potential(Vector3 position)

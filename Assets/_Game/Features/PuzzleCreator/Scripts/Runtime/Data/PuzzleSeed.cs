@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace DigitalLove.Game.SpaceShaping.Creator
 {
@@ -15,9 +16,16 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         [Tooltip("The cube may be moved over the field. A fixed level places several cubes instead.")]
         public bool translatable;
 
-        [Tooltip("How many zones the solution scales (1–3). A fixed level places that many cubes.")]
+        [Tooltip("Zones the solution scales (1–3) — the bake's zone count, not the cubes placed. A fixed "
+            + "level places that many cubes; a movable level ships one start frame the player moves.")]
         [Min(1)]
-        public int moves = 1;
+        [FormerlySerializedAs("moves")]
+        public int zones = 1;
+
+        [Tooltip("Ships the level must land. 1 is the classic single-ship puzzle (origin to destination); "
+            + "2 or more bakes a shared-field level where every ship must arrive.")]
+        [Min(1)]
+        public int ships = 1;
 
         [Tooltip("The frame may be resized at runtime (1x to 2x).")]
         public bool resizable;

@@ -10,13 +10,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public static bool TrySelect(
             PuzzleData puzzle, PuzzleSimSettings settings, PuzzleBrief brief, out PuzzleSolution solution)
         {
-            if (!brief.SupportsMoves)
+            if (!brief.SupportsZones)
             {
                 solution = default;
                 return false;
             }
 
-            if (brief.Moves > 1)
+            if (brief.Zones > 1)
                 return PuzzleBeamSearch.TrySelect(puzzle, settings, brief, out solution);
 
             CentreHit hit = BestCentre(
@@ -37,7 +37,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleData puzzle, PuzzleSimSettings settings, PuzzleBrief brief, float width,
             out PuzzleSolution solution)
         {
-            if (brief.Moves <= 1)
+            if (brief.Zones <= 1)
                 return TryBestSingleAtWidth(puzzle, settings, width, out solution);
 
             return PuzzleBeamSearch.TrySelect(puzzle, settings, brief, width, out solution);
@@ -95,7 +95,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (PuzzleZoneCandidates.ContainsEndpoint(zone, puzzle))
                 return false;
 
-            if (!PuzzleZoneCandidates.ContainsSource(zone, puzzle))
+            if (!PuzzleZoneCandidates.CoversSource(zone, puzzle))
                 return false;
 
             return PuzzleZoneRun.TryArrive(puzzle, settings, zone, out solution);

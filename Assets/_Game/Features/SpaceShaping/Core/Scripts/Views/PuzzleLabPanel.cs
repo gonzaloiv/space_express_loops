@@ -69,7 +69,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void OnReadoutChanged(PuzzleReadout readout)
         {
-            if (hasRendered && SameDisplay(readout, lastReadout))
+            if (hasRendered && readout.Equals(lastReadout))
                 return;
 
             hasRendered = true;
@@ -216,17 +216,5 @@ namespace DigitalLove.Game.SpaceShaping
             grade >= 3 ? AccentColor : grade > 0 ? ValueColor : FaintColor;
 
         private static string F(float value) => value.ToString("0.00", CultureInfo.InvariantCulture);
-
-        private static bool SameDisplay(PuzzleReadout a, PuzzleReadout b) =>
-            a.EntropySpent == b.EntropySpent
-            && a.EntropyPending == b.EntropyPending
-            && a.EntropyBudget == b.EntropyBudget
-            && a.Outcome == b.Outcome
-            && a.HasResult == b.HasResult
-            && a.PredictedSolved == b.PredictedSolved
-            && a.IsChecked == b.IsChecked
-            && a.IsSolved == b.IsSolved
-            && a.IsFailed == b.IsFailed
-            && a.Grade == b.Grade;
     }
 }

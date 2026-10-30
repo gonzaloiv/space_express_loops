@@ -38,16 +38,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         [Header("Refuse")]
         [SerializeField] private float refuseSecs = 0.18f;
 
-        private RendererTint frameTint;
-        private RendererTint fillTint;
-
-        private float minScaleFactor = 0.6f;
-        private float maxScaleFactor = 1.8f;
-
-        private bool hasPrediction;
-        private ZoneVerdict predictedVerdict;
-        private ZoneRefusal refusal;
-        private float refusedUntil;
+        private ZoneFeedback feedback;
 
         private bool classified;
         private bool frameGrab;
@@ -61,36 +52,25 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         private bool hovering;
         private Vector3 hoverWorld;
 
-        public event Action<ZoneRefusal> Refused;
+        public event Action<ZoneRefusal> Refused
+        {
+            add => feedback.Refused += value;
+            remove => feedback.Refused -= value;
+        }
+
+        private void Awake() => feedback = new ZoneFeedback(frameRenderer, fillRenderer, BuildPalette());
 
         private void OnEnable() => grabbable.WhenPointerEventRaised += OnPointerEvent;
 
         private void OnDisable() => grabbable.WhenPointerEventRaised -= OnPointerEvent;
 
-        public void SetScaleEnvelope(float min, float max)
-        {
-            minScaleFactor = min;
-            maxScaleFactor = max;
-        }
+        public void SetScaleEnvelope(float min, float max) => feedback.SetScaleEnvelope(min, max);
 
-        public void SetPrediction(ZoneVerdict verdict)
-        {
-            hasPrediction = true;
-            predictedVerdict = verdict;
-        }
+        public void SetPrediction(ZoneVerdict verdict) => feedback.SetPrediction(verdict);
 
-        public void ClearPrediction() => hasPrediction = false;
+        public void ClearPrediction() => feedback.ClearPrediction();
 
-        public void Refuse(ZoneRefusal reason)
-        {
-            bool repeat = IsRefusing && refusal == reason;
-            refusal = reason;
-            refusedUntil = Time.unscaledTime + refuseSecs;
-            if (!repeat)
-                Refused?.Invoke(reason);
-        }
-
-        private bool IsRefusing => Time.unscaledTime < refusedUntil;
+        public void Refuse(ZoneRefusal reason) => feedback.Refuse(reason);
 
         private void OnPointerEvent(PointerEvent evt)
         {
@@ -122,7 +102,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
             TrackCount(count);
             ApplyGesture(count);
-            ApplyFeedback();
+            ApplyFeedback(count);
             lastCount = count;
         }
 
@@ -131,8 +111,11 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             zone.SetScaling(false);
             classified = false;
             lastCount = 0;
-            ApplyFeedback();
+            ApplyFeedback(0);
         }
+
+        private void ApplyFeedback(int count) =>
+            feedback.Apply(zone, count, frameGrab, hovering, hoverWorld);
 
         private void TrackCount(int count)
         {
@@ -197,7 +180,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
             float target = ZoneGesture.ScaleTarget(
                 startScale, ZoneGesture.HandDistance(grabbable) / startHandDistance, scaleGain,
-                minScaleFactor, maxScaleFactor);
+                feedback.MinScale, feedback.MaxScale);
             float blend = 1f - Mathf.Exp(-Time.deltaTime / Mathf.Max(scaleSmoothSecs, 0.001f));
             zone.SetScale(Mathf.Lerp(zone.Scale, target, blend));
         }
@@ -225,66 +208,20 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             zone.SetFrame(zone.Centre, size);
         }
 
-        private void ApplyFeedback()
-        {
-            if (IsRefusing)
+        private ZonePalette BuildPalette() =>
+            new()
             {
-                frameTint.Set(frameRenderer, danger.value);
-                fillTint.Set(fillRenderer, Fill(neutral, fillIdleAlpha));
-                return;
-            }
-
-            if (grabbable.SelectingPointsCount == 0)
-            {
-                ApplyIdleFeedback();
-                return;
-            }
-
-            bool scaling = grabbable.SelectingPointsCount >= 2 && !frameGrab;
-            Color frameColor = scaling ? PredictionColor(miss.value, neutral.value) : FrameActiveColor();
-            frameTint.Set(frameRenderer, frameColor);
-            fillTint.Set(fillRenderer, scaling ? ScaleColor() : Fill(neutral, fillIdleAlpha));
-        }
-
-        private Color PredictionColor(Color missColor, Color none)
-        {
-            if (!hasPrediction)
-                return none;
-
-            if (predictedVerdict == ZoneVerdict.Solved)
-                return success.value;
-
-            return predictedVerdict == ZoneVerdict.Crash ? danger.value : missColor;
-        }
-
-        private void ApplyIdleFeedback()
-        {
-            bool hoverInside = hovering && zone.ContentContains(hoverWorld);
-            Color fallback = hovering && !hoverInside ? neutralHover.value : neutral.value;
-            frameTint.Set(frameRenderer, PredictionColor(fallback, fallback));
-            fillTint.Set(fillRenderer, hovering && hoverInside
-                ? Fill(neutralHover, fillIdleAlpha)
-                : Fill(neutral, fillIdleAlpha));
-        }
-
-        private Color FrameActiveColor()
-        {
-            if (grabbable.SelectingPointsCount >= 2)
-                return zone.CanResize ? fast.value : neutral.value;
-
-            return zone.CanMove ? neutralHover.value : neutral.value;
-        }
-
-        private Color ScaleColor() =>
-            Color.Lerp(Fill(slow, fillActiveAlpha), Fill(fast, fillActiveAlpha), Mathf.InverseLerp(
-                minScaleFactor, maxScaleFactor, zone.Scale));
-
-        private static Color Fill(ColorValue color, float alpha)
-        {
-            Color value = color.value;
-            value.a = alpha;
-            return value;
-        }
+                Neutral = neutral.value,
+                NeutralHover = neutralHover.value,
+                Slow = slow.value,
+                Fast = fast.value,
+                Success = success.value,
+                Miss = miss.value,
+                Danger = danger.value,
+                FillIdleAlpha = fillIdleAlpha,
+                FillActiveAlpha = fillActiveAlpha,
+                RefuseSecs = refuseSecs
+            };
 
         private Vector3 HandLocal() => ZoneGesture.HandLocal(zone, grabbable);
     }

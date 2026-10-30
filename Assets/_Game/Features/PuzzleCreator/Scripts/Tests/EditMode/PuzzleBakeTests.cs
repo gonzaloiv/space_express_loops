@@ -65,7 +65,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleData variant = Bake(out PuzzleZone[] solution);
 
             Assert.IsFalse(variant.translatable);
-            Assert.AreEqual(1, variant.moves);
+            Assert.AreEqual(1, variant.zones);
             Assert.AreEqual(1, variant.frames.Length);
             Assert.Less(Vector3.Distance(variant.frames[0].centre, solution[0].centre), 1e-4f);
             Object.DestroyImmediate(variant);
@@ -76,14 +76,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         {
             PuzzleSeed authored = ScriptableObject.CreateInstance<PuzzleSeed>();
             authored.translatable = true;
-            authored.moves = 2;
+            authored.zones = 2;
             authored.resizable = true;
 
             PuzzleBrief mapped = PuzzleBrief.From(authored, settings);
 
             Assert.AreEqual(settings.endpointClearance, mapped.EndpointClearance, 1e-4f);
             Assert.IsTrue(mapped.Translatable);
-            Assert.AreEqual(2, mapped.Moves);
+            Assert.AreEqual(2, mapped.Zones);
             Assert.IsTrue(mapped.Resizable);
             Object.DestroyImmediate(authored);
         }
@@ -92,7 +92,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         public void Bake_FixedMultiZone_IsSearched()
         {
             PuzzleBrief multi = brief;
-            multi.Moves = 2;
+            multi.Zones = 2;
 
             PuzzleFieldBake.Bake(planets, sim, multi, out PuzzleBakeStatus status, out _);
 

@@ -19,16 +19,16 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             out PuzzleSolution solution)
         {
             solution = default;
-            int moves = Mathf.Clamp(brief.Moves, 2, 3);
+            int zones = Mathf.Clamp(brief.Zones, 2, 3);
             PuzzleSearchContext context = new(
                 puzzle, settings,
                 PuzzleZoneCandidates.Centres(puzzle, puzzle.cubeSizeMax),
-                PuzzleZoneCandidates.Scales(settings, moves == 2 ? 8 : 6));
+                PuzzleZoneCandidates.Scales(settings, zones == 2 ? 8 : 6));
 
             List<PuzzleChain> beam = FirstStep(
                 context, PuzzleZoneCandidates.Sizes(puzzle), width);
-            for (int depth = 2; depth <= moves && beam.Count > 0; depth++)
-                beam = Expand(context, beam, depth == moves);
+            for (int depth = 2; depth <= zones && beam.Count > 0; depth++)
+                beam = Expand(context, beam, depth == zones);
 
             return Choose(beam, out solution);
         }
@@ -81,7 +81,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             PuzzleZone zone = PuzzleZoneCandidates.Zone(centre, size, scale, context.Settings.ZoneFalloff);
             if (PuzzleZoneCandidates.ContainsEndpoint(zone, context.Puzzle)
-                || !PuzzleZoneCandidates.ContainsSource(zone, context.Puzzle))
+                || !PuzzleZoneCandidates.CoversSource(zone, context.Puzzle))
                 return false;
 
             context.Evaluations++;
@@ -121,7 +121,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return;
 
             if (PuzzleZoneCandidates.ContainsEndpoint(zone, context.Puzzle)
-                || !PuzzleZoneCandidates.ContainsSource(zone, context.Puzzle)
+                || !PuzzleZoneCandidates.CoversSource(zone, context.Puzzle)
                 || Overlaps(prefix.Zones, zone))
                 return;
 

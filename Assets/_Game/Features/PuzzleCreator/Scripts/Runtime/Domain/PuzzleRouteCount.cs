@@ -51,7 +51,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return false;
 
             if (PuzzleZoneCandidates.ContainsEndpoint(moved, puzzle)
-                || !PuzzleZoneCandidates.ContainsSource(moved, puzzle))
+                || !PuzzleZoneCandidates.CoversSource(moved, puzzle))
                 return false;
 
             for (int i = 0; i < solution.Length; i++)

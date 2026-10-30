@@ -12,6 +12,7 @@ namespace DigitalLove.Game.SpaceShaping
         public float EntropyBudget;
         public PuzzleSimSettings Sim;
         public SourceSpec[] Sources;
+        public ShipSpec[] Ships;
 
         public static SpaceShapingSetup Build(PuzzleData puzzle, PuzzleSimSettings settings)
         {
@@ -22,24 +23,30 @@ namespace DigitalLove.Game.SpaceShaping
             if (capture > 0f)
                 sim.CaptureRadius = capture;
 
+            ShipSpec[] ships = ShipSpecs.From(puzzle);
+
             return new SpaceShapingSetup
             {
                 Origin = puzzle.Origin,
                 Destination = puzzle.Destination,
-                MaxSteps = BudgetSteps(puzzle, settings),
+                MaxSteps = BudgetSteps(ships, settings),
                 LaunchSpeed = settings.LaunchSpeed,
                 EntropyBudget = puzzle.entropyBudget,
                 Sim = sim,
-                Sources = SourceSpecs.From(puzzle.sources, settings)
+                Sources = SourceSpecs.From(puzzle.sources, settings),
+                Ships = ships
             };
         }
 
-        private static int BudgetSteps(PuzzleData puzzle, PuzzleSimSettings settings)
+        private static int BudgetSteps(ShipSpec[] ships, PuzzleSimSettings settings)
         {
             if (settings.NominalSpeed <= 0f || settings.StepSecs <= 0f)
                 return 1;
 
-            float run = Vector3.Distance(puzzle.Origin, puzzle.Destination);
+            float run = 0f;
+            for (int i = 0; i < ships.Length; i++)
+                run = Mathf.Max(run, Vector3.Distance(ships[i].Origin, ships[i].Destination));
+
             return Mathf.Max(1, Mathf.CeilToInt(run / settings.NominalSpeed / settings.StepSecs));
         }
     }

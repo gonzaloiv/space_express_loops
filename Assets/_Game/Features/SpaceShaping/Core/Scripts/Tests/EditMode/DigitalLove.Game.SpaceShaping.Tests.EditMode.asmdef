@@ -6,8 +6,7 @@
         "DigitalLove.Game.SpaceShaping",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "DigitalLove.Game.SpaceShaping.Zone",
-        "DigitalLove.Game.SpaceShaping.Grid"
+        "DigitalLove.Game.SpaceShaping.Zone"
     ],
     "includePlatforms": [
         "Editor"

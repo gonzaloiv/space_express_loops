@@ -140,15 +140,16 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void BuildSetup_UsesTheGlobalLaunchSpeed()
+        public void BuildSetup_LaunchSpeedIsFactorTimesNominalSpeed()
         {
             PuzzleData puzzle = Bare();
             SpaceShapingSettings settings = Settings();
-            settings.launchSpeed = 1.25f;
+            settings.launchSpeedFactor = 1.25f;
+            settings.nominalSpeed = 2f;
 
             SpaceShapingSetup setup = SpaceShapingSetup.Build(puzzle, PuzzleSimSettings.From(settings));
 
-            Assert.AreEqual(1.25f, setup.LaunchSpeed, 1e-4f);
+            Assert.AreEqual(2.5f, setup.LaunchSpeed, 1e-4f);
         }
 
         private static PuzzleData Bare()

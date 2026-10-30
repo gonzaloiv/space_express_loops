@@ -1,6 +1,7 @@
 using DigitalLove.Casual.Levels;
 using DigitalLove.Game.SpaceShaping.Cube;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace DigitalLove.Game.SpaceShaping
 {
@@ -21,12 +22,16 @@ namespace DigitalLove.Game.SpaceShaping
         public bool translatable;
         [Tooltip("Zones the solution scales — the bake's zone count, not the cubes placed. A movable "
             + "level ships one start frame and the player moves it between zones.")]
-        public int moves = 1;
+        [FormerlySerializedAs("moves")]
+        public int zones = 1;
         [Tooltip("Baked route clusters: distinct zone sets that arrive within budget.")]
         public int routes = 1;
         public bool resizable;
         public float entropyBudget = 1f;
         public PuzzleSource[] sources;
+        [Tooltip("Extra ships. Empty is the single-ship puzzle (origin/destination); two or more makes "
+            + "it a multi-ship level, solved when every ship arrives.")]
+        public PuzzleShip[] ships;
 
         public Vector3 Origin => origin;
 

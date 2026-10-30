@@ -10,8 +10,8 @@ namespace DigitalLove.Game.SpaceShaping
         public float runDistance = 0.7f;
 
         [Header("Simulation")]
-        [Tooltip("Given launch speed, shared by every puzzle, in metres per second.")]
-        public float launchSpeed = 0.9f;
+        [Tooltip("Launch speed as a multiple of nominalSpeed, shared by every puzzle. nominalSpeed carries the field's scale, so this stays a constant when the field is resized.")]
+        public float launchSpeedFactor = 0.9f;
 
         [Tooltip("Integrator step, in seconds. The step budget is derived from the run and the nominal speed, so the budget can never drift from the run.")]
         public float stepSecs = 0.0008333333f;

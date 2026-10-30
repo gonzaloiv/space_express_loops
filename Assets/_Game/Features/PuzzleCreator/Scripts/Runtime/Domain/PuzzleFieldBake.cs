@@ -13,7 +13,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.cubeSizeMin = min;
             puzzle.cubeSizeMax = max;
             puzzle.translatable = brief.Translatable;
-            puzzle.moves = brief.Moves;
+            puzzle.zones = brief.Zones;
             puzzle.resizable = brief.Resizable;
             if (!PuzzleRunChoice.TryPick(
                 planets.planets, settings.RunDistance, brief.EndpointClearance,
@@ -27,10 +27,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return true;
         }
 
-        private const float CubeMargin = 1.1f;
-
-        // The cube must enclose the planet it covers, so the range spans the field's planets with a
-        // margin: the smallest planet for the floor, the largest for the ceiling.
+        // The cube must enclose the planet it covers, so the range spans the field's planets with the
+        // same margin the search requires: the smallest planet for the floor, the largest for the
+        // ceiling.
         private static void CubeRange(PuzzlePlanetListAsset planets, out float min, out float max)
         {
             float smallest = float.MaxValue;
@@ -42,8 +41,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 largest = Mathf.Max(largest, radius);
             }
 
-            min = Mathf.Max(smallest, 0.01f) * 2f * CubeMargin;
-            max = Mathf.Max(largest, 0.01f) * 2f * CubeMargin;
+            min = Mathf.Max(smallest, 0.01f) * 2f * PuzzleZoneCandidates.PlanetMargin;
+            max = Mathf.Max(largest, 0.01f) * 2f * PuzzleZoneCandidates.PlanetMargin;
         }
 
         public static PuzzleData Bake(
@@ -68,7 +67,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             out PuzzleBakeStatus status, out PuzzleZone[] solution)
         {
             solution = null;
-            if (!brief.SupportsMoves)
+            if (!brief.SupportsZones)
                 return Fail(PuzzleBakeStatus.UnsupportedBrief, out status);
 
             if (!PuzzleSolutionSearch.TrySelect(field, settings, brief, out PuzzleSolution found))
@@ -105,21 +104,21 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             // A movable single-zone level must offer a choice of where to scale. A multi-zone chain is
             // already pinned by the baked solution, so it is allowed to have exactly one route.
-            return !brief.Translatable || brief.Moves > 1 || puzzle.routes >= PuzzleRouteCount.MinRoutes;
+            return !brief.Translatable || brief.Zones > 1 || puzzle.routes >= PuzzleRouteCount.MinRoutes;
         }
 
         private static bool HasShorterSolution(
             PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, PuzzleSolution found)
         {
-            if (brief.Moves <= 1)
+            if (brief.Zones <= 1)
                 return false;
 
             float width = found.Zones[0].Width;
             float budget = found.EntropySpent * PuzzleGrade.BudgetFactor;
             PuzzleBrief shorter = brief;
-            for (int moves = 1; moves < brief.Moves; moves++)
+            for (int zones = 1; zones < brief.Zones; zones++)
             {
-                shorter.Moves = moves;
+                shorter.Zones = zones;
                 if (PuzzleSolutionSearch.TryFindAtWidth(field, settings, shorter, width, out PuzzleSolution candidate)
                     && candidate.EntropySpent <= budget)
                     return true;
@@ -155,7 +154,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             PuzzleData puzzle = Object.Instantiate(field);
             puzzle.frames = BuildFrames(field, solution, brief);
-            puzzle.moves = solution.Zones.Length;
+            puzzle.zones = solution.Zones.Length;
             return puzzle;
         }
 

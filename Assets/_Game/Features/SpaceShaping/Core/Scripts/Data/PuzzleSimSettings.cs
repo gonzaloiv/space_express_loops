@@ -17,7 +17,7 @@ namespace DigitalLove.Game.SpaceShaping
         public static PuzzleSimSettings From(SpaceShapingSettings settings) => new()
         {
             RunDistance = settings.runDistance,
-            LaunchSpeed = settings.launchSpeed,
+            LaunchSpeed = settings.launchSpeedFactor * settings.nominalSpeed,
             StepSecs = settings.stepSecs,
             NominalSpeed = settings.nominalSpeed,
             SourceStrengthScale = settings.sourceStrengthScale,

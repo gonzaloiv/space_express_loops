@@ -48,11 +48,15 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             }
         }
 
-        public bool ContentContains(Vector3 world)
+        public Vector3 ToLocal(Vector3 world)
         {
             Transform parent = transform.parent;
-            Vector3 local = parent != null ? parent.InverseTransformPoint(world) : world;
-            Vector3 offset = local - Centre;
+            return parent != null ? parent.InverseTransformPoint(world) : world;
+        }
+
+        public bool ContentContains(Vector3 world)
+        {
+            Vector3 offset = ToLocal(world) - Centre;
             Vector3 half = ContentSize * 0.5f;
             return Mathf.Abs(offset.x) <= half.x
                 && Mathf.Abs(offset.y) <= half.y

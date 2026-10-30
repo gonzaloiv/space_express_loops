@@ -10,13 +10,12 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private PuzzleData[] puzzles;
         [SerializeField] private SpaceShapingSettings settings;
         [SerializeField] private SpaceShapingView view;
-        [SerializeField] private ShipTravelView ship;
 
         private readonly TrajectoryIntegrator integrator = new();
         private readonly ShipLaunch launch = new();
 
         private SpaceShapingSession session;
-        private TrajectoryResult lastResult;
+        private TrajectoryResult[] lastResults;
         private PuzzleReadout readout;
         private int puzzleIndex;
         private bool wasScaling;
@@ -36,7 +35,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         public override void Enter()
         {
-            ship.Completed += OnFlightCompleted;
+            view.ShipsCompleted += OnFlightCompleted;
             view.Refused += OnRefused;
             view.SetScaleEnvelope(settings.minScaleFactor, settings.maxScaleFactor);
             puzzleIndex = 0;
@@ -45,7 +44,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         public override void Exit()
         {
-            ship.Completed -= OnFlightCompleted;
+            view.ShipsCompleted -= OnFlightCompleted;
             view.Refused -= OnRefused;
             session = null;
         }
@@ -55,7 +54,7 @@ namespace DigitalLove.Game.SpaceShaping
             wasScaling = false;
             ResetView();
             session.Reset();
-            ship.SoftReset(view.LaunchPoint(session));
+            view.SoftResetShips(session);
             PushField();
         }
 
@@ -70,9 +69,9 @@ namespace DigitalLove.Game.SpaceShaping
         {
             SpaceShapingSession preview = new(BuildSetup());
             SpacetimeField field = preview.BuildField();
-            TrajectoryResult result = preview.Simulate(field, integrator, launch);
+            TrajectoryResult[] results = preview.SimulateAll(field, integrator, launch);
             view.Render(field, preview);
-            view.ShowTrajectory(view.ClipToLaunch(result, preview), preview.IsSolved(result));
+            view.ShowTrajectories(preview, results);
         }
 
         private void LateUpdate()
@@ -110,7 +109,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             if (!wasScaling)
             {
-                ship.Stop();
+                view.StopShips();
                 view.ClearPrediction();
             }
 
@@ -121,17 +120,23 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void RenderPreview()
         {
-            view.ApplyFromSession(session);
-            view.Render(session.BuildField(), session);
+            ApplyAndRender(session.BuildField());
             readout = PuzzleReadout.Pending(session);
             ReadoutChanged?.Invoke(readout);
+        }
+
+        private void ApplyAndRender(SpacetimeField field)
+        {
+            view.ApplyFromSession(session);
+            view.Render(field, session);
         }
 
         private void CommitScale()
         {
             wasScaling = false;
             session.CommitPreview();
-            ship.Travel(PushField());
+            PushField();
+            view.TravelShips(session, lastResults);
         }
 
         private void ResetView()
@@ -147,30 +152,25 @@ namespace DigitalLove.Game.SpaceShaping
             isChecked = false;
             ResetView();
             session = new SpaceShapingSession(BuildSetup());
-            ship.SoftReset(view.LaunchPoint(session));
+            view.SoftResetShips(session);
             PushField();
         }
 
-        private TrajectoryResult PushField()
+        private void PushField()
         {
-            ship.Stop();
-            view.ApplyFromSession(session);
-
+            view.StopShips();
             SpacetimeField field = session.BuildField();
-            TrajectoryResult result = session.Simulate(field, integrator, launch);
-            bool solved = session.IsSolved(result);
-            view.SetPrediction(solved, result.Outcome);
+            TrajectoryResult[] results = session.SimulateAll(field, integrator, launch);
+            view.SetPrediction(session.IsSolved(results), results.Worst());
 
-            view.Render(field, session);
-            TrajectoryResult visible = view.ClipToLaunch(result, session);
-            view.ShowTrajectory(visible, solved);
+            ApplyAndRender(field);
+            view.ShowTrajectories(session, results);
             view.Snapshot();
 
-            lastResult = result;
+            lastResults = results;
             hasResult = true;
             isChecked = false;
             PublishReadout();
-            return visible;
         }
 
         private void OnFlightCompleted()
@@ -180,7 +180,7 @@ namespace DigitalLove.Game.SpaceShaping
 
             isChecked = true;
             PublishReadout();
-            view.PulseTrajectory();
+            view.PulseTrajectories();
         }
 
         private void OnRefused(ZoneRefusal reason) => Refused?.Invoke(reason);
@@ -190,7 +190,7 @@ namespace DigitalLove.Game.SpaceShaping
             if (!hasResult)
                 return;
 
-            readout = PuzzleReadout.From(session, lastResult, isChecked);
+            readout = PuzzleReadout.From(session, lastResults, isChecked);
             ReadoutChanged?.Invoke(readout);
         }
 

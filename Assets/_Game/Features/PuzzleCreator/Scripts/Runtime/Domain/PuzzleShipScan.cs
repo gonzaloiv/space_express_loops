@@ -44,6 +44,37 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         // Field-only: the step budget is held fixed, so only the edit itself can rescue a run.
         public List<PuzzleShipRescue> RescuedFixed(PuzzleZone zone) => Run(zone, false);
 
+        // Independent re-check of a chosen ship set: every ship misses on the pristine field and arrives
+        // with the zone applied. The bake uses this to confirm what the rescue scan found.
+        public bool Rescues(PuzzleZone zone, IReadOnlyList<PuzzleShip> ships)
+        {
+            if (count < 2 || ships == null || ships.Count == 0)
+                return false;
+
+            FieldView edited = FieldView.Build(setup, zone);
+            for (int i = 0; i < ships.Count; i++)
+            {
+                if (!Rescues(edited, ships[i]))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool Rescues(FieldView edited, PuzzleShip ship)
+        {
+            float capture = ship.captureRadius;
+            if (capture <= 0f)
+                return false;
+
+            if (Run(start, ship.origin, ship.destination, capture, false).Outcome
+                == TrajectoryOutcome.Arrive)
+                return false;
+
+            return Run(edited, ship.origin, ship.destination, capture, true).Outcome
+                == TrajectoryOutcome.Arrive;
+        }
+
         private void CacheStart()
         {
             for (int i = 0; i < count; i++)
@@ -101,10 +132,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 rescued.Add(new PuzzleShipRescue(origin, destination, margin));
         }
 
-        private TrajectoryResult Run(FieldView view, int i, int j, float capture, bool timeDilation)
+        private TrajectoryResult Run(FieldView view, int i, int j, float capture, bool timeDilation) =>
+            Run(view, puzzle.sources[i].home, puzzle.sources[j].home, capture, timeDilation);
+
+        private TrajectoryResult Run(
+            FieldView view, Vector3 origin, Vector3 destination, float capture, bool timeDilation)
         {
-            Vector3 origin = puzzle.sources[i].home;
-            Vector3 destination = puzzle.sources[j].home;
             TrajectorySettings trajectory = new()
             {
                 Destination = destination,

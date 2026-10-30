@@ -23,7 +23,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             grabbable.GrabPoints.Count > 0 ? grabbable.GrabPoints[0].position : zone.transform.position;
 
         public static Vector3 HandLocal(SpaceZoneView zone, Grabbable grabbable) =>
-            ToParentLocal(zone, HandWorld(zone, grabbable));
+            zone.ToLocal(HandWorld(zone, grabbable));
 
         public static float HandDistance(Grabbable grabbable)
         {
@@ -38,11 +38,5 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         public static float ResizeFactor(float ratio, float gain, float maxGrow) =>
             Mathf.Clamp(Mathf.Pow(ratio, gain), 1f, maxGrow);
-
-        private static Vector3 ToParentLocal(SpaceZoneView zone, Vector3 world)
-        {
-            Transform parent = zone.transform.parent;
-            return parent != null ? parent.InverseTransformPoint(world) : world;
-        }
     }
 }

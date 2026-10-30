@@ -6,7 +6,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
     public class PuzzleShipSweepTests
     {
         private const int Seed = 1;
-        private const int Fields = 10;
+        private const int Fields = 2;
 
         [Test]
         [Explicit("Spike measurement, not a regression test: run by name when sweeping feasibility.")]

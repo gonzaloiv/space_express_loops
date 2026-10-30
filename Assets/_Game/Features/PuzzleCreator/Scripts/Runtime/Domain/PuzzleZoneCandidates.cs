@@ -8,6 +8,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public const int DefaultSamples = 32;
         public const int CoarseSamples = 24;
         public const float ZoneGapFactor = 0.25f;
+        public const float PlanetMargin = 1.1f;
 
         private const int SizeSamples = 3;
         private const int MaxCentres = 8;
@@ -22,17 +23,24 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return Trim(centres, MaxCentres);
         }
 
-        internal static bool ContainsSource(PuzzleZone zone, PuzzleData puzzle)
+        // A zone only counts if it covers a planet: the planet's centre sits inside the zone and the
+        // zone encloses its body with a margin, so the cube reads as wrapping the planet rather than
+        // cutting through it.
+        public static bool CoversSource(PuzzleZone zone, PuzzleData puzzle)
         {
+            bool covered = false;
             for (int i = 0; i < puzzle.sources.Length; i++)
             {
                 if (!zone.Contains(puzzle.sources[i].home))
                     continue;
 
-                return true;
+                if (zone.Extent < puzzle.sources[i].scale * 0.5f * PlanetMargin)
+                    return false;
+
+                covered = true;
             }
 
-            return false;
+            return covered;
         }
 
         public static bool ContainsEndpoint(PuzzleZone zone, PuzzleData puzzle) =>

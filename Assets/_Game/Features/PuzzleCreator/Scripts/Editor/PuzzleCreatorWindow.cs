@@ -73,13 +73,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         private void DrawBake()
         {
-            using (new EditorGUI.DisabledScope(seed == null || settings == null))
+            bool ready = seed != null && settings != null;
+            using (new EditorGUI.DisabledScope(!ready))
             {
                 if (GUILayout.Button("Generate (rebuild)"))
                     Generate();
 
-                if (GUILayout.Button($"Find working seed (from {CurrentSeed()})"))
-                    FindSeed();
+                using (new EditorGUI.DisabledScope(!ready || PuzzleBrief.From(seed, settings).IsMultiShip))
+                {
+                    if (GUILayout.Button($"Find working seed (from {CurrentSeed()})"))
+                        FindSeed();
+                }
 
                 if (GUILayout.Button("Save level"))
                     Save();
@@ -92,10 +96,22 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         {
             shape = PuzzleArtifactExporter.ExportShape(seed, settings);
             planets = PuzzleArtifactExporter.ExportPlanets(shape);
-            generated = PuzzleFieldBake.Bake(
-                planets, PuzzleSimSettings.From(settings), PuzzleBrief.From(seed, settings), out status,
-                out generatedSolution);
+            PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
+            PuzzleBrief brief = PuzzleBrief.From(seed, settings);
+            if (brief.IsMultiShip)
+                GenerateMultiShip(sim, brief);
+            else
+                generated = PuzzleFieldBake.Bake(planets, sim, brief, out status, out generatedSolution);
+
             Repaint();
+        }
+
+        private void GenerateMultiShip(PuzzleSimSettings sim, PuzzleBrief brief)
+        {
+            PuzzleMultiShipResult result = PuzzleMultiShipBake.Bake(planets, sim, brief);
+            status = result.Status;
+            generated = result.Status == PuzzleBakeStatus.Baked ? result.Puzzle : null;
+            generatedSolution = generated != null ? new[] { result.Solution } : null;
         }
 
         private void FindSeed()
@@ -119,7 +135,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             generated = result.Puzzle;
             generatedSolution = result.Solution;
             Debug.Log($"Puzzle creator: seed {result.Seed} baked a verified level "
-                + $"({result.Puzzle.moves} step(s), {result.Routes} route(s)).");
+                + $"({result.Puzzle.zones} zone(s), {result.Routes} route(s)).");
             Repaint();
         }
 
@@ -148,7 +164,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 EditorGUILayout.HelpBox(Message(status), type);
                 return;
             }
-
             PuzzleData puzzle = generated;
             PuzzleVerification run = PuzzleVerifier.Verify(
                 puzzle, generatedSolution, PuzzleSimSettings.From(settings));
@@ -163,7 +178,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             EditorGUILayout.LabelField(
                 "Entropy", $"{run.EntropySpent:F2} / {puzzle.entropyBudget:F2}  ({PuzzleGrade.Stars(run.EntropySpent, puzzle.entropyBudget)}★)");
             EditorGUILayout.LabelField("Cubes", FramesText(puzzle));
-            EditorGUILayout.LabelField("Steps", puzzle.moves.ToString());
+            EditorGUILayout.LabelField("Zones", puzzle.zones.ToString());
             EditorGUILayout.LabelField("Routes", puzzle.routes.ToString());
         }
 
@@ -186,20 +201,32 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         }
 
         private static string BriefText(PuzzleSeed value) =>
-            BriefText(value.translatable, value.moves, value.resizable)
+            BriefText(value.translatable, value.zones, value.resizable)
+            + $" · {Mathf.Max(1, value.ships)} ship(s)"
             + $" · {value.fieldShape}";
 
         private static string BriefText(PuzzleData value) =>
-            BriefText(value.translatable, value.moves, value.resizable);
+            BriefText(value.translatable, value.zones, value.resizable)
+            + $" · {ShipCount(value)} ship(s)";
 
-        private static string BriefText(bool translatable, int moves, bool resizable) =>
-            $"{(translatable ? "movable" : "fixed")} · {Mathf.Max(1, moves)} zone(s) · "
+        private static int ShipCount(PuzzleData puzzle) =>
+            puzzle.ships != null && puzzle.ships.Length > 0 ? puzzle.ships.Length : 1;
+
+        private static string BriefText(bool translatable, int zones, bool resizable) =>
+            $"{(translatable ? "movable" : "fixed")} · {Mathf.Max(1, zones)} zone(s) · "
             + $"{(resizable ? "resizable" : "fixed size")}";
 
-        private static string Message(PuzzleBakeStatus status)
+        private string Message(PuzzleBakeStatus status)
         {
             if (status == PuzzleBakeStatus.UnsupportedBrief)
                 return "Rejected: this creator supports 1–3 zones.";
+
+            if (status == PuzzleBakeStatus.NoSolution)
+                return IsMultiShip()
+                    ? "Rejected: no zone rescues the required number of runs by the field alone. Raise "
+                        + "Planet Count (a sparse field has too few runs) or lower Ships."
+                    : "Rejected: no zone bends the bare run onto the destination. The field may be too "
+                        + "dense. Use Find working seed.";
 
             if (status == PuzzleBakeStatus.StartNotFailed)
                 return "Rejected: the bare start already arrives. The level needs a failing start "
@@ -213,14 +240,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 return "Rejected: a movable level needs at least two routes so the player can choose. "
                     + "Use Find working seed.";
 
-            if (status == PuzzleBakeStatus.NoSolution)
-                return "Rejected: no zone bends the bare run onto the destination. The field may be too "
-                    + "dense. Use Find working seed.";
-
             if (status == PuzzleBakeStatus.Unverified)
                 return "A solution was found but it did not verify inside the budget.";
 
             return "Set the seed + settings, then Generate (it rebuilds the shape and planets first).";
         }
+
+        private bool IsMultiShip() =>
+            seed != null && settings != null && PuzzleBrief.From(seed, settings).IsMultiShip;
     }
 }

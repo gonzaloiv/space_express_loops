@@ -1,5 +1,4 @@
 using DigitalLove.Game.SpaceShaping.Cube;
-using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
 {
@@ -14,8 +13,5 @@ namespace DigitalLove.Game.SpaceShaping
         public SpaceZone Zone { get; }
 
         public float EntropyCost { get; }
-
-        public void Apply(Vector3[] positions, float[] scales, SourceSpec[] specs) =>
-            Zone.ApplyTo(positions, scales, specs);
     }
 }

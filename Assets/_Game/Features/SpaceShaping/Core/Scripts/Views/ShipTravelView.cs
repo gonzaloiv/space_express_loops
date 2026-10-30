@@ -17,10 +17,6 @@ namespace DigitalLove.Game.SpaceShaping
 
         public event Action Completed;
 
-        public bool IsFlying { get; private set; }
-
-        public float Progress { get; private set; }
-
         public void SoftReset(Vector3 origin)
         {
             Stop();
@@ -38,7 +34,6 @@ namespace DigitalLove.Game.SpaceShaping
             transform.localPosition = points[0];
             trail.Clear();
             trail.emitting = true;
-            IsFlying = true;
             flight = StartCoroutine(Fly(points, TravelSecs(points)));
         }
 
@@ -47,8 +42,6 @@ namespace DigitalLove.Game.SpaceShaping
             if (flight != null)
                 StopCoroutine(flight);
             flight = null;
-            IsFlying = false;
-            Progress = 0f;
             trail.emitting = false;
             trail.Clear();
         }
@@ -68,14 +61,11 @@ namespace DigitalLove.Game.SpaceShaping
                 progress = Mathf.Min(progress + Mathf.Max(Time.deltaTime / travel, 0.0001f), 1f);
                 float eased = Mathf.SmoothStep(0f, 1f, progress);
                 float index = eased * last;
-                Progress = eased;
                 MoveTo(Sample(points, index), Heading(points, index), Time.deltaTime);
                 yield return null;
             }
 
             transform.localPosition = points[last];
-            Progress = 1f;
-            IsFlying = false;
             flight = null;
             trail.emitting = false;
             Completed?.Invoke();
