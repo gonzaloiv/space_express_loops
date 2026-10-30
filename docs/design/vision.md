@@ -5,10 +5,10 @@
 **Target:** Meta VR Start Developer Competition 2026 · **seated mixed reality** ·
 hand-tracking first-class.
 **Date:** 2026-10-23.
-**Revised:** 2026-10-29.
+**Revised:** 2026-11-01.
 
 **Related:** [core loop](core-loop.md) · [the cube](systems/cube.md) ·
-[progression](systems/progression.md) · [jobs](jobs.md) · [presentation](presentation.md) ·
+[progression](systems/progression.md) · [jobs](jobs.md) ·
 [lore](world/lore.md) · [glossary](glossary.md) · [plans board](../plans/README.md)
 
 ## 1. The game, in one paragraph
@@ -21,10 +21,11 @@ the space stretches (a shrunk zone is a shortcut) and the planets spread and gro
 deform the spacetime the ship flies through until the delivery **arrives** — and cheaply.
 Relativity is the language, and the cube is how you speak it.
 
-**Current shape.** The signature interaction (a bubble in front of you, scaled by two hands)
-works; the gravity puzzle works in the lab; the room-scale game is legacy. What is missing is
-**one fused, playable seated slice** — and **one instrument** (the cube) to play it with.
-Build status lives on the [plans board](../plans/README.md); this doc does not track it.
+**Current shape.** The bubble and the cube work in the lab: the pinch scales a zone, the ship
+flies the result, and the field pass is in progress — depth, a central sun, and the look pass.
+The room-scale game is legacy. What is missing is **one fused, playable seated slice** — the lab
+loop inside the MR bubble, with the run's jobs and progression. Build status lives on the
+[plans board](../plans/README.md); this doc does not track it.
 
 ## 2. Design pillars
 
@@ -33,11 +34,14 @@ Build status lives on the [plans board](../plans/README.md); this doc does not t
 2. **The cube is the product.** The one tool, and the signature moment — "the cube
    deforms the universe". It gets the polish budget (feel, sound, haptics, the visible
    field-warp).
-3. **Scale the space and the content together.** One gesture does both; several placed zones enter at
-   job 3, moving the cube (the region) at job 4, resizing at job 5. The field is derived, never edited.
+3. **Scale the space and the content together.** One gesture does both; the centre arrives at job 2,
+   several placed zones at job 3, moving the cube (the region) at job 4, multi-zone from job 5, the
+   capstone at job 7. Resize is deferred: it works, but the explanation is not ready. The field is
+   derived, never edited.
 4. **One budget, one score.** Entropy is the budget: spend it all before you solve and the job
    **fails**. Entropy left is the **eco rating**; **arriving** is the goal — the launch is only a check.
-   The launch itself is given, not a lever.
+   The field itself shows the spend — calm at full, strained as it drains, about to blow near empty —
+   and the bar lives in it, not on a panel. The launch itself is given, not a lever.
 5. **Discrete jobs.** ~1 minute each; a **10-minute experience**, about **7 levels** — **3–5
    first**, extended only if the variation axes hold.
    Nothing live-ticking.
@@ -53,15 +57,16 @@ Build status lives on the [plans board](../plans/README.md); this doc does not t
   (`UniverseView.roomAnchor` / `bubbleAnchor`).
 - **Legacy (cut):** room-scale *gameplay* — planets scattered around your physical
   room, walking to them. A seated player does not walk to a planet.
-- **One view, one instrument: the cube (the lens).** There is no Map/Sculpt mode split. The cube
-  is a tangible MR tool you **move and resize** over the bubble; the space **inside** it scales
+- **One view, one instrument: the cube.** There is no Map/Sculpt mode split. The cube
+  is a tangible MR tool you **move** over the bubble (resize is deferred); the space **inside** it scales
   reality/the field — it transforms the zone it covers ([the cube](systems/cube.md)). **The cube's
-  size is the aperture** — a big cube reads wide and coarse, a small cube reads narrow and fine.
-  The whole map stays visible in the background, so you get overview and detail at once, with no
-  transition.
+  size is the aperture:** it sets the *scope* of an edit — how many planets and lattice cells one
+  pinch touches — not its precision. The pinch sets the magnitude. The level sets the cube's size;
+  resize is deferred (it works, but the explanation is not ready). The whole map stays visible in the
+  background, so you get overview and detail at once, with no transition.
 
 So: the *room* is the backdrop and the anchor; the *bubble* is the playfield; the
-*cube* (the lens) is how you touch it.
+*cube* is how you touch it.
 
 ## 4. The scale is physical (a deliberate guardrail)
 
@@ -91,17 +96,20 @@ routes; keep the economy *between* jobs. Then the management layer is a wrapper
 ## 6. Scope: the competition slice
 
 - **In:** the **full run** — the bubble, the cube, the **level selector** and **3–5 jobs first
-  (7 as the run)**, the grade, and player progression ([core loop](core-loop.md),
-  [progression](systems/progression.md)).
-- **Out of the first run:** rotate, a separate tutorial flow (the per-job
-  manual card is in — [jobs](jobs.md)), and the whole feel pass. **Out until proven:** sectors, multi-ship,
-  runtime/procedural level generation.
+  (7 as the run)**, the grade, player progression, and **multi-ship** support ([core loop](core-loop.md),
+  [progression](systems/progression.md), [jobs](jobs.md)).
+- **Out of the first run:** resize (working, but the explanation is not ready), a separate tutorial flow
+  (the per-job manual card is in — [jobs](jobs.md)), and the whole feel pass. **Out until proven:**
+  sectors as gameplay (the ambient sector field stays the map backdrop) and runtime/procedural level
+  generation.
 - **Technical target:** Meta Quest 3S, **72 fps**.
 - **Validation first:** do not invest past the validation (§7) until it passes.
 
 ## 7. The validation
 
 The go/no-go test. **Validation 1** is the lab (editor/play-mode) test; **Validation 2** is on device.
+Validation 1 is re-run on the current **scale-the-path** loop; the old timing/window pass no longer
+applies, and arrival-only is the win condition.
 
 1. **Validation 1 — lab, in the editor, seated, hand-tracked** (no MR/bubble): does the mechanic
    survive a goal and a cost?
@@ -114,7 +122,7 @@ mechanic before writing another plan.
 
 ## 8. What not to do
 
-- No sectors, multi-ship, or level generation before the §7 validation.
+- No gameplay sectors or runtime level generation before the §7 validation.
 - No further investment in room-scale gameplay or the legacy idle economy; freeze and
   plan the cut.
 - No co-equal live-ticking economy under the puzzle.
@@ -125,14 +133,18 @@ mechanic before writing another plan.
 
 ## 9. Risks (condensed)
 
-| Risk | Status / mitigation |
+| Risk | Current state / mitigation |
 |---|---|
-| Toy, not game (no stake) | **Addressed** by the entropy budget — run out before solving and the job fails — plus the arrival goal and the grade ([core loop](core-loop.md) §3). |
-| The cube is "just a group drag" | Resolved: the cube scale is a **metric stretch** (a shortcut), not a drag — it spreads and grows the content too. See [the cube](systems/cube.md). |
-| Field illegibility | Make the map *read the field* (straight-line reference, accel arrows); the bubble already shows the warped sheet. |
-| Ship-zone legibility | The ship is map-size; show which zone it is in (tint, trail). |
-| Prediction trust | Scale is now physical; show the result live, before the ship travels. |
+| Toy, not game (no stake) | **Designed, not validated.** The entropy fail, arrival goal and grade are in the loop and the panel ([core loop](core-loop.md) §3); Validation 1 is still an open tail ([plans board](../plans/README.md)). |
+| The cube is "just a group drag" | **Resolved.** The scale is a metric stretch plus content spread/growth, not a drag ([the cube](systems/cube.md)). |
+| Field illegibility | **Partly open.** Lattice warp, planet size/well and the live trajectory are in; the **straight-line reference** named in the read is not built ([plans board](../plans/README.md)). |
+| Sun reads as another planet | **Open.** The sun is a flat `Sun.prefab`; the reference marker is the S4 look pass. |
+| Sun scale is a free win | **Open.** `mass ∝ radius³` makes a grown sun strong fast; the bake must verify scalable-by-default, otherwise lock it per puzzle ([field plan](../plans/in-progress/space-shaping-realistic-field.md)). The centre (job 2) is the first test; the capstone (job 7) must also hold. |
+| Ship-zone legibility | **Partial.** The ship has a trail; there is no zone tint or "which zone" indicator ([plans board](../plans/README.md)). |
+| Prediction trust | **Mitigated in the lab.** The live trajectory previews while shaping and the ship flies on release; the missing straight-line baseline is the read-side hole. |
 | Identity | **Resolved** by the transport-company pivot and the name "Our Space". |
-| Competition scope | Keep one fused seated slice; no sectors/multi-ship/generation until proven. |
-| Room-scale legacy drag | Freeze room-scale gameplay; keep only MR bubble anchoring. |
-| Content ceiling | Simultaneous multi-ship is "near-chaotic" for generation; authored multi-route is fine (a shared bottleneck is a legibility win). |
+| Competition scope | **Active.** The current spend is the field pass (S4); run authoring (jobs, map, TTS) is unplanned; Validation 1 is the gate before further investment ([plans board](../plans/README.md)). |
+| Room-scale legacy drag | **Active in code.** `UniverseViewMode.Room` still exists and is fanned out; freeze or remove it. |
+| Content ceiling | **Valid, narrower.** Authored multi-ship is fine; simultaneous unscripted multi-ship is "near-chaotic". The 7-job spine is single-ship; multi-ship is a stretch. |
+| Entropy legibility | **Open.** The budget is derived from the bake's best solution; the player never sees that reference. The field itself must carry the spend (strains near empty), with the bar in the field ([progression](systems/progression.md) §Open questions). |
+| Run length | **Open.** The target is a 10-minute session; 7 × ~1 min is the current shape, with 3–5 first ([progression](systems/progression.md) §Open questions). |

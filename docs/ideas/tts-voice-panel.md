@@ -2,7 +2,7 @@
 
 **Status:** idea · presentation · updated 2026-10-30 — recorded, design only. Not scheduled.
 
-**Related:** [presentation](../design/presentation.md) · [jobs](../design/jobs.md)
+**Related:** [jobs](../design/jobs.md)
 
 ## Goal
 

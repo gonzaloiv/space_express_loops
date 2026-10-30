@@ -104,6 +104,96 @@ namespace DigitalLove.Game.Sectors.Tests
             }
         }
 
+        [Test]
+        public void Generate_Cluster_HasComparableVerticalAndHorizontalExtent()
+        {
+            SectorShapeData data = Default(SectorShapeKind.Cluster);
+            data.bulge = 0.8f;
+            data.planetCount = new MinMaxInt { min = 24, max = 24 };
+
+            for (int seed = 0; seed < Seeds; seed++)
+            {
+                SectorLayout layout = SectorShape.Generate(data, new SeededRandom(seed));
+                float horizontal = 0f;
+                float vertical = 0f;
+                for (int i = 0; i < layout.PlanetCount; i++)
+                {
+                    SectorPlanet planet = layout.Planets[i];
+                    horizontal = Mathf.Max(
+                        horizontal,
+                        Mathf.Sqrt(planet.Position.x * planet.Position.x + planet.Position.z * planet.Position.z));
+                    vertical = Mathf.Max(vertical, Mathf.Abs(planet.Position.y));
+                }
+
+                Assert.Greater(
+                    vertical,
+                    0.5f * horizontal,
+                    $"cluster seed {seed} is flatter than a disc");
+            }
+        }
+
+        [Test]
+        public void Generate_Tilt_IsDeterministic_And_Applied([Values] SectorShapeKind kind)
+        {
+            SectorShapeData data = Default(kind);
+            data.tilt = 12f;
+            SectorLayout first = SectorShape.Generate(data, new SeededRandom(1));
+            SectorLayout second = SectorShape.Generate(data, new SeededRandom(1));
+
+            Assert.AreEqual(first.AnchorRotation, second.AnchorRotation);
+            Assert.AreNotEqual(first.AnchorRotation, Quaternion.identity);
+            for (int i = 0; i < first.PlanetCount; i++)
+            {
+                Assert.AreEqual(first.Planets[i].Position, second.Planets[i].Position);
+                Assert.AreEqual(first.Planets[i].Radius, second.Planets[i].Radius, Tolerance);
+            }
+        }
+
+        [Test]
+        public void Generate_RingAndSpiral_HaveCentreBulge([Values] SectorShapeKind kind)
+        {
+            if (kind == SectorShapeKind.Cluster)
+                return;
+
+            SectorShapeData data = Default(kind);
+            data.bulge = 0.8f;
+            float thinJitter = data.inclination * data.radius.max;
+
+            for (int seed = 0; seed < Seeds; seed++)
+            {
+                SectorLayout layout = SectorShape.Generate(data, new SeededRandom(seed));
+                float maxAbsY = 0f;
+                for (int i = 0; i < layout.PlanetCount; i++)
+                    maxAbsY = Mathf.Max(maxAbsY, Mathf.Abs(layout.Planets[i].Position.y));
+
+                Assert.Greater(
+                    maxAbsY,
+                    thinJitter,
+                    $"{kind} seed {seed} has no centre bulge");
+            }
+        }
+
+        [Test]
+        public void Generate_RingAndSpiral_VerticalSpreadStaysBounded([Values] SectorShapeKind kind)
+        {
+            if (kind == SectorShapeKind.Cluster)
+                return;
+
+            SectorShapeData data = Default(kind);
+            data.bulge = 0.8f;
+            float bound = (0.8f + 0.25f) * data.radius.max + Tolerance;
+
+            for (int seed = 0; seed < Seeds; seed++)
+            {
+                SectorLayout layout = SectorShape.Generate(data, new SeededRandom(seed));
+                for (int i = 0; i < layout.PlanetCount; i++)
+                    Assert.LessOrEqual(
+                        Mathf.Abs(layout.Planets[i].Position.y),
+                        bound,
+                        $"{kind} seed {seed} planet {i} left the bulge band");
+            }
+        }
+
         private static SectorShapeData Default(SectorShapeKind kind) => new() { kind = kind };
     }
 }

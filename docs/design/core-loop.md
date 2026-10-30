@@ -2,7 +2,7 @@
 
 **Status:** design · core loop — what the player actually does.
 **Date:** 2026-10-23.
-**Revised:** 2026-10-30.
+**Revised:** 2026-11-01.
 
 **Related:** [vision](vision.md) · [the cube](systems/cube.md) · [progression](systems/progression.md) ·
 [jobs](jobs.md) · [glossary](glossary.md)
@@ -11,16 +11,22 @@ Three loops, nested. The product *is* the loop; everything else supports it.
 
 ## 1. Moment-to-moment (seconds)
 
-Read the field → (move / resize the cube) → scale a zone → the ship flies the result.
+Read the field → (move the cube) → scale a zone → the ship flies the result.
 
-- **Read:** the warped sheet, the planets, the straight-line reference.
+- **Read:** the straight-line reference, the lattice warp, and the planets' size/well.
 - **Act:** grab inside the cube and pinch to scale the covered zone ([the cube](systems/cube.md)).
 - **See:** the live trajectory line while shaping — it updates on every edit, before release — then the
   flight: the ship launches on each modification and flies that same trajectory. There is **no separate
   commit action** — finishing the edit *is* the commit.
 
+**What the player reads.** Three cues, in order: the **straight line** from origin to destination (the
+flat-field baseline), the **lattice warp** (the zone the player shaped — the planets' own wells are not
+drawn), and **planet size** (a bigger planet is a stronger well, `mass ∝ radius³`). The live trajectory
+is the *result* of the read, not a cue: it tells the player what will happen, while the three cues let
+them predict it. The ship stays at map size; the zone is what changes.
+
 Jobs 1–2 use a **fixed** cube: the only move is the grab-inside scale. Several placed zones enter at
-job 3, moving the cube at job 4, and resizing at job 5
+job 3, moving the cube at job 4, and multi-zone from job 5. Resize is deferred from the slice
 ([progression](systems/progression.md) §The learning path).
 
 ## 2. Session — one job (~1 minute)
@@ -34,10 +40,12 @@ Modify → the ship flies the current trajectory (a check) → keep shaping → 
    which is only a *wrong* answer, not a fail.
 3. **Keep shaping:** a miss does **not** end the job — the player edits on, and a new modification
    **interrupts** the flight. The launch is only a check; the job ends when a solve lands or the
-   **committed spend reaches the entropy budget** (the fail). If the same commit both arrives and
-   empties the budget, the solve wins. Once the budget is spent, new edits are refused;
-   reset/retry stays free.
-4. **Pass:** arriving passes the job, graded on **entropy left** → 1–3 stars.
+   **committed spend reaches the entropy budget** (the fail; job 1 is exempt). If the same commit both
+   arrives and empties the budget, the solve wins. Once the budget is spent, new edits are refused;
+   reset/retry stays free. Job 1 is exempt from the refusal too: its bar clamps and the player can keep
+   shaping.
+4. **Pass:** arriving passes the job, graded on **entropy left** → 1–3 stars. **Job 1 is the tutorial
+   exception:** it has no entropy fail and no stars; the bar is informational ([jobs](jobs.md)).
 
 **Entropy is charged per modification, not per launch** — it persists across launches, so failing
 drains the bar.
@@ -47,12 +55,17 @@ drains the bar.
 Entropy is the Wrap's cost and the only resource the player manages: a **budget** (the fail) and the
 **score** (the grade).
 
-- **Every completed modification burns it.** The cost is the **net** scale change from the last
-  committed value for that zone, charged when the edit finishes — the same cost the bake budgets, so
-  returning the hands to where they started costs nothing. **Reset/retry is free** and **undo refunds**
-  the last edit; only committed modifications cost.
+- **Every completed modification burns it.** Each committed pinch costs **|new scale − the last
+  committed scale for that zone|**, charged when the pinch finishes. Within one pinch the pending cost
+  is free to undo: return the hands to the committed value before release and it costs nothing. After
+  release, moving the zone back costs again; **undo refunds the last committed edit**. **Reset/retry is
+  free.** Only committed modifications cost.
+- **The budget is derived by the bake.** The creator finds a solution, then sets the job's budget to
+  **3× that solution's entropy**. Stars are **1/3 and 2/3 of the budget**: 3★ means spending no more
+  than the bake's solution, 2★ up to twice that, otherwise 1★. The thresholds are the same shape every
+  job; the field sets the absolute cost.
 - **The budget is exhausted when committed spend reaches it:** new edits are refused and an unsolved
-  job **fails**. If the same commit both arrives and empties the budget, the solve wins.
+  job **fails** (job 1 is exempt). If the same commit both arrives and empties the budget, the solve wins.
 - **The grade is what is left** — the eco rating, shown as **1–3 stars**, awarded only on a solve.
 - **Why the edits cost and the field is free.** The launch is **Coast** — an initial velocity, no engine
   burn (`ShipLaunch.cs`, `LaunchModel.Coast`). In a Coast + well model the ship exchanges energy with
@@ -63,9 +76,15 @@ Entropy is the Wrap's cost and the only resource the player manages: a **budget*
   burns entropy. The perfect run is **cheap and arriving**.
 
 **Fuel is not a lever.** The launch is **given** — one global speed, the same for every job — and lives
-in the fiction as the company's cost ([lore](world/lore.md)). The readout shows the result, the entropy
-bar (committed spend plus a pending segment for the in-progress edit), the grade, and a command count
-(zones — a lab diagnostic only).
+in the fiction as the company's cost ([lore](world/lore.md)). The readout shows the result and the stars;
+the entropy bar lives **in the field**, world-anchored to the run — not in a screen-space panel; the lab
+panel is a diagnostic. The bar shows **remaining entropy**, the pending pinch and the last committed
+edit's cost; moving the cube and launching are visibly free. The **1/3 and 2/3** marks are cost bands,
+not stars: the grade is awarded on a solve and shown in the reward/readout, never on the bar.
+
+**The bar is the meter.** Entropy is read from the in-field bar, not a screen-space panel. The lattice
+tint already shows the zone warp, so entropy must not reuse it; a field-wide stress (rim or pulse) is
+optional and needs its own channel. It never shows a move count.
 
 ## 4. Meta — the company (~10 minutes)
 
@@ -78,8 +97,8 @@ Solve jobs in order; the map fills; stars accumulate ([progression](systems/prog
 ## 5. What the loop must do
 
 - **A goal:** the destination — **arrive**.
-- **A budget:** entropy — spend it all before you solve and the job **fails**; what is left is the
-  score.
+- **A budget:** entropy — spend it all before you solve and the job **fails** (job 1 is exempt); what is
+  left is the score.
 - **A legible read:** the field, so the player can *predict* the cube's effect.
 - **A payoff:** the ship-travel moment (the demo beat).
 

@@ -9,6 +9,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         public float MinScale;
         public float MaxScale;
         public string Name;
+        public bool CentreOnly;
+        public bool FixedMass;
 
         public SourceSpec Scaled(Vector3 centre, float factor) => new()
         {
@@ -16,7 +18,9 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             InitialScale = InitialScale * factor,
             MinScale = MinScale * factor,
             MaxScale = MaxScale * factor,
-            Name = Name
+            Name = Name,
+            CentreOnly = CentreOnly,
+            FixedMass = FixedMass
         };
     }
 }

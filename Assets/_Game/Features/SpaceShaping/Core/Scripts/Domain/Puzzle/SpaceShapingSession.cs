@@ -75,6 +75,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         public float HomeScale(int index) => setup.Sources[index].InitialScale;
 
+        public bool IsSun(int index) => setup.Sources[index].CentreOnly;
+
         public Vector3 GetPosition(int index) => positions[index];
 
         public float GetScale(int index) => scales[index];

@@ -10,13 +10,16 @@ namespace DigitalLove.Game.SpaceShaping
             for (int i = 0; i < specs.Length; i++)
             {
                 float scale = sources[i].scale;
+                bool fixedMass = sources[i].fixedMass;
                 specs[i] = new SourceSpec
                 {
                     Home = sources[i].home,
                     InitialScale = scale,
-                    MinScale = scale * settings.MinScaleFactor,
-                    MaxScale = scale * settings.MaxScaleFactor,
-                    Name = sources[i].name
+                    MinScale = fixedMass ? scale : scale * settings.MinScaleFactor,
+                    MaxScale = fixedMass ? scale : scale * settings.MaxScaleFactor,
+                    Name = sources[i].name,
+                    CentreOnly = sources[i].centreOnly,
+                    FixedMass = fixedMass
                 };
             }
 

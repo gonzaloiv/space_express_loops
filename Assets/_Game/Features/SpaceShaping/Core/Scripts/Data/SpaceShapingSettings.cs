@@ -9,6 +9,11 @@ namespace DigitalLove.Game.SpaceShaping
         [Tooltip("The run: origin to destination, in metres. It also sizes the field, so keep planetRadiusMax well under runDistance / 2.")]
         public float runDistance = 0.7f;
 
+        [Header("Sun")]
+        [Tooltip("Radius of the sun at the field's centre, in metres. 0 disables the sun; a seed's "
+            + "Has Sun flag decides whether it is baked.")]
+        public float sunRadius = 0f;
+
         [Header("Simulation")]
         [Tooltip("Launch speed as a multiple of nominalSpeed, shared by every puzzle. nominalSpeed carries the field's scale, so this stays a constant when the field is resized.")]
         public float launchSpeedFactor = 0.9f;
@@ -34,6 +39,16 @@ namespace DigitalLove.Game.SpaceShaping
 
         [Tooltip("Planet spacing, as a multiple of the summed radii. The field builder spaces the sector 1.1x wider so the first constraint pass never moves a baked planet.")]
         public float separationScale = 1.2f;
+
+        [Header("Field depth")]
+        [Tooltip("Vertical thickness of the disc, as a fraction of the sector radius. Puzzle field only; the ambient sector field stays flat.")]
+        public float fieldThickness = 0.08f;
+
+        [Tooltip("Pitch/roll tilt of the layout, in degrees. The tilt is baked into the planet positions, so the cube stays world-axis-aligned.")]
+        public float fieldTilt = 12f;
+
+        [Tooltip("Centre bulge: the innermost ring/segment spread as a multiple of its radius. 0 keeps the field flat.")]
+        public float fieldBulge = 0.8f;
 
         [Header("Zone")]
         [Tooltip("The cube's soft edge, as a fraction of its half-size (0 = hard edge). Shared with the view so a found solution reproduces.")]

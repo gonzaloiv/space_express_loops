@@ -45058,6 +45058,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.SpaceShapingViewSpawner
   prototype: {fileID: 1432176000000000001, guid: 6a1a9c1cd3694b11946468f943f46cd8, type: 3}
+  sunPrototype: {fileID: 5148713355404427665, guid: 2ddbb2dd4b3a6cf42851cc4fc6177849, type: 3}
   originPrototype: {fileID: 104580328670047092, guid: 2a724411ab8931244ad8fd7a0920cd0e, type: 3}
   destinationPrototype: {fileID: 104580328670047092, guid: f262f1ed9da69c449b0fd504f6c5fa98, type: 3}
   sourceParent: {fileID: 1529374044}
@@ -88322,7 +88323,7 @@ MonoBehaviour:
   state: {fileID: 1095678994}
   distance: 0.5
   heightOffset: -0.1
-  scale: 0.8
+  scale: 0.6
 --- !u!1 &2089349800
 GameObject:
   m_ObjectHideFlags: 0

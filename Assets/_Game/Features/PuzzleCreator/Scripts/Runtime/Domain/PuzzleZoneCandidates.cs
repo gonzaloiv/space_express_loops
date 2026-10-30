@@ -23,18 +23,23 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return Trim(centres, MaxCentres);
         }
 
-        // A zone only counts if it covers a planet: the planet's centre sits inside the zone and the
-        // zone encloses its body with a margin, so the cube reads as wrapping the planet rather than
-        // cutting through it.
+        // A zone only counts if it covers a scaleable source: a planet's centre must sit inside the zone
+        // and the zone must enclose its body with a margin, so the cube reads as wrapping the planet. The
+        // sun is centre-only — a cube over its centre scales it without needing to enclose the star. A
+        // fixed source is skipped: it never scales, so it must not demand a star-sized cube.
         public static bool CoversSource(PuzzleZone zone, PuzzleData puzzle)
         {
             bool covered = false;
             for (int i = 0; i < puzzle.sources.Length; i++)
             {
+                if (puzzle.sources[i].fixedMass)
+                    continue;
+
                 if (!zone.Contains(puzzle.sources[i].home))
                     continue;
 
-                if (zone.Extent < puzzle.sources[i].scale * 0.5f * PlanetMargin)
+                if (!puzzle.sources[i].centreOnly
+                    && zone.Extent < puzzle.sources[i].scale * 0.5f * PlanetMargin)
                     return false;
 
                 covered = true;
@@ -81,7 +86,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static void AddSources(List<Vector3> centres, PuzzleSource[] sources)
         {
             for (int i = 0; i < sources.Length; i++)
+            {
+                if (sources[i].fixedMass)
+                    continue;
+
                 Add(centres, sources[i].home);
+            }
         }
 
         private static void AddPairs(List<Vector3> centres, PuzzleSource[] sources, float maxCubeSize)
@@ -89,7 +99,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             for (int i = 0; i < sources.Length; i++)
             {
                 for (int j = i + 1; j < sources.Length; j++)
+                {
+                    if (sources[i].fixedMass || sources[j].fixedMass)
+                        continue;
+
                     AddPair(centres, sources[i].home, sources[j].home, maxCubeSize);
+                }
             }
         }
 

@@ -47,6 +47,9 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         {
             for (int i = 0; i < positions.Length; i++)
             {
+                if (specs[i].FixedMass)
+                    continue;
+
                 float factor = Mathf.Lerp(1f, Scale, InsideFactor(positions[i]));
                 positions[i] = Centre + (positions[i] - Centre) * factor;
                 scales[i] *= factor;

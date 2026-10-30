@@ -2,18 +2,20 @@
 
 **Status:** design · system · cube.
 **Date:** 2026-10-23.
-**Revised:** 2026-10-30.
+**Revised:** 2026-11-01.
 
-**Related:** [vision](../vision.md) §3 · [core loop](../core-loop.md) · [progression](progression.md) §The brief ·
+**Related:** [vision](../vision.md) §3 · [core loop](../core-loop.md) · [jobs](../jobs.md) §The run — the brief ·
 [glossary](../glossary.md)
 
 ## Goal
 
-One instrument, one view. The cube is the **lens**: a tangible MR tool you **move and resize** over
+One instrument, one view. The cube is the **instrument**: a tangible MR tool you **move** over
 the bubble; the space **inside** it scales reality/the field — it transforms the zone it covers.
 There is no Map/Sculpt mode split, and the whole map stays visible in the background — overview and
-detail at once, no transition. **The cube's size is the aperture:** big reads wide and coarse, small
-reads narrow and fine.
+detail at once, no transition. **The cube's size is the aperture:** it sets the *scope* of an edit
+(how many planets and lattice cells one pinch touches), not its precision; the pinch sets the
+magnitude. The level sets the cube's size; resizing is deferred (it works, but the explanation is not
+ready).
 
 **One gesture, one effect.** A pinch inside the cube does two things at once, and both are *space*:
 
@@ -25,37 +27,43 @@ The path bends because the planets moved and grew; the field and the trajectory 
 result ([core loop](../core-loop.md)).
 
 **Honest framing.** The physics is Newtonian gravity — `SpacetimeField` is inverse-square, a source is
-position + radius + strength. Relativity is the **language and the fiction**, not a simulation: do not
-simulate Einstein's field equations. The test for any new effect is whether it changes what the player
-*decides*, not the number they read after solving.
+position + radius + strength. A **sun** is a source too: it sits at the field centre, is scalable by
+its centre by default, and is never a run endpoint. Relativity is the **language and the fiction**, not
+a simulation:
+do not simulate Einstein's field equations. The test for any new effect is whether it changes what the
+player *decides*, not the number they read after solving.
 
 ## Inputs — the two gestures (taught in order)
 
 | Gesture | Trigger | Effect |
 |---|---|---|
 | **The scale** | a two-hand pinch **inside** the cube | scales the space *and* the content: the metric stretches (a shrunk zone is a **shortcut**), the planets **spread** and **grow** (`mass ∝ radius³`), so a grown planet deepens its well and bends the path |
-| **The region** *(move at job 4, resize at job 5)* | grab the cube's **edges / corners** | **moves / resizes** the cube (the lens) — sets *where* you work; the soft brush blends several zones |
+| **The region** *(move at job 4; resize deferred)* | grab the cube's **edges / corners** | **moves / resizes** the cube — sets *where* you work; the soft brush blends several zones |
 
 **Multiple scales are the way.** The player scales **several** zones, and the soft brush blends them
 into one field — the core of the verb, not a later unlock. The region's size must stay **separate
 from the scale** — coupling them is the bug.
 
 **The brief selects the gestures.** A fixed level locks the move, a locked frame locks the resize, and
-the scale inside the cube is always available. **Several zones do not require a movable cube:** a level
-may place **several fixed cubes** for the player to scale, so `moves ≥ 2` holds with `translatable`
-either way — the level pre-places the zones, or the player moves a single lens between them
-([progression](progression.md) §The brief). The game never shows a move count; the lab readout may show
-a command count as a diagnostic.
+the scale inside the cube is always available. Several zones do not require a movable cube; the
+[progression](progression.md) §The several-zones rung owns that rule. The game never shows a move
+count.
 
 ## Rules
 
 - **Soft brush.** The cube's influence falls off at the edges so neighbouring zones blend; a hard
   edge would tear the mesh.
 - **The field is derived, never edited.** The player scales the space and the content; the field,
-  grid and trajectory are computed from the result.
+  lattice and trajectory are computed from the result.
 - **Planets stay the field's sources.** The *verb* changes, not the physics (`SpacetimeField`,
   `TrajectoryIntegrator` stand). Scaling the content changes the field for free through the existing
   `mass ∝ radius³` rule.
+- **The sun is scalable by default.** It sits at the field centre and is never an endpoint. A cube
+  containing its centre scales it; a puzzle can lock it (`sunScalable` off), pinning min and max scale
+  to the baked radius. Job 1 has no sun; the centre (job 2) introduces it with the cube over its centre;
+  after that it is a normal source.
+- **A translatable level starts the cube at the centre.** The solution includes an off-centre zone, so the
+  move is required; the player chooses where to work.
 - **Planets cannot fuse.** The separation constraint (`SourceConstraints`, 1.2 × the sum of radii,
   applied on every recompute) pushes any overlapping pair apart, so a zone transform can never merge
   two planets — but the constraint can *fight* the cube's intent, so the player must see the planets
@@ -68,25 +76,34 @@ a command count as a diagnostic.
 ## Feedback
 
 - The mesh **starts flat and warps only with the player's zones** — the planets' wells are not drawn,
-  so any bend reads as something the player did; the lattice spans the run (sized from
-  `origin`→`destination`).
-- The planets visibly **spread and grow**.
-- The cube keeps a **committed check lamp** after landing — **green when the last check arrived**, red
-  on a crash — until the next edit. A locked gesture or an over-budget scale **flashes the frame red**
-  instead of failing silently.
+  so any local bend reads as something the player did. Entropy is read from the **in-field bar**, not a
+  lattice tint: the zone warp already owns the tint. A field-wide stress (rim or pulse) is optional and
+  needs its own channel; the lattice spans the run (sized from `origin`→`destination`).
+- While the pinch is in progress the **frame stays fixed** and the **inner volume** scales with the
+  hands: the content it covers spreads and grows, the fill follows the hand scale (the throb is only an
+  accent), and the trajectory preview follows. The volume, not the frame, is the thing being scaled.
+- The planets visibly **spread and grow**; the sun scales by its centre unless the puzzle locks it. A
+  locked sun holds its mass and reads as fixed, so covering it with the cube does not look broken.
+- The cube keeps a **committed check lamp** after landing — it shows the last check's outcome until
+  the next edit. A locked gesture or an over-budget scale **flashes the frame** instead of failing
+  silently.
 - The ship **launches on each completed pinch** and flies the current trajectory. The **trajectory
-  line** previews **live while shaping**, in a pending accent rather than the checked green/red, then
+  line** previews **live while shaping**, in a pending state rather than the checked result, then
   takes its result on landing ([core loop](../core-loop.md) §1).
 
 ## Failure
 
 None. The tool has no fail state; the only hard fail is **spending the full entropy budget** before a
-solve ([core loop](../core-loop.md) §3).
+solve ([core loop](../core-loop.md) §3), and the job-1 tutorial is exempt.
 
 ## Tuning
 
 - Falloff width (soft-brush blend) — tune in the lab.
 - Scale smoothing — the gesture eases toward its target so the scale, spread and warp move smoothly.
+- Entropy bar — the in-field bar's drain, band marks and last-edit segment; do not reuse the lattice tint.
+- Inner volume fill — follow the hand scale; use the throb only as an accent.
+- Sun radius and mass — scalable by its centre by default; a puzzle can lock it if the bake finds
+  scaling trivializes the level.
 
 ## Open questions
 
@@ -94,3 +111,5 @@ solve ([core loop](../core-loop.md) §3).
   verified puzzles — **not the slice**.
 - Multi-zone solutions: the search and bake are a separate plan; the region/scale decoupling is
   settled — they stay separate.
+- **Resize explanation:** the mechanic works, but the player needs a clear "size is scope, not
+  precision" lesson before it enters the run. Deferred; next cut candidate.

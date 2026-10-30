@@ -14,6 +14,8 @@ namespace DigitalLove.Game.Sectors
         public MinMaxFloat PlanetRadius;
         public MinMaxInt RingCount;
         public MinMaxInt ArmCount;
+        public float TiltDegrees;
+        public float BulgeHeight;
 
         public float OuterRadius => SectorRadius * Spread;
     }

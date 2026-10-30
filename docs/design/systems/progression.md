@@ -2,7 +2,7 @@
 
 **Status:** design · system · progression.
 **Date:** 2026-10-23.
-**Revised:** 2026-10-30.
+**Revised:** 2026-11-01.
 
 **Related:** [vision](../vision.md) · [core loop](../core-loop.md) · [the cube](cube.md) ·
 [lore](../world/lore.md) · [jobs](../jobs.md)
@@ -37,7 +37,7 @@ The **level selector** is needed: a field of cubes, one per job.
 
 - A **big universe** (the bounded sector field) holds the cubes, one per job.
 - Each cube carries a **number** — the number *is* the order. The graph is **implied**, not drawn.
-- **A level is a cube on the map:** picking it brings the cube/lens into the play space, and its
+- **A level is a cube on the map:** picking it brings the cube into the play space, and its
   number/seed generates (offline) the puzzle's **own field** — the campaign map is the backdrop, the
   puzzle field is the play space.
 - **Direct pick only (decided 2026-10-27):** the map is the only navigation; the result offers
@@ -47,58 +47,53 @@ The **level selector** is needed: a field of cubes, one per job.
 
 One new lesson at a time, so the player never faces two unrelated ideas at once:
 
-1. **Jobs 1–2 — the fixed cube, one zone.** A fixed region; the only move is the **grab-inside
-   scale**. One lever, one planet.
-2. **Job 3 — several zones.** The level places **several fixed cubes**; the player scales each and the
+1. **Job 1 — the fixed cube, one zone.** A fixed region; the only move is the **grab-inside scale**.
+   One lever, one pinch. The field has three planets so the run can be blocked, but the count is not the
+   lesson ([jobs](../jobs.md) §The run).
+2. **Job 2 — the centre.** The fixed cube is placed over the sun; the player scales the star with the
+   same verb. It lands before the move lesson, so the sun is met with a fixed cube.
+3. **Job 3 — several zones.** The level places **several fixed cubes**; the player scales each and the
    soft brush blends them. No move — "where do I scale" is the lesson on its own, learned before the
-   lens can be placed.
-3. **Job 4 — the lens moves.** The cube becomes **translatable**: the player chooses *where* to work,
-   not just how much. "Where does the lens sit" is its own lesson, split from "several zones".
-4. **Job 5 — the resizable frame.** The region can be **resized** — the aperture becomes the player's
-   to choose.
+   cube can be placed.
+4. **Job 4 — the cube moves.** The cube becomes **translatable**: the player chooses *where* to work,
+   not just how much. "Where does the cube sit" is its own lesson, split from "several zones".
+5. **Jobs 5–6 — multi-zone.** The player moves the cube and scales several zones, spreading the edit to
+   spend less entropy.
+6. **Job 7 — the capstone.** The cube starts over the sun; the solution scales several zones, the star
+   included. The finale combines every verb, not a new control.
 
-So the run order is **scale → several zones → move → resize**, then the combine jobs (6–7) mix the
-verbs.
+So the run order is **scale → centre → several zones → move → multi-zone → capstone**. **Resize is
+deferred** from the slice: it works, but the explanation (size is scope, not precision) is not ready; it
+is the next cut candidate.
+
+### The several-zones rung
 
 **Several zones is its own rung (2026-10-29).** The old rule — a fixed cube covers one region, so
-`moves ≥ 2` implies `translatable` — was a limitation of the old timed win condition. With
+`zones ≥ 2` implied `translatable` — was a limitation of the old timed win condition. With
 **arrival-only**, a level can simply **place several fixed cubes**, so "several zones" (job 3) and "the
 cube moves" (job 4) split into two lessons
-(see [the brief](#the-brief--the-conditions-a-solution-must-meet)). The placed-zone condition may recur
+(see [the brief](../jobs.md#the-run--the-brief)). The placed-zone condition may recur
 in later jobs; for now it is job 3 only.
 
 A **tutorial** will be needed for this, but not yet — get the loop working first
 ([vision](../vision.md) §6).
 
-### The brief — the conditions a solution must meet
-
-Each job's puzzle carries a **brief**; the per-level conditions are the source of truth here, and the
-creator bakes to them:
-
-- **`translatable`** — the cube may be **moved** (its centre changes) or is **fixed** at home.
-- **`moves`** — how many **zones** the solution scales (the cube edits `N` places, up or down).
-  **`moves ≥ 2` holds with `translatable` either way** — a **fixed** level places several cubes for the
-  player to scale, a **translatable** one has the player move a single lens between zones.
-- **`resizable`** — the frame may be **resized** (`[1×, 2×]`) or is locked.
-- **`scalable`** is **always true** — scaling the content is the verb; there is no locked-scale level.
-
 ### The puzzle map
 
-The **concrete run** — one row per job, with its brief, field, dials and lore skin — is in
-[jobs](../jobs.md). This doc sets the shape; jobs is the specific development of it.
+The **concrete run** — one row per job, with its brief fields, archetypes, field and lore skin — is in
+[jobs](../jobs.md). This doc sets the advancement shape; jobs is the specific development of it.
 
-**The slice.** Jobs 1–7 are the full run, ~1 minute each. The curve rises by **planet count** and
-**entropy tightness**. The last jobs **combine** every verb the player has learned — that is the
-capstone, not a locked cube.
-
-Each job is defined on its **seed** — the field, the brief conditions and the dials — and the **level**
-is the baked result of that seed. The seed is the recipe; the level is what the creator bakes from it,
-once.
+**Multi-ship.** A job may carry more than one run; it is solved only when **every ship arrives**. The
+runs are baked with a relation — **fan-out** (one origin), **converge** (one destination), or
+**separate** (no shared planet) — so the shared field stays legible. Multi-ship is a variation axis,
+not a mode: the same cube, entropy and arrival rules apply. The 7-job spine is single-ship; a
+multi-ship job can be authored as a stretch or a later combine job.
 
 ### The company is lore only
 
-No economy, no ships, no unlocks. Money is **flavour** ([lore](../world/lore.md)); progression is
-the **lit cubes + stars**. Reputation / ships / systems are the wrapper, once the core loop is fun.
+No economy, no fleet management, no unlocks. Money is **flavour** ([lore](../world/lore.md));
+progression is the **lit cubes + stars**. Reputation, fleet and systems are the wrapper, once the core
+loop is fun.
 The fiction for all of this — why the cubes are numbered, why the order, what the stars mean — is in
 [lore §The progression](../world/lore.md).
 
@@ -113,47 +108,28 @@ None — progression never blocks a run on a score (see Open).
 
 ## Tuning — the shape
 
-**Seven cubes**, ~1 minute each. The curve rises by **planet count** and **entropy tightness**.
+**The full run is seven cubes**, ~1 minute each. The curve rises by **planet count**, **field depth**,
+and **solution cost**.
+
+**Entropy is derived, not hand-set.** The bake finds a solution and sets the budget to **3×** its
+entropy cost; stars are **1/3 and 2/3** of that budget. So 3★ means spending no more than the bake's
+solution, 2★ up to twice it, otherwise 1★. The thresholds are the same shape every graded job; job 1 is
+the tutorial exception (no fail, no stars). The field sets the absolute cost and how hard it is to read.
 
 ### Variation axes (enough for ~7 distinct jobs)
 
 The verb is always the **scale**, so variety comes from the field and the brief:
 
 1. **Planet count** — 1 → 4+ sources.
-2. **Entropy budget** — loose → tight (grade pressure).
+2. **Solution cost** — cheap → expensive; the bake triples it into the budget, so this sets the
+   absolute bar, not the star thresholds.
 3. **Well depth** — shallow → deep (a deeper well bends the path more).
-4. **Layout** — single well vs multi-well; where the shortcut sits vs the natural path.
+4. **Well layout** — single well vs multi-well; where the shortcut sits vs the natural path.
 5. **Scramble** — how far the authored start sits from the solved arrangement (the difficulty dial).
-
-### Archetypes — the named shape of a job
-
-An archetype names the lesson a job teaches. It is read from the brief and the field, so each job reads as
-one lesson and the set reads as a catalogue. Archetypes stack: a job has one primary archetype and may add
-a layout.
-
-| Archetype | Brief | Lesson | Jobs |
-|---|---|---|---|
-| **Shortcut** | `moves 1`, fixed cube, on-path | scale one zone | 1–2 |
-| **Several zones** | `moves ≥ 2`, fixed cubes | scale and blend the placed zones | 3 |
-| **Move** | `translatable`, `moves 1` | place the lens yourself | 4 |
-| **Resize** | `resizable` | the aperture is the player's | 5 |
-| **Multi-zone** | `moves ≥ 2`, `translatable` | place and blend several zones — a spread edit can spend less entropy | 6–7 |
-
-**Multi-zone as an efficiency lesson.** Entropy is charged per zone as the net scale change, so a level
-can be authored so the **cheap** solution is to **move the cube** and scale **several zones a little**,
-rather than one zone a lot — spreading the edit beats one big edit on the grade.
-
-Layout is a second axis, from `fieldShape`: **Ring**, **Spiral**, **Cluster**. A job is e.g. *Multi-zone ·
-Spiral*.
-
-Each archetype should have **more than one route** where the brief allows. A job with one route is a
-single answer, not a variation.
-
-*Automatic labelling from the brief is possible (a pure function of the brief) and is deferred; the labels
-are design-only until then.*
-
-Jobs 1–2 teach the scale on one planet; job 3 adds several zones; job 4 adds the move; job 5 adds the
-resize; jobs 6–7 combine the verbs. Prove 3–5 first, then extend only if the axes hold.
+6. **Ships** — one run → several runs, all arriving.
+7. **Depth** — flat disc → bulge and tilt; where the vertical structure sits.
+8. **Field shape** — Ring → Spiral → Cluster; one shape per act, so the run's silhouette turns with it.
+9. **Sun** — radius and mass; scalable by its centre by default, lockable per puzzle.
 
 ## Persistence
 
@@ -166,3 +142,10 @@ mid-flight (the seed is authoring-only).
 - **Star-gating?** No, in the demo — never block a run on a score. Stars feed a rating, or unlock
   *cosmetics / bonus* later.
 - **The numbers:** reset per act, or run 1 → N? (The slice proposes one chapter, numbered 1 → N.)
+- **The rungs.** Re-analyze the learning-path order and count
+  (scale → centre → several zones → move → multi-zone → capstone) after the run shape settles; the current
+  order is the working shape, not final.
+- **Entropy legibility.** The budget is derived from the bake's best solution; the player never sees
+  that reference. Can they track spent vs remaining well enough from the readout?
+- **Run length.** What set fills a **10-minute session** and stays fun — 5, 7, or 8 jobs? The current
+  target is 7 × ~1 min; prove 3–5 first.

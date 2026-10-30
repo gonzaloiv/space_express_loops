@@ -13,6 +13,7 @@ namespace DigitalLove.Game.Nodes
         private int variantSeed;
 
         public bool IsActive => gameObject.activeInHierarchy;
+        public bool IsVisible => isVisible;
         public Vector3 LocalPosition => transform.localPosition;
         public Vector3 Position => nodeBody.Position;
         public float Radius => radius;

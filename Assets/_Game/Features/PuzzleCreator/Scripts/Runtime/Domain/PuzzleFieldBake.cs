@@ -8,7 +8,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public static bool Apply(
             PuzzleBrief brief, PuzzleData puzzle, PuzzlePlanetListAsset planets, PuzzleSimSettings settings)
         {
-            puzzle.sources = PuzzleSourceBridge.ToSources(planets.planets);
+            puzzle.sources = WithSun(
+                PuzzleSourceBridge.ToSources(planets.planets), brief.SunRadius, brief.SunScalable);
             CubeRange(planets, out float min, out float max);
             puzzle.cubeSizeMin = min;
             puzzle.cubeSizeMax = max;
@@ -16,7 +17,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.zones = brief.Zones;
             puzzle.resizable = brief.Resizable;
             if (!PuzzleRunChoice.TryPick(
-                planets.planets, settings.RunDistance, brief.EndpointClearance,
+                planets.planets, settings.RunDistance, brief.EndpointClearance, brief.SunRadius,
                 out Vector3 origin, out Vector3 destination))
                 return false;
 
@@ -25,6 +26,31 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.captureRadius = puzzle.CaptureRadiusAtDestination();
             puzzle.zoneCentre = (origin + destination) * 0.5f;
             return true;
+        }
+
+        // The sun is a source at the field's centre, fixed or scalable as the seed says. It stays out of
+        // the cube range so a planet-sized cube still reads as the player's tool, while the run choice
+        // keeps the star's band clear.
+        private static PuzzleSource[] WithSun(
+            PuzzleSource[] sources, float sunRadius, bool sunScalable)
+        {
+            if (sunRadius <= 0f)
+                return sources;
+
+            PuzzleSource[] withSun = new PuzzleSource[sources.Length + 1];
+            withSun[0] = new PuzzleSource
+            {
+                home = Vector3.zero,
+                scale = sunRadius * 2f,
+                name = "Sun",
+                fixedMass = !sunScalable,
+                centreOnly = true
+            };
+
+            for (int i = 0; i < sources.Length; i++)
+                withSun[i + 1] = sources[i];
+
+            return withSun;
         }
 
         // The cube must enclose the planet it covers, so the range spans the field's planets with the

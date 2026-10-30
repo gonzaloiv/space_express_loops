@@ -2,7 +2,7 @@
 
 **Status:** design · world · lore.
 **Date:** 2026-10-23.
-**Revised:** 2026-10-30.
+**Revised:** 2026-11-01.
 
 **Related:** [vision](../vision.md) · [core loop](../core-loop.md) ·
 [progression](../systems/progression.md) · [glossary](../glossary.md)
@@ -64,6 +64,9 @@ The run is the company **proving the Wrap**, one delivery at a time. All backdro
 
 The **arrival** is the customer's promise — the one thing the company must not break. Editing little
 and arriving are the same play; the stars are where it shows up as a number.
+
+**A contract can be a multi-ship run.** Some promises need more than one ship; the company flies
+them together, and the promise is the same — everything arrives.
 
 ## The customers
 

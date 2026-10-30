@@ -3,7 +3,7 @@
 # Checks, under docs/design/:
 #   1. every design doc (except README) has a **Status:** line;
 #   2. every design doc is referenced from docs/design/README.md;
-#   3. no design doc uses the retired gate names (the vision §7 go/no-go is the "validation").
+#   3. no design doc uses a retired term (the vision §7 go/no-go is the "validation").
 #
 # Link targets across docs/ are already checked by docs/plans/check-plans.ps1.
 # Exit code 1 if any problem is found.
@@ -17,7 +17,7 @@ $readme    = Join-Path $designDir 'README.md'
 $problems = New-Object System.Collections.Generic.List[string]
 $readmeText = if (Test-Path -LiteralPath $readme) { [System.IO.File]::ReadAllText($readme) } else { '' }
 
-$retired = @('device gate', 'Gate B', 'lens gate')
+$retired = @('device gate', 'Gate B', 'lens gate', 'warped sheet', 'command count', 'eco grade')
 
 foreach ($f in Get-ChildItem -Path $designDir -Recurse -Filter *.md -File) {
     if ($f.Name -eq 'README.md') { continue }
@@ -34,8 +34,9 @@ foreach ($f in Get-ChildItem -Path $designDir -Recurse -Filter *.md -File) {
     }
 
     foreach ($term in $retired) {
-        if ($text -match [regex]::Escape($term)) {
-            $problems.Add("RETIRED TERM   {0}  ('{1}' -> 'validation')" -f $rel, $term)
+        $pattern = '\b' + [regex]::Escape($term) + '\b'
+        if ($text -match $pattern) {
+            $problems.Add("RETIRED TERM   $rel  ('$term')")
         }
     }
 }

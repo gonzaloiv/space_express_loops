@@ -9,7 +9,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private const float BlockBandFactor = 2f;
 
         public static bool TryPick(
-            PuzzleFieldPlanet[] planets, float targetRun, float endpointClearance,
+            PuzzleFieldPlanet[] planets, float targetRun, float endpointClearance, float sunRadius,
             out Vector3 origin, out Vector3 destination)
         {
             RunChoice choice = new() { Best = float.MaxValue };
@@ -17,7 +17,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             for (int i = 0; i < planets.Length; i++)
             {
                 for (int j = i + 1; j < planets.Length; j++)
-                    Consider(planets, i, j, target, ref choice);
+                    Consider(planets, i, j, target, sunRadius, ref choice);
             }
 
             origin = choice.Origin;
@@ -26,13 +26,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         }
 
         private static void Consider(
-            PuzzleFieldPlanet[] planets, int i, int j, RunTarget target, ref RunChoice choice)
+            PuzzleFieldPlanet[] planets, int i, int j, RunTarget target, float sunRadius,
+            ref RunChoice choice)
         {
             float run = Vector3.Distance(planets[i].position, planets[j].position);
             if (run < target.Distance * MinRunFraction || run > target.Distance * MaxRunFactor)
                 return;
 
-            if (!RunIsBlocked(planets, i, j, target.EndpointClearance))
+            if (!RunIsBlocked(planets, i, j, target.EndpointClearance, sunRadius))
                 return;
 
             float delta = Mathf.Abs(run - target.Distance);
@@ -46,11 +47,20 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         }
 
         private static bool RunIsBlocked(
-            PuzzleFieldPlanet[] planets, int a, int b, float endpointClearance)
+            PuzzleFieldPlanet[] planets, int a, int b, float endpointClearance, float sunRadius)
         {
             Vector3 from = planets[a].position;
             Vector3 to = planets[b].position;
             bool blocked = false;
+            if (sunRadius > 0f)
+            {
+                if (Vector3.Distance(Vector3.zero, from) < endpointClearance + sunRadius
+                    || Vector3.Distance(Vector3.zero, to) < endpointClearance + sunRadius)
+                    return false;
+
+                if (PuzzleRunGeometry.DistanceToSegment(Vector3.zero, from, to) < sunRadius * BlockBandFactor)
+                    blocked = true;
+            }
             for (int k = 0; k < planets.Length; k++)
             {
                 if (k == a || k == b)

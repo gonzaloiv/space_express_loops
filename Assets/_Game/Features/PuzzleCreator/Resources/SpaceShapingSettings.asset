@@ -12,16 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10000000000000000000000000000019, type: 3}
   m_Name: SpaceShapingSettings
   m_EditorClassIdentifier: 
-  runDistance: 0.5
+  runDistance: 0.7
+  sunRadius: 0.06
   launchSpeedFactor: 0.9
   stepSecs: 0.0008333333
-  nominalSpeed: 0.5
-  planetRadiusMin: 0.005
-  planetRadiusMax: 0.1
-  endpointClearance: 0.005
-  sourceStrengthScale: 6
-  separationScale: 0.1
-  zoneFalloff: 0.5
-  zoneEffectGain: 1.5
-  minScaleFactor: 0.75
-  maxScaleFactor: 1.25
+  nominalSpeed: 1
+  planetRadiusMin: 0.006
+  planetRadiusMax: 0.06
+  endpointClearance: 0.033
+  sourceStrengthScale: 5.5555553
+  separationScale: 1.2
+  fieldThickness: 0.08
+  fieldTilt: 12
+  fieldBulge: 0.8
+  zoneFalloff: 0.25
+  zoneEffectGain: 1
+  minScaleFactor: 0.6
+  maxScaleFactor: 1.8

@@ -2,7 +2,7 @@
 
 **Status:** idea · presentation · updated 2026-10-30 — recorded, design only. Not scheduled.
 
-**Related:** [presentation](../design/presentation.md)
+**Related:** [vision](../design/vision.md)
 
 ## The idea
 

@@ -2,7 +2,7 @@
 
 **Status:** idea · space shaping · updated 2026-10-30 — how the puzzle field becomes a galaxy. Not scheduled.
 
-**Related:** [presentation](../design/presentation.md) · [progression](../design/systems/progression.md) ·
+**Related:** [progression](../design/systems/progression.md) ·
 [the cube](../design/systems/cube.md) · [jobs](../design/jobs.md)
 
 ## Goal
@@ -58,14 +58,13 @@ among the planets** — messy, and competing with them for attention. It is gone
 builder, the mesh asset, the test, the scene object and the level's `sunCentre` are all removed, and the
 lattice mesh is untouched.
 
-**Open — a real mass instead.** The physically right version is not a graphic at all: a **body** at the
+**Now in — a real mass.** The physically right version is not a graphic at all: a **body** at the
 sun's position is a *source*, so the field bends around it, the ship can crash into it, and
-`SourceConstraints.Separate` pushes the planets clear — a star with its system around it, and the bake
-would automatically route solutions around it. Planned in
+`SourceConstraints.Separate` pushes the planets clear — a star with its system around it. Implemented in
 [a more realistic field](../plans/in-progress/space-shaping-realistic-field.md); the visual is a
-**reference marker**, not a lit star. Two decisions gate it: whether the cube may **scale** it (a dominant scaleable
-mass is a puzzle-breaking lever, and `scalable` is always true today), and its **placement** (a star
-belongs at the centre of the system, not above the run midpoint, which would shape the field generator).
+**reference marker**, not a lit star. The two decisions are settled: scalable by default with
+`sunScalable` as a per-puzzle lock, and the sun placed at the centre of the system. A seed's `hasSun`
+decides whether the level has one; the radius is a single field setting.
 
 ### 3. Dust — noise around the field
 

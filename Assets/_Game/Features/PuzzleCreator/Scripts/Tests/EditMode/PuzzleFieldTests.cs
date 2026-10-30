@@ -80,6 +80,21 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
+        public void Build_PassesTheDepthKnobs()
+        {
+            SpaceShapingSettings settings = Settings();
+            settings.fieldThickness = 0.05f;
+            settings.fieldTilt = 9f;
+            settings.fieldBulge = 0.6f;
+
+            SectorShapeData shape = PuzzleFieldBuilder.Build(Seed(), settings);
+
+            Assert.AreEqual(0.05f, shape.inclination, 1e-4f);
+            Assert.AreEqual(9f, shape.tilt, 1e-4f);
+            Assert.AreEqual(0.6f, shape.bulge, 1e-4f);
+        }
+
+        [Test]
         public void Bridge_MapsRadiusToDoubleScale()
         {
             PuzzleFieldPlanet[] planets = { new(new Vector3(1f, 2f, 3f), 0.5f) };
@@ -122,6 +137,165 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
+        public void Apply_AddsAFixedSunAtTheCentre()
+        {
+            PuzzleData puzzle = Applied(new PuzzleBrief { SunRadius = 0.15f, SunScalable = false });
+
+            Assert.AreEqual(4, puzzle.sources.Length);
+            Assert.AreEqual(Vector3.zero, puzzle.sources[0].home);
+            Assert.IsTrue(puzzle.sources[0].fixedMass);
+            Assert.IsTrue(puzzle.sources[0].centreOnly);
+            Assert.AreEqual(0.3f, puzzle.sources[0].scale, 1e-4f);
+            Assert.AreNotEqual(Vector3.zero, puzzle.origin);
+            Assert.AreNotEqual(Vector3.zero, puzzle.destination);
+        }
+
+        [Test]
+        public void Apply_AddsAScalableSunAtTheCentre()
+        {
+            PuzzleData puzzle = Applied(new PuzzleBrief { SunRadius = 0.15f, SunScalable = true });
+
+            Assert.IsFalse(puzzle.sources[0].fixedMass);
+            Assert.IsTrue(puzzle.sources[0].centreOnly);
+        }
+
+        [Test]
+        public void Apply_SeedWithoutASun_BakesNoSun()
+        {
+            PuzzleSeed seed = Seed();
+            seed.hasSun = false;
+            SpaceShapingSettings settings = Settings();
+            settings.sunRadius = 0.15f;
+
+            PuzzleData puzzle = Applied(PuzzleBrief.From(seed, settings));
+
+            Assert.AreEqual(3, puzzle.sources.Length);
+        }
+
+        [Test]
+        public void Apply_SeedWithASun_BakesOneAtTheSettingsRadius()
+        {
+            PuzzleSeed seed = Seed();
+            seed.hasSun = true;
+            SpaceShapingSettings settings = Settings();
+            settings.sunRadius = 0.08f;
+
+            PuzzleData puzzle = Applied(PuzzleBrief.From(seed, settings));
+
+            Assert.AreEqual(4, puzzle.sources.Length);
+            Assert.AreEqual(0.16f, puzzle.sources[0].scale, 1e-4f);
+        }
+
+        [Test]
+        public void Apply_SeedScalable_ControlsTheLock()
+        {
+            PuzzleSeed seed = Seed();
+            seed.hasSun = true;
+
+            seed.sunScalable = false;
+            Assert.IsTrue(Applied(PuzzleBrief.From(seed, Settings())).sources[0].fixedMass);
+
+            seed.sunScalable = true;
+            Assert.IsFalse(Applied(PuzzleBrief.From(seed, Settings())).sources[0].fixedMass);
+        }
+
+        [Test]
+        public void Build_SetsTheAnchorToTheSunRadius()
+        {
+            PuzzleSeed seed = Seed();
+            seed.hasSun = true;
+            SpaceShapingSettings settings = Settings();
+            settings.sunRadius = 0.15f;
+
+            SectorShapeData shape = PuzzleFieldBuilder.Build(seed, settings);
+
+            Assert.AreEqual(0.15f, shape.anchorRadius, 1e-4f);
+        }
+
+        [Test]
+        public void Build_WithoutASun_LeavesNoAnchorHole()
+        {
+            PuzzleSeed seed = Seed();
+            seed.hasSun = false;
+            SpaceShapingSettings settings = Settings();
+            settings.sunRadius = 0.15f;
+
+            Assert.AreEqual(0f, PuzzleFieldBuilder.Build(seed, settings).anchorRadius, 1e-4f);
+        }
+
+        [Test]
+        public void CoversSource_IgnoresAFixedSun()
+        {
+            PuzzleData puzzle = Bare();
+            puzzle.sources = new[]
+            {
+                new PuzzleSource { home = Vector3.zero, scale = 1f, fixedMass = true },
+                new PuzzleSource { home = new Vector3(0.2f, 0f, 0f), scale = 0.1f }
+            };
+            PuzzleZone zone = new()
+            {
+                centre = new Vector3(0.1f, 0f, 0f),
+                halfExtents = Vector3.one * 0.25f,
+                scale = 1f,
+                falloff = 0f
+            };
+
+            Assert.IsTrue(PuzzleZoneCandidates.CoversSource(zone, puzzle));
+        }
+
+        [Test]
+        public void Centres_ExcludeAFixedSun()
+        {
+            PuzzleData puzzle = Bare();
+            puzzle.sources = new[]
+            {
+                new PuzzleSource { home = Vector3.zero, scale = 1f, fixedMass = true },
+                new PuzzleSource { home = new Vector3(0.2f, 0f, 0f), scale = 0.1f }
+            };
+
+            Vector3[] centres = PuzzleZoneCandidates.Centres(puzzle, 0.1f);
+
+            Assert.AreEqual(1, centres.Length);
+            Assert.AreEqual(new Vector3(0.2f, 0f, 0f), centres[0]);
+        }
+
+        [Test]
+        public void CoversSource_ScalesAScalableSunByItsCentre()
+        {
+            PuzzleData puzzle = Bare();
+            puzzle.sources = new[]
+            {
+                new PuzzleSource { home = Vector3.zero, scale = 1f, centreOnly = true },
+                new PuzzleSource { home = new Vector3(0.2f, 0f, 0f), scale = 0.1f }
+            };
+            PuzzleZone zone = new()
+            {
+                centre = Vector3.zero,
+                halfExtents = Vector3.one * 0.01f,
+                scale = 1f,
+                falloff = 0f
+            };
+
+            Assert.IsTrue(PuzzleZoneCandidates.CoversSource(zone, puzzle));
+        }
+
+        [Test]
+        public void Centres_IncludeAScalableSun()
+        {
+            PuzzleData puzzle = Bare();
+            puzzle.sources = new[]
+            {
+                new PuzzleSource { home = Vector3.zero, scale = 1f, centreOnly = true },
+                new PuzzleSource { home = new Vector3(0.2f, 0f, 0f), scale = 0.1f }
+            };
+
+            Vector3[] centres = PuzzleZoneCandidates.Centres(puzzle, 0.1f);
+
+            Assert.AreEqual(2, centres.Length);
+            CollectionAssert.Contains(centres, Vector3.zero);
+        }
+
+        [Test]
         public void Bake_PicksTheRunFromTheField()
         {
             PuzzleSeed seed = Seed();
@@ -156,6 +330,21 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         {
             PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
             puzzle.sources = System.Array.Empty<PuzzleSource>();
+            return puzzle;
+        }
+
+        private static PuzzleData Applied(PuzzleBrief brief)
+        {
+            PuzzlePlanetListAsset planets = ScriptableObject.CreateInstance<PuzzlePlanetListAsset>();
+            planets.planets = new[]
+            {
+                new PuzzleFieldPlanet(new Vector3(-0.2f, 0f, 0f), 0.02f, "a"),
+                new PuzzleFieldPlanet(new Vector3(0.2f, 0f, 0f), 0.02f, "b"),
+                new PuzzleFieldPlanet(new Vector3(0f, 0.02f, 0f), 0.02f, "c")
+            };
+            PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
+            PuzzleSimSettings settings = new() { RunDistance = 0.5f };
+            Assert.IsTrue(PuzzleFieldBake.Apply(brief, puzzle, planets, settings));
             return puzzle;
         }
 

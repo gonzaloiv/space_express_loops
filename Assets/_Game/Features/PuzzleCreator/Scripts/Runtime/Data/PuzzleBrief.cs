@@ -5,6 +5,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     public struct PuzzleBrief
     {
         public float EndpointClearance;
+        public float SunRadius;
+        public bool SunScalable;
         public bool Translatable;
         public int Zones;
         public bool Resizable;
@@ -20,6 +22,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public static PuzzleBrief From(PuzzleSeed seed, SpaceShapingSettings settings) => new()
         {
             EndpointClearance = settings.endpointClearance,
+            SunRadius = seed.EffectiveSunRadius(settings),
+            SunScalable = seed.sunScalable,
             Translatable = seed.translatable,
             Zones = Mathf.Max(1, seed.zones),
             Resizable = seed.resizable,

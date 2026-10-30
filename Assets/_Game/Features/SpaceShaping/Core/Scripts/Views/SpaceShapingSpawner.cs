@@ -11,6 +11,7 @@ namespace DigitalLove.Game.SpaceShaping
     public class SpaceShapingSpawner : MonoBehaviour
     {
         [SerializeField] private FieldPlanetBehaviour prototype;
+        [SerializeField] private FieldPlanetBehaviour sunPrototype;
         [SerializeField] private FieldPlanetBehaviour originPrototype;
         [SerializeField] private FieldPlanetBehaviour destinationPrototype;
         [SerializeField] private Transform sourceParent;
@@ -26,6 +27,7 @@ namespace DigitalLove.Game.SpaceShaping
         private readonly List<SpaceZoneView> cubes = new();
         private TrajectoryLinePool lines;
         private ShipFlightPool ships;
+        private FieldPlanetBehaviour sunPlanet;
         private FieldPlanetBehaviour originPlanet;
         private FieldPlanetBehaviour destinationPlanet;
 
@@ -40,6 +42,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void Awake()
         {
+            sunPlanet = Instantiate(sunPrototype, sourceParent);
+            sunPlanet.Initialize();
             originPlanet = Instantiate(originPrototype, sourceParent);
             originPlanet.Initialize();
             destinationPlanet = Instantiate(destinationPrototype, sourceParent);
@@ -55,13 +59,24 @@ namespace DigitalLove.Game.SpaceShaping
             int origin = session.IndexOf(session.Origin);
             int destination = session.IndexOf(session.Destination);
             int slot = 0;
+            bool sunSpawned = false;
             for (int i = 0; i < count; i++)
             {
                 if (i == origin || i == destination)
                     continue;
 
+                if (session.IsSun(i))
+                {
+                    sunPlanet.Spawn(session.GetPosition(i), session.GetScale(i), i, session.Name(i));
+                    sunSpawned = true;
+                    continue;
+                }
+
                 Source(slot++).Spawn(session.GetPosition(i), session.GetScale(i), i, session.Name(i));
             }
+
+            if (!sunSpawned)
+                sunPlanet.Hide();
 
             for (int i = slot; i < pool.Count; i++)
                 pool[i].Hide();

@@ -13,30 +13,21 @@ MonoBehaviour:
   m_Name: PuzzleSeed_Shape_Planets
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Creator::DigitalLove.Game.SpaceShaping.Creator.PuzzlePlanetListAsset
   planets:
-  - position: {x: 0.03783343, y: -0.0251547, z: 0.14119634}
-    radius: 0.04548941
+  - position: {x: 0.17070954, y: 0.31530887, z: 0.121248215}
+    radius: 0.036349718
     name: solmuigawa
-  - position: {x: -0.14119634, y: -0.008095581, z: -0.03783345}
-    radius: 0.016733931
+  - position: {x: 0.35359478, y: 0.009815428, z: -0.06428043}
+    radius: 0.050029546
     name: xanzonides
-  - position: {x: 0.09287755, y: 0.009788695, z: -0.10344383}
-    radius: 0.04552313
+  - position: {x: -0.059143126, y: 0.018614428, z: -0.20075671}
+    radius: 0.026728118
     name: thennilia
-  - position: {x: -0.15917799, y: -0.006054783, z: 0.091901414}
-    radius: 0.061437644
+  - position: {x: -0.29768413, y: -0.16952258, z: -0.14807986}
+    radius: 0.03399928
     name: chelluna
-  - position: {x: -0.010556492, y: 0.0016606782, z: -0.19241714}
-    radius: 0.09115502
+  - position: {x: -0.13707753, y: 0.045619283, z: -0.117890224}
+    radius: 0.04869869
     name: teiter
-  - position: {x: 0.15449786, y: 0.015586063, z: 0.10351227}
-    radius: 0.08295567
+  - position: {x: -0.26692188, y: 0.030789273, z: 0.100036465}
+    radius: 0.05956199
     name: thuamia
-  - position: {x: -0.15569553, y: -0.023418033, z: -0.15569557}
-    radius: 0.043727454
-    name: gniviter
-  - position: {x: 0.2128409, y: -0.029824618, z: -0.053290274}
-    radius: 0.09040257
-    name: phexogantu
-  - position: {x: -0.057307262, y: 0.0021208199, z: 0.21387377}
-    radius: 0.051194396
-    name: zippe 3VGR

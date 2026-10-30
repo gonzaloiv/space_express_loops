@@ -12,20 +12,19 @@ Active work. The one thing being built.
 
 - [Space shaping — a more realistic field](in-progress/space-shaping-realistic-field.md) — a 3D
   disc/bulge/cluster plus a star with real mass, so the field reads as a galaxy rather than a flat diagram.
-  Starts Mon 2026-11-02.
+  In progress — depth, the sun (per-seed presence and lock) and the runtime lock are in; next: the
+  headset read and cost pass (S4).
 
 ## Next
 
 Queued. One plan moves to **Now** when it starts.
 
-- [Space shaping — rings on some planets](backlog/space-shaping-planet-rings.md) — authored rings on a
-  subset of planets, chosen at puzzle creation and baked with the level.
+- [First-minute read and cost](backlog/first-minute-read.md) — baked tutorial first job, straight-line
+  baseline, and an in-field entropy bar. The read is the gate.
 
 ## Later
 
 Design-only or deferred. Nothing here is scheduled.
-
-_Empty._
 
 Candidate ideas (not plans) live in [docs/ideas](../ideas/README.md): variations, element pack,
 hologram look, TTS companion, feel polish.
@@ -34,8 +33,16 @@ hologram look, TTS companion, feel polish.
 
 Loose ends that still need a home. Close one by linking the plan that finishes it.
 
-- **Re-run Validation 1 on the maze.** The shape-the-path change retired the window/clock, so the
-  timing pass no longer applies; the maze mechanic needs a fresh validation pass.
+- **Re-run Validation 1 on the current loop.** The gate for the slice; the
+  [first-minute read plan](backlog/first-minute-read.md) §3 runs it.
+- **Run authoring.** Jobs 1–5, the map/level selector, and the TTS intro (manual + tech voice) are
+  designed but not built; add a plan before the 10-minute slice.
+- **Ship-zone cue.** The ship has a trail; there is no zone indicator. Fold it into the first-minute read
+  plan or the feel pass.
+- **Resize.** Working, but the explanation (size is scope, not precision) is not ready. Deferred from the
+  slice; next cut candidate.
+- **Capstone routes.** The design requires at least two routes for the capstone jobs (6–7); the bake
+  currently enforces only the movable single-zone case. Fix the bake before authoring them.
 
 ## Conventions
 

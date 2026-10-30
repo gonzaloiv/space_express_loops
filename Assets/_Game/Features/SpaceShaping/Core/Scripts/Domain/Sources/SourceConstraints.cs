@@ -8,7 +8,7 @@ namespace DigitalLove.Game.SpaceShaping
         public static void Apply(Vector3[] positions, float[] scales, SourceSpec[] specs, float separationScale)
         {
             ClampScale(scales, specs);
-            Separate(positions, scales, separationScale);
+            Separate(positions, scales, specs, separationScale);
         }
 
         private static void ClampScale(float[] scales, SourceSpec[] specs)
@@ -17,7 +17,10 @@ namespace DigitalLove.Game.SpaceShaping
                 scales[i] = Mathf.Clamp(scales[i], specs[i].MinScale, specs[i].MaxScale);
         }
 
-        private static void Separate(Vector3[] positions, float[] scales, float separationScale)
+        // A fixed source is immovable: a pair it joins pushes only the other body, so a locked sun
+        // stays at the centre while the planets it meets move out.
+        private static void Separate(
+            Vector3[] positions, float[] scales, SourceSpec[] specs, float separationScale)
         {
             for (int i = 0; i < positions.Length; i++)
             {
@@ -29,9 +32,11 @@ namespace DigitalLove.Game.SpaceShaping
                     if (distance >= minDistance || distance < 0.0001f)
                         continue;
 
-                    Vector3 push = delta.normalized * ((minDistance - distance) * 0.5f);
-                    positions[i] -= push;
-                    positions[j] += push;
+                    Vector3 push = delta.normalized * (minDistance - distance);
+                    if (!specs[i].FixedMass)
+                        positions[i] -= push * (specs[j].FixedMass ? 1f : 0.5f);
+                    if (!specs[j].FixedMass)
+                        positions[j] += push * (specs[i].FixedMass ? 1f : 0.5f);
                 }
             }
         }
