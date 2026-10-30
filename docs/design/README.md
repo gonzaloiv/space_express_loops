@@ -8,12 +8,10 @@ these docs describe the intended game, not what is shipped.
 | Doc | Concern |
 |---|---|
 | [Vision](vision.md) | The pitch, the pillars, the scope, the validation, what not to do. |
-| [Core loop](core-loop.md) | What the player does: moment-to-moment, a job, the company. |
+| [Core loop](core-loop.md) | What the player does: moment-to-moment, a job, the company, entropy. |
 | [The cube](systems/cube.md) | The one instrument, end to end. |
-| [Resources](systems/resources.md) | Time (window), fuel (brief), entropy (score). |
-| [Relativity](systems/relativity.md) | The effect menu the cube instruments. |
 | [Progression](systems/progression.md) | How the game advances: the cube map, stars, the learning path. |
-| [Jobs](jobs.md) | The concrete run: one row per job — brief, field, dials, and lore skin. |
+| [Jobs](jobs.md) | The concrete run: one row per job — brief, field, entropy, and lore skin. |
 | [Presentation](presentation.md) | Look, sound, HUD. |
 | [Lore](world/lore.md) | The fiction frame. |
 | [Glossary](glossary.md) | The fixed terms. |

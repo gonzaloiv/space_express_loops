@@ -10,18 +10,22 @@ namespace DigitalLove.Game.SpaceShaping
     public class SpaceShapingView : MonoBehaviour
     {
         [SerializeField] private FieldPlanetBehaviour prototype;
+        [SerializeField] private FieldPlanetBehaviour originPrototype;
         [SerializeField] private FieldPlanetBehaviour destinationPrototype;
         [SerializeField] private Transform sourceParent;
         [SerializeField] private SpacetimeMeshView mesh;
         [SerializeField] private TrajectoryLineView trajectory;
         [SerializeField] private SpaceZoneView cubePrototype;
         [SerializeField] private Transform cubeParent;
+        [Tooltip("Visual gap between the origin planet's surface and where the trajectory and ship start, in metres.")]
+        [SerializeField] private float launchGap = 0.02f;
 
         private const float FramePadding = 0.02f;
 
         private readonly List<FieldPlanetBehaviour> pool = new();
         private readonly List<SpaceZoneView> cubes = new();
         private readonly List<SpaceZone> lastZones = new();
+        private FieldPlanetBehaviour originPlanet;
         private FieldPlanetBehaviour destinationPlanet;
         private ZoneConditions conditions;
         private float zoneFalloff = 0.5f;
@@ -56,6 +60,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void Awake()
         {
+            originPlanet = Instantiate(originPrototype, sourceParent);
+            originPlanet.Initialize();
             destinationPlanet = Instantiate(destinationPrototype, sourceParent);
             destinationPlanet.Initialize();
         }
@@ -83,11 +89,12 @@ namespace DigitalLove.Game.SpaceShaping
         public void ApplyFromSession(SpaceShapingSession session)
         {
             int count = session.SourceCount;
-            int destination = DestinationIndex(session);
+            int origin = IndexAt(session, session.Origin);
+            int destination = IndexAt(session, session.Destination);
             int slot = 0;
             for (int i = 0; i < count; i++)
             {
-                if (i == destination)
+                if (i == origin || i == destination)
                     continue;
 
                 Source(slot++).Spawn(session.GetPosition(i), session.GetScale(i) * 0.5f, i);
@@ -96,18 +103,23 @@ namespace DigitalLove.Game.SpaceShaping
             for (int i = slot; i < pool.Count; i++)
                 pool[i].Hide();
 
-            if (destination >= 0)
-                destinationPlanet.Spawn(
-                    session.GetPosition(destination), session.GetScale(destination) * 0.5f, destination);
-            else
-                destinationPlanet.Hide();
+            Spawn(originPlanet, session, origin);
+            Spawn(destinationPlanet, session, destination);
         }
 
-        private static int DestinationIndex(SpaceShapingSession session)
+        private static void Spawn(FieldPlanetBehaviour planet, SpaceShapingSession session, int index)
+        {
+            if (index >= 0)
+                planet.Spawn(session.GetPosition(index), session.GetScale(index) * 0.5f, index);
+            else
+                planet.Hide();
+        }
+
+        private static int IndexAt(SpaceShapingSession session, Vector3 point)
         {
             for (int i = 0; i < session.SourceCount; i++)
             {
-                if ((session.Home(i) - session.Destination).sqrMagnitude < 0.000001f)
+                if ((session.Home(i) - point).sqrMagnitude < 0.000001f)
                     return i;
             }
 
@@ -184,37 +196,54 @@ namespace DigitalLove.Game.SpaceShaping
 
         private static void Frame(SpaceShapingSession session, out Vector3 centre, out float half)
         {
-            Vector3 min = session.Origin;
-            Vector3 max = session.Origin;
-            Encapsulate(ref min, ref max, session.Destination);
-            for (int i = 0; i < session.SourceCount; i++)
-            {
-                Vector3 position = session.GetPosition(i);
-                float radius = session.GetScale(i) * 0.5f;
-                Encapsulate(ref min, ref max, position - Vector3.one * radius);
-                Encapsulate(ref min, ref max, position + Vector3.one * radius);
-            }
-
+            Vector3 min = Vector3.Min(session.Origin, session.Destination);
+            Vector3 max = Vector3.Max(session.Origin, session.Destination);
             centre = (min + max) * 0.5f;
             Vector3 size = max - min;
             half = Mathf.Max(Mathf.Max(size.x, size.y), size.z) * 0.5f + FramePadding;
         }
 
-        private static void Encapsulate(ref Vector3 min, ref Vector3 max, Vector3 point)
+        public Vector3 LaunchPoint(SpaceShapingSession session)
         {
-            min = Vector3.Min(min, point);
-            max = Vector3.Max(max, point);
+            Vector3 direction = session.Destination - session.Origin;
+            direction = direction.sqrMagnitude > 0.000001f ? direction.normalized : Vector3.forward;
+            return session.Origin + direction * (session.OriginRadius + launchGap);
+        }
+
+        public TrajectoryResult ClipToLaunch(TrajectoryResult result, SpaceShapingSession session)
+        {
+            if (!result.HasPoints)
+                return result;
+
+            float clearance = session.OriginRadius + launchGap;
+            float clearanceSq = clearance * clearance;
+            int start = 0;
+            while (start < result.Points.Count
+                && (result.Points[start] - session.Origin).sqrMagnitude < clearanceSq)
+                start++;
+
+            if (start == 0 || start >= result.Points.Count)
+                return result;
+
+            return new TrajectoryResult(
+                result.Outcome, result.Points.GetRange(start, result.Points.Count - start));
         }
 
         public void ShowTrajectory(TrajectoryResult result, bool solved) =>
             trajectory.Show(result, solved, frameCentre, frameHalf);
 
-        public void Refuse()
+        public void ClearPrediction() => ForEachCube(cube => cube.ClearPrediction());
+
+        public event Action<ZoneRefusal> Refused;
+
+        public void Refuse(ZoneRefusal reason)
         {
             SpaceZoneView cube = Active();
             if (cube != null)
-                cube.Refuse();
+                cube.Refuse(reason);
         }
+
+        private void OnCubeRefused(ZoneRefusal reason) => Refused?.Invoke(reason);
 
         public void PulseTrajectory() => trajectory.Pulse();
 
@@ -248,6 +277,7 @@ namespace DigitalLove.Game.SpaceShaping
             SpaceZoneView cube = Instantiate(cubePrototype, cubeParent);
             cube.SetConditions(conditions);
             cube.SetScaleEnvelope(minScale, maxScale);
+            cube.Refused += OnCubeRefused;
             return cube;
         }
 

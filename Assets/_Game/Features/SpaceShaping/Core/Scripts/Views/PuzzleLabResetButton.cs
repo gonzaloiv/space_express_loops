@@ -9,9 +9,9 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] protected PuzzleLabPanel panel;
         [SerializeField] private Grabbable grabbable;
         [SerializeField] private Renderer face;
-        [SerializeField] private Color idleColor = new(0.14117648f, 0.14117648f, 0.14117648f, 1f);
-        [SerializeField] private Color hoverColor = new(0.1882353f, 0.1882353f, 0.1882353f, 1f);
-        [SerializeField] private Color pressedColor = new(0.23137255f, 0.36078432f, 0.9647059f, 1f);
+        [SerializeField] private ColorValue neutral;
+        [SerializeField] private ColorValue neutralHover;
+        [SerializeField] private ColorValue accent;
         [SerializeField] private float pressedSecs = 0.12f;
 
         private RendererTint tint;
@@ -28,7 +28,7 @@ namespace DigitalLove.Game.SpaceShaping
         protected virtual void Update()
         {
             bool pressed = Time.unscaledTime < pressedUntil;
-            tint.Set(face, pressed ? pressedColor : hovered ? hoverColor : idleColor);
+            tint.Set(face, pressed ? accent.value : hovered ? neutralHover.value : neutral.value);
         }
 
         protected virtual void LateUpdate()

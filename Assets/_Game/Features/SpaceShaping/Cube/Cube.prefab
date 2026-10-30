@@ -163,24 +163,21 @@ MonoBehaviour:
   zone: {fileID: 5572121854155305578}
   frameRenderer: {fileID: 27529119412877910}
   fillRenderer: {fileID: 7219471136746057563}
-  frameIdle: {r: 0.9, g: 0.93, b: 1, a: 0.7}
-  frameHover: {r: 0.65, g: 0.95, b: 1, a: 1}
-  frameMove: {r: 0.5, g: 0.9, b: 1, a: 1}
-  frameResize: {r: 1, g: 0.55, b: 0.15, a: 1}
+  neutral: {fileID: 11400000, guid: c01d0000000000000000000000000007, type: 2}
+  neutralHover: {fileID: 11400000, guid: c01d0000000000000000000000000008, type: 2}
+  slow: {fileID: 11400000, guid: c01d0000000000000000000000000005, type: 2}
+  fast: {fileID: 11400000, guid: c01d0000000000000000000000000006, type: 2}
+  success: {fileID: 11400000, guid: c01d0000000000000000000000000002, type: 2}
+  miss: {fileID: 11400000, guid: c01d0000000000000000000000000004, type: 2}
+  danger: {fileID: 11400000, guid: c01d0000000000000000000000000003, type: 2}
   frameGain: 1.5
   frameGrowRatio: 2
-  fillIdle: {r: 0.55, g: 0.65, b: 0.95, a: 0.16}
-  fillHover: {r: 0.7, g: 0.82, b: 1, a: 0.22}
-  fillShrink: {r: 0.2, g: 0.6, b: 1, a: 0.28}
-  fillMagnify: {r: 1, g: 0.45, b: 0.2, a: 0.28}
+  fillIdleAlpha: 0.1
+  fillActiveAlpha: 0.28
   scaleGain: 1
   scaleSmoothSecs: 0.12
   moveRefuseDistance: 0.02
   resizeRefuseRatio: 0.03
-  frameSolved: {r: 0.35, g: 1, b: 0.55, a: 1}
-  frameMiss: {r: 0.75, g: 0.85, b: 1, a: 1}
-  frameCrash: {r: 1, g: 0.35, b: 0.3, a: 1}
-  frameRefused: {r: 1, g: 0.25, b: 0.2, a: 1}
   refuseSecs: 0.18
 --- !u!1 &6340765332551876216
 GameObject:

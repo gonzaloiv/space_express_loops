@@ -16,9 +16,9 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private Transform endMarker;
         [SerializeField] private Renderer endMarkerRenderer;
         [SerializeField] private float lineWidth = 0.008f;
-        [SerializeField] private Color arriveColor = new(0.35f, 1f, 0.55f, 1f);
-        [SerializeField] private Color crashColor = new(1f, 0.35f, 0.3f, 1f);
-        [SerializeField] private Color missColor = new(0.75f, 0.85f, 1f, 1f);
+        [SerializeField] private ColorValue success;
+        [SerializeField] private ColorValue danger;
+        [SerializeField] private ColorValue miss;
 
         private RendererTint markerTint;
         private Coroutine pulse;
@@ -43,7 +43,7 @@ namespace DigitalLove.Game.SpaceShaping
             }
 
             FillLine(result.Points);
-            Color color = solved ? arriveColor : ColorFor(result.Outcome);
+            Color color = solved ? success.value : ColorFor(result.Outcome);
             SetColor(color);
             Vector3 end = result.Points[count - 1];
             Vector3 heading = Heading(result.Points);
@@ -184,7 +184,7 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         private Color ColorFor(TrajectoryOutcome outcome) =>
-            outcome == TrajectoryOutcome.Crash ? crashColor : missColor;
+            outcome == TrajectoryOutcome.Crash ? danger.value : miss.value;
 
         private void SetColor(Color color)
         {

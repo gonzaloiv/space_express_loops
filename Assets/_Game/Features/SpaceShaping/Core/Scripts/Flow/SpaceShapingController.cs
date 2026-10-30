@@ -25,6 +25,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         public event Action<PuzzleReadout> ReadoutChanged;
 
+        public event Action<ZoneRefusal> Refused;
+
         public PuzzleReadout Readout => readout;
 
         public PuzzleData CurrentPuzzle =>
@@ -35,6 +37,7 @@ namespace DigitalLove.Game.SpaceShaping
         public override void Enter()
         {
             ship.Completed += OnFlightCompleted;
+            view.Refused += OnRefused;
             view.SetScaleEnvelope(settings.minScaleFactor, settings.maxScaleFactor);
             puzzleIndex = 0;
             StartPuzzle();
@@ -43,6 +46,7 @@ namespace DigitalLove.Game.SpaceShaping
         public override void Exit()
         {
             ship.Completed -= OnFlightCompleted;
+            view.Refused -= OnRefused;
             session = null;
         }
 
@@ -51,7 +55,7 @@ namespace DigitalLove.Game.SpaceShaping
             wasScaling = false;
             ResetView();
             session.Reset();
-            ship.SoftReset(session.Origin);
+            ship.SoftReset(view.LaunchPoint(session));
             PushField();
         }
 
@@ -68,7 +72,7 @@ namespace DigitalLove.Game.SpaceShaping
             SpacetimeField field = preview.BuildField();
             TrajectoryResult result = preview.Simulate(field, integrator, launch);
             view.Render(field, preview);
-            view.ShowTrajectory(result, preview.IsSolved(result));
+            view.ShowTrajectory(view.ClipToLaunch(result, preview), preview.IsSolved(result));
         }
 
         private void LateUpdate()
@@ -85,7 +89,7 @@ namespace DigitalLove.Game.SpaceShaping
             {
                 if (!wasScaling && session.IsOverBudget)
                 {
-                    view.Refuse();
+                    view.Refuse(ZoneRefusal.OutOfEntropy);
                     return;
                 }
 
@@ -104,9 +108,23 @@ namespace DigitalLove.Game.SpaceShaping
         }
         private void BeginScale()
         {
+            if (!wasScaling)
+            {
+                ship.Stop();
+                view.ClearPrediction();
+            }
+
             session.PreviewZone(view.Zone);
             wasScaling = true;
-            PushField();
+            RenderPreview();
+        }
+
+        private void RenderPreview()
+        {
+            view.ApplyFromSession(session);
+            view.Render(session.BuildField(), session);
+            readout = PuzzleReadout.Pending(session);
+            ReadoutChanged?.Invoke(readout);
         }
 
         private void CommitScale()
@@ -129,7 +147,7 @@ namespace DigitalLove.Game.SpaceShaping
             isChecked = false;
             ResetView();
             session = new SpaceShapingSession(BuildSetup());
-            ship.SoftReset(session.Origin);
+            ship.SoftReset(view.LaunchPoint(session));
             PushField();
         }
 
@@ -144,14 +162,15 @@ namespace DigitalLove.Game.SpaceShaping
             view.SetPrediction(solved, result.Outcome);
 
             view.Render(field, session);
-            view.ShowTrajectory(result, solved);
+            TrajectoryResult visible = view.ClipToLaunch(result, session);
+            view.ShowTrajectory(visible, solved);
             view.Snapshot();
 
             lastResult = result;
             hasResult = true;
             isChecked = false;
             PublishReadout();
-            return result;
+            return visible;
         }
 
         private void OnFlightCompleted()
@@ -163,6 +182,8 @@ namespace DigitalLove.Game.SpaceShaping
             PublishReadout();
             view.PulseTrajectory();
         }
+
+        private void OnRefused(ZoneRefusal reason) => Refused?.Invoke(reason);
 
         private void PublishReadout()
         {

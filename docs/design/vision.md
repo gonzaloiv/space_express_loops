@@ -7,20 +7,19 @@ hand-tracking first-class.
 **Date:** 2026-10-23.
 **Revised:** 2026-10-29.
 
-**Related:** [core loop](core-loop.md) · [the cube](systems/cube.md) · [resources](systems/resources.md) ·
-[relativity](systems/relativity.md) · [progression](systems/progression.md) · [presentation](presentation.md) ·
+**Related:** [core loop](core-loop.md) · [the cube](systems/cube.md) ·
+[progression](systems/progression.md) · [jobs](jobs.md) · [presentation](presentation.md) ·
 [lore](world/lore.md) · [glossary](glossary.md) · [plans board](../plans/README.md)
 
 ## 1. The game, in one paragraph
 
 **Our Space** is a seated mixed-reality game where a miniature universe floats in
 your real room. You run an interstellar transport company: each job is a delivery
-from one star to another, with a **window** and an **eco rating**. Your one tool is
+from one star to another, with an **eco rating**. Your one tool is
 **the cube** — a tangible instrument you move over the bubble. **Grab inside it and scale**:
-the space stretches (a shrunk zone is a shortcut) and the planets spread and grow. Both
-change **time**, the ship's clock, so you deform the spacetime the ship flies through until
-the delivery lands on time and cheaply. Relativity is the language, and the cube is how you
-speak it.
+the space stretches (a shrunk zone is a shortcut) and the planets spread and grow. So you
+deform the spacetime the ship flies through until the delivery **arrives** — and cheaply.
+Relativity is the language, and the cube is how you speak it.
 
 **Current shape.** The signature interaction (a bubble in front of you, scaled by two hands)
 works; the gravity puzzle works in the lab; the room-scale game is legacy. What is missing is
@@ -35,15 +34,14 @@ Build status lives on the [plans board](../plans/README.md); this doc does not t
    deforms the universe". It gets the polish budget (feel, sound, haptics, the visible
    field-warp).
 3. **Scale the space and the content together.** One gesture does both; several placed zones enter at
-   job 3, moving the cube (the region) at job 4, resizing at job 6; rotate arrives in **later puzzles**,
-   not the first 8. The field is derived, never edited.
+   job 3, moving the cube (the region) at job 4, resizing at job 5. The field is derived, never edited.
 4. **One budget, one score.** Entropy is the budget: spend it all before you solve and the job
-   **fails**. Entropy left is the **eco rating**; the **window** `[Tmin, Tmax]` is the target — the launch
-   is only a check. The launch itself is given, not a lever.
-5. **Discrete jobs.** ~1 minute each; a **10-minute experience**, about **8–10 levels** — **3–5
+   **fails**. Entropy left is the **eco rating**; **arriving** is the goal — the launch is only a check.
+   The launch itself is given, not a lever.
+5. **Discrete jobs.** ~1 minute each; a **10-minute experience**, about **7 levels** — **3–5
    first**, extended only if the variation axes hold.
    Nothing live-ticking.
-6. **Relativity is the language.** Not a skin — the cube instruments it.
+6. **Relativity is the language.** The theme and the feel, not a simulation — the cube speaks it.
 
 ## 3. Mixed reality: why the bubble is the point
 
@@ -93,9 +91,9 @@ routes; keep the economy *between* jobs. Then the management layer is a wrapper
 ## 6. Scope: the competition slice
 
 - **In:** the **full run** — the bubble, the cube, the **level selector** and **3–5 jobs first
-  (8–10 as the stretch)**, the grade, and player progression ([core loop](core-loop.md),
+  (7 as the run)**, the grade, and player progression ([core loop](core-loop.md),
   [progression](systems/progression.md)).
-- **Out of the first 8:** rotate (arrives in **later puzzles**), a separate tutorial flow (the per-job
+- **Out of the first run:** rotate, a separate tutorial flow (the per-job
   manual card is in — [jobs](jobs.md)), and the whole feel pass. **Out until proven:** sectors, multi-ship,
   runtime/procedural level generation.
 - **Technical target:** Meta Quest 3S, **72 fps**.
@@ -129,7 +127,7 @@ mechanic before writing another plan.
 
 | Risk | Status / mitigation |
 |---|---|
-| Toy, not game (no stake) | **Addressed** by the entropy budget — run out before solving and the job fails — plus the window target and the grade ([resources](systems/resources.md)). |
+| Toy, not game (no stake) | **Addressed** by the entropy budget — run out before solving and the job fails — plus the arrival goal and the grade ([core loop](core-loop.md) §3). |
 | The cube is "just a group drag" | Resolved: the cube scale is a **metric stretch** (a shortcut), not a drag — it spreads and grows the content too. See [the cube](systems/cube.md). |
 | Field illegibility | Make the map *read the field* (straight-line reference, accel arrows); the bubble already shows the warped sheet. |
 | Ship-zone legibility | The ship is map-size; show which zone it is in (tint, trail). |

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Cube
@@ -78,7 +79,15 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         public void SetPrediction(ZoneVerdict verdict) => listener.SetPrediction(verdict);
 
-        public void Refuse() => listener.Refuse();
+        public void ClearPrediction() => listener.ClearPrediction();
+
+        public event Action<ZoneRefusal> Refused
+        {
+            add => listener.Refused += value;
+            remove => listener.Refused -= value;
+        }
+
+        public void Refuse(ZoneRefusal reason) => listener.Refuse(reason);
 
         public void SetScaling(bool value) => scaling = value;
 

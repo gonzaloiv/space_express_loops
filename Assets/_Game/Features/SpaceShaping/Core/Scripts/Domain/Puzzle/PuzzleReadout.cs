@@ -6,6 +6,7 @@ namespace DigitalLove.Game.SpaceShaping
         public float EntropyPending { get; }
         public float EntropyBudget { get; }
         public TrajectoryOutcome Outcome { get; }
+        public bool HasResult { get; }
         public bool PredictedSolved { get; }
         public bool IsChecked { get; }
         public bool IsSolved { get; }
@@ -20,6 +21,7 @@ namespace DigitalLove.Game.SpaceShaping
             EntropyPending = session.PendingEntropy;
             EntropyBudget = session.EntropyBudget;
             Outcome = result.Outcome;
+            HasResult = true;
             PredictedSolved = session.IsSolved(result);
             IsChecked = isChecked;
             IsSolved = solved;
@@ -28,8 +30,25 @@ namespace DigitalLove.Game.SpaceShaping
             CommandCount = session.CommandCount;
         }
 
+        private PuzzleReadout(SpaceShapingSession session)
+        {
+            EntropySpent = session.EntropyCommitted;
+            EntropyPending = session.PendingEntropy;
+            EntropyBudget = session.EntropyBudget;
+            Outcome = TrajectoryOutcome.Miss;
+            HasResult = false;
+            PredictedSolved = false;
+            IsChecked = false;
+            IsSolved = false;
+            IsFailed = false;
+            Grade = 0;
+            CommandCount = session.CommandCount;
+        }
+
         public static PuzzleReadout From(
             SpaceShapingSession session, TrajectoryResult result, bool isChecked) =>
             new(session, result, isChecked);
+
+        public static PuzzleReadout Pending(SpaceShapingSession session) => new(session);
     }
 }

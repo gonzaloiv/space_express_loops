@@ -2,15 +2,15 @@
 
 **Status:** design · system · progression.
 **Date:** 2026-10-23.
-**Revised:** 2026-10-29.
+**Revised:** 2026-10-30.
 
-**Related:** [vision](../vision.md) · [core loop](../core-loop.md) · [resources](resources.md) ·
+**Related:** [vision](../vision.md) · [core loop](../core-loop.md) · [the cube](cube.md) ·
 [lore](../world/lore.md) · [jobs](../jobs.md)
 
 ## Goal
 
 How the game advances across jobs — and what gates it. The competition slice is the **full run** —
-**3–5 jobs first**, 8–10 as the stretch — not a single job, so progression is **in scope**.
+**3–5 jobs first**, the rest as stretch — not a single job, so progression is **in scope**.
 
 ## Inputs
 
@@ -23,7 +23,7 @@ Two things: **what advances**, and **what gates**.
 ### Three layers
 
 1. **The spine (what gates).** Solve job N → job N+1 opens. A linear *order* paces the run; you
-   cannot wander into job 9 at minute one.
+   cannot wander into job 7 at minute one.
 2. **The network (what you build).** The map *is* the company: solved cubes lit, current
    highlighted, locked dark. Every solve **grows the network**.
 3. **The score (what you chase).** Per-job **stars** (the entropy left / eco rating, 1–3) plus a
@@ -47,33 +47,23 @@ The **level selector** is needed: a field of cubes, one per job.
 
 One new lesson at a time, so the player never faces two unrelated ideas at once:
 
-The scale has **two faces** — **space** (a shortcut / the path) and **time** (the ship's clock) —
-driven by the **same factor** ([the cube](cube.md)). The **space face** is the metric stretch; the
-**time face** is the field: growing a planet deepens its well (`mass ∝ radius³`). The player learns
-**space first, then time**.
-
 1. **Jobs 1–2 — the fixed cube, one zone.** A fixed region; the only move is the **grab-inside
-   scale** (the **space face**: the shortcut and the spread). One lever, one planet, a generous
-   window.
+   scale**. One lever, one planet.
 2. **Job 3 — several zones.** The level places **several fixed cubes**; the player scales each and the
    soft brush blends them. No move — "where do I scale" is the lesson on its own, learned before the
    lens can be placed.
 3. **Job 4 — the lens moves.** The cube becomes **translatable**: the player chooses *where* to work,
    not just how much. "Where does the lens sit" is its own lesson, split from "several zones".
-4. **Job 5 — the time tutorial.** A planet off the trajectory. The scale changes its mass and so the
-   clock, but not the path (the ship never passes near it). The player learns the clock before path
-   and clock compete. (Recurring off-path levels are a later variation.)
-5. **Job 6 — the resizable frame.** The region can be **resized** — the aperture becomes the player's
+4. **Job 5 — the resizable frame.** The region can be **resized** — the aperture becomes the player's
    to choose.
-6. **Later puzzles — rotate.** The spin gesture (frame dragging) arrives in **later puzzles**, not
-   the first 8, adding *direction* to the scale.
 
-So the run order is **scale → several zones → move → time → resize**; rotate comes later.
+So the run order is **scale → several zones → move → resize**, then the combine jobs (6–7) mix the
+verbs.
 
 **Several zones is its own rung (2026-10-29).** The old rule — a fixed cube covers one region, so
-`moves ≥ 2` implies `translatable` — was a limitation of the retired window/time win condition. With
-arrival-only, a level can simply **place several fixed cubes**, so "several zones" (job 3) and "the cube
-moves" (job 4) split into two lessons
+`moves ≥ 2` implies `translatable` — was a limitation of the old timed win condition. With
+**arrival-only**, a level can simply **place several fixed cubes**, so "several zones" (job 3) and "the
+cube moves" (job 4) split into two lessons
 (see [the brief](#the-brief--the-conditions-a-solution-must-meet)). The placed-zone condition may recur
 in later jobs; for now it is job 3 only.
 
@@ -90,7 +80,6 @@ creator bakes to them:
   **`moves ≥ 2` holds with `translatable` either way** — a **fixed** level places several cubes for the
   player to scale, a **translatable** one has the player move a single lens between zones.
 - **`resizable`** — the frame may be **resized** (`[1×, 2×]`) or is locked.
-- **`rotate`** — the spin gesture is available (later puzzles).
 - **`scalable`** is **always true** — scaling the content is the verb; there is no locked-scale level.
 
 ### The puzzle map
@@ -98,12 +87,13 @@ creator bakes to them:
 The **concrete run** — one row per job, with its brief, field, dials and lore skin — is in
 [jobs](../jobs.md). This doc sets the shape; jobs is the specific development of it.
 
-**The slice.** Jobs 1–8 are the full run, ~1 minute each. The curve rises by **planet count** and
-**window tightness**; rotate waits for later puzzles. The last jobs **combine** every verb the player
-has learned — that is the capstone, not a locked cube.
+**The slice.** Jobs 1–7 are the full run, ~1 minute each. The curve rises by **planet count** and
+**entropy tightness**. The last jobs **combine** every verb the player has learned — that is the
+capstone, not a locked cube.
 
-Each job is defined on its **seed** — the band, the brief conditions and the dials — and the **level** is
-the baked result of that seed. The seed is the recipe; the level is what the creator bakes from it, once.
+Each job is defined on its **seed** — the field, the brief conditions and the dials — and the **level**
+is the baked result of that seed. The seed is the recipe; the level is what the creator bakes from it,
+once.
 
 ### The company is lore only
 
@@ -121,21 +111,19 @@ The fiction for all of this — why the cubes are numbered, why the order, what 
 
 None — progression never blocks a run on a score (see Open).
 
-## Tuning — the 10-minute shape
+## Tuning — the shape
 
-About **8–10 cubes** (3–5 first), ~1 minute each. The curve rises by **planet count** and **window
-tightness**.
+**Seven cubes**, ~1 minute each. The curve rises by **planet count** and **entropy tightness**.
 
-### Variation axes (enough for ~10 distinct jobs)
+### Variation axes (enough for ~7 distinct jobs)
 
 The verb is always the **scale**, so variety comes from the field and the brief:
 
 1. **Planet count** — 1 → 4+ sources.
-2. **Window tightness** — generous → razor.
-3. **Entropy budget** — loose → tight (grade pressure).
-4. **Well depth** — shallow → deep (the clock crawls).
-5. **Layout** — single well vs multi-well; where the shortcut sits vs the natural path.
-6. **Scramble** — how far the authored start sits from the solved arrangement (the difficulty dial).
+2. **Entropy budget** — loose → tight (grade pressure).
+3. **Well depth** — shallow → deep (a deeper well bends the path more).
+4. **Layout** — single well vs multi-well; where the shortcut sits vs the natural path.
+5. **Scramble** — how far the authored start sits from the solved arrangement (the difficulty dial).
 
 ### Archetypes — the named shape of a job
 
@@ -145,13 +133,11 @@ a layout.
 
 | Archetype | Brief | Lesson | Jobs |
 |---|---|---|---|
-| **Shortcut** | `moves 1`, fixed cube, on-path | scale one zone; the space face | 1–2 |
+| **Shortcut** | `moves 1`, fixed cube, on-path | scale one zone | 1–2 |
 | **Several zones** | `moves ≥ 2`, fixed cubes | scale and blend the placed zones | 3 |
 | **Move** | `translatable`, `moves 1` | place the lens yourself | 4 |
-| **Multi-zone** | `moves ≥ 2`, `translatable` | place and blend several zones — a spread edit can spend less entropy | 7–8 |
-| **Clock** | `offPath` | the time face: mass moves the clock, not the path | 5 |
-| **Resize** | `resizable` | the aperture is the player's | 6 |
-| **Bottleneck** *(later)* | several routes share one planet | one edit fixes many routes | later |
+| **Resize** | `resizable` | the aperture is the player's | 5 |
+| **Multi-zone** | `moves ≥ 2`, `translatable` | place and blend several zones — a spread edit can spend less entropy | 6–7 |
 
 **Multi-zone as an efficiency lesson.** Entropy is charged per zone as the net scale change, so a level
 can be authored so the **cheap** solution is to **move the cube** and scale **several zones a little**,
@@ -166,9 +152,8 @@ single answer, not a variation.
 *Automatic labelling from the brief is possible (a pure function of the brief) and is deferred; the labels
 are design-only until then.*
 
-Jobs 1–2 teach the scale on one planet; job 3 adds several zones; job 4 adds the move; job 5 turns to
-the clock; resize follows. Rotate arrives in later puzzles. Ten jobs is the stretch goal — prove 3–5
-first, then extend only if the axes hold.
+Jobs 1–2 teach the scale on one planet; job 3 adds several zones; job 4 adds the move; job 5 adds the
+resize; jobs 6–7 combine the verbs. Prove 3–5 first, then extend only if the axes hold.
 
 ## Persistence
 

@@ -109,6 +109,7 @@ MonoBehaviour:
   gridCount: 5
   sides: 4
   radius: 0.0025
-  slowColor: {r: 0.45, g: 0.7, b: 1, a: 0.5019608}
-  fastColor: {r: 1, g: 0.65, b: 0.35, a: 0.5019608}
+  neutral: {fileID: 11400000, guid: c01d0000000000000000000000000007, type: 2}
+  slow: {fileID: 11400000, guid: c01d0000000000000000000000000005, type: 2}
+  fast: {fileID: 11400000, guid: c01d0000000000000000000000000006, type: 2}
   tintStrength: 0.35

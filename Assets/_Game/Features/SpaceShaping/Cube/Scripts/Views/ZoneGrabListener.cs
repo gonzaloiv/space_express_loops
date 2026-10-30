@@ -1,3 +1,4 @@
+using System;
 using DigitalLove.Global;
 using Oculus.Interaction;
 using UnityEngine;
@@ -11,29 +12,30 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         [SerializeField] private Renderer frameRenderer;
         [SerializeField] private Renderer fillRenderer;
 
+        [Header("Palette")]
+        [SerializeField] private ColorValue neutral;
+        [SerializeField] private ColorValue neutralHover;
+        [SerializeField] private ColorValue slow;
+        [SerializeField] private ColorValue fast;
+        [SerializeField] private ColorValue success;
+        [SerializeField] private ColorValue miss;
+        [SerializeField] private ColorValue danger;
+
         [Header("Frame - the region")]
-        [SerializeField] private Color frameIdle = new(0.9f, 0.93f, 1f, 0.7f);
-        [SerializeField] private Color frameHover = new(0.65f, 0.95f, 1f, 1f);
-        [SerializeField] private Color frameMove = new(0.5f, 0.9f, 1f, 1f);
-        [SerializeField] private Color frameResize = new(1f, 0.55f, 0.15f, 1f);
         [SerializeField] private float frameGain = 1.5f;
         [SerializeField] private float frameGrowRatio = 2f;
 
         [Header("Fill - the scaled space")]
-        [SerializeField] private Color fillIdle = new(0.55f, 0.65f, 0.95f, 0.1f);
-        [SerializeField] private Color fillHover = new(0.7f, 0.82f, 1f, 0.22f);
-        [SerializeField] private Color fillShrink = new(0.2f, 0.6f, 1f, 0.28f);
-        [SerializeField] private Color fillMagnify = new(1f, 0.45f, 0.2f, 0.28f);
+        [SerializeField] private float fillIdleAlpha = 0.1f;
+        [SerializeField] private float fillActiveAlpha = 0.28f;
+
+        [Header("Scale")]
         [SerializeField] private float scaleGain = 1f;
         [SerializeField] private float scaleSmoothSecs = 0.12f;
         [SerializeField] private float moveRefuseDistance = 0.02f;
         [SerializeField] private float resizeRefuseRatio = 0.03f;
 
-        [Header("Prediction")]
-        [SerializeField] private Color frameSolved = new(0.35f, 1f, 0.55f, 1f);
-        [SerializeField] private Color frameMiss = new(0.75f, 0.85f, 1f, 1f);
-        [SerializeField] private Color frameCrash = new(1f, 0.35f, 0.3f, 1f);
-        [SerializeField] private Color frameRefused = new(1f, 0.25f, 0.2f, 1f);
+        [Header("Refuse")]
         [SerializeField] private float refuseSecs = 0.18f;
 
         private RendererTint frameTint;
@@ -44,6 +46,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         private bool hasPrediction;
         private ZoneVerdict predictedVerdict;
+        private ZoneRefusal refusal;
         private float refusedUntil;
 
         private bool classified;
@@ -57,6 +60,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         private bool hovering;
         private Vector3 hoverWorld;
+
+        public event Action<ZoneRefusal> Refused;
 
         private void OnEnable() => grabbable.WhenPointerEventRaised += OnPointerEvent;
 
@@ -74,7 +79,16 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             predictedVerdict = verdict;
         }
 
-        public void Refuse() => refusedUntil = Time.unscaledTime + refuseSecs;
+        public void ClearPrediction() => hasPrediction = false;
+
+        public void Refuse(ZoneRefusal reason)
+        {
+            bool repeat = IsRefusing && refusal == reason;
+            refusal = reason;
+            refusedUntil = Time.unscaledTime + refuseSecs;
+            if (!repeat)
+                Refused?.Invoke(reason);
+        }
 
         private bool IsRefusing => Time.unscaledTime < refusedUntil;
 
@@ -162,14 +176,14 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             if (!zone.CanMove)
             {
                 if ((HandLocal() - grabOrigin).sqrMagnitude > moveRefuseDistance * moveRefuseDistance)
-                    Refuse();
+                    Refuse(ZoneRefusal.Locked);
                 return;
             }
 
             Vector3 centre = HandLocal() + grabOffset;
             if (!zone.CanPlace(centre, zone.Size))
             {
-                Refuse();
+                Refuse(ZoneRefusal.OutOfBounds);
                 return;
             }
 
@@ -197,14 +211,14 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             if (!zone.CanResize)
             {
                 if (Mathf.Abs(ratio - 1f) > resizeRefuseRatio)
-                    Refuse();
+                    Refuse(ZoneRefusal.Locked);
                 return;
             }
 
             Vector3 size = startSize * ZoneGesture.ResizeFactor(ratio, frameGain, frameGrowRatio);
             if (!zone.CanPlace(zone.Centre, size))
             {
-                Refuse();
+                Refuse(ZoneRefusal.OutOfBounds);
                 return;
             }
 
@@ -215,8 +229,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         {
             if (IsRefusing)
             {
-                frameTint.Set(frameRenderer, frameRefused);
-                fillTint.Set(fillRenderer, fillIdle);
+                frameTint.Set(frameRenderer, danger.value);
+                fillTint.Set(fillRenderer, Fill(neutral, fillIdleAlpha));
                 return;
             }
 
@@ -227,41 +241,50 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             }
 
             bool scaling = grabbable.SelectingPointsCount >= 2 && !frameGrab;
-            Color frameColor = scaling ? PredictionColor(frameMiss, frameIdle) : FrameActiveColor();
+            Color frameColor = scaling ? PredictionColor(miss.value, neutral.value) : FrameActiveColor();
             frameTint.Set(frameRenderer, frameColor);
-            fillTint.Set(fillRenderer, scaling ? ScaleColor() : fillIdle);
+            fillTint.Set(fillRenderer, scaling ? ScaleColor() : Fill(neutral, fillIdleAlpha));
         }
 
-        private Color PredictionColor(Color miss, Color none)
+        private Color PredictionColor(Color missColor, Color none)
         {
             if (!hasPrediction)
                 return none;
 
             if (predictedVerdict == ZoneVerdict.Solved)
-                return frameSolved;
+                return success.value;
 
-            return predictedVerdict == ZoneVerdict.Crash ? frameCrash : miss;
+            return predictedVerdict == ZoneVerdict.Crash ? danger.value : missColor;
         }
 
         private void ApplyIdleFeedback()
         {
             bool hoverInside = hovering && zone.ContentContains(hoverWorld);
-            Color fallback = hovering && !hoverInside ? frameHover : frameIdle;
+            Color fallback = hovering && !hoverInside ? neutralHover.value : neutral.value;
             frameTint.Set(frameRenderer, PredictionColor(fallback, fallback));
-            fillTint.Set(fillRenderer, hovering && hoverInside ? fillHover : fillIdle);
+            fillTint.Set(fillRenderer, hovering && hoverInside
+                ? Fill(neutralHover, fillIdleAlpha)
+                : Fill(neutral, fillIdleAlpha));
         }
 
         private Color FrameActiveColor()
         {
             if (grabbable.SelectingPointsCount >= 2)
-                return zone.CanResize ? frameResize : frameIdle;
+                return zone.CanResize ? fast.value : neutral.value;
 
-            return zone.CanMove ? frameMove : frameIdle;
+            return zone.CanMove ? neutralHover.value : neutral.value;
         }
 
         private Color ScaleColor() =>
-            Color.Lerp(fillShrink, fillMagnify, Mathf.InverseLerp(
+            Color.Lerp(Fill(slow, fillActiveAlpha), Fill(fast, fillActiveAlpha), Mathf.InverseLerp(
                 minScaleFactor, maxScaleFactor, zone.Scale));
+
+        private static Color Fill(ColorValue color, float alpha)
+        {
+            Color value = color.value;
+            value.a = alpha;
+            return value;
+        }
 
         private Vector3 HandLocal() => ZoneGesture.HandLocal(zone, grabbable);
     }

@@ -2,15 +2,16 @@
 
 **Status:** design · world · lore.
 **Date:** 2026-10-23.
+**Revised:** 2026-10-30.
 
-**Related:** [vision](../vision.md) · [resources](../systems/resources.md) ·
+**Related:** [vision](../vision.md) · [core loop](../core-loop.md) ·
 [progression](../systems/progression.md) · [glossary](../glossary.md)
 
 ## Goal
 
 The fiction is a **frame**, and its one job is to **justify the loop**: it explains why the only
 lever is *cost*. Keep it as backdrop and subtext — never as exposition. Money is **flavour only**
-([resources](../systems/resources.md)).
+([core loop](../core-loop.md) §3).
 
 Its voice is **Jim's** — the CEO, who operates the Wrap himself. Everything here is what Jim knows and
 would say, not narration.
@@ -61,16 +62,15 @@ The run is the company **proving the Wrap**, one delivery at a time. All backdro
 - **The map fills with the network.** A solved cube **lights**, and the lit map *is* the company's
   reach — a small firm quietly covering more of the sector. That filling is the progression feel.
 
-The **window** is the customer's promise — the one thing the company must not break
-([resources](../systems/resources.md)). Editing little and arriving on time are the same play; the stars
-are where it shows up as a number.
+The **arrival** is the customer's promise — the one thing the company must not break. Editing little
+and arriving are the same play; the stars are where it shows up as a number.
 
 ## The customers
 
-- The other end of every window is a **client** — a settlement or firm in the same stationary economy.
+- The other end of every contract is a **client** — a settlement or firm in the same stationary economy.
 - **Names are absurd on purpose** (random, comic): the sector is bleak, the paperwork is not. It keeps
   the tone from tipping into misery.
-- The client is **never a face** — a name, a window, a promise.
+- The client is **never a face** — a name, a contract, a promise.
 
 ## The tech team
 
@@ -103,8 +103,7 @@ physics **collapses** them: a gravity assist is *literally* getting something fo
 reading the field better. The greedy play **is** the green play. No scold, no guilt.
 
 - **No dilemma is the feature** — but know where the fault line is. It already exists:
-  **entropy-greed vs the time promise.** Editing little is cheap, and the victim is the customer's
-  window ([resources](../systems/resources.md)).
+  **entropy-greed vs the promise.** Editing little is cheap, and the victim is the customer's delivery.
 - **Darker, later (optional):** the cheap path grazes someone's home, or parks the crew in a time
   well — a social or human cost, externalised off the ledger.
 
@@ -125,8 +124,6 @@ makes a small game stick.
 
 ## Seeds (later)
 
-- **Make the pun mechanically true.** Settle some contracts in the ship's proper-time frame and
-  others in Earth's, so a job's margin literally depends on the clock.
 - **Externalised costs.** A cheap route that grazes an inhabited world, or a crew put in a time
   well, as a social/human price hidden from the ledger.
 - **The tech voice as a person.** Give the single character an arc across the run — pride, doubt, and the

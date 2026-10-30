@@ -10,9 +10,8 @@ the ship flies the deformed spacetime.
 
 Active work. The one thing being built.
 
-| Plan | Area | Why now |
-|---|---|---|
-| [Space shaping — several zones](in-progress/space-shaping-several-zones.md) | space shaping | **2026-10-29:** the "several zones" rung — a fixed level places cubes and the player scales each, split from the move. |
+- [Multi-ship spike](in-progress/space-shaping-multiship-spike.md) — can one zone rescue two ships?
+  A creator-side measurement before any runtime work.
 
 ## Next
 

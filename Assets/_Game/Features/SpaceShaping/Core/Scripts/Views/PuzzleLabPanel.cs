@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using DigitalLove.Game.SpaceShaping.Cube;
 using DigitalLove.Global;
 using TMPro;
 using UnityEngine;
@@ -13,31 +14,58 @@ namespace DigitalLove.Game.SpaceShaping
         private const string FaintColor = "#707070";
         private const string AccentColor = "#3B5CF6";
         private const string DangerColor = "#FF4D40";
+        private const float HeadlinePercent = 160f;
+        private const float MessageSecs = 2f;
 
         [SerializeField] private SpaceShapingController state;
         [SerializeField] private TMP_Text label;
         [SerializeField] private Transform committedFill;
         [SerializeField] private Transform pendingFill;
         [SerializeField] private Renderer pendingRenderer;
-        [SerializeField] private Color pendingColor = new(0.23137255f, 0.36078432f, 0.9647059f, 1f);
-        [SerializeField] private Color overflowColor = new(1f, 0.3019608f, 0.2509804f, 1f);
+        [SerializeField] private ColorValue accent;
+        [SerializeField] private ColorValue danger;
 
         private readonly StringBuilder text = new();
         private RendererTint pendingTint;
         private PuzzleReadout lastReadout;
+        private string message;
+        private float messageUntil;
         private bool hasRendered;
 
         private void OnEnable()
         {
             state.ReadoutChanged += OnReadoutChanged;
+            state.Refused += OnRefused;
             OnReadoutChanged(state.Readout);
         }
 
-        private void OnDisable() => state.ReadoutChanged -= OnReadoutChanged;
+        private void OnDisable()
+        {
+            state.ReadoutChanged -= OnReadoutChanged;
+            state.Refused -= OnRefused;
+        }
+
+        private void Update()
+        {
+            if (message == null || Time.unscaledTime < messageUntil)
+                return;
+
+            message = null;
+            if (hasRendered)
+                Render(lastReadout);
+        }
 
         public void ResetPuzzle() => state.ResetPuzzle();
 
         public void NextPuzzle() => state.NextPuzzle();
+
+        private void OnRefused(ZoneRefusal reason)
+        {
+            message = RefusalText(reason);
+            messageUntil = Time.unscaledTime + MessageSecs;
+            if (hasRendered)
+                Render(lastReadout);
+        }
 
         private void OnReadoutChanged(PuzzleReadout readout)
         {
@@ -52,17 +80,25 @@ namespace DigitalLove.Game.SpaceShaping
         private void Render(PuzzleReadout readout)
         {
             text.Clear();
+            AppendHeadline(readout);
             AppendEntropyRow(readout);
-            AppendResultRow(readout);
             AppendGradeRow(readout);
-            AppendCommandsRow(readout);
+            AppendMessageRow();
             label.SetText(text);
             SetBar(readout);
         }
 
+        private void AppendHeadline(PuzzleReadout readout)
+        {
+            text.Append("<size=")
+                .Append(HeadlinePercent.ToString(CultureInfo.InvariantCulture)).Append("%>");
+            AppendTint(ResultColor(readout), Result(readout));
+            text.Append("</size>");
+        }
+
         private void AppendEntropyRow(PuzzleReadout readout)
         {
-            BeginRow("ENTROPY ");
+            BeginRow("ENTROPY");
             AppendTint(ValueColor, F(readout.EntropySpent));
             if (readout.EntropyPending > 0.00005f)
             {
@@ -73,25 +109,23 @@ namespace DigitalLove.Game.SpaceShaping
             EndRow();
         }
 
-        private void AppendResultRow(PuzzleReadout readout)
-        {
-            BeginRow("RESULT  ");
-            AppendTint(ResultColor(readout), Result(readout));
-            EndRow();
-        }
-
         private void AppendGradeRow(PuzzleReadout readout)
         {
-            BeginRow("GRADE   ");
+            if (!readout.IsChecked || !readout.IsSolved)
+                return;
+
+            BeginRow("GRADE  ");
             AppendTint(GradeColor(readout.Grade), PuzzleReward.Describe(readout.Grade));
             EndRow();
         }
 
-        private void AppendCommandsRow(PuzzleReadout readout)
+        private void AppendMessageRow()
         {
-            BeginRow("COMMANDS");
-            AppendTint(FaintColor, readout.CommandCount.ToString(CultureInfo.InvariantCulture));
-            EndRow();
+            if (message == null)
+                return;
+
+            text.Append('\n');
+            AppendTint(DangerColor, message);
         }
 
         private void BeginRow(string name)
@@ -116,7 +150,7 @@ namespace DigitalLove.Game.SpaceShaping
             float remaining = 1f - spent;
             bool overflow = readout.EntropyBudget > 0f
                 && readout.EntropySpent + readout.EntropyPending > readout.EntropyBudget;
-            SetPendingColor(overflow ? overflowColor : pendingColor);
+            SetPendingColor(overflow ? danger.value : accent.value);
             SetSegment(committedFill, 0f, remaining);
             SetSegment(pendingFill, remaining - pending, pending);
         }
@@ -136,55 +170,63 @@ namespace DigitalLove.Game.SpaceShaping
 
         private static string Result(PuzzleReadout readout)
         {
-            if (!readout.IsChecked)
-                return readout.PredictedSolved ? "PREDICTED ARRIVE" : "PREDICTED " + Outcome(readout);
+            if (!readout.HasResult)
+                return "SHAPING";
 
             if (readout.IsSolved)
-                return "CHECKED ARRIVE";
+                return "DELIVERED";
 
             if (readout.IsFailed)
-                return "CHECKED OUT OF ENTROPY";
+                return "OUT OF ENTROPY";
 
-            return "CHECKED " + Outcome(readout);
-        }
+            bool crash = readout.Outcome == TrajectoryOutcome.Crash;
+            if (!readout.IsChecked)
+                return crash ? "WILL CRASH" : "WILL MISS";
 
-        private static string GradeColor(int grade)
-        {
-            if (grade >= 3)
-                return AccentColor;
-
-            return grade > 0 ? ValueColor : FaintColor;
+            return crash ? "CRASHED" : "MISSED";
         }
 
         private static string ResultColor(PuzzleReadout readout)
         {
-            if (!readout.IsChecked)
+            if (!readout.HasResult)
                 return LabelColor;
 
-            if (readout.IsSolved)
-                return AccentColor;
-
-            if (readout.IsFailed || readout.Outcome == TrajectoryOutcome.Crash)
+            if (readout.Outcome == TrajectoryOutcome.Crash || readout.IsFailed)
                 return DangerColor;
 
-            return FaintColor;
+            return readout.PredictedSolved ? AccentColor : FaintColor;
         }
 
-        private static string Outcome(PuzzleReadout readout) =>
-            readout.Outcome == TrajectoryOutcome.Crash ? "CRASH" : "MISS";
+        private static string RefusalText(ZoneRefusal reason)
+        {
+            switch (reason)
+            {
+                case ZoneRefusal.Locked:
+                    return "ZONE IS FIXED";
+                case ZoneRefusal.OutOfBounds:
+                    return "KEEP CLEAR OF THE PLANETS";
+                case ZoneRefusal.OutOfEntropy:
+                    return "OUT OF ENTROPY - RESET";
+                default:
+                    return string.Empty;
+            }
+        }
 
-        private static string F(float value) => value.ToString("0.0000", CultureInfo.InvariantCulture);
+        private static string GradeColor(int grade) =>
+            grade >= 3 ? AccentColor : grade > 0 ? ValueColor : FaintColor;
+
+        private static string F(float value) => value.ToString("0.00", CultureInfo.InvariantCulture);
 
         private static bool SameDisplay(PuzzleReadout a, PuzzleReadout b) =>
             a.EntropySpent == b.EntropySpent
             && a.EntropyPending == b.EntropyPending
             && a.EntropyBudget == b.EntropyBudget
             && a.Outcome == b.Outcome
+            && a.HasResult == b.HasResult
             && a.PredictedSolved == b.PredictedSolved
             && a.IsChecked == b.IsChecked
             && a.IsSolved == b.IsSolved
             && a.IsFailed == b.IsFailed
-            && a.Grade == b.Grade
-            && a.CommandCount == b.CommandCount;
+            && a.Grade == b.Grade;
     }
 }

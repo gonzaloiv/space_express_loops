@@ -32,6 +32,15 @@ namespace DigitalLove.Game.SpaceShaping
 
         public Vector3 Destination => setup.Destination;
 
+        public float OriginRadius
+        {
+            get
+            {
+                int origin = OriginIndex();
+                return origin >= 0 ? scales[origin] * 0.5f : 0f;
+            }
+        }
+
         public IReadOnlyList<SpaceZone> Zones => zones;
 
         public int CommandCount => commands.Count;
@@ -128,6 +137,17 @@ namespace DigitalLove.Game.SpaceShaping
 
             launch.LaunchSpeed = setup.LaunchSpeed;
             return launch.Simulate(field, setup.Origin, setup.Destination, settings, integrator);
+        }
+
+        private int OriginIndex()
+        {
+            for (int i = 0; i < setup.Sources.Length; i++)
+            {
+                if ((setup.Sources[i].Home - setup.Origin).sqrMagnitude < 0.000001f)
+                    return i;
+            }
+
+            return -1;
         }
 
         private void Recompute()
