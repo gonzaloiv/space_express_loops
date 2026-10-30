@@ -27,6 +27,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         public int ShipCount => ships.Length;
 
+        public float StepSecs => setup.Sim.StepSecs;
+
         public ShipSpec Ship(int index) => ships[index];
 
         public Vector3 Origin => setup.Origin;
@@ -68,6 +70,8 @@ namespace DigitalLove.Game.SpaceShaping
         public bool IsOverBudget => setup.EntropyBudget > 0f && log.Committed >= setup.EntropyBudget;
 
         public Vector3 Home(int index) => setup.Sources[index].Home;
+
+        public string Name(int index) => setup.Sources[index].Name;
 
         public float HomeScale(int index) => setup.Sources[index].InitialScale;
 

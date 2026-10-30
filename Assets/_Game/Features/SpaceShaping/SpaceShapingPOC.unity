@@ -45008,7 +45008,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.SpaceShapingState
   puzzles:
   - {fileID: 11400000, guid: c5e7000b370fd814c8d5e7396f997da5, type: 2}
-  - {fileID: 11400000, guid: d65ffd11b2bd59c4d994d4b1bd608078, type: 2}
   settings: {fileID: 11400000, guid: 1000000000000000000000000000001a, type: 2}
   view: {fileID: 1095678997}
 --- !u!4 &1095678996
@@ -45064,6 +45063,7 @@ MonoBehaviour:
   sourceParent: {fileID: 1529374044}
   trajectoryPrototype: {fileID: 7421319929626500612, guid: 1f053f762efe6e54bbf1c80c5d39c4fe, type: 3}
   shipPrototype: {fileID: 5197302854918167167, guid: 8920a6c04cb8505438dda15dad061f26, type: 3}
+  shipStaggerSecs: 0.08
   shipsParent: {fileID: 1548055764}
   linesParent: {fileID: 1662250515}
   cubePrototype: {fileID: 5572121854155305578, guid: 77bfd046ac9cfc04b9b6b681c2b86f03, type: 3}
@@ -53077,7 +53077,7 @@ Transform:
   m_GameObject: {fileID: 1293175973}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.2, z: -0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

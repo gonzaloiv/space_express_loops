@@ -7,15 +7,22 @@ namespace DigitalLove.Game.Sectors
     {
         private const int ClusterAttempts = 32;
         private const int SeparationPasses = 32;
+        private const float TiltDegrees = 12f;
+        private const float BulgeHeight = 0.8f;
 
         public static SectorLayout Generate(SectorShapeData data, SeededRandom random)
         {
             SectorShapeRequest request = Resolve(data, random);
-            Quaternion yaw = Quaternion.Euler(0f, random.Range(0f, 360f), 0f);
+            float yaw = random.Range(0f, 360f);
+            float pitch = random.Range(-TiltDegrees, TiltDegrees);
+            float roll = random.Range(-TiltDegrees, TiltDegrees);
+            Quaternion rotation = Quaternion.Euler(pitch, yaw, roll);
             SectorPlanet[] planets = new SectorPlanet[request.PlanetCount];
             Fill(request, random, planets);
             ResolveOverlaps(request, planets);
-            return new SectorLayout(request.SectorRadius, request.AnchorRadius, yaw, planets);
+            for (int i = 0; i < planets.Length; i++)
+                planets[i] = new SectorPlanet(rotation * planets[i].Position, planets[i].Radius);
+            return new SectorLayout(request.SectorRadius, request.AnchorRadius, rotation, planets);
         }
 
         private static SectorShapeRequest Resolve(SectorShapeData data, SeededRandom random)
@@ -53,8 +60,9 @@ namespace DigitalLove.Game.Sectors
             {
                 int inRing = CountInRing(planets.Length, rings, ring);
                 float radius = Mathf.Lerp(InnerRadius(request), SafeRadius(request), (ring + 1) / (float)rings);
+                float verticalJitter = ring == 0 ? BulgeHeight * radius : Jitter(request);
                 for (int i = 0; i < inRing; i++)
-                    planets[index++] = Place(request, random, Angle(phase, i, inRing), radius);
+                    planets[index++] = Place(request, random, Angle(phase, i, inRing), radius, verticalJitter);
             }
         }
 
@@ -70,16 +78,19 @@ namespace DigitalLove.Game.Sectors
                 float t = (i / arms + 1f) / perArm;
                 float radius = Mathf.Lerp(inner, outer, t);
                 float angle = arm * Mathf.PI * 2f / arms + t * Mathf.PI * 1.25f;
-                planets[i] = Place(request, random, angle, radius);
+                float verticalJitter = t < 0.5f ? BulgeHeight * radius : Jitter(request);
+                planets[i] = Place(request, random, angle, radius, verticalJitter);
             }
         }
 
         private static void FillCluster(SectorShapeRequest request, SeededRandom random, SectorPlanet[] planets)
         {
+            float inner = InnerRadius(request);
+            float outer = Mathf.Max(inner, SafeRadius(request));
             for (int i = 0; i < planets.Length; i++)
             {
                 float radius = SampleRadius(request, random);
-                Vector3 position = SampleClusterPoint(request, random, planets, i, radius);
+                Vector3 position = SampleClusterPoint(request, random, planets, i, radius, inner, outer);
                 planets[i] = new SectorPlanet(position, radius);
             }
         }
@@ -89,18 +100,20 @@ namespace DigitalLove.Game.Sectors
             SeededRandom random,
             SectorPlanet[] planets,
             int index,
-            float radius)
+            float radius,
+            float inner,
+            float outer)
         {
-            float inner = InnerRadius(request);
-            float outer = Mathf.Max(inner, SafeRadius(request));
             for (int attempt = 0; attempt < ClusterAttempts; attempt++)
             {
-                Vector3 candidate = SampleAnnulus(request, random, inner, outer);
+                float orbital = random.Range(inner, outer);
+                Vector3 candidate = SampleSphereDirection(request, random) * orbital;
                 if (IsClear(request, planets, index, radius, candidate))
                     return candidate;
             }
 
-            return SampleAnnulus(request, random, inner, outer);
+            float orbitalFallback = random.Range(inner, outer);
+            return SampleSphereDirection(request, random) * orbitalFallback;
         }
 
         private static Vector3 SampleAnnulus(
@@ -116,6 +129,16 @@ namespace DigitalLove.Game.Sectors
                 Mathf.Cos(angle) * radius,
                 random.Range(-1f, 1f) * jitter,
                 Mathf.Sin(angle) * radius);
+        }
+
+        // Uniform direction on a sphere: gives a cluster comparable vertical and horizontal extent
+        // instead of a flattened disc.
+        private static Vector3 SampleSphereDirection(SeededRandom random)
+        {
+            float angle = random.Range(0f, Mathf.PI * 2f);
+            float z = random.Range(-1f, 1f);
+            float s = Mathf.Sqrt(Mathf.Max(0f, 1f - z * z));
+            return new Vector3(Mathf.Cos(angle) * s, z, Mathf.Sin(angle) * s);
         }
 
         private static bool IsClear(
@@ -188,12 +211,12 @@ namespace DigitalLove.Game.Sectors
             SectorShapeRequest request,
             SeededRandom random,
             float angle,
-            float radius)
+            float radius,
+            float verticalJitter)
         {
-            float jitter = Jitter(request);
             Vector3 position = new(
                 Mathf.Cos(angle) * radius,
-                random.Range(-1f, 1f) * jitter,
+                random.Range(-1f, 1f) * verticalJitter,
                 Mathf.Sin(angle) * radius);
             return new SectorPlanet(position, SampleRadius(request, random));
         }

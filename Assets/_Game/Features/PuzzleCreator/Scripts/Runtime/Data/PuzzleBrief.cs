@@ -9,11 +9,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public int Zones;
         public bool Resizable;
         public int Ships;
+        public PuzzleShipRelation Relation;
 
         public bool SupportsZones =>
             Zones <= 3;
 
-        public bool IsMultiShip =>
+        public bool IsMulti =>
             Ships > 1;
 
         public static PuzzleBrief From(PuzzleSeed seed, SpaceShapingSettings settings) => new()
@@ -22,7 +23,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             Translatable = seed.translatable,
             Zones = Mathf.Max(1, seed.zones),
             Resizable = seed.resizable,
-            Ships = Mathf.Max(1, seed.ships)
+            Ships = Mathf.Max(1, seed.ships),
+            Relation = seed.relation
         };
     }
 }

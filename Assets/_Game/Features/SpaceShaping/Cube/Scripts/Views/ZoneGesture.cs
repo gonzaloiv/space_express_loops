@@ -5,14 +5,14 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 {
     internal static class ZoneGesture
     {
-        public static bool HandInsideContent(SpaceZoneView zone, Grabbable grabbable) =>
-            zone.ContentContains(HandWorld(zone, grabbable));
+        public static bool HandInsideScale(SpaceZoneView zone, Grabbable grabbable) =>
+            zone.ScaleContains(HandWorld(zone, grabbable));
 
-        public static bool AllHandsInside(SpaceZoneView zone, Grabbable grabbable)
+        public static bool AllHandsInsideScale(SpaceZoneView zone, Grabbable grabbable)
         {
             for (int i = 0; i < grabbable.GrabPoints.Count; i++)
             {
-                if (!zone.ContentContains(grabbable.GrabPoints[i].position))
+                if (!zone.ScaleContains(grabbable.GrabPoints[i].position))
                     return false;
             }
 

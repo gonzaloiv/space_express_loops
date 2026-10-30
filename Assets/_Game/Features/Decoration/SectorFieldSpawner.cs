@@ -62,12 +62,13 @@ namespace DigitalLove.Game.SilentPlanets
         {
             SectorLayout layout = placement.Layout;
             int seed = SectorGrid.CellSeed(field.worldSeed, placement.Cell);
-            Acquire().Spawn(placement.Center, layout.AnchorRadius, seed);
+            Acquire().Spawn(placement.Center, layout.AnchorRadius, seed, string.Empty);
 
             for (int i = 0; i < layout.PlanetCount; i++)
             {
                 SectorPlanet planet = layout.Planets[i];
-                Acquire().Spawn(placement.Center + planet.Position, planet.Radius, seed + i + 1);
+                Acquire().Spawn(
+                    placement.Center + planet.Position, planet.Radius, seed + i + 1, string.Empty);
             }
         }
 

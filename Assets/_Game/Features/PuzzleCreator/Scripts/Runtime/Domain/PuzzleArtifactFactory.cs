@@ -16,6 +16,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             PuzzlePlanetListAsset asset = ScriptableObject.CreateInstance<PuzzlePlanetListAsset>();
             asset.planets = PuzzleFieldGenerator.Generate(shape.shape, shape.seed);
+            PlanetNames.Instance.Assign(asset.planets);
             return asset;
         }
     }

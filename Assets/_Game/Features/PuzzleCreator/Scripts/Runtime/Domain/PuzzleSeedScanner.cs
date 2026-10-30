@@ -24,6 +24,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 }
 
                 Keep(ref best, candidate);
+
+                // Multi-ship bakes are much heavier and have no route ranking, so the first one
+                // that bakes is the answer.
+                if (brief.IsMulti)
+                    break;
             }
 
             return best;
@@ -34,6 +39,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             int seedValue)
         {
             PuzzlePlanetListAsset planets = Planets(seed, settings, seedValue);
+            if (brief.IsMulti)
+                return ProbeMulti(planets, sim, brief, seedValue);
+
             PuzzleData baked = PuzzleFieldBake.Bake(
                 planets, sim, brief, out PuzzleBakeStatus status, out PuzzleZone[] solution);
             Object.DestroyImmediate(planets);
@@ -45,6 +53,23 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Puzzle = baked,
                 Solution = solution,
                 Routes = baked != null ? baked.routes : 0
+            };
+        }
+
+        private static PuzzleSeedScanResult ProbeMulti(
+            PuzzlePlanetListAsset planets, PuzzleSimSettings sim, PuzzleBrief brief, int seedValue)
+        {
+            PuzzleMultiShipResult result = PuzzleMultiShipBake.Bake(planets, sim, brief);
+            Object.DestroyImmediate(planets);
+            PuzzleData baked = result.Status == PuzzleBakeStatus.Baked ? result.Puzzle : null;
+            return new PuzzleSeedScanResult
+            {
+                Found = baked != null,
+                Seed = seedValue,
+                Status = result.Status,
+                Puzzle = baked,
+                Solution = baked != null ? new[] { result.Solution } : null,
+                Routes = 0
             };
         }
 

@@ -71,13 +71,12 @@ a command count as a diagnostic.
   so any bend reads as something the player did; the lattice spans the run (sized from
   `origin`→`destination`).
 - The planets visibly **spread and grow**.
-- The cube keeps a **committed check lamp** after release — **green when the last check arrived**, red
+- The cube keeps a **committed check lamp** after landing — **green when the last check arrived**, red
   on a crash — until the next edit. A locked gesture or an over-budget scale **flashes the frame red**
   instead of failing silently.
 - The ship **launches on each completed pinch** and flies the current trajectory. The **trajectory
-  line** is the prediction, computed **on release**: while shaping, the mesh and planets stay live but
-  the path holds its last value, then it refreshes on release and the flight repeats it
-  ([core loop](../core-loop.md) §1).
+  line** previews **live while shaping**, in a pending accent rather than the checked green/red, then
+  takes its result on landing ([core loop](../core-loop.md) §1).
 
 ## Failure
 

@@ -5,6 +5,7 @@ namespace DigitalLove.Game.Nodes
     public class FieldPlanetBehaviour : MonoBehaviour, IPoolableNode
     {
         [SerializeField] private NodeBody nodeBody;
+        [SerializeField] private PlanetNameLabel nameLabel;
 
         private bool isVisible = true;
         private bool hasVariant;
@@ -23,9 +24,10 @@ namespace DigitalLove.Game.Nodes
             nodeBody.Init(radius, 0);
             isVisible = false;
             nodeBody.SetVisible(false);
+            nameLabel.Hide();
         }
 
-        public void Spawn(Vector3 localPosition, float spawnRadius, int seed)
+        public void Spawn(Vector3 localPosition, float spawnRadius, int seed, string name)
         {
             radius = spawnRadius;
             transform.localPosition = localPosition;
@@ -37,11 +39,13 @@ namespace DigitalLove.Game.Nodes
 
             gameObject.SetActive(true);
             SetVisible(true);
+            nameLabel.Place(name);
         }
 
         public void Hide()
         {
             SetVisible(false);
+            nameLabel.Hide();
             gameObject.SetActive(false);
         }
 

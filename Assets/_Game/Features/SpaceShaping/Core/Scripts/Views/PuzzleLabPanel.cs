@@ -179,11 +179,10 @@ namespace DigitalLove.Game.SpaceShaping
             if (readout.IsFailed)
                 return "OUT OF ENTROPY";
 
-            bool crash = readout.Outcome == TrajectoryOutcome.Crash;
             if (!readout.IsChecked)
-                return crash ? "WILL CRASH" : "WILL MISS";
+                return readout.IsFlying ? "IN FLIGHT" : "SHAPING";
 
-            return crash ? "CRASHED" : "MISSED";
+            return readout.Outcome == TrajectoryOutcome.Crash ? "CRASHED" : "MISSED";
         }
 
         private static string ResultColor(PuzzleReadout readout)
@@ -191,10 +190,13 @@ namespace DigitalLove.Game.SpaceShaping
             if (!readout.HasResult)
                 return LabelColor;
 
-            if (readout.Outcome == TrajectoryOutcome.Crash || readout.IsFailed)
-                return DangerColor;
+            if (!readout.IsChecked)
+                return readout.IsFlying ? AccentColor : FaintColor;
 
-            return readout.PredictedSolved ? AccentColor : FaintColor;
+            if (readout.IsSolved)
+                return AccentColor;
+
+            return readout.Outcome == TrajectoryOutcome.Crash ? DangerColor : FaintColor;
         }
 
         private static string RefusalText(ZoneRefusal reason)

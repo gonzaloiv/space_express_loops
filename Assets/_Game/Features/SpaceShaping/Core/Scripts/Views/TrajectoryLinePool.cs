@@ -16,10 +16,11 @@ namespace DigitalLove.Game.SpaceShaping
             this.parent = parent;
         }
 
-        public void Show(IReadOnlyList<TrajectoryResult> results, Vector3 centre, float half)
+        public void Show(
+            IReadOnlyList<TrajectoryResult> results, Vector3 centre, float half, bool pending)
         {
             for (int i = 0; i < results.Count; i++)
-                Slot(i).Show(results[i], Arrived(results[i]), centre, half);
+                Slot(i).Show(results[i], Arrived(results[i]), centre, half, pending);
 
             for (int i = results.Count; i < lines.Count; i++)
                 lines[i].Hide();

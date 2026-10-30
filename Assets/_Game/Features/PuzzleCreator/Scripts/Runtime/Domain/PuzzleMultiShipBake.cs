@@ -13,7 +13,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public static PuzzleMultiShipResult Bake(
             PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief)
         {
-            if (!brief.IsMultiShip)
+            if (!brief.IsMulti)
                 return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.UnsupportedBrief };
 
             PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
@@ -31,11 +31,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static PuzzleMultiShipResult BakeField(
             PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief)
         {
-            Probe probe = new(field, settings, brief.Ships);
+            Probe probe = new(field, settings, brief);
             if (!probe.Find(out PuzzleZone zone, out List<PuzzleShipRescue> rescued))
                 return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.NoSolution };
 
-            PuzzleShip[] ships = Select(field, rescued, brief.Ships);
+            PuzzleShip[] ships = Select(field, rescued, brief);
             if (ships == null || !probe.Scan.Rescues(zone, ships))
                 return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.NoSolution };
 
@@ -47,15 +47,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             };
         }
 
-        // One ship per origin and destination planet: two ships sharing either endpoint is not a
-        // multi-ship level.
-        private static PuzzleShip[] Select(PuzzleData field, List<PuzzleShipRescue> rescued, int count)
+        // Take the first runs the brief's relation allows between every pair of ships.
+        private static PuzzleShip[] Select(PuzzleData field, List<PuzzleShipRescue> rescued, PuzzleBrief brief)
         {
-            PuzzleShip[] ships = new PuzzleShip[count];
+            PuzzleShip[] ships = new PuzzleShip[brief.Ships];
             int taken = 0;
-            for (int i = 0; i < rescued.Count && taken < count; i++)
+            for (int i = 0; i < rescued.Count && taken < brief.Ships; i++)
             {
-                if (Used(ships, taken, rescued[i]))
+                if (Used(brief.Relation, ships, taken, rescued[i]))
                     continue;
 
                 ships[taken] = new PuzzleShip
@@ -67,26 +66,37 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 taken++;
             }
 
-            return taken == count ? ships : null;
+            return taken == brief.Ships ? ships : null;
         }
 
-        private static bool Used(PuzzleShip[] ships, int taken, PuzzleShipRescue rescue)
+        private static bool Used(
+            PuzzleShipRelation relation, PuzzleShip[] ships, int taken, PuzzleShipRescue rescue)
         {
             for (int i = 0; i < taken; i++)
             {
-                if (SharesPlanet(
-                    ships[i].origin, ships[i].destination, rescue.Origin, rescue.Destination))
+                if (!Allowed(
+                    relation, ships[i].origin, ships[i].destination, rescue.Origin, rescue.Destination))
                     return true;
             }
 
             return false;
         }
 
-        // Each ship gets its own pair of planets: no endpoint is shared between two runs.
-        private static bool SharesPlanet(
-            Vector3 origin, Vector3 destination, Vector3 otherOrigin, Vector3 otherDestination) =>
-            Same(origin, otherOrigin) || Same(origin, otherDestination)
-            || Same(destination, otherOrigin) || Same(destination, otherDestination);
+        // How two ships may relate. Fan-out shares an origin, converge shares a destination, and a
+        // separate pair shares no planet at all.
+        internal static bool Allowed(
+            PuzzleShipRelation relation, Vector3 origin, Vector3 destination,
+            Vector3 otherOrigin, Vector3 otherDestination)
+        {
+            if (relation == PuzzleShipRelation.FanOut)
+                return Same(origin, otherOrigin) && !Same(destination, otherDestination);
+
+            if (relation == PuzzleShipRelation.Converge)
+                return Same(destination, otherDestination) && !Same(origin, otherOrigin);
+
+            return !Same(origin, otherOrigin) && !Same(origin, otherDestination)
+                && !Same(destination, otherOrigin) && !Same(destination, otherDestination);
+        }
 
         private static bool Same(Vector3 a, Vector3 b) => (a - b).sqrMagnitude < 1e-8f;
 
@@ -144,12 +154,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             private readonly PuzzleSimSettings settings;
             private readonly float[] scales;
             private readonly int required;
+            private readonly PuzzleShipRelation relation;
 
-            public Probe(PuzzleData field, PuzzleSimSettings settings, int required)
+            public Probe(PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief)
             {
                 this.field = field;
                 this.settings = settings;
-                this.required = required;
+                required = brief.Ships;
+                relation = brief.Relation;
                 scan = new PuzzleShipScan(field, settings, 0f);
                 scales = Linear(settings, ScaleSamples);
             }
@@ -215,8 +227,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return k + 1 < row.Length && row[k + 1] != null && Distinct(row[k + 1]) >= required;
             }
 
-            // How many ships a rescue set can supply: each needs its own pair of endpoint planets.
-            private static int Distinct(List<PuzzleShipRescue> rescued)
+            // How many relation-allowed ships a rescue set can supply.
+            private int Distinct(List<PuzzleShipRescue> rescued)
             {
                 int distinct = 0;
                 for (int i = 0; i < rescued.Count; i++)
@@ -228,12 +240,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return distinct;
             }
 
-            private static bool Fresh(List<PuzzleShipRescue> rescued, int index)
+            private bool Fresh(List<PuzzleShipRescue> rescued, int index)
             {
                 for (int i = 0; i < index; i++)
                 {
-                    if (SharesPlanet(
-                        rescued[i].Origin, rescued[i].Destination,
+                    if (!Allowed(
+                        relation, rescued[i].Origin, rescued[i].Destination,
                         rescued[index].Origin, rescued[index].Destination))
                         return false;
                 }

@@ -15,7 +15,8 @@ namespace DigitalLove.Game.SpaceShaping
                     Home = sources[i].home,
                     InitialScale = scale,
                     MinScale = scale * settings.MinScaleFactor,
-                    MaxScale = scale * settings.MaxScaleFactor
+                    MaxScale = scale * settings.MaxScaleFactor,
+                    Name = sources[i].name
                 };
             }
 

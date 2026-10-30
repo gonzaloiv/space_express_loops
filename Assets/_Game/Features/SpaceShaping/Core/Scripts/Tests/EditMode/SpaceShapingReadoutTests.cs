@@ -25,6 +25,20 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         }
 
         [Test]
+        public void UncheckedFlight_ReportsFlying()
+        {
+            SpaceShapingSession session = new(Setup());
+            session.ApplyZone(Zone(1.5f));
+
+            PuzzleReadout readout = PuzzleReadout.From(session, Simulate(session), false, true);
+
+            Assert.IsTrue(readout.IsFlying);
+            Assert.IsFalse(readout.IsChecked);
+            Assert.IsFalse(readout.IsSolved);
+            Assert.IsTrue(readout.PredictedSolved);
+        }
+
+        [Test]
         public void CheckedSolved_AwardsGradeFromCommittedEntropy()
         {
             SpaceShapingSession session = new(Setup());

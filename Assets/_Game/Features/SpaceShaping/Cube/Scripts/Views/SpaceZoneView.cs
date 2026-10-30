@@ -7,6 +7,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
     {
         [SerializeField] private float falloff = 0.5f;
         [SerializeField] private float contentInsetFraction = 0.05f;
+        [Tooltip("Extra volume around the content, as a fraction of its half-size, where a pinch still scales instead of grabbing the frame.")]
+        [SerializeField] private float scaleMarginFraction = 0.25f;
         [SerializeField] private float throbAmount = 0.5f;
         [SerializeField] private Transform contentVisual;
         [SerializeField] private ZoneGrabListener listener;
@@ -36,17 +38,11 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 && !candidate.Influences(conditions.Destination);
         }
 
-        private Vector3 ContentSize
-        {
-            get
-            {
-                Vector3 content = Size * (1f - contentInsetFraction);
-                return new Vector3(
-                    Mathf.Max(content.x, 0.1f),
-                    Mathf.Max(content.y, 0.1f),
-                    Mathf.Max(content.z, 0.1f));
-            }
-        }
+        // The content's share of the frame. Proportional, so the fill tracks any cube size; the old
+        // absolute floor blew small cubes past the frame.
+        private float ContentFraction => Mathf.Clamp(1f - contentInsetFraction, 0.01f, 1f);
+
+        private Vector3 ContentSize => Size * ContentFraction;
 
         public Vector3 ToLocal(Vector3 world)
         {
@@ -54,10 +50,14 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             return parent != null ? parent.InverseTransformPoint(world) : world;
         }
 
-        public bool ContentContains(Vector3 world)
+        public bool ContentContains(Vector3 world) => Contains(world, ContentSize * 0.5f);
+
+        public bool ScaleContains(Vector3 world) =>
+            Contains(world, ContentSize * 0.5f * (1f + Mathf.Max(scaleMarginFraction, 0f)));
+
+        private bool Contains(Vector3 world, Vector3 half)
         {
             Vector3 offset = ToLocal(world) - Centre;
-            Vector3 half = ContentSize * 0.5f;
             return Mathf.Abs(offset.x) <= half.x
                 && Mathf.Abs(offset.y) <= half.y
                 && Mathf.Abs(offset.z) <= half.z;
@@ -104,6 +104,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         {
             scale = 1f;
             scaling = false;
+            ApplyContentVisual();
         }
 
         private void ApplyContentVisual()
@@ -111,16 +112,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             if (contentVisual == null)
                 return;
 
-            Vector3 size = Size;
-            Vector3 content = ContentSize;
             float throb = 1f + Mathf.Abs(scale - 1f) * throbAmount;
-            contentVisual.localScale = new Vector3(
-                SafeRatio(content.x, size.x),
-                SafeRatio(content.y, size.y),
-                SafeRatio(content.z, size.z)) * throb;
+            contentVisual.localScale = Vector3.one * Mathf.Min(ContentFraction * throb, 1f);
         }
-
-        private static float SafeRatio(float content, float size) =>
-            size > 0.0001f ? content / size : 1f;
     }
 }

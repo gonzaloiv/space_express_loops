@@ -22,10 +22,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         [FormerlySerializedAs("moves")]
         public int zones = 1;
 
-        [Tooltip("Ships the level must land. 1 is the classic single-ship puzzle (origin to destination); "
-            + "2 or more bakes a shared-field level where every ship must arrive.")]
+        [Tooltip("Ships the level must land. 1 is a single-ship puzzle; 2 or more bakes a multi-ship "
+            + "level whose runs relate as the relation field says.")]
         [Min(1)]
         public int ships = 1;
+
+        [Tooltip("How multi-ship runs relate: FanOut shares one origin with different destinations; "
+            + "Converge shares one destination with different origins; Separate shares no planet.")]
+        public PuzzleShipRelation relation = PuzzleShipRelation.Separate;
 
         [Tooltip("The frame may be resized at runtime (1x to 2x).")]
         public bool resizable;

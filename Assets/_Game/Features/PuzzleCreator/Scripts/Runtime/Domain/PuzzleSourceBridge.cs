@@ -10,7 +10,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 sources[i] = new PuzzleSource
                 {
                     home = planets[i].position,
-                    scale = planets[i].radius * 2f
+                    scale = planets[i].radius * 2f,
+                    name = planets[i].name
                 };
             }
 

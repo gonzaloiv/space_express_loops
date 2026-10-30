@@ -11,13 +11,15 @@ namespace DigitalLove.Game.SpaceShaping
         private readonly ShipTravelView prototype;
         private readonly Transform parent;
         private readonly List<ShipTravelView> ships = new();
+        private readonly float staggerSecs;
 
         private int flying;
 
-        public ShipFlightPool(ShipTravelView prototype, Transform parent)
+        public ShipFlightPool(ShipTravelView prototype, Transform parent, float staggerSecs)
         {
             this.prototype = prototype;
             this.parent = parent;
+            this.staggerSecs = Mathf.Max(staggerSecs, 0f);
         }
 
         public event Action Completed;
@@ -29,16 +31,18 @@ namespace DigitalLove.Game.SpaceShaping
                 Slot(i).SoftReset(origins[i]);
         }
 
-        public void Travel(IReadOnlyList<TrajectoryResult> results)
+        public void Travel(IReadOnlyList<TrajectoryResult> results, float stepSecs)
         {
             Stop();
+            float step = Mathf.Max(stepSecs, 0f);
             for (int i = 0; i < results.Count; i++)
             {
                 if (!CanFly(results[i]))
                     continue;
 
                 flying++;
-                Slot(i).Travel(results[i]);
+                float simSecs = (results[i].Points.Count - 1) * step;
+                Slot(i).Travel(results[i], simSecs, (flying - 1) * staggerSecs);
             }
 
             if (flying == 0)

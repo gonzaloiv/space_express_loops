@@ -53,7 +53,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void SingleShipBrief_IsRejected()
+        public void OneShipBrief_IsRejected()
         {
             PuzzleSeed seed = ScriptableObject.CreateInstance<PuzzleSeed>();
             seed.seed = Seed;

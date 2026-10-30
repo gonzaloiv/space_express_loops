@@ -13,27 +13,30 @@ MonoBehaviour:
   m_Name: PuzzleSeed_Shape_Planets
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Creator::DigitalLove.Game.SpaceShaping.Creator.PuzzlePlanetListAsset
   planets:
-  - position: {x: 0.049510967, y: -0.004228942, z: 0.07563906}
-    radius: 0.03632415
-  - position: {x: -0.093036726, y: 0.024871234, z: 0.006097951}
-    radius: 0.02880816
-  - position: {x: 0.041237388, y: 0.016457012, z: -0.08362114}
-    radius: 0.021876918
-  - position: {x: -0.04977271, y: -0.020414414, z: 0.12016192}
-    radius: 0.03739562
-  - position: {x: -0.07917693, y: 0.020529844, z: -0.10318537}
-    radius: 0.014613008
-  - position: {x: 0.12894963, y: 0.014084365, z: -0.016976545}
-    radius: 0.010905859
-  - position: {x: -0.1636816, y: -0.022208229, z: 0.03255829}
-    radius: 0.01101197
-  - position: {x: 0.05364453, y: -0.0083955, z: -0.15803154}
-    radius: 0.008204024
-  - position: {x: 0.11232542, y: 0.01804686, z: 0.12735744}
-    radius: 0.04803614
-  - position: {x: -0.14385673, y: 0.010486814, z: -0.14385678}
-    radius: 0.034714546
-  - position: {x: 0.19578514, y: -0.02038621, z: -0.052460425}
-    radius: 0.026022095
-  - position: {x: -0.052460324, y: 0.0203902, z: 0.19578473}
-    radius: 0.01915647
+  - position: {x: 0.03783343, y: -0.0251547, z: 0.14119634}
+    radius: 0.04548941
+    name: solmuigawa
+  - position: {x: -0.14119634, y: -0.008095581, z: -0.03783345}
+    radius: 0.016733931
+    name: xanzonides
+  - position: {x: 0.09287755, y: 0.009788695, z: -0.10344383}
+    radius: 0.04552313
+    name: thennilia
+  - position: {x: -0.15917799, y: -0.006054783, z: 0.091901414}
+    radius: 0.061437644
+    name: chelluna
+  - position: {x: -0.010556492, y: 0.0016606782, z: -0.19241714}
+    radius: 0.09115502
+    name: teiter
+  - position: {x: 0.15449786, y: 0.015586063, z: 0.10351227}
+    radius: 0.08295567
+    name: thuamia
+  - position: {x: -0.15569553, y: -0.023418033, z: -0.15569557}
+    radius: 0.043727454
+    name: gniviter
+  - position: {x: 0.2128409, y: -0.029824618, z: -0.053290274}
+    radius: 0.09040257
+    name: phexogantu
+  - position: {x: -0.057307262, y: 0.0021208199, z: 0.21387377}
+    radius: 0.051194396
+    name: zippe 3VGR

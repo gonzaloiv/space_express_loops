@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 2070693744694798367}
   - component: {fileID: 6063723488889721561}
   - component: {fileID: 2564147109840229003}
-  - component: {fileID: 6988438104700231090}
-  - component: {fileID: 6608356072183359930}
+  - component: {fileID: 5519929800292730316}
   m_Layer: 11
   m_Name: Sphere
   m_TagString: Untagged
@@ -29,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1221875905710984084}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.3, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -92,45 +91,21 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &6988438104700231090
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1221875905710984084}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!1818360610 &6608356072183359930
-ScaleConstraint:
+--- !u!114 &5519929800292730316
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1221875905710984084}
   m_Enabled: 1
-  serializedVersion: 2
-  m_Weight: 1
-  m_ScaleAtRest: {x: 0.05, y: 0.05, z: 0.05}
-  m_ScaleOffset: {x: 1, y: 1, z: 1}
-  m_AffectScalingX: 1
-  m_AffectScalingY: 1
-  m_AffectScalingZ: 1
-  m_Active: 1
-  m_IsLocked: 0
-  m_Sources: []
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adbb4e3277ad0c744b04224b8cfbc169, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DestinationView
+  indicator: {fileID: 2070693744694798367}
+  rend: {fileID: 8009654505590779967}
+  yOffset: 0.25
 --- !u!1001 &1338579793297812341
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -187,6 +162,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Destination
       objectReference: {fileID: 0}
+    - target: {fileID: 4128531780289376924, guid: 6a1a9c1cd3694b11946468f943f46cd8, type: 3}
+      propertyPath: yOffset
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 7402625994764319391, guid: 6a1a9c1cd3694b11946468f943f46cd8, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -199,36 +178,13 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1673654939693186368, guid: 6a1a9c1cd3694b11946468f943f46cd8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2070693744694798367}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3061310674406793158, guid: 6a1a9c1cd3694b11946468f943f46cd8, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3330126157526715465}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6a1a9c1cd3694b11946468f943f46cd8, type: 3}
 --- !u!4 &408019376402683445 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1673654939693186368, guid: 6a1a9c1cd3694b11946468f943f46cd8, type: 3}
   m_PrefabInstance: {fileID: 1338579793297812341}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &4100636228153046195 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3061310674406793158, guid: 6a1a9c1cd3694b11946468f943f46cd8, type: 3}
-  m_PrefabInstance: {fileID: 1338579793297812341}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3330126157526715465
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4100636228153046195}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adbb4e3277ad0c744b04224b8cfbc169, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DestinationView
-  indicator: {fileID: 2070693744694798367}
-  rend: {fileID: 8009654505590779967}
-  yOffset: 0.1
 --- !u!23 &8009654505590779967 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 9059999379901930314, guid: 6a1a9c1cd3694b11946468f943f46cd8, type: 3}

@@ -42,6 +42,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         private bool classified;
         private bool frameGrab;
+        private bool moved;
+        private bool scaled;
         private int lastCount;
         private float startHandDistance;
         private float startScale;
@@ -108,6 +110,11 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         private void EndGesture()
         {
+            if (moved && !scaled)
+                zone.ResetScale();
+
+            moved = false;
+            scaled = false;
             zone.SetScaling(false);
             classified = false;
             lastCount = 0;
@@ -124,7 +131,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 startHandDistance = ZoneGesture.HandDistance(grabbable);
                 startScale = zone.Scale;
                 startSize = zone.Size;
-                frameGrab = !ZoneGesture.AllHandsInside(zone, grabbable);
+                frameGrab = !ZoneGesture.AllHandsInsideScale(zone, grabbable);
             }
 
             if (count == 1 && lastCount != 1)
@@ -141,7 +148,10 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             else if (frameGrab)
                 ResizeFrame();
             else
+            {
+                scaled = true;
                 ScaleUniverse();
+            }
 
             zone.SetScaling(count >= 2 && !frameGrab);
         }
@@ -149,7 +159,9 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         private void BeginGesture()
         {
             classified = true;
-            frameGrab = !ZoneGesture.HandInsideContent(zone, grabbable);
+            moved = false;
+            scaled = false;
+            frameGrab = !ZoneGesture.HandInsideScale(zone, grabbable);
             grabOffset = zone.Centre - HandLocal();
             grabOrigin = HandLocal();
         }
@@ -171,6 +183,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             }
 
             zone.SetFrame(centre, zone.Size);
+            moved = true;
         }
 
         private void ScaleUniverse()

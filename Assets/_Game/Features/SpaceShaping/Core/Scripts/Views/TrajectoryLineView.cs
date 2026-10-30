@@ -20,6 +20,8 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private ColorValue success;
         [SerializeField] private ColorValue danger;
         [SerializeField] private ColorValue miss;
+        [Tooltip("Unchecked prediction colour: the path is not a result until the ship lands.")]
+        [SerializeField] private Color pending = new(0.231f, 0.361f, 0.965f, 0.55f);
 
         private RendererTint markerTint;
         private Coroutine pulse;
@@ -33,7 +35,8 @@ namespace DigitalLove.Game.SpaceShaping
             headingLine.widthMultiplier = lineWidth;
         }
 
-        public void Show(TrajectoryResult result, bool solved, Vector3 fieldCentre, float fieldHalf)
+        public void Show(
+            TrajectoryResult result, bool solved, Vector3 fieldCentre, float fieldHalf, bool pending)
         {
             StopPulse();
             int count = result.Points != null ? result.Points.Count : 0;
@@ -44,12 +47,12 @@ namespace DigitalLove.Game.SpaceShaping
             }
 
             FillLine(result.Points);
-            Color color = solved ? success.value : ColorFor(result.Outcome);
+            Color color = pending ? this.pending : solved ? success.value : ColorFor(result.Outcome);
             SetColor(color);
             Vector3 end = result.Points[count - 1];
             Vector3 heading = Heading(result.Points);
             ShowMarker(end, heading, color);
-            if (result.Outcome == TrajectoryOutcome.Miss)
+            if (!pending && result.Outcome == TrajectoryOutcome.Miss)
                 ShowHeading(end, heading, color, DistanceToBox(end, heading, fieldCentre, fieldHalf));
             else
                 HideHeading();

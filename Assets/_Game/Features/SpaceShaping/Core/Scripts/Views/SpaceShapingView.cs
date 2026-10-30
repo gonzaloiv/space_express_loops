@@ -23,12 +23,10 @@ namespace DigitalLove.Game.SpaceShaping
         [Tooltip("Lattice warp: the maximum well displacement, in metres.")]
         [SerializeField] private float warpMax = 0.16f;
 
-        private readonly List<SpaceZone> lastZones = new();
         private ZoneConditions conditions;
         private float zoneFalloff = 0.5f;
         private float minScale = 0.6f;
         private float maxScale = 1.8f;
-        private bool hasSnapshot;
         private Vector3 frameCentre;
         private float frameHalf;
 
@@ -55,27 +53,6 @@ namespace DigitalLove.Game.SpaceShaping
 
         public bool IsScaling => spawner.Cubes.AnyScaling();
 
-        public bool HasChanged()
-        {
-            IReadOnlyList<SpaceZoneView> cubes = spawner.Cubes;
-            if (!hasSnapshot || lastZones.Count != cubes.Count)
-                return true;
-
-            for (int i = 0; i < cubes.Count; i++)
-            {
-                if (Changed(cubes[i].Zone, lastZones[i]))
-                    return true;
-            }
-
-            return false;
-        }
-
-        private static bool Changed(SpaceZone current, SpaceZone last) =>
-            current.Centre != last.Centre
-            || current.HalfExtents != last.HalfExtents
-            || current.Scale != last.Scale
-            || current.Falloff != last.Falloff;
-
         public void ApplyFromSession(SpaceShapingSession session) => spawner.SpawnPlanets(session);
 
         public void SetConditions(ZoneConditions value)
@@ -92,7 +69,6 @@ namespace DigitalLove.Game.SpaceShaping
                 Place(Cube(i), frames[i]);
 
             spawner.HideCubesFrom(count);
-            hasSnapshot = false;
         }
 
         public void SetScaleEnvelope(float min, float max)
@@ -111,16 +87,6 @@ namespace DigitalLove.Game.SpaceShaping
                 return ZoneVerdict.Solved;
 
             return outcome == TrajectoryOutcome.Crash ? ZoneVerdict.Crash : ZoneVerdict.Miss;
-        }
-
-        public void Snapshot()
-        {
-            IReadOnlyList<SpaceZoneView> cubes = spawner.Cubes;
-            lastZones.Clear();
-            for (int i = 0; i < cubes.Count; i++)
-                lastZones.Add(cubes[i].Zone);
-
-            hasSnapshot = true;
         }
 
         public void Render(SpacetimeField field, SpaceShapingSession session)
@@ -155,10 +121,11 @@ namespace DigitalLove.Game.SpaceShaping
         public void StopShips() => spawner.Ships.Stop();
 
         public void TravelShips(SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results) =>
-            spawner.Ships.Travel(Visible(session, results));
+            spawner.Ships.Travel(Visible(session, results), session.StepSecs);
 
-        public void ShowTrajectories(SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results) =>
-            spawner.Lines.Show(Visible(session, results), frameCentre, frameHalf);
+        public void ShowTrajectories(
+            SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results, bool pending) =>
+            spawner.Lines.Show(Visible(session, results), frameCentre, frameHalf, pending);
 
         public void PulseTrajectories() => spawner.Lines.Pulse();
 

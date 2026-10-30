@@ -10,15 +10,16 @@ the ship flies the deformed spacetime.
 
 Active work. The one thing being built.
 
-- [Multi-ship](in-progress/space-shaping-multiship.md) — bake and play a two-ship puzzle from one field
-  edit; N-ready.
+- [Space shaping — a more realistic field](in-progress/space-shaping-realistic-field.md) — a 3D
+  disc/bulge/cluster plus a star with real mass, so the field reads as a galaxy rather than a flat diagram.
+  Starts Mon 2026-11-02.
 
 ## Next
 
 Queued. One plan moves to **Now** when it starts.
 
-- [Space shaping — the sun and the dust](backlog/space-shaping-sun-and-dust.md) — a star with real mass
-  (a source, marked by a reference) plus a digital-noise dust layer that warps with the grid.
+- [Space shaping — rings on some planets](backlog/space-shaping-planet-rings.md) — authored rings on a
+  subset of planets, chosen at puzzle creation and baked with the level.
 
 ## Later
 

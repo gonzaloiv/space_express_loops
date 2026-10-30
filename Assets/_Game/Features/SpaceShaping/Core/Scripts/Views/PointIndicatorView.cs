@@ -4,11 +4,12 @@ public class PointIndicatorView : MonoBehaviour
 {
     [SerializeField] private Transform indicator;
     [SerializeField] private MeshRenderer rend;
+    [Tooltip("Gap above the planet surface, as a fraction of the planet radius.")]
     [SerializeField] private float yOffset = 0.1f;
 
-    private void OnEnable()
+    private void LateUpdate()
     {
-        indicator.localPosition = new Vector3(0, rend.bounds.size.y * rend.transform.lossyScale.y +
-            rend.transform.lossyScale.y * yOffset, 0);
+        float radius = rend.localBounds.extents.y * rend.transform.localScale.y;
+        indicator.localPosition = new Vector3(0f, radius * (1f + yOffset), 0f);
     }
 }

@@ -7,5 +7,6 @@ namespace DigitalLove.Game.SpaceShaping
     {
         public Vector3 home;
         public float scale;
+        public string name;
     }
 }

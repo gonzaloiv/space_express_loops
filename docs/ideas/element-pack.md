@@ -62,8 +62,8 @@ lattice mesh is untouched.
 sun's position is a *source*, so the field bends around it, the ship can crash into it, and
 `SourceConstraints.Separate` pushes the planets clear — a star with its system around it, and the bake
 would automatically route solutions around it. Planned in
-[the sun and the dust](../plans/backlog/space-shaping-sun-and-dust.md); the visual is a **reference
-marker**, not a lit star. Two decisions gate it: whether the cube may **scale** it (a dominant scaleable
+[a more realistic field](../plans/in-progress/space-shaping-realistic-field.md); the visual is a
+**reference marker**, not a lit star. Two decisions gate it: whether the cube may **scale** it (a dominant scaleable
 mass is a puzzle-breaking lever, and `scalable` is always true today), and its **placement** (a star
 belongs at the centre of the system, not above the run midpoint, which would shape the field generator).
 
@@ -79,6 +79,9 @@ This is the biggest galaxy read for the cost: it is what makes empty space read 
 
 Open: a shader veil on the existing lattice (cheapest, no new mesh) or noise-scattered points (more
 depth, one authored mesh). Either way it is authored or computed — never instantiated at runtime.
+
+Not in the current sun plan: dust waits until rings have carried the planet-variety read, because the
+transparent layer is the larger perf and read risk.
 
 ### 4. Decor bodies — the moon — shaped by the cube, weightless
 

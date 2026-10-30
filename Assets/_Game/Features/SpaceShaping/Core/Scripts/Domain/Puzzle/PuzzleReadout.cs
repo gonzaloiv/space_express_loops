@@ -12,13 +12,15 @@ namespace DigitalLove.Game.SpaceShaping
         public bool HasResult { get; }
         public bool PredictedSolved { get; }
         public bool IsChecked { get; }
+        public bool IsFlying { get; }
         public bool IsSolved { get; }
         public bool IsFailed { get; }
         public int Grade { get; }
         public int CommandCount { get; }
 
         private PuzzleReadout(
-            SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results, bool isChecked)
+            SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results,
+            bool isChecked, bool isFlying)
         {
             bool hasResult = results != null;
             EntropySpent = session.EntropyCommitted;
@@ -29,22 +31,32 @@ namespace DigitalLove.Game.SpaceShaping
             HasResult = hasResult;
             PredictedSolved = hasResult && session.IsSolved(results);
             IsChecked = isChecked;
+            IsFlying = hasResult && isFlying;
             IsSolved = isChecked && PredictedSolved;
             IsFailed = isChecked && hasResult && session.IsFailed(results);
             Grade = IsSolved ? session.Grade() : 0;
         }
 
-        private PuzzleReadout(SpaceShapingSession session) : this(session, null, false)
+        private PuzzleReadout(SpaceShapingSession session) : this(session, null, false, false)
         {
         }
 
         public static PuzzleReadout From(
             SpaceShapingSession session, TrajectoryResult result, bool isChecked) =>
-            new(session, new[] { result }, isChecked);
+            new(session, new[] { result }, isChecked, false);
+
+        public static PuzzleReadout From(
+            SpaceShapingSession session, TrajectoryResult result, bool isChecked, bool isFlying) =>
+            new(session, new[] { result }, isChecked, isFlying);
 
         public static PuzzleReadout From(
             SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results, bool isChecked) =>
-            new(session, results, isChecked);
+            new(session, results, isChecked, false);
+
+        public static PuzzleReadout From(
+            SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results,
+            bool isChecked, bool isFlying) =>
+            new(session, results, isChecked, isFlying);
 
         public static PuzzleReadout Pending(SpaceShapingSession session) => new(session);
 
@@ -56,15 +68,19 @@ namespace DigitalLove.Game.SpaceShaping
             && HasResult == other.HasResult
             && PredictedSolved == other.PredictedSolved
             && IsChecked == other.IsChecked
+            && IsFlying == other.IsFlying
             && IsSolved == other.IsSolved
             && IsFailed == other.IsFailed
-            && Grade == other.Grade;
+            && Grade == other.Grade
+            && CommandCount == other.CommandCount;
 
         public override bool Equals(object obj) => obj is PuzzleReadout other && Equals(other);
 
         public override int GetHashCode() =>
             HashCode.Combine(
                 HashCode.Combine(EntropySpent, EntropyPending, EntropyBudget, Outcome),
-                HashCode.Combine(HasResult, PredictedSolved, IsChecked, IsSolved, IsFailed, Grade));
+                HashCode.Combine(
+                    HasResult, PredictedSolved, IsChecked, IsFlying, IsSolved, IsFailed, Grade),
+                CommandCount);
     }
 }

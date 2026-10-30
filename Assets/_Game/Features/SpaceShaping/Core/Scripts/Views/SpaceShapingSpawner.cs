@@ -16,6 +16,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private Transform sourceParent;
         [SerializeField] private TrajectoryLineView trajectoryPrototype;
         [SerializeField] private ShipTravelView shipPrototype;
+        [SerializeField] private float shipStaggerSecs = 0.08f;
         [SerializeField] private Transform shipsParent;
         [SerializeField] private Transform linesParent;
         [SerializeField] private SpaceZoneView cubePrototype;
@@ -44,7 +45,7 @@ namespace DigitalLove.Game.SpaceShaping
             destinationPlanet = Instantiate(destinationPrototype, sourceParent);
             destinationPlanet.Initialize();
             lines = new TrajectoryLinePool(trajectoryPrototype, linesParent);
-            ships = new ShipFlightPool(shipPrototype, shipsParent);
+            ships = new ShipFlightPool(shipPrototype, shipsParent, shipStaggerSecs);
             ships.Completed += OnShipsCompleted;
         }
 
@@ -59,7 +60,7 @@ namespace DigitalLove.Game.SpaceShaping
                 if (i == origin || i == destination)
                     continue;
 
-                Source(slot++).Spawn(session.GetPosition(i), session.GetScale(i), i);
+                Source(slot++).Spawn(session.GetPosition(i), session.GetScale(i), i, session.Name(i));
             }
 
             for (int i = slot; i < pool.Count; i++)
@@ -86,7 +87,7 @@ namespace DigitalLove.Game.SpaceShaping
         private static void Spawn(FieldPlanetBehaviour planet, SpaceShapingSession session, int index)
         {
             if (index >= 0)
-                planet.Spawn(session.GetPosition(index), session.GetScale(index), index);
+                planet.Spawn(session.GetPosition(index), session.GetScale(index), index, session.Name(index));
             else
                 planet.Hide();
         }

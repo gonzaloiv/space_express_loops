@@ -7,6 +7,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
     {
         private const float PreviewHeight = 240f;
         private const int SeedAttempts = 64;
+        private const int MultiSeedAttempts = 12;
 
         [SerializeField] private PuzzleSeed seed;
         [SerializeField] private SpaceShapingSettings settings;
@@ -79,11 +80,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 if (GUILayout.Button("Generate (rebuild)"))
                     Generate();
 
-                using (new EditorGUI.DisabledScope(!ready || PuzzleBrief.From(seed, settings).IsMultiShip))
-                {
-                    if (GUILayout.Button($"Find working seed (from {CurrentSeed()})"))
-                        FindSeed();
-                }
+                if (GUILayout.Button($"Find working seed (from {CurrentSeed()})"))
+                    FindSeed();
 
                 if (GUILayout.Button("Save level"))
                     Save();
@@ -98,7 +96,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             planets = PuzzleArtifactExporter.ExportPlanets(shape);
             PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
             PuzzleBrief brief = PuzzleBrief.From(seed, settings);
-            if (brief.IsMultiShip)
+            if (brief.IsMulti)
                 GenerateMultiShip(sim, brief);
             else
                 generated = PuzzleFieldBake.Bake(planets, sim, brief, out status, out generatedSolution);
@@ -116,7 +114,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         private void FindSeed()
         {
-            PuzzleSeedScanResult result = PuzzleSeedScanner.Find(seed, settings, SeedAttempts);
+            PuzzleBrief brief = PuzzleBrief.From(seed, settings);
+            int attempts = brief.IsMulti ? MultiSeedAttempts : SeedAttempts;
+            PuzzleSeedScanResult result = PuzzleSeedScanner.Find(seed, settings, attempts);
 
             status = result.Status;
             if (!result.Found)
@@ -124,7 +124,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 generated = null;
                 generatedSolution = null;
                 Debug.LogWarning(
-                    $"Puzzle creator: no working seed in {SeedAttempts} from {CurrentSeed()} ({result.Status}).");
+                    $"Puzzle creator: no working seed in {attempts} from {CurrentSeed()} ({result.Status}).");
                 return;
             }
 
@@ -134,8 +134,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             planets = PuzzleArtifactExporter.ExportPlanets(shape);
             generated = result.Puzzle;
             generatedSolution = result.Solution;
-            Debug.Log($"Puzzle creator: seed {result.Seed} baked a verified level "
-                + $"({result.Puzzle.zones} zone(s), {result.Routes} route(s)).");
+            string summary = brief.IsMulti
+                ? $"{result.Puzzle.ships.Length} ship(s), {brief.Relation}"
+                : $"{result.Puzzle.zones} zone(s), {result.Routes} route(s)";
+            Debug.Log($"Puzzle creator: seed {result.Seed} baked a verified level ({summary}).");
             Repaint();
         }
 
@@ -201,9 +203,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         }
 
         private static string BriefText(PuzzleSeed value) =>
-            BriefText(value.translatable, value.zones, value.resizable)
-            + $" · {Mathf.Max(1, value.ships)} ship(s)"
-            + $" · {value.fieldShape}";
+            $"{BriefText(value.translatable, value.zones, value.resizable)}"
+            + $" · {Mathf.Max(1, value.ships)} ship(s) · {value.fieldShape}"
+            + (value.ships > 1 ? $" · {value.relation}" : "");
 
         private static string BriefText(PuzzleData value) =>
             BriefText(value.translatable, value.zones, value.resizable)
@@ -222,9 +224,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 return "Rejected: this creator supports 1–3 zones.";
 
             if (status == PuzzleBakeStatus.NoSolution)
-                return IsMultiShip()
-                    ? "Rejected: no zone rescues the required number of runs by the field alone. Raise "
-                        + "Planet Count (a sparse field has too few runs) or lower Ships."
+                return IsMulti()
+                    ? $"Rejected: no zone rescues {Mathf.Max(1, seed.ships)} runs with "
+                        + $"{seed.relation} across a scale plateau. Raise Planet Count, or try another seed."
                     : "Rejected: no zone bends the bare run onto the destination. The field may be too "
                         + "dense. Use Find working seed.";
 
@@ -246,7 +248,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             return "Set the seed + settings, then Generate (it rebuilds the shape and planets first).";
         }
 
-        private bool IsMultiShip() =>
-            seed != null && settings != null && PuzzleBrief.From(seed, settings).IsMultiShip;
+        private bool IsMulti() =>
+            seed != null && settings != null && PuzzleBrief.From(seed, settings).IsMulti;
     }
 }
