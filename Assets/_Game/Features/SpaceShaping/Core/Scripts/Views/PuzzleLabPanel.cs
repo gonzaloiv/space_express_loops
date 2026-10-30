@@ -14,8 +14,6 @@ namespace DigitalLove.Game.SpaceShaping
         private const string AccentColor = "#3B5CF6";
         private const string DangerColor = "#FF4D40";
 
-        private static readonly string[] Stars = { "-", "★", "★★", "★★★" };
-
         [SerializeField] private SpaceShapingController state;
         [SerializeField] private TMP_Text label;
         [SerializeField] private Transform committedFill;
@@ -57,7 +55,6 @@ namespace DigitalLove.Game.SpaceShaping
             AppendEntropyRow(readout);
             AppendResultRow(readout);
             AppendGradeRow(readout);
-            AppendRewardRow(readout);
             AppendCommandsRow(readout);
             label.SetText(text);
             SetBar(readout);
@@ -86,14 +83,7 @@ namespace DigitalLove.Game.SpaceShaping
         private void AppendGradeRow(PuzzleReadout readout)
         {
             BeginRow("GRADE   ");
-            AppendTint(readout.Grade > 0 ? ValueColor : FaintColor, Stars[readout.Grade]);
-            EndRow();
-        }
-
-        private void AppendRewardRow(PuzzleReadout readout)
-        {
-            BeginRow("REWARD  ");
-            AppendTint(RewardColor(readout.Grade), PuzzleReward.Describe(readout.Grade));
+            AppendTint(GradeColor(readout.Grade), PuzzleReward.Describe(readout.Grade));
             EndRow();
         }
 
@@ -158,7 +148,7 @@ namespace DigitalLove.Game.SpaceShaping
             return "CHECKED " + Outcome(readout);
         }
 
-        private static string RewardColor(int grade)
+        private static string GradeColor(int grade)
         {
             if (grade >= 3)
                 return AccentColor;

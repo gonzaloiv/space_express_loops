@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace DigitalLove.Game.SpaceShaping
 {
     public readonly struct PuzzleReadout
@@ -7,7 +5,6 @@ namespace DigitalLove.Game.SpaceShaping
         public float EntropySpent { get; }
         public float EntropyPending { get; }
         public float EntropyBudget { get; }
-        public float EntropyLeft { get; }
         public TrajectoryOutcome Outcome { get; }
         public bool PredictedSolved { get; }
         public bool IsChecked { get; }
@@ -22,7 +19,6 @@ namespace DigitalLove.Game.SpaceShaping
             EntropySpent = session.EntropyCommitted;
             EntropyPending = session.PendingEntropy;
             EntropyBudget = session.EntropyBudget;
-            EntropyLeft = Mathf.Max(0f, EntropyBudget - EntropySpent);
             Outcome = result.Outcome;
             PredictedSolved = session.IsSolved(result);
             IsChecked = isChecked;

@@ -173,8 +173,8 @@ MonoBehaviour:
   fillHover: {r: 0.7, g: 0.82, b: 1, a: 0.22}
   fillShrink: {r: 0.2, g: 0.6, b: 1, a: 0.28}
   fillMagnify: {r: 1, g: 0.45, b: 0.2, a: 0.28}
-  scaleGain: 2
-  scaleSmoothSecs: 0.08
+  scaleGain: 1
+  scaleSmoothSecs: 0.12
   moveRefuseDistance: 0.02
   resizeRefuseRatio: 0.03
   frameSolved: {r: 0.35, g: 1, b: 0.55, a: 1}

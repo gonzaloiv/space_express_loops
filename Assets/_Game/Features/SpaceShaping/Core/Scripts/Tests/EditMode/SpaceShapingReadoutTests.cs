@@ -38,7 +38,6 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             Assert.AreEqual(2, readout.Grade);
             Assert.AreEqual(0.5f, readout.EntropySpent, 0.0001f);
             Assert.AreEqual(0f, readout.EntropyPending, 0.0001f);
-            Assert.AreEqual(0.5f, readout.EntropyLeft, 0.0001f);
             Assert.AreEqual(1, readout.CommandCount);
         }
 
@@ -71,22 +70,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             Assert.IsTrue(readout.IsChecked);
             Assert.IsFalse(readout.IsSolved);
             Assert.IsTrue(readout.IsFailed);
-            Assert.AreEqual(0f, readout.EntropyLeft, 0.0001f);
             Assert.AreEqual(0, readout.Grade);
-        }
-
-        [Test]
-        public void OverBudgetSolved_SolveWins()
-        {
-            SpaceShapingSession session = new(Setup());
-            session.ApplyZone(RemoteZone(3f));
-
-            PuzzleReadout readout = PuzzleReadout.From(session, Simulate(session), true);
-
-            Assert.IsTrue(readout.IsSolved);
-            Assert.IsFalse(readout.IsFailed);
-            Assert.AreEqual(1, readout.Grade);
-            Assert.AreEqual(0f, readout.EntropyLeft, 0.0001f);
         }
 
         [Test]
@@ -95,11 +79,12 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             SpaceShapingSession session = new(Setup());
             session.ApplyZone(Zone(3f));
 
-            PuzzleResult result = PuzzleResult.From(session, Simulate(session));
+            PuzzleReadout readout = PuzzleReadout.From(session, Simulate(session), true);
 
             Assert.IsTrue(session.IsOverBudget);
-            Assert.AreEqual(PuzzleResultOutcome.Solved, result.Outcome);
-            Assert.AreEqual(1, result.Grade);
+            Assert.IsTrue(readout.IsSolved);
+            Assert.IsFalse(readout.IsFailed);
+            Assert.AreEqual(1, readout.Grade);
         }
 
         [Test]
@@ -110,10 +95,10 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             SpaceShapingSession session = new(setup);
             session.ApplyZone(Zone(1.5f));
 
-            PuzzleResult result = PuzzleResult.From(session, Simulate(session));
+            PuzzleReadout readout = PuzzleReadout.From(session, Simulate(session), true);
 
-            Assert.AreEqual(PuzzleResultOutcome.Miss, result.Outcome);
-            Assert.AreEqual(0, result.Grade);
+            Assert.AreEqual(TrajectoryOutcome.Miss, readout.Outcome);
+            Assert.AreEqual(0, readout.Grade);
             Assert.AreEqual(1, session.CommandCount);
         }
 
@@ -125,10 +110,10 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             SpaceShapingSession session = new(setup);
             session.ApplyZone(Zone(3f));
 
-            PuzzleResult result = PuzzleResult.From(session, Simulate(session));
+            PuzzleReadout readout = PuzzleReadout.From(session, Simulate(session), true);
 
-            Assert.AreEqual(PuzzleResultOutcome.Failed, result.Outcome);
-            Assert.AreEqual(0, result.Grade);
+            Assert.IsTrue(readout.IsFailed);
+            Assert.AreEqual(0, readout.Grade);
             Assert.AreEqual(1, session.CommandCount);
         }
 
@@ -205,8 +190,5 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             session.Simulate();
 
         private static SpaceZone Zone(float scale) => new(Vector3.zero, Vector3.one, scale, 0f);
-
-        private static SpaceZone RemoteZone(float scale) =>
-            new(new Vector3(100f, 0f, 0f), Vector3.one, scale, 0f);
     }
 }

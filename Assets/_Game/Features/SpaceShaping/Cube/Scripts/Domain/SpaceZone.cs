@@ -4,6 +4,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 {
     public readonly struct SpaceZone
     {
+        private const float MinEffect = 0.1f;
+
         public readonly Vector3 Centre;
         public readonly Vector3 HalfExtents;
         public readonly float Scale;
@@ -33,6 +35,13 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         public bool SameRegion(SpaceZone other) =>
             (Centre - other.Centre).sqrMagnitude < 0.000001f
             && (HalfExtents - other.HalfExtents).sqrMagnitude < 0.000001f;
+
+        public SpaceZone Effective(float gain)
+        {
+            float applied = gain > 0f ? gain : 1f;
+            float effect = Mathf.Max(1f + (Scale - 1f) * applied, MinEffect);
+            return new SpaceZone(Centre, HalfExtents, effect, Falloff);
+        }
 
         public void ApplyTo(Vector3[] positions, float[] scales, SourceSpec[] specs)
         {

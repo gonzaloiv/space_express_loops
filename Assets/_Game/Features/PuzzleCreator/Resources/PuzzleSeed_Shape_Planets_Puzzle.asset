@@ -14,28 +14,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.PuzzleData
   id: 
   prefab: {fileID: 0}
-  origin: {x: 0.056238808, y: 0.019783657, z: 0.12880702}
-  destination: {x: -0.06033945, y: -0.01229901, z: -0.203256}
-  zoneCentre: {x: -0.0020503215, y: 0.0037423237, z: -0.037224486}
-  cubeSizeMin: 0.051708862
-  cubeSizeMax: 0.20705909
+  origin: {x: 0.19508895, y: -0.014309261, z: -0.2634617}
+  destination: {x: -0.30366153, y: -0.023950847, z: -0.122035116}
+  zoneCentre: {x: -0.054286286, y: -0.019130055, z: -0.19274841}
+  cubeSizeMin: 0.17454474
+  cubeSizeMax: 0.42954943
   frames:
-  - centre: {x: -0.07915271, y: -0.0056468043, z: -0.09744232}
-    size: 0.12938398
-  - centre: {x: 0.18325688, y: -0.024261873, z: -0.022805082}
-    size: 0.12938398
-  captureRadius: 0.023504028
+  - centre: {x: -0.1509643, y: 0.0638881, z: -0.28426155}
+    size: 0.17454474
+  - centre: {x: -0.32287538, y: -0.030240422, z: 0.050135233}
+    size: 0.17454474
+  captureRadius: 0.07933851
   translatable: 0
   moves: 2
   routes: 1
   resizable: 0
-  entropyBudget: 0.8571428
+  entropyBudget: 0.4285714
   sources:
-  - home: {x: -0.07915271, y: -0.0056468043, z: -0.09744232}
-    scale: 0.15333642
-  - home: {x: 0.18325688, y: -0.024261873, z: -0.022805082}
-    scale: 0.18823552
-  - home: {x: 0.056238808, y: 0.019783657, z: 0.12880702}
-    scale: 0.12568155
-  - home: {x: -0.06033945, y: -0.01229901, z: -0.203256}
-    scale: 0.047008056
+  - home: {x: 0.28734946, y: 0.016786484, z: 0.15755962}
+    scale: 0.26860955
+  - home: {x: -0.18216306, y: 0.009197056, z: 0.27277935}
+    scale: 0.3446086
+  - home: {x: -0.32287538, y: -0.030240422, z: 0.050135233}
+    scale: 0.188034
+  - home: {x: 0.19508895, y: -0.014309261, z: -0.2634617}
+    scale: 0.39049947
+  - home: {x: -0.30366153, y: -0.023950847, z: -0.122035116}
+    scale: 0.15867703
+  - home: {x: -0.1509643, y: 0.0638881, z: -0.28426155}
+    scale: 0.32028046

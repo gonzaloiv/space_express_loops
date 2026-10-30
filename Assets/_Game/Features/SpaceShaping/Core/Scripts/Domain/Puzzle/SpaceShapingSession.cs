@@ -161,16 +161,17 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void UpsertZone(SpaceZone zone)
         {
+            SpaceZone effective = zone.Effective(setup.Sim.ZoneEffectGain);
             for (int i = 0; i < zones.Count; i++)
             {
                 if (!zones[i].SameRegion(zone))
                     continue;
 
-                zones[i] = zone;
+                zones[i] = effective;
                 return;
             }
 
-            zones.Add(zone);
+            zones.Add(effective);
         }
 
         private void ApplyZones()

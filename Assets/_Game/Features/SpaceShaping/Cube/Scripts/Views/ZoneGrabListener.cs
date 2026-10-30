@@ -24,8 +24,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         [SerializeField] private Color fillHover = new(0.7f, 0.82f, 1f, 0.22f);
         [SerializeField] private Color fillShrink = new(0.2f, 0.6f, 1f, 0.28f);
         [SerializeField] private Color fillMagnify = new(1f, 0.45f, 0.2f, 0.28f);
-        [SerializeField] private float scaleGain = 2f;
-        [SerializeField] private float scaleSmoothSecs = 0.08f;
+        [SerializeField] private float scaleGain = 1f;
+        [SerializeField] private float scaleSmoothSecs = 0.12f;
         [SerializeField] private float moveRefuseDistance = 0.02f;
         [SerializeField] private float resizeRefuseRatio = 0.03f;
 

@@ -39,6 +39,9 @@ namespace DigitalLove.Game.SpaceShaping
         [Tooltip("The cube's soft edge, as a fraction of its half-size (0 = hard edge). Shared with the view so a found solution reproduces.")]
         public float zoneFalloff = 0.25f;
 
+        [Tooltip("How hard a zone's scale bites, as a multiplier on its deviation from 1. 1 = the reachable scale is the effect; 1.5 makes a 1.25x pinch read as 1.375x. Reach and entropy still use the raw scale.")]
+        public float zoneEffectGain = 1f;
+
         [Header("Reachable scale")]
         [Tooltip("Smallest scale the player can reach (0.6 = shrink to 60%).")]
         public float minScaleFactor = 0.6f;
