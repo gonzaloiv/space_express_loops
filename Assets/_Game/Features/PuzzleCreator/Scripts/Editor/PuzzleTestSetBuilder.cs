@@ -199,8 +199,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
             field.entropyBudget = found.EntropySpent * PuzzleGrade.BudgetFactor;
             PuzzleData variant = Object.Instantiate(field);
-            variant.zoneCentre = brief.Translatable ? field.zoneCentre : found.Zones[0].centre;
-            variant.cubeSize = found.Zones[0].halfExtents.x * 2f;
+            variant.frames = PuzzleFieldBake.BuildFrames(field, found, brief);
             variant.moves = found.Zones.Length;
             PuzzleVerification check = PuzzleVerifier.Verify(variant, found.Zones, sim);
             Object.DestroyImmediate(field);

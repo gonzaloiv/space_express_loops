@@ -12,10 +12,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public PuzzleFieldShape fieldShape = PuzzleFieldShape.Auto;
 
         [Header("Brief")]
-        [Tooltip("The cube may be moved over the field. A multi-zone level requires it.")]
+        [Tooltip("The cube may be moved over the field. A fixed level places several cubes instead.")]
         public bool translatable;
 
-        [Tooltip("How many zones the solution scales (1–3). Two or more zones need a movable cube.")]
+        [Tooltip("How many zones the solution scales (1–3). A fixed level places that many cubes.")]
         [Min(1)]
         public int moves = 1;
 

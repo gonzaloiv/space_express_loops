@@ -36,17 +36,40 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void Brief_SupportsTranslatableMultiZone()
+        public void Brief_SupportsFixedAndMovableMultiZone()
         {
             Assert.IsTrue(brief.SupportsMoves);
 
             PuzzleBrief fixedMulti = brief;
             fixedMulti.Translatable = false;
-            Assert.IsFalse(fixedMulti.SupportsMoves);
+            Assert.IsTrue(fixedMulti.SupportsMoves);
 
             PuzzleBrief tooMany = brief;
             tooMany.Moves = 4;
             Assert.IsFalse(tooMany.SupportsMoves);
+        }
+
+        [Test]
+        public void Search_FixedMatchesMovable()
+        {
+            PuzzleData field = WideField(brief);
+            PuzzleBrief fixedTwo = brief;
+            fixedTwo.Translatable = false;
+
+            bool movableFound = PuzzleSolutionSearch.TrySelect(field, sim, brief, out PuzzleSolution movable);
+            bool fixedFound = PuzzleSolutionSearch.TrySelect(field, sim, fixedTwo, out PuzzleSolution fixedZones);
+
+            Assert.AreEqual(movableFound, fixedFound);
+            if (!movableFound)
+            {
+                Object.DestroyImmediate(field);
+                return;
+            }
+
+            Assert.AreEqual(movable.Zones.Length, fixedZones.Zones.Length);
+            for (int i = 0; i < movable.Zones.Length; i++)
+                Assert.Less(Vector3.Distance(movable.Zones[i].centre, fixedZones.Zones[i].centre), 1e-4f);
+            Object.DestroyImmediate(field);
         }
 
         [Test]

@@ -10,7 +10,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public bool Resizable;
 
         public bool SupportsMoves =>
-            Moves <= 3 && (Moves <= 1 || Translatable);
+            Moves <= 3;
 
         public static PuzzleBrief From(PuzzleSeed seed, SpaceShapingSettings settings) => new()
         {

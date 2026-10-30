@@ -23,7 +23,6 @@
   <Project Path="DigitalLove.UI.Behaviours.csproj" />
   <Project Path="DigitalLove.UI.DesignSystem.csproj" />
   <Project Path="DigitalLove.VFX.Animation.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.csproj" />
   <Project Path="MegaFiers.MegaShape.Editor.csproj" />
   <Project Path="Klak.Motion.csproj" />
   <Project Path="DigitalLove.FlowControl.csproj" />
@@ -45,6 +44,7 @@
   <Project Path="DigitalLove.Game.Sectors.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Localization.csproj" />
   <Project Path="DigitalLove.VFX.Fader.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.csproj" />
   <Project Path="DigitalLove.TTS.Samples.csproj" />
   <Project Path="DigitalLove.Game.UI.csproj" />
   <Project Path="DigitalLove.Game.Sectors.csproj" />

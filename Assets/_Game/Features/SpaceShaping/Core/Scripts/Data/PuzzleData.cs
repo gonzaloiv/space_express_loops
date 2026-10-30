@@ -10,12 +10,17 @@ namespace DigitalLove.Game.SpaceShaping
         [Header("Space Shaping")]
         public Vector3 origin;
         public Vector3 destination;
+        [Tooltip("Run midpoint; the start frame a movable level ships.")]
         public Vector3 zoneCentre;
         public float cubeSizeMin;
         public float cubeSizeMax;
-        public float cubeSize;
+        [Tooltip("The cube frames the level places: position + size. A fixed level ships the solved "
+            + "zones; a movable level ships one start frame.")]
+        public PuzzleFrame[] frames;
         public float captureRadius;
         public bool translatable;
+        [Tooltip("Zones the solution scales — the bake's zone count, not the cubes placed. A movable "
+            + "level ships one start frame and the player moves it between zones.")]
         public int moves = 1;
         [Tooltip("Baked route clusters: distinct zone sets that arrive within budget.")]
         public int routes = 1;

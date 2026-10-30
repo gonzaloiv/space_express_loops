@@ -66,7 +66,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
             Assert.IsFalse(variant.translatable);
             Assert.AreEqual(1, variant.moves);
-            Assert.Less(Vector3.Distance(variant.zoneCentre, solution[0].centre), 1e-4f);
+            Assert.AreEqual(1, variant.frames.Length);
+            Assert.Less(Vector3.Distance(variant.frames[0].centre, solution[0].centre), 1e-4f);
             Object.DestroyImmediate(variant);
         }
 
@@ -88,16 +89,59 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void Bake_RejectsFixedMultiZone()
+        public void Bake_FixedMultiZone_IsSearched()
         {
             PuzzleBrief multi = brief;
             multi.Moves = 2;
 
-            PuzzleData rejected = PuzzleFieldBake.Bake(
-                planets, sim, multi, out PuzzleBakeStatus status, out _);
+            PuzzleFieldBake.Bake(planets, sim, multi, out PuzzleBakeStatus status, out _);
 
-            Assert.IsNull(rejected);
-            Assert.AreEqual(PuzzleBakeStatus.UnsupportedBrief, status);
+            Assert.AreNotEqual(PuzzleBakeStatus.UnsupportedBrief, status);
+        }
+
+        [Test]
+        public void Frames_FixedShipsOnePerZone()
+        {
+            PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
+            field.zoneCentre = new Vector3(1f, 2f, 3f);
+            PuzzleBrief fixedBrief = brief;
+            fixedBrief.Translatable = false;
+            PuzzleSolution solution = new()
+            {
+                Zones = new[]
+                {
+                    PuzzleZoneCandidates.Zone(new Vector3(0.1f, 0f, 0f), 0.2f, 1.4f, 0.5f),
+                    PuzzleZoneCandidates.Zone(new Vector3(-0.1f, 0f, 0f), 0.2f, 0.6f, 0.5f)
+                }
+            };
+
+            PuzzleFrame[] frames = PuzzleFieldBake.BuildFrames(field, solution, fixedBrief);
+
+            Assert.AreEqual(2, frames.Length);
+            Assert.Less(Vector3.Distance(frames[0].centre, solution.Zones[0].centre), 1e-4f);
+            Assert.AreEqual(0.2f, frames[0].size, 1e-4f);
+            Assert.Less(Vector3.Distance(frames[1].centre, solution.Zones[1].centre), 1e-4f);
+            Object.DestroyImmediate(field);
+        }
+
+        [Test]
+        public void Frames_MovableShipsOneStart()
+        {
+            PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
+            field.zoneCentre = new Vector3(1f, 2f, 3f);
+            PuzzleBrief movable = brief;
+            movable.Translatable = true;
+            PuzzleSolution solution = new()
+            {
+                Zones = new[] { PuzzleZoneCandidates.Zone(new Vector3(9f, 9f, 9f), 0.2f, 1.4f, 0.5f) }
+            };
+
+            PuzzleFrame[] frames = PuzzleFieldBake.BuildFrames(field, solution, movable);
+
+            Assert.AreEqual(1, frames.Length);
+            Assert.Less(Vector3.Distance(frames[0].centre, field.zoneCentre), 1e-4f);
+            Assert.AreEqual(0.2f, frames[0].size, 1e-4f);
+            Object.DestroyImmediate(field);
         }
 
         private static PuzzleData Bake(out PuzzleZone[] solution)
@@ -122,8 +166,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Assert.IsNotNull(solution);
             Assert.AreEqual(1, solution.Length);
             Assert.IsTrue(ContainsSource(variant, solution[0]));
-            Assert.GreaterOrEqual(variant.cubeSize, variant.cubeSizeMin - 1e-4f);
-            Assert.LessOrEqual(variant.cubeSize, variant.cubeSizeMax + 1e-4f);
+            Assert.AreEqual(1, variant.frames.Length);
+            Assert.GreaterOrEqual(variant.frames[0].size, variant.cubeSizeMin - 1e-4f);
+            Assert.LessOrEqual(variant.frames[0].size, variant.cubeSizeMax + 1e-4f);
             Assert.LessOrEqual(check.EntropySpent, variant.entropyBudget / 3f + 1e-3f);
         }
 

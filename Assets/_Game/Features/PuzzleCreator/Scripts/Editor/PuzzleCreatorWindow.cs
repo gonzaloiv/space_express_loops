@@ -162,9 +162,27 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             EditorGUILayout.LabelField("Solution", run.SolvedOutcome.ToString());
             EditorGUILayout.LabelField(
                 "Entropy", $"{run.EntropySpent:F2} / {puzzle.entropyBudget:F2}  ({PuzzleGrade.Stars(run.EntropySpent, puzzle.entropyBudget)}★)");
-            EditorGUILayout.LabelField("Cube", $"{puzzle.cubeSize:F2} m");
+            EditorGUILayout.LabelField("Cubes", FramesText(puzzle));
             EditorGUILayout.LabelField("Steps", puzzle.moves.ToString());
             EditorGUILayout.LabelField("Routes", puzzle.routes.ToString());
+        }
+
+        private static string FramesText(PuzzleData puzzle)
+        {
+            if (puzzle.frames == null || puzzle.frames.Length == 0)
+                return "none";
+
+            float min = puzzle.frames[0].size;
+            float max = puzzle.frames[0].size;
+            for (int i = 1; i < puzzle.frames.Length; i++)
+            {
+                min = Mathf.Min(min, puzzle.frames[i].size);
+                max = Mathf.Max(max, puzzle.frames[i].size);
+            }
+
+            return Mathf.Approximately(min, max)
+                ? $"{puzzle.frames.Length} × {min:F2} m"
+                : $"{puzzle.frames.Length} · {min:F2}–{max:F2} m";
         }
 
         private static string BriefText(PuzzleSeed value) =>
@@ -181,7 +199,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         private static string Message(PuzzleBakeStatus status)
         {
             if (status == PuzzleBakeStatus.UnsupportedBrief)
-                return "Rejected: this creator supports 1–3 zones. Two or more zones need a movable cube.";
+                return "Rejected: this creator supports 1–3 zones.";
 
             if (status == PuzzleBakeStatus.StartNotFailed)
                 return "Rejected: the bare start already arrives. The level needs a failing start "

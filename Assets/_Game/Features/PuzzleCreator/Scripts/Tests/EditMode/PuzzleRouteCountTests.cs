@@ -19,7 +19,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             puzzle.destination = new Vector3(0.35f, 0f, 0f);
             puzzle.cubeSizeMin = 0.1f;
             puzzle.cubeSizeMax = 0.5f;
-            puzzle.cubeSize = 0.21f;
             puzzle.entropyBudget = 100f;
             puzzle.sources = new[]
             {

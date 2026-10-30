@@ -17,30 +17,29 @@ the placed-cube path end to end.
 
 ## 2. Slices
 
-### S1 — Creator + data · open
+### S1 — Creator + data · landed (needs a Unity bake for a real job-3 seed)
 
-- `PuzzleBrief.SupportsMoves` allows `Moves > 1` when fixed (today it requires `Translatable`); the
-  property then reduces to a bare `Moves <= 3`, so inline it at the bake's call site.
-- `PuzzleData` carries the cube frames (position + size) from the bake, replacing `zoneCentre` +
-  `cubeSize`; the solved **scales** are not shipped. The search is unchanged — it already finds each
-  zone's centre, size and scale. The frame count is the move count: `Fits` pins
-  `solution.Length == puzzle.moves`.
-- `PuzzleVerifier.Fits` needs no change: a chain shares one width (`PuzzleBeamSearch` uses `prefix.Size`),
-  so the shared-size rule already holds for fixed multi-zone.
-- The bake guarantees **distinct regions**: `SpaceShapingSession.UpsertZone` merges zones with the same
-  centre and half-extents (`SpaceZone.SameRegion`), so two cubes at the same place and size would
-  collapse into one zone.
-- **Exit:** a fixed 2-cube seed bakes, verifies and saves; a creator test pins it. The exit leans on the
-  field and the settings asset (`planetRadiusMax` well under `runDistance / 2`), so name the seed and the
-  settings the test uses rather than scanning.
+- `PuzzleBrief.SupportsMoves` reduced to `Moves <= 3` — fixed multi-zone is now searched like movable.
+  The property is kept (not inlined) because both the bake and the search gate on it.
+- `PuzzleData` ships `PuzzleFrame[] frames` (position + size) instead of `cubeSize`; `zoneCentre` stays
+  the run midpoint (the start frame a movable level ships). `PuzzleFieldBake.BuildFrames` is the one
+  frame builder, shared with the editor's loose test-set bake. The solved **scales** are not shipped.
+- `PuzzleVerifier.Fits` unchanged: a chain shares one width (`PuzzleBeamSearch` uses `prefix.Size`), so
+  the shared-size rule already holds for fixed multi-zone.
+- **Exit:** unit tests pin the relaxation (`SupportsMoves`, `Bake` no longer returns `UnsupportedBrief`),
+  the fixed/movable search parity, and frame shipping (one per solved zone; one start frame when movable).
+  **Still open:** a real fixed 2-cube seed baked and saved through the creator — needs Find-working-seed
+  in Unity, which this plan could not run. The POC's single level asset was hand-patched with its one
+  frame so it keeps playing.
 
-### S2 — Runtime: the placed cubes · open
+### S2 — Runtime: the placed cubes · landed (needs a headset/POC check)
 
-- `SpaceShapingView` holds a cube per frame — **all present at once** — and the gesture routes to the
-  cube being scaled; `ResetView` places the frames.
-- `SpaceShapingController` previews/commits the **active** cube's zone (the session already upserts
-  several zones by region).
+- `SpaceShapingView` pools a `SpaceZoneView` per frame (all active at once, extras hidden), applies
+  conditions/envelope/falloff to each on creation, and routes `Zone`/`IsScaling`/`Refuse` to the cube
+  being scaled. `SpaceShapingController.ResetView` places the frames; the dead `ApplySolvedScale` and
+  the unused `Zone` property were removed.
 - **Exit:** a 2-cube level plays in the POC — scaling each cube bends the path; reset and next work.
+  **Not yet checked in Unity.**
 
 ### S3 — Legibility · open
 
@@ -68,9 +67,9 @@ Settled by the design change: job 3 teaches several zones on placed fixed cubes;
 
 ## 4. Tests
 
-- Creator: a fixed 2-cube bake verifies; a fixed multi-zone with a one-cube shortcut is rejected
-  (`FewerZones`); `SupportsMoves` allows fixed multi-zone; a level whose solution shrinks one cube and
-  grows the other bakes.
+- Creator: `SupportsMoves` allows fixed multi-zone; fixed/movable search parity; a fixed multi-zone with a
+  one-cube shortcut is rejected (`FewerZones`); frames ship one per solved zone (one start frame when
+  movable). A real fixed 2-cube **bake** is still open (S1's exit).
 - Runtime: N cube views are placed; each scaled zone appears in the session.
 
 ## 5. Out of scope
@@ -81,4 +80,5 @@ Settled by the design change: job 3 teaches several zones on placed fixed cubes;
 ## 6. Risks
 
 - **Legibility** — several cubes bending the same field may clutter; S3 carries that risk.
-- **Rebake** — the frame array changes the asset schema; re-bake the POC levels.
+- **Rebake** — the frame array changes the asset schema; the POC level and the 8-job test set must be
+  re-baked through the creator menu (the single POC level was hand-patched to keep playing meanwhile).

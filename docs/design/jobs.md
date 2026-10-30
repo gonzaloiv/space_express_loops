@@ -22,7 +22,7 @@ general system; this is the specific development of it. Counts are a **stretch g
 | 4 | the lens moves | **yes** · 1 · no · no | 2–3 · multi-well | medium · medium | "where does the lens sit" enters |
 | 5 | the clock (off-path planet) | fixed · 1 · no · no | 1 (off-path) · — · medium | generous · loose | the time face alone |
 | 6 | resize the frame | yes · 1+ · **yes** · no | 3–4 · multi-well | tight · tight | the aperture is the player's |
-| 7–8 | combine | yes · 2+ · yes · no | 3–4 · mixed · deep | tight · tight | mastery: read the field, edit little |
+| 7–8 | combine | yes · 2+ · yes · no | 3–4 · mixed · deep | tight · tight | mastery: read the field, edit little — spread the edit across zones to spend less entropy |
 | later | rotate | yes · 1+ · yes · **yes** | 3+ · multi-well · deep | razor · tight | direction, not just position |
 
 **The several-zones rung.** A fixed cube covers one region, but a level can **place several fixed

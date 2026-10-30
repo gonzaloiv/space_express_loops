@@ -1,7 +1,7 @@
 using DigitalLove.Game.SpaceShaping.Cube;
 using UnityEngine;
 
-namespace DigitalLove.Game.SpaceShaping
+namespace DigitalLove.Game.SpaceShaping.Creator
 {
     [System.Serializable]
     public struct PuzzleZone

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DigitalLove.Game.Nodes;
 using DigitalLove.Game.SpaceShaping.Cube;
@@ -19,35 +20,65 @@ namespace DigitalLove.Game.SpaceShaping
         private const float FramePadding = 0.02f;
 
         private readonly List<FieldPlanetBehaviour> pool = new();
-        private SpaceZoneView cube;
+        private readonly List<SpaceZoneView> cubes = new();
+        private readonly List<SpaceZone> lastZones = new();
+        private FieldPlanetBehaviour destinationPlanet;
+        private ZoneConditions conditions;
+        private float zoneFalloff = 0.5f;
+        private float minScale = 0.6f;
+        private float maxScale = 1.8f;
+        private bool hasSnapshot;
         private Vector3 frameCentre;
         private float frameHalf;
-        private FieldPlanetBehaviour destinationPlanet;
-        private SpaceZone lastZone;
-        private bool hasSnapshot;
 
-        public SpaceZone Zone => cube.Zone;
+        public SpaceZone Zone
+        {
+            get
+            {
+                SpaceZoneView cube = Active();
+                return cube != null ? cube.Zone : default;
+            }
+        }
 
-        public bool IsScaling => cube.IsScaling;
+        public bool IsScaling
+        {
+            get
+            {
+                for (int i = 0; i < cubes.Count; i++)
+                {
+                    if (cubes[i].IsScaling)
+                        return true;
+                }
+
+                return false;
+            }
+        }
 
         private void Awake()
         {
-            cube = Instantiate(cubePrototype, cubeParent);
             destinationPlanet = Instantiate(destinationPrototype, sourceParent);
             destinationPlanet.Initialize();
         }
 
         public bool HasChanged()
         {
-            if (!hasSnapshot)
+            if (!hasSnapshot || lastZones.Count != cubes.Count)
                 return true;
 
-            SpaceZone current = cube.Zone;
-            return current.Centre != lastZone.Centre
-                || current.HalfExtents != lastZone.HalfExtents
-                || current.Scale != lastZone.Scale
-                || current.Falloff != lastZone.Falloff;
+            for (int i = 0; i < cubes.Count; i++)
+            {
+                if (Changed(cubes[i].Zone, lastZones[i]))
+                    return true;
+            }
+
+            return false;
         }
+
+        private static bool Changed(SpaceZone current, SpaceZone last) =>
+            current.Centre != last.Centre
+            || current.HalfExtents != last.HalfExtents
+            || current.Scale != last.Scale
+            || current.Falloff != last.Falloff;
 
         public void ApplyFromSession(SpaceShapingSession session)
         {
@@ -83,20 +114,37 @@ namespace DigitalLove.Game.SpaceShaping
             return -1;
         }
 
-        public void SetConditions(ZoneConditions conditions) => cube.SetConditions(conditions);
-
-        public void SetZoneFrame(Vector3 centre, Vector3 size, float falloff)
+        public void SetConditions(ZoneConditions value)
         {
-            cube.SetFrame(centre, size);
-            cube.SetFalloff(falloff);
+            conditions = value;
+            ForEachCube(cube => cube.SetConditions(value));
         }
 
-        public void SetZoneScale(float scale) => cube.SetScale(scale);
+        public void PlaceFrames(PuzzleFrame[] frames, float falloff)
+        {
+            zoneFalloff = falloff;
+            int count = frames != null ? frames.Length : 0;
+            for (int i = 0; i < count; i++)
+                Place(Cube(i), frames[i]);
 
-        public void SetScaleEnvelope(float min, float max) => cube.SetScaleEnvelope(min, max);
+            for (int i = count; i < cubes.Count; i++)
+                cubes[i].gameObject.SetActive(false);
 
-        public void SetPrediction(bool solved, TrajectoryOutcome outcome) =>
-            cube.SetPrediction(Verdict(solved, outcome));
+            hasSnapshot = false;
+        }
+
+        public void SetScaleEnvelope(float min, float max)
+        {
+            minScale = min;
+            maxScale = max;
+            ForEachCube(cube => cube.SetScaleEnvelope(min, max));
+        }
+
+        public void SetPrediction(bool solved, TrajectoryOutcome outcome)
+        {
+            ZoneVerdict verdict = Verdict(solved, outcome);
+            ForEachCube(cube => cube.SetPrediction(verdict));
+        }
 
         private static ZoneVerdict Verdict(bool solved, TrajectoryOutcome outcome)
         {
@@ -108,7 +156,10 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void Snapshot()
         {
-            lastZone = cube.Zone;
+            lastZones.Clear();
+            for (int i = 0; i < cubes.Count; i++)
+                lastZones.Add(cubes[i].Zone);
+
             hasSnapshot = true;
         }
 
@@ -158,15 +209,54 @@ namespace DigitalLove.Game.SpaceShaping
         public void ShowTrajectory(TrajectoryResult result, bool solved) =>
             trajectory.Show(result, solved, frameCentre, frameHalf);
 
-        public void Refuse() => cube.Refuse();
+        public void Refuse()
+        {
+            SpaceZoneView cube = Active();
+            if (cube != null)
+                cube.Refuse();
+        }
 
         public void PulseTrajectory() => trajectory.Pulse();
 
-        public void ResetZone()
+        private void ForEachCube(Action<SpaceZoneView> apply)
+        {
+            for (int i = 0; i < cubes.Count; i++)
+                apply(cubes[i]);
+        }
+
+        private SpaceZoneView Active()
+        {
+            for (int i = 0; i < cubes.Count; i++)
+            {
+                if (cubes[i].IsScaling)
+                    return cubes[i];
+            }
+
+            return cubes.Count > 0 ? cubes[0] : null;
+        }
+
+        private SpaceZoneView Cube(int index)
+        {
+            while (index >= cubes.Count)
+                cubes.Add(Create());
+
+            return cubes[index];
+        }
+
+        private SpaceZoneView Create()
+        {
+            SpaceZoneView cube = Instantiate(cubePrototype, cubeParent);
+            cube.SetConditions(conditions);
+            cube.SetScaleEnvelope(minScale, maxScale);
+            return cube;
+        }
+
+        private void Place(SpaceZoneView cube, PuzzleFrame frame)
         {
             cube.gameObject.SetActive(true);
             cube.ResetScale();
-            hasSnapshot = false;
+            cube.SetFrame(frame.centre, frame.BoxSize);
+            cube.SetFalloff(zoneFalloff);
         }
 
         private FieldPlanetBehaviour Source(int index)

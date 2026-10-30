@@ -154,10 +154,32 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static PuzzleData Variant(PuzzleData field, PuzzleSolution solution, PuzzleBrief brief)
         {
             PuzzleData puzzle = Object.Instantiate(field);
-            puzzle.zoneCentre = brief.Translatable ? field.zoneCentre : solution.Zones[0].centre;
-            puzzle.cubeSize = solution.Zones[0].halfExtents.x * 2f;
+            puzzle.frames = BuildFrames(field, solution, brief);
             puzzle.moves = solution.Zones.Length;
             return puzzle;
+        }
+
+        // A fixed level ships the solved zone geometry and the player finds the scales; a movable
+        // level ships one start frame at the run midpoint and the player moves and scales it.
+        public static PuzzleFrame[] BuildFrames(
+            PuzzleData field, PuzzleSolution solution, PuzzleBrief brief)
+        {
+            if (!brief.Translatable)
+                return SolvedFrames(solution.Zones);
+
+            return new[]
+            {
+                new PuzzleFrame { centre = field.zoneCentre, size = solution.Zones[0].Width }
+            };
+        }
+
+        private static PuzzleFrame[] SolvedFrames(PuzzleZone[] zones)
+        {
+            PuzzleFrame[] frames = new PuzzleFrame[zones.Length];
+            for (int i = 0; i < zones.Length; i++)
+                frames[i] = new PuzzleFrame { centre = zones[i].centre, size = zones[i].Width };
+
+            return frames;
         }
 
         private static bool StartFails(PuzzleData field, PuzzleSimSettings settings) =>

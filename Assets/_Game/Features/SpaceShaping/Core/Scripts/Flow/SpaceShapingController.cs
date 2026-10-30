@@ -27,8 +27,6 @@ namespace DigitalLove.Game.SpaceShaping
 
         public PuzzleReadout Readout => readout;
 
-        public SpaceZone Zone => view.Zone;
-
         public PuzzleData CurrentPuzzle =>
             puzzles != null && puzzleIndex >= 0 && puzzleIndex < puzzles.Length
                 ? puzzles[puzzleIndex]
@@ -71,18 +69,6 @@ namespace DigitalLove.Game.SpaceShaping
             TrajectoryResult result = preview.Simulate(field, integrator, launch);
             view.Render(field, preview);
             view.ShowTrajectory(result, preview.IsSolved(result));
-        }
-
-        public bool ApplySolvedScale(float scale)
-        {
-            if (session == null || scale <= 0f)
-                return false;
-
-            ResetPuzzle();
-            view.SetZoneScale(scale);
-            session.ApplyZone(view.Zone);
-            ship.Travel(PushField());
-            return true;
         }
 
         private void LateUpdate()
@@ -133,19 +119,8 @@ namespace DigitalLove.Game.SpaceShaping
         private void ResetView()
         {
             PuzzleData puzzle = puzzles[puzzleIndex];
-            view.ResetZone();
             view.SetConditions(puzzle.ToZoneConditions());
-            PuzzleFrame frame = FirstFrame(puzzle);
-            view.SetZoneFrame(frame.centre, frame.BoxSize, settings.zoneFalloff);
-        }
-
-        // One cube until S2 places a cube per frame; the first frame is the level's lead cube.
-        private static PuzzleFrame FirstFrame(PuzzleData puzzle)
-        {
-            if (puzzle.frames != null && puzzle.frames.Length > 0)
-                return puzzle.frames[0];
-
-            return new PuzzleFrame { centre = puzzle.zoneCentre, size = puzzle.cubeSizeMin };
+            view.PlaceFrames(puzzle.frames, settings.zoneFalloff);
         }
 
         private void StartPuzzle()

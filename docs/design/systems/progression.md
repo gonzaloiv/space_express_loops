@@ -148,16 +148,20 @@ a layout.
 | **Shortcut** | `moves 1`, fixed cube, on-path | scale one zone; the space face | 1–2 |
 | **Several zones** | `moves ≥ 2`, fixed cubes | scale and blend the placed zones | 3 |
 | **Move** | `translatable`, `moves 1` | place the lens yourself | 4 |
-| **Multi-zone** | `moves ≥ 2`, `translatable` | place and blend several zones | 7–8 |
+| **Multi-zone** | `moves ≥ 2`, `translatable` | place and blend several zones — a spread edit can spend less entropy | 7–8 |
 | **Clock** | `offPath` | the time face: mass moves the clock, not the path | 5 |
 | **Resize** | `resizable` | the aperture is the player's | 6 |
 | **Bottleneck** *(later)* | several routes share one planet | one edit fixes many routes | later |
 
+**Multi-zone as an efficiency lesson.** Entropy is charged per zone as the net scale change, so a level
+can be authored so the **cheap** solution is to **move the cube** and scale **several zones a little**,
+rather than one zone a lot — spreading the edit beats one big edit on the grade.
+
 Layout is a second axis, from `fieldShape`: **Ring**, **Spiral**, **Cluster**. A job is e.g. *Multi-zone ·
 Spiral*.
 
-Each archetype should have **more than one route** where the brief allows (see the routes rule in the
-polish plan). A job with one route is a single answer, not a variation.
+Each archetype should have **more than one route** where the brief allows. A job with one route is a
+single answer, not a variation.
 
 *Automatic labelling from the brief is possible (a pure function of the brief) and is deferred; the labels
 are design-only until then.*

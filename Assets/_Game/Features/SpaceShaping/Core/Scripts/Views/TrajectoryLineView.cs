@@ -48,7 +48,11 @@ namespace DigitalLove.Game.SpaceShaping
             Vector3 end = result.Points[count - 1];
             Vector3 heading = Heading(result.Points);
             ShowMarker(end, heading, color);
-            ShowHeading(end, heading, color, DistanceToBox(end, heading, fieldCentre, fieldHalf));
+            if (result.Outcome == TrajectoryOutcome.Miss)
+                ShowHeading(end, heading, color, DistanceToBox(end, heading, fieldCentre, fieldHalf));
+            else
+                HideHeading();
+
             line.enabled = true;
         }
 
@@ -126,9 +130,14 @@ namespace DigitalLove.Game.SpaceShaping
             StopPulse();
             line.positionCount = 0;
             line.enabled = false;
+            HideHeading();
+            endMarker.gameObject.SetActive(false);
+        }
+
+        private void HideHeading()
+        {
             headingLine.positionCount = 0;
             headingLine.enabled = false;
-            endMarker.gameObject.SetActive(false);
         }
 
         public void Pulse()
