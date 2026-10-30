@@ -99,10 +99,10 @@ namespace DigitalLove.Game.SpaceShaping
         private void AppendEntropyRow(PuzzleReadout readout)
         {
             BeginRow("ENTROPY");
-            AppendTint(ValueColor, F(readout.EntropySpent));
+            AppendTint(ValueColor, F(readout.EntropyBudget - readout.EntropySpent));
             if (readout.EntropyPending > 0.00005f)
             {
-                text.Append("<color=").Append(AccentColor).Append("> +");
+                text.Append("<color=").Append(AccentColor).Append("> -");
                 text.Append(F(readout.EntropyPending)).Append("</color>");
             }
             AppendTint(FaintColor, " / " + F(readout.EntropyBudget));

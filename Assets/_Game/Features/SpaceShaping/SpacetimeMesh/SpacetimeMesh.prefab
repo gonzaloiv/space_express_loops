@@ -108,8 +108,8 @@ MonoBehaviour:
   sourceMesh: {fileID: 4300000, guid: 117a268f6de7fdd4ab3a48a6b24dc4ad, type: 2}
   gridCount: 5
   sides: 4
-  radius: 0.0025
+  radius: 0.0035
   neutral: {fileID: 11400000, guid: c01d0000000000000000000000000007, type: 2}
   slow: {fileID: 11400000, guid: c01d0000000000000000000000000005, type: 2}
   fast: {fileID: 11400000, guid: c01d0000000000000000000000000006, type: 2}
-  tintStrength: 0.35
+  tintStrength: 2.5

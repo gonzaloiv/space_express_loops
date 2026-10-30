@@ -51,17 +51,21 @@ A second well beside a planet: a double-well the player has to read, authored as
 does not orbit and it is not attached, so the cube transforms it independently of its neighbour (scale a
 zone that covers one and not the other and they separate).
 
-### 2. The sun, in the grid — the cheapest graphic
+### 2. The sun — tried, then removed *(2026-10-30)*
 
-The sun is **a graphic in the lattice style, not a tint**: authored wireframe geometry (a cage or a
-burst) drawn with the same line look as the grid. The lattice is an authored tube mesh
-(`LatticeMeshBuilder`, menu `DigitalLove/Space Shaping/Build Lattice Mesh`) whose vertices the view
-rewrites every frame from `LatticeGrid.Node` and the warp (`SpacetimeMeshView.WarpVertices`), so a sun
-graphic riding that path is shaped by the cube for free.
+A three-ring wireframe graphic was built and placed from the puzzle data, and it read as **another object
+among the planets** — messy, and competing with them for attention. It is gone: the view, the mesh
+builder, the mesh asset, the test, the scene object and the level's `sunCentre` are all removed, and the
+lattice mesh is untouched.
 
-Cost: authored geometry plus a small view extension — the view assumes one fixed vertex layout
-(`samplesPerLine = vertexCount / (3 · gridCount² · sides)`), so the sun either joins that layout or is a
-sibling mesh driven by the same warp delegate. No data, no flag, no parent, no pool.
+**Open — a real mass instead.** The physically right version is not a graphic at all: a **body** at the
+sun's position is a *source*, so the field bends around it, the ship can crash into it, and
+`SourceConstraints.Separate` pushes the planets clear — a star with its system around it, and the bake
+would automatically route solutions around it. Planned in
+[the sun and the dust](../plans/backlog/space-shaping-sun-and-dust.md); the visual is a **reference
+marker**, not a lit star. Two decisions gate it: whether the cube may **scale** it (a dominant scaleable
+mass is a puzzle-breaking lever, and `scalable` is always true today), and its **placement** (a star
+belongs at the centre of the system, not above the run midpoint, which would shape the field generator).
 
 ### 3. Dust — noise around the field
 
@@ -91,8 +95,8 @@ the prediction time-dependent. So the moon is decor by construction, and it need
 - a **parent link** to its planet, so it rides the planet's transformed position after the cube acts;
 - a **deterministic orbit** — a pure function of the level clock (no randomness), so the level relaunches
   identically;
-- a decor prototype in the view, and one decision — whether decor joins `SourceConstraints.Separate`
-  (probably yes, so it does not interpenetrate a planet).
+- a decor prototype in the view. It must **not** join `SourceConstraints.Separate` (see Constraints) —
+  decor is transformed by the cube but never moves a source.
 
 Read: *planets bend, moons decorate* — a moon is never checked because it can never bend anything. That
 is forced by the static field, not chosen.
@@ -106,6 +110,10 @@ The rest of the pack — belt, nebula, station, comet, gate, black hole — each
 - **A belt is not "more planets".** `SourceConstraints.Separate` pushes any pair apart to
   `(scale_i + scale_j) * 0.5 * separationScale` (`SourceConstraints.cs:28`), so a scatter of many tiny
   sources fights the solver — that is a real system, not data.
+- **Decor must not join the separation constraint.** `Separate` pushes *both* bodies of an overlapping
+  pair (`SourceConstraints.cs:32-34`), so a weightless decor body in the same list would displace real
+  planets and change the field — it could break a baked solution. Decor is shaped by the cube, never by
+  the constraint.
 - **No runtime asset creation.** Every element is an authored prefab or a visual drawn from the existing
   lattice — never geometry invented in code.
 - **Determinism.** Motion is allowed only as a **pure function of the level clock** (the moon's orbit), so

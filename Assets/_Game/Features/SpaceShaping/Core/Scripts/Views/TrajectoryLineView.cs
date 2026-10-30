@@ -8,8 +8,9 @@ namespace DigitalLove.Game.SpaceShaping
     public class TrajectoryLineView : MonoBehaviour
     {
         private const int MaxLinePoints = 400;
-        private const float PulseSecs = 0.35f;
+        private const float PulseSecs = 0.5f;
         private const float HeadingEpsilon = 1e-10f;
+        private const float TailDim = 0.2f;
 
         [SerializeField] private LineRenderer line;
         [SerializeField] private LineRenderer headingLine;
@@ -155,7 +156,7 @@ namespace DigitalLove.Game.SpaceShaping
             while (t < PulseSecs)
             {
                 t += Time.deltaTime;
-                float bump = 1f + Mathf.Sin(Mathf.Clamp01(t / PulseSecs) * Mathf.PI) * 0.8f;
+                float bump = 1f + Mathf.Sin(Mathf.Clamp01(t / PulseSecs) * Mathf.PI) * 1.4f;
                 endMarker.localScale = markerBaseScale * bump;
                 yield return null;
             }
@@ -188,9 +189,12 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void SetColor(Color color)
         {
-            line.startColor = color;
+            line.startColor = Dim(color);
             line.endColor = color;
         }
+
+        private static Color Dim(Color color) =>
+            new Color(color.r * TailDim, color.g * TailDim, color.b * TailDim, color.a);
 
         private void SetMarkerColor(Color color) => markerTint.Set(endMarkerRenderer, color);
     }

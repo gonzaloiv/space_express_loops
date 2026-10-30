@@ -27,11 +27,11 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         [Header("Fill - the scaled space")]
         [SerializeField] private float fillIdleAlpha = 0.1f;
-        [SerializeField] private float fillActiveAlpha = 0.28f;
+        [SerializeField] private float fillActiveAlpha = 0.45f;
 
         [Header("Scale")]
-        [SerializeField] private float scaleGain = 1f;
-        [SerializeField] private float scaleSmoothSecs = 0.12f;
+        [SerializeField] private float scaleGain = 0.9f;
+        [SerializeField] private float scaleSmoothSecs = 0.2f;
         [SerializeField] private float moveRefuseDistance = 0.02f;
         [SerializeField] private float resizeRefuseRatio = 0.03f;
 

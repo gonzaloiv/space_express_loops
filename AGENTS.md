@@ -70,3 +70,15 @@ Organize first-party code into folders that describe what it does, so the tree r
 - Prefer a descriptive folder over name prefixes or a flat dump of files.
 - When moving files, move the `.meta` too; keep GUIDs (never re-create assets).
 - Skip `**/Vendor/**`, `**/Samples/**`, and `**/Plugins/**`.
+
+## Tests — pick the suite, do not launch everything
+
+Two EditMode suites, very different cost:
+
+- `DigitalLove.Game.SpaceShaping.Tests.EditMode` — **fast** (seconds). This is the default pass.
+- `DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode` — **bake-heavy**: a full solution search per test, tens of seconds in total. Run it deliberately, not on every change.
+
+`PuzzleShipSweepTests` and `PuzzleShipPlateauTests` are `[Explicit]`: they only run when named. Keep their field/sample counts small — they are smoke checks now, not the original feasibility sweep.
+
+Running tests through the Unity MCP drops the bridge on the domain reload, so job polling can time out or disconnect even though the run finished. Read the result in the Test Runner window; if a run stops starting at all, clear the stuck job first.
+

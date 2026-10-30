@@ -14,11 +14,20 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private FieldPlanetBehaviour destinationPrototype;
         [SerializeField] private Transform sourceParent;
         [SerializeField] private SpacetimeMeshView mesh;
+        [SerializeField] private LatticeDustView dust;
         [SerializeField] private TrajectoryLineView trajectory;
         [SerializeField] private SpaceZoneView cubePrototype;
         [SerializeField] private Transform cubeParent;
         [Tooltip("Visual gap between the origin planet's surface and where the trajectory and ship start, in metres.")]
         [SerializeField] private float launchGap = 0.02f;
+        [Tooltip("Lattice fade: distance from the nearest planet or the run where the fade starts, as a fraction of the field half-extent.")]
+        [SerializeField] private float fadeNear = 0.15f;
+        [Tooltip("Lattice fade: distance from the nearest planet or the run where the lattice is fully transparent, as a fraction of the field half-extent.")]
+        [SerializeField] private float fadeFar = 0.55f;
+        [Tooltip("Lattice warp: how deep the wells pull the lattice, as a multiplier on the field pull.")]
+        [SerializeField] private float warpDepth = 0.3f;
+        [Tooltip("Lattice warp: the maximum well displacement, in metres.")]
+        [SerializeField] private float warpMax = 0.16f;
 
         private const float FramePadding = 0.02f;
 
@@ -34,6 +43,8 @@ namespace DigitalLove.Game.SpaceShaping
         private bool hasSnapshot;
         private Vector3 frameCentre;
         private float frameHalf;
+        private bool dustPlaced;
+        private float dustHalf;
 
         public SpaceZone Zone
         {
@@ -97,7 +108,7 @@ namespace DigitalLove.Game.SpaceShaping
                 if (i == origin || i == destination)
                     continue;
 
-                Source(slot++).Spawn(session.GetPosition(i), session.GetScale(i) * 0.5f, i);
+                Source(slot++).Spawn(session.GetPosition(i), session.GetScale(i), i);
             }
 
             for (int i = slot; i < pool.Count; i++)
@@ -110,7 +121,7 @@ namespace DigitalLove.Game.SpaceShaping
         private static void Spawn(FieldPlanetBehaviour planet, SpaceShapingSession session, int index)
         {
             if (index >= 0)
-                planet.Spawn(session.GetPosition(index), session.GetScale(index) * 0.5f, index);
+                planet.Spawn(session.GetPosition(index), session.GetScale(index), index);
             else
                 planet.Hide();
         }
@@ -143,6 +154,7 @@ namespace DigitalLove.Game.SpaceShaping
                 cubes[i].gameObject.SetActive(false);
 
             hasSnapshot = false;
+            dustPlaced = false;
         }
 
         public void SetScaleEnvelope(float min, float max)
@@ -178,8 +190,21 @@ namespace DigitalLove.Game.SpaceShaping
         public void Render(SpacetimeField field, SpaceShapingSession session)
         {
             Frame(session, out frameCentre, out frameHalf);
-            LatticeWarp warp = new(field, session.Zones);
-            mesh.Render(warp.Warp, WarpStrength(session.Zones), frameCentre, frameHalf);
+            LatticeWarp warp = new(field, session.Zones, warpDepth, warpMax);
+            ContentFade fade = new(session, frameHalf * fadeNear, frameHalf * fadeFar);
+            mesh.Render(warp.Warp, fade.Alpha, WarpStrength(session.Zones), frameCentre, frameHalf);
+            RenderDust(warp.Warp, session);
+        }
+
+        private void RenderDust(Func<Vector3, Vector3> warp, SpaceShapingSession session)
+        {
+            if (!dustPlaced)
+            {
+                dustHalf = frameHalf;
+                dustPlaced = true;
+            }
+
+            dust.Render(warp, session.ZoneCentre, dustHalf);
         }
 
         private static float WarpStrength(IReadOnlyList<SpaceZone> zones)
@@ -196,11 +221,26 @@ namespace DigitalLove.Game.SpaceShaping
 
         private static void Frame(SpaceShapingSession session, out Vector3 centre, out float half)
         {
-            Vector3 min = Vector3.Min(session.Origin, session.Destination);
-            Vector3 max = Vector3.Max(session.Origin, session.Destination);
+            Vector3 min = session.Origin;
+            Vector3 max = session.Origin;
+            Encapsulate(ref min, ref max, session.Destination);
+            for (int i = 0; i < session.SourceCount; i++)
+            {
+                Vector3 position = session.Home(i);
+                float radius = session.HomeScale(i) * 0.5f;
+                Encapsulate(ref min, ref max, position - Vector3.one * radius);
+                Encapsulate(ref min, ref max, position + Vector3.one * radius);
+            }
+
             centre = (min + max) * 0.5f;
             Vector3 size = max - min;
             half = Mathf.Max(Mathf.Max(size.x, size.y), size.z) * 0.5f + FramePadding;
+        }
+
+        private static void Encapsulate(ref Vector3 min, ref Vector3 max, Vector3 point)
+        {
+            min = Vector3.Min(min, point);
+            max = Vector3.Max(max, point);
         }
 
         public Vector3 LaunchPoint(SpaceShapingSession session)

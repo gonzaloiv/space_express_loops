@@ -7,9 +7,9 @@ namespace DigitalLove.Game.SpaceShaping
 {
     public class ShipTravelView : MonoBehaviour
     {
-        [SerializeField] private float minTravelSecs = 0.8f;
-        [SerializeField] private float maxTravelSecs = 3.5f;
-        [SerializeField] private float travelSecsPerPoint = 0.02f;
+        [SerializeField] private float minTravelSecs = 0.45f;
+        [SerializeField] private float maxTravelSecs = 2.2f;
+        [SerializeField] private float travelSecsPerPoint = 0.012f;
         [SerializeField] private float turnDegPerSec = 720f;
         [SerializeField] private TrailRenderer trail;
 

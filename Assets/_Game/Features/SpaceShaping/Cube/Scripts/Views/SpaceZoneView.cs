@@ -7,6 +7,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
     {
         [SerializeField] private float falloff = 0.5f;
         [SerializeField] private float contentInsetFraction = 0.05f;
+        [SerializeField] private float throbAmount = 0.5f;
         [SerializeField] private Transform contentVisual;
         [SerializeField] private ZoneGrabListener listener;
 
@@ -73,7 +74,11 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         public void SetFalloff(float value) => falloff = Mathf.Max(value, 0f);
 
-        public void SetScale(float value) => scale = Mathf.Max(value, 0.01f);
+        public void SetScale(float value)
+        {
+            scale = Mathf.Max(value, 0.01f);
+            ApplyContentVisual();
+        }
 
         public void SetScaleEnvelope(float min, float max) => listener.SetScaleEnvelope(min, max);
 
@@ -104,10 +109,11 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
             Vector3 size = Size;
             Vector3 content = ContentSize;
+            float throb = 1f + Mathf.Abs(scale - 1f) * throbAmount;
             contentVisual.localScale = new Vector3(
                 SafeRatio(content.x, size.x),
                 SafeRatio(content.y, size.y),
-                SafeRatio(content.z, size.z));
+                SafeRatio(content.z, size.z)) * throb;
         }
 
         private static float SafeRatio(float content, float size) =>

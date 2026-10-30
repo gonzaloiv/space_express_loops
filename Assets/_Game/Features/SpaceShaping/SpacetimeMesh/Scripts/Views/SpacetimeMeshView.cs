@@ -15,13 +15,15 @@ namespace DigitalLove.Game.SpaceShaping.Grid
         [SerializeField] private ColorValue neutral;
         [SerializeField] private ColorValue slow;
         [SerializeField] private ColorValue fast;
-        [SerializeField] private float tintStrength = 0.35f;
+        [SerializeField] private float tintStrength = 2.5f;
 
         private Mesh mesh;
         private Vector3[] vertices;
+        private Color[] colors;
         private int samplesPerLine;
         private RendererTint tint;
         private Func<Vector3, Vector3> lastWarp;
+        private Func<Vector3, float> lastFade;
         private float lastStrength;
         private Vector3 lastCentre;
         private float lastHalf;
@@ -33,13 +35,14 @@ namespace DigitalLove.Game.SpaceShaping.Grid
         public float Radius => radius;
 
         public void Render(
-            Func<Vector3, Vector3> warp, float warpStrength, Vector3 centre, float half)
+            Func<Vector3, Vector3> warp, Func<Vector3, float> fade,
+            float warpStrength, Vector3 centre, float half)
         {
-            Remember(warp, warpStrength, centre, half);
+            Remember(warp, fade, warpStrength, centre, half);
             EnsureMesh();
             transform.localPosition = centre;
             transform.localRotation = Quaternion.identity;
-            WarpVertices(warp, half);
+            WarpVertices(warp, fade, half);
             CommitMesh();
             ApplyTint(warpStrength);
         }
@@ -52,15 +55,17 @@ namespace DigitalLove.Game.SpaceShaping.Grid
         }
 
         private void Remember(
-            Func<Vector3, Vector3> warp, float warpStrength, Vector3 centre, float half)
+            Func<Vector3, Vector3> warp, Func<Vector3, float> fade,
+            float warpStrength, Vector3 centre, float half)
         {
             lastWarp = warp;
+            lastFade = fade;
             lastStrength = warpStrength;
             lastCentre = centre;
             lastHalf = half;
         }
 
-        private void WarpVertices(Func<Vector3, Vector3> warp, float half)
+        private void WarpVertices(Func<Vector3, Vector3> warp, Func<Vector3, float> fade, float half)
         {
             Vector3 gridMin = new(-half, -half, -half);
             Vector3 gridMax = new(half, half, half);
@@ -74,6 +79,7 @@ namespace DigitalLove.Game.SpaceShaping.Grid
                     sample.Axis, sample.NodeIndex, sample.I, sample.J, gridCount, gridMin, gridMax);
                 Vector3 warpNode = transform.parent.InverseTransformPoint(transform.TransformPoint(node));
                 Vector3 warped = warp(warpNode);
+                colors[v] = new Color(1f, 1f, 1f, fade(warped));
                 Vector3 local = transform.InverseTransformPoint(transform.parent.TransformPoint(warped));
                 vertices[v] = local + LatticeGrid.RingOffset(sample.Axis, sample.Side, sides) * radius;
             }
@@ -93,6 +99,7 @@ namespace DigitalLove.Game.SpaceShaping.Grid
         private void CommitMesh()
         {
             mesh.SetVertices(vertices);
+            mesh.SetColors(colors);
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
             meshRenderer.enabled = Application.isPlaying;
@@ -114,6 +121,7 @@ namespace DigitalLove.Game.SpaceShaping.Grid
 
             meshFilter.sharedMesh = mesh;
             vertices = new Vector3[mesh.vertexCount];
+            colors = new Color[mesh.vertexCount];
             samplesPerLine = mesh.vertexCount / (3 * gridCount * gridCount * sides);
         }
 
@@ -138,8 +146,8 @@ namespace DigitalLove.Game.SpaceShaping.Grid
 
         private void OnValidate()
         {
-            if (mesh != null && lastWarp != null && lastHalf > 0f)
-                Render(lastWarp, lastStrength, lastCentre, lastHalf);
+            if (mesh != null && lastWarp != null && lastFade != null && lastHalf > 0f)
+                Render(lastWarp, lastFade, lastStrength, lastCentre, lastHalf);
         }
 
         private void OnDestroy()

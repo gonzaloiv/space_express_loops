@@ -57,6 +57,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         public Vector3 Home(int index) => setup.Sources[index].Home;
 
+        public float HomeScale(int index) => setup.Sources[index].InitialScale;
+
         public Vector3 GetPosition(int index) => positions[index];
 
         public float GetScale(int index) => scales[index];

@@ -10,12 +10,15 @@ the ship flies the deformed spacetime.
 
 Active work. The one thing being built.
 
-- [Multi-ship spike](in-progress/space-shaping-multiship-spike.md) — can one zone rescue two ships?
-  A creator-side measurement before any runtime work.
+- [Multi-ship](in-progress/space-shaping-multiship.md) — bake and play a two-ship puzzle from one field
+  edit; N-ready.
 
 ## Next
 
-_Empty._
+Queued. One plan moves to **Now** when it starts.
+
+- [Space shaping — the sun and the dust](backlog/space-shaping-sun-and-dust.md) — a star with real mass
+  (a source, marked by a reference) plus a digital-noise dust layer that warps with the grid.
 
 ## Later
 

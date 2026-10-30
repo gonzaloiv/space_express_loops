@@ -17,6 +17,7 @@
   <Project Path="DigitalLove.Game.Levels.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.csproj" />
   <Project Path="DigitalLove.Game.States.Setup.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode.csproj" />
   <Project Path="Vendor.GameAnalytics.csproj" />
   <Project Path="DigitalLove.Interactables.XRI.csproj" />
   <Project Path="DigitalLove.Audio.Runtime.csproj" />
@@ -30,6 +31,7 @@
   <Project Path="DigitalLove.Global.Editor.csproj" />
   <Project Path="DOTween.Modules.csproj" />
   <Project Path="DigitalLove.XR.MRUK.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.csproj" />
   <Project Path="Klak.Motion.Editor.csproj" />
   <Project Path="DigitalLove.Interactables.OculusInteraction.Samples.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.Hands.csproj" />
@@ -40,11 +42,9 @@
   <Project Path="DigitalLove.Analytics.csproj" />
   <Project Path="DigitalLove.VFX.Materials.Editor.csproj" />
   <Project Path="DigitalLove.XR.OVR.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Game.Sectors.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Localization.csproj" />
   <Project Path="DigitalLove.VFX.Fader.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.csproj" />
   <Project Path="DigitalLove.TTS.Samples.csproj" />
   <Project Path="DigitalLove.Game.UI.csproj" />
   <Project Path="DigitalLove.Game.Sectors.csproj" />
@@ -61,7 +61,6 @@
   <Project Path="DigitalLove.Timeline.Integrations.csproj" />
   <Project Path="DigitalLove.Game.Persistence.csproj" />
   <Project Path="DigitalLove.XR.MetaPlatform.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.Grid.Editor.csproj" />
   <Project Path="DigitalLove.Game.Flow.GameStartState.csproj" />
   <Project Path="DigitalLove.Analytics.GameAnalytics.csproj" />
   <Project Path="DigitalLove.Game.TTS.csproj" />
@@ -91,6 +90,7 @@
   <Project Path="DigitalLove.Reflex.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Creator.Editor.csproj" />
   <Project Path="DigitalLove.Analytics.Integrations.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Grid.Editor.csproj" />
   <Project Path="DigitalLove.FlowControl.Routes.Editor.csproj" />
   <Project Path="DigitalLove.Audio.Samples.csproj" />
   <Project Path="DigitalLove.Interactables.Keypad.csproj" />

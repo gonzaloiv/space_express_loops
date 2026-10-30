@@ -6,17 +6,20 @@ namespace DigitalLove.Game.SpaceShaping
 {
     public readonly struct LatticeWarp
     {
-        private const float DepthScale = 0.15f;
-        private const float MaxDisplacement = 0.08f;
         private const float ZoneShells = 3f;
 
         private readonly SpacetimeField field;
         private readonly IReadOnlyList<SpaceZone> zones;
+        private readonly float depthScale;
+        private readonly float maxDisplacement;
 
-        public LatticeWarp(SpacetimeField field, IReadOnlyList<SpaceZone> zones)
+        public LatticeWarp(
+            SpacetimeField field, IReadOnlyList<SpaceZone> zones, float depthScale, float maxDisplacement)
         {
             this.field = field;
             this.zones = zones;
+            this.depthScale = depthScale;
+            this.maxDisplacement = maxDisplacement;
         }
 
         public Vector3 Warp(Vector3 node)
@@ -39,9 +42,9 @@ namespace DigitalLove.Game.SpaceShaping
             if (field == null)
                 return warped;
 
-            Vector3 pull = field.Pull(warped) * DepthScale;
-            if (pull.sqrMagnitude > MaxDisplacement * MaxDisplacement)
-                pull = pull.normalized * MaxDisplacement;
+            Vector3 pull = field.Pull(warped) * depthScale;
+            if (pull.sqrMagnitude > maxDisplacement * maxDisplacement)
+                pull = pull.normalized * maxDisplacement;
 
             return warped + pull;
         }
