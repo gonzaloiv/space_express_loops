@@ -4,7 +4,7 @@
 into play; starts after the PoC is integrated into the main scene.
 
 **Related:** [progression](../../design/systems/progression.md) · [jobs](../../design/jobs.md) ·
-[core loop](../../design/core-loop.md) · [first-minute read](../in-progress/first-minute-read.md)
+[core loop](../../design/core-loop.md)
 
 ## 1. Why
 

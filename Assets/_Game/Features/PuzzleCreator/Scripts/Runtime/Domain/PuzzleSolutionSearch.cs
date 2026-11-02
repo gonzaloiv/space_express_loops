@@ -16,11 +16,19 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return false;
             }
 
+            PuzzleSolutionContext context =
+                PuzzleSolutionContext.Create(puzzle, settings, brief.Mechanism);
+            return TrySelect(context, brief, out solution);
+        }
+
+        private static bool TrySelect(
+            PuzzleSolutionContext context, PuzzleBrief brief, out PuzzleSolution solution)
+        {
             if (brief.Zones > 1)
-                return PuzzleBeamSearch.TrySelect(puzzle, settings, brief, out solution);
+                return PuzzleBeamSearch.TrySelect(context, brief, out solution);
 
             CentreHit hit = BestCentre(
-                puzzle, settings, PuzzleZoneCandidates.Centres(puzzle, puzzle.cubeSizeMax));
+                context, PuzzleZoneCandidates.Centres(context.Puzzle, context.Puzzle.cubeSizeMax));
             if (!hit.Found)
             {
                 solution = default;
@@ -28,7 +36,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             }
 
             PuzzleSolution[] fine = Scan(
-                puzzle, settings, hit.Centre, PuzzleZoneCandidates.DefaultSamples);
+                context, hit.Centre, PuzzleZoneCandidates.DefaultSamples);
             solution = fine.Length > 0 ? Best(fine) : hit.Solution;
             return true;
         }
@@ -37,24 +45,27 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleData puzzle, PuzzleSimSettings settings, PuzzleBrief brief, float width,
             out PuzzleSolution solution)
         {
+            PuzzleSolutionContext context =
+                PuzzleSolutionContext.Create(puzzle, settings, PuzzleMechanism.Any);
             if (brief.Zones <= 1)
-                return TryBestSingleAtWidth(puzzle, settings, width, out solution);
+                return TryBestSingleAtWidth(context, width, out solution);
 
-            return PuzzleBeamSearch.TrySelect(puzzle, settings, brief, width, out solution);
+            return PuzzleBeamSearch.TrySelect(context, brief, width, out solution);
         }
 
         private static bool TryBestSingleAtWidth(
-            PuzzleData puzzle, PuzzleSimSettings settings, float width, out PuzzleSolution solution)
+            PuzzleSolutionContext context, float width, out PuzzleSolution solution)
         {
             solution = default;
-            Vector3[] centres = PuzzleZoneCandidates.Centres(puzzle, Mathf.Max(width, 0.01f));
+            Vector3[] centres = PuzzleZoneCandidates.Centres(
+                context.Puzzle, Mathf.Max(width, 0.01f));
             float[] sizes = { width };
             float[] scales = PuzzleZoneCandidates.Scales(
-                settings, PuzzleZoneCandidates.DefaultSamples);
+                context.Settings, PuzzleZoneCandidates.DefaultSamples);
             for (int c = 0; c < centres.Length; c++)
             {
                 PuzzleSolution candidate = BestEntropyAtCentre(
-                    puzzle, settings, centres[c], sizes, scales);
+                    context, centres[c], sizes, scales);
                 if (candidate.Zones != null
                     && (solution.Zones == null || candidate.EntropySpent < solution.EntropySpent))
                     solution = candidate;
@@ -63,9 +74,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return solution.Zones != null;
         }
 
- private static PuzzleSolution BestEntropyAtCentre(
-            PuzzleData puzzle, PuzzleSimSettings settings, Vector3 centre, float[] sizes,
-            float[] scales)
+        private static PuzzleSolution BestEntropyAtCentre(
+            PuzzleSolutionContext context, Vector3 centre, float[] sizes, float[] scales)
         {
             PuzzleSolution best = default;
             for (int s = 0; s < sizes.Length; s++)
@@ -73,8 +83,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 for (int i = 0; i < scales.Length; i++)
                 {
                     PuzzleZone zone = PuzzleZoneCandidates.Zone(
-                        centre, sizes[s], scales[i], settings.ZoneFalloff);
-                    if (!TryZone(puzzle, settings, zone, out PuzzleSolution candidate))
+                        centre, sizes[s], scales[i], context.Settings.ZoneFalloff);
+                    if (!TryZone(context, zone, out PuzzleSolution candidate))
                         continue;
 
                     if (best.Zones == null || candidate.EntropySpent < best.EntropySpent)
@@ -85,30 +95,30 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return best;
         }
 
-
-
         private static bool TryZone(
-            PuzzleData puzzle, PuzzleSimSettings settings, PuzzleZone zone,
-            out PuzzleSolution solution)
+            PuzzleSolutionContext context, PuzzleZone zone, out PuzzleSolution solution)
         {
             solution = default;
-            if (PuzzleZoneCandidates.ContainsEndpoint(zone, puzzle))
+            if (PuzzleZoneCandidates.ContainsEndpoint(zone, context.Puzzle))
                 return false;
 
-            if (!PuzzleZoneCandidates.CoversSource(zone, puzzle))
+            if (!PuzzleZoneCandidates.CoversSource(zone, context.Puzzle))
                 return false;
 
-            return PuzzleZoneRun.TryArrive(puzzle, settings, zone, out solution);
+            if (!PuzzleZoneRun.Simulate(context, new[] { zone }, out solution, out _))
+                return false;
+
+            return context.Matches(solution.Kind);
         }
 
         private static CentreHit BestCentre(
-            PuzzleData puzzle, PuzzleSimSettings settings, Vector3[] centres)
+            PuzzleSolutionContext context, Vector3[] centres)
         {
             CentreHit hit = default;
             for (int i = 0; i < centres.Length; i++)
             {
                 PuzzleSolution candidate = Best(
-                    Scan(puzzle, settings, centres[i], PuzzleZoneCandidates.CoarseSamples));
+                    Scan(context, centres[i], PuzzleZoneCandidates.CoarseSamples));
                 if (candidate.Zones == null)
                     continue;
 
@@ -124,18 +134,19 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         }
 
         private static PuzzleSolution[] Scan(
-            PuzzleData puzzle, PuzzleSimSettings settings, Vector3 centre, int samples)
+            PuzzleSolutionContext context, Vector3 centre, int samples)
         {
             List<PuzzleSolution> found = new();
-            float[] sizes = PuzzleZoneCandidates.Sizes(puzzle);
-            float[] scales = PuzzleZoneCandidates.Scales(settings, Mathf.Max(MinSamples, samples));
+            float[] sizes = PuzzleZoneCandidates.Sizes(context.Puzzle);
+            float[] scales = PuzzleZoneCandidates.Scales(
+                context.Settings, Mathf.Max(MinSamples, samples));
             for (int s = 0; s < sizes.Length; s++)
             {
                 for (int i = 0; i < scales.Length; i++)
                 {
                     PuzzleZone zone = PuzzleZoneCandidates.Zone(
-                        centre, sizes[s], scales[i], settings.ZoneFalloff);
-                    if (TryZone(puzzle, settings, zone, out PuzzleSolution solution))
+                        centre, sizes[s], scales[i], context.Settings.ZoneFalloff);
+                    if (TryZone(context, zone, out PuzzleSolution solution))
                         found.Add(solution);
                 }
             }

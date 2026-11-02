@@ -9,6 +9,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         FewerZones,
         SingleRoute,
         Unverified,
-        UnsupportedBrief
+        UnsupportedBrief,
+        NotCurved,
+        NotCleared,
+        NotMixed,
+        UnsupportedMechanism,
+        WrongRoleRoute,
+        StartNotBlocked
     }
 }

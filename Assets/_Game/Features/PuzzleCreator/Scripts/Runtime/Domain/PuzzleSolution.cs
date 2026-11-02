@@ -4,5 +4,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     {
         public PuzzleZone[] Zones;
         public float EntropySpent;
+        public PuzzleSolutionKind Kind;
+        public float Deviation;
     }
 }

@@ -99,6 +99,27 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
+        public void Search_RequestedRole_ReturnsMatchingKind()
+        {
+            PuzzleData puzzle = Puzzle();
+            PuzzleBrief requested = brief;
+
+            requested.Mechanism = PuzzleMechanism.Curve;
+            if (PuzzleSolutionSearch.TrySelect(puzzle, settings, requested, out PuzzleSolution curve))
+                Assert.AreEqual(PuzzleSolutionKind.Curve, curve.Kind);
+
+            requested.Mechanism = PuzzleMechanism.Clear;
+            if (PuzzleSolutionSearch.TrySelect(puzzle, settings, requested, out PuzzleSolution clear))
+                Assert.AreEqual(PuzzleSolutionKind.Clear, clear.Kind);
+
+            requested.Mechanism = PuzzleMechanism.Mixed;
+            if (PuzzleSolutionSearch.TrySelect(puzzle, settings, requested, out PuzzleSolution mixed))
+                Assert.AreEqual(PuzzleSolutionKind.Mixed, mixed.Kind);
+
+            Object.DestroyImmediate(puzzle);
+        }
+
+        [Test]
         public void Verify_MissingSolution_DoesNotSolve()
         {
             PuzzleData bare = Puzzle();

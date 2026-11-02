@@ -59,6 +59,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             wasScaling = false;
             isFlying = false;
+            nextPreviewTime = 0f;
             ResetView();
             session.Reset();
             view.SoftResetShips(session);
@@ -162,6 +163,7 @@ namespace DigitalLove.Game.SpaceShaping
         private void ResetView()
         {
             PuzzleData puzzle = puzzles[puzzleIndex];
+            view.ClearPrediction();
             view.SetConditions(puzzle.ToZoneConditions());
             view.PlaceFrames(puzzle.frames, settings.zoneFalloff);
         }

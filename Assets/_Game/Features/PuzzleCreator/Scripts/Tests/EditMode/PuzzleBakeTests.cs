@@ -47,6 +47,30 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
+        public void Bake_RequestedRole_RejectsCheaperWrongRole()
+        {
+            PuzzleData baseline = Bake(out _, out PuzzleSolutionKind actual);
+            PuzzleMechanism requested = actual == PuzzleSolutionKind.Curve
+                ? PuzzleMechanism.Clear
+                : PuzzleMechanism.Curve;
+            PuzzleBrief role = brief;
+            role.Mechanism = requested;
+
+            PuzzleData baked = PuzzleFieldBake.Bake(
+                planets, sim, role, out PuzzleBakeStatus status, out _,
+                out _);
+
+            Assert.IsNull(baked, "a cheaper or equal wrong-role route must reject the seed");
+            Assert.IsTrue(
+                status == PuzzleBakeStatus.WrongRoleRoute
+                || status == PuzzleBakeStatus.NotCleared
+                || status == PuzzleBakeStatus.NotCurved,
+                $"unexpected status {status}");
+
+            Object.DestroyImmediate(baseline);
+        }
+
+        [Test]
         public void Bake_IsDeterministic()
         {
             PuzzleData first = Bake(out PuzzleZone[] firstSolution);
@@ -72,20 +96,24 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void Brief_CarriesTheSeedConditions()
+        public void Bake_TutorialStartShowsABlocker()
         {
-            PuzzleSeed authored = ScriptableObject.CreateInstance<PuzzleSeed>();
-            authored.translatable = true;
-            authored.zones = 2;
-            authored.resizable = true;
+            PuzzleBrief tutorial = brief;
+            tutorial.NoFail = true;
 
-            PuzzleBrief mapped = PuzzleBrief.From(authored, settings);
+            PuzzleData baked = PuzzleFieldBake.Bake(
+                planets, sim, tutorial, out PuzzleBakeStatus status,
+                out PuzzleZone[] solution);
 
-            Assert.AreEqual(settings.endpointClearance, mapped.EndpointClearance, 1e-4f);
-            Assert.IsTrue(mapped.Translatable);
-            Assert.AreEqual(2, mapped.Zones);
-            Assert.IsTrue(mapped.Resizable);
-            Object.DestroyImmediate(authored);
+            if (baked == null)
+            {
+                Assert.AreEqual(PuzzleBakeStatus.StartNotBlocked, status);
+                return;
+            }
+
+            PuzzleVerification check = PuzzleVerifier.Verify(baked, solution, sim);
+            Assert.IsTrue(PuzzleStartCheck.ShowsBlocker(check, baked, sim));
+            Object.DestroyImmediate(baked);
         }
 
         [Test]
@@ -144,10 +172,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Object.DestroyImmediate(field);
         }
 
-        private static PuzzleData Bake(out PuzzleZone[] solution)
+        private static PuzzleData Bake(out PuzzleZone[] solution) =>
+            Bake(out solution, out _);
+
+        private static PuzzleData Bake(out PuzzleZone[] solution, out PuzzleSolutionKind kind)
         {
             PuzzleData variant = PuzzleFieldBake.Bake(
-                planets, sim, brief, out PuzzleBakeStatus status, out solution);
+                planets, sim, brief, out PuzzleBakeStatus status, out solution, out kind);
 
             Assert.AreEqual(PuzzleBakeStatus.Baked, status);
             Assert.IsNotNull(variant);

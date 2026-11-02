@@ -11,26 +11,26 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private const float SizeTolerance = 0.0001f;
 
         public static bool TrySelect(
-            PuzzleData puzzle, PuzzleSimSettings settings, PuzzleBrief brief, out PuzzleSolution solution) =>
-            TrySelect(puzzle, settings, brief, 0f, out solution);
+            PuzzleSolutionContext solutionContext, PuzzleBrief brief, out PuzzleSolution solution) =>
+            TrySelect(solutionContext, brief, 0f, out solution);
 
         public static bool TrySelect(
-            PuzzleData puzzle, PuzzleSimSettings settings, PuzzleBrief brief, float width,
+            PuzzleSolutionContext solutionContext, PuzzleBrief brief, float width,
             out PuzzleSolution solution)
         {
             solution = default;
             int zones = Mathf.Clamp(brief.Zones, 2, 3);
             PuzzleSearchContext context = new(
-                puzzle, settings,
-                PuzzleZoneCandidates.Centres(puzzle, puzzle.cubeSizeMax),
-                PuzzleZoneCandidates.Scales(settings, zones == 2 ? 8 : 6));
+                solutionContext,
+                PuzzleZoneCandidates.Centres(solutionContext.Puzzle, solutionContext.Puzzle.cubeSizeMax),
+                PuzzleZoneCandidates.Scales(solutionContext.Settings, zones == 2 ? 8 : 6));
 
             List<PuzzleChain> beam = FirstStep(
-                context, PuzzleZoneCandidates.Sizes(puzzle), width);
+                context, PuzzleZoneCandidates.Sizes(context.Puzzle), width);
             for (int depth = 2; depth <= zones && beam.Count > 0; depth++)
                 beam = Expand(context, beam, depth == zones);
 
-            return Choose(beam, out solution);
+            return Choose(context, beam, out solution);
         }
 
         private static List<PuzzleChain> FirstStep(
@@ -127,7 +127,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             context.Evaluations++;
             PuzzleChain candidate = Evaluate(context, Append(prefix.Zones, zone));
-            if (final && !candidate.Arrived)
+            if (final && (!candidate.Arrived || !context.Solution.Matches(candidate.Solution.Kind)))
                 return;
 
             next.Add(candidate);
@@ -140,7 +140,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static PuzzleChain Evaluate(PuzzleSearchContext context, PuzzleZone[] zones)
         {
             PuzzleZoneRun.Simulate(
-                context.Puzzle, context.Settings, zones,
+                context.Solution, zones,
                 out PuzzleSolution solution, out TrajectoryResult result);
 
             return new PuzzleChain(
@@ -148,7 +148,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 result.Outcome == TrajectoryOutcome.Arrive);
         }
 
-        private static bool Choose(List<PuzzleChain> beam, out PuzzleSolution solution)
+        private static bool Matches(PuzzleSearchContext context, PuzzleChain chain) =>
+            context.Solution.Matches(chain.Solution.Kind);
+
+        private static bool Choose(
+            PuzzleSearchContext context, List<PuzzleChain> beam, out PuzzleSolution solution)
         {
             solution = default;
             PuzzleChain best = default;
@@ -156,7 +160,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             for (int i = 0; i < beam.Count; i++)
             {
                 PuzzleChain chain = beam[i];
-                if (!chain.Arrived)
+                if (!chain.Arrived || !Matches(context, chain))
                     continue;
 
                 if (!found || Precedes(chain, best, false))

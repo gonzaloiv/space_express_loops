@@ -14,5 +14,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             float t = Mathf.Clamp01(Vector3.Dot(point - from, segment) / lengthSq);
             return Vector3.Distance(point, from + segment * t);
         }
+
+        public static float MaxDeviation(TrajectoryResult result, Vector3 from, Vector3 to)
+        {
+            if (!result.HasPoints)
+                return 0f;
+
+            float max = 0f;
+            for (int i = 0; i < result.Points.Count; i++)
+                max = Mathf.Max(max, DistanceToSegment(result.Points[i], from, to));
+
+            return max;
+        }
     }
 }

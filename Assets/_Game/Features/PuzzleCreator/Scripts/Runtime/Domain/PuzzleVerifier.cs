@@ -26,8 +26,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             {
                 Start = startResult,
                 SolvedRun = solvedResults[0],
+                StartResults = startResults,
+                SolvedResults = solvedResults,
                 Solution = solution,
                 EntropySpent = solved.EntropySpent,
+                Kind = PuzzleSolutionClassifier.Classify(solved, setup, startResults, solvedResults),
                 StartMargin = startResult.HasPoints
                     ? startResult.ClosestApproach(setup.Destination)
                     : 0f,

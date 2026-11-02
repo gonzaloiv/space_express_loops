@@ -4,7 +4,7 @@
 pinch, and a ghost that shows the value the hands are about to commit.
 
 **Related:** [core loop](../../design/core-loop.md) · [the cube](../../design/systems/cube.md) ·
-[jobs](../../design/jobs.md) · [first-minute read](../in-progress/first-minute-read.md)
+[jobs](../../design/jobs.md)
 
 ## 1. Why
 
@@ -51,8 +51,8 @@ continuous; only the committed value is discrete.
 - Decide whether entropy charges **per step** (an integer) or the raw ladder delta. Per step makes the
   3× budget and the 1/3–2/3 bands exact; the raw delta keeps the current model but geometric steps cost
   different amounts.
-- The tutorial's first pinch uses the ghost as the teaching cue ([first-minute read](../in-progress/first-minute-read.md)
-  S1/S3); the ghost and the bar's pending marker are the same value.
+- The tutorial's first pinch uses the ghost as the teaching cue; the ghost and the bar's pending marker
+  are the same value.
 - **Exit:** after a pinch the player can state the cost and the remaining budget from the ghost and the
   bar alone.
 

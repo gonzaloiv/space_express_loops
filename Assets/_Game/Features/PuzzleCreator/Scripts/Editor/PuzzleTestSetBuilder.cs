@@ -25,30 +25,33 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             public readonly int PlanetCount;
             public readonly bool Translatable;
             public readonly int Zones;
+            public readonly int MinRoutes;
             public readonly int Attempts;
 
             public Job(
-                string id, int seed, int planetCount, bool translatable, int zones, int attempts)
+                string id, int seed, int planetCount, bool translatable, int zones,
+                int minRoutes, int attempts)
             {
                 Id = id;
                 Seed = seed;
                 PlanetCount = planetCount;
                 Translatable = translatable;
                 Zones = zones;
+                MinRoutes = minRoutes;
                 Attempts = attempts;
             }
         }
 
         private static readonly Job[] Jobs =
         {
-            new Job("01_01", 1, 3, false, 1, 4),
-            new Job("01_02", 1, 3, false, 1, 6),
-            new Job("01_03", 1, 4, true, 1, 4),
-            new Job("01_04", 1, 5, false, 1, 4),
-            new Job("01_05", 2, 5, true, 2, 4),
-            new Job("01_06", 3, 5, true, 2, 4),
-            new Job("01_07", 4, 5, true, 2, 4),
-            new Job("01_08", 5, 6, true, 2, 4),
+            new Job("01_01", 1, 3, false, 1, 0, 4),
+            new Job("01_02", 1, 3, false, 1, 0, 6),
+            new Job("01_03", 1, 4, true, 1, 0, 4),
+            new Job("01_04", 1, 5, false, 1, 0, 4),
+            new Job("01_05", 2, 5, true, 2, 0, 4),
+            new Job("01_06", 3, 5, true, 2, 0, 4),
+            new Job("01_07", 4, 5, true, 2, 2, 4),
+            new Job("01_08", 5, 6, true, 2, 2, 4),
         };
 
         [MenuItem("DigitalLove/Space Shaping/Build 8-Job Test Set")]
@@ -174,6 +177,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             seed.planetCount = job.PlanetCount;
             seed.translatable = job.Translatable;
             seed.zones = job.Zones;
+            seed.minRoutes = job.MinRoutes;
             seed.resizable = false;
 
             PuzzleSimSettings sim = PuzzleSimSettings.From(settings);

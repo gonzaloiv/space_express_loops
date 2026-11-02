@@ -22,6 +22,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private ColorValue neutral;
         [Tooltip("Unchecked prediction colour: the path is not a result until the ship lands.")]
         [SerializeField] private ColorValue pending;
+        [SerializeField, Range(0f, 1f)] private float pendingAlpha = 0.55f;
 
         private RendererTint markerTint;
         private Coroutine pulse;
@@ -47,7 +48,9 @@ namespace DigitalLove.Game.SpaceShaping
             }
 
             FillLine(result.Points);
-            Color color = pending ? this.pending.value : solved ? success.value : ColorFor(result.Outcome);
+            Color color = pending
+                ? WithAlpha(this.pending.value, pendingAlpha)
+                : solved ? success.value : ColorFor(result.Outcome);
             SetColor(color);
             Vector3 end = result.Points[count - 1];
             Vector3 heading = Heading(result.Points);
@@ -81,6 +84,12 @@ namespace DigitalLove.Game.SpaceShaping
         {
             Color color = Color.Lerp(this.pending.value, Color.gray, 0.65f);
             color.a = 0.4f;
+            return color;
+        }
+
+        private static Color WithAlpha(Color color, float alpha)
+        {
+            color.a = alpha;
             return color;
         }
 

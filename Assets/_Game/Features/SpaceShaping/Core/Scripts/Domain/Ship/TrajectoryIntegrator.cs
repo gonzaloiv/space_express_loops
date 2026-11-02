@@ -18,10 +18,10 @@ namespace DigitalLove.Game.SpaceShaping
                 StepState next = Step(field, settings, state);
                 points.Add(next.Position);
                 TrajectoryOutcome outcome = Classify(
-                    field, state.Position, next.Position, start, settings);
+                    field, state.Position, next.Position, start, settings, out int crashSource);
                 state = next;
                 if (outcome != TrajectoryOutcome.Miss)
-                    return new TrajectoryResult(outcome, points);
+                    return new TrajectoryResult(outcome, points, crashSource);
             }
 
             return new TrajectoryResult(TrajectoryOutcome.Miss, points);
@@ -50,18 +50,12 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         private static TrajectoryOutcome Classify(
-            SpacetimeField field, Vector3 from, Vector3 to, Vector3 start, TrajectorySettings settings)
+            SpacetimeField field, Vector3 from, Vector3 to, Vector3 start, TrajectorySettings settings,
+            out int crashSource)
         {
-            IReadOnlyList<SpaceSource> sources = field.Sources;
-            for (int i = 0; i < sources.Count; i++)
-            {
-                SpaceSource source = sources[i];
-                if (IsAt(source.Position, start) || IsAt(source.Position, settings.Destination))
-                    continue;
-
-                if (SegmentHitsSphere(from, to, source.Position, source.Radius))
-                    return TrajectoryOutcome.Crash;
-            }
+            crashSource = NearestCrashSource(field, from, to, start, settings.Destination);
+            if (crashSource >= 0)
+                return TrajectoryOutcome.Crash;
 
             if (SegmentHitsSphere(from, to, settings.Destination, settings.CaptureRadius))
                 return TrajectoryOutcome.Arrive;
@@ -69,17 +63,46 @@ namespace DigitalLove.Game.SpaceShaping
             return TrajectoryOutcome.Miss;
         }
 
+        private static int NearestCrashSource(
+            SpacetimeField field, Vector3 from, Vector3 to, Vector3 start, Vector3 destination)
+        {
+            IReadOnlyList<SpaceSource> sources = field.Sources;
+            int crashSource = -1;
+            float nearest = float.MaxValue;
+            for (int i = 0; i < sources.Count; i++)
+            {
+                SpaceSource source = sources[i];
+                if (IsAt(source.Position, start) || IsAt(source.Position, destination))
+                    continue;
+
+                if (!SegmentHit(from, to, source.Position, source.Radius, out float t) || t >= nearest)
+                    continue;
+
+                nearest = t;
+                crashSource = i;
+            }
+
+            return crashSource;
+        }
+
         private static bool IsAt(Vector3 position, Vector3 point) =>
             (position - point).sqrMagnitude < 0.0001f;
 
-        private static bool SegmentHitsSphere(Vector3 from, Vector3 to, Vector3 centre, float radius)
+        private static bool SegmentHitsSphere(Vector3 from, Vector3 to, Vector3 centre, float radius) =>
+            SegmentHit(from, to, centre, radius, out _);
+
+        private static bool SegmentHit(
+            Vector3 from, Vector3 to, Vector3 centre, float radius, out float t)
         {
             Vector3 segment = to - from;
             float lengthSq = segment.sqrMagnitude;
             if (lengthSq < 0.0000001f)
+            {
+                t = 0f;
                 return (from - centre).sqrMagnitude <= radius * radius;
+            }
 
-            float t = Mathf.Clamp01(Vector3.Dot(centre - from, segment) / lengthSq);
+            t = Mathf.Clamp01(Vector3.Dot(centre - from, segment) / lengthSq);
             Vector3 closest = from + segment * t;
             return (closest - centre).sqrMagnitude <= radius * radius;
         }

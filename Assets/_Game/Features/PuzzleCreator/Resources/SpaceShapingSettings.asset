@@ -25,7 +25,7 @@ MonoBehaviour:
   fieldThickness: 0.08
   fieldTilt: 12
   fieldBulge: 0.8
-  zoneFalloff: 0.25
-  zoneEffectGain: 1.25
+  zoneFalloff: 0.5
+  zoneEffectGain: 1.75
   minScaleFactor: 0.6
   maxScaleFactor: 1.8

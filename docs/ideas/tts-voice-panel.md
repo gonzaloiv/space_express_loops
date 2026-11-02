@@ -1,8 +1,14 @@
 # TTS Voice Panel — Camera-Operator Companion
 
-**Status:** idea · presentation · updated 2026-10-30 — recorded, design only. Not scheduled.
+**Status:** idea · presentation · revised 2026-11-02 — the camera-operator companion is deferred; the
+first fit is the field-side contract screen ([plan](../plans/backlog/tts-job-intro.md)).
 
-**Related:** [jobs](../design/jobs.md)
+**Related:** [jobs](../design/jobs.md) · [job intro plan](../plans/backlog/tts-job-intro.md)
+
+**Current fit (2026-11-02).** The game is seated MR with a per-job intro screen, not the legacy persistent
+card. The [job intro plan](../plans/backlog/tts-job-intro.md) builds a field-side contract screen that can
+reposition around the field; the travel/parking below is a later feel-pass variant, only if the screen
+should persist during play.
 
 ## Goal
 

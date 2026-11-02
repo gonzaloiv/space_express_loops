@@ -4,19 +4,20 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     internal sealed class PuzzleSearchContext
     {
-        public readonly PuzzleData Puzzle;
-        public readonly PuzzleSimSettings Settings;
+        public readonly PuzzleSolutionContext Solution;
         public readonly Vector3[] Centres;
         public readonly float[] Scales;
         public int Evaluations;
 
-        public PuzzleSearchContext(
-            PuzzleData puzzle, PuzzleSimSettings settings, Vector3[] centres, float[] scales)
+        public PuzzleSearchContext(PuzzleSolutionContext solution, Vector3[] centres, float[] scales)
         {
-            Puzzle = puzzle;
-            Settings = settings;
+            Solution = solution;
             Centres = centres;
             Scales = scales;
         }
+
+        public PuzzleData Puzzle => Solution.Puzzle;
+
+        public PuzzleSimSettings Settings => Solution.Settings;
     }
 }

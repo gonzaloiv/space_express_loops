@@ -10,16 +10,15 @@ the ship flies the deformed spacetime.
 
 Active work. The one thing being built.
 
-- [First-minute read and cost](in-progress/first-minute-read.md) — 3-planet tutorial first job,
-  straight-line baseline, and an in-field entropy bar. In progress — S1, S2, S2.5 and S3 are implemented
-  (tutorial rebaked, baseline reference, unified colour set, in-field bar); run Validation 1.
+- [Puzzle solution mechanism — curve or clear](in-progress/puzzle-solution-mechanism.md) — the creator
+  classifies a solve as a well curve or an obstacle clear, and a job requests its role. S1/S2 implemented;
+  S3 re-bakes the content; §7 start check is open.
 
 ## Next
 
 Queued. One plan moves to **Now** when it starts.
 
-- [Puzzle solution mechanism — curve or clear](backlog/puzzle-solution-mechanism.md) — the creator
-  classifies a solve as a well curve or an obstacle clear, and a job requests its role.
+- Nothing queued.
 
 ## Later
 
@@ -29,18 +28,21 @@ Design-only or deferred. Nothing here is scheduled.
   the bake and the pinch, with a ghost preview of the value the hands are about to commit.
 - [Puzzle selection — the run carousel](backlog/puzzle-selection.md) — an arc of job fields, one
   focused, touched and amplified into play; starts after the PoC is in the main scene.
+- [TTS job intro — the contract screen](backlog/tts-job-intro.md) — a field-side contract screen
+  (manual + tech voice) that can reposition around the field; the camera-operator companion is deferred.
 
 Candidate ideas (not plans) live in [docs/ideas](../ideas/README.md): variations, element pack,
-hologram look, TTS companion, feel polish.
+hologram look, TTS companion (deferred), feel polish.
 
 ## Open tails
 
 Loose ends that still need a home. Close one by linking the plan that finishes it.
 
-- **Re-run Validation 1 on the current loop.** The gate for the slice; the
-  [first-minute read plan](in-progress/first-minute-read.md) §3 runs it.
+- **Re-run Validation 1 on the current loop.** The gate for the slice; the test steps need a home now
+  that the first-minute read plan is gone.
 - **Run authoring.** Jobs 1–5, the map/level selector, and the TTS intro (manual + tech voice) are
-  designed but not built; add a plan before the 10-minute slice.
+  designed but not built. The TTS intro now has a plan ([TTS job intro](backlog/tts-job-intro.md)); the
+  rest still needs one before the 10-minute slice.
 - **Ship-zone cue.** The ship has a trail; there is no zone indicator. Fold it into the first-minute read
   plan or the feel pass.
 - **Resize.** Working, but the explanation (size is scope, not precision) is not ready. Deferred from the

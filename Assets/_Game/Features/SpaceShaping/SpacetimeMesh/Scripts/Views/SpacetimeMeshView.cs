@@ -14,6 +14,9 @@ namespace DigitalLove.Game.SpaceShaping.Grid
         [SerializeField] private float radius = 0.005f;
         [SerializeField] private ColorValue neutral;
         [SerializeField] private ColorValue accent;
+        [Tooltip("Opacity applied to the lattice colour (0 = invisible, 1 = the colour's own alpha).")]
+        [Range(0f, 1f)]
+        [SerializeField] private float gridOpacity = 0.35f;
         [SerializeField] private float tintStrength = 2.5f;
 
         private Mesh mesh;
@@ -49,7 +52,9 @@ namespace DigitalLove.Game.SpaceShaping.Grid
         private void ApplyTint(float strength)
         {
             float amount = Mathf.Clamp01(Mathf.Abs(strength) * tintStrength);
-            tint.Set(meshRenderer, Color.Lerp(neutral.value, accent.value, amount));
+            Color color = Color.Lerp(neutral.value, accent.value, amount);
+            color.a *= gridOpacity;
+            tint.Set(meshRenderer, color);
         }
 
         private void Remember(

@@ -55,14 +55,29 @@ namespace DigitalLove.Game.SpaceShaping
                 Render(lastReadout);
         }
 
-        public void ResetPuzzle() => state.ResetPuzzle();
+        public void ResetPuzzle()
+        {
+            ClearMessage();
+            state.ResetPuzzle();
+        }
 
-        public void NextPuzzle() => state.NextPuzzle();
+        public void NextPuzzle()
+        {
+            ClearMessage();
+            state.NextPuzzle();
+        }
 
         private void OnRefused(ZoneRefusal reason)
         {
             message = RefusalText(reason);
             messageUntil = Time.unscaledTime + MessageSecs;
+            if (hasRendered)
+                Render(lastReadout);
+        }
+
+        private void ClearMessage()
+        {
+            message = null;
             if (hasRendered)
                 Render(lastReadout);
         }

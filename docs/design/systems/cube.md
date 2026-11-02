@@ -91,9 +91,10 @@ count.
 - The cube keeps a **committed check lamp** after landing — it shows the last check's outcome until
   the next edit. A locked gesture or an over-budget scale **flashes the frame** instead of failing
   silently.
-- The ship **launches on each completed pinch** and flies the current trajectory. The **trajectory
-  line** previews **live while shaping**, in a pending state rather than the checked result, then
-  takes its result on landing ([core loop](../core-loop.md) §1).
+- The job opens with the **start check**: the ship flies the initial field and fails (the tutorial's
+  start crashes into the blocker). The **trajectory line** previews **live while shaping**, in a
+  pending state rather than the checked result, then takes its result on landing. The ship launches on
+  each completed pinch after that ([core loop](../core-loop.md) §2).
 
 ## Failure
 

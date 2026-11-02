@@ -434,4 +434,5 @@ MonoBehaviour:
   success: {fileID: 11400000, guid: c01d0000000000000000000000000002, type: 2}
   danger: {fileID: 11400000, guid: c01d0000000000000000000000000003, type: 2}
   neutral: {fileID: 11400000, guid: c01d0000000000000000000000000007, type: 2}
-  pending: {fileID: 11400000, guid: 287009dea5799dc46a035eb843ef9d0c, type: 2}
+  pending: {fileID: 11400000, guid: c01d0000000000000000000000000001, type: 2}
+  pendingAlpha: 0.55

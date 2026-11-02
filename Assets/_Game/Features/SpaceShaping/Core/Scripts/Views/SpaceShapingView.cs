@@ -13,9 +13,11 @@ namespace DigitalLove.Game.SpaceShaping
     {
         [SerializeField] private SpaceShapingSpawner spawner;
         [SerializeField] private SpacetimeMeshView mesh;
-        [Tooltip("Clearance between a planet's surface and the trajectory/ship at both caps, in metres.")]
+        [Tooltip("Minimum clearance between a planet's surface and the trajectory/ship at both caps, in metres.")]
         [FormerlySerializedAs("launchGap")]
-        [SerializeField] private float capGap = 0.02f;
+        [SerializeField] private float capGap = 0.001f;
+        [Tooltip("Clearance between a planet's surface and the trajectory/ship at both caps, as a fraction of the planet's radius. Keeps the gap visible on larger planets.")]
+        [SerializeField] private float capGapFraction = 0.15f;
         [Tooltip("Lattice fade: distance from the nearest planet or the run where the fade starts, as a fraction of the field half-extent.")]
         [SerializeField] private float fadeNear = 0.15f;
         [Tooltip("Lattice fade: distance from the nearest planet or the run where the lattice is fully transparent, as a fraction of the field half-extent.")]
@@ -162,48 +164,30 @@ namespace DigitalLove.Game.SpaceShaping
 
         private Vector3 LaunchPoint(SpaceShapingSession session, ShipSpec ship)
         {
-            Vector3 direction = ship.Destination - ship.Origin;
-            direction = direction.sqrMagnitude > 0.000001f ? direction.normalized : Vector3.forward;
-            return ship.Origin + direction * (session.RadiusAt(ship.Origin) + capGap);
+            float radius = session.RadiusAt(ship.Origin);
+            return TrajectoryCaps.LaunchPoint(
+                ship.Origin, ship.Destination, radius, CapGap(radius));
         }
 
         private Vector3 ArrivalPoint(SpaceShapingSession session, ShipSpec ship)
         {
-            Vector3 direction = ship.Destination - ship.Origin;
-            direction = direction.sqrMagnitude > 0.000001f ? direction.normalized : Vector3.forward;
-            return ship.Destination - direction * (session.RadiusAt(ship.Destination) + capGap);
+            float radius = session.RadiusAt(ship.Destination);
+            return TrajectoryCaps.ArrivalPoint(
+                ship.Origin, ship.Destination, radius, CapGap(radius));
         }
 
         private TrajectoryResult ClipToCaps(
             TrajectoryResult result, SpaceShapingSession session, ShipSpec ship)
         {
-            if (!result.HasPoints)
-                return result;
-
-            List<Vector3> points = result.Points;
-            int start = 0;
-            float launchSq = ClearanceSq(session.RadiusAt(ship.Origin));
-            while (start < points.Count
-                && (points[start] - ship.Origin).sqrMagnitude < launchSq)
-                start++;
-
-            int end = points.Count - 1;
-            float arrivalSq = ClearanceSq(session.RadiusAt(ship.Destination));
-            while (end > start && (points[end] - ship.Destination).sqrMagnitude < arrivalSq)
-                end--;
-
-            if ((start == 0 && end == points.Count - 1) || end <= start)
-                return result;
-
-            return new TrajectoryResult(
-                result.Outcome, points.GetRange(start, end - start + 1));
+            float launchRadius = session.RadiusAt(ship.Origin);
+            float arrivalRadius = session.RadiusAt(ship.Destination);
+            return TrajectoryCaps.Clip(
+                result,
+                ship.Origin, launchRadius + CapGap(launchRadius),
+                ship.Destination, arrivalRadius + CapGap(arrivalRadius));
         }
 
-        private float ClearanceSq(float radius)
-        {
-            float clearance = radius + capGap;
-            return clearance * clearance;
-        }
+        private float CapGap(float radius) => Mathf.Max(capGap, radius * capGapFraction);
 
         public void ClearPrediction() => spawner.Cubes.ClearPredictions();
 

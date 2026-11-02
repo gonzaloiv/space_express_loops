@@ -26,6 +26,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         [FormerlySerializedAs("moves")]
         public int zones = 1;
 
+        [Tooltip("The role the bake must produce: Any, a grown well (Curve), a shrunk obstacle "
+            + "(Clear), or both (Mixed, needs at least two zones).")]
+        public PuzzleMechanism mechanism = PuzzleMechanism.Any;
+
+        [Tooltip("Minimum distinct arriving routes the bake must offer. 0 = auto: 2 for a movable "
+            + "single-zone level, otherwise 1. Set 2 for the capstone multi-zone jobs.")]
+        [Min(0)]
+        public int minRoutes;
+
         [Tooltip("Ships the level must land. 1 is a single-ship puzzle; 2 or more bakes a multi-ship "
             + "level whose runs relate as the relation field says.")]
         [Min(1)]

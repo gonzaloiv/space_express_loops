@@ -137,7 +137,7 @@ mechanic before writing another plan.
 |---|---|
 | Toy, not game (no stake) | **Designed, not validated.** The entropy fail, arrival goal and grade are in the loop and the panel ([core loop](core-loop.md) §3); Validation 1 is still an open tail ([plans board](../plans/README.md)). |
 | The cube is "just a group drag" | **Resolved.** The scale is a metric stretch plus content spread/growth, not a drag ([the cube](systems/cube.md)). |
-| Field illegibility | **Partly open.** Lattice warp, planet size/well and the live trajectory are in; the **straight-line reference** named in the read is not built ([plans board](../plans/README.md)). |
+| Field illegibility | **Partly open.** Lattice warp, planet size/well and the live trajectory are in; the **start run** is shown as the blocked reference ([plans board](../plans/README.md)). |
 | Sun reads as another planet | **Open.** The sun is a flat `Sun.prefab`; the reference marker is the S4 look pass. |
 | Sun scale is a free win | **Open.** `mass ∝ radius³` makes a grown sun strong fast; the bake must verify scalable-by-default, otherwise lock it per puzzle. The centre (job 2) is the first test; the capstone (job 7) must also hold. |
 | Ship-zone legibility | **Partial.** The ship has a trail; there is no zone tint or "which zone" indicator ([plans board](../plans/README.md)). |

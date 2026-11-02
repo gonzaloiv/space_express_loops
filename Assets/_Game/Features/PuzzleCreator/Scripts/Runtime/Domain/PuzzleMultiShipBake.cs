@@ -8,13 +8,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     // as a movable start frame. The result is confirmed by an independent N-run re-check.
     public static class PuzzleMultiShipBake
     {
-        private const int ScaleSamples = 13;
-
         public static PuzzleMultiShipResult Bake(
             PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief)
         {
             if (!brief.IsMulti)
                 return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.UnsupportedBrief };
+
+            if (brief.Mechanism != PuzzleMechanism.Any)
+                return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.UnsupportedMechanism };
 
             PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
             if (!PuzzleFieldBake.Apply(brief, field, planets, settings))
@@ -31,7 +32,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static PuzzleMultiShipResult BakeField(
             PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief)
         {
-            Probe probe = new(field, settings, brief);
+            PuzzleMultiShipProbe probe = new(field, settings, brief);
             if (!probe.Find(out PuzzleZone zone, out List<PuzzleShipRescue> rescued))
                 return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.NoSolution };
 
@@ -39,11 +40,31 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (ships == null || !probe.Scan.Rescues(zone, ships))
                 return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.NoSolution };
 
+            return Confirm(field, settings, brief, zone, ships);
+        }
+
+        private static PuzzleMultiShipResult Confirm(
+            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief,
+            PuzzleZone zone, PuzzleShip[] ships)
+        {
+            PuzzleData variant = Variant(field, zone, ships, brief);
+            PuzzleVerification check = PuzzleVerifier.Verify(variant, new[] { zone }, settings);
+            if (!check.Solved)
+            {
+                Object.DestroyImmediate(variant);
+                return new PuzzleMultiShipResult
+                {
+                    Status = PuzzleBakeStatus.Unverified,
+                    Kind = check.Kind
+                };
+            }
+
             return new PuzzleMultiShipResult
             {
-                Puzzle = Variant(field, zone, ships, brief),
+                Puzzle = variant,
                 Solution = zone,
-                Status = PuzzleBakeStatus.Baked
+                Status = PuzzleBakeStatus.Baked,
+                Kind = check.Kind
             };
         }
 
@@ -147,133 +168,5 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return new[] { new PuzzleFrame { centre = puzzle.zoneCentre, size = zone.Width } };
         }
 
-        private sealed class Probe
-        {
-            private readonly PuzzleShipScan scan;
-            private readonly PuzzleData field;
-            private readonly PuzzleSimSettings settings;
-            private readonly float[] scales;
-            private readonly int required;
-            private readonly PuzzleShipRelation relation;
-
-            public Probe(PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief)
-            {
-                this.field = field;
-                this.settings = settings;
-                required = brief.Ships;
-                relation = brief.Relation;
-                scan = new PuzzleShipScan(field, settings, 0f);
-                scales = Linear(settings, ScaleSamples);
-            }
-
-            public PuzzleShipScan Scan => scan;
-
-            public bool Find(out PuzzleZone zone, out List<PuzzleShipRescue> rescued)
-            {
-                Candidate best = default;
-                Vector3[] centres = PuzzleZoneCandidates.Centres(field, field.cubeSizeMax);
-                float[] sizes = PuzzleZoneCandidates.Sizes(field);
-
-                for (int c = 0; c < centres.Length; c++)
-                {
-                    for (int s = 0; s < sizes.Length; s++)
-                        Consider(centres[c], sizes[s], ref best);
-                }
-
-                zone = best.Zone;
-                rescued = best.Rescued;
-                return best.Count >= required;
-            }
-
-            private void Consider(Vector3 centre, float size, ref Candidate best)
-            {
-                List<PuzzleShipRescue>[] row = Row(centre, size);
-                for (int k = 0; k < row.Length; k++)
-                {
-                    if (!Plateau(row, k))
-                        continue;
-
-                    int distinct = Distinct(row[k]);
-                    if (distinct <= best.Count)
-                        continue;
-
-                    best.Count = distinct;
-                    best.Zone = Zone(centre, size, scales[k]);
-                    best.Rescued = row[k];
-                }
-            }
-
-            private List<PuzzleShipRescue>[] Row(Vector3 centre, float size)
-            {
-                List<PuzzleShipRescue>[] row = new List<PuzzleShipRescue>[scales.Length];
-                for (int k = 0; k < scales.Length; k++)
-                {
-                    PuzzleZone zone = Zone(centre, size, scales[k]);
-                    if (PuzzleZoneCandidates.CoversSource(zone, field))
-                        row[k] = scan.RescuedFixed(zone);
-                }
-
-                return row;
-            }
-
-            private bool Plateau(List<PuzzleShipRescue>[] row, int k)
-            {
-                if (row[k] == null || Distinct(row[k]) < required)
-                    return false;
-
-                if (k > 0 && row[k - 1] != null && Distinct(row[k - 1]) >= required)
-                    return true;
-
-                return k + 1 < row.Length && row[k + 1] != null && Distinct(row[k + 1]) >= required;
-            }
-
-            // How many relation-allowed ships a rescue set can supply.
-            private int Distinct(List<PuzzleShipRescue> rescued)
-            {
-                int distinct = 0;
-                for (int i = 0; i < rescued.Count; i++)
-                {
-                    if (Fresh(rescued, i))
-                        distinct++;
-                }
-
-                return distinct;
-            }
-
-            private bool Fresh(List<PuzzleShipRescue> rescued, int index)
-            {
-                for (int i = 0; i < index; i++)
-                {
-                    if (!Allowed(
-                        relation, rescued[i].Origin, rescued[i].Destination,
-                        rescued[index].Origin, rescued[index].Destination))
-                        return false;
-                }
-
-                return true;
-            }
-
-            private PuzzleZone Zone(Vector3 centre, float size, float scale) =>
-                PuzzleZoneCandidates.Zone(centre, size, scale, settings.ZoneFalloff);
-
-            private struct Candidate
-            {
-                public int Count;
-                public PuzzleZone Zone;
-                public List<PuzzleShipRescue> Rescued;
-            }
-
-            private static float[] Linear(PuzzleSimSettings settings, int samples)
-            {
-                float[] scales = new float[samples];
-                for (int i = 0; i < samples; i++)
-                {
-                    scales[i] = Mathf.Lerp(
-                        settings.MinScaleFactor, settings.MaxScaleFactor, i / (float)(samples - 1));
-                }
-
-                return scales;
-            }
-        }
     }
 }

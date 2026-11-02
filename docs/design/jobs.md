@@ -2,7 +2,7 @@
 
 **Status:** design · content · jobs.
 **Date:** 2026-10-27.
-**Revised:** 2026-11-01.
+**Revised:** 2026-11-02.
 
 **Related:** [progression](systems/progression.md) · [lore](world/lore.md) ·
 [the cube](systems/cube.md) · [glossary](glossary.md)
@@ -16,15 +16,30 @@ first.
 
 ## The run — the mechanics
 
-| # | Teaches | Brief (translatable · zones · resizable · ships) | Shape | Field (planets + sun · wells · depth) | Entropy scale (derived) | Why |
+| # | Teaches | Role | Brief (translatable · zones · resizable · ships) | Shape | Field (planets + sun · wells · depth) | Entropy scale (derived) | Why |
 |---|---|---|---|---|---|---|---|
-| 1 | the scale | fixed · 1 zone · no · 1 ship | Ring | 3 · single · tutorial | low | first contact: a viable three-planet field, no sun, one pinch |
-| 2 | the centre | fixed · 1 zone · no · 1 ship | Ring | 1 + sun · single · medium | medium | the fixed cube over the sun — the star is a source too |
-| 3 | several zones | fixed · 2+ zones · no · 1 ship | Ring | 2–3 + sun · multi | medium | "where do I scale" enters — the fixed cubes are on planets |
-| 4 | the cube moves | **yes** · 1 zone · no · 1 ship | Spiral | 3–4 + sun · multi | medium | spawns at the centre; the solution is off-centre, so the move is required |
-| 5 | multi-zone intro | yes · 2+ zones · no · 1 ship | Spiral | 2–3 + sun · multi | medium | move + scale two zones — the combination enters |
-| 6 | efficiency | yes · 2+ zones · no · 1 ship | Cluster | 3–4 + sun · multi | high | the cheap answer is to spread the edit across zones |
-| 7 | the capstone | yes · 2+ zones · no · 1 ship | Cluster | 3–4 + sun · mixed · deep | high | multi-zone + the centre — starts over the sun and scales several zones |
+| 1 | the scale | Curve | fixed · 1 zone · no · 1 ship | Ring | 3 · single · tutorial | low | first contact: a viable three-planet field, no sun, one pinch |
+| 2 | the centre | Curve | fixed · 1 zone · no · 1 ship | Ring | 4–6 + sun · single · medium | medium | the fixed cube over the sun — the star is a source too |
+| 3 | several zones | Curve | fixed · 2+ zones · no · 1 ship | Ring | 6–8 + sun · multi | medium | "where do I scale" enters — the fixed cubes are on planets |
+| 4 | the cube moves | Curve | **yes** · 1 zone · no · 1 ship | Spiral | 8–10 + sun · multi | medium | spawns at the centre; the solution is off-centre, so the move is required |
+| 5 | multi-zone intro | Curve | yes · 2+ zones · no · 1 ship | Spiral | 10–12 + sun · multi | medium | move + scale two zones — the combination enters |
+| 6 | efficiency | Curve | yes · 2+ zones · no · 1 ship | Cluster | 10–12 + sun · multi | high | the cheap answer is to spread the edit across zones |
+| 7 | the capstone | Curve | yes · 2+ zones · no · 1 ship | Cluster | 12 + sun · mixed · deep | high | multi-zone + the centre — starts over the sun and scales several zones |
+
+**The role.** Each job states the role its reference solution must teach: **Curve** (a well grew),
+**Clear** (an obstacle shrank), **Mixed** (both, at least two zones), or **Any** (no request). It is a
+**bake request**, not a player condition. The creator searches for a matching solve and rejects the seed
+when it cannot find one; it also rejects a seed when a **cheaper or equal wrong-role route** exists,
+because the taught role must be the best answer. More expensive alternate routes may remain. The 7-job
+spine requests **Curve**; the **Clear** obstacle and the **Mixed** clear+curve are later variations
+([archetypes](#the-run--archetypes)). The bake reports the reference solution's `kind` and path
+`deviation`; the player never sees the label. Multi-ship role requests are not supported yet.
+
+**The field is a galaxy, not a handful of balls.** The planet column is the **source** count — the bodies
+that bend the path. The field also carries **decor** (dust, moons, distant planets) from
+[the element pack](../ideas/element-pack.md) once that lands, so the playfield reads as a populated system
+without every body becoming a well. The tutorial stays sparse at three; the count rises by act, so the
+galaxy grows with the run.
 
 **The shape.** Each job states its `fieldShape`; `Auto` is for experiments only. Shape is a read axis,
 not a difficulty dial — it never changes a rule — so it marks an **act**: **Ring** carries the
@@ -88,11 +103,18 @@ creator bakes to them. Three groups.
 | **`resizable`** | The frame may be **resized** (`[1×, 2×]`) or is locked. Deferred from the slice until the explanation is ready. |
 | **`ships` / `relation`** | How many runs the job has (1 = single-ship) and how they relate: **fan-out** (one origin), **converge** (one destination), or **separate**. |
 
+**Bake request** — what the creator must produce:
+
+| Field | Means |
+|---|---|
+| **`mechanism`** | The role the bake's reference solution must have: **`Any`** (no request), **`Curve`** (a well grew), **`Clear`** (an obstacle shrank), or **`Mixed`** (both; needs ≥2 zones). The search filters to the requested role; a seed that cannot bake it is rejected, and so is a seed whose cheapest route has the wrong role. More expensive alternate routes may remain. |
+| **`minRoutes`** | Minimum distinct arriving routes the bake must offer. `0` = auto: 2 for a movable single-zone level, otherwise 1. The capstone jobs (6–7) set 2. |
+
 **Baked results** — what the creator records, not a player condition:
 
 | Field | Means |
 |---|---|
-| **`routes`** | Distinct zone sets that arrive within budget. A movable single-zone level and the capstone jobs (6–7) need at least two; fixed and intro levels may have one. |
+| **`routes`** | Distinct zone sets that arrive within budget. The bake enforces `minRoutes`: a movable single-zone level and the capstone jobs (6–7) need at least two; fixed and intro levels may have one. |
 | **`entropyBudget`** | **3×** the entropy of the bake's solution; the star thresholds are 1/3 and 2/3 of it. |
 | **`sources` / `frames`** | The baked field (planets, sun, positions) and the cube frames the level places. |
 

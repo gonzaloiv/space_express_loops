@@ -81,8 +81,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         public static PuzzleData Bake(
             PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief,
-            out PuzzleBakeStatus status, out PuzzleZone[] solution)
+            out PuzzleBakeStatus status, out PuzzleZone[] solution) =>
+            Bake(planets, settings, brief, out status, out solution, out _);
+
+        public static PuzzleData Bake(
+            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief,
+            out PuzzleBakeStatus status, out PuzzleZone[] solution, out PuzzleSolutionKind kind)
         {
+            kind = PuzzleSolutionKind.Other;
             PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
             if (!Apply(brief, field, planets, settings))
             {
@@ -91,39 +97,61 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return Fail(PuzzleBakeStatus.NoRun, out status);
             }
 
-            PuzzleData baked = BakeField(field, settings, brief, out status, out solution);
+            PuzzleData baked = BakeField(
+                field, settings, brief, out status, out solution, out kind);
             Object.DestroyImmediate(field);
             return baked;
         }
 
         private static PuzzleData BakeField(
             PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief,
-            out PuzzleBakeStatus status, out PuzzleZone[] solution)
+            out PuzzleBakeStatus status, out PuzzleZone[] solution, out PuzzleSolutionKind kind)
         {
             solution = null;
+            kind = PuzzleSolutionKind.Other;
             if (!brief.SupportsZones)
                 return Fail(PuzzleBakeStatus.UnsupportedBrief, out status);
 
-            if (!PuzzleSolutionSearch.TrySelect(field, settings, brief, out PuzzleSolution found))
-                return Fail(PuzzleBakeStatus.NoSolution, out status);
+            if (brief.Mechanism == PuzzleMechanism.Mixed && brief.Zones < 2)
+                return Fail(PuzzleBakeStatus.UnsupportedMechanism, out status);
 
-            if (!StartFails(field, settings))
-                return Fail(PuzzleBakeStatus.StartNotFailed, out status);
+            PuzzleBakeStatus selected = PuzzleSolutionSelection.Select(
+                field, settings, brief, out PuzzleSolution found, out kind);
+            if (selected != PuzzleBakeStatus.Baked)
+                return Fail(selected, out status);
 
-            if (HasShorterSolution(field, settings, brief, found))
+            return Finish(field, settings, brief, found, out status, out solution, out kind);
+        }
+
+        private static PuzzleData Finish(
+            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, PuzzleSolution found,
+            out PuzzleBakeStatus status, out PuzzleZone[] solution, out PuzzleSolutionKind kind)
+        {
+            solution = null;
+            kind = found.Kind;
+            PuzzleBakeStatus start = PuzzleStartCheck.Status(field, settings, brief);
+            if (start != PuzzleBakeStatus.Baked)
+                return Fail(start, out status);
+
+            if (PuzzleSolutionSelection.HasShorter(field, settings, brief, found))
                 return Fail(PuzzleBakeStatus.FewerZones, out status);
 
-            PuzzleData verified = Verified(field, found, brief, settings, out status);
+            return Confirm(field, settings, brief, found, out status, out solution, out kind);
+        }
+
+        private static PuzzleData Confirm(
+            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, PuzzleSolution found,
+            out PuzzleBakeStatus status, out PuzzleZone[] solution, out PuzzleSolutionKind kind)
+        {
+            solution = null;
+            PuzzleData verified = Verified(
+                field, found, brief, settings, out status, out kind);
             if (verified == null)
-            {
-                solution = null;
                 return null;
-            }
 
             if (!HasRoutes(verified, settings, brief, found.Zones))
             {
                 Object.DestroyImmediate(verified);
-                solution = null;
                 return Fail(PuzzleBakeStatus.SingleRoute, out status);
             }
 
@@ -135,30 +163,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleData puzzle, PuzzleSimSettings settings, PuzzleBrief brief, PuzzleZone[] zones)
         {
             puzzle.routes = PuzzleRouteCount.Count(puzzle, settings, zones);
-
-            // A movable single-zone level must offer a choice of where to scale. A multi-zone chain is
-            // already pinned by the baked solution, so it is allowed to have exactly one route.
-            return !brief.Translatable || brief.Zones > 1 || puzzle.routes >= PuzzleRouteCount.MinRoutes;
-        }
-
-        private static bool HasShorterSolution(
-            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, PuzzleSolution found)
-        {
-            if (brief.Zones <= 1)
-                return false;
-
-            float width = found.Zones[0].Width;
-            float budget = found.EntropySpent * PuzzleGrade.BudgetFactor;
-            PuzzleBrief shorter = brief;
-            for (int zones = 1; zones < brief.Zones; zones++)
-            {
-                shorter.Zones = zones;
-                if (PuzzleSolutionSearch.TryFindAtWidth(field, settings, shorter, width, out PuzzleSolution candidate)
-                    && candidate.EntropySpent <= budget)
-                    return true;
-            }
-
-            return false;
+            return puzzle.routes >= Mathf.Max(1, brief.MinRoutes);
         }
 
         private static PuzzleData Fail(PuzzleBakeStatus value, out PuzzleBakeStatus status)
@@ -169,11 +174,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         private static PuzzleData Verified(
             PuzzleData field, PuzzleSolution solution, PuzzleBrief brief, PuzzleSimSettings settings,
-            out PuzzleBakeStatus status)
+            out PuzzleBakeStatus status, out PuzzleSolutionKind kind)
         {
             field.entropyBudget = solution.EntropySpent * PuzzleGrade.BudgetFactor;
             PuzzleData variant = Variant(field, solution, brief);
-            if (PuzzleVerifier.Verify(variant, solution.Zones, settings).Solved)
+            PuzzleVerification check = PuzzleVerifier.Verify(variant, solution.Zones, settings);
+            kind = check.Kind;
+            if (check.Solved)
             {
                 status = PuzzleBakeStatus.Baked;
                 return variant;
@@ -214,8 +221,5 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             return frames;
         }
-
-        private static bool StartFails(PuzzleData field, PuzzleSimSettings settings) =>
-            PuzzleVerifier.Verify(field, null, settings).StartFails;
     }
 }

@@ -123,7 +123,7 @@ the tutorial exception (no fail, no stars). The field sets the absolute cost and
 
 The verb is always the **scale**, so variety comes from the field and the brief:
 
-1. **Planet count** — 1 → 4+ sources.
+1. **Planet count** — 3 (tutorial) → 12 sources by act; the field grows into a little galaxy.
 2. **Solution cost** — cheap → expensive; the bake triples it into the budget, so this sets the
    absolute bar, not the star thresholds.
 3. **Well depth** — shallow → deep (a deeper well bends the path more).

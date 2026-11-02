@@ -64,6 +64,35 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         }
 
         [Test]
+        public void Reset_ClearsCommandsAndRestoresSources()
+        {
+            SpaceShapingSetup setup = Setup();
+            setup.Sources = new[]
+            {
+                new SourceSpec
+                {
+                    Home = Vector3.one,
+                    InitialScale = 2f,
+                    MinScale = 1f,
+                    MaxScale = 3f
+                }
+            };
+            SpaceShapingSession session = new(setup);
+            session.ApplyZone(new SpaceZone(Vector3.one, Vector3.one, 1.5f, 0f));
+
+            Assert.Greater(session.EntropyCommitted, 0f);
+            Assert.AreNotEqual(2f, session.GetScale(0));
+
+            session.Reset();
+
+            Assert.AreEqual(0, session.CommandCount);
+            Assert.AreEqual(0f, session.EntropyCommitted, 0.0001f);
+            Assert.AreEqual(0f, session.PendingEntropy, 0.0001f);
+            Assert.AreEqual(2f, session.GetScale(0), 0.0001f);
+            Assert.AreEqual(Vector3.one, session.GetPosition(0));
+        }
+
+        [Test]
         public void Entropy_IsChargedPerModification_NotPerSimulation()
         {
             SpaceShapingSession session = new(Setup());

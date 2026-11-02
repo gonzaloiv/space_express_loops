@@ -232,7 +232,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3589734
 Transform:
   m_ObjectHideFlags: 0
@@ -45482,6 +45482,7 @@ MonoBehaviour:
   spawner: {fileID: 1095678998}
   mesh: {fileID: 1402556516}
   capGap: 0.001
+  capGapFraction: 0.15
   fadeNear: 0.15
   fadeFar: 0.55
   warpDepth: 0.3
@@ -45510,7 +45511,7 @@ MonoBehaviour:
   linesParent: {fileID: 1662250515}
   cubePrototype: {fileID: 5572121854155305578, guid: 77bfd046ac9cfc04b9b6b681c2b86f03, type: 3}
   cubeParent: {fileID: 2088624213}
-  originColor: {fileID: 11400000, guid: 8d70e3c21fd688f4987875d2c932a657, type: 2}
+  originColor: {fileID: 11400000, guid: c01d0000000000000000000000000002, type: 2}
   destinationColor: {fileID: 11400000, guid: 3aa4c7c2bdea4434aad4f233a423c200, type: 2}
 --- !u!1 &1095809710
 GameObject:
@@ -51707,7 +51708,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.18}
+  m_AnchoredPosition: {x: 0, y: 0.2}
   m_SizeDelta: {x: 600, y: 220}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1250813854

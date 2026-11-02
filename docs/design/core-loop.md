@@ -13,8 +13,8 @@ Three loops, nested. The product *is* the loop; everything else supports it.
 
 Read the field → (move the cube) → scale a zone → the ship flies the result.
 
-- **Read:** the straight-line reference and the bodies on it, the lattice warp, and the planets' size —
-  a grown planet is a stronger well, a shrunken one is a smaller obstacle.
+- **Read:** the **start run** and the bodies it hits, the lattice warp, and the planets' size — a grown
+  planet is a stronger well, a shrunken one is a smaller obstacle.
 - **Act:** grab inside the cube and pinch to scale the covered zone ([the cube](systems/cube.md)).
 - **See:** the live trajectory line while shaping — it updates on every edit, before release — then the
   flight: the ship launches on each modification and flies that same trajectory. There is **no separate
@@ -34,8 +34,12 @@ job 3, moving the cube at job 4, and multi-zone from job 5. Resize is deferred f
 
 ## 2. Session — one job (~1 minute)
 
-Modify → the ship flies the current trajectory (a check) → keep shaping → arrive.
+**Start** (the failed check) → modify → the ship flies the current trajectory (a check) → keep shaping →
+arrive.
 
+0. **Start:** the job opens with a check — the ship flies the initial field and fails (crash or miss).
+   It is free (no modification, no entropy) and does not end the job; the failure is the problem to fix.
+   The tutorial's start must **crash** into a visible blocker, not miss into empty space.
 1. **Modify:** every completed pinch launches the ship along the resulting trajectory
    ([the cube](systems/cube.md)) — the finished edit *is* the commit; there is no separate commit
    button.

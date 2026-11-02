@@ -11,12 +11,20 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             candidate.Found && (!best.Found || candidate.Routes > best.Routes);
 
         public static PuzzleSeedScanResult Find(
-            PuzzleSeed seed, SpaceShapingSettings settings, int attempts, bool sunScalable = true,
+            PuzzleSeed seed, SpaceShapingSettings settings, int attempts,
             System.Action<int, int> onProgress = null)
         {
             PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
             PuzzleBrief brief = PuzzleBrief.From(seed, settings);
-            brief.SunScalable = sunScalable;
+            if (brief.IsMulti && brief.Mechanism != PuzzleMechanism.Any)
+            {
+                return new PuzzleSeedScanResult
+                {
+                    Seed = seed.seed,
+                    Status = PuzzleBakeStatus.UnsupportedMechanism
+                };
+            }
+
             return Scan(seed, settings, sim, brief, attempts, onProgress);
         }
 
@@ -51,7 +59,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             tally.Failures[(int)candidate.Status]++;
             if (!best.Found)
+            {
                 best.Status = candidate.Status;
+                best.Kind = candidate.Kind;
+            }
             if (tally.HasFailure)
                 return;
 
@@ -78,7 +89,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return ProbeMulti(planets, sim, brief, seedValue);
 
             PuzzleData baked = PuzzleFieldBake.Bake(
-                planets, sim, brief, out PuzzleBakeStatus status, out PuzzleZone[] solution);
+                planets, sim, brief, out PuzzleBakeStatus status, out PuzzleZone[] solution,
+                out PuzzleSolutionKind kind);
             Object.DestroyImmediate(planets);
             return new PuzzleSeedScanResult
             {
@@ -87,6 +99,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Status = status,
                 Puzzle = baked,
                 Solution = solution,
+                Kind = kind,
                 Routes = baked != null ? baked.routes : 0
             };
         }
@@ -104,6 +117,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Status = result.Status,
                 Puzzle = baked,
                 Solution = baked != null ? new[] { result.Solution } : null,
+                Kind = result.Kind,
                 Routes = 0
             };
         }
