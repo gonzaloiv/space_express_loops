@@ -16,7 +16,8 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private LineRenderer headingLine;
         [SerializeField] private Transform endMarker;
         [SerializeField] private Renderer endMarkerRenderer;
-        [SerializeField] private float lineWidth = 0.008f;
+        [SerializeField] private float baselineWidth = 0.001f;
+        [SerializeField] private Material baselineMaterial;
         [SerializeField] private ColorValue success;
         [SerializeField] private ColorValue danger;
         [SerializeField] private ColorValue neutral;
@@ -28,12 +29,12 @@ namespace DigitalLove.Game.SpaceShaping
         private Coroutine pulse;
         private Vector3 markerBaseScale;
         private bool hasMarkerScale;
+        private Material lineMaterial;
 
         private void Awake()
         {
             CaptureMarkerScale();
-            line.widthMultiplier = lineWidth;
-            headingLine.widthMultiplier = lineWidth;
+            lineMaterial = line.sharedMaterial;
         }
 
         public void Show(
@@ -47,12 +48,19 @@ namespace DigitalLove.Game.SpaceShaping
                 return;
             }
 
-            FillLine(result.Points);
+            line.sharedMaterial = lineMaterial;
             Color color = pending
                 ? WithAlpha(this.pending.value, pendingAlpha)
                 : solved ? success.value : ColorFor(result.Outcome);
+            ShowResult(result, color, fieldCentre, fieldHalf, pending);
+        }
+
+        private void ShowResult(
+            TrajectoryResult result, Color color, Vector3 fieldCentre, float fieldHalf, bool pending)
+        {
+            FillLine(result.Points);
             SetColor(color);
-            Vector3 end = result.Points[count - 1];
+            Vector3 end = result.Points[result.Points.Count - 1];
             Vector3 heading = Heading(result.Points);
             ShowMarker(end, heading, color);
             if (!pending && result.Outcome == TrajectoryOutcome.Miss)
@@ -71,12 +79,11 @@ namespace DigitalLove.Game.SpaceShaping
             line.positionCount = 2;
             line.SetPosition(0, start);
             line.SetPosition(1, end);
-            line.widthMultiplier = lineWidth * 0.5f;
-            line.textureMode = LineTextureMode.Tile;
-            line.textureScale = new Vector2(8f, 1f);
+            line.sharedMaterial = baselineMaterial;
+            line.widthMultiplier = baselineWidth;
+            line.textureScale = new Vector2(16f, 1f);
             Color color = BaselineColor();
-            line.startColor = color;
-            line.endColor = color;
+            line.SetBaseColor(color);
             line.enabled = true;
         }
 
@@ -130,6 +137,7 @@ namespace DigitalLove.Game.SpaceShaping
             headingLine.positionCount = 2;
             headingLine.SetPosition(0, end);
             headingLine.SetPosition(1, end + heading * length);
+            headingLine.SetBaseColor(color);
             headingLine.startColor = color;
             headingLine.endColor = color;
             headingLine.enabled = true;
@@ -225,6 +233,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void SetColor(Color color)
         {
+            line.SetBaseColor(color);
             line.startColor = Dim(color);
             line.endColor = color;
         }

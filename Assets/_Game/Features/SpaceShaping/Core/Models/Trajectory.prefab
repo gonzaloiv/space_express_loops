@@ -133,7 +133,7 @@ LineRenderer:
     numCornerVertices: 4
     numCapVertices: 4
     alignment: 0
-    textureMode: 1
+    textureMode: 2
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
@@ -349,7 +349,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.008
+    widthMultiplier: 0.002
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -407,7 +407,7 @@ LineRenderer:
     numCornerVertices: 4
     numCapVertices: 4
     alignment: 0
-    textureMode: 0
+    textureMode: 2
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
@@ -430,7 +430,8 @@ MonoBehaviour:
   headingLine: {fileID: 7424174562472781703}
   endMarker: {fileID: 3512529249859547283}
   endMarkerRenderer: {fileID: 1702546055494276616}
-  lineWidth: 0.002
+  baselineWidth: 0.001
+  baselineMaterial: {fileID: 2100000, guid: fa63089b2f5a421a92636a5f2bc8a517, type: 2}
   success: {fileID: 11400000, guid: c01d0000000000000000000000000002, type: 2}
   danger: {fileID: 11400000, guid: c01d0000000000000000000000000003, type: 2}
   neutral: {fileID: 11400000, guid: c01d0000000000000000000000000007, type: 2}

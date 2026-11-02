@@ -63,7 +63,7 @@ namespace DigitalLove.Game.SpaceShaping
             ResetView();
             session.Reset();
             view.SoftResetShips(session);
-            PushField(false, false);
+            PlayStartCheck();
             view.ShowBaseline(session);
         }
 
@@ -177,8 +177,15 @@ namespace DigitalLove.Game.SpaceShaping
             ResetView();
             session = new SpaceShapingSession(BuildSetup());
             view.SoftResetShips(session);
-            PushField(false, false);
+            PlayStartCheck();
             view.ShowBaseline(session);
+        }
+
+        private void PlayStartCheck()
+        {
+            PushField(true, false);
+            view.ShowTrajectories(session, lastResults, false);
+            view.TravelShips(session, lastResults);
         }
 
         private void PushField(bool startFlight = false, bool showPath = true)

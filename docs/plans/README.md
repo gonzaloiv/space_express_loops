@@ -10,9 +10,7 @@ the ship flies the deformed spacetime.
 
 Active work. The one thing being built.
 
-- [Puzzle solution mechanism — curve or clear](in-progress/puzzle-solution-mechanism.md) — the creator
-  classifies a solve as a well curve or an obstacle clear, and a job requests its role. S1/S2 implemented;
-  S3 re-bakes the content; §7 start check is open.
+- Nothing in progress.
 
 ## Next
 

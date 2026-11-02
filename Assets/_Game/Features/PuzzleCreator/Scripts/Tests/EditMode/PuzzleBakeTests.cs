@@ -96,7 +96,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
-        public void Bake_TutorialStartShowsABlocker()
+        public void Bake_TutorialStartCrashes()
         {
             PuzzleBrief tutorial = brief;
             tutorial.NoFail = true;
@@ -112,7 +112,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             }
 
             PuzzleVerification check = PuzzleVerifier.Verify(baked, solution, sim);
-            Assert.IsTrue(PuzzleStartCheck.ShowsBlocker(check, baked, sim));
+            Assert.AreEqual(TrajectoryOutcome.Crash, check.StartOutcome);
             Object.DestroyImmediate(baked);
         }
 

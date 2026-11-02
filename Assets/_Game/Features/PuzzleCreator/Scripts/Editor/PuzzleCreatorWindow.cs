@@ -307,8 +307,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                     + "(a crash or a miss); use Find working seed.";
 
             if (status == PuzzleBakeStatus.StartNotBlocked)
-                return "Rejected: the tutorial start misses with no blocker on the line. Use Find working "
-                    + "seed.";
+                return "Rejected: the tutorial start misses. It must crash into a visible blocker; use Find "
+                    + "working seed.";
 
             if (status == PuzzleBakeStatus.WrongRoleRoute)
                 return $"Rejected: a {generatedKind} route is at least as cheap as the requested "
