@@ -32,7 +32,9 @@ the UI. Do not introduce a third word for the same idea.
 | **the field** | The derived acceleration/potential the ship flies through. |
 | **the lattice (the grid)** | The visual spacetime mesh the player's zones warp; flat until a zone is applied. Use **lattice** in design prose; **grid** is the code name. |
 | **straight-line reference** | The origin→destination line a flat field would produce; the baseline the player compares the warped trajectory against. |
-| **well** | A planet's gravity well. A bigger planet makes a deeper well (`mass ∝ radius³`) and bends the path more. |
+| **well** | A planet's gravity well. A bigger planet makes a deeper well (`mass ∝ radius³`) and bends the path more. A smaller one is a smaller obstacle on the line. |
+| **obstacle** | A body on the origin→destination line. Shrinking it shrinks its collision radius, so the path can clear. |
+| **curve / clear** | The two roles of the scale: **grow to curve** (a well bends the path), **shrink to clear** (a smaller obstacle leaves the line). A multi-zone solution can mix them. |
 | **readout** | The derived surface for one run: result, entropy and stars. The final bar lives **in the field**, not a panel; the lab panel is a diagnostic. |
 | **bubble** | The playfield: the miniature universe anchored in the room. |
 | **job (level, contract)** | One delivery — a cube on the map; ~1 minute each, **3–5 first**, 7 in the run. **Contract** is the fiction word. |

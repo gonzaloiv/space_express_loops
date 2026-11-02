@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DigitalLove.Game.SpaceShaping.Cube;
 using DigitalLove.Game.SpaceShaping.Grid;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace DigitalLove.Game.SpaceShaping
 {
@@ -12,8 +13,9 @@ namespace DigitalLove.Game.SpaceShaping
     {
         [SerializeField] private SpaceShapingSpawner spawner;
         [SerializeField] private SpacetimeMeshView mesh;
-        [Tooltip("Visual gap between the origin planet's surface and where the trajectory and ship start, in metres.")]
-        [SerializeField] private float launchGap = 0.02f;
+        [Tooltip("Clearance between a planet's surface and the trajectory/ship at both caps, in metres.")]
+        [FormerlySerializedAs("launchGap")]
+        [SerializeField] private float capGap = 0.02f;
         [Tooltip("Lattice fade: distance from the nearest planet or the run where the fade starts, as a fraction of the field half-extent.")]
         [SerializeField] private float fadeNear = 0.15f;
         [Tooltip("Lattice fade: distance from the nearest planet or the run where the lattice is fully transparent, as a fraction of the field half-extent.")]
@@ -127,6 +129,25 @@ namespace DigitalLove.Game.SpaceShaping
             SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results, bool pending) =>
             spawner.Lines.Show(Visible(session, results), frameCentre, frameHalf, pending);
 
+        public void ShowBaseline(SpaceShapingSession session)
+        {
+            int count = session.ShipCount;
+            Vector3[] starts = new Vector3[count];
+            Vector3[] ends = new Vector3[count];
+            for (int i = 0; i < count; i++)
+            {
+                ShipSpec ship = session.Ship(i);
+                starts[i] = LaunchPoint(session, ship);
+                ends[i] = ArrivalPoint(session, ship);
+            }
+
+            spawner.Baselines.ShowBaselines(starts, ends);
+        }
+
+        public void HideBaseline() => spawner.Baselines.Hide();
+
+        public void HideTrajectories() => spawner.Lines.Hide();
+
         public void PulseTrajectories() => spawner.Lines.Pulse();
 
         private TrajectoryResult[] Visible(
@@ -134,7 +155,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             TrajectoryResult[] visible = new TrajectoryResult[results.Count];
             for (int i = 0; i < results.Count; i++)
-                visible[i] = ClipToLaunch(results[i], session, session.Ship(i));
+                visible[i] = ClipToCaps(results[i], session, session.Ship(i));
 
             return visible;
         }
@@ -143,27 +164,45 @@ namespace DigitalLove.Game.SpaceShaping
         {
             Vector3 direction = ship.Destination - ship.Origin;
             direction = direction.sqrMagnitude > 0.000001f ? direction.normalized : Vector3.forward;
-            return ship.Origin + direction * (session.RadiusAt(ship.Origin) + launchGap);
+            return ship.Origin + direction * (session.RadiusAt(ship.Origin) + capGap);
         }
 
-        private TrajectoryResult ClipToLaunch(
+        private Vector3 ArrivalPoint(SpaceShapingSession session, ShipSpec ship)
+        {
+            Vector3 direction = ship.Destination - ship.Origin;
+            direction = direction.sqrMagnitude > 0.000001f ? direction.normalized : Vector3.forward;
+            return ship.Destination - direction * (session.RadiusAt(ship.Destination) + capGap);
+        }
+
+        private TrajectoryResult ClipToCaps(
             TrajectoryResult result, SpaceShapingSession session, ShipSpec ship)
         {
             if (!result.HasPoints)
                 return result;
 
-            float clearance = session.RadiusAt(ship.Origin) + launchGap;
-            float clearanceSq = clearance * clearance;
+            List<Vector3> points = result.Points;
             int start = 0;
-            while (start < result.Points.Count
-                && (result.Points[start] - ship.Origin).sqrMagnitude < clearanceSq)
+            float launchSq = ClearanceSq(session.RadiusAt(ship.Origin));
+            while (start < points.Count
+                && (points[start] - ship.Origin).sqrMagnitude < launchSq)
                 start++;
 
-            if (start == 0 || start >= result.Points.Count)
+            int end = points.Count - 1;
+            float arrivalSq = ClearanceSq(session.RadiusAt(ship.Destination));
+            while (end > start && (points[end] - ship.Destination).sqrMagnitude < arrivalSq)
+                end--;
+
+            if ((start == 0 && end == points.Count - 1) || end <= start)
                 return result;
 
             return new TrajectoryResult(
-                result.Outcome, result.Points.GetRange(start, result.Points.Count - start));
+                result.Outcome, points.GetRange(start, end - start + 1));
+        }
+
+        private float ClearanceSq(float radius)
+        {
+            float clearance = radius + capGap;
+            return clearance * clearance;
         }
 
         public void ClearPrediction() => spawner.Cubes.ClearPredictions();

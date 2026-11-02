@@ -17,14 +17,16 @@ detail at once, no transition. **The cube's size is the aperture:** it sets the 
 magnitude. The level sets the cube's size; resizing is deferred (it works, but the explanation is not
 ready).
 
-**One gesture, one effect.** A pinch inside the cube does two things at once, and both are *space*:
+**One gesture, two roles.** A pinch inside the cube changes the space and the bodies at once:
 
 - it stretches the **metric** — a shrunk zone is a **shortcut**;
-- it **spreads and grows** the covered planets (`mass ∝ radius³`), so a grown planet is heavier and
-  bends the path more.
+- it **spreads and scales** the covered planets: a grown planet is heavier (`mass ∝ radius³`) and bends
+  the path more; a shrunken planet is a **smaller obstacle** and can clear a path it was blocking.
 
-The path bends because the planets moved and grew; the field and the trajectory are computed from the
-result ([core loop](../core-loop.md)).
+The path bends because the planets moved and changed; the field and the trajectory are computed from the
+result ([core loop](../core-loop.md)). **Grow to bend, shrink to clear** — the direction of the same
+gesture chooses the role. With several cubes, one can shrink an obstacle while another grows a well: a
+clear and a curve in one solution.
 
 **Honest framing.** The physics is Newtonian gravity — `SpacetimeField` is inverse-square, a source is
 position + radius + strength. A **sun** is a source too: it sits at the field centre, is scalable by
@@ -37,12 +39,13 @@ player *decides*, not the number they read after solving.
 
 | Gesture | Trigger | Effect |
 |---|---|---|
-| **The scale** | a two-hand pinch **inside** the cube | scales the space *and* the content: the metric stretches (a shrunk zone is a **shortcut**), the planets **spread** and **grow** (`mass ∝ radius³`), so a grown planet deepens its well and bends the path |
+| **The scale** | a two-hand pinch **inside** the cube | scales the space *and* the content: the metric stretches (a shrunk zone is a **shortcut**), the planets **spread** and **scale** — a grown planet deepens its well and bends the path, a shrunken planet is a smaller obstacle and can clear it |
 | **The region** *(move at job 4; resize deferred)* | grab the cube's **edges / corners** | **moves / resizes** the cube — sets *where* you work; the soft brush blends several zones |
 
 **Multiple scales are the way.** The player scales **several** zones, and the soft brush blends them
-into one field — the core of the verb, not a later unlock. The region's size must stay **separate
-from the scale** — coupling them is the bug.
+into one field — the core of the verb, not a later unlock. One zone can clear an obstacle while another
+grows a well: the same gesture with two roles. The region's size must stay **separate from the scale** —
+coupling them is the bug.
 
 **The brief selects the gestures.** A fixed level locks the move, a locked frame locks the resize, and
 the scale inside the cube is always available. Several zones do not require a movable cube; the
@@ -59,8 +62,8 @@ count.
   `TrajectoryIntegrator` stand). Scaling the content changes the field for free through the existing
   `mass ∝ radius³` rule.
 - **The sun is scalable by default.** It sits at the field centre and is never an endpoint. A cube
-  containing its centre scales it; a puzzle can lock it (`sunScalable` off), pinning min and max scale
-  to the baked radius. Job 1 has no sun; the centre (job 2) introduces it with the cube over its centre;
+  containing its centre scales it; a level can lock it (`fixedMass`), pinning min and max scale to the
+  baked radius. Job 1 has no sun; the centre (job 2) introduces it with the cube over its centre;
   after that it is a normal source.
 - **A translatable level starts the cube at the centre.** The solution includes an off-centre zone, so the
   move is required; the player chooses where to work.
@@ -82,8 +85,9 @@ count.
 - While the pinch is in progress the **frame stays fixed** and the **inner volume** scales with the
   hands: the content it covers spreads and grows, the fill follows the hand scale (the throb is only an
   accent), and the trajectory preview follows. The volume, not the frame, is the thing being scaled.
-- The planets visibly **spread and grow**; the sun scales by its centre unless the puzzle locks it. A
-  locked sun holds its mass and reads as fixed, so covering it with the cube does not look broken.
+- The planets visibly **spread and scale** — grow to bend, shrink to clear; the sun scales by its centre
+  unless the puzzle locks it. A locked sun holds its mass and reads as fixed, so covering it with the cube
+  does not look broken.
 - The cube keeps a **committed check lamp** after landing — it shows the last check's outcome until
   the next edit. A locked gesture or an over-budget scale **flashes the frame** instead of failing
   silently.

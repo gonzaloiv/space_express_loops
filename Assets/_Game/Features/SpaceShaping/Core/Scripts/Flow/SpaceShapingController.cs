@@ -50,6 +50,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             view.ShipsCompleted -= OnFlightCompleted;
             view.Refused -= OnRefused;
+            view.HideBaseline();
             session = null;
             isFlying = false;
         }
@@ -61,7 +62,8 @@ namespace DigitalLove.Game.SpaceShaping
             ResetView();
             session.Reset();
             view.SoftResetShips(session);
-            PushField();
+            PushField(false, false);
+            view.ShowBaseline(session);
         }
 
         public void NextPuzzle()
@@ -77,6 +79,7 @@ namespace DigitalLove.Game.SpaceShaping
             SpacetimeField field = preview.BuildField();
             TrajectoryResult[] results = preview.SimulateAll(field, integrator, launch);
             view.Render(field, preview);
+            view.ShowBaseline(preview);
             view.ShowTrajectories(preview, results, false);
         }
 
@@ -152,6 +155,7 @@ namespace DigitalLove.Game.SpaceShaping
             wasScaling = false;
             session.CommitPreview();
             PushField(true);
+            view.HideBaseline();
             view.TravelShips(session, lastResults);
         }
 
@@ -171,10 +175,11 @@ namespace DigitalLove.Game.SpaceShaping
             ResetView();
             session = new SpaceShapingSession(BuildSetup());
             view.SoftResetShips(session);
-            PushField();
+            PushField(false, false);
+            view.ShowBaseline(session);
         }
 
-        private void PushField(bool startFlight = false)
+        private void PushField(bool startFlight = false, bool showPath = true)
         {
             isFlying = startFlight;
             view.StopShips();
@@ -182,7 +187,10 @@ namespace DigitalLove.Game.SpaceShaping
             TrajectoryResult[] results = session.SimulateAll(field, integrator, launch);
 
             ApplyAndRender(field);
-            view.ShowTrajectories(session, results, true);
+            if (showPath)
+                view.ShowTrajectories(session, results, true);
+            else
+                view.HideTrajectories();
 
             lastResults = results;
             hasResult = true;
@@ -197,8 +205,11 @@ namespace DigitalLove.Game.SpaceShaping
 
             isChecked = true;
             isFlying = false;
-            view.SetPrediction(session.IsSolved(lastResults), lastResults.Worst());
+            bool solved = session.IsSolved(lastResults);
+            view.SetPrediction(solved, lastResults.Worst());
             view.ShowTrajectories(session, lastResults, false);
+            if (!solved)
+                view.ShowBaseline(session);
             view.PulseTrajectories();
             PublishReadout();
         }

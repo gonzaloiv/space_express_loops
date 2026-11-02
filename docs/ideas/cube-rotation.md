@@ -10,5 +10,4 @@ containment test, and the baked geometry for a verb the player has not asked for
 accepts oriented zones. Worth it only if a puzzle needs a frame that is not axis-aligned — for example,
 a tilted field where the player wants to work along the tilt.
 
-**Related:** [the cube](../design/systems/cube.md) ·
-[a more realistic field](../plans/in-progress/space-shaping-realistic-field.md)
+**Related:** [the cube](../design/systems/cube.md)

@@ -183,6 +183,33 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             Assert.IsFalse(readout.IsFailed);
         }
 
+        [Test]
+        public void LastEdit_ReportsCostAndCentre()
+        {
+            SpaceShapingSession session = new(Setup());
+            session.ApplyZone(Zone(1.5f));
+            Vector3 centre = new(1f, 0f, 0f);
+            session.ApplyZone(new SpaceZone(centre, Vector3.one, 1.2f, 0f));
+
+            PuzzleReadout readout = PuzzleReadout.From(session, Simulate(session), true);
+
+            Assert.IsTrue(readout.HasLastEdit);
+            Assert.AreEqual(0.2f, readout.LastEditCost, 0.0001f);
+            Assert.AreEqual(centre, readout.LastEditCentre);
+        }
+
+        [Test]
+        public void NoEdit_ReportsNoLastEdit()
+        {
+            SpaceShapingSession session = new(Setup());
+
+            PuzzleReadout readout = PuzzleReadout.From(session, Simulate(session), true);
+
+            Assert.IsFalse(readout.HasLastEdit);
+            Assert.AreEqual(0f, readout.LastEditCost, 0.0001f);
+            Assert.AreEqual(Vector3.zero, readout.LastEditCentre);
+        }
+
         private static SpaceShapingSetup Setup() => new()
         {
             Origin = new Vector3(-4f, 0f, 0f),

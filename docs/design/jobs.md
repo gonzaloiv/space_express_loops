@@ -33,7 +33,7 @@ turn the silhouette when the act turns; the new verb is still the lesson.
 
 **The sun.** The field can place a **sun** at its centre; it is scalable by its centre by default, is
 never a run endpoint, and is not counted in the planet column ([the cube](systems/cube.md)). A seed can
-lock it, change its radius, or omit it.
+omit it; the level can lock it; the settings size it.
 
 **The sun in the first jobs.** Job 1 has **no sun**: the only sources are planets. Job 2 introduces the
 sun with a fixed cube over the centre, so the star is in the zone by construction. No lock; after job 2
@@ -120,6 +120,13 @@ add a layout.
 | **Move** | `translatable`, `zones 1` | place the cube yourself | 4 |
 | **Multi-zone** | `zones ≥ 2`, `translatable` | place and blend several zones — a spread edit can spend less entropy | 5–6 |
 | **Capstone** | `zones ≥ 2`, `translatable`, cube over the sun | combine the centre + several zones | 7 |
+| **Obstacle** | `zones 1`, cube on a body on the line | shrink the blocker so the path clears | later |
+| **Mixed** | `zones ≥ 2`, one on the blocker, one on a run planet | clear with one zone, curve with another | later |
+
+**The obstacle is the second role.** A body on the straight line is an obstacle; reducing its scale
+reduces its collision radius, so the path can pass. It is a **later variation**, not job 1: the tutorial
+keeps the curve. With several cubes, one can sit on the obstacle (shrink) and one on a run planet (grow)
+— a clear and a curve in one multi-zone solution. The creator tags the role so a job can request it.
 
 **Multi-zone as an efficiency lesson.** Each committed zone edit costs its net change from that zone's
 last committed scale, so a level can be authored so the **cheap** solution is to **move the cube** and
@@ -133,7 +140,8 @@ the player meets the sun with a fixed cube and only later learns to place the cu
 Shape is a second axis, from `fieldShape`: **Ring** and **Spiral** are thin discs with a central
 bulge; **Cluster** is a 3D ellipsoid. The field may be tilted off the XZ plane; the cube and its
 gestures stay world-axis-aligned. The run turns the shape by act (Ring → Spiral → Cluster), so a job is
-e.g. *Multi-zone · Spiral*.
+e.g. *Multi-zone · Spiral*. Role is a third axis: a zone **curves** (grow a well) or **clears** (shrink a
+blocker); a multi-zone job can mix one of each.
 
 Each archetype should have **more than one route** where the brief allows. A job with one route is a
 single answer, not a variation.

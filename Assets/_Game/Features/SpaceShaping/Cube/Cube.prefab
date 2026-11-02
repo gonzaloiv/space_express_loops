@@ -164,11 +164,8 @@ MonoBehaviour:
   frameRenderer: {fileID: 27529119412877910}
   fillRenderer: {fileID: 7219471136746057563}
   neutral: {fileID: 11400000, guid: c01d0000000000000000000000000007, type: 2}
-  neutralHover: {fileID: 11400000, guid: c01d0000000000000000000000000008, type: 2}
-  slow: {fileID: 11400000, guid: c01d0000000000000000000000000005, type: 2}
-  fast: {fileID: 11400000, guid: c01d0000000000000000000000000006, type: 2}
+  accent: {fileID: 11400000, guid: c01d0000000000000000000000000001, type: 2}
   success: {fileID: 11400000, guid: c01d0000000000000000000000000002, type: 2}
-  miss: {fileID: 11400000, guid: c01d0000000000000000000000000004, type: 2}
   danger: {fileID: 11400000, guid: c01d0000000000000000000000000003, type: 2}
   frameGain: 1.5
   frameGrowRatio: 2
@@ -286,6 +283,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Cube::DigitalLove.Game.SpaceShaping.Cube.SpaceZoneView
   falloff: 0.5
   contentInsetFraction: 0.075
+  scaleMarginFraction: 0.25
   throbAmount: 0.5
   contentVisual: {fileID: 929135511502200135}
   listener: {fileID: 5660060481010103316}

@@ -11,6 +11,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         public string[] names = Array.Empty<string>();
 
+        public string NameAt(int index)
+        {
+            if (names == null || names.Length == 0)
+                return string.Empty;
+
+            return names[((index % names.Length) + names.Length) % names.Length];
+        }
+
         public void Assign(PuzzleFieldPlanet[] planets)
         {
             if (planets == null || planets.Length == 0)

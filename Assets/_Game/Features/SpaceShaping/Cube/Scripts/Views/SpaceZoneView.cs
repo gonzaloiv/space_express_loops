@@ -98,7 +98,14 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         public void Refuse(ZoneRefusal reason) => listener.Refuse(reason);
 
-        public void SetScaling(bool value) => scaling = value;
+        public void SetScaling(bool value)
+        {
+            if (scaling == value)
+                return;
+
+            scaling = value;
+            ApplyContentVisual();
+        }
 
         public void ResetScale()
         {
@@ -112,8 +119,10 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             if (contentVisual == null)
                 return;
 
-            float throb = 1f + Mathf.Abs(scale - 1f) * throbAmount;
-            contentVisual.localScale = Vector3.one * Mathf.Min(ContentFraction * throb, 1f);
+            float visualScale = scaling ? scale : 1f;
+            float throb = 1f + Mathf.Abs(visualScale - 1f) * throbAmount * 0.25f;
+            float fill = ContentFraction * visualScale * throb;
+            contentVisual.localScale = Vector3.one * Mathf.Clamp(fill, 0.01f, ContentFraction);
         }
     }
 }

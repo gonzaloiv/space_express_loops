@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using DigitalLove.Game.Nodes;
 using DigitalLove.Game.SpaceShaping.Cube;
+using DigitalLove.Global;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
@@ -23,9 +24,14 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private SpaceZoneView cubePrototype;
         [SerializeField] private Transform cubeParent;
 
+        [Header("Endpoints")]
+        [SerializeField] private ColorValue originColor;
+        [SerializeField] private ColorValue destinationColor;
+
         private readonly List<FieldPlanetBehaviour> pool = new();
         private readonly List<SpaceZoneView> cubes = new();
         private TrajectoryLinePool lines;
+        private TrajectoryLinePool baselines;
         private ShipFlightPool ships;
         private FieldPlanetBehaviour sunPlanet;
         private FieldPlanetBehaviour originPlanet;
@@ -34,6 +40,7 @@ namespace DigitalLove.Game.SpaceShaping
         public FieldPlanetBehaviour Origin => originPlanet;
         public FieldPlanetBehaviour Destination => destinationPlanet;
         public TrajectoryLinePool Lines => lines;
+        public TrajectoryLinePool Baselines => baselines;
         public ShipFlightPool Ships => ships;
         public IReadOnlyList<SpaceZoneView> Cubes => cubes;
 
@@ -49,6 +56,7 @@ namespace DigitalLove.Game.SpaceShaping
             destinationPlanet = Instantiate(destinationPrototype, sourceParent);
             destinationPlanet.Initialize();
             lines = new TrajectoryLinePool(trajectoryPrototype, linesParent);
+            baselines = new TrajectoryLinePool(trajectoryPrototype, linesParent);
             ships = new ShipFlightPool(shipPrototype, shipsParent, shipStaggerSecs);
             ships.Completed += OnShipsCompleted;
         }
@@ -83,6 +91,10 @@ namespace DigitalLove.Game.SpaceShaping
 
             Spawn(originPlanet, session, origin);
             Spawn(destinationPlanet, session, destination);
+            if (origin >= 0)
+                originPlanet.SetRouteColor(originColor.value);
+            if (destination >= 0)
+                destinationPlanet.SetRouteColor(destinationColor.value);
         }
 
         public SpaceZoneView Cube(int index)

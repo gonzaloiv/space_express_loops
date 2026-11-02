@@ -8,5 +8,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public PuzzleBakeStatus Status;
         public PuzzleData Puzzle;
         public PuzzleZone[] Solution;
+        public int Attempts;
+        public int Baked;
+        public bool HasFailure;
+        public PuzzleBakeStatus FirstFailure;
+        public int[] Failures;
     }
 }

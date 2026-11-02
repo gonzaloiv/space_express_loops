@@ -36,6 +36,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
+        public void NameAt_WrapsTheList()
+        {
+            PlanetNames names = Names("alpha", "bravo");
+
+            Assert.AreEqual("alpha", names.NameAt(0));
+            Assert.AreEqual("bravo", names.NameAt(1));
+            Assert.AreEqual("alpha", names.NameAt(2));
+            Assert.AreEqual("bravo", names.NameAt(-1));
+            Object.DestroyImmediate(names);
+        }
+
+        [Test]
         public void Bridge_CarriesThePlanetName()
         {
             PuzzleFieldPlanet[] planets = Planets(1);

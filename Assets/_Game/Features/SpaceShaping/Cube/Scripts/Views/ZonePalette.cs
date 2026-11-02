@@ -6,11 +6,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
     public sealed class ZonePalette
     {
         public Color Neutral;
-        public Color NeutralHover;
-        public Color Slow;
-        public Color Fast;
+        public Color Accent;
         public Color Success;
-        public Color Miss;
         public Color Danger;
         public float FillIdleAlpha = 0.1f;
         public float FillActiveAlpha = 0.45f;

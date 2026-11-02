@@ -13,6 +13,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         [SerializeField] private SpaceShapingSettings settings;
         [SerializeField] private PuzzleShapeAsset shape;
         [SerializeField] private PuzzlePlanetListAsset planets;
+        [SerializeField] private bool lockSun;
 
         private PuzzleData generated;
         private PuzzleZone[] generatedSolution;
@@ -55,6 +56,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
             EditorGUILayout.LabelField("Brief", BriefText(seed));
             EditorGUILayout.HelpBox("Edit the seed asset to change the brief.", MessageType.None);
+            lockSun = EditorGUILayout.Toggle("Lock sun", lockSun);
         }
 
         private void DrawExport()
@@ -96,6 +98,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             planets = PuzzleArtifactExporter.ExportPlanets(shape);
             PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
             PuzzleBrief brief = PuzzleBrief.From(seed, settings);
+            brief.SunScalable = !lockSun;
             if (brief.IsMulti)
                 GenerateMultiShip(sim, brief);
             else
@@ -116,15 +119,25 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         {
             PuzzleBrief brief = PuzzleBrief.From(seed, settings);
             int attempts = brief.IsMulti ? MultiSeedAttempts : SeedAttempts;
-            PuzzleSeedScanResult result = PuzzleSeedScanner.Find(seed, settings, attempts);
+            int start = CurrentSeed();
+            PuzzleSeedScanResult result;
+            try
+            {
+                result = PuzzleSeedScanner.Find(
+                    seed, settings, attempts, !lockSun, ReportProgress);
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
+            }
 
             status = result.Status;
+            string report = ScanReport(result, start);
             if (!result.Found)
             {
                 generated = null;
                 generatedSolution = null;
-                Debug.LogWarning(
-                    $"Puzzle creator: no working seed in {attempts} from {CurrentSeed()} ({result.Status}).");
+                Debug.LogWarning($"Puzzle creator: no working seed. {report}");
                 return;
             }
 
@@ -137,8 +150,35 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             string summary = brief.IsMulti
                 ? $"{result.Puzzle.ships.Length} ship(s), {brief.Relation}"
                 : $"{result.Puzzle.zones} zone(s), {result.Routes} route(s)";
-            Debug.Log($"Puzzle creator: seed {result.Seed} baked a verified level ({summary}).");
+            Debug.Log($"Puzzle creator: seed {result.Seed} baked a verified level ({summary}). {report}");
             Repaint();
+        }
+
+        private void ReportProgress(int done, int total)
+        {
+            EditorUtility.DisplayProgressBar(
+                "Find working seed", $"Probing seed {CurrentSeed() + done - 1} ({done}/{total})...",
+                done / (float)total);
+        }
+
+        private static string ScanReport(PuzzleSeedScanResult result, int start)
+        {
+            string text = $"scanned {result.Attempts} from {start}: {result.Baked} baked";
+            if (result.Found)
+                text += $", seed {result.Seed} ({result.Routes} route(s))";
+            if (result.Failures != null)
+            {
+                for (int i = 0; i < result.Failures.Length; i++)
+                {
+                    if (result.Failures[i] == 0)
+                        continue;
+                    text += $", {(PuzzleBakeStatus)i} {result.Failures[i]}";
+                }
+            }
+
+            if (!result.Found && result.HasFailure)
+                text += $", first failure {result.FirstFailure}";
+            return text;
         }
 
         private void Save()
@@ -178,7 +218,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 "Start", $"{run.StartOutcome} (margin {run.StartMargin:F3} m)");
             EditorGUILayout.LabelField("Solution", run.SolvedOutcome.ToString());
             EditorGUILayout.LabelField(
-                "Entropy", $"{run.EntropySpent:F2} / {puzzle.entropyBudget:F2}  ({PuzzleGrade.Stars(run.EntropySpent, puzzle.entropyBudget)}★)");
+                "Entropy", $"{run.EntropySpent:F2} / {puzzle.entropyBudget:F2}  {GradeText(puzzle, run)}");
             EditorGUILayout.LabelField("Cubes", FramesText(puzzle));
             EditorGUILayout.LabelField("Zones", puzzle.zones.ToString());
             EditorGUILayout.LabelField("Routes", puzzle.routes.ToString());
@@ -202,14 +242,21 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 : $"{puzzle.frames.Length} · {min:F2}–{max:F2} m";
         }
 
+        private static string GradeText(PuzzleData puzzle, PuzzleVerification run) =>
+            puzzle.noGrade
+                ? "(tutorial)"
+                : $"({PuzzleGrade.Stars(run.EntropySpent, puzzle.entropyBudget)}★)";
+
         private static string BriefText(PuzzleSeed value) =>
             $"{BriefText(value.translatable, value.zones, value.resizable)}"
             + $" · {Mathf.Max(1, value.ships)} ship(s) · {value.fieldShape}"
-            + (value.ships > 1 ? $" · {value.relation}" : "");
+            + (value.ships > 1 ? $" · {value.relation}" : "")
+            + (value.noFail || value.noGrade ? " · tutorial" : "");
 
         private static string BriefText(PuzzleData value) =>
             BriefText(value.translatable, value.zones, value.resizable)
-            + $" · {ShipCount(value)} ship(s)";
+            + $" · {ShipCount(value)} ship(s)"
+            + (value.noFail || value.noGrade ? " · tutorial" : "");
 
         private static int ShipCount(PuzzleData puzzle) =>
             puzzle.ships != null && puzzle.ships.Length > 0 ? puzzle.ships.Length : 1;

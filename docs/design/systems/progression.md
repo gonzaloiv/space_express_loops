@@ -66,6 +66,9 @@ So the run order is **scale → centre → several zones → move → multi-zone
 deferred** from the slice: it works, but the explanation (size is scope, not precision) is not ready; it
 is the next cut candidate.
 
+**The obstacle is a later variation.** Shrinking a blocker to clear the chord is the opposite role of the
+curve; the tutorial keeps the curve, and a multi-zone job can combine a clear with a curve.
+
 ### The several-zones rung
 
 **Several zones is its own rung (2026-10-29).** The old rule — a fixed cube covers one region, so
@@ -130,6 +133,7 @@ The verb is always the **scale**, so variety comes from the field and the brief:
 7. **Depth** — flat disc → bulge and tilt; where the vertical structure sits.
 8. **Field shape** — Ring → Spiral → Cluster; one shape per act, so the run's silhouette turns with it.
 9. **Sun** — radius and mass; scalable by its centre by default, lockable per puzzle.
+10. **Edit role** — curve (grow a well) or clear (shrink a blocker); a multi-zone job can mix one of each.
 
 ## Persistence
 

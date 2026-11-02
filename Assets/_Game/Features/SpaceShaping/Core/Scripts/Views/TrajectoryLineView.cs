@@ -19,9 +19,9 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private float lineWidth = 0.008f;
         [SerializeField] private ColorValue success;
         [SerializeField] private ColorValue danger;
-        [SerializeField] private ColorValue miss;
+        [SerializeField] private ColorValue neutral;
         [Tooltip("Unchecked prediction colour: the path is not a result until the ship lands.")]
-        [SerializeField] private Color pending = new(0.231f, 0.361f, 0.965f, 0.55f);
+        [SerializeField] private ColorValue pending;
 
         private RendererTint markerTint;
         private Coroutine pulse;
@@ -47,7 +47,7 @@ namespace DigitalLove.Game.SpaceShaping
             }
 
             FillLine(result.Points);
-            Color color = pending ? this.pending : solved ? success.value : ColorFor(result.Outcome);
+            Color color = pending ? this.pending.value : solved ? success.value : ColorFor(result.Outcome);
             SetColor(color);
             Vector3 end = result.Points[count - 1];
             Vector3 heading = Heading(result.Points);
@@ -58,6 +58,30 @@ namespace DigitalLove.Game.SpaceShaping
                 HideHeading();
 
             line.enabled = true;
+        }
+
+        public void ShowBaseline(Vector3 start, Vector3 end)
+        {
+            StopPulse();
+            HideHeading();
+            endMarker.gameObject.SetActive(false);
+            line.positionCount = 2;
+            line.SetPosition(0, start);
+            line.SetPosition(1, end);
+            line.widthMultiplier = lineWidth * 0.5f;
+            line.textureMode = LineTextureMode.Tile;
+            line.textureScale = new Vector2(8f, 1f);
+            Color color = BaselineColor();
+            line.startColor = color;
+            line.endColor = color;
+            line.enabled = true;
+        }
+
+        private Color BaselineColor()
+        {
+            Color color = Color.Lerp(this.pending.value, Color.gray, 0.65f);
+            color.a = 0.4f;
+            return color;
         }
 
         private void FillLine(IReadOnlyList<Vector3> points)
@@ -188,7 +212,7 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         private Color ColorFor(TrajectoryOutcome outcome) =>
-            outcome == TrajectoryOutcome.Crash ? danger.value : miss.value;
+            outcome == TrajectoryOutcome.Crash ? danger.value : neutral.value;
 
         private void SetColor(Color color)
         {

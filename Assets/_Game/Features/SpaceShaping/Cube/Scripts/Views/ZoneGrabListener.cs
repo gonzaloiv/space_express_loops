@@ -14,11 +14,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         [Header("Palette")]
         [SerializeField] private ColorValue neutral;
-        [SerializeField] private ColorValue neutralHover;
-        [SerializeField] private ColorValue slow;
-        [SerializeField] private ColorValue fast;
+        [SerializeField] private ColorValue accent;
         [SerializeField] private ColorValue success;
-        [SerializeField] private ColorValue miss;
         [SerializeField] private ColorValue danger;
 
         [Header("Frame - the region")]
@@ -225,11 +222,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             new()
             {
                 Neutral = neutral.value,
-                NeutralHover = neutralHover.value,
-                Slow = slow.value,
-                Fast = fast.value,
+                Accent = accent.value,
                 Success = success.value,
-                Miss = miss.value,
                 Danger = danger.value,
                 FillIdleAlpha = fillIdleAlpha,
                 FillActiveAlpha = fillActiveAlpha,

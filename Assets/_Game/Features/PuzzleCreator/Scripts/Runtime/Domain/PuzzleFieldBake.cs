@@ -16,6 +16,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.translatable = brief.Translatable;
             puzzle.zones = brief.Zones;
             puzzle.resizable = brief.Resizable;
+            puzzle.noFail = brief.NoFail;
+            puzzle.noGrade = brief.NoGrade;
             if (!PuzzleRunChoice.TryPick(
                 planets.planets, settings.RunDistance, brief.EndpointClearance, brief.SunRadius,
                 out Vector3 origin, out Vector3 destination))
@@ -42,7 +44,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             {
                 home = Vector3.zero,
                 scale = sunRadius * 2f,
-                name = "Sun",
+                name = SunName(sources.Length),
                 fixedMass = !sunScalable,
                 centreOnly = true
             };
@@ -51,6 +53,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 withSun[i + 1] = sources[i];
 
             return withSun;
+        }
+
+        private static string SunName(int planetCount)
+        {
+            PlanetNames names = PlanetNames.Instance;
+            return names != null ? names.NameAt(planetCount) : string.Empty;
         }
 
         // The cube must enclose the planet it covers, so the range spans the field's planets with the

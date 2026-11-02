@@ -12,6 +12,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public bool Resizable;
         public int Ships;
         public PuzzleShipRelation Relation;
+        public bool NoFail;
+        public bool NoGrade;
 
         public bool SupportsZones =>
             Zones <= 3;
@@ -23,12 +25,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             EndpointClearance = settings.endpointClearance,
             SunRadius = seed.EffectiveSunRadius(settings),
-            SunScalable = seed.sunScalable,
+            SunScalable = true,
             Translatable = seed.translatable,
             Zones = Mathf.Max(1, seed.zones),
             Resizable = seed.resizable,
             Ships = Mathf.Max(1, seed.ships),
-            Relation = seed.relation
+            Relation = seed.relation,
+            NoFail = seed.noFail,
+            NoGrade = seed.noGrade
         };
     }
 }

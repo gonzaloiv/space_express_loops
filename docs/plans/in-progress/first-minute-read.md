@@ -1,10 +1,10 @@
 # First-minute read and cost
 
-**Status:** next · space shaping · updated 2026-11-02 — the first job is a baked tutorial field, and the
-in-field entropy bar is the read; stars stay score.
+**Status:** now · space shaping · updated 2026-11-02 — S1–S3 are implemented (tutorial rebaked, baseline,
+  unified colour set, in-field bar); run Validation 1.
 
 **Related:** [core loop](../../design/core-loop.md) · [the cube](../../design/systems/cube.md) ·
-[jobs](../../design/jobs.md) · [field plan](../in-progress/space-shaping-realistic-field.md)
+[jobs](../../design/jobs.md)
 
 ## 1. Why
 
@@ -15,22 +15,46 @@ should wait.
 
 ## 2. Slices
 
+All slices are read/presentation work: S1 the tutorial field, the cube fill and the cue, S2 the baseline,
+S2.5 fewer colours, S3 the bar. The baseline and the bar are authored objects (no runtime creation); the
+fill and cue are existing view surfaces.
+
 ### S1 — a clean first contact
 
 The first job is a **viable field, baked normally** — no special case in the bake. Three planets, no
-sun, one fixed zone: two make the run, the third blocks it, and the cube covers one. The lesson is the
-pinch, not the planet count. The creator bakes it from a standard seed (`planetCount 3`, `fieldShape
-Ring`, `hasSun` off, `translatable` off, `zones 1`); use `Find working seed` or `Generate`. Fix the
-single-ring case (force ≥2 rings for the puzzle field) so a small field does not dome its rim. Verify
-with `PuzzleVerifier`: the run misses at start and one pinch solves it.
+sun, one fixed zone: two make the run, the third blocks it, and the cube covers the **blocker** — the only
+non-endpoint body a zone may cover (`PuzzleVerifier` rejects a zone that influences an endpoint). The
+lesson is the pinch, not the planet count. The creator bakes it from a standard
+seed (`planetCount 3`, `fieldShape Ring`, `hasSun` off, `translatable` off, `zones 1`); use `Find working
+seed` or `Generate`. The field already forces at least two rings, so the three-planet field does not dome
+its rim. Verify with `PuzzleVerifier`: the run misses at start and one pinch solves it.
 
-- **The game teaches the pinch.** The tutorial shows the gesture itself: an authored visual cue (the
-  cube's frame pulse/outline), with the manual/TTS line layered on once the read passes. A player who does
-  nothing spends nothing and never fails ([core loop](../../design/core-loop.md) §2), so the game cannot
-  wait for discovery.
+- **Job 1 is a curve.** The third planet is why the start fails; the cube covers the blocker and **grows**
+  it, so its well bends the path around the body. The obstacle lesson is the *shrink* of the same body, a
+  later variation, not the tutorial; request `Curve` once the
+  [mechanism check](../backlog/puzzle-solution-mechanism.md) lands.
+- **Compact the three-planet field.** Keep the sector radius global (`runDistance`); only `spread`
+  follows the count — about 0.6 for three planets, 0.7 for six or more — so the tutorial does not read as
+  a sparse rim. The run target and planet sizes stay global, and `Build_SpansTheRun`'s outer bounds must
+  still hold.
+
+- **The game teaches the pinch.** The tutorial shows the gesture itself: the fill scales with the hands and
+  the frame takes its active colour, with the manual/TTS line layered on once the read passes. A player who
+  does nothing spends nothing and never fails ([core loop](../../design/core-loop.md) §2), so the game
+  cannot wait for discovery.
 - **The pinch is the inner volume.** The frame stays fixed; the inner volume and the content it covers
   scale with the hands, and the path preview follows. The fill follows the hand scale (the throb is only
-  an accent), so the player sees the volume shrink or grow before release.
+  an accent), so the player sees the volume shrink or grow before release. On release the inner volume
+  returns to its base size; the committed scale lives on in the field.
+- **Planet labels sit above the body.** `PlanetNameLabel.Place` anchors the label above the planet on
+  its local Y — the axis the body spins around — so the label stays put instead of orbiting. Keep it
+  clear of the endpoint markers; a short leader is a later polish.
+- **Colour the endpoints.** Tint the origin and destination planet bodies with distinct colours, not only
+  the marker prefabs; reset the tint when a pooled body is reused.
+- **Both trajectory caps clear the surface.** The launch clip uses `LaunchPoint`/`ClipToLaunch` with a
+  fixed 0.02 m gap, and the arrival ends at the capture point; in the headset the ship starts and finishes
+  inside the bodies. Offset both ends by the surface plus a ship-sized clearance, and apply the same
+  clipped points to the line and the flight.
 - **The budget stays derived.** Record the reference solution and set `entropyBudget = 3×` its entropy;
   "generous" means a cheap solution, not a hand-set budget.
 - **No fail, no stars.** Job 1 cannot fail and does not grade: the bar shows spend and remaining, but the
@@ -47,15 +71,28 @@ with `PuzzleVerifier`: the run misses at start and one pinch solves it.
 ### S2 — the straight-line baseline
 
 - The baseline is the **zero-field segment** origin→destination, drawn under the live trajectory, thin,
-  dashed and desaturated. It is not the no-edit trajectory: the lab already draws that, and the field
-  curves it. Show it from entry through shaping, not during the flight, and let it replace the initial
-  pending line as the reference — do not show both.
+  desaturated and tiled so it reads as a dashed reference. It is not the no-edit trajectory: the lab
+  already draws that, and the field curves it. Show it from entry through shaping, not during the flight,
+  and let it replace the initial pending line as the reference — do not show both.
 - It is global to every job, not just job 1.
 - **Exit:** before release, the player can compare the baseline and the bent trajectory.
 
+### S2.5 — fewer colours, direct ColorValue
+
+- Keep the direct `ColorValue` references on the views; do not add a palette asset. The small runtime
+  `ZonePalette` stays as the internal mapping.
+- Make the set consistent: every feature colour is a `ColorValue`, including the spawner's origin and
+  destination (currently plain `Color`). The sun is outside the set today: it is material-owned
+  (`Sun.mat`); add a `sun` `ColorValue` only if the sun body should follow.
+- Remove the feature's `neutralHover`, `slow`, `fast` and `miss` fields: hover uses `accent`; the scale
+  gradient runs `neutral` -> `accent`; a miss uses `neutral`; danger stays for crash/refusal.
+- Keep the shared `ColorValue` assets and `_Modules/Theming`; do not delete the module colours.
+- **Exit:** no plain `Color` fields in the feature; the remaining set is neutral, accent, success,
+  danger, origin, destination, plus `sun` only if chosen.
+
 ### S3 — the in-field entropy bar
 
-- The meter is an authored **3D bar in the field**, anchored **above** the run midpoint
+- The meter is an authored **world-space canvas** in the field, anchored **above** the run midpoint
   (`PuzzleData.zoneCentre`) and billboarded to the player, clear of the trajectory, the cube and the hands.
   It **drains** as entropy is spent. It is not a screen-space panel; the lab panel stays a diagnostic.
 - The bar is **entropy only**: remaining budget, the committed spend, the pending pinch, and the last
@@ -93,12 +130,15 @@ slice's fix. This is Validation 1 ([vision](../../design/vision.md) §7) on the 
 ## 4. Out of scope
 
 - Resize, multi-ship, the field look, more than the first two jobs, and the free-move cue (job 4+).
+- The obstacle/clear lesson and the mixed clear+curve multi-zone job (later).
 
 ## 5. Risks
 
 - **Tutorial bake conditions.** Three planets is the minimum for a no-sun blocked run: `TryPick` pairs
-  endpoints and needs a third body. Two planets cannot bake. Force ≥2 rings for the puzzle field, or the
-  three-planet ring domes its rim. The tutorial is a normal bake, so `Find working seed` works.
+  endpoints and needs a third body. Two planets cannot bake. The field already forces at least two rings,
+  so the tutorial does not dome its rim. Compact the small field through `spread`, not a smaller sector
+  radius; the sector radius stays derived from `runDistance`. The tutorial is a normal bake, so `Find
+  working seed` works.
 - **Bar vs zone tint.** The lattice tint is the zone warp today; a global entropy tint would fight it.
   Keep the bar as the read and give any field-wide stress its own channel.
 - **Direction.** The bar shows remaining; the 1/3 and 2/3 marks are cost, not score.

@@ -59,6 +59,12 @@ namespace DigitalLove.Game.SpaceShaping
 
         public int CommandCount => log.Count;
 
+        public bool HasLastEdit => log.HasCommands;
+
+        public float LastEditCost => log.LastCost;
+
+        public Vector3 LastEditCentre => log.LastCentre;
+
         public float EntropySpent => log.Spent;
 
         public float EntropyCommitted => log.Committed;
@@ -67,7 +73,10 @@ namespace DigitalLove.Game.SpaceShaping
 
         public float EntropyBudget => setup.EntropyBudget;
 
-        public bool IsOverBudget => setup.EntropyBudget > 0f && log.Committed >= setup.EntropyBudget;
+        public bool IsOverBudget => !setup.NoFail && setup.EntropyBudget > 0f
+            && log.Committed >= setup.EntropyBudget;
+
+        public bool NoGrade => setup.NoGrade;
 
         public Vector3 Home(int index) => setup.Sources[index].Home;
 
@@ -89,7 +98,9 @@ namespace DigitalLove.Game.SpaceShaping
         public bool IsFailed(IReadOnlyList<TrajectoryResult> results) =>
             IsOverBudget && !results.AllArrived();
 
-        public int Grade() => PuzzleGrade.Stars(log.Committed, setup.EntropyBudget);
+        public int Grade() => setup.NoGrade
+            ? 0
+            : PuzzleGrade.Stars(log.Committed, setup.EntropyBudget);
 
         public void Reset()
         {

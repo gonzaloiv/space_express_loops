@@ -13,8 +13,7 @@ namespace DigitalLove.Game.SpaceShaping.Grid
         [SerializeField] private int sides = 6;
         [SerializeField] private float radius = 0.005f;
         [SerializeField] private ColorValue neutral;
-        [SerializeField] private ColorValue slow;
-        [SerializeField] private ColorValue fast;
+        [SerializeField] private ColorValue accent;
         [SerializeField] private float tintStrength = 2.5f;
 
         private Mesh mesh;
@@ -49,9 +48,8 @@ namespace DigitalLove.Game.SpaceShaping.Grid
 
         private void ApplyTint(float strength)
         {
-            Color target = strength >= 0f ? slow.value : fast.value;
             float amount = Mathf.Clamp01(Mathf.Abs(strength) * tintStrength);
-            tint.Set(meshRenderer, Color.Lerp(neutral.value, target, amount));
+            tint.Set(meshRenderer, Color.Lerp(neutral.value, accent.value, amount));
         }
 
         private void Remember(

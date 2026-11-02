@@ -110,6 +110,5 @@ MonoBehaviour:
   sides: 4
   radius: 0.0035
   neutral: {fileID: 11400000, guid: c01d0000000000000000000000000007, type: 2}
-  slow: {fileID: 11400000, guid: c01d0000000000000000000000000005, type: 2}
-  fast: {fileID: 11400000, guid: c01d0000000000000000000000000006, type: 2}
+  accent: {fileID: 11400000, guid: c01d0000000000000000000000000001, type: 2}
   tintStrength: 2.5

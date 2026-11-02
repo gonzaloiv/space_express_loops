@@ -17,6 +17,13 @@ namespace DigitalLove.Game.SpaceShaping
 
         public int Count => commands.Count;
 
+        public bool HasCommands => commands.Count > 0;
+
+        public float LastCost => commands.Count > 0 ? commands[commands.Count - 1].EntropyCost : 0f;
+
+        public Vector3 LastCentre =>
+            commands.Count > 0 ? commands[commands.Count - 1].Zone.Centre : Vector3.zero;
+
         public float Committed { get; private set; }
 
         public float Spent { get; private set; }

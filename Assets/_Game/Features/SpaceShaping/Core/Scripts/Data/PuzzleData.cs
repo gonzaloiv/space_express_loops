@@ -28,6 +28,10 @@ namespace DigitalLove.Game.SpaceShaping
         public int routes = 1;
         public bool resizable;
         public float entropyBudget = 1f;
+        [Tooltip("The tutorial cannot fail on entropy; the bar still shows the spend.")]
+        public bool noFail;
+        [Tooltip("The tutorial does not award or show stars.")]
+        public bool noGrade;
         public PuzzleSource[] sources;
         [Tooltip("Extra ships. Empty is the single-ship puzzle (origin/destination); two or more makes "
             + "it a multi-ship level, solved when every ship arrives.")]

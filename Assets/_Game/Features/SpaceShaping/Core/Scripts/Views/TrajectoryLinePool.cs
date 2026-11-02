@@ -26,6 +26,22 @@ namespace DigitalLove.Game.SpaceShaping
                 lines[i].Hide();
         }
 
+        public void ShowBaselines(IReadOnlyList<Vector3> starts, IReadOnlyList<Vector3> ends)
+        {
+            int count = Mathf.Min(starts.Count, ends.Count);
+            for (int i = 0; i < count; i++)
+                Slot(i).ShowBaseline(starts[i], ends[i]);
+
+            for (int i = count; i < lines.Count; i++)
+                lines[i].Hide();
+        }
+
+        public void Hide()
+        {
+            for (int i = 0; i < lines.Count; i++)
+                lines[i].Hide();
+        }
+
         public void Pulse()
         {
             for (int i = 0; i < lines.Count; i++)

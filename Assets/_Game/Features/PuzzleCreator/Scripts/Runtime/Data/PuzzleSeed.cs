@@ -16,9 +16,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         [Tooltip("Bake a sun at the field's centre, sized by the settings' sunRadius.")]
         public bool hasSun;
 
-        [Tooltip("Let a cube over the sun's centre scale it. On by default; a locked sun keeps its size.")]
-        public bool sunScalable = true;
-
         [Header("Brief")]
         [Tooltip("The cube may be moved over the field. A fixed level places several cubes instead.")]
         public bool translatable;
@@ -40,6 +37,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         [Tooltip("The frame may be resized at runtime (1x to 2x).")]
         public bool resizable;
+
+        [Header("Tutorial")]
+        [Tooltip("The tutorial cannot fail on entropy; the bar still shows the spend.")]
+        public bool noFail;
+
+        [Tooltip("The tutorial does not award or show stars.")]
+        public bool noGrade;
 
         public float EffectiveSunRadius(SpaceShapingSettings settings) =>
             hasSun ? settings.sunRadius : 0f;

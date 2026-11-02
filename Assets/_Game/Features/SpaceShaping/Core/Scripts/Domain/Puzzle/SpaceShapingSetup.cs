@@ -10,6 +10,8 @@ namespace DigitalLove.Game.SpaceShaping
         public int MaxSteps;
         public float LaunchSpeed;
         public float EntropyBudget;
+        public bool NoFail;
+        public bool NoGrade;
         public PuzzleSimSettings Sim;
         public SourceSpec[] Sources;
         public ShipSpec[] Ships;
@@ -32,6 +34,8 @@ namespace DigitalLove.Game.SpaceShaping
                 MaxSteps = BudgetSteps(ships, settings),
                 LaunchSpeed = settings.LaunchSpeed,
                 EntropyBudget = puzzle.entropyBudget,
+                NoFail = puzzle.noFail,
+                NoGrade = puzzle.noGrade,
                 Sim = sim,
                 Sources = SourceSpecs.From(puzzle.sources, settings),
                 Ships = ships

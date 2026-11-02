@@ -139,7 +139,7 @@ mechanic before writing another plan.
 | The cube is "just a group drag" | **Resolved.** The scale is a metric stretch plus content spread/growth, not a drag ([the cube](systems/cube.md)). |
 | Field illegibility | **Partly open.** Lattice warp, planet size/well and the live trajectory are in; the **straight-line reference** named in the read is not built ([plans board](../plans/README.md)). |
 | Sun reads as another planet | **Open.** The sun is a flat `Sun.prefab`; the reference marker is the S4 look pass. |
-| Sun scale is a free win | **Open.** `mass ∝ radius³` makes a grown sun strong fast; the bake must verify scalable-by-default, otherwise lock it per puzzle ([field plan](../plans/in-progress/space-shaping-realistic-field.md)). The centre (job 2) is the first test; the capstone (job 7) must also hold. |
+| Sun scale is a free win | **Open.** `mass ∝ radius³` makes a grown sun strong fast; the bake must verify scalable-by-default, otherwise lock it per puzzle. The centre (job 2) is the first test; the capstone (job 7) must also hold. |
 | Ship-zone legibility | **Partial.** The ship has a trail; there is no zone tint or "which zone" indicator ([plans board](../plans/README.md)). |
 | Prediction trust | **Mitigated in the lab.** The live trajectory previews while shaping and the ship flies on release; the missing straight-line baseline is the read-side hole. |
 | Identity | **Resolved** by the transport-company pivot and the name "Our Space". |

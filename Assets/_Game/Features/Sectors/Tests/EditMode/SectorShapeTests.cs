@@ -150,26 +150,61 @@ namespace DigitalLove.Game.Sectors.Tests
         }
 
         [Test]
-        public void Generate_RingAndSpiral_HaveCentreBulge([Values] SectorShapeKind kind)
+        public void Generate_RingAndSpiral_BulgeIsAtTheCentre([Values] SectorShapeKind kind)
         {
             if (kind == SectorShapeKind.Cluster)
                 return;
 
             SectorShapeData data = Default(kind);
-            data.bulge = 0.8f;
-            float thinJitter = data.inclination * data.radius.max;
+            data.bulge = 1f;
+            data.tilt = 0f;
+            data.radius = new MinMaxFloat(1f, 1f);
+            data.anchorRadius = 0.05f;
+            data.planetRadius = new MinMaxFloat(0.02f, 0.03f);
+            data.minSeparation = 1.2f;
+            data.ringCount = new MinMaxInt { min = 2, max = 2 };
+            data.planetCount = new MinMaxInt { min = 9, max = 9 };
 
             for (int seed = 0; seed < Seeds; seed++)
             {
                 SectorLayout layout = SectorShape.Generate(data, new SeededRandom(seed));
-                float maxAbsY = 0f;
+                float near = float.MaxValue;
+                float far = 0f;
                 for (int i = 0; i < layout.PlanetCount; i++)
-                    maxAbsY = Mathf.Max(maxAbsY, Mathf.Abs(layout.Planets[i].Position.y));
+                {
+                    float distance = Xz(layout.Planets[i].Position);
+                    near = Mathf.Min(near, distance);
+                    far = Mathf.Max(far, distance);
+                }
 
+                float low = near + (far - near) / 3f;
+                float high = near + 2f * (far - near) / 3f;
+                float innerY = 0f;
+                float outerY = 0f;
+                int innerCount = 0;
+                int outerCount = 0;
+                for (int i = 0; i < layout.PlanetCount; i++)
+                {
+                    float distance = Xz(layout.Planets[i].Position);
+                    float y = Mathf.Abs(layout.Planets[i].Position.y);
+                    if (distance < low)
+                    {
+                        innerY = Mathf.Max(innerY, y);
+                        innerCount++;
+                    }
+                    else if (distance > high)
+                    {
+                        outerY = Mathf.Max(outerY, y);
+                        outerCount++;
+                    }
+                }
+
+                Assert.Greater(innerCount, 0, $"{kind} seed {seed} has no inner planets");
+                Assert.Greater(outerCount, 0, $"{kind} seed {seed} has no outer planets");
                 Assert.Greater(
-                    maxAbsY,
-                    thinJitter,
-                    $"{kind} seed {seed} has no centre bulge");
+                    innerY,
+                    2f * outerY,
+                    $"{kind} seed {seed} bulges the rim instead of the centre");
             }
         }
 
@@ -195,5 +230,8 @@ namespace DigitalLove.Game.Sectors.Tests
         }
 
         private static SectorShapeData Default(SectorShapeKind kind) => new() { kind = kind };
+
+        private static float Xz(Vector3 position) =>
+            Mathf.Sqrt(position.x * position.x + position.z * position.z);
     }
 }

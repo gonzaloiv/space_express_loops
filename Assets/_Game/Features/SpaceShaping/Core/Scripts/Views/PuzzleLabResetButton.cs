@@ -10,7 +10,6 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private Grabbable grabbable;
         [SerializeField] private Renderer face;
         [SerializeField] private ColorValue neutral;
-        [SerializeField] private ColorValue neutralHover;
         [SerializeField] private ColorValue accent;
         [SerializeField] private float pressedSecs = 0.12f;
 
@@ -28,7 +27,7 @@ namespace DigitalLove.Game.SpaceShaping
         protected virtual void Update()
         {
             bool pressed = Time.unscaledTime < pressedUntil;
-            tint.Set(face, pressed ? accent.value : hovered ? neutralHover.value : neutral.value);
+            tint.Set(face, pressed || hovered ? accent.value : neutral.value);
         }
 
         protected virtual void LateUpdate()

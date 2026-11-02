@@ -4,33 +4,68 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleSeedScanner
     {
+        private static readonly int StatusCount =
+            System.Enum.GetValues(typeof(PuzzleBakeStatus)).Length;
+
         public static bool IsBetter(PuzzleSeedScanResult candidate, PuzzleSeedScanResult best) =>
             candidate.Found && (!best.Found || candidate.Routes > best.Routes);
 
         public static PuzzleSeedScanResult Find(
-            PuzzleSeed seed, SpaceShapingSettings settings, int attempts)
+            PuzzleSeed seed, SpaceShapingSettings settings, int attempts, bool sunScalable = true,
+            System.Action<int, int> onProgress = null)
         {
             PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
             PuzzleBrief brief = PuzzleBrief.From(seed, settings);
+            brief.SunScalable = sunScalable;
+            return Scan(seed, settings, sim, brief, attempts, onProgress);
+        }
+
+        private static PuzzleSeedScanResult Scan(
+            PuzzleSeed seed, SpaceShapingSettings settings, PuzzleSimSettings sim, PuzzleBrief brief,
+            int attempts, System.Action<int, int> onProgress)
+        {
             PuzzleSeedScanResult best = new() { Seed = seed.seed };
+            Tally tally = new() { Failures = new int[StatusCount] };
             for (int i = 0; i < attempts; i++)
             {
                 PuzzleSeedScanResult candidate = Probe(seed, settings, sim, brief, seed.seed + i);
+                tally.Probes++;
+                onProgress?.Invoke(tally.Probes, attempts);
                 if (!candidate.Found)
                 {
-                    if (!best.Found)
-                        best.Status = candidate.Status;
+                    Record(candidate, ref best, ref tally);
                     continue;
                 }
 
-                Keep(ref best, candidate);
-
-                // Multi-ship bakes are much heavier and have no route ranking, so the first one
-                // that bakes is the answer.
-                if (brief.IsMulti)
-                    break;
+                tally.Baked++;
+                best = candidate;
+                Debug.Log($"[Puzzle seed] {candidate.Seed}: baked {candidate.Routes} route(s).");
+                break;
             }
 
+            return WithReport(best, tally);
+        }
+
+        private static void Record(
+            PuzzleSeedScanResult candidate, ref PuzzleSeedScanResult best, ref Tally tally)
+        {
+            tally.Failures[(int)candidate.Status]++;
+            if (!best.Found)
+                best.Status = candidate.Status;
+            if (tally.HasFailure)
+                return;
+
+            tally.HasFailure = true;
+            tally.FirstFailure = candidate.Status;
+        }
+
+        private static PuzzleSeedScanResult WithReport(PuzzleSeedScanResult best, Tally tally)
+        {
+            best.Attempts = tally.Probes;
+            best.Baked = tally.Baked;
+            best.Failures = tally.Failures;
+            best.HasFailure = tally.HasFailure;
+            best.FirstFailure = tally.FirstFailure;
             return best;
         }
 
@@ -73,20 +108,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             };
         }
 
-        private static void Keep(ref PuzzleSeedScanResult best, PuzzleSeedScanResult candidate)
-        {
-            if (!IsBetter(candidate, best))
-            {
-                Object.DestroyImmediate(candidate.Puzzle);
-                return;
-            }
-
-            if (best.Found)
-                Object.DestroyImmediate(best.Puzzle);
-
-            best = candidate;
-        }
-
         private static PuzzlePlanetListAsset Planets(
             PuzzleSeed seed, SpaceShapingSettings settings, int seedValue)
         {
@@ -97,6 +118,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             Object.DestroyImmediate(shape);
             Object.DestroyImmediate(probe);
             return planets;
+        }
+
+        private struct Tally
+        {
+            public int Probes;
+            public int Baked;
+            public int[] Failures;
+            public bool HasFailure;
+            public PuzzleBakeStatus FirstFailure;
         }
     }
 }

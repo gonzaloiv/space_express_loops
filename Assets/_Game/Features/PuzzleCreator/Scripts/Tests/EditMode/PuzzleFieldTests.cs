@@ -58,6 +58,35 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
+        public void Build_CompactsTheThreePlanetField()
+        {
+            SpaceShapingSettings settings = Settings();
+            PuzzleSeed few = Seed();
+            few.planetCount = 3;
+            PuzzleSeed many = Seed();
+            many.planetCount = 6;
+
+            Assert.AreEqual(0.6f, PuzzleFieldBuilder.Build(few, settings).spread, 1e-4f);
+            Assert.AreEqual(0.7f, PuzzleFieldBuilder.Build(many, settings).spread, 1e-4f);
+        }
+
+        [Test]
+        public void Build_ThreePlanetFieldStillSpansTheRun()
+        {
+            SpaceShapingSettings settings = Settings();
+            PuzzleSeed seed = Seed();
+            seed.planetCount = 3;
+
+            PuzzleFieldPlanet[] planets = Planets(seed, settings);
+            float outer = 0f;
+            for (int i = 0; i < planets.Length; i++)
+                outer = Mathf.Max(outer, planets[i].position.magnitude + planets[i].radius);
+
+            Assert.Greater(outer, settings.runDistance * 0.5f);
+            Assert.Less(outer, settings.runDistance * 0.75f);
+        }
+
+        [Test]
         public void Build_SpacesWiderThanThePuzzleNeeds()
         {
             SpaceShapingSettings settings = Settings();
@@ -92,6 +121,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Assert.AreEqual(0.05f, shape.inclination, 1e-4f);
             Assert.AreEqual(9f, shape.tilt, 1e-4f);
             Assert.AreEqual(0.6f, shape.bulge, 1e-4f);
+        }
+
+        [Test]
+        public void Build_AlwaysAsksForAnInnerRing()
+        {
+            PuzzleSeed seed = Seed();
+            seed.planetCount = 6;
+
+            SectorShapeData shape = PuzzleFieldBuilder.Build(seed, Settings());
+
+            Assert.GreaterOrEqual(shape.ringCount.min, 2);
         }
 
         [Test]
@@ -146,6 +186,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Assert.IsTrue(puzzle.sources[0].fixedMass);
             Assert.IsTrue(puzzle.sources[0].centreOnly);
             Assert.AreEqual(0.3f, puzzle.sources[0].scale, 1e-4f);
+            Assert.IsFalse(string.IsNullOrEmpty(puzzle.sources[0].name));
+            Assert.AreNotEqual("Sun", puzzle.sources[0].name);
+            for (int i = 1; i < puzzle.sources.Length; i++)
+                Assert.AreNotEqual(puzzle.sources[0].name, puzzle.sources[i].name);
             Assert.AreNotEqual(Vector3.zero, puzzle.origin);
             Assert.AreNotEqual(Vector3.zero, puzzle.destination);
         }
@@ -184,19 +228,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
             Assert.AreEqual(4, puzzle.sources.Length);
             Assert.AreEqual(0.16f, puzzle.sources[0].scale, 1e-4f);
+            Assert.IsFalse(puzzle.sources[0].fixedMass);
         }
 
         [Test]
-        public void Apply_SeedScalable_ControlsTheLock()
+        public void Brief_DefaultsToAScalableSun()
         {
             PuzzleSeed seed = Seed();
             seed.hasSun = true;
+            SpaceShapingSettings settings = Settings();
+            settings.sunRadius = 0.1f;
 
-            seed.sunScalable = false;
-            Assert.IsTrue(Applied(PuzzleBrief.From(seed, Settings())).sources[0].fixedMass);
-
-            seed.sunScalable = true;
-            Assert.IsFalse(Applied(PuzzleBrief.From(seed, Settings())).sources[0].fixedMass);
+            Assert.IsTrue(PuzzleBrief.From(seed, settings).SunScalable);
         }
 
         [Test]

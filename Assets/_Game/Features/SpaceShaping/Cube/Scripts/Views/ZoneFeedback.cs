@@ -75,7 +75,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
             bool scaling = selectingPoints >= 2 && !frameGrab;
             Color frameColor = scaling
-                ? PredictionColor(palette.Miss, palette.Neutral)
+                ? PredictionColor(palette.Neutral)
                 : FrameActive(zone, selectingPoints);
             frameTint.Set(frameRenderer, frameColor);
             fillTint.Set(fillRenderer, scaling
@@ -88,28 +88,28 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         private void ApplyIdle(SpaceZoneView zone, bool hovering, Vector3 hoverWorld)
         {
             bool hoverInside = hovering && zone.ContentContains(hoverWorld);
-            Color fallback = hovering && !hoverInside ? palette.NeutralHover : palette.Neutral;
-            frameTint.Set(frameRenderer, PredictionColor(fallback, fallback));
+            Color fallback = hovering ? palette.Accent : palette.Neutral;
+            frameTint.Set(frameRenderer, PredictionColor(fallback));
             fillTint.Set(fillRenderer, hovering && hoverInside
-                ? Fill(palette.NeutralHover, palette.FillIdleAlpha)
+                ? Fill(palette.Accent, palette.FillIdleAlpha)
                 : Fill(palette.Neutral, palette.FillIdleAlpha));
         }
 
         private Color FrameActive(SpaceZoneView zone, int selectingPoints)
         {
             if (selectingPoints >= 2)
-                return zone.CanResize ? palette.Fast : palette.Neutral;
+                return zone.CanResize ? palette.Accent : palette.Neutral;
 
-            return zone.CanMove ? palette.NeutralHover : palette.Neutral;
+            return zone.CanMove ? palette.Accent : palette.Neutral;
         }
 
         private Color ScaleColor(float scale) =>
             Color.Lerp(
-                Fill(palette.Slow, palette.FillActiveAlpha),
-                Fill(palette.Fast, palette.FillActiveAlpha),
+                Fill(palette.Neutral, palette.FillActiveAlpha),
+                Fill(palette.Accent, palette.FillActiveAlpha),
                 Mathf.InverseLerp(minScale, maxScale, scale));
 
-        private Color PredictionColor(Color missColor, Color none)
+        private Color PredictionColor(Color none)
         {
             if (!hasPrediction)
                 return none;
@@ -117,7 +117,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             if (prediction == ZoneVerdict.Solved)
                 return palette.Success;
 
-            return prediction == ZoneVerdict.Crash ? palette.Danger : missColor;
+            return prediction == ZoneVerdict.Crash ? palette.Danger : palette.Neutral;
         }
 
         private static Color Fill(Color color, float alpha)

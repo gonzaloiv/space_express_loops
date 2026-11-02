@@ -10,21 +10,25 @@ the ship flies the deformed spacetime.
 
 Active work. The one thing being built.
 
-- [Space shaping — a more realistic field](in-progress/space-shaping-realistic-field.md) — a 3D
-  disc/bulge/cluster plus a star with real mass, so the field reads as a galaxy rather than a flat diagram.
-  In progress — depth, the sun (per-seed presence and lock) and the runtime lock are in; next: the
-  headset read and cost pass (S4).
+- [First-minute read and cost](in-progress/first-minute-read.md) — 3-planet tutorial first job,
+  straight-line baseline, and an in-field entropy bar. In progress — S1, S2, S2.5 and S3 are implemented
+  (tutorial rebaked, baseline reference, unified colour set, in-field bar); run Validation 1.
 
 ## Next
 
 Queued. One plan moves to **Now** when it starts.
 
-- [First-minute read and cost](backlog/first-minute-read.md) — baked tutorial first job, straight-line
-  baseline, and an in-field entropy bar. The read is the gate.
+- [Puzzle solution mechanism — curve or clear](backlog/puzzle-solution-mechanism.md) — the creator
+  classifies a solve as a well curve or an obstacle clear, and a job requests its role.
 
 ## Later
 
 Design-only or deferred. Nothing here is scheduled.
+
+- [Space shaping — the scale ghost](backlog/space-shaping-scale-ghost.md) — one scale ladder shared by
+  the bake and the pinch, with a ghost preview of the value the hands are about to commit.
+- [Puzzle selection — the run carousel](backlog/puzzle-selection.md) — an arc of job fields, one
+  focused, touched and amplified into play; starts after the PoC is in the main scene.
 
 Candidate ideas (not plans) live in [docs/ideas](../ideas/README.md): variations, element pack,
 hologram look, TTS companion, feel polish.
@@ -34,7 +38,7 @@ hologram look, TTS companion, feel polish.
 Loose ends that still need a home. Close one by linking the plan that finishes it.
 
 - **Re-run Validation 1 on the current loop.** The gate for the slice; the
-  [first-minute read plan](backlog/first-minute-read.md) §3 runs it.
+  [first-minute read plan](in-progress/first-minute-read.md) §3 runs it.
 - **Run authoring.** Jobs 1–5, the map/level selector, and the TTS intro (manual + tech voice) are
   designed but not built; add a plan before the 10-minute slice.
 - **Ship-zone cue.** The ship has a trail; there is no zone indicator. Fold it into the first-minute read

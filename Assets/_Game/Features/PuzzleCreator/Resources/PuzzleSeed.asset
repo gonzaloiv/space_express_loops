@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a653680055d8a644b9da0f0e6c7c3ee3, type: 3}
   m_Name: PuzzleSeed
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Creator::DigitalLove.Game.SpaceShaping.Creator.PuzzleSeed
-  seed: 20
-  planetCount: 6
+  seed: 3
+  planetCount: 9
   fieldShape: 0
   hasSun: 1
-  sunScalable: 1
   translatable: 0
   zones: 1
   ships: 1
   relation: 1
   resizable: 0
+  noFail: 0
+  noGrade: 0

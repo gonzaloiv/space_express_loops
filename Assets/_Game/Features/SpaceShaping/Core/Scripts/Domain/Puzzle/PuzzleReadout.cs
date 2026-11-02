@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
 {
@@ -15,8 +16,12 @@ namespace DigitalLove.Game.SpaceShaping
         public bool IsFlying { get; }
         public bool IsSolved { get; }
         public bool IsFailed { get; }
+        public bool NoGrade { get; }
         public int Grade { get; }
         public int CommandCount { get; }
+        public bool HasLastEdit { get; }
+        public float LastEditCost { get; }
+        public Vector3 LastEditCentre { get; }
 
         private PuzzleReadout(
             SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results,
@@ -34,7 +39,11 @@ namespace DigitalLove.Game.SpaceShaping
             IsFlying = hasResult && isFlying;
             IsSolved = isChecked && PredictedSolved;
             IsFailed = isChecked && hasResult && session.IsFailed(results);
+            NoGrade = session.NoGrade;
             Grade = IsSolved ? session.Grade() : 0;
+            HasLastEdit = session.HasLastEdit;
+            LastEditCost = session.LastEditCost;
+            LastEditCentre = session.LastEditCentre;
         }
 
         private PuzzleReadout(SpaceShapingSession session) : this(session, null, false, false)
@@ -71,16 +80,20 @@ namespace DigitalLove.Game.SpaceShaping
             && IsFlying == other.IsFlying
             && IsSolved == other.IsSolved
             && IsFailed == other.IsFailed
+            && NoGrade == other.NoGrade
             && Grade == other.Grade
-            && CommandCount == other.CommandCount;
+            && CommandCount == other.CommandCount
+            && HasLastEdit == other.HasLastEdit
+            && LastEditCost == other.LastEditCost
+            && LastEditCentre == other.LastEditCentre;
 
         public override bool Equals(object obj) => obj is PuzzleReadout other && Equals(other);
 
         public override int GetHashCode() =>
             HashCode.Combine(
-                HashCode.Combine(EntropySpent, EntropyPending, EntropyBudget, Outcome),
+                HashCode.Combine(EntropySpent, EntropyPending, EntropyBudget, Outcome, NoGrade),
                 HashCode.Combine(
                     HasResult, PredictedSolved, IsChecked, IsFlying, IsSolved, IsFailed, Grade),
-                CommandCount);
+                HashCode.Combine(CommandCount, HasLastEdit, LastEditCost, LastEditCentre));
     }
 }

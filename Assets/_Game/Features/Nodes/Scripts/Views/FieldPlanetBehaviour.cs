@@ -50,6 +50,8 @@ namespace DigitalLove.Game.Nodes
             gameObject.SetActive(false);
         }
 
+        public void SetRouteColor(Color color) => nodeBody.SetRouteColor(color);
+
         public void SetVisible(bool visible)
         {
             if (isVisible == visible)

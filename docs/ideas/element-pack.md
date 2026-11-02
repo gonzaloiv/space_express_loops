@@ -61,10 +61,9 @@ lattice mesh is untouched.
 **Now in — a real mass.** The physically right version is not a graphic at all: a **body** at the
 sun's position is a *source*, so the field bends around it, the ship can crash into it, and
 `SourceConstraints.Separate` pushes the planets clear — a star with its system around it. Implemented in
-[a more realistic field](../plans/in-progress/space-shaping-realistic-field.md); the visual is a
-**reference marker**, not a lit star. The two decisions are settled: scalable by default with
-`sunScalable` as a per-puzzle lock, and the sun placed at the centre of the system. A seed's `hasSun`
-decides whether the level has one; the radius is a single field setting.
+the space-shaping field; the visual is a **reference marker**, not a lit star. The two decisions are
+settled: scalable by default with `fixedMass` as a per-level lock, and the sun placed at the centre of
+the system. A seed's `hasSun` decides whether the level has one; the radius is a single field setting.
 
 ### 3. Dust — noise around the field
 

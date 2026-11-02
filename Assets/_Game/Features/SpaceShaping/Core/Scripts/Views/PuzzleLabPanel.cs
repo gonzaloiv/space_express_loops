@@ -111,7 +111,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void AppendGradeRow(PuzzleReadout readout)
         {
-            if (!readout.IsChecked || !readout.IsSolved)
+            if (!readout.IsChecked || !readout.IsSolved || readout.NoGrade)
                 return;
 
             BeginRow("GRADE  ");
