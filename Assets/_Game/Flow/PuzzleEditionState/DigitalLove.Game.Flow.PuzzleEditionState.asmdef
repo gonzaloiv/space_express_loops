@@ -3,7 +3,7 @@
     "rootNamespace": "",
     "references": [
         "DigitalLove.FlowControl",
-        "DigitalLove.Game.Levels",
+        "DigitalLove.Input",
         "DigitalLove.Game.SpaceShaping"
     ],
     "includePlatforms": [],

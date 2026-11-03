@@ -1,0 +1,24 @@
+{
+    "name": "DigitalLove.Game.Flow.PuzzleSelectionState",
+    "rootNamespace": "",
+    "references": [
+        "DigitalLove.FlowControl",
+        "DigitalLove.DataAccess.Local",
+        "DigitalLove.DataAccess.Remote",
+        "Reflex",
+        "DigitalLove.Casual.Levels",
+        "DigitalLove.Game.SpaceShaping.Domain",
+        "DigitalLove.Game.PuzzleSelection",
+        "DigitalLove.Input",
+        "DigitalLove.Global"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

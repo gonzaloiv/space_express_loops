@@ -19,5 +19,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PlanetNames.Instance.Assign(asset.planets);
             return asset;
         }
+
+        // Planets for a probe seed: the seed clone, shape, and planet list are all transient.
+        public static PuzzlePlanetListAsset PlanetsFor(
+            PuzzleSeed seed, SpaceShapingSettings settings, int seedValue)
+        {
+            PuzzleSeed probe = Object.Instantiate(seed);
+            probe.seed = seedValue;
+            PuzzleShapeAsset shape = Shape(probe, settings);
+            PuzzlePlanetListAsset planets = Planets(shape);
+            Object.DestroyImmediate(shape);
+            Object.DestroyImmediate(probe);
+            return planets;
+        }
     }
 }

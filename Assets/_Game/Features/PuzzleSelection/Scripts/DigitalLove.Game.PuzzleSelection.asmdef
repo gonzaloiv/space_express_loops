@@ -1,0 +1,22 @@
+{
+    "name": "DigitalLove.Game.PuzzleSelection",
+    "rootNamespace": "",
+    "references": [
+        "DigitalLove.Game.SpaceShaping.Domain",
+        "DigitalLove.Game.SpaceShaping.Views",
+        "DigitalLove.Casual.Levels",
+        "DigitalLove.Input",
+        "DigitalLove.Game.Nodes",
+        "Oculus.Interaction",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,7 +1,7 @@
 using UnityEngine;
 using DigitalLove.TTS;
 using System;
-using DigitalLove.Game.Levels;
+using DigitalLove.Casual.Levels;
 using DigitalLove.Game.Persistence;
 using DigitalLove.Global;
 using DigitalLove.DataAccess;
@@ -25,9 +25,9 @@ namespace DigitalLove.Game.TTS
             SaveCookie(key);
         }
 
-        public void SayRoundIntro(RoundData roundData, Action onComplete)
+        public void SayRoundIntro(LevelData levelData, Action onComplete)
         {
-            Say(roundData.IntroKey, onComplete);
+            Say(levelData.IntroKey, onComplete);
         }
 
         private async void SaveCookie(string key)

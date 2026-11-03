@@ -13,26 +13,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         public float Width => halfExtents.x * 2f;
 
-        public float Extent => Mathf.Min(halfExtents.x, Mathf.Min(halfExtents.y, halfExtents.z));
+        public float Extent => Zone.Extent;
 
         public SpaceZone ToSpaceZone() => new(centre, halfExtents, scale, falloff);
 
-        public float Margin(Vector3 point)
-        {
-            Vector3 inset = halfExtents - Abs(point - centre);
-            return Mathf.Min(inset.x, Mathf.Min(inset.y, inset.z));
-        }
+        public float Margin(Vector3 point) => Zone.Margin(point);
 
-        public bool Influences(Vector3 point) =>
-            Margin(point) + Mathf.Max(falloff, 0f) * Extent > 0f;
+        public bool Influences(Vector3 point) => Zone.Influences(point);
 
-        public bool Contains(Vector3 point)
-        {
-            Vector3 offset = Abs(point - centre);
-            return offset.x <= halfExtents.x
-                && offset.y <= halfExtents.y
-                && offset.z <= halfExtents.z;
-        }
+        public bool Contains(Vector3 point) => Zone.Margin(point) >= 0f;
+
+        private SpaceZone Zone => ToSpaceZone();
 
         public bool Overlaps(PuzzleZone other, float gapFactor)
         {

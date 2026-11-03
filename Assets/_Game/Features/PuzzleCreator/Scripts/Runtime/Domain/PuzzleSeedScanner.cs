@@ -88,19 +88,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (brief.IsMulti)
                 return ProbeMulti(planets, sim, brief, seedValue);
 
-            PuzzleData baked = PuzzleFieldBake.Bake(
-                planets, sim, brief, out PuzzleBakeStatus status, out PuzzleZone[] solution,
-                out PuzzleSolutionKind kind);
+            PuzzleBakeResult baked = PuzzleFieldBake.Bake(planets, sim, brief);
             Object.DestroyImmediate(planets);
             return new PuzzleSeedScanResult
             {
-                Found = baked != null,
+                Found = baked.Baked,
                 Seed = seedValue,
-                Status = status,
-                Puzzle = baked,
-                Solution = solution,
-                Kind = kind,
-                Routes = baked != null ? baked.routes : 0
+                Status = baked.Status,
+                Puzzle = baked.Puzzle,
+                Solution = baked.Solution,
+                Kind = baked.Kind,
+                Routes = baked.Baked ? baked.Puzzle.routes : 0
             };
         }
 
@@ -123,16 +121,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         }
 
         private static PuzzlePlanetListAsset Planets(
-            PuzzleSeed seed, SpaceShapingSettings settings, int seedValue)
-        {
-            PuzzleSeed probe = Object.Instantiate(seed);
-            probe.seed = seedValue;
-            PuzzleShapeAsset shape = PuzzleArtifactFactory.Shape(probe, settings);
-            PuzzlePlanetListAsset planets = PuzzleArtifactFactory.Planets(shape);
-            Object.DestroyImmediate(shape);
-            Object.DestroyImmediate(probe);
-            return planets;
-        }
+            PuzzleSeed seed, SpaceShapingSettings settings, int seedValue) =>
+            PuzzleArtifactFactory.PlanetsFor(seed, settings, seedValue);
 
         private struct Tally
         {

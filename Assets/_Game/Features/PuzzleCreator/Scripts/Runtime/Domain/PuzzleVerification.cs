@@ -4,7 +4,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     {
         public TrajectoryResult Start;
         public TrajectoryResult SolvedRun;
-        public TrajectoryResult[] StartResults;
         public TrajectoryResult[] SolvedResults;
         public PuzzleZone[] Solution;
         public float EntropySpent;

@@ -2,7 +2,12 @@
     "name": "DigitalLove.Game.Flow.PuzzleStartState",
     "rootNamespace": "",
     "references": [
-        "GUID:65917f6bc12bb4a4cad49ea83a119a2b"
+        "GUID:65917f6bc12bb4a4cad49ea83a119a2b",
+        "GUID:293dd66d193b83b4f97e05b2afb21a23",
+        "GUID:3acc9a1f9a04cf745bc41f5b0590363a",
+        "GUID:10000000000000000000000000000001",
+        "GUID:1530a967b84cfb44dbdd5e8a1989764f",
+        "GUID:ddca81f93c9e44d2fbf5efa600ddbada"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

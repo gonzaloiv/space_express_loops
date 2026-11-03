@@ -10,7 +10,8 @@ the ship flies the deformed spacetime.
 
 Active work. The one thing being built.
 
-- Nothing in progress.
+- [Puzzle selection — the run carousel](in-progress/puzzle-selection.md) — an arc of job fields, one
+  focused, touched and amplified into play; starts after the PoC is in the main scene.
 
 ## Next
 
@@ -24,8 +25,7 @@ Design-only or deferred. Nothing here is scheduled.
 
 - [Space shaping — the scale ghost](backlog/space-shaping-scale-ghost.md) — one scale ladder shared by
   the bake and the pinch, with a ghost preview of the value the hands are about to commit.
-- [Puzzle selection — the run carousel](backlog/puzzle-selection.md) — an arc of job fields, one
-  focused, touched and amplified into play; starts after the PoC is in the main scene.
+
 - [TTS job intro — the contract screen](backlog/tts-job-intro.md) — a field-side contract screen
   (manual + tech voice) that can reposition around the field; the camera-operator companion is deferred.
 

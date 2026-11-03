@@ -10,15 +10,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
             PuzzleBrief brief = PuzzleBrief.From(seed, settings);
-            PuzzleSeed probe = Object.Instantiate(seed);
-            probe.seed = seedValue;
-            PuzzleShapeAsset shape = PuzzleArtifactFactory.Shape(probe, settings);
-            PuzzlePlanetListAsset planets = PuzzleArtifactFactory.Planets(shape);
+            PuzzlePlanetListAsset planets = PuzzleArtifactFactory.PlanetsFor(seed, settings, seedValue);
             PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
             bool baked = PuzzleFieldBake.Apply(brief, field, planets, sim);
             Object.DestroyImmediate(planets);
-            Object.DestroyImmediate(shape);
-            Object.DestroyImmediate(probe);
             if (baked)
                 return field;
 

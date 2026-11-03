@@ -82,7 +82,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 {
                     origin = rescued[i].Origin,
                     destination = rescued[i].Destination,
-                    captureRadius = Capture(field, rescued[i].Destination)
+                    captureRadius = field.CaptureRadiusAt(rescued[i].Destination)
                 };
                 taken++;
             }
@@ -121,17 +121,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         private static bool Same(Vector3 a, Vector3 b) => (a - b).sqrMagnitude < 1e-8f;
 
-        private static float Capture(PuzzleData field, Vector3 destination)
-        {
-            for (int i = 0; i < field.sources.Length; i++)
-            {
-                if ((field.sources[i].home - destination).sqrMagnitude < 1e-8f)
-                    return field.sources[i].scale * 0.5f;
-            }
-
-            return 0f;
-        }
-
         private static PuzzleData Variant(
             PuzzleData field, PuzzleZone zone, PuzzleShip[] ships, PuzzleBrief brief)
         {
@@ -167,6 +156,5 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             return new[] { new PuzzleFrame { centre = puzzle.zoneCentre, size = zone.Width } };
         }
-
     }
 }

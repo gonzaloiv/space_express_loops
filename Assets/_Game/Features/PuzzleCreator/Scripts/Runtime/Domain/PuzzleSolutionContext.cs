@@ -7,18 +7,16 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public readonly PuzzleData Puzzle;
         public readonly PuzzleSimSettings Settings;
         public readonly SpaceShapingSetup Setup;
-        public readonly TrajectoryResult[] StartResults;
         public readonly bool[] Obstacles;
         public readonly PuzzleMechanism Requested;
 
         private PuzzleSolutionContext(
             PuzzleData puzzle, PuzzleSimSettings settings, SpaceShapingSetup setup,
-            TrajectoryResult[] startResults, bool[] obstacles, PuzzleMechanism requested)
+            bool[] obstacles, PuzzleMechanism requested)
         {
             Puzzle = puzzle;
             Settings = settings;
             Setup = setup;
-            StartResults = startResults;
             Obstacles = obstacles;
             Requested = requested;
         }
@@ -31,7 +29,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             TrajectoryResult[] startResults = start.SimulateAll();
             bool[] obstacles = PuzzleSolutionClassifier.Obstacles(setup, startResults);
             return new PuzzleSolutionContext(
-                puzzle, settings, setup, startResults, obstacles, requested);
+                puzzle, settings, setup, obstacles, requested);
         }
 
         public PuzzleSolutionKind Classify(

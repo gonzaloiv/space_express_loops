@@ -23,11 +23,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Object.DestroyImmediate(source);
 
             planets = Planets();
-            PuzzleData baked = PuzzleFieldBake.Bake(
-                planets, sim, brief, out PuzzleBakeStatus status, out _);
-            Assert.AreEqual(PuzzleBakeStatus.Baked, status, $"seed {KnownSeed} no longer bakes");
-            Assert.IsNotNull(baked);
-            Object.DestroyImmediate(baked);
+            PuzzleBakeResult result = PuzzleFieldBake.Bake(planets, sim, brief);
+            Assert.AreEqual(PuzzleBakeStatus.Baked, result.Status, $"seed {KnownSeed} no longer bakes");
+            Assert.IsNotNull(result.Puzzle);
+            Object.DestroyImmediate(result.Puzzle);
         }
 
         [OneTimeTearDown]
@@ -56,16 +55,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleBrief role = brief;
             role.Mechanism = requested;
 
-            PuzzleData baked = PuzzleFieldBake.Bake(
-                planets, sim, role, out PuzzleBakeStatus status, out _,
-                out _);
+            PuzzleBakeResult result = PuzzleFieldBake.Bake(planets, sim, role);
 
-            Assert.IsNull(baked, "a cheaper or equal wrong-role route must reject the seed");
+            Assert.IsNull(result.Puzzle, "a cheaper or equal wrong-role route must reject the seed");
             Assert.IsTrue(
-                status == PuzzleBakeStatus.WrongRoleRoute
-                || status == PuzzleBakeStatus.NotCleared
-                || status == PuzzleBakeStatus.NotCurved,
-                $"unexpected status {status}");
+                result.Status == PuzzleBakeStatus.WrongRoleRoute
+                || result.Status == PuzzleBakeStatus.NotCleared
+                || result.Status == PuzzleBakeStatus.NotCurved,
+                $"unexpected status {result.Status}");
 
             Object.DestroyImmediate(baseline);
         }
@@ -102,19 +99,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             tutorial.NoFail = true;
             tutorial.Mechanism = PuzzleMechanism.Curve;
 
-            PuzzleData baked = PuzzleFieldBake.Bake(
-                planets, sim, tutorial, out PuzzleBakeStatus status,
-                out PuzzleZone[] solution);
+            PuzzleBakeResult result = PuzzleFieldBake.Bake(planets, sim, tutorial);
+            PuzzleData baked = result.Puzzle;
 
             if (baked == null)
             {
                 Assert.IsTrue(
-                    status == PuzzleBakeStatus.StartNotBlocked
-                    || status == PuzzleBakeStatus.StartTooStraight);
+                    result.Status == PuzzleBakeStatus.StartNotBlocked
+                    || result.Status == PuzzleBakeStatus.StartTooStraight);
                 return;
             }
 
-            PuzzleVerification check = PuzzleVerifier.Verify(baked, solution, sim);
+            PuzzleVerification check = PuzzleVerifier.Verify(baked, result.Solution, sim);
             Assert.AreEqual(TrajectoryOutcome.Crash, check.StartOutcome);
             Assert.GreaterOrEqual(
                 PuzzleRunGeometry.MaxAngle(check.Start, baked.origin, baked.destination), 4f);
@@ -131,9 +127,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleBrief multi = brief;
             multi.Zones = 2;
 
-            PuzzleFieldBake.Bake(planets, sim, multi, out PuzzleBakeStatus status, out _);
+            PuzzleBakeResult result = PuzzleFieldBake.Bake(planets, sim, multi);
 
-            Assert.AreNotEqual(PuzzleBakeStatus.UnsupportedBrief, status);
+            Assert.AreNotEqual(PuzzleBakeStatus.UnsupportedBrief, result.Status);
         }
 
         [Test]
@@ -186,12 +182,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
         private static PuzzleData Bake(out PuzzleZone[] solution, out PuzzleSolutionKind kind)
         {
-            PuzzleData variant = PuzzleFieldBake.Bake(
-                planets, sim, brief, out PuzzleBakeStatus status, out solution, out kind);
+            PuzzleBakeResult result = PuzzleFieldBake.Bake(planets, sim, brief);
+            solution = result.Solution;
+            kind = result.Kind;
 
-            Assert.AreEqual(PuzzleBakeStatus.Baked, status);
-            Assert.IsNotNull(variant);
-            return variant;
+            Assert.AreEqual(PuzzleBakeStatus.Baked, result.Status);
+            Assert.IsNotNull(result.Puzzle);
+            return result.Puzzle;
         }
 
 
@@ -230,9 +227,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         {
             PuzzleSeed seed = ScriptableObject.CreateInstance<PuzzleSeed>();
             seed.seed = KnownSeed;
-            PuzzleShapeAsset shape = PuzzleArtifactFactory.Shape(seed, settings);
-            PuzzlePlanetListAsset list = PuzzleArtifactFactory.Planets(shape);
-            Object.DestroyImmediate(shape);
+            PuzzlePlanetListAsset list = PuzzleArtifactFactory.PlanetsFor(seed, settings, KnownSeed);
             Object.DestroyImmediate(seed);
             return list;
         }

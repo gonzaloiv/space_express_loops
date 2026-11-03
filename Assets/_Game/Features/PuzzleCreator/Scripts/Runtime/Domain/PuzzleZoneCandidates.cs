@@ -130,10 +130,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static float RunDistance(Vector3 centre, PuzzleData puzzle) =>
             PuzzleRunGeometry.DistanceToSegment(centre, puzzle.origin, puzzle.destination);
 
-        private static bool IsEndpoint(Vector3 home, PuzzleData puzzle) =>
-            Vector3.Distance(home, puzzle.origin) < MergeDistance
-            || Vector3.Distance(home, puzzle.destination) < MergeDistance;
-
         private static Vector3[] Trim(List<Vector3> centres, int max)
         {
             int count = Mathf.Min(centres.Count, max);

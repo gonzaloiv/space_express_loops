@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Creator
 {
-    public readonly struct PuzzleShipRescue
+    internal readonly struct PuzzleShipRescue
     {
         public readonly Vector3 Origin;
         public readonly Vector3 Destination;

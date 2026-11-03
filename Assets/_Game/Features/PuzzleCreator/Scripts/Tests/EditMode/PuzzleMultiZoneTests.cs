@@ -82,11 +82,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleBrief shorter = PuzzleBrief.From(seed, settings);
             PuzzlePlanetListAsset field = Planets(seed);
 
-            PuzzleData rejected = PuzzleFieldBake.Bake(
-                field, sim, shorter, out PuzzleBakeStatus status, out _);
+            PuzzleBakeResult result = PuzzleFieldBake.Bake(field, sim, shorter);
 
-            Assert.IsNull(rejected);
-            Assert.AreEqual(PuzzleBakeStatus.FewerZones, status);
+            Assert.IsNull(result.Puzzle);
+            Assert.AreEqual(PuzzleBakeStatus.FewerZones, result.Status);
             Object.DestroyImmediate(field);
             Object.DestroyImmediate(seed);
         }

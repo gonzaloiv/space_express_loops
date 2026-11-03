@@ -12,7 +12,7 @@ How to bake a level with **DigitalLove/Space Shaping/Puzzle Creator**.
 | **Export shape** | Builds the planet layout from the seed (`seed`, `planetCount`, `fieldShape`). |
 | **Export planets** | Generates the planet positions from the shape. |
 | **Generate (rebuild)** | Exports shape + planets, then bakes a level for the seed's brief. |
-| **Find working seed** | Scans seeds until one bakes. **Single-ship only.** |
+| **Find working seed** | Scans seeds until one bakes. Multi-ship bakes probe fewer seeds per press. |
 | **Save level** | Writes `Resources/{seed}_Shape_Planets_Puzzle.asset` — this **overwrites** any level already saved for that seed. |
 
 ## The seed
@@ -76,7 +76,8 @@ Below ~9 planets there is nothing for a second ship to ride, and `Generate` retu
 ## Gotchas
 
 - **`zones` is silently ignored by multi-ship levels.** A multi level is always one movable frame.
-- **`Find working seed` is disabled for multi-ship levels.** It scans single-ship bakes only.
+- **`Find working seed` is slower on multi-ship levels.** It still scans, but only 12 seeds per press
+  instead of 64.
 - **`Save level` overwrites** `Resources/{seed}_Shape_Planets_Puzzle.asset`. Bake a second level by
   giving it its own seed asset, or copy the saved asset aside first.
 - **A rejected bake is not a crash.** `NoSolution` means no zone held the required runs across a

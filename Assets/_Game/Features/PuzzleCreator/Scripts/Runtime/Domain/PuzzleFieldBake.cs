@@ -5,6 +5,16 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleFieldBake
     {
+        public static PuzzleBakeResult Bake(
+            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief) =>
+            Run(planets, settings, brief, true);
+
+        // Loose skips the teaching checks (straight start, shorter zone, route count) so an editor
+        // tool can build a smoke-test set from a field that does not meet the full brief.
+        public static PuzzleBakeResult BakeLoose(
+            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief) =>
+            Run(planets, settings, brief, false);
+
         public static bool Apply(
             PuzzleBrief brief, PuzzleData puzzle, PuzzlePlanetListAsset planets, PuzzleSimSettings settings)
         {
@@ -79,84 +89,81 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             max = Mathf.Max(largest, 0.01f) * 2f * PuzzleZoneCandidates.PlanetMargin;
         }
 
-        public static PuzzleData Bake(
-            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief,
-            out PuzzleBakeStatus status, out PuzzleZone[] solution) =>
-            Bake(planets, settings, brief, out status, out solution, out _);
-
-        public static PuzzleData Bake(
-            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief,
-            out PuzzleBakeStatus status, out PuzzleZone[] solution, out PuzzleSolutionKind kind)
+        private static PuzzleBakeResult Run(
+            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief, bool strict)
         {
-            kind = PuzzleSolutionKind.Other;
             PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
             if (!Apply(brief, field, planets, settings))
             {
                 Object.DestroyImmediate(field);
-                solution = null;
-                return Fail(PuzzleBakeStatus.NoRun, out status);
+                return Fail(PuzzleBakeStatus.NoRun);
             }
 
-            PuzzleData baked = BakeField(
-                field, settings, brief, out status, out solution, out kind);
+            PuzzleBakeResult result = BakeField(field, settings, brief, strict);
             Object.DestroyImmediate(field);
-            return baked;
+            return result;
         }
 
-        private static PuzzleData BakeField(
-            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief,
-            out PuzzleBakeStatus status, out PuzzleZone[] solution, out PuzzleSolutionKind kind)
+        private static PuzzleBakeResult BakeField(
+            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, bool strict)
         {
-            solution = null;
-            kind = PuzzleSolutionKind.Other;
             if (!brief.SupportsZones)
-                return Fail(PuzzleBakeStatus.UnsupportedBrief, out status);
+                return Fail(PuzzleBakeStatus.UnsupportedBrief);
 
             if (brief.Mechanism == PuzzleMechanism.Mixed && brief.Zones < 2)
-                return Fail(PuzzleBakeStatus.UnsupportedMechanism, out status);
+                return Fail(PuzzleBakeStatus.UnsupportedMechanism);
 
             PuzzleBakeStatus selected = PuzzleSolutionSelection.Select(
-                field, settings, brief, out PuzzleSolution found, out kind);
+                field, settings, brief, out PuzzleSolution found, out PuzzleSolutionKind kind);
             if (selected != PuzzleBakeStatus.Baked)
-                return Fail(selected, out status);
+                return Fail(selected, kind);
 
-            return Finish(field, settings, brief, found, out status, out solution, out kind);
-        }
-
-        private static PuzzleData Finish(
-            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, PuzzleSolution found,
-            out PuzzleBakeStatus status, out PuzzleZone[] solution, out PuzzleSolutionKind kind)
-        {
-            solution = null;
-            kind = found.Kind;
-            PuzzleBakeStatus start = PuzzleStartCheck.Status(field, settings, brief);
-            if (start != PuzzleBakeStatus.Baked)
-                return Fail(start, out status);
-
-            if (PuzzleSolutionSelection.HasShorter(field, settings, brief, found))
-                return Fail(PuzzleBakeStatus.FewerZones, out status);
-
-            return Confirm(field, settings, brief, found, out status, out solution, out kind);
-        }
-
-        private static PuzzleData Confirm(
-            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, PuzzleSolution found,
-            out PuzzleBakeStatus status, out PuzzleZone[] solution, out PuzzleSolutionKind kind)
-        {
-            solution = null;
-            PuzzleData verified = Verified(
-                field, found, brief, settings, out status, out kind);
-            if (verified == null)
-                return null;
-
-            if (!HasRoutes(verified, settings, brief, found.Zones))
+            if (strict)
             {
-                Object.DestroyImmediate(verified);
-                return Fail(PuzzleBakeStatus.SingleRoute, out status);
+                PuzzleBakeStatus start = PuzzleStartCheck.Status(field, settings, brief);
+                if (start != PuzzleBakeStatus.Baked)
+                    return Fail(start);
+
+                if (PuzzleSolutionSelection.HasShorter(field, settings, brief, found))
+                    return Fail(PuzzleBakeStatus.FewerZones);
             }
 
-            solution = found.Zones;
-            return verified;
+            return Confirm(field, settings, brief, found, kind, strict);
+        }
+
+        private static PuzzleBakeResult Confirm(
+            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, PuzzleSolution found,
+            PuzzleSolutionKind kind, bool strict)
+        {
+            field.entropyBudget = found.EntropySpent * PuzzleGrade.BudgetFactor;
+            PuzzleData variant = Variant(field, found, brief);
+            PuzzleVerification check = PuzzleVerifier.Verify(variant, found.Zones, settings);
+            kind = check.Kind;
+            if (!check.Solved)
+            {
+                Object.DestroyImmediate(variant);
+                return Fail(PuzzleBakeStatus.Unverified, kind);
+            }
+
+            if (!strict && !check.StartFails)
+            {
+                Object.DestroyImmediate(variant);
+                return Fail(PuzzleBakeStatus.StartNotFailed, kind);
+            }
+
+            if (strict && !HasRoutes(variant, settings, brief, found.Zones))
+            {
+                Object.DestroyImmediate(variant);
+                return Fail(PuzzleBakeStatus.SingleRoute, kind);
+            }
+
+            return new PuzzleBakeResult
+            {
+                Puzzle = variant,
+                Solution = found.Zones,
+                Status = PuzzleBakeStatus.Baked,
+                Kind = kind
+            };
         }
 
         private static bool HasRoutes(
@@ -166,30 +173,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return puzzle.routes >= Mathf.Max(1, brief.MinRoutes);
         }
 
-        private static PuzzleData Fail(PuzzleBakeStatus value, out PuzzleBakeStatus status)
-        {
-            status = value;
-            return null;
-        }
-
-        private static PuzzleData Verified(
-            PuzzleData field, PuzzleSolution solution, PuzzleBrief brief, PuzzleSimSettings settings,
-            out PuzzleBakeStatus status, out PuzzleSolutionKind kind)
-        {
-            field.entropyBudget = solution.EntropySpent * PuzzleGrade.BudgetFactor;
-            PuzzleData variant = Variant(field, solution, brief);
-            PuzzleVerification check = PuzzleVerifier.Verify(variant, solution.Zones, settings);
-            kind = check.Kind;
-            if (check.Solved)
-            {
-                status = PuzzleBakeStatus.Baked;
-                return variant;
-            }
-
-            Object.DestroyImmediate(variant);
-            status = PuzzleBakeStatus.Unverified;
-            return null;
-        }
+        private static PuzzleBakeResult Fail(PuzzleBakeStatus status, PuzzleSolutionKind kind = PuzzleSolutionKind.Other) =>
+            new() { Status = status, Kind = kind };
 
         private static PuzzleData Variant(PuzzleData field, PuzzleSolution solution, PuzzleBrief brief)
         {

@@ -1,10 +1,7 @@
+using DigitalLove.Casual.Levels;
 using DigitalLove.Game.SpaceShaping;
-using Oculus.Interaction;
-using TMPro;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 {
@@ -12,8 +9,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
     {
         private const string SettingsPath =
             "Assets/_Game/Features/PuzzleCreator/Resources/SpaceShapingSettings.asset";
-        private const string GeneratedFolder = "Assets/_Game/Features/SpaceShaping/Generated";
-        private const string ScenePath = "Assets/_Game/Features/SpaceShaping/SpaceShapingPOC.unity";
+        private const string GeneratedFolder = "Assets/_Game/Features/PuzzleCreator/Resources";
+        private const string ChapterPath = "Assets/_Game/Resources/Chapters/01.asset";
         private const int MazeSeed = 1;
         private const int MazePlanets = 6;
         private const int MazeAttempts = 8;
@@ -118,10 +115,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                     (saved != null ? "saved" : "MISSING"));
             }
 
-            WireScene(puzzles);
+            WireChapter(puzzles);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log("Test set: 8 jobs built and wired into SpaceShapingPOC.");
+            Debug.Log($"Test set: {Jobs.Length} jobs built and wired into chapter 01.");
         }
 
         [MenuItem("DigitalLove/Space Shaping/Build Maze Test Level")]
@@ -162,16 +159,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 return;
             }
 
-            WireScene(new[] { saved });
+            WireChapter(new[] { saved });
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log($"Maze test: baked Maze_01 (seed {result.Seed}, {baked.zones} zone(s)) and wired into SpaceShapingPOC.");
+            Debug.Log($"Maze test: baked Maze_01 (seed {result.Seed}, {baked.zones} zone(s)) and wired into chapter 01.");
         }
 
         private static PuzzleData TryBakeLoose(
             Job job, SpaceShapingSettings settings, out PuzzleBakeStatus status)
         {
-            status = PuzzleBakeStatus.NoSolution;
             PuzzleSeed seed = ScriptableObject.CreateInstance<PuzzleSeed>();
             seed.seed = job.Seed;
             seed.planetCount = job.PlanetCount;
@@ -180,148 +176,42 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             seed.minRoutes = job.MinRoutes;
             seed.resizable = false;
 
-            PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
-            PuzzleBrief brief = PuzzleBrief.From(seed, settings);
-            PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
             PuzzlePlanetListAsset planets = Planets(seed, settings);
-            bool applied = PuzzleFieldBake.Apply(brief, field, planets, sim);
+            PuzzleBakeResult result = PuzzleFieldBake.BakeLoose(
+                planets, PuzzleSimSettings.From(settings), PuzzleBrief.From(seed, settings));
             Object.DestroyImmediate(planets);
-            if (!applied)
-            {
-                status = PuzzleBakeStatus.NoRun;
-                Object.DestroyImmediate(field);
-                Object.DestroyImmediate(seed);
-                return null;
-            }
-
-            if (!PuzzleSolutionSearch.TrySelect(field, sim, brief, out PuzzleSolution found))
-            {
-                Object.DestroyImmediate(field);
-                Object.DestroyImmediate(seed);
-                return null;
-            }
-
-            field.entropyBudget = found.EntropySpent * PuzzleGrade.BudgetFactor;
-            PuzzleData variant = Object.Instantiate(field);
-            variant.frames = PuzzleFieldBake.BuildFrames(field, found, brief);
-            variant.zones = found.Zones.Length;
-            PuzzleVerification check = PuzzleVerifier.Verify(variant, found.Zones, sim);
-            Object.DestroyImmediate(field);
             Object.DestroyImmediate(seed);
-
-            if (!check.Solved)
-            {
-                status = PuzzleBakeStatus.Unverified;
-                Object.DestroyImmediate(variant);
-                return null;
-            }
-
-            if (!check.StartFails)
-            {
-                status = PuzzleBakeStatus.StartNotFailed;
-                Object.DestroyImmediate(variant);
-                return null;
-            }
-
-            status = PuzzleBakeStatus.Baked;
-            return variant;
+            status = result.Status;
+            return result.Puzzle;
         }
 
-        private static PuzzlePlanetListAsset Planets(PuzzleSeed seed, SpaceShapingSettings settings)
-        {
-            PuzzleShapeAsset shape = PuzzleArtifactFactory.Shape(seed, settings);
-            PuzzlePlanetListAsset planets = PuzzleArtifactFactory.Planets(shape);
-            Object.DestroyImmediate(shape);
-            return planets;
-        }
+        private static PuzzlePlanetListAsset Planets(PuzzleSeed seed, SpaceShapingSettings settings) =>
+            PuzzleArtifactFactory.PlanetsFor(seed, settings, seed.seed);
 
-        private static void WireScene(PuzzleData[] puzzles)
+        private static void WireChapter(PuzzleData[] puzzles)
         {
-            Scene scene = SceneManager.GetActiveScene();
-            if (scene.path != ScenePath)
-                scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
-
-            SpaceShapingController state = FindState(scene);
-            if (state == null)
+            ChapterData chapter = AssetDatabase.LoadAssetAtPath<ChapterData>(ChapterPath);
+            if (chapter == null)
             {
-                Debug.LogError("Test set: no SpaceShapingState in the POC scene.");
+                Debug.LogError($"Test set: missing chapter at {ChapterPath}.");
                 return;
             }
 
-            SerializedObject serialized = new SerializedObject(state);
-            SerializedProperty array = serialized.FindProperty("puzzles");
-            array.arraySize = puzzles.Length;
+            int count = 0;
+            LevelData[] levels = new LevelData[puzzles.Length];
             for (int i = 0; i < puzzles.Length; i++)
-                array.GetArrayElementAtIndex(i).objectReferenceValue = puzzles[i];
-
-            serialized.ApplyModifiedPropertiesWithoutUndo();
-            EnsureNextButton();
-            EditorSceneManager.MarkSceneDirty(scene);
-            EditorSceneManager.SaveScene(scene);
-        }
-
-        private static SpaceShapingController FindState(Scene scene)
-        {
-            GameObject[] roots = scene.GetRootGameObjects();
-            for (int i = 0; i < roots.Length; i++)
             {
-                SpaceShapingController state = roots[i].GetComponentInChildren<SpaceShapingController>(true);
-                if (state != null)
-                    return state;
+                if (puzzles[i] == null)
+                    continue;
+
+                levels[count++] = puzzles[i];
             }
 
-            return null;
-        }
+            if (count != levels.Length)
+                System.Array.Resize(ref levels, count);
 
-        private static void EnsureNextButton()
-        {
-            if (Object.FindAnyObjectByType<PuzzleLabNextButton>() != null)
-                return;
-
-            PuzzleLabResetButton reset = Object.FindAnyObjectByType<PuzzleLabResetButton>();
-            if (reset == null)
-            {
-                Debug.LogWarning("Test set: no ResetButton to duplicate for Next.");
-                return;
-            }
-
-            PuzzleLabPanel panel = PanelOf(reset);
-            GameObject next = Object.Instantiate(reset.gameObject, reset.transform.parent);
-            next.name = "NextButton";
-            next.SetActive(false);
-            next.transform.localPosition = new Vector3(0f, -0.05f, 0f);
-
-            Object.DestroyImmediate(next.GetComponent<PuzzleLabResetButton>());
-            PuzzleLabNextButton button = next.AddComponent<PuzzleLabNextButton>();
-            SerializedObject serialized = new SerializedObject(button);
-            serialized.FindProperty("panel").objectReferenceValue = panel;
-            serialized.FindProperty("grabbable").objectReferenceValue = next.GetComponent<Grabbable>();
-            serialized.FindProperty("face").objectReferenceValue = FaceOf(next);
-            serialized.ApplyModifiedPropertiesWithoutUndo();
-
-            TMP_Text label = next.GetComponentInChildren<TMP_Text>(true);
-            if (label != null)
-                label.text = "NEXT";
-
-            next.SetActive(true);
-        }
-
-        private static PuzzleLabPanel PanelOf(PuzzleLabResetButton reset)
-        {
-            SerializedObject serialized = new SerializedObject(reset);
-            return serialized.FindProperty("panel").objectReferenceValue as PuzzleLabPanel;
-        }
-
-        private static Renderer FaceOf(GameObject button)
-        {
-            Transform face = button.transform.Find("Face");
-            if (face == null)
-            {
-                Debug.LogWarning("Test set: Next button has no Face child.");
-                return null;
-            }
-
-            return face.GetComponent<Renderer>();
+            chapter.levels = levels;
+            EditorUtility.SetDirty(chapter);
         }
     }
 }

@@ -26,7 +26,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             {
                 Start = startResult,
                 SolvedRun = solvedResults[0],
-                StartResults = startResults,
                 SolvedResults = solvedResults,
                 Solution = solution,
                 EntropySpent = solved.EntropySpent,
@@ -62,7 +61,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
                 if (PuzzleZoneCandidates.ContainsEndpoint(solution[i], puzzle))
                     return false;
-
             }
 
             return true;

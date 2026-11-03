@@ -103,8 +103,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             }
             else
             {
-                generated = PuzzleFieldBake.Bake(
-                    planets, sim, brief, out status, out generatedSolution, out generatedKind);
+                PuzzleBakeResult result = PuzzleFieldBake.Bake(planets, sim, brief);
+                status = result.Status;
+                generated = result.Puzzle;
+                generatedSolution = result.Solution;
+                generatedKind = result.Kind;
             }
 
             Repaint();

@@ -10,7 +10,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     //
     // A pair's pristine outcome does not depend on the zone, so it is computed once per field; a sweep
     // can then test many zones against the same field cheaply.
-    public sealed class PuzzleShipScan
+    internal sealed class PuzzleShipScan
     {
         private readonly SpaceShapingSetup setup;
         private readonly PuzzleData puzzle;
@@ -153,22 +153,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private int Budget(
             IReadOnlyList<SpaceZone> zones, Vector3 origin, Vector3 destination, bool timeDilation)
         {
-            if (settings.NominalSpeed <= 0f || settings.StepSecs <= 0f)
-                return 1;
-
-            float factor = 1f;
-            if (timeDilation && zones != null)
-            {
-                for (int i = 0; i < zones.Count; i++)
-                {
-                    if (zones[i].IsActive)
-                        factor = Mathf.Max(factor, zones[i].Scale);
-                }
-            }
-
-            float run = Vector3.Distance(origin, destination);
-            return Mathf.Max(
-                1, Mathf.CeilToInt(run / settings.NominalSpeed / settings.StepSecs * factor));
+            float factor = timeDilation ? PuzzleStepBudget.ZoneFactor(zones) : 1f;
+            return PuzzleStepBudget.Steps(
+                Vector3.Distance(origin, destination), settings, factor);
         }
 
         private readonly struct FieldView

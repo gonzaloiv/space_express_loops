@@ -7,16 +7,11 @@ namespace DigitalLove.Game.Nodes
 {
     public class HubsSpawner : MonoBehaviour
     {
-        [SerializeField] private MrukRoomLocalPlacement roomPlacement;
         [SerializeField] private List<HubBehaviour> hubs;
-        [SerializeField] private float minDistanceBetweenHubs;
-        [SerializeField] private float minDistanceToRoomBounds;
 
         private IdCounter idCounter = new();
 
         public IReadOnlyList<HubBehaviour> All => hubs;
-
-        public float HubPlacementRadius => hubs[0].NodeBody.Radius;
 
         public void SyncIdsFromSnapshot(IEnumerable<string> existingIds) =>
             idCounter.SyncFromExistingIds(existingIds);
@@ -83,25 +78,16 @@ namespace DigitalLove.Game.Nodes
                 GetOrSpawn(hubData.id, hubData);
         }
 
-        public void HideAll()
-        {
-            hubs.ForEachInPool(hub =>
-            {
-                if (hub.IsActive)
-                    roomPlacement.Unregister(hub.LocalPosition, hub.NodeBody.Radius);
-                hub.Hide();
-            });
-        }
+        public void HideAll() =>
+            hubs.ForEachInPool(hub => hub.Hide());
 
         private HubBehaviour Spawn(string hubId, HubData hubData = null)
         {
             HubBehaviour hub = hubs.AcquireInactive(hubs[0], transform, CreatePooledHub);
             Vector3 localPosition = hubData?.localPosition != null
                 ? hubData.localPosition.ToVector3()
-                : GetValidHubLocalPosition();
+                : Vector3.zero;
             hub.Spawn(hubId, localPosition);
-            if (hubData == null)
-                roomPlacement.Register(localPosition, hub.NodeBody.Radius);
             return hub;
         }
 
@@ -109,39 +95,6 @@ namespace DigitalLove.Game.Nodes
         {
             hub.Initialize();
             hub.Hide();
-        }
-
-        private Vector3 GetValidHubLocalPosition()
-        {
-            float placementRadius = HubPlacementRadius;
-
-            if (!hubs.IsAnyActive())
-                return roomPlacement.GetRoomCenterLocalPosition(placementRadius);
-
-            for (int i = 0; i < MrukRoomLocalPlacement.DefaultMaxIterations; i++)
-            {
-                Vector3 localPosition = roomPlacement.GetValidLocalPosition(placementRadius);
-                if (minDistanceBetweenHubs <= 0f || !IsTooCloseToOtherHubs(localPosition, minDistanceBetweenHubs))
-                    return localPosition;
-            }
-
-            Debug.LogWarning("Failed to find a hub position with minimum hub spacing; using best-effort placement.");
-            return roomPlacement.GetValidLocalPosition(placementRadius);
-        }
-
-        private bool IsTooCloseToOtherHubs(Vector3 localPosition, float minDistance)
-        {
-            for (int i = 0; i < hubs.Count; i++)
-            {
-                HubBehaviour hub = hubs[i];
-                if (hub == null || !hub.IsActive)
-                    continue;
-
-                if (Vector3.Distance(hub.LocalPosition, localPosition) < minDistance)
-                    return true;
-            }
-
-            return false;
         }
     }
 }

@@ -23,6 +23,20 @@ A review is delivered **in the chat**, not as a file: a one-line verdict, then r
 `file:line` evidence. Do not create a `docs/reviews/` folder or review documents. When a review changes a
 plan or the code, apply it in the same change and say so in the chat.
 
+## No internal APIs
+
+In first-party C#:
+
+- Do not call or instantiate `internal` methods, constructors, or types owned by another type. `internal` is assembly-wide public and makes a collaborator depend on an implementation detail.
+- When a collaborator needs the behavior, move it to the owning type, add a collection extension, or pass a read-only snapshot / return an intention.
+- Do not add `InternalsVisibleTo` to open up another type; fix the ownership or the boundary instead.
+- Declaring a helper `internal` is acceptable only for a genuine module helper shared by a small set of sibling types in the same assembly — never as a shortcut to reach across features.
+- If nothing public fits, stop and fix the design; do not widen visibility for convenience.
+
+### Exceptions
+
+Unity/vendor/package APIs and Editor tooling that must bind to them. Skip `**/Vendor/**`, `**/Samples/**`, and `**/Plugins/**`.
+
 ## SerializeField wiring
 
 - Use serialized references for all scene, prefab, and same-GameObject collaborators.

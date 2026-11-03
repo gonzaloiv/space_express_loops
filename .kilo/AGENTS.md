@@ -49,6 +49,20 @@ Serialized Unity fields, prefab-facing types, interface implementations, and pub
 - Reserve `internal` for genuine module helpers shared by a small set of sibling types in the same assembly.
 - If a member would be public across an assembly boundary, justify its design as if it were public.
 
+## No internal APIs
+
+In first-party C#:
+
+- Do not call or instantiate `internal` methods, constructors, or types owned by another type. `internal` is assembly-wide public and makes a collaborator depend on an implementation detail.
+- When a collaborator needs the behavior, move it to the owning type, add a collection extension, or pass a read-only snapshot / return an intention.
+- Do not add `InternalsVisibleTo` to open up another type; fix the ownership or the boundary instead.
+- Declaring a helper `internal` is acceptable only for a genuine module helper shared by a small set of sibling types in the same assembly — never as a shortcut to reach across features.
+- If nothing public fits, stop and fix the design; do not widen visibility for convenience.
+
+### Exceptions
+
+Unity/vendor/package APIs and Editor tooling that must bind to them. Skip `**/Vendor/**`, `**/Samples/**`, and `**/Plugins/**`.
+
 ## State ownership and snapshots
 
 When one type owns state that several collaborators need:
