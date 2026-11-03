@@ -1,5 +1,5 @@
 {
-    "name": "DigitalLove.Game.Flow.PuzzleBootState",
+    "name": "DigitalLove.Game.Flow.PuzzleEditionState",
     "rootNamespace": "",
     "references": [
         "DigitalLove.FlowControl",

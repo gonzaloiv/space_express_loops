@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.SpaceShaping.Cube;
 using UnityEngine;
@@ -6,7 +7,9 @@ namespace DigitalLove.Game.SpaceShaping
 {
     public class SpaceShapingController : MonoState
     {
-        private const float PreviewIntervalSecs = 0.05f;
+        private const float PreviewIntervalSecs = 0.075f;
+        private const float LatticeIntervalSecs = 1f / 30f;
+        private const float ReadoutIntervalSecs = 0.1f;
 
         [SerializeField] private PuzzleData[] puzzles;
         [SerializeField] private SpaceShapingSettings settings;
@@ -17,8 +20,11 @@ namespace DigitalLove.Game.SpaceShaping
 
         private SpaceShapingSession session;
         private TrajectoryResult[] lastResults;
+        private List<Vector3>[] trajectoryBuffers;
         private int puzzleIndex;
         private float nextPreviewTime;
+        private float nextLatticeTime;
+        private float nextReadoutTime;
         private bool wasScaling;
         private bool hasResult;
         private bool isChecked;
@@ -54,6 +60,8 @@ namespace DigitalLove.Game.SpaceShaping
             wasScaling = false;
             isFlying = false;
             nextPreviewTime = 0f;
+            nextLatticeTime = 0f;
+            nextReadoutTime = 0f;
             ResetView();
             session.Reset();
             view.SoftResetShips(session);
@@ -112,6 +120,8 @@ namespace DigitalLove.Game.SpaceShaping
                 view.ClearPrediction();
                 isFlying = false;
                 nextPreviewTime = 0f;
+                nextLatticeTime = 0f;
+                nextReadoutTime = 0f;
             }
 
             session.PreviewZone(view.Zone);
@@ -121,19 +131,29 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void RenderPreview()
         {
-            SpacetimeField field = session.BuildField();
-            ApplyAndRender();
-            view.ShowReadout(PuzzleReadout.Pending(session));
-            PreviewPath(field);
+            if (Time.unscaledTime >= nextLatticeTime)
+            {
+                nextLatticeTime = Time.unscaledTime + LatticeIntervalSecs;
+                ApplyAndRender();
+            }
+
+            if (Time.unscaledTime >= nextReadoutTime)
+            {
+                nextReadoutTime = Time.unscaledTime + ReadoutIntervalSecs;
+                view.ShowReadout(PuzzleReadout.Pending(session));
+            }
+
+            PreviewPath();
         }
 
-        private void PreviewPath(SpacetimeField field)
+        private void PreviewPath()
         {
             if (Time.unscaledTime < nextPreviewTime)
                 return;
 
             nextPreviewTime = Time.unscaledTime + PreviewIntervalSecs;
-            lastResults = session.SimulateAll(field, integrator, launch);
+            SpacetimeField field = session.BuildField();
+            lastResults = session.SimulateAll(field, integrator, launch, trajectoryBuffers);
             hasResult = true;
             view.ShowTrajectories(session, lastResults, true);
         }
@@ -167,8 +187,11 @@ namespace DigitalLove.Game.SpaceShaping
             isChecked = false;
             isFlying = false;
             nextPreviewTime = 0f;
+            nextLatticeTime = 0f;
+            nextReadoutTime = 0f;
             ResetView();
             session = new SpaceShapingSession(BuildSetup());
+            EnsureTrajectoryBuffers();
             view.SetPuzzle(CurrentPuzzle);
             view.SoftResetShips(session);
             PlayStartCheck();
@@ -187,7 +210,8 @@ namespace DigitalLove.Game.SpaceShaping
             isFlying = startFlight;
             view.StopShips();
             SpacetimeField field = session.BuildField();
-            TrajectoryResult[] results = session.SimulateAll(field, integrator, launch);
+            TrajectoryResult[] results = session.SimulateAll(
+                field, integrator, launch, trajectoryBuffers);
 
             ApplyAndRender();
             if (showPath)
@@ -223,6 +247,16 @@ namespace DigitalLove.Game.SpaceShaping
                 return;
 
             view.ShowReadout(PuzzleReadout.From(session, lastResults, isChecked, isFlying));
+        }
+
+        private void EnsureTrajectoryBuffers()
+        {
+            if (trajectoryBuffers != null && trajectoryBuffers.Length == session.ShipCount)
+                return;
+
+            trajectoryBuffers = new List<Vector3>[session.ShipCount];
+            for (int i = 0; i < trajectoryBuffers.Length; i++)
+                trajectoryBuffers[i] = new List<Vector3>(session.MaxSteps + 1);
         }
 
         public SpaceShapingSetup BuildSetup() =>

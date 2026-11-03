@@ -33,8 +33,8 @@ when it cannot find one; it also rejects a seed when a **cheaper or equal wrong-
 because the taught role must be the best answer. More expensive alternate routes may remain. The 7-job
 spine requests **Curve**; the **Clear** obstacle and the **Mixed** clear+curve are later variations
 ([archetypes](#the-run--archetypes)). A `Curve`/`Mixed` seed is rejected when its start path stays under
-4° off the chord: the start must show the field. The bake reports the reference solution's `kind`; the
-player never sees the label. Multi-ship role requests are not supported yet.
+5% of the chord or 4° off it: the start must show the field. The bake reports the reference solution's
+`kind`; the player never sees the label. Multi-ship role requests are not supported yet.
 
 **The field is a galaxy, not a handful of balls.** The planet column is the **source** count — the bodies
 that bend the path. The field also carries **decor** (dust, moons, distant planets) from

@@ -102,15 +102,26 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void TravelShips(SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results) =>
             spawner.Ships.Travel(
-                ShipRunGeometry.Visible(session, results, capGap, capGapFraction), session.StepSecs);
+                VisibleRuns(session, results, out _, out _), session.StepSecs);
 
         public void ShowTrajectories(
             SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results, bool pending)
         {
-            FieldFrame.Measure(session, out Vector3 centre, out float half);
-            spawner.Lines.Show(
-                ShipRunGeometry.Visible(session, results, capGap, capGapFraction),
-                centre, half, pending);
+            TrajectoryResult[] visible = VisibleRuns(session, results, out Vector3 centre, out float half);
+            spawner.Lines.Show(visible, centre, half, pending);
+        }
+
+        private TrajectoryResult[] VisibleRuns(
+            SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results,
+            out Vector3 centre, out float half)
+        {
+            TrajectoryResult[] visible = ShipRunGeometry.Visible(
+                session, results, capGap, capGapFraction);
+            FieldFrame.Measure(session, out centre, out half);
+            for (int i = 0; i < visible.Length; i++)
+                visible[i] = TrajectoryCaps.ClipToBox(visible[i], centre, half);
+
+            return visible;
         }
 
         public void ShowBaseline(SpaceShapingSession session)

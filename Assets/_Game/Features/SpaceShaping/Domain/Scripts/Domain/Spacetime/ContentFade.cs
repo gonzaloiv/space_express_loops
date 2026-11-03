@@ -30,8 +30,15 @@ namespace DigitalLove.Game.SpaceShaping
             float best = SegmentDistance(point, session.Origin, session.Destination);
             for (int i = 0; i < session.SourceCount; i++)
             {
-                float surface = Vector3.Distance(point, session.GetPosition(i)) - session.GetScale(i) * 0.5f;
-                best = Mathf.Min(best, surface);
+                float radius = session.GetScale(i) * 0.5f;
+                float limit = best + radius;
+                float sqr = (point - session.GetPosition(i)).sqrMagnitude;
+                if (limit >= 0f && sqr >= limit * limit)
+                    continue;
+
+                float surface = Mathf.Sqrt(sqr) - radius;
+                if (surface < best)
+                    best = surface;
             }
 
             return best;

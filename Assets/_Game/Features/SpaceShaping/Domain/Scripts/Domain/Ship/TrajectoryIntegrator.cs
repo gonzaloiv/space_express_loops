@@ -7,9 +7,19 @@ namespace DigitalLove.Game.SpaceShaping
     public class TrajectoryIntegrator
     {
         public TrajectoryResult Integrate(
-            SpacetimeField field, Vector3 start, LaunchSettings launch, TrajectorySettings settings)
+            SpacetimeField field, Vector3 start, LaunchSettings launch, TrajectorySettings settings) =>
+            Integrate(field, start, launch, settings, new List<Vector3>(settings.MaxSteps + 1));
+
+        // points is cleared and reused; the returned result owns it until the next call.
+        public TrajectoryResult Integrate(
+            SpacetimeField field, Vector3 start, LaunchSettings launch, TrajectorySettings settings,
+            List<Vector3> points)
         {
-            List<Vector3> points = new(settings.MaxSteps + 1);
+            points.Clear();
+            int capacity = settings.MaxSteps + 1;
+            if (points.Capacity < capacity)
+                points.Capacity = capacity;
+
             StepState state = new(start, launch.Direction * launch.Speed);
             points.Add(state.Position);
 

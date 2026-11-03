@@ -22,6 +22,9 @@ namespace DigitalLove.Game.SpaceShaping.Grid
         private Mesh mesh;
         private Vector3[] vertices;
         private Color[] colors;
+        private Vector3[] nodeFractions;
+        private Vector3[] ringOffsets;
+        private Bounds bounds;
         private int samplesPerLine;
         private RendererTint tint;
         private Func<Vector3, Vector3> lastWarp;
@@ -70,21 +73,40 @@ namespace DigitalLove.Game.SpaceShaping.Grid
 
         private void WarpVertices(Func<Vector3, Vector3> warp, Func<Vector3, float> fade, float half)
         {
-            Vector3 gridMin = new(-half, -half, -half);
-            Vector3 gridMax = new(half, half, half);
+            Matrix4x4 localToParent = transform.parent.worldToLocalMatrix * transform.localToWorldMatrix;
+            Matrix4x4 parentToLocal = transform.worldToLocalMatrix * transform.parent.localToWorldMatrix;
+            bounds = new Bounds(Vector3.zero, Vector3.zero);
+
+            for (int v = 0; v < vertices.Length; v++)
+            {
+                Vector3 fraction = nodeFractions[v];
+                Vector3 node = new(
+                    (fraction.x * 2f - 1f) * half,
+                    (fraction.y * 2f - 1f) * half,
+                    (fraction.z * 2f - 1f) * half);
+                Vector3 warpNode = localToParent.MultiplyPoint3x4(node);
+                Vector3 warped = warp(warpNode);
+                colors[v] = new Color(1f, 1f, 1f, fade(warped));
+                Vector3 local = parentToLocal.MultiplyPoint3x4(warped) + ringOffsets[v] * radius;
+                vertices[v] = local;
+                bounds.Encapsulate(local);
+            }
+        }
+
+        private void BuildStaticData()
+        {
             int perLine = samplesPerLine * sides;
             int perAxisVertices = gridCount * gridCount * perLine;
+            nodeFractions = new Vector3[vertices.Length];
+            ringOffsets = new Vector3[vertices.Length];
 
             for (int v = 0; v < vertices.Length; v++)
             {
                 LatticeSample sample = Decode(v, perLine, perAxisVertices);
-                Vector3 node = LatticeGrid.Node(
-                    sample.Axis, sample.NodeIndex, sample.I, sample.J, gridCount, gridMin, gridMax);
-                Vector3 warpNode = transform.parent.InverseTransformPoint(transform.TransformPoint(node));
-                Vector3 warped = warp(warpNode);
-                colors[v] = new Color(1f, 1f, 1f, fade(warped));
-                Vector3 local = transform.InverseTransformPoint(transform.parent.TransformPoint(warped));
-                vertices[v] = local + LatticeGrid.RingOffset(sample.Axis, sample.Side, sides) * radius;
+                nodeFractions[v] = LatticeGrid.Node(
+                    sample.Axis, sample.NodeIndex, sample.I, sample.J, gridCount,
+                    Vector3.zero, Vector3.one);
+                ringOffsets[v] = LatticeGrid.RingOffset(sample.Axis, sample.Side, sides);
             }
         }
 
@@ -103,8 +125,7 @@ namespace DigitalLove.Game.SpaceShaping.Grid
         {
             mesh.SetVertices(vertices);
             mesh.SetColors(colors);
-            mesh.RecalculateNormals();
-            mesh.RecalculateBounds();
+            mesh.bounds = bounds;
             meshRenderer.enabled = Application.isPlaying;
         }
 
@@ -126,6 +147,7 @@ namespace DigitalLove.Game.SpaceShaping.Grid
             vertices = new Vector3[mesh.vertexCount];
             colors = new Color[mesh.vertexCount];
             samplesPerLine = mesh.vertexCount / (3 * gridCount * gridCount * sides);
+            BuildStaticData();
         }
 
         private bool IsMeshCurrent() => mesh != null && mesh.vertexCount == sourceMesh.vertexCount;

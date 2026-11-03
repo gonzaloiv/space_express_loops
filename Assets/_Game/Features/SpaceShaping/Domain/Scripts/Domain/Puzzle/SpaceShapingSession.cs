@@ -29,6 +29,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         public float StepSecs => setup.Sim.StepSecs;
 
+        public int MaxSteps => setup.MaxSteps;
+
         public ShipSpec Ship(int index) => ships[index];
 
         public Vector3 Origin => setup.Origin;
@@ -153,38 +155,51 @@ namespace DigitalLove.Game.SpaceShaping
 
         public TrajectoryResult Simulate(
             SpacetimeField field, TrajectoryIntegrator integrator, ShipLaunch launch) =>
-            SimulateShip(field, integrator, launch, ships[0], StepBudget());
+            SimulateShip(field, integrator, launch, ships[0], null);
 
         // One result per ship, all sharing the budget of the longest run.
         public TrajectoryResult[] SimulateAll() =>
             SimulateAll(BuildField(), new TrajectoryIntegrator(), new ShipLaunch());
 
         public TrajectoryResult[] SimulateAll(
-            SpacetimeField field, TrajectoryIntegrator integrator, ShipLaunch launch)
+            SpacetimeField field, TrajectoryIntegrator integrator, ShipLaunch launch) =>
+            SimulateAll(field, integrator, launch, null);
+
+        // buffers lets a caller reuse each ship's point list between previews.
+        public TrajectoryResult[] SimulateAll(
+            SpacetimeField field, TrajectoryIntegrator integrator, ShipLaunch launch,
+            List<Vector3>[] buffers)
         {
             TrajectoryResult[] results = new TrajectoryResult[ships.Length];
-            int budget = StepBudget();
             for (int i = 0; i < ships.Length; i++)
-                results[i] = SimulateShip(field, integrator, launch, ships[i], budget);
+                results[i] = SimulateShip(field, integrator, launch, ships[i], Buffer(buffers, i));
 
             return results;
         }
 
+        private static List<Vector3> Buffer(List<Vector3>[] buffers, int index) =>
+            buffers != null && index < buffers.Length ? buffers[index] : null;
+
         private TrajectoryResult SimulateShip(
             SpacetimeField field, TrajectoryIntegrator integrator, ShipLaunch launch,
-            ShipSpec ship, int budget)
+            ShipSpec ship, List<Vector3> buffer)
         {
             TrajectorySettings settings = new()
             {
                 Destination = ship.Destination,
                 CaptureRadius = ship.CaptureRadius > 0f ? ship.CaptureRadius : setup.Sim.CaptureRadius,
                 StepSecs = setup.Sim.StepSecs,
-                MaxSteps = budget,
+                MaxSteps = StepBudget(),
                 Zones = log.Zones
             };
 
             launch.LaunchSpeed = setup.LaunchSpeed;
-            return launch.Simulate(field, ship.Origin, ship.Destination, settings, integrator);
+            if (buffer == null)
+                return launch.Simulate(field, ship.Origin, ship.Destination, settings, integrator);
+
+            return integrator.Integrate(
+                field, ship.Origin,
+                launch.BuildLaunch(ship.Origin, ship.Destination), settings, buffer);
         }
 
         private void Recompute()

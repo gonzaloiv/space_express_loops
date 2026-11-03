@@ -46,6 +46,65 @@ namespace DigitalLove.Game.SpaceShaping
             return new TrajectoryResult(result.Outcome, clipped);
         }
 
+        public static TrajectoryResult ClipToBox(
+            TrajectoryResult result, Vector3 centre, float half)
+        {
+            if (!result.HasPoints)
+                return result;
+
+            List<Vector3> points = result.Points;
+            int lastInside = LastInside(points, centre, half);
+            if (lastInside == points.Count - 1)
+                return result;
+
+            if (lastInside < 0)
+                return new TrajectoryResult(result.Outcome, new List<Vector3>());
+
+            List<Vector3> clipped = new(lastInside + 2);
+            for (int i = 0; i <= lastInside; i++)
+                clipped.Add(points[i]);
+            clipped.Add(BoxCrossing(points[lastInside], points[lastInside + 1], centre, half));
+
+            return new TrajectoryResult(result.Outcome, clipped);
+        }
+
+        private static int LastInside(List<Vector3> points, Vector3 centre, float half)
+        {
+            int last = -1;
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (!Inside(points[i], centre, half))
+                    break;
+
+                last = i;
+            }
+
+            return last;
+        }
+
+        private static bool Inside(Vector3 point, Vector3 centre, float half) =>
+            Mathf.Abs(point.x - centre.x) <= half
+            && Mathf.Abs(point.y - centre.y) <= half
+            && Mathf.Abs(point.z - centre.z) <= half;
+
+        private static Vector3 BoxCrossing(
+            Vector3 inside, Vector3 outside, Vector3 centre, float half)
+        {
+            Vector3 segment = outside - inside;
+            float t = 1f;
+            if (Mathf.Abs(segment.x) > 0.0000001f)
+                t = Mathf.Min(t, ((segment.x > 0f ? centre.x + half : centre.x - half) - inside.x)
+                    / segment.x);
+            if (Mathf.Abs(segment.y) > 0.0000001f)
+                t = Mathf.Min(t, ((segment.y > 0f ? centre.y + half : centre.y - half) - inside.y)
+                    / segment.y);
+            if (Mathf.Abs(segment.z) > 0.0000001f)
+                t = Mathf.Min(t, ((segment.z > 0f ? centre.z + half : centre.z - half) - inside.z)
+                    / segment.z);
+
+            return inside + segment * Mathf.Clamp01(t);
+        }
+
         private static Vector3 Direction(Vector3 origin, Vector3 destination)
         {
             Vector3 direction = destination - origin;
