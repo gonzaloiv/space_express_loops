@@ -1,0 +1,232 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace DigitalLove.Game.SpaceShaping.Creator
+{
+    public static class PuzzleBeamSearch
+    {
+        private const int Width = 8;
+        private const int MaxEvaluations = 5000;
+        private const float MarginEpsilon = 0.0001f;
+        private const float SizeTolerance = 0.0001f;
+
+        public static bool TrySelect(
+            PuzzleSolutionContext solutionContext, PuzzleBrief brief, out PuzzleSolution solution) =>
+            TrySelect(solutionContext, brief, 0f, out solution);
+
+        public static bool TrySelect(
+            PuzzleSolutionContext solutionContext, PuzzleBrief brief, float width,
+            out PuzzleSolution solution)
+        {
+            solution = default;
+            int zones = Mathf.Clamp(brief.Zones, 2, 3);
+            PuzzleSearchContext context = new(
+                solutionContext,
+                PuzzleZoneCandidates.Centres(solutionContext.Puzzle, solutionContext.Puzzle.cubeSizeMax),
+                PuzzleZoneCandidates.Scales(solutionContext.Settings, zones == 2 ? 8 : 6));
+
+            List<PuzzleChain> beam = FirstStep(
+                context, PuzzleZoneCandidates.Sizes(context.Puzzle), width);
+            for (int depth = 2; depth <= zones && beam.Count > 0; depth++)
+                beam = Expand(context, beam, depth == zones);
+
+            return Choose(context, beam, out solution);
+        }
+
+        private static List<PuzzleChain> FirstStep(
+            PuzzleSearchContext context, float[] sizes, float width)
+        {
+            List<PuzzleChain> beam = new();
+            for (int c = 0; c < context.Centres.Length; c++)
+            {
+                for (int s = 0; s < sizes.Length; s++)
+                {
+                    if (width > 0f && Mathf.Abs(sizes[s] - width) > SizeTolerance)
+                        continue;
+
+                    AddBest(context, context.Centres[c], sizes[s], beam);
+                }
+            }
+
+            return beam;
+        }
+
+        private static void AddBest(
+            PuzzleSearchContext context, Vector3 centre, float size, List<PuzzleChain> beam)
+        {
+            PuzzleChain best = default;
+            bool found = false;
+            for (int i = 0; i < context.Scales.Length; i++)
+            {
+                if (!TryCandidate(context, centre, size, context.Scales[i], out PuzzleChain chain))
+                    continue;
+
+                if (!found || Precedes(chain, best, true))
+                {
+                    best = chain;
+                    found = true;
+                }
+            }
+
+            if (found)
+                beam.Add(best);
+        }
+
+        private static bool TryCandidate(
+            PuzzleSearchContext context, Vector3 centre, float size, float scale, out PuzzleChain chain)
+        {
+            chain = default;
+            if (context.Evaluations >= MaxEvaluations)
+                return false;
+
+            PuzzleZone zone = PuzzleZoneCandidates.Zone(centre, size, scale, context.Settings.ZoneFalloff);
+            if (PuzzleZoneCandidates.ContainsEndpoint(zone, context.Puzzle)
+                || !PuzzleZoneCandidates.CoversSource(zone, context.Puzzle))
+                return false;
+
+            context.Evaluations++;
+            chain = Evaluate(context, new[] { zone });
+            return true;
+        }
+
+        private static List<PuzzleChain> Expand(
+            PuzzleSearchContext context, List<PuzzleChain> beam, bool final)
+        {
+            List<PuzzleChain> next = new();
+            for (int b = 0; b < beam.Count; b++)
+                ExpandChain(context, next, beam[b], final);
+
+            return Ordered(next, final);
+        }
+
+        private static void ExpandChain(
+            PuzzleSearchContext context, List<PuzzleChain> next, PuzzleChain prefix, bool final)
+        {
+            List<PuzzleZone> zones = PuzzleZoneCandidates.Build(
+                context.Centres, new[] { prefix.Size }, context.Scales,
+                context.Settings.ZoneFalloff);
+            for (int i = 0; i < zones.Count; i++)
+                AddExpansion(context, next, prefix, zones[i], final);
+        }
+
+        private static void AddExpansion(
+            PuzzleSearchContext context, List<PuzzleChain> next, PuzzleChain prefix, PuzzleZone zone,
+            bool final)
+        {
+            if (context.Evaluations >= MaxEvaluations)
+                return;
+
+            if (PuzzleZoneCandidates.ContainsEndpoint(zone, context.Puzzle)
+                || !PuzzleZoneCandidates.CoversSource(zone, context.Puzzle)
+                || Overlaps(prefix.Zones, zone))
+                return;
+
+            context.Evaluations++;
+            PuzzleChain candidate = Evaluate(context, Append(prefix.Zones, zone));
+            if (final && (!candidate.Arrived || !context.Solution.Matches(candidate.Solution.Kind)))
+                return;
+
+            next.Add(candidate);
+        }
+
+        private static PuzzleChain Evaluate(PuzzleSearchContext context, PuzzleZone[] zones)
+        {
+            PuzzleZoneRun.Simulate(
+                context.Solution, zones,
+                out PuzzleSolution solution, out TrajectoryResult result);
+
+            return new PuzzleChain(
+                zones, solution, Margin(result, context.Puzzle.destination),
+                result.Outcome == TrajectoryOutcome.Arrive);
+        }
+
+        private static bool Matches(PuzzleSearchContext context, PuzzleChain chain) =>
+            context.Solution.Matches(chain.Solution.Kind);
+
+        private static bool Choose(
+            PuzzleSearchContext context, List<PuzzleChain> beam, out PuzzleSolution solution)
+        {
+            solution = default;
+            PuzzleChain best = default;
+            bool found = false;
+            for (int i = 0; i < beam.Count; i++)
+            {
+                PuzzleChain chain = beam[i];
+                if (!chain.Arrived || !Matches(context, chain))
+                    continue;
+
+                if (!found || Precedes(chain, best, false))
+                {
+                    best = chain;
+                    found = true;
+                }
+            }
+
+            if (found)
+                solution = best.Solution;
+
+            return found;
+        }
+
+        private static int Order(PuzzleChain a, PuzzleChain b, bool final)
+        {
+            if (!final && a.Margin != b.Margin)
+                return a.Margin < b.Margin ? -1 : 1;
+
+            return PuzzleSolutionOrdering.Order(a.Solution, b.Solution);
+        }
+
+        private static bool Precedes(PuzzleChain a, PuzzleChain b, bool marginFirst)
+        {
+            if (marginFirst && !SameMargin(a, b))
+                return a.Margin < b.Margin;
+
+            return PuzzleSolutionOrdering.Precedes(a.Solution, b.Solution);
+        }
+
+        private static bool SameMargin(PuzzleChain a, PuzzleChain b) =>
+            Mathf.Abs(a.Margin - b.Margin) <= MarginEpsilon;
+
+        private static PuzzleZone[] Append(PuzzleZone[] zones, PuzzleZone zone)
+        {
+            PuzzleZone[] next = new PuzzleZone[zones.Length + 1];
+            for (int i = 0; i < zones.Length; i++)
+                next[i] = zones[i];
+
+            next[zones.Length] = zone;
+            return next;
+        }
+
+        private static bool Overlaps(PuzzleZone[] zones, PuzzleZone zone)
+        {
+            for (int i = 0; i < zones.Length; i++)
+            {
+                if (zone.Overlaps(zones[i], PuzzleZoneCandidates.ZoneGapFactor))
+                    return true;
+            }
+
+            return false;
+        }
+
+        private static List<PuzzleChain> Ordered(List<PuzzleChain> chains, bool final)
+        {
+            chains.Sort((a, b) => Order(a, b, final));
+            return Trim(chains);
+        }
+
+        private static List<PuzzleChain> Trim(List<PuzzleChain> chains)
+        {
+            if (chains.Count <= Width)
+                return chains;
+
+            List<PuzzleChain> trimmed = new(Width);
+            for (int i = 0; i < Width; i++)
+                trimmed.Add(chains[i]);
+
+            return trimmed;
+        }
+
+        private static float Margin(TrajectoryResult result, Vector3 destination) =>
+            result.HasPoints ? result.ClosestApproach(destination) : float.MaxValue;
+    }
+}

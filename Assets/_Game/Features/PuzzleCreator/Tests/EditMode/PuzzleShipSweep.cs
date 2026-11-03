@@ -1,0 +1,98 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace DigitalLove.Game.SpaceShaping.Creator
+{
+    // Slice 2 of the multi-ship spike: over K generated fields, sweep the candidate zones and record the
+    // best rescued-pair count, with the runtime budget and with the budget held fixed. The gap between
+    // the two is the share of rescues that are field-driven rather than bought by time dilation.
+    public static class PuzzleShipSweep
+    {
+        private const int ScaleSamples = 4;
+
+        public static PuzzleShipSweepReport Run(
+            PuzzleSeed seed, SpaceShapingSettings settings, int fields, float clearance)
+        {
+            PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
+            PuzzleShipSweepReport report = new() { Fields = fields };
+
+            for (int i = 0; i < fields; i++)
+            {
+                PuzzleData field = PuzzleSeedField.Build(seed, settings, seed.seed + i);
+                if (field == null)
+                    continue;
+
+                report.Baked++;
+                Accumulate(ref report, Best(field, sim, clearance));
+                Object.DestroyImmediate(field);
+            }
+
+            return report;
+        }
+
+        private static FieldResult Best(PuzzleData field, PuzzleSimSettings sim, float clearance)
+        {
+            PuzzleShipScan scan = new(field, sim, clearance);
+            Vector3[] centres = PuzzleZoneCandidates.Centres(field, field.cubeSizeMax);
+            float[] sizes = PuzzleZoneCandidates.Sizes(field);
+            float[] scales = PuzzleZoneCandidates.Scales(sim, ScaleSamples);
+            FieldResult best = default;
+            List<PuzzleZone> zones = PuzzleZoneCandidates.Build(
+                centres, sizes, scales, sim.ZoneFalloff);
+
+            for (int i = 0; i < zones.Count; i++)
+                Consider(scan, field, zones[i], ref best);
+
+            return best;
+        }
+
+        private static void Consider(
+            PuzzleShipScan scan, PuzzleData field, PuzzleZone zone, ref FieldResult best)
+        {
+            if (!PuzzleZoneCandidates.CoversSource(zone, field))
+                return;
+
+            List<PuzzleShipRescue> rescued = scan.Rescued(zone);
+            if (rescued.Count > best.Count)
+                best.Count = rescued.Count;
+
+            for (int i = 0; i < rescued.Count; i++)
+            {
+                if (rescued[i].Margin > best.Margin)
+                    best.Margin = rescued[i].Margin;
+            }
+
+            if (rescued.Count < 2)
+                return;
+
+            int fixedCount = scan.RescuedFixed(zone).Count;
+            if (fixedCount > best.FixedCount)
+                best.FixedCount = fixedCount;
+        }
+
+        private static void Accumulate(ref PuzzleShipSweepReport report, FieldResult result)
+        {
+            if (result.Count > report.BestCount)
+                report.BestCount = result.Count;
+
+            if (result.FixedCount > report.BestFixedCount)
+                report.BestFixedCount = result.FixedCount;
+
+            if (result.Margin > report.BestMargin)
+                report.BestMargin = result.Margin;
+
+            if (result.Count >= 2)
+                report.FieldsWithTwo++;
+
+            if (result.FixedCount >= 2)
+                report.FieldsWithTwoFixed++;
+        }
+
+        private struct FieldResult
+        {
+            public int Count;
+            public int FixedCount;
+            public float Margin;
+        }
+    }
+}

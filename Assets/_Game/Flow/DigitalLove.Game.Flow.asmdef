@@ -1,0 +1,27 @@
+{
+    "name": "DigitalLove.Game.Flow",
+    "rootNamespace": "",
+    "references": [
+        "DigitalLove.FlowControl",
+        "DigitalLove.Input",
+        "DigitalLove.Game.SpaceShaping",
+        "Reflex",
+        "DigitalLove.XR.OVR",
+        "DigitalLove.DataAccess.Local",
+        "DigitalLove.Casual.Levels",
+        "DigitalLove.Game.PuzzleSelection",
+        "DigitalLove.Global",
+        "DigitalLove.Game.SpaceShaping.Domain",
+        "DigitalLove.DataAccess.Remote",
+        "DigitalLove.Game.Persistence"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

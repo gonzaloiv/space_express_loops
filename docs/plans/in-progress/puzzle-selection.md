@@ -15,7 +15,7 @@ edition to selection is wired.
 The run needs a level selector, but a flat grid of full fields is noisy and expensive; a carousel keeps
 one field legible while the neighbours give the run's shape. The selection must also honour the first
 launch (straight to the tutorial) and return the player to the map later. The carousel is chosen over the
-grid: one focus, three previews, and the same cube/amplify language as play.
+grid: one focus, three previews, and the same cube/scale language as play.
 
 ## 2. The definition
 
@@ -47,27 +47,24 @@ enters a job itself. Locked feedback (the visible refusal) stays in the view.
 3. On enter it puts the selected `PuzzleData` into `MemoryDataClient` and routes to `PuzzleStart`.
 4. `Exit` unsubscribes and hides the view.
 
-Swiping and touching never start a job; only the amplify enters.
+Swiping and touching never start a job; only the scale-in enters.
 
 **The shared gesture.** The scale in/out gesture controller is a serialized scene reference on both
 `PuzzleSelectionState` and `PuzzleEditionState`, so each state can subscribe to the same gesture while
-it is active. Selection consumes it for the amplify/focus feedback and the arc rotation; edition
-consumes it for the play scale. Subscribe in `Enter`, unsubscribe in `Exit`; do not wire it in `Awake`
-and do not find a second instance at runtime. The view reads the gesture state the state passes in, not
-the controller itself.
+it is active. Selection consumes it for the scale-in and swipe/focus feedback; edition consumes it for the
+play scale, scale-out return, and puzzle rotation. Subscribe in `Enter`, unsubscribe in `Exit`; do not wire it in
+`Awake` and do not find a second instance at runtime. The view reads the gesture state the state passes
+in, not the controller itself.
 
-**Rotation.** The same gesture can drive the arc: derive `yaw` from the line between the two pinch
-points (`atan2(right.x - left.x, right.z - left.z)`), unwrap the delta, and map it to a step index
-(`round(delta / stepAngle)`). The view snaps to `-index * stepAngle`; focus changes only when the
-snapped index changes. Ignore rotation when the horizontal hand separation is too small or the vector is
-mostly vertical, and use a dead zone plus hysteresis so the arc does not jitter around a step. Rotation
-is a focus verb only; it never enters a job.
+**No arc rotation.** Selection does not use the two-hand twist. Focus changes only by one-hand swipe or
+by touching a side cube; the arc still snaps to the focused job, but the gesture itself does not rotate
+the carousel.
 
 **Swipe.** Swipe is a **one-hand pinch-drag**, using the shared gesture's `IsSingleHandPinching` state:
 take `DragPoint - DragStartPoint`, project it onto the arc's local right axis, and require horizontal
 dominance (about 1.5× the vertical component) plus a minimum drag (about 3 cm). Commit **one step per
 pinch** on release, reset on pinch end, and cancel the swipe when the second hand pinches (that is
-rotation/amplify, not swipe). A pinch that starts on a side cube is a cube touch, not a swipe; the
+scale-in, not swipe). A pinch that starts on a side cube is a cube touch, not a swipe; the
 gesture input's busy-interactor gate suppresses the swipe. The arc may follow the drag a little, then
 snap.
 
@@ -78,8 +75,8 @@ so keep pinch-drag as the slice default and add palm wave only if the pinch feel
 
 **The transition.** The gesture model records the start and end point and time of each gesture, with a
 short velocity window (about 0.1 s) at release. A step commits on distance **or** flick speed; the
-direction comes from the signed horizontal delta (or the sign of the yaw delta for rotation). The view
-snaps with a duration derived from that release speed, clamped (roughly 0.08–0.35 s): a slow drag settles
+direction comes from the signed horizontal delta. The view snaps with a duration derived from that
+release speed, clamped (roughly 0.08–0.35 s): a slow drag settles
 gently, a fast flick arrives quickly. Exactly one step per gesture; speed changes the transition, never
 the count.
 
@@ -131,38 +128,39 @@ state, with job 1 solved and job 2 current.
   numbered cubes. Each job shows a **diorama** of its baked field (planets, sun, the cube) — pooled from
   an authored prototype, no runtime hierarchy — and a number.
 - Cube states: current (highlighted), solved (lit + stars), locked (dark). Locked refuses visibly on the
-  amplify; focus is allowed so the player sees what is next.
+  scale-in; focus is allowed so the player sees what is next.
 - Cap the visible previews at three; the full field is built only on entry.
 - **Exit:** a 7-job run reads at a glance, the current/solved/locked states are distinct, and the preview
   cost is measured.
 
-### S2 — focus, rotation, and the first launch
+### S2 — focus and the first launch
 
-- Swipe changes the centre one job at a time; touching a side cube brings it to the centre. The amplify
+- Swipe changes the centre one job at a time; touching a side cube brings it to the centre. The scale-in
   is the only way to enter, so a swipe or a touch never starts a job. Swipe is a one-hand pinch-drag for
   the slice; an open-palm wave is deferred.
 - The snap transition follows the gesture: record start/end, use the release speed to select a fast or
   gentle transition (clamped), and still move exactly one job.
-- **Rotation:** twisting the two pinch points rotates the arc by one step per `stepAngle` and snaps to
-  the nearest job. Rotation changes focus only; it never enters. Ignore near-vertical or too-close hands,
-  and use hysteresis so a held twist does not oscillate between two jobs.
+- Selection does not use the two-hand twist; that gesture is reserved for rotating the puzzle in edition.
+- The old bubble/galaxy hand-line and pinch-marker indicator is restored under the selection view. It is
+  driven by the shared gesture state and hides with the selection content.
 - First launch skips the map and starts job 1; the map is the return state after the first solve. No
   empty map is shown.
-- **Exit:** a player can reach any unlocked job by swipe, touch, or twist, and a fresh install goes
-  straight to the tutorial.
+- **Exit:** a player can reach any unlocked job by swipe or touch, and a fresh install goes straight to
+  the tutorial.
 
 ### S3 — enter, return, and state
 
-- The two-hand amplify grows the focused field/cube into the play space (an authored transition, no
-  scene load). The result offers **Map/Retry**; the map is also reachable from edition.
-- Scale out (two hands closer, the inverse of the amplify) returns to selection from edition. Its
-  `ScaleOutMinDistance` / `ScaleOutMaxRatio` live on the shared `TwoHandGestureInput`; the amplify
-  direction never exits, so play scaling does not trigger it. The result path can add a second exit later.
-- Edition reuses the selection's two-hand yaw detector (`TwoHandYawGesture` in `DigitalLove.Input`) to
-  rotate the puzzle around its measured field centre. Selection keeps using it for focus; edition sends
-  the yaw delta to `SpaceShapingController.Rotate`.
+- The two-hand scale-in shrinks the focused selectable, then the spawned puzzle scales up into the play
+  space (an authored transition, no scene load). The result offers **Map/Retry**; the map is also
+  reachable from edition.
+- Scale out (two hands closer) returns to selection from edition. Its `ScaleOutMinDistance` /
+  `ScaleOutMaxRatio` live on the shared `TwoHandGestureInput`; state gates keep selection scale-in and
+  edition scale-out separate. The result path can add a second exit later.
+- Edition uses the shared two-hand yaw detector (`TwoHandYawGesture` in `DigitalLove.Input`) to rotate
+  the puzzle around its measured field centre. Selection does not use it; edition sends the yaw delta to
+  `SpaceShapingController.Rotate`.
 - On a solve: light the cube, award stars, open the next job, highlight the new current. The map fills.
-- **Exit:** amplify enters, the inverse returns from the result, the play pinch never exits, and the
+- **Exit:** scale-in enters, scale-out returns from the result, the play pinch never exits, and the
   solved/current/locked state survives the session.
 
 ## 5. Where the code lives
@@ -197,8 +195,8 @@ selection.
 - **Pooling:** `ViewPool<T>` is the one place pooled views are instantiated. Do not hand-roll slot
   lists or `Instantiate` loops.
 - **Gesture:** `TwoHandGestureInput` already publishes `TwoHandGestureState`, pinch points, start points,
-  and distance. `TwoHandYawGesture` owns the shared yaw math/validity; `RunCarouselGesture` uses it for
-  focus and `PuzzleEditionState` uses it to rotate the puzzle. Neither reads Oculus hands itself.
+  and distance. `TwoHandYawGesture` owns the shared yaw math/validity; `PuzzleEditionState` uses it to
+  rotate the puzzle, while selection focus is swipe/touch only. Neither reads Oculus hands itself.
 - **Touch:** `RunSlotTouch` follows the existing `Grabbable.WhenPointerEventRaised` /
   `PointerEventType.Select` pattern used by `PuzzleLabButton` and `GrabbableWrapper`; there is no shared
   relay, so do not add a second interaction system.
@@ -208,8 +206,8 @@ selection.
 
 ## 6. Decisions
 
-**Settled:** the return is the **inverse** of the amplify — two hands closer, not the amplify direction —
-so the same two-hand vocabulary exits without firing during play scaling.
+**Settled:** selection enters on scale-in (hands apart); edition returns on scale-out (hands closer).
+The opposite directions are state-gated, so a play scale does not enter or exit by accident.
 
 **Settled:** preview fidelity is the pooled lightweight diorama (not a flat cube thumbnail), and locked
 pods focus and refuse rather than being skipped by the swipe.
@@ -227,18 +225,17 @@ Still open:
 
 - **Preview source cap.** How many sources a side diorama shows (full field vs a reduced set), and
   whether the centre stays full. This sets the S1 cost measurement.
-- **Amplify handoff.** Whether the centre diorama morphs into the play field or zooms/fades into the
-  already-authored play field. For the first cut, prefer the handoff: the play field is a separate
-  prefab and a planet-by-planet morph is a second system.
-- **Gesture arbitration.** Scale and rotation read the same two-hand gesture. Pick one channel per
-  gesture (first threshold crossed wins) or separate the thresholds; do not let a twist during the
-  amplify change focus.
+- **Scale-in handoff.** The centre selectable scales down, then the authored play field scales up. A
+  planet-by-planet morph is a second system and stays out of the slice.
+- **Gesture arbitration (edition).** Scale-out and rotation read the same two-hand gesture. Pick one
+  channel per gesture (first threshold crossed wins) or separate the thresholds, so a twist during
+  scale-out does not rotate the puzzle.
 - **Swipe direction.** Swipe right = previous or next? Pick the “push the arc” mapping (drag left moves
   focus right) or the “page” mapping (swipe right = next) once on device.
 - **Transition speed.** How release speed maps to tween duration (linear, eased, or stepped) and where
   the min/max clamps sit. Start with a clamped inverse mapping and tune on device.
-- **Step angle.** Match the authored arc (±35°) or use a smaller step. The step sets how far the hands
-  must twist per job; start at the arc angle and tune on device.
+- **Arc step angle.** Match the authored arc (±35°) for the snap layout; selection no longer maps a
+  twist per job.
 
 ## 7. Out of scope
 
@@ -261,15 +258,15 @@ Still open:
 - **Preview cost.** Three dioramas with planets and a sun are real objects; the current baked field has
   13 sources. The session build is data-only, so pool the views from a lightweight prototype, cap the
   sides, and measure before treating S1 as done.
-- **Gesture conflict.** The amplify is the scale in play; the exit uses the inverse (hands closer), with
-  a distance + ratio threshold so an ordinary play scale does not exit. Tune both thresholds in the
-  headset before treating the exit as final.
-- **Rotation stability.** Two-hand yaw is noisy when the hands are close or nearly vertical. Gate on the
-  horizontal separation, unwrap the angle, and keep hysteresis around the step; otherwise the arc
-  flickers between jobs or jumps two at once.
-- **Scale/rotation arbitration.** A two-hand gesture can change distance and yaw at the same time. Lock
-  the gesture to the first channel that crosses its threshold, or a twist during the amplify will change
-  focus just before entry.
+- **Gesture conflict.** Selection enters on hands apart; edition exits on hands closer. Gate them by
+  state and keep a distance + ratio threshold so an ordinary play scale does not trigger either. The
+  release grace keeps the two-hand gesture alive when one pinch briefly drops while extending. Tune the
+  thresholds and grace in the headset before treating the transitions as final.
+- **Edition rotation stability.** Two-hand yaw is noisy when the hands are close or nearly vertical. Gate
+  on horizontal separation and unwrap the angle so the puzzle does not jitter or spin on a bad frame.
+- **Edition scale/rotation arbitration.** A two-hand gesture can change distance and yaw at the same
+  time. Lock the gesture to the first channel that crosses its threshold, or a twist during scale-out
+  will rotate the puzzle just before the exit.
 - **Swipe vs cube touch.** A pinch that starts over a side cube must focus that cube, not step the arc.
   Gate the swipe on the gesture's busy-interactor flag and require the press to start off the cubes.
 - **One step per pinch.** Without a per-pinch lock and a small cooldown, a long drag steps several jobs

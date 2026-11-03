@@ -62,8 +62,8 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
         private static TwoHandGestureState State(
             Vector3 left, Vector3 right, bool active = true) =>
             new(
-                new HandPinchState(true, true, left, left),
-                new HandPinchState(true, true, right, right),
+                new HandPinchState(true, left, left),
+                new HandPinchState(true, right, right),
                 active,
                 Vector3.Distance(left, right),
                 0f);

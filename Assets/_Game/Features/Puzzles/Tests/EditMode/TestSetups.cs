@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
 {
-    internal static class TestSetups
+    public static class TestSetups
     {
         public static SpaceShapingSetup Session(int maxSteps) => new()
         {
