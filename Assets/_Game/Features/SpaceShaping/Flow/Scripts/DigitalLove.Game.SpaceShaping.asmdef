@@ -1,0 +1,20 @@
+{
+    "name": "DigitalLove.Game.SpaceShaping",
+    "rootNamespace": "",
+    "references": [
+        "DigitalLove.Game.SpaceShaping.Domain",
+        "DigitalLove.Game.SpaceShaping.Views",
+        "DigitalLove.Game.SpaceShaping.Zone",
+        "DigitalLove.FlowControl",
+        "DigitalLove.Casual.Levels"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

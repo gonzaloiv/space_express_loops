@@ -2,8 +2,8 @@ using System.Collections.Generic;
 
 namespace DigitalLove.Game.SpaceShaping.Cube
 {
-    // Bulk operations over the zone views owned by SpaceShapingSpawner. Keeps the per-view
-    // calls out of SpaceShapingView.
+    // Bulk operations over the zone views owned by the zone pool. Keeps per-view calls out of
+    // SpaceShapingView.
     public static class SpaceZoneViewExtensions
     {
         public static void ApplyConditions(this IReadOnlyList<SpaceZoneView> zones, ZoneConditions value)

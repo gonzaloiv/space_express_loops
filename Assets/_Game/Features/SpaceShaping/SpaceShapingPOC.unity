@@ -265,7 +265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9ea729286f54934a6a134ce4be35eb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.PuzzleLabPanel
-  state: {fileID: 1095678994}
+  view: {fileID: 1095678997}
   label: {fileID: 2070852751}
   committedFill: {fileID: 25731442}
   pendingFill: {fileID: 1398640557}
@@ -45485,8 +45485,6 @@ MonoBehaviour:
   capGapFraction: 0.15
   fadeNear: 0.15
   fadeFar: 0.55
-  warpDepth: 0.3
-  warpMax: 0.16
 --- !u!114 &1095678998
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51723,7 +51721,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86c6e415a1af7b742a05d84d8625cf72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.EntropyBarView
-  state: {fileID: 1095678994}
+  view: {fileID: 1095678997}
   label: {fileID: 1595532422}
   bar: {fileID: 897380560}
   committedFill: {fileID: 816620843}
@@ -51735,7 +51733,7 @@ MonoBehaviour:
   accent: {fileID: 11400000, guid: c01d0000000000000000000000000001, type: 2}
   neutral: {fileID: 11400000, guid: c01d0000000000000000000000000007, type: 2}
   danger: {fileID: 11400000, guid: c01d0000000000000000000000000003, type: 2}
-  height: 0.18
+  height: 0.22
   markerWidth: 0.012
 --- !u!223 &1250813855
 Canvas:
@@ -89368,9 +89366,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.PuzzleFieldPlacement
   head: {fileID: 395081174}
-  state: {fileID: 1095678994}
+  view: {fileID: 1095678997}
   distance: 0.5
-  heightOffset: -0.1
+  heightOffset: -0.125
   scale: 0.75
 --- !u!1 &2089349800
 GameObject:

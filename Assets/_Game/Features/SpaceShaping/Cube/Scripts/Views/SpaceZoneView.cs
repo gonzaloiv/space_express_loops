@@ -74,6 +74,14 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             ApplyContentVisual();
         }
 
+        public void Place(Vector3 centre, Vector3 size, float value)
+        {
+            gameObject.SetActive(true);
+            ResetScale();
+            SetFrame(centre, size);
+            SetFalloff(value);
+        }
+
         public void SetConditions(ZoneConditions value) => conditions = value;
 
         public void SetFalloff(float value) => falloff = Mathf.Max(value, 0f);

@@ -14,18 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runDistance: 0.7
   sunRadius: 0.06
-  launchSpeedFactor: 0.9
+  launchSpeedFactor: 1
   stepSecs: 0.0008333333
   nominalSpeed: 1
   planetRadiusMin: 0.006
   planetRadiusMax: 0.06
   endpointClearance: 0.033
-  sourceStrengthScale: 5.5555553
+  sourceStrengthScale: 120
   separationScale: 1.2
   fieldThickness: 0.08
   fieldTilt: 12
   fieldBulge: 0.8
   zoneFalloff: 0.5
-  zoneEffectGain: 1.75
+  zoneEffectGain: 1
   minScaleFactor: 0.6
   maxScaleFactor: 1.8

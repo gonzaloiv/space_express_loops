@@ -100,6 +100,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         {
             PuzzleBrief tutorial = brief;
             tutorial.NoFail = true;
+            tutorial.Mechanism = PuzzleMechanism.Curve;
 
             PuzzleData baked = PuzzleFieldBake.Bake(
                 planets, sim, tutorial, out PuzzleBakeStatus status,
@@ -107,12 +108,20 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
             if (baked == null)
             {
-                Assert.AreEqual(PuzzleBakeStatus.StartNotBlocked, status);
+                Assert.IsTrue(
+                    status == PuzzleBakeStatus.StartNotBlocked
+                    || status == PuzzleBakeStatus.StartTooStraight);
                 return;
             }
 
             PuzzleVerification check = PuzzleVerifier.Verify(baked, solution, sim);
             Assert.AreEqual(TrajectoryOutcome.Crash, check.StartOutcome);
+            Assert.GreaterOrEqual(
+                PuzzleRunGeometry.MaxAngle(check.Start, baked.origin, baked.destination), 4f);
+            float run = Vector3.Distance(baked.origin, baked.destination);
+            float deviation = PuzzleRunGeometry.MaxChordDeviation(
+                check.Start, baked.origin, baked.destination);
+            Assert.GreaterOrEqual(deviation / run, 0.05f);
             Object.DestroyImmediate(baked);
         }
 

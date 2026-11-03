@@ -20,8 +20,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             solution = new PuzzleSolution
             {
                 Zones = zones,
-                EntropySpent = session.EntropySpent,
-                Deviation = PuzzleRunGeometry.MaxDeviation(result, setup.Origin, setup.Destination)
+                EntropySpent = session.EntropySpent
             };
 
             return result.Outcome == TrajectoryOutcome.Arrive;
@@ -37,9 +36,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             {
                 Zones = zones,
                 EntropySpent = session.EntropySpent,
-                Kind = context.Classify(session, result),
-                Deviation = PuzzleRunGeometry.MaxDeviation(
-                    result, context.Setup.Origin, context.Setup.Destination)
+                Kind = context.Classify(session, result)
             };
 
             return result.Outcome == TrajectoryOutcome.Arrive;

@@ -226,6 +226,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             EditorGUILayout.LabelField(
                 "Role", $"{run.Kind} (requested {seed.mechanism})");
             EditorGUILayout.LabelField(
+                "Start angle", $"{PuzzleRunGeometry.MaxAngle(run.Start, puzzle.origin, puzzle.destination):F1}°");
+            float startRunLength = Vector3.Distance(puzzle.origin, puzzle.destination);
+            float startDeviation = PuzzleRunGeometry.MaxChordDeviation(
+                run.Start, puzzle.origin, puzzle.destination);
+            string deviationText = startRunLength > 0f
+                ? $"{100f * startDeviation / startRunLength:F1}% ({startDeviation:F3} m)"
+                : "—";
+            EditorGUILayout.LabelField("Start deviation", deviationText);
+            EditorGUILayout.LabelField(
                 "Entropy", $"{run.EntropySpent:F2} / {puzzle.entropyBudget:F2}  {GradeText(puzzle, run)}");
             EditorGUILayout.LabelField("Cubes", FramesText(puzzle));
             EditorGUILayout.LabelField("Zones", puzzle.zones.ToString());
@@ -309,6 +318,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             if (status == PuzzleBakeStatus.StartNotBlocked)
                 return "Rejected: the tutorial start misses. It must crash into a visible blocker; use Find "
                     + "working seed.";
+
+            if (status == PuzzleBakeStatus.StartTooStraight)
+                return "Rejected: the start path stays under 5% of the chord or 4° off it, too straight "
+                    + "for a curve lesson. Use Find working seed.";
 
             if (status == PuzzleBakeStatus.WrongRoleRoute)
                 return $"Rejected: a {generatedKind} route is at least as cheap as the requested "

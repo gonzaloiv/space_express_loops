@@ -3,7 +3,7 @@
     "rootNamespace": "",
     "references": [
         "DigitalLove.Game.SpaceShaping.Creator",
-        "DigitalLove.Game.SpaceShaping",
+        "DigitalLove.Game.SpaceShaping.Domain",
         "DigitalLove.Game.Sectors",
         "DigitalLove.Global",
         "DigitalLove.Casual.Levels",

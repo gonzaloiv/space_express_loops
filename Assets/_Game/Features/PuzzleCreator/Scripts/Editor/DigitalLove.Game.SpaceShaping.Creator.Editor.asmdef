@@ -4,6 +4,8 @@
     "references": [
         "DigitalLove.Game.SpaceShaping.Creator",
         "DigitalLove.Game.SpaceShaping",
+        "DigitalLove.Game.SpaceShaping.Domain",
+        "DigitalLove.Game.SpaceShaping.Views",
         "DigitalLove.Game.Sectors",
         "DigitalLove.Casual.Levels",
         "DigitalLove.FlowControl",
