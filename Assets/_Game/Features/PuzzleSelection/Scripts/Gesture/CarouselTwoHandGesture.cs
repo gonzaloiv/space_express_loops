@@ -13,17 +13,18 @@ namespace DigitalLove.Game.PuzzleSelection
         }
 
         private readonly CarouselGestureSettings settings;
+        private readonly TwoHandYawGesture yaw;
         private Mode mode;
         private bool isActive;
         private bool amplifySent;
         private float startDistance;
-        private float lastYaw;
-        private float accumulatedYaw;
         private int appliedRotationSteps;
 
         public CarouselTwoHandGesture(CarouselGestureSettings settings)
         {
             this.settings = settings;
+            yaw = new TwoHandYawGesture(
+                settings.RotationMinSeparation, settings.RotationMaxVerticalRatio);
         }
 
         public CarouselGestureOutcome Update(in TwoHandGestureState state)
@@ -32,7 +33,7 @@ namespace DigitalLove.Game.PuzzleSelection
                 return default;
 
             EnsureActive(state);
-            AccumulateYaw(state);
+            yaw.Update(state);
             if (mode == Mode.None)
                 mode = Classify(state);
 
@@ -50,9 +51,8 @@ namespace DigitalLove.Game.PuzzleSelection
             isActive = false;
             amplifySent = false;
             startDistance = 0f;
-            lastYaw = 0f;
-            accumulatedYaw = 0f;
             appliedRotationSteps = 0;
+            yaw.Reset();
         }
 
         private void EnsureActive(in TwoHandGestureState state)
@@ -62,22 +62,13 @@ namespace DigitalLove.Game.PuzzleSelection
 
             isActive = true;
             startDistance = state.Distance;
-            lastYaw = Yaw(state);
-            accumulatedYaw = 0f;
             appliedRotationSteps = 0;
-        }
-
-        private void AccumulateYaw(in TwoHandGestureState state)
-        {
-            float yaw = Yaw(state);
-            if (RotationIsValid(state))
-                accumulatedYaw += Mathf.DeltaAngle(lastYaw, yaw);
-            lastYaw = yaw;
+            yaw.Reset();
         }
 
         private Mode Classify(in TwoHandGestureState state)
         {
-            float rotate = Mathf.Abs(accumulatedYaw)
+            float rotate = Mathf.Abs(yaw.AccumulatedYaw)
                 / Mathf.Max(settings.RotationThresholdDegrees, 0.001f);
             float amplify = AmplifyProgress(state);
             if (rotate < 1f && amplify < 1f)
@@ -89,11 +80,12 @@ namespace DigitalLove.Game.PuzzleSelection
         private int ChangeRotationStep()
         {
             float stepAngle = Mathf.Max(settings.StepAngleDegrees, 0.001f);
-            int desired = Mathf.RoundToInt(accumulatedYaw / stepAngle);
+            float accumulated = yaw.AccumulatedYaw;
+            int desired = Mathf.RoundToInt(accumulated / stepAngle);
             if (desired == appliedRotationSteps)
                 return 0;
 
-            float walked = Mathf.Abs(accumulatedYaw - appliedRotationSteps * stepAngle);
+            float walked = Mathf.Abs(accumulated - appliedRotationSteps * stepAngle);
             if (walked < settings.RotationThresholdDegrees)
                 return 0;
 
@@ -120,22 +112,6 @@ namespace DigitalLove.Game.PuzzleSelection
                 return 0f;
 
             return Mathf.Max(delta / minDistance, ratio / settings.AmplifyMinRatio);
-        }
-
-        private bool RotationIsValid(in TwoHandGestureState state)
-        {
-            Vector3 line = state.Right.Point - state.Left.Point;
-            float horizontal = Mathf.Sqrt(line.x * line.x + line.z * line.z);
-            if (horizontal < settings.RotationMinSeparation)
-                return false;
-
-            return Mathf.Abs(line.y) <= horizontal * settings.RotationMaxVerticalRatio;
-        }
-
-        private static float Yaw(in TwoHandGestureState state)
-        {
-            Vector3 line = state.Right.Point - state.Left.Point;
-            return Mathf.Atan2(line.x, line.z) * Mathf.Rad2Deg;
         }
     }
 }

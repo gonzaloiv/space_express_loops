@@ -53,7 +53,7 @@ Unity/vendor/package APIs and Editor tooling that must bind to them. Skip `**/Ve
 
 ## Spawned content
 
-Content that is generated or pooled at runtime **from an authored prototype** is fine — the sector field's silent planets (`SectorFieldSpawner` + `NodePoolExtensions.AcquireInactive`) and the puzzle field's planets (`SpaceShapingView`'s `SpaceSourceView` pool) are the precedent. Spawn from a serialized prototype and pool it; never invent a mesh, material, or hierarchy with no authored source.
+Content that is generated or pooled at runtime **from an authored prototype** is fine — the puzzle field's planets (`FieldPlanetSet` + `ViewPool`) and spawned ships (`SpaceShapingSpawner` + `ShipFlightPool`) are the precedent. Spawn from a serialized prototype and pool it; never invent a mesh, material, or hierarchy with no authored source.
 
 ## States, modes, and sessions
 

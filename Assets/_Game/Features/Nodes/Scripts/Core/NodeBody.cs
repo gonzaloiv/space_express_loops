@@ -9,15 +9,8 @@ namespace DigitalLove.Game.Nodes
 
         [SerializeField] private Transform body;
         [SerializeField] private List<Renderer> renderers;
-        [SerializeField] private Color defaultColor = Color.white;
 
         private Renderer activeRenderer;
-
-        public float Radius => body.lossyScale.x;
-        public Vector3 Position => body.position;
-
-        public void Init(float radius) =>
-            Init(radius, Random.Range(0, int.MaxValue));
 
         public void Init(float radius, int variantSeed)
         {
@@ -61,7 +54,7 @@ namespace DigitalLove.Game.Nodes
             activeRenderer = renderers[index];
         }
 
-        public void EnsureReadyForRouteColor()
+        private void EnsureReadyForRouteColor()
         {
             if (activeRenderer != null || renderers == null || renderers.Count == 0)
                 return;
@@ -84,11 +77,6 @@ namespace DigitalLove.Game.Nodes
             Material material = activeRenderer.material;
             material.SetColor(BaseColorId, color);
             material.color = color;
-        }
-
-        public void ResetRouteColor()
-        {
-            SetRouteColor(defaultColor);
         }
 
     }

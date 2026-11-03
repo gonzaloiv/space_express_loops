@@ -34,7 +34,7 @@ namespace DigitalLove.Game.TTS
         {
             PlayerData playerData = memoryDataClient.Get<PlayerData>();
             playerData.GetOrCreateCookie(key);
-            await GameSnapshotStore.SavePlayerDataAsync(playerData, unityPlayerDataClient);
+            await PlayerDataStore.SaveAsync(playerData, unityPlayerDataClient);
         }
 
         public void SetInFrontOfCameraOrDefault(bool isInFrontOfCamera)

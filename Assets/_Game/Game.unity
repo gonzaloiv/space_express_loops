@@ -3407,6 +3407,8 @@ MonoBehaviour:
   releaseGraceSecs: 0.15
   scaleOutMinDistance: 0.08
   scaleOutMaxRatio: 0.8
+  rotationMinSeparation: 0.12
+  rotationMaxVerticalRatio: 1
 --- !u!4 &673349776
 Transform:
   m_ObjectHideFlags: 0
@@ -7127,7 +7129,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 723.08496, y: -50}
-  m_SizeDelta: {x: 243.83, y: 50}
+  m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1213392285
 MonoBehaviour:
@@ -9462,7 +9464,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bcae75ac51ccc14a94b9512f79c0a34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.XR.OVR::DigitalLove.XR.OVROriginBehaviour
-  camYOffset: -0.15
+  camYOffset: 0.15
   camZOffset: 0.6
   hasToRotate: 1
   ovrSessionHelper: {fileID: 1351310012}
@@ -10095,7 +10097,7 @@ Transform:
   m_GameObject: {fileID: 1876506283}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.38268343, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 1, y: 1, z: 0.2}
+  m_LocalPosition: {x: 1, y: 0, z: 0.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

@@ -158,6 +158,9 @@ state, with job 1 solved and job 2 current.
 - Scale out (two hands closer, the inverse of the amplify) returns to selection from edition. Its
   `ScaleOutMinDistance` / `ScaleOutMaxRatio` live on the shared `TwoHandGestureInput`; the amplify
   direction never exits, so play scaling does not trigger it. The result path can add a second exit later.
+- Edition reuses the selection's two-hand yaw detector (`TwoHandYawGesture` in `DigitalLove.Input`) to
+  rotate the puzzle around its measured field centre. Selection keeps using it for focus; edition sends
+  the yaw delta to `SpaceShapingController.Rotate`.
 - On a solve: light the cube, award stars, open the next job, highlight the new current. The map fills.
 - **Exit:** amplify enters, the inverse returns from the result, the play pinch never exits, and the
   solved/current/locked state survives the session.
@@ -194,7 +197,8 @@ selection.
 - **Pooling:** `ViewPool<T>` is the one place pooled views are instantiated. Do not hand-roll slot
   lists or `Instantiate` loops.
 - **Gesture:** `TwoHandGestureInput` already publishes `TwoHandGestureState`, pinch points, start points,
-  and distance. `RunCarouselGesture` reads that state; it does not read Oculus hands itself.
+  and distance. `TwoHandYawGesture` owns the shared yaw math/validity; `RunCarouselGesture` uses it for
+  focus and `PuzzleEditionState` uses it to rotate the puzzle. Neither reads Oculus hands itself.
 - **Touch:** `RunSlotTouch` follows the existing `Grabbable.WhenPointerEventRaised` /
   `PointerEventType.Select` pattern used by `PuzzleLabButton` and `GrabbableWrapper`; there is no shared
   relay, so do not add a second interaction system.

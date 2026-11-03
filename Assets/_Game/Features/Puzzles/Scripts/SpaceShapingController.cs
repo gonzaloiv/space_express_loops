@@ -42,6 +42,16 @@ namespace DigitalLove.Game.SpaceShaping
             view.gameObject.SetActive(false);
         }
 
+        public void Rotate(float degrees)
+        {
+            if (run == null || Mathf.Approximately(degrees, 0f))
+                return;
+
+            FieldFrame.Measure(run.Session, out Vector3 centre, out _);
+            Vector3 pivot = view.transform.TransformPoint(centre);
+            view.transform.RotateAround(pivot, Vector3.up, degrees);
+        }
+
         public void ResetPuzzle()
         {
             wasScaling = false;

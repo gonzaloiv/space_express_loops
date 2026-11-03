@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace DigitalLove.Game.Nodes
 {
-    public class FieldPlanetBehaviour : MonoBehaviour, IPoolableNode
+    public class FieldPlanetBehaviour : MonoBehaviour
     {
         [SerializeField] private NodeBody nodeBody;
         [SerializeField] private PlanetNameLabel nameLabel;
@@ -12,10 +12,7 @@ namespace DigitalLove.Game.Nodes
         private float radius = 0.1f;
         private int variantSeed;
 
-        public bool IsActive => gameObject.activeInHierarchy;
         public bool IsVisible => isVisible;
-        public Vector3 LocalPosition => transform.localPosition;
-        public Vector3 Position => nodeBody.Position;
         public float Radius => radius;
 
         public void Initialize()
@@ -52,7 +49,7 @@ namespace DigitalLove.Game.Nodes
 
         public void SetRouteColor(Color color) => nodeBody.SetRouteColor(color);
 
-        public void SetVisible(bool visible)
+        private void SetVisible(bool visible)
         {
             if (isVisible == visible)
                 return;

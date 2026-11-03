@@ -24,6 +24,10 @@ namespace DigitalLove.Input
         [SerializeField, Min(0.01f)] private float scaleOutMinDistance = 0.08f;
         [SerializeField, Range(0f, 1f)] private float scaleOutMaxRatio = 0.8f;
 
+        [Header("Rotation")]
+        [SerializeField, Min(0f)] private float rotationMinSeparation = 0.12f;
+        [SerializeField, Min(0f)] private float rotationMaxVerticalRatio = 1f;
+
         private bool isActive;
         private float bothPinchingSince = -1f;
         private float lastBothPinchTime;
@@ -49,6 +53,8 @@ namespace DigitalLove.Input
         public TwoHandGestureState State { get; private set; }
         public float ScaleOutMinDistance => scaleOutMinDistance;
         public float ScaleOutMaxRatio => scaleOutMaxRatio;
+        public float RotationMinSeparation => rotationMinSeparation;
+        public float RotationMaxVerticalRatio => rotationMaxVerticalRatio;
         public event Action<TwoHandGestureState> StateChanged;
         public event Action<TwoHandGestureState> GestureStarted;
         public event Action<TwoHandGestureState> GestureEnded;
