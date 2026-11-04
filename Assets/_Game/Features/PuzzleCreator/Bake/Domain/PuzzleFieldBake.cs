@@ -10,7 +10,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             Run(planets, settings, brief);
 
         public static bool Apply(
-            PuzzleBrief brief, PuzzleData puzzle, PuzzlePlanetListAsset planets, PuzzleSimSettings settings)
+            PuzzleBrief brief, PuzzleData puzzle, PuzzlePlanetListAsset planets, PuzzleSimSettings settings) =>
+            Apply(brief, puzzle, planets, settings, out _);
+
+        public static bool Apply(
+            PuzzleBrief brief, PuzzleData puzzle, PuzzlePlanetListAsset planets,
+            PuzzleSimSettings settings, out PuzzleRunReport runReport)
         {
             puzzle.sources = WithSun(
                 PuzzleSourceBridge.ToSources(planets.planets), brief.SunRadius, brief.SunScalable);
@@ -23,7 +28,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.noFail = brief.NoFail;
             puzzle.noGrade = brief.NoGrade;
             PuzzleRunRequest run = BuildRunRequest(brief, planets, settings);
-            if (!PuzzleRunChoice.TryPick(run, out Vector3 origin, out Vector3 destination))
+            if (!PuzzleRunChoice.TryPick(
+                    run, out Vector3 origin, out Vector3 destination, out runReport))
                 return false;
 
             puzzle.origin = origin;
@@ -41,8 +47,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             EndpointClearance = brief.EndpointClearance,
             SunRadius = brief.SunRadius,
             RequirePlanetBlocker = true,
-            AllowSunOnChord = brief.Mechanism != PuzzleMechanism.Curve
-                || brief.SunRule == PuzzleSunRule.InZone
+            AllowSunOnChord = brief.SunOnChord,
+            HasCandidate = planets.hasCandidate,
+            CandidateOrigin = planets.candidateOrigin,
+            CandidateDestination = planets.candidateDestination
         };
 
         // The sun is a source at the field's centre, fixed or scalable as the seed says. It stays out of
@@ -98,13 +106,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief)
         {
             PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
-            if (!Apply(brief, field, planets, settings))
+            if (!Apply(brief, field, planets, settings, out PuzzleRunReport runReport))
             {
                 Object.DestroyImmediate(field);
-                return Fail(PuzzleBakeStatus.NoRun);
+                return Fail(PuzzleBakeStatus.NoRun, runReport);
             }
 
             PuzzleBakeResult result = BakeField(field, settings, brief);
+            result.RunReport = runReport;
+            result.PostClear = planets.postClear;
             Object.DestroyImmediate(field);
             return result;
         }
@@ -177,6 +187,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         private static PuzzleBakeResult Fail(PuzzleBakeStatus status, PuzzleSolutionKind kind = PuzzleSolutionKind.Other) =>
             new() { Status = status, Kind = kind };
+
+        private static PuzzleBakeResult Fail(PuzzleBakeStatus status, PuzzleRunReport runReport) =>
+            new() { Status = status, RunReport = runReport };
 
         private static PuzzleData Variant(PuzzleData field, PuzzleSolution solution, PuzzleBrief brief)
         {

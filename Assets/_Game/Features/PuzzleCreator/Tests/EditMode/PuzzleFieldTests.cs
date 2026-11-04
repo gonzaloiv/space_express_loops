@@ -387,6 +387,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             };
             PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
             PuzzleSimSettings settings = new() { RunDistance = 0.5f };
+            brief.SunOnChord = true;
             Assert.IsTrue(PuzzleFieldBake.Apply(brief, puzzle, planets, settings));
             return puzzle;
         }

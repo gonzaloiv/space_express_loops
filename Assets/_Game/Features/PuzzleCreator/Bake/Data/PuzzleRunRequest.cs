@@ -8,5 +8,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public float SunRadius;
         public bool RequirePlanetBlocker;
         public bool AllowSunOnChord;
+        public bool HasCandidate;
+        public UnityEngine.Vector3 CandidateOrigin;
+        public UnityEngine.Vector3 CandidateDestination;
     }
 }

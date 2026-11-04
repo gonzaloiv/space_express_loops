@@ -47,6 +47,7 @@
   <Project Path="DigitalLove.Localization.csproj" />
   <Project Path="DigitalLove.VFX.Fader.csproj" />
   <Project Path="DigitalLove.TTS.Samples.csproj" />
+  <Project Path="DigitalLove.Game.PuzzleSelection.Editor.csproj" />
   <Project Path="DigitalLove.Casual.Analytics.csproj" />
   <Project Path="DigitalLove.Timeline.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.FieldContent.csproj" />

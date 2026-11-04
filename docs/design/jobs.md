@@ -21,7 +21,7 @@ first.
 | 1 | the scale | Curve | fixed · 1 zone · no · 1 ship | Ring | 4 · single · tutorial | low | first contact: a viable four-planet field, no sun, one pinch |
 | 2 | the centre | Curve | fixed · 1 zone · no · 1 ship | Ring | 4–6 + sun · single · medium | medium | the fixed cube over the sun — the star is a source too |
 | 3 | the other direction | Clear | fixed · 1 zone · no · 1 ship | Ring | 5–6 + sun · single · medium | medium | a planet blocks the line; shrinking it clears the path — the same pinch, the opposite role |
-| 4 | several zones | Mixed | fixed · 2+ zones · no · 1 ship | Ring | 6–8 + sun · multi | medium | "where do I scale" enters — one fixed cube shrinks the blocker, one grows a well |
+| 4 | several zones | Mixed | fixed · 2+ zones · no · 1 ship | Ring | 6–8 + sun · multi | medium | "where do I scale" enters — one fixed cube shrinks the blocker, one grows a well; the existing blocker is made fatal on the single-Curve path, in place/inside the run's block band and within the cube range/separation, so the single Clear fails the well and the single Curve fails the blocker; the two-zone Mixed is the only route |
 | 5 | the cube moves | Curve | **yes** · 1 zone · no · 1 ship | Spiral | 8–10 + sun · multi | medium | spawns at the centre; the solution is off-centre, so the move is required |
 | 6 | multi-zone intro | Curve | yes · 2+ zones · no · 1 ship | Spiral | 10–12 + sun · multi | medium | move + scale two zones — the combination enters |
 | 7 | efficiency | Curve | yes · 2+ zones · no · 1 ship | Cluster | 10 + sun · multi · deep | high | the cheap answer is to spread the edit across zones |
@@ -93,8 +93,10 @@ the first graded job. Job 1 has no fail and no stars; job 2 fails without stars.
 **The several-zones rung** is owned by [progression](systems/progression.md) §The several-zones rung:
 a fixed level places several cubes, so `zones ≥ 2` does not need a move. Job 4 teaches that; job 5
 adds the move; multi-zone follows at job 6; the capstone adds the centre at job 8. Job 4 also brings the
-clear role back: one fixed cube sits on the blocker, one on a run planet, so the Ring act ends by
-combining the two roles.
+clear role back: one fixed cube sits on the blocker, one on a run planet, and the existing blocker is made
+fatal on the single-Curve path in place/inside the run's block band and within the cube
+range/separation, so the single Clear fails the well and the single Curve fails the blocker; the two-zone
+Mixed is the only route, so the Ring act ends by combining the two roles.
 
 **Job 4 keeps the sun out of the zones.** The fixed cubes sit on planets; the sun is background, so the
 lesson stays "where do I scale," not "what is the star." Job 3 (the obstacle) also keeps the sun out of
@@ -178,8 +180,12 @@ reduces its collision radius, so the path can pass. It is **job 3**: it lands af
 placement, so the player learns both directions of the same pinch while the field is still fixed. The
 tutorial and the centre keep the curve. With several cubes, one can sit on the obstacle (shrink) and one
 on a run planet (grow) — a clear and a curve in one multi-zone solution, as job 4 and the capstone
-(job 8) do. The creator tags the role so a job can request it. Job 3 requests `minRoutes: 2`: two blockers
-on or near the line, so the player chooses which one to shrink.
+(job 8) do. Job 4 makes the existing blocker fatal on the single-Curve path in place/inside the run's
+block band and within the cube range/separation, so the single Clear fails the well and the single Curve
+fails the blocker; the two-zone Mixed is the only route and the Ring act ends by combining the two roles.
+The creator
+tags the role so a job can request it. Job 3 requests `minRoutes: 2`: two blockers on or near the line, so
+the player chooses which one to shrink.
 
 **Multi-zone as an efficiency lesson.** Each committed zone edit costs its net change from that zone's
 last committed scale, so a level can be authored so the **cheap** solution is to **move the cube** and

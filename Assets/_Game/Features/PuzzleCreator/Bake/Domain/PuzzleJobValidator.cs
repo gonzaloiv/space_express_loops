@@ -102,7 +102,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             float radius = sun.scale * 0.5f;
             return PuzzleRunGeometry.DistanceToSegment(
                 sun.home, puzzle.origin, puzzle.destination)
-                < radius * PuzzleRunChoice.BlockBandFactor;
+                < radius * PuzzleRunChoice.SunBlockBandFactor;
         }
 
         private static int BlockerCount(PuzzleSource[] sources, int sun, PuzzleData puzzle)
@@ -116,7 +116,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 float radius = sources[i].scale * 0.5f;
                 if (PuzzleRunGeometry.DistanceToSegment(
                         sources[i].home, puzzle.origin, puzzle.destination)
-                    < radius * PuzzleRunChoice.BlockBandFactor)
+                    < radius * PuzzleRunChoice.PlanetBlockBandFactor)
                     count++;
             }
 

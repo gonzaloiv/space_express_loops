@@ -109,6 +109,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             seed.mechanism = job.Mechanism;
             seed.hasSun = job.HasSun;
             seed.sunRule = job.SunRule;
+            seed.sunOnChord = job.SunOnChord;
             seed.noFail = job.NoFail;
             seed.noGrade = job.NoGrade;
             seed.fieldShape = job.FieldShape;

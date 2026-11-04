@@ -1,9 +1,11 @@
 # Bake — role and sun alignment
 
-**Status:** now · space shaping · updated 2026-11-04 — S1/S2 landed; job 1 bakes with four
-planets (seed 37); the placement uses two runs with one blocker each (`MinBlockers = 1`,
-`MinRoutes = 2`), but the true candidate pin, the separate `SunOnChord` field, and the report masking are
-still open; the explicit rerun is pending.
+**Status:** now · space shaping · updated 2026-11-05 — S1/S2 landed; jobs 1–3 bake; job 4’s
+well-on-post-clear removed the single `Clear` but not the single `Curve`. The second-blocker path is gone;
+**`MakeBlockerFatal` is implemented** and its dedicated test is in. The bounded 5×4 move/grow sweep is
+**done and negative** (`blocker 0, radius 0.018, moved=False, grown=False, width 0.071`); stop for the
+job/field decision. Keep `Mixed`/`Zones = 2`/`MinRoutes = 2`/`MinBlockers = 1`; a zone-width increase needs the cube max,
+`Zones = 1` is out of plan, and the contract is not relaxed. Job 4 remains 2/4; jobs 5–8 and S4 remain.
 
 **Related:** [vision](../../design/vision.md) · [jobs](../../design/jobs.md) ·
 [progression](../../design/systems/progression.md) · [core loop](../../design/core-loop.md) ·
@@ -18,7 +20,7 @@ hand-edited `PuzzlePlanetListAsset`. The job ladder and roles stay as designed �
 has two blockers — and the bake must meet them. If job 2 cannot make the star the cheapest `Curve`, that is
 a job/field decision, not a reason to change the field rule silently.
 
-**Current state (2026-11-04):** S1 (`Matches(Any, Other)` is false, role costs logged) and S2
+**Current state (2026-11-05):** S1 (`Matches(Any, Other)` is false, role costs logged) and S2
 (`PuzzleRunRequest`, planet-blocker/sun-chord preference, `PuzzleRunChoiceTests`) are in, along with the
 sun/start rule, contract fields, paths, log, test-only validator, and loose-fallback removal. The focused
 `PuzzleRunChoiceTests`/`PuzzleSolutionClassifierTests`/`PuzzleBakeTests`/`PuzzleSearchTests` pass 29/29
@@ -26,16 +28,54 @@ sun/start rule, contract fields, paths, log, test-only validator, and loose-fall
 6 pairs / 2 length / 4 no-planet / 0 sun-chord, and job 3 as 10 pairs / 2 length / 8 no-planet / 0
 sun-chord; widening the planet band to 4× does not change the counts. The report counts `NoPlanetBlocker`
 before `SunOnChord`, so the sun-chord slot is masked and “the sun is not the problem” is not proven yet.
-The full Creator suite is 105/101/4. The explicit `PuzzleJobBakeTests` rerun is 1/4: job 1 passes (four
-planets, seed 37, one route); `01_02` is unchanged (`6 / 2 length / 4 no planet`), `01_03` regressed to
-`NoSolution` / 0 pairs; jobs 4–8 are not reached by `JobSet`; the two-ship fixture is the fourth failure.
-The first pass of the candidate pin, sun-aware `Fits`, `NoSolution` report, and
-`PuzzleBlockerPlacementTests` is wired, but the execution is still short: `TryPick` considers all pairs
-after the candidate; the placement uses **two runs with one blocker each**, and the contract/validator
-are `MinBlockers = 1` + `MinRoutes = 2` (keep that); the chord rule is derived from `SunRule` — add a
-separate `SunOnChord` field, all eight false; and the report still masks `SunOnChord` behind
-`NoPlanetBlocker`. The explicit rerun is pending after the editor/MCP session recovers; the
-role-cost/collect-all/filtered gate follows; the re-bake (S4) is not done.
+The true pin, separate `SunOnChord`, independent report counts, `Fits` sun check, placement tests, edge
+offset (1.5×), six-planet job 3, and the role-dependent `Clear` offset (0.5×) are in;
+`PuzzleFieldTests` pass 26/26. The explicit `PuzzleJobBakeTests` is 2/4: jobs 1–3 bake (job 3 seed 146,
+two routes); job 4 is `NotMixed` with a pinned accepted run (`pairs 1`, `accepted 1`); jobs 5–8 are not
+reached by `JobSet`; the two-ship fixture is the remaining ordinary failure. The Mixed blocker/well has
+been tried at edge, far, in-band, and separated-fraction positions; the logs still show a single `Clear`
+at 0.286 against the `Mixed` 0.343 (and a single `Curve` at 0.571 against 0.686). The single-role route
+still solves, so random offsets cannot make `Mixed` cheapest. The first post-clear obstacle (a free
+third planet) removed the single `Clear` but left the single `Curve` at 0.571 against the `Mixed` 0.686.
+The single-role fallback then failed `FewerZones`: the two-zone Curve has a shorter one-zone route. The
+**well index** is now on `PuzzlePlanetListAsset`, and `PuzzlePostClearPlacement` moves the well itself onto
+the post-clear path. That removed the single `Clear`, but the single `Curve` remains 0.571 against the
+`Mixed` 0.686, so the `Mixed` is not cheapest. **Post-curve probe implemented.** `PuzzlePostClearPlacement`
+moves the well, rebuilds the field, simulates the single-Curve path, and tries one second-blocker
+candidate on that path within `clearWidth * 0.5` of the first blocker. It reports `PuzzlePostClearReport`
+through the bake/scanner and keeps the placement only after verifying:
+
+1. the single `Clear` still fails the well,
+2. the single `Curve` fails the blocker,
+3. the `Mixed` clears the required sources and grows the well,
+4. the `Mixed` is strictly cheapest,
+5. the `Mixed`'s two zones can cover the required sources.
+
+Keep `Mixed`/`Zones = 2`/`MinRoutes = 2`/`MinBlockers = 1`; the second blocker does not change those
+contract values, and `MinRoutes` covers the routes. The single-role `Zones = 1` with `MinRoutes` reset is
+a job change outside the plan (a `Zones = 2` single role fails `FewerZones`), not an in-plan fallback. If
+the probe fails, stop and make the job 4 job/field decision; do not silently switch to `Zones = 1`. The
+probe report and dedicated test are in. The test reports `Tried=True, kept=False, clear/curve/mixed false,
+reach 0.036, blocker 0`: no second-blocker candidate fits. The Mixed Clear half-width (0.036) cannot reach
+a second blocker that `Fits` keeps ~0.120 from the first; the Curve-zone alternative has the same
+zone/separation limit. The probe is conclusive: a second blocker cannot sit inside the 0.036 Clear
+half-width and stay 0.120 from the first. The job 4 decision is **`MakeBlockerFatal`**: make the existing
+blocker fatal on the single-Curve path (move it or grow its radius in place). The existing blocker is also
+the run blocker, so keep it inside the run's block band or grow its radius in place, and verify the pinned
+`TryPick`/`Apply` candidate still selects; then run the five checks. **Landed:** `MakeBlockerFatal` is in
+`PuzzlePostClearPlacement`; the second-blocker probe/report/test fields and `TryPickCandidate` are removed.
+The dedicated test now reports the blocker index/radius and moved/grown flags. Its latest result is
+`Tried=True, kept=False, blocker 0, radius 0.018, moved=False, grown=False, clear/curve/mixed false,
+width 0.071`: no fatal placement yet. The bounded **5×4 sweep** is done — the single-Curve solution's candidate points × radius scales
+1.5×/2×/2.5×/3×, each checking the run band, the pinned `TryPick`/`Apply`, the cube/`Fits`, and the five
+checks. It is **negative** (same report; 14.5 s); stop for the job/field decision. The grow path also changes the blocker radius,
+so verify the field's cube range (`PuzzleFieldBake.Apply`/`cubeSizeMin/Max`/`PuzzleZoneCandidates`) and the
+visual separation (`PuzzleBlockerPlacement.Fits`/`separationScale`; endpoints/other planets/sun). The
+zone-width alternative needs the `PuzzleZoneCandidates`/cube max check: the clear width is 0.072 and the
+required separation 0.120, so a covering zone needs a full width >0.120; if the cube max is below that, it
+is not viable. The single-role
+`Zones = 1`/`MinRoutes` reset is a job change outside the plan; do not relax. Then jobs 5–8, the
+collect-all harness, the filtered two-ship gate, and S4.
 
 ## 1. Why
 
@@ -150,9 +190,20 @@ the wrong lesson. Fix the bake, then author the run.
 - **Role-cost check.** The derived blocker must make the requested role the cheapest: `Clear` for job 3,
   and `Curve` for job 2 (the star grows). If the star growth cannot be the cheapest `Curve`, job 2 is a
   field decision — or an explicit job change outside this plan — not a forced `Curve`.
+- **Job 4 `MakeBlockerFatal`.** **Landed:** `PuzzlePostClearPlacement` takes the existing blocker
+  (`blockerIndex`), moves it or grows its radius in place within the run band/cube/separation; the
+  second-blocker path is removed. The first attempt is negative: one move and a 1.5× grow (`blocker 0,
+  radius 0.018, moved=False, grown=False, width 0.071`). Next: the **bounded sweep** — the single-Curve
+  solution's candidate points × radius scales 1.5×/2×/2.5×/3× within `planetRadiusMax`/the cube/zone;
+  each checks the run band, the pinned `TryPick`/`Apply`, the cube range/`Fits` separation, and the five
+  checks; cap 5×4. If none works, stop for the job/field decision. A zone-width increase is the
+  alternative only if the `PuzzleZoneCandidates`/cube max can exceed 0.120; `Zones = 1`/`MinRoutes` reset
+  is a job change outside the plan; do not relax.
 - **Exit:** job 2 bakes a planet-blocked, sun-off-chord `Curve` whose zone is centred on the star and
-  grown; job 3’s derived blockers make `Clear` cheapest and offer two routes; a four-planet `Ring`
-  tutorial bakes its requested role and a crash; jobs 4/7/8 offer two routes; job 5 is no longer a loose
+  grown; job 3’s derived blockers make `Clear` cheapest and offer two routes; job 4’s existing blocker
+  fatal on the single-Curve path makes the single `Clear` fail the well and the single `Curve` fail the
+  blocker; the two-zone `Mixed` is the only route; a four-planet `Ring`
+  tutorial bakes its requested role and a crash; jobs 7/8 offer two routes; job 5 is no longer a loose
   one-route bake; no fixed-level solved zone sits on the sun except job 2.
 
 ### S4 — paths, shape, log, re-bake
@@ -195,6 +246,12 @@ the wrong lesson. Fix the bake, then author the run.
 - The `NoSolution` path carries the run report; `01_03` reports its pairs/filters instead of 0.
 - The derived blocker makes the requested role the cheapest: `Clear` for job 3, `Curve` for job 2; if the
   star growth cannot be cheapest, job 2 is a job/field decision.
+- Job 4: `MakeBlockerFatal` is landed; the bounded 5×4 sweep is **negative** (`blocker 0, radius 0.018,
+  moved/grown false, width 0.071`). Stop for the job/field decision; the zone-width increase is the
+  remaining field option (cube max permitting), and `Zones = 1` remains a job change outside the plan. The zone-width alternative needs the
+  `PuzzleZoneCandidates`/cube max check (clear width 0.072, separation 0.120). `01_04` is **pending** the
+  explicit rerun; it is not claimed yet. A single-role `Zones = 2` fails `FewerZones`; `Zones = 1` is a
+  job change outside the plan.
 - Job 2 is `CentredGrown`; job 8 is `InZone`; jobs 3/4/5/6/7 are `OutOfZone` and have no solved zone on
   the sun. Jobs 5/8 start at the field centre; jobs 6/7 start at the run midpoint.
 - A four-planet `Ring` tutorial bakes a crash; a one-route field fails `minRoutes: 2` for jobs 3/4/5/7/8.
@@ -225,6 +282,19 @@ the wrong lesson. Fix the bake, then author the run.
   count.
 - **Job 1 role fix.** `Clear` was cheaper than `Curve` on the 3-planet field; job 1 is now four planets so
   it has a non-blocker well.
+- **Job 4 `MakeBlockerFatal`.** The second blocker cannot fit: the Clear half-width 0.036 vs the `Fits`
+  separation 0.120. The existing blocker is also the run blocker, so moving it can invalidate the pinned
+  `TryPick`/`Apply` candidate; keep it inside the run's block band or grow its radius in place, and verify
+  the run candidate. The grow path changes the radius: verify the cube range/zone candidates and the visual
+  separation (`Fits`/`separationScale`); if the grown radius breaks the cube/zone or overlaps, use the move
+  path. The single `Clear` fails the well; the single `Curve` fails the existing blocker; the
+  `Mixed`'s Clear + Curve is the only route. `MakeBlockerFatal` is landed and the second-blocker path is
+  removed; the first attempt is negative (`blocker 0, radius 0.018, moved/grown false, width 0.071`). Next:
+  the bounded sweep (curve points × radius scales; the run band, the pinned `TryPick`/`Apply`, the
+  cube/`Fits`, the five checks; cap 5×4); if none, stop. The zone-width increase is the alternative only
+  if the cube max can exceed 0.120 (`PuzzleZoneCandidates`); `Zones = 1`/`MinRoutes` reset is a job change
+  outside the plan; do not relax. The blocker is a generator
+  rule, not a hand-edited field.
 - **Derived blocker.** Job 2/3 must stay derived: a generator rule places a blocker on the chosen chord;
   do not hand-edit `PuzzlePlanetListAsset`. Pin the candidate; the two job-3 blockers use **two runs, one
   each**, with `MinBlockers = 1` on the chosen run and `MinRoutes = 2`; keep `SunRule` for the solved zone

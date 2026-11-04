@@ -19,6 +19,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         [Tooltip("What the solution must do with the sun: Any, InZone, CentredGrown, or OutOfZone.")]
         public PuzzleSunRule sunRule = PuzzleSunRule.Any;
 
+        [Tooltip("Whether the run chord may pass through the sun.")]
+        public bool sunOnChord;
+
         [Header("Brief")]
         [Tooltip("The cube may be moved over the field. A fixed level places several cubes instead.")]
         public bool translatable;

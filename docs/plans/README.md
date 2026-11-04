@@ -27,6 +27,9 @@ Queued. One plan moves to **Now** when it starts.
 
 Design-only or deferred. Nothing here is scheduled.
 
+- [Puzzle map — selection info and onboarding](backlog/puzzle-map-info.md) — the cube carries the job
+  name, state and stars, and the swipe/zoom verbs are taught in place.
+
 - [Space shaping — the scale ghost](backlog/space-shaping-scale-ghost.md) — one scale ladder shared by
   the bake and the pinch, with a ghost preview of the value the hands are about to commit.
 

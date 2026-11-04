@@ -55,9 +55,11 @@ One new lesson at a time, so the player never faces two unrelated ideas at once:
 3. **Job 3 — the other direction.** A planet blocks the line; the fixed cube sits on it, and the player
    **shrinks** it to clear the path. Same pinch as job 1, opposite role — learned before placement.
 4. **Job 4 — several zones.** The level places **several fixed cubes**; one sits on the blocker (shrink)
-   and one on a run planet (grow), so the Ring act ends by combining the two roles. The player scales
-   each and the soft brush blends them. No move — "where do I scale" is the lesson on its own, learned
-   before the cube can be placed.
+   and one on a run planet (grow), and the existing blocker is made fatal on the single-Curve path in
+   place/inside the run's block band and within the cube range/separation, so the single Clear fails the
+   well and the single Curve fails the blocker; the two-zone Mixed is the only route, so the Ring act
+   ends by combining the two roles. The player scales each and the soft brush blends them. No move — "where do I scale" is the
+   lesson on its own, learned before the cube can be placed.
 5. **Job 5 — the cube moves.** The cube becomes **translatable**: the player chooses *where* to work,
    not just how much. "Where does the cube sit" is its own lesson, split from "several zones".
 6. **Jobs 6–7 — multi-zone.** The player moves the cube and scales several zones, spreading the edit to
@@ -72,7 +74,9 @@ is the next cut candidate.
 **The obstacle is job 3.** Shrinking a blocker to clear the chord is the opposite role of the curve; it
 lands right after the centre, before placement, so both directions of the pinch are learned on a fixed
 field. The tutorial and the centre keep the curve; job 4 and the capstone (job 8) combine a clear with a
-curve.
+curve; job 4 makes the existing blocker fatal on the single-Curve path in place/inside the run's block
+band and within the cube range/separation, so the single Clear fails the well and the single Curve fails
+the blocker, and the two-zone Mixed is the only route.
 
 ### The several-zones rung
 

@@ -19,7 +19,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleSeedScanResult result = Bake(
                 contract, out PuzzleSeed seed, out SpaceShapingSettings settings);
 
-            Assert.IsTrue(result.Found, $"{contract.Id}: {result.Status}");
+            Assert.IsTrue(
+                result.Found,
+                $"{contract.Id}: {result.Status} [{result.RunReport}] post-clear [{result.PostClear}]");
             Assert.AreEqual(PuzzleSolutionKind.Curve, result.Kind);
             PuzzleVerification check = PuzzleVerifier.Verify(
                 result.Puzzle, result.Solution, PuzzleSimSettings.From(settings));
@@ -35,7 +37,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleJobContract contract = PuzzleJobContracts.All[1];
             PuzzleSeedScanResult result = Bake(contract, out PuzzleSeed seed, out _);
 
-            Assert.IsTrue(result.Found, $"{contract.Id}: {result.Status}");
+            Assert.IsTrue(
+                result.Found,
+                $"{contract.Id}: {result.Status} [{result.RunReport}] post-clear [{result.PostClear}]");
             Assert.IsTrue(
                 PuzzleSunRuleCheck.Matches(result.Puzzle, result.Solution, PuzzleSunRule.CentredGrown),
                 $"{contract.Id}: the solved zone is not a centred, grown star");
@@ -51,7 +55,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             {
                 PuzzleJobContract contract = PuzzleJobContracts.All[i];
                 PuzzleSeedScanResult result = Bake(contract, out PuzzleSeed seed, out _);
-                Assert.IsTrue(result.Found, $"{contract.Id}: {result.Status}");
+                Assert.IsTrue(
+                result.Found,
+                $"{contract.Id}: {result.Status} [{result.RunReport}] post-clear [{result.PostClear}]");
                 Assert.IsTrue(
                     PuzzleSunRuleCheck.Matches(result.Puzzle, result.Solution, PuzzleSunRule.OutOfZone),
                     $"{contract.Id}: a solved zone contains the sun");
@@ -67,7 +73,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             {
                 PuzzleJobContract contract = PuzzleJobContracts.All[i];
                 PuzzleSeedScanResult result = Bake(contract, out PuzzleSeed seed, out _);
-                Assert.IsTrue(result.Found, $"{contract.Id}: {result.Status}");
+                Assert.IsTrue(
+                result.Found,
+                $"{contract.Id}: {result.Status} [{result.RunReport}] post-clear [{result.PostClear}]");
                 Assert.IsTrue(
                     PuzzleJobValidator.Validate(
                         result.Puzzle, result.Kind, result.Solution, contract, out List<string> failures),
@@ -93,6 +101,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             seed.fieldShape = contract.FieldShape;
             seed.hasSun = contract.HasSun;
             seed.sunRule = contract.SunRule;
+            seed.sunOnChord = contract.SunOnChord;
             seed.mechanism = contract.Mechanism;
             seed.zones = contract.Zones;
             seed.minRoutes = contract.MinRoutes;

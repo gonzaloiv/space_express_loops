@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Creator
@@ -6,12 +7,66 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     {
         private const float MinRunFraction = 0.5f;
         private const float MaxRunFactor = 1.5f;
-        internal const float BlockBandFactor = 2f;
+        internal const float SunBlockBandFactor = 2f;
+        internal const float PlanetBlockBandFactor = 2f;
 
         public static bool TryPick(
-            PuzzleRunRequest request, out Vector3 origin, out Vector3 destination)
+            PuzzleRunRequest request, out Vector3 origin, out Vector3 destination) =>
+            TryPick(request, out origin, out destination, out _);
+
+        public static bool TryPickCandidates(
+            PuzzleRunRequest request, int count, out Candidate[] candidates)
+        {
+            List<Candidate> found = new();
+            for (int i = 0; i < request.Planets.Length; i++)
+            {
+                for (int j = i + 1; j < request.Planets.Length; j++)
+                    AddCandidate(i, j, request, found);
+            }
+
+            found.Sort((a, b) => a.Delta.CompareTo(b.Delta));
+            int length = Mathf.Min(count, found.Count);
+            candidates = new Candidate[length];
+            for (int i = 0; i < length; i++)
+                candidates[i] = found[i];
+
+            return length > 0;
+        }
+
+        private static void AddCandidate(
+            int i, int j, PuzzleRunRequest request, List<Candidate> found)
+        {
+            Vector3 from = request.Planets[i].position;
+            Vector3 to = request.Planets[j].position;
+            float run = Vector3.Distance(from, to);
+            if (run < request.TargetRun * MinRunFraction || run > request.TargetRun * MaxRunFactor)
+                return;
+            if (!EndpointsClear(request, i, j))
+                return;
+            if (!request.AllowSunOnChord && SunBlocked(request, from, to))
+                return;
+
+            found.Add(new Candidate(from, to, Mathf.Abs(run - request.TargetRun)));
+        }
+
+        public static bool TryPick(
+            PuzzleRunRequest request, out Vector3 origin, out Vector3 destination,
+            out PuzzleRunReport report)
         {
             RunChoice choice = new() { Best = float.MaxValue };
+            if (request.HasCandidate)
+            {
+                int ci = IndexOf(request.Planets, request.CandidateOrigin);
+                int cj = IndexOf(request.Planets, request.CandidateDestination);
+                if (ci >= 0 && cj >= 0 && ci != cj)
+                    Consider(ci, cj, request, ref choice);
+
+                origin = choice.Origin;
+                destination = choice.Destination;
+                report = choice.Report;
+                return choice.Found;
+            }
+
             for (int i = 0; i < request.Planets.Length; i++)
             {
                 for (int j = i + 1; j < request.Planets.Length; j++)
@@ -20,28 +75,45 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             origin = choice.Origin;
             destination = choice.Destination;
+            report = choice.Report;
             return choice.Found;
         }
 
         private static void Consider(
             int i, int j, PuzzleRunRequest request, ref RunChoice choice)
         {
+            choice.Report.Pairs++;
             Vector3 from = request.Planets[i].position;
             Vector3 to = request.Planets[j].position;
             float run = Vector3.Distance(from, to);
             if (run < request.TargetRun * MinRunFraction || run > request.TargetRun * MaxRunFactor)
+            {
+                choice.Report.LengthRejected++;
                 return;
+            }
 
             RunBlockers blockers = Blockers(request, i, j);
             if (!blockers.Valid)
+            {
+                choice.Report.ClearanceRejected++;
                 return;
-            if (request.RequirePlanetBlocker && !blockers.Planet)
-                return;
-            if (!request.AllowSunOnChord && blockers.Sun)
-                return;
-            if (!blockers.Planet && !blockers.Sun)
+            }
+            bool noPlanet = request.RequirePlanetBlocker && !blockers.Planet;
+            bool sunChord = !request.AllowSunOnChord && blockers.Sun;
+            if (noPlanet)
+                choice.Report.NoPlanetBlocker++;
+            if (sunChord)
+                choice.Report.SunOnChord++;
+            if (noPlanet || sunChord)
                 return;
 
+            if (!blockers.Planet && !blockers.Sun)
+            {
+                choice.Report.NoBlocker++;
+                return;
+            }
+
+            choice.Report.Accepted++;
             float delta = Mathf.Abs(run - request.TargetRun);
             if (delta >= choice.Best)
                 return;
@@ -63,6 +135,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             bool sun = SunBlocked(request, from, to);
             bool planet = PlanetBlocked(request, a, b, from, to);
             return new RunBlockers(true, planet, sun);
+        }
+
+        private static int IndexOf(PuzzleFieldPlanet[] planets, Vector3 point)
+        {
+            for (int i = 0; i < planets.Length; i++)
+                if ((planets[i].position - point).sqrMagnitude < 0.000001f)
+                    return i;
+
+            return -1;
         }
 
         private static bool EndpointsClear(
@@ -93,7 +174,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleRunRequest request, Vector3 from, Vector3 to) =>
             request.SunRadius > 0f
             && PuzzleRunGeometry.DistanceToSegment(Vector3.zero, from, to)
-                < request.SunRadius * BlockBandFactor;
+                < request.SunRadius * SunBlockBandFactor;
 
         private static bool PlanetBlocked(
             PuzzleRunRequest request, int a, int b, Vector3 from, Vector3 to)
@@ -106,7 +187,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 float radius = request.Planets[k].radius;
                 if (PuzzleRunGeometry.DistanceToSegment(
                         request.Planets[k].position, from, to)
-                    < radius * BlockBandFactor)
+                    < radius * PlanetBlockBandFactor)
                     return true;
             }
 
@@ -127,12 +208,27 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             }
         }
 
+        public readonly struct Candidate
+        {
+            public readonly Vector3 Origin;
+            public readonly Vector3 Destination;
+            public readonly float Delta;
+
+            public Candidate(Vector3 origin, Vector3 destination, float delta)
+            {
+                Origin = origin;
+                Destination = destination;
+                Delta = delta;
+            }
+        }
+
         private struct RunChoice
         {
             public Vector3 Origin;
             public Vector3 Destination;
             public float Best;
             public bool Found;
+            public PuzzleRunReport Report;
         }
     }
 }

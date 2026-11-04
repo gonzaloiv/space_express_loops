@@ -7,9 +7,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static readonly int StatusCount =
             System.Enum.GetValues(typeof(PuzzleBakeStatus)).Length;
 
-        public static bool IsBetter(PuzzleSeedScanResult candidate, PuzzleSeedScanResult best) =>
-            candidate.Found && (!best.Found || candidate.Routes > best.Routes);
-
         public static PuzzleSeedScanResult Find(
             PuzzleSeed seed, SpaceShapingSettings settings, int attempts,
             System.Action<int, int> onProgress = null)
@@ -62,6 +59,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             {
                 best.Status = candidate.Status;
                 best.Kind = candidate.Kind;
+                best.RunReport = candidate.RunReport;
+                if (candidate.PostClear.ClearWidth > best.PostClear.ClearWidth)
+                    best.PostClear = candidate.PostClear;
             }
             if (tally.HasFailure)
                 return;
@@ -98,6 +98,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Puzzle = baked.Puzzle,
                 Solution = baked.Solution,
                 Kind = baked.Kind,
+                RunReport = baked.RunReport,
+                PostClear = baked.PostClear,
                 Routes = baked.Baked ? baked.Puzzle.routes : 0
             };
         }

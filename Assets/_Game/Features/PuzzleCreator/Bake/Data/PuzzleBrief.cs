@@ -8,6 +8,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public float SunRadius;
         public bool SunScalable;
         public PuzzleSunRule SunRule;
+        public bool SunOnChord;
         public bool Translatable;
         public PuzzleStartRule StartRule;
         public int Zones;
@@ -31,6 +32,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             SunRadius = seed.EffectiveSunRadius(settings),
             SunScalable = true,
             SunRule = seed.sunRule,
+            SunOnChord = seed.sunOnChord,
             Translatable = seed.translatable,
             StartRule = seed.startRule,
             Zones = Mathf.Max(1, seed.zones),

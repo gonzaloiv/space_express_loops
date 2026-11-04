@@ -60,10 +60,10 @@ namespace DigitalLove.Game.Persistence.Tests
             AddComplete(playerData, "01_02", 1);
 
             RunProgress progress = RunProgressCookies.Build(selector, playerData);
-            RunCarousel carousel = RunCarousel.FromLevels(levels, progress);
+            JobEntry[] entries = RunJobs.FromLevels(levels, progress);
 
-            Assert.AreEqual(JobState.Solved, carousel[0].State);
-            Assert.AreEqual(JobState.Solved, carousel[1].State);
+            Assert.AreEqual(JobState.Solved, entries[0].State);
+            Assert.AreEqual(JobState.Solved, entries[1].State);
         }
 
         private LevelSelector Selector(params PuzzleData[] levels)
