@@ -15,7 +15,7 @@ namespace DigitalLove.Game.Flow
     {
         [SerializeField] private MonoState nextState;
         [SerializeField] private LevelSelector levelSelector;
-        [SerializeField] private RunCarouselView view;
+        [SerializeField] private PuzzleMapView view;
         [SerializeField] private TwoHandGestureInput gesture;
 
         [Header("Debug")]
@@ -25,14 +25,10 @@ namespace DigitalLove.Game.Flow
 
         [Inject] private MemoryDataClient memoryDataClient;
 
-        private RunCarousel carousel;
+        private PuzzleMap map;
 
         public override void Enter()
         {
-            view.FocusRequested += OnFocusRequested;
-            view.EnterRequested += OnEnterRequested;
-            gesture.StateChanged += OnGestureChanged;
-
             PlayerData playerData = memoryDataClient.Get<PlayerData>();
 
             if (skipMapOnFirstLaunch && playerData.GetLevelCompleteCookies().Count == 0)
@@ -43,7 +39,8 @@ namespace DigitalLove.Game.Flow
 
             if (selectRandom.Value)
             {
-                EnterJob(levelSelector.GetLevelByGlobalIndex<PuzzleData>(Random.Range(0, levelSelector.TotalLevelsCount)));
+                EnterJob(levelSelector.GetLevelByGlobalIndex<PuzzleData>(
+                    Random.Range(0, levelSelector.TotalLevelsCount)));
                 return;
             }
 
@@ -53,53 +50,45 @@ namespace DigitalLove.Game.Flow
                 return;
             }
 
+            view.EnterRequested += OnEnterRequested;
+            gesture.StateChanged += OnGestureChanged;
+
             RunProgress progress = RunProgressCookies.Build(levelSelector, playerData);
-            carousel = RunCarousel.FromLevels(ReadLevels(), progress);
-            view.Show(carousel);
+            PuzzleData[] levels = ReadLevels();
+            map = PuzzleMap.FromLevels(
+                levels, progress, PuzzleMapLayout.Galaxy(levels.Length));
+            view.Show(map);
         }
 
         public override void Exit()
         {
-            view.FocusRequested -= OnFocusRequested;
             view.EnterRequested -= OnEnterRequested;
             gesture.StateChanged -= OnGestureChanged;
 
-            if (carousel == null)
+            if (map == null)
                 return;
 
             view.Hide();
-            carousel = null;
+            map = null;
         }
 
         private void OnGestureChanged(TwoHandGestureState state) => view.ApplyGesture(state);
 
-        private void OnFocusRequested(int index)
-        {
-            if (carousel.Focus(index))
-            {
-                view.Show(carousel);
-                return;
-            }
-
-            if (index != carousel.FocusedIndex)
-                view.Refuse();
-        }
-
         private void OnEnterRequested()
         {
             Debug.Log(
-                $"[PuzzleSelection] enter can={carousel.CanEnter} index={carousel.FocusedIndex} " +
-                $"state={carousel.Focused.State} puzzle={(carousel.FocusedPuzzle == null ? "null" : carousel.FocusedPuzzle.name)} " +
+                $"[PuzzleSelection] enter can={map.CanEnter} index={map.SelectedIndex} " +
+                $"state={map.Selected.State} puzzle={(map.SelectedPuzzle == null ? "null" : map.SelectedPuzzle.name)} " +
                 $"next={nextState.RouteId}",
                 this);
 
-            if (!carousel.CanEnter)
+            if (!map.CanEnter)
             {
                 view.Refuse();
                 return;
             }
 
-            EnterJob(carousel.FocusedPuzzle);
+            EnterJob(map.SelectedPuzzle);
         }
 
         private void EnterJob(PuzzleData puzzle)

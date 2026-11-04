@@ -1,16 +1,21 @@
+using UnityEngine;
+
 namespace DigitalLove.Game.PuzzleSelection
 {
     public readonly struct CarouselGestureOutcome
     {
         public readonly int FocusDelta;
         public readonly bool Enter;
-        public readonly float Speed;
+        public readonly Vector3 DragOffset;
+        public readonly bool IsDragging;
 
-        public CarouselGestureOutcome(int focusDelta, bool enter, float speed = 0f)
+        public CarouselGestureOutcome(
+            int focusDelta, bool enter, Vector3 dragOffset = default, bool isDragging = false)
         {
             FocusDelta = focusDelta;
             Enter = enter;
-            Speed = speed;
+            DragOffset = dragOffset;
+            IsDragging = isDragging;
         }
     }
 }

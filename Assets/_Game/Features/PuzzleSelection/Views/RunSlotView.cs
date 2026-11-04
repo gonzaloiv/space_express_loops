@@ -13,25 +13,38 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField] private GameObject currentState;
         [SerializeField] private GameObject solvedState;
         [SerializeField] private GameObject lockedState;
-        [SerializeField] private GameObject focusedState;
+        [SerializeField] private GameObject selectionCube;
         [SerializeField] private PuzzleDioramaView diorama;
 
         private Coroutine refusalRoutine;
         private Vector3 homeLocalPosition;
         private Quaternion homeLocalRotation;
-
-        public int JobIndex { get; private set; } = -1;
-        public Transform DioramaTransform => diorama.transform;
+        private Vector3 homeVisualScale;
 
         private void Awake()
         {
             homeLocalPosition = diorama.transform.localPosition;
             homeLocalRotation = diorama.transform.localRotation;
+            homeVisualScale = visualRoot.localScale;
         }
 
-        public void Show(int index, PuzzleData puzzle, JobState state, int stars, bool focused)
+        public void ShowMapField(
+            int index, PuzzleData puzzle, JobState state, int stars, bool selected)
         {
-            JobIndex = index;
+            diorama.SetCubesVisible(false);
+            Show(index, puzzle, state, stars);
+            SetChromeVisible(false);
+            selectionCube.SetActive(selected);
+        }
+
+        public void Hide()
+        {
+            ResetVisual();
+            gameObject.SetActive(false);
+        }
+
+        private void Show(int index, PuzzleData puzzle, JobState state, int stars)
+        {
             gameObject.SetActive(true);
             ResetVisual();
             numberLabel.text = (index + 1).ToString();
@@ -39,19 +52,21 @@ namespace DigitalLove.Game.PuzzleSelection
             currentState.SetActive(state == JobState.Current);
             solvedState.SetActive(state == JobState.Solved);
             lockedState.SetActive(state == JobState.Locked);
-            focusedState.SetActive(focused);
             diorama.Render(puzzle);
         }
 
-        public void Hide()
+        private void SetChromeVisible(bool visible)
         {
-            JobIndex = -1;
-            ResetVisual();
-            gameObject.SetActive(false);
+            numberLabel.gameObject.SetActive(visible);
+            starsLabel.gameObject.SetActive(visible);
+            currentState.SetActive(visible);
+            solvedState.SetActive(visible);
+            lockedState.SetActive(visible);
         }
 
-        public void ResetVisual()
+        private void ResetVisual()
         {
+            visualRoot.localScale = homeVisualScale;
             diorama.transform.localPosition = homeLocalPosition;
             diorama.transform.localRotation = homeLocalRotation;
             diorama.transform.localScale = Vector3.one;

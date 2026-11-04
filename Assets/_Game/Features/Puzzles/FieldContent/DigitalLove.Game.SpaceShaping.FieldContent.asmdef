@@ -1,0 +1,19 @@
+{
+    "name": "DigitalLove.Game.SpaceShaping.FieldContent",
+    "rootNamespace": "",
+    "references": [
+        "DigitalLove.Global",
+        "DigitalLove.Game.Nodes",
+        "DigitalLove.Game.SpaceShaping.Domain",
+        "DigitalLove.Casual.Levels"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

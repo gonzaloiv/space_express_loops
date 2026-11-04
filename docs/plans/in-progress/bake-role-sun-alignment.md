@@ -1,22 +1,41 @@
 # Bake — role and sun alignment
 
 **Status:** now · space shaping · updated 2026-11-04 — S1/S2 landed; job 1 bakes with four
-planets (seed 37); S3 is blocked on jobs 2/3 returning `NoRun`.
+planets (seed 37); the placement uses two runs with one blocker each (`MinBlockers = 1`,
+`MinRoutes = 2`), but the true candidate pin, the separate `SunOnChord` field, and the report masking are
+still open; the explicit rerun is pending.
 
-**Related:** [jobs](../../design/jobs.md) · [progression](../../design/systems/progression.md) ·
-[core loop](../../design/core-loop.md) · [the cube](../../design/systems/cube.md)
+**Related:** [vision](../../design/vision.md) · [jobs](../../design/jobs.md) ·
+[progression](../../design/systems/progression.md) · [core loop](../../design/core-loop.md) ·
+[the cube](../../design/systems/cube.md)
 
 **Scope:** `PuzzleJobContract`/`PuzzleJobContracts` is the job seed spec, and `PuzzleJobValidator` is an
 editor-time acceptance gate — not a separate plan and not a runtime system. Fold its checks into
 `PuzzleBrief`/`PuzzleFieldBake` as S1–S3 land; keep the validator test-only.
 
+**Design constraints:** the field is **derived, never edited**; a blocker is a generator rule, not a
+hand-edited `PuzzlePlanetListAsset`. The job ladder and roles stay as designed — job 2 is the centre, job 3
+has two blockers — and the bake must meet them. If job 2 cannot make the star the cheapest `Curve`, that is
+a job/field decision, not a reason to change the field rule silently.
+
 **Current state (2026-11-04):** S1 (`Matches(Any, Other)` is false, role costs logged) and S2
 (`PuzzleRunRequest`, planet-blocker/sun-chord preference, `PuzzleRunChoiceTests`) are in, along with the
 sun/start rule, contract fields, paths, log, test-only validator, and loose-fallback removal. The focused
-`PuzzleRunChoiceTests`/`PuzzleSolutionClassifierTests`/`PuzzleBakeTests`/`PuzzleSearchTests` pass 29/29.
-The explicit `PuzzleJobBakeTests` run is 1/4: job 1 passes (four planets, seed 37, one route); jobs 2/3
-return `NoRun`; jobs 4–8 are not reached by `JobSet`. The `Validate_MovableStartFrame_Fails` assertion is
-fixed. S3 is the field/run authoring work; the re-bake (S4) is not done.
+`PuzzleRunChoiceTests`/`PuzzleSolutionClassifierTests`/`PuzzleBakeTests`/`PuzzleSearchTests` pass 29/29
+(including the 18/18 run/validator tests). The S3 diagnostic is in: `PuzzleRunReport` shows job 2 as
+6 pairs / 2 length / 4 no-planet / 0 sun-chord, and job 3 as 10 pairs / 2 length / 8 no-planet / 0
+sun-chord; widening the planet band to 4× does not change the counts. The report counts `NoPlanetBlocker`
+before `SunOnChord`, so the sun-chord slot is masked and “the sun is not the problem” is not proven yet.
+The full Creator suite is 105/101/4. The explicit `PuzzleJobBakeTests` rerun is 1/4: job 1 passes (four
+planets, seed 37, one route); `01_02` is unchanged (`6 / 2 length / 4 no planet`), `01_03` regressed to
+`NoSolution` / 0 pairs; jobs 4–8 are not reached by `JobSet`; the two-ship fixture is the fourth failure.
+The first pass of the candidate pin, sun-aware `Fits`, `NoSolution` report, and
+`PuzzleBlockerPlacementTests` is wired, but the execution is still short: `TryPick` considers all pairs
+after the candidate; the placement uses **two runs with one blocker each**, and the contract/validator
+are `MinBlockers = 1` + `MinRoutes = 2` (keep that); the chord rule is derived from `SunRule` — add a
+separate `SunOnChord` field, all eight false; and the report still masks `SunOnChord` behind
+`NoPlanetBlocker`. The explicit rerun is pending after the editor/MCP session recovers; the
+role-cost/collect-all/filtered gate follows; the re-bake (S4) is not done.
 
 ## 1. Why
 
@@ -76,7 +95,7 @@ the wrong lesson. Fix the bake, then author the run.
   sun off the chord as a well. Make "blocked by a planet" versus "blocked by the sun" explicit in the
   request/status. **Landed:** `PuzzleRunRequest` carries `RequirePlanetBlocker` and `AllowSunOnChord`;
   `PuzzleRunChoiceTests` cover sun-only, planet-blocked, sun-on-chord, and `InZone` cases. Job 2 still
-  returns `NoRun` under the planet-blocker/sun-off-chord rule, so the field/run authoring remains S3.
+  returns `NoRun` under the planet-blocker/sun-off-chord rule, so the derived blocker rule remains S3.
   The start frame (`PuzzleStartRule.FieldCentre` for jobs 5/8) is in `BuildFrames` and the validator.
 - Add `PuzzleSunRule` to `PuzzleBrief` and a matching `SunRuleFailed` status. Job 2 is
   `CentredGrown`: the zone must be centred on the star and its scale must grow. `BuildFrames` alone
@@ -98,12 +117,43 @@ the wrong lesson. Fix the bake, then author the run.
 - **Job 1 role fix.** The 3-planet ring only had the blocker as a non-endpoint source, so `Clear` was
   cheaper than the requested `Curve`. Job 1 is now a four-planet ring; seed 37 bakes one `Curve` route
   within 200 attempts. The design table and the tutorial contract follow that change.
-- **Job 2/3 still no run.** Four-, five-, and six-planet probes (up to 200 attempts) return `NoRun`
-  under the planet-blocker/sun-chord constraints; more attempts do not help. S3 needs a
-  run-choice/field-authoring pass before the re-bake.
-- **Exit:** a four-planet `Ring` tutorial bakes its requested role and a crash; jobs 3/4/7/8 offer two
-  routes; job 5 is no longer a loose one-route bake; no fixed-level solved zone sits on the sun except
-  job 2.
+- **Job 2/3 diagnostic.** Four-, five-, and six-planet probes (up to 200 attempts) return `NoRun`; more
+  attempts do not help. `PuzzleRunReport` shows job 2 as 6 pairs / 2 length / 4 no-planet / 0 sun-chord,
+  and job 3 as 10 pairs / 2 length / 8 no-planet / 0 sun-chord; widening the planet band to 4× did not
+  change the counts. The no-planet count is the only counted reject, but `Consider` checks it before
+  `SunOnChord`, so the sun-chord slot is masked; do not conclude the sun is innocent. Derive a blocker on
+  the chosen chord in the generator (no hand-edited `PuzzlePlanetListAsset`, no wider planet band by
+  default). Job 3 also has
+  seeds where the cheapest role is `Curve` while `Clear` is requested, so the derived blocker must make
+  shrinking it the cheapest `Clear`. Job 2’s centre is possible only if growing the sun is the cheapest
+  `Curve`; S1’s cheaper-role rule still gates it, so the blocker alone is not enough if `Clear` stays
+  cheaper.
+- **Derived blocker rule.** The generator needs a two-pass: pick a candidate pair by run length and
+  endpoint clearance without requiring a blocker, place one planet within `2 × radius` of the chord for
+  job 2 (two for job 3) without overlapping the endpoints, the sun, or other planets, then **pin the
+  candidate**: the final selection uses that pair, or verifies the blocker is on the final run.
+  **Wired, not a true pin:** the candidate is carried through `PuzzlePlanetListAsset` ->
+  `PuzzleRunRequest`, but `TryPick` considers it first and then loops every pair, so another pair can win.
+  Pin it: when `HasCandidate`, validate and return the candidate pair, skip the loop. Keep **two**
+  candidate runs, one blocker each (the current `TryPickCandidates(count)` + `Place` does this); the
+  chosen run is `MinBlockers = 1` and the two blockers give `MinRoutes = 2`, so the player chooses which
+  one to shrink (`jobs.md:181`). Do **not** put both blockers on one chord: that makes the single-zone
+  `Clear` unsolvable, which is the `01_03` `NoSolution`. Change `PuzzleJobContracts`/`PuzzleJobValidator`/
+  the job-bake tests from `MinBlockers = 2` to `1`. Keep the planet band at 2×; a 4× band did not change
+  the counts. The blocker is a generator rule, not a hand-edited `PuzzlePlanetListAsset`.
+- **Separate SunOnChord field.** Add `sunOnChord` to `PuzzleSeed`/`PuzzleBrief` (all eight false) and use
+  it for `AllowSunOnChord`; `SunRule` stays the solved-zone rule — job 8 is `InZone` but `SunOnChord =
+  false`. Do not derive the chord rule from `SunRule` or `Mechanism`. Update the placement,
+  `BuildRunRequest`, and the validator; the `KeepBlockersOffTheSun` test uses a sun-on candidate for an
+  `OutOfZone` job and asserts the chosen candidate run is sun-off. **Landed:** the sun is in `Fits`, the
+  `NoSolution` path carries the report, and `PuzzleBlockerPlacementTests` cover the placement.
+- **Role-cost check.** The derived blocker must make the requested role the cheapest: `Clear` for job 3,
+  and `Curve` for job 2 (the star grows). If the star growth cannot be the cheapest `Curve`, job 2 is a
+  field decision — or an explicit job change outside this plan — not a forced `Curve`.
+- **Exit:** job 2 bakes a planet-blocked, sun-off-chord `Curve` whose zone is centred on the star and
+  grown; job 3’s derived blockers make `Clear` cheapest and offer two routes; a four-planet `Ring`
+  tutorial bakes its requested role and a crash; jobs 4/7/8 offer two routes; job 5 is no longer a loose
+  one-route bake; no fixed-level solved zone sits on the sun except job 2.
 
 ### S4 — paths, shape, log, re-bake
 
@@ -121,8 +171,9 @@ the wrong lesson. Fix the bake, then author the run.
 - **Acceptance fixtures.** The explicit job-bake tests load
   `PuzzleCreator/Data/SpaceShapingSettings.asset`; default-settings tests are not the production ramp.
   Run `PuzzleJobBakeTests` deliberately, not as part of the ordinary suite.
-- The two-ship fixture is marked `[Explicit]` (multi-ship is out of scope); keep it out of the ordinary
-  suite so S4 can close on the single-ship jobs.
+- The two-ship fixture is `[Explicit]` (multi-ship is out of scope). The green gate is the Unity Test
+  Runner or a filter that excludes it; the MCP suite includes explicit tests and stays red on that
+  fixture.
 - **Exit:** eight assets, no duplicates/fallback warnings, chapter references the eight updated assets,
   log shows 1 `Curve`, 2 `Curve`, 3 `Clear`, 4 `Mixed`, 5 `Curve`, 6 `Curve`, 7 `Curve`, 8 `Mixed`,
   routes ≥ 2 on 3/4/5/7/8, and the Creator bake tests are green.
@@ -133,10 +184,23 @@ the wrong lesson. Fix the bake, then author the run.
 - A requested role bakes only when its route is the cheapest; the role solution and both costs are
   captured in the search/log (the status enum has no cost fields).
 - A `Curve` sun job selects a planet-blocked run; job 2's zone is centred on the star and grown.
+- The derived blocker picks a candidate run by length/clearance without requiring a blocker, places one
+  planet within `2 × radius` of the chord for job 2 (two for job 3) without overlapping the endpoints,
+  the sun, or other planets, then pins that candidate for the final selection; a 4× band does not
+  substitute for this.
+- `PuzzleBlockerPlacementTests` assert the true pin (the final `TryPick` returns the candidate), the two
+  job-3 blockers on **two runs with one each** (the chosen run `MinBlockers = 1`, `MinRoutes = 2`), the
+  chosen run is sun-off for an `OutOfZone` job, the endpoint/planet separation, and the `NoSolution`
+  report is non-zero; `01_02` must show a planet blocker rather than the current 4 no-planet pairs.
+- The `NoSolution` path carries the run report; `01_03` reports its pairs/filters instead of 0.
+- The derived blocker makes the requested role the cheapest: `Clear` for job 3, `Curve` for job 2; if the
+  star growth cannot be cheapest, job 2 is a job/field decision.
 - Job 2 is `CentredGrown`; job 8 is `InZone`; jobs 3/4/5/6/7 are `OutOfZone` and have no solved zone on
   the sun. Jobs 5/8 start at the field centre; jobs 6/7 start at the run midpoint.
 - A four-planet `Ring` tutorial bakes a crash; a one-route field fails `minRoutes: 2` for jobs 3/4/5/7/8.
 - The explicit job-bake tests use the production settings asset and are run deliberately.
+- The acceptance harness collects every job failure (`Assert.Multiple` / per-job results); one `NoRun`
+  does not hide jobs 4–8.
 - The start-frame validator test asserts with `Has.Some.Contains` on the message list; the previous
   `Does.Contain` failure was a test assertion, not a validator result.
 - The ordinary `PuzzleBakeTests` / `PuzzleSearchTests` / `PuzzleMultiShipBakeTests` still create default
@@ -155,12 +219,20 @@ the wrong lesson. Fix the bake, then author the run.
 
 - **`Other` is a real route.** If it is legitimate, excluding it may hide a valid solution; decide with
   a test, not by moving the role check.
-- **Sun as a well.** If no seed makes the star's growth the cheapest `Curve`, the centre job needs a
-  field-authoring pass; record it instead of falling back.
+- **Sun as a well.** If no derived blocker makes the star's growth the cheapest `Curve`, the centre job
+  needs a job/field decision; record it instead of falling back or forcing the `Curve`.
 - **Sparse fields.** A sparse-field `NoRun` may be a run-choice constraint; fix the constraint, not the
   count.
 - **Job 1 role fix.** `Clear` was cheaper than `Curve` on the 3-planet field; job 1 is now four planets so
   it has a non-blocker well.
+- **Derived blocker.** Job 2/3 must stay derived: a generator rule places a blocker on the chosen chord;
+  do not hand-edit `PuzzlePlanetListAsset`. Pin the candidate; the two job-3 blockers use **two runs, one
+  each**, with `MinBlockers = 1` on the chosen run and `MinRoutes = 2`; keep `SunRule` for the solved zone
+  and add a separate `SunOnChord` field (all eight false), never derive the chord rule from `SunRule`; the
+  two-pass placement must respect endpoint clearance, the sun, and planet separation; the placement and
+  final request must share the chord rule; the `NoSolution` path must carry the report; the report must
+  count the sun independently of the no-planet check. The S1 cheaper-role gate still applies after the
+  blocker.
 - **Paths.** Moving the exporter without moving the chapter references orphans the assets; update the
   chapter GUIDs in place.
 - **Test set.** The loose fallback is gone; the builder only ships strict bakes.

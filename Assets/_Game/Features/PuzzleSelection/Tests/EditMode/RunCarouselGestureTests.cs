@@ -23,7 +23,25 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
 
             CarouselGestureOutcome outcome = gesture.Update(None(), RightAxis, UpAxis, 0.12f);
 
-            Assert.AreEqual(-1, outcome.FocusDelta);
+            Assert.AreEqual(1, outcome.FocusDelta);
+        }
+
+        [Test]
+        public void Drag_ReportsOffsetUntilRelease()
+        {
+            Vector3 start = new(0f, 1f, 0.5f);
+            gesture.Update(Single(start, start), RightAxis, UpAxis, 0f);
+
+            CarouselGestureOutcome drag = gesture.Update(
+                Single(start + new Vector3(0.05f, 0f, 0f), start), RightAxis, UpAxis, 0.1f);
+
+            Assert.IsTrue(drag.IsDragging);
+            Assert.AreEqual(0.05f, drag.DragOffset.x, 0.0001f);
+
+            CarouselGestureOutcome release = gesture.Update(None(), RightAxis, UpAxis, 0.12f);
+
+            Assert.IsFalse(release.IsDragging);
+            Assert.AreEqual(1, release.FocusDelta);
         }
 
         [Test]

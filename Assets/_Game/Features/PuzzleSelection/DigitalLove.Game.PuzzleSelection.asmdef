@@ -3,12 +3,10 @@
     "rootNamespace": "",
     "references": [
         "DigitalLove.Game.SpaceShaping.Domain",
-        "DigitalLove.Game.SpaceShaping.Views",
+        "DigitalLove.Game.SpaceShaping.FieldContent",
         "DigitalLove.Casual.Levels",
         "DigitalLove.Input",
         "DigitalLove.Game.Nodes",
-        "DOTween.Modules",
-        "Oculus.Interaction",
         "Unity.TextMeshPro"
     ],
     "includePlatforms": [],

@@ -28,22 +28,23 @@ namespace DigitalLove.Game.PuzzleSelection
             bool single = state.IsSingleHandPinching && !twoHand;
             int focusDelta = 0;
             bool enter = false;
-            float speed = 0f;
+            Vector3 dragOffset = default;
+            bool isDragging = false;
 
             if (twoHand)
                 UpdateTwoHand(state, out focusDelta, out enter);
             else if (single)
-                UpdateSingleHand(state, nowSecs);
-            else
             {
-                CarouselGestureOutcome release = Release(rightAxis, upAxis, nowSecs);
-                focusDelta = release.FocusDelta;
-                speed = release.Speed;
+                UpdateSingleHand(state, nowSecs);
+                isDragging = swiping;
+                dragOffset = isDragging ? swipeLast - swipeStart : default;
             }
+            else
+                focusDelta = Release(rightAxis, upAxis, nowSecs).FocusDelta;
 
             wasSingleHand = single;
             wasTwoHand = twoHand;
-            return new CarouselGestureOutcome(focusDelta, enter, speed);
+            return new CarouselGestureOutcome(focusDelta, enter, dragOffset, isDragging);
         }
 
         public void Reset()
@@ -120,8 +121,8 @@ namespace DigitalLove.Game.PuzzleSelection
             if (!horizontalEnough || !moves)
                 return default;
 
-            int focusDelta = horizontal > 0f ? -1 : 1;
-            return new CarouselGestureOutcome(focusDelta, false, speed);
+            int focusDelta = horizontal > 0f ? 1 : -1;
+            return new CarouselGestureOutcome(focusDelta, false);
         }
 
         private void ResetSwipe()

@@ -11,8 +11,8 @@ the ship flies the deformed spacetime.
 Active work. The one thing being built.
 
 - [Puzzle map — the run as a global field](in-progress/puzzle-map.md) — puzzle fields in a galaxy
-  cluster; the selected field is a diorama, nearby planets are culled by radius, the selection reads by
-  tint, and S4 replaces the diorama with the shared full play field.
+  cluster; the selected field is a diorama, nearby full fields are culled by radius, the selection reads
+  by a selection cube, and S4 replaces the diorama with the shared full play field.
 
 - [Bake — role and sun alignment](in-progress/bake-role-sun-alignment.md) — make the bake produce the
   designed roles (sun-Curve, Clear, Mixed) so the 8-job set stops falling back to Clear or duplicates.
