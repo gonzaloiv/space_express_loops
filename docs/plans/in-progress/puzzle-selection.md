@@ -3,7 +3,7 @@
 **Status:** now · flow · updated 2026-11-03 — an arc of job fields, one focused, touched and
 amplified into play; starts after the PoC is integrated into the main scene.
 
-**Ready:** S1/S2 code is in `Assets/_Game/Features/PuzzleSelection`; the 7-job S1 exit waits on the run
+**Ready:** S1/S2 code is in `Assets/_Game/Features/PuzzleSelection`; the 8-job S1 exit waits on the run
 assets, and S3 waits on the completion/result path in flow (owned separately). The scale-out return from
 edition to selection is wired.
 
@@ -127,10 +127,11 @@ state, with job 1 solved and job 2 current.
 - An authored arc: the focused field at the centre, one at each side (±~35°), the rest implied by the
   numbered cubes. Each job shows a **diorama** of its baked field (planets, sun, the cube) — pooled from
   an authored prototype, no runtime hierarchy — and a number.
-- Cube states: current (highlighted), solved (lit + stars), locked (dark). Locked refuses visibly on the
-  scale-in; focus is allowed so the player sees what is next.
+- Cube states: current (highlighted), solved (lit + stars), locked (dark). Locked jobs are side
+  previews only; they cannot be focused, so the centre is always an enterable current/solved job.
+  Touching or swiping a locked job refuses and keeps the centre in place.
 - Cap the visible previews at three; the full field is built only on entry.
-- **Exit:** a 7-job run reads at a glance, the current/solved/locked states are distinct, and the preview
+- **Exit:** an 8-job run reads at a glance, the current/solved/locked states are distinct, and the preview
   cost is measured.
 
 ### S2 — focus and the first launch
@@ -156,9 +157,10 @@ state, with job 1 solved and job 2 current.
 - Scale out (two hands closer) returns to selection from edition. Its `ScaleOutMinDistance` /
   `ScaleOutMaxRatio` live on the shared `TwoHandGestureInput`; state gates keep selection scale-in and
   edition scale-out separate. The result path can add a second exit later.
-- Edition uses the shared two-hand yaw detector (`TwoHandYawGesture` in `DigitalLove.Input`) to rotate
-  the puzzle around its measured field centre. Selection does not use it; edition sends the yaw delta to
-  `SpaceShapingController.Rotate`.
+- Edition rotates with a **one-hand pinch drag**, snapped to `rotationStepDegrees` per
+  `rotationStepDistance` of drag (`OneHandRotationGesture` in `DigitalLove.Input`). The step is sent to
+  `SpaceShapingController.Rotate`, which rotates around the measured field centre. Two-hand pinch is
+  reserved for scale-out; selection does not rotate.
 - On a solve: light the cube, award stars, open the next job, highlight the new current. The map fills.
 - **Exit:** scale-in enters, scale-out returns from the result, the play pinch never exits, and the
   solved/current/locked state survives the session.
@@ -195,8 +197,8 @@ selection.
 - **Pooling:** `ViewPool<T>` is the one place pooled views are instantiated. Do not hand-roll slot
   lists or `Instantiate` loops.
 - **Gesture:** `TwoHandGestureInput` already publishes `TwoHandGestureState`, pinch points, start points,
-  and distance. `TwoHandYawGesture` owns the shared yaw math/validity; `PuzzleEditionState` uses it to
-  rotate the puzzle, while selection focus is swipe/touch only. Neither reads Oculus hands itself.
+  and distance. `OneHandRotationGesture` owns the snapped pinch-drag math; `PuzzleEditionState` uses it
+  to rotate the puzzle, while selection focus is swipe/touch only. Neither reads Oculus hands itself.
 - **Touch:** `RunSlotTouch` follows the existing `Grabbable.WhenPointerEventRaised` /
   `PointerEventType.Select` pattern used by `PuzzleLabButton` and `GrabbableWrapper`; there is no shared
   relay, so do not add a second interaction system.
@@ -209,8 +211,8 @@ selection.
 **Settled:** selection enters on scale-in (hands apart); edition returns on scale-out (hands closer).
 The opposite directions are state-gated, so a play scale does not enter or exit by accident.
 
-**Settled:** preview fidelity is the pooled lightweight diorama (not a flat cube thumbnail), and locked
-pods focus and refuse rather than being skipped by the swipe.
+**Settled:** preview fidelity is the pooled lightweight diorama (not a flat cube thumbnail); locked jobs
+stay as side previews and cannot be focused.
 
 **Settled:** progression and persistence belong to flow. Selection receives a run-progress snapshot
 (current index + solved flags) and never owns that state.
@@ -227,9 +229,8 @@ Still open:
   whether the centre stays full. This sets the S1 cost measurement.
 - **Scale-in handoff.** The centre selectable scales down, then the authored play field scales up. A
   planet-by-planet morph is a second system and stays out of the slice.
-- **Gesture arbitration (edition).** Scale-out and rotation read the same two-hand gesture. Pick one
-  channel per gesture (first threshold crossed wins) or separate the thresholds, so a twist during
-  scale-out does not rotate the puzzle.
+- **Gesture arbitration (edition).** Scale-out is two-hand; rotation is one-hand. The pinch count keeps
+  them separate, so a scale-out cannot rotate the puzzle and a one-hand drag cannot exit.
 - **Swipe direction.** Swipe right = previous or next? Pick the “push the arc” mapping (drag left moves
   focus right) or the “page” mapping (swipe right = next) once on device.
 - **Transition speed.** How release speed maps to tween duration (linear, eased, or stepped) and where
@@ -239,7 +240,7 @@ Still open:
 
 ## 7. Out of scope
 
-- The full campaign universe/backdrop; the run's seven jobs are the slice.
+- The full campaign universe/backdrop; the run's eight jobs are the slice.
 - Mid-play exit; multi-ship; the in-level state (the field is baked, the run restarts).
 - Stars/economy beyond the per-job display.
 - Free-spin/inertia on the arc; rotation snaps to a job and stops.
@@ -248,7 +249,7 @@ Still open:
 ## 8. Risks
 
 - **No run assets.** Only `01_01` exists and its id is blank, so no level cookie can match it. Until the
-  run has seven valid assets with ids, the carousel can only show one job and cannot distinguish solved
+  run has eight valid assets with ids, the carousel can only show one job and cannot distinguish solved
   from locked.
 - **S3 depends on flow.** `PuzzleEditionState` and `PuzzleCompleteState` are still thin. The solve
   signal, result panel, and route back to selection are being built separately; S1/S2 do not wait on
@@ -262,11 +263,11 @@ Still open:
   state and keep a distance + ratio threshold so an ordinary play scale does not trigger either. The
   release grace keeps the two-hand gesture alive when one pinch briefly drops while extending. Tune the
   thresholds and grace in the headset before treating the transitions as final.
-- **Edition rotation stability.** Two-hand yaw is noisy when the hands are close or nearly vertical. Gate
-  on horizontal separation and unwrap the angle so the puzzle does not jitter or spin on a bad frame.
-- **Edition scale/rotation arbitration.** A two-hand gesture can change distance and yaw at the same
-  time. Lock the gesture to the first channel that crosses its threshold, or a twist during scale-out
-  will rotate the puzzle just before the exit.
+- **Edition rotation stability.** A one-hand pinch drag is noisy near the step boundary. The snapped
+  step distance is the hysteresis; tune `rotationStepDistance` and `rotationStepDegrees` so it does not
+  jitter or double-step.
+- **Edition scale/rotation arbitration.** Scale-out is two-hand and rotation is one-hand, so the pinch
+  count separates them. A hand losing pinch during scale-out is still covered by the release grace.
 - **Swipe vs cube touch.** A pinch that starts over a side cube must focus that cube, not step the arc.
   Gate the swipe on the gesture's busy-interactor flag and require the press to start off the cubes.
 - **One step per pinch.** Without a per-pinch lock and a small cooldown, a long drag steps several jobs

@@ -26,7 +26,7 @@ continuous; only the committed value is discrete.
   solutions are then exactly reachable by the hand.
 - Re-bake the job set; if 10–12 drops routes or the capstone's ≥2, raise the count. The ladder is a
   tuning knob, not a constant.
-- **Exit:** every baked solution's scale is a ladder point; the existing bake tests pass; the 7-job set
+- **Exit:** every baked solution's scale is a ladder point; the existing bake tests pass; the 8-job set
   bakes (or the count is tuned to it).
 
 ### S2 — the ghost value

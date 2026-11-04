@@ -20,19 +20,20 @@ first.
 |---|---|---|---|---|---|---|---|
 | 1 | the scale | Curve | fixed · 1 zone · no · 1 ship | Ring | 3 · single · tutorial | low | first contact: a viable three-planet field, no sun, one pinch |
 | 2 | the centre | Curve | fixed · 1 zone · no · 1 ship | Ring | 4–6 + sun · single · medium | medium | the fixed cube over the sun — the star is a source too |
-| 3 | several zones | Curve | fixed · 2+ zones · no · 1 ship | Ring | 6–8 + sun · multi | medium | "where do I scale" enters — the fixed cubes are on planets |
-| 4 | the cube moves | Curve | **yes** · 1 zone · no · 1 ship | Spiral | 8–10 + sun · multi | medium | spawns at the centre; the solution is off-centre, so the move is required |
-| 5 | multi-zone intro | Curve | yes · 2+ zones · no · 1 ship | Spiral | 10–12 + sun · multi | medium | move + scale two zones — the combination enters |
-| 6 | efficiency | Curve | yes · 2+ zones · no · 1 ship | Cluster | 10–12 + sun · multi | high | the cheap answer is to spread the edit across zones |
-| 7 | the capstone | Curve | yes · 2+ zones · no · 1 ship | Cluster | 12 + sun · mixed · deep | high | multi-zone + the centre — starts over the sun and scales several zones |
+| 3 | the other direction | Clear | fixed · 1 zone · no · 1 ship | Ring | 5–6 + sun · single · medium | medium | a planet blocks the line; shrinking it clears the path — the same pinch, the opposite role |
+| 4 | several zones | Curve | fixed · 2+ zones · no · 1 ship | Ring | 6–8 + sun · multi | medium | "where do I scale" enters — the fixed cubes are on planets |
+| 5 | the cube moves | Curve | **yes** · 1 zone · no · 1 ship | Spiral | 8–10 + sun · multi | medium | spawns at the centre; the solution is off-centre, so the move is required |
+| 6 | multi-zone intro | Curve | yes · 2+ zones · no · 1 ship | Spiral | 10–12 + sun · multi | medium | move + scale two zones — the combination enters |
+| 7 | efficiency | Curve | yes · 2+ zones · no · 1 ship | Cluster | 10–12 + sun · multi | high | the cheap answer is to spread the edit across zones |
+| 8 | the capstone | Mixed | yes · 2+ zones · no · 1 ship | Cluster | 12 + sun · multi · deep | high | multi-zone + the centre + both roles — starts over the sun, shrinks the blocker, scales several zones |
 
 **The role.** Each job states the role its reference solution must teach: **Curve** (a well grew),
 **Clear** (an obstacle shrank), **Mixed** (both, at least two zones), or **Any** (no request). It is a
 **bake request**, not a player condition. The creator searches for a matching solve and rejects the seed
 when it cannot find one; it also rejects a seed when a **cheaper or equal wrong-role route** exists,
-because the taught role must be the best answer. More expensive alternate routes may remain. The 7-job
-spine requests **Curve**; the **Clear** obstacle and the **Mixed** clear+curve are later variations
-([archetypes](#the-run--archetypes)). A `Curve`/`Mixed` seed is rejected when its start path stays under
+because the taught role must be the best answer. More expensive alternate routes may remain. The 8-job
+spine requests **Curve** except job 3 (**Clear**) and job 8 (**Mixed**); the capstone is where the two
+roles meet ([archetypes](#the-run--archetypes)). A `Curve`/`Mixed` seed is rejected when its start path stays under
 5% of the chord or 4° off it: the start must show the field. The bake reports the reference solution's
 `kind`; the player never sees the label. Multi-ship role requests are not supported yet.
 
@@ -44,8 +45,14 @@ galaxy grows with the run.
 
 **The shape.** Each job states its `fieldShape`; `Auto` is for experiments only. Shape is a read axis,
 not a difficulty dial — it never changes a rule — so it marks an **act**: **Ring** carries the
-fixed-cube opening (1–3), **Spiral** the move act (4–5), **Cluster** the mastery act (6–7). A job may
+fixed-cube opening (1–4), **Spiral** the move act (5–6), **Cluster** the mastery act (7–8). A job may
 turn the silhouette when the act turns; the new verb is still the lesson.
+
+**The ramp is three dials, not the budget.** The entropy budget is always `3×` the bake's solution, so
+the star thresholds keep the same shape every job; difficulty comes from **scramble** (how far the start
+sits from the solved arrangement), **planet count**, and **depth**. Turn all three up by act: the
+tutorial is nearly solved, the act ends are scrambled. Do not tighten the budget to add difficulty; that
+only moves the star bar.
 
 **The sun.** The field can place a **sun** at its centre; it is scalable by its centre by default, is
 never a run endpoint, and is not counted in the planet column ([the cube](systems/cube.md)). A seed can
@@ -59,35 +66,37 @@ the sun is a normal source in the later levels.
 — with the tutorial flags (no fail, no stars). The field has more than one planet; the lesson is the
 cube's scale, not a single-source field. It still records a reference solution, so the budget stays `3×`
 and the star bands keep their shape. Job 1 has **no entropy fail and no stars**: the bar is
-informational, and the fail and grade rules start at job 2. The read test runs without the brief/TTS line.
+informational. The fail starts at job 2; stars start at job 3, so the two pressures fade in one at a
+time. The read test runs without the brief/TTS line.
 
 **Entropy scale.** The bake sets the budget to **3×** its solution's entropy; the labels are the
 absolute cost of that solution. The star thresholds stay **1/3 and 2/3** of the budget, so the grade
-pressure has the same shape every graded job ([progression](systems/progression.md) §Tuning); job 1 is
-informational.
+pressure has the same shape every graded job ([progression](systems/progression.md) §Tuning); job 3 is
+the first graded job. Job 1 has no fail and no stars; job 2 fails without stars.
 
 **The several-zones rung** is owned by [progression](systems/progression.md) §The several-zones rung:
-a fixed level places several cubes, so `zones ≥ 2` does not need a move. Job 3 teaches that; job 4
-adds the move; multi-zone follows at job 5; the capstone adds the centre at job 7.
+a fixed level places several cubes, so `zones ≥ 2` does not need a move. Job 4 teaches that; job 5
+adds the move; multi-zone follows at job 6; the capstone adds the centre at job 8.
 
-**Job 3 keeps the sun out of the zones.** The fixed cubes sit on planets; the sun is background, so the
-lesson stays "where do I scale," not "what is the star."
+**Job 4 keeps the sun out of the zones.** The fixed cubes sit on planets; the sun is background, so the
+lesson stays "where do I scale," not "what is the star." Job 3 (the obstacle) also keeps the sun out of
+the zone: the blocker is a planet, the star is background.
 
-**The move is guaranteed.** A translatable level starts the cube at the field centre; job 4's solution
+**The move is guaranteed.** A translatable level starts the cube at the field centre; job 5's solution
 includes an off-centre zone, so the player must move the cube.
 
-**The capstone is the centre + multi-zone.** Job 7 starts the cube over the sun and the solution scales
-several zones, the star included; the player must move out to the other zones. It is the only job that
-combines every verb.
+**The capstone is the centre + multi-zone + both roles.** Job 8 starts the cube over the sun; the
+solution shrinks the blocker and scales several zones, the star included, so the player must move out to
+the other zones. It is the only job that combines every verb and both roles.
 
 **Resize is deferred.** `resizable` works, but the slice does not use it: the explanation (size is scope,
 not precision) is not ready. It is the next cut candidate.
 
-**The slice.** Jobs 1–7 are the full run, ~1 minute each.
+**The slice.** Jobs 1–8 are the full run, ~1 minute each.
 
 **Multi-ship.** A job may carry more than one run; it is solved only when **every ship arrives**. The
 runs are baked as **fan-out**, **converge**, or **separate**, so the shared field stays legible.
-Multi-ship is available now; the 7-job spine above is single-ship. A multi-ship job can be authored as
+Multi-ship is available now; the 8-job spine above is single-ship. A multi-ship job can be authored as
 a stretch or a later combine job.
 
 ## The run — the brief
@@ -109,13 +118,13 @@ creator bakes to them. Three groups.
 | Field | Means |
 |---|---|
 | **`mechanism`** | The role the bake's reference solution must have: **`Any`** (no request), **`Curve`** (a well grew), **`Clear`** (an obstacle shrank), or **`Mixed`** (both; needs ≥2 zones). The search filters to the requested role; a seed that cannot bake it is rejected, and so is a seed whose cheapest route has the wrong role. More expensive alternate routes may remain. |
-| **`minRoutes`** | Minimum distinct arriving routes the bake must offer. `0` = auto: 2 for a movable single-zone level, otherwise 1. The capstone jobs (6–7) set 2. |
+| **`minRoutes`** | Minimum distinct arriving routes the bake must offer. `0` = auto: 2 for a movable single-zone level, otherwise 1. The capstone jobs (7–8) set 2. |
 
 **Baked results** — what the creator records, not a player condition:
 
 | Field | Means |
 |---|---|
-| **`routes`** | Distinct zone sets that arrive within budget. The bake enforces `minRoutes`: a movable single-zone level and the capstone jobs (6–7) need at least two; fixed and intro levels may have one. |
+| **`routes`** | Distinct zone sets that arrive within budget. The bake enforces `minRoutes`: a movable single-zone level and the capstone jobs (7–8) need at least two; fixed and intro levels may have one. |
 | **`entropyBudget`** | **3×** the entropy of the bake's solution; the star thresholds are 1/3 and 2/3 of it. |
 | **`sources` / `frames`** | The baked field (planets, sun, positions) and the cube frames the level places. |
 
@@ -139,17 +148,20 @@ add a layout.
 |---|---|---|---|
 | **Shortcut** | `zones 1`, fixed cube, on-path | scale one zone | 1 |
 | **Centre** | `zones 1`, fixed cube over the sun | scale the star itself | 2 |
-| **Several zones** | `zones ≥ 2`, fixed cubes | scale and blend the placed zones | 3 |
-| **Move** | `translatable`, `zones 1` | place the cube yourself | 4 |
-| **Multi-zone** | `zones ≥ 2`, `translatable` | place and blend several zones — a spread edit can spend less entropy | 5–6 |
-| **Capstone** | `zones ≥ 2`, `translatable`, cube over the sun | combine the centre + several zones | 7 |
-| **Obstacle** | `zones 1`, cube on a body on the line | shrink the blocker so the path clears | later |
-| **Mixed** | `zones ≥ 2`, one on the blocker, one on a run planet | clear with one zone, curve with another | later |
+| **Obstacle** | `zones 1`, fixed cube on a body on the line | shrink the blocker so the path clears | 3 |
+| **Several zones** | `zones ≥ 2`, fixed cubes | scale and blend the placed zones | 4 |
+| **Move** | `translatable`, `zones 1` | place the cube yourself | 5 |
+| **Multi-zone** | `zones ≥ 2`, `translatable` | place and blend several zones — a spread edit can spend less entropy | 6–7 |
+| **Capstone** | `zones ≥ 2`, `translatable`, cube over the sun | combine the centre + several zones + both roles | 8 |
+| **Mixed** | `zones ≥ 2`, one on the blocker, one on a run planet | clear with one zone, curve with another | 8 · capstone |
 
 **The obstacle is the second role.** A body on the straight line is an obstacle; reducing its scale
-reduces its collision radius, so the path can pass. It is a **later variation**, not job 1: the tutorial
-keeps the curve. With several cubes, one can sit on the obstacle (shrink) and one on a run planet (grow)
-— a clear and a curve in one multi-zone solution. The creator tags the role so a job can request it.
+reduces its collision radius, so the path can pass. It is **job 3**: it lands after the centre and before
+placement, so the player learns both directions of the same pinch while the field is still fixed. The
+tutorial and the centre keep the curve. With several cubes, one can sit on the obstacle (shrink) and one
+on a run planet (grow) — a clear and a curve in one multi-zone solution, as the capstone (job 8) does.
+The creator tags the role so a job can request it. Job 3 requests `minRoutes: 2`: two blockers on or near
+the line, so the player chooses which one to shrink.
 
 **Multi-zone as an efficiency lesson.** Each committed zone edit costs its net change from that zone's
 last committed scale, so a level can be authored so the **cheap** solution is to **move the cube** and
@@ -181,11 +193,12 @@ One line each; never exposition ([lore](world/lore.md)).
 |---|---|---|---|---|
 | 1 | Blödmeyer & Sons (no sons) | a pallet of valves | "One pinch. You'll be fine." | "Welcome. Your Wrap does one thing. Do that one thing." |
 | 2 | The Lighthouse Keepers' Union | one bulb | "The star is a source too." | "The star is not a planet. It bends the same way." |
-| 3 | Two Guys, One Moon | spare pump parts | "Two zones now. Scale them both." | "The Wrap scales where it sits. Two of them, this time." |
-| 4 | Madame Fink's Discount Gravity | a piano | "Now move it. *Where* is a choice." | "The Wrap is yours to place. Where you work is a decision. Make it." |
-| 5 | The Third Best Bakery | a wedding cake, still warm | "Several zones. Place it, scale them." | "The Wrap is yours to place. Use it more than once." |
-| 6 | Nobody & Co. | a body (a funeral) | "Tight. Really tight. Sorry." | "Every edit costs. The customer only ever sees the arrival." |
-| 7 | The Inheritance of Mr. Fink | the last of something | "…Good luck." | "This is the one the manual was written for." |
+| 3 | Strait & Narrow Ltd. | a wide load | "Shrink the rock, not the cargo." | "The Wrap takes as well as gives. A smaller world is a wider door." |
+| 4 | Two Guys, One Moon | spare pump parts | "Two zones now. Scale them both." | "The Wrap scales where it sits. Two of them, this time." |
+| 5 | Madame Fink's Discount Gravity | a piano | "Now move it. *Where* is a choice." | "The Wrap is yours to place. Where you work is a decision. Make it." |
+| 6 | The Third Best Bakery | a wedding cake, still warm | "Several zones. Place it, scale them." | "The Wrap is yours to place. Use it more than once." |
+| 7 | Nobody & Co. | a body (a funeral) | "Tight. Really tight. Sorry." | "Every edit costs. The customer only ever sees the arrival." |
+| 8 | The Inheritance of Mr. Fink | the last of something | "…Good luck." | "This is the one the manual was written for." |
 
 ## The manual's arc
 
@@ -215,5 +228,5 @@ names stay absurd** — the tonal relief.
 
 - **Routes as a mechanic?** If a late job (7–8) has more than one route, multiple routes stops being an
   authoring guard and becomes a principal mechanic. Decide whether the run teaches it.
-- **The capstone jobs.** What jobs 5–6 vary (planet count, entropy scale), and whether job 7 combines the
+- **The capstone jobs.** What jobs 6–7 vary (planet count, entropy scale), and whether job 8 combines the
   centre + multi-zone as the finale or introduces a new variation.

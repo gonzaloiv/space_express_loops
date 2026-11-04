@@ -76,7 +76,13 @@ namespace DigitalLove.Game.Flow
         private void OnFocusRequested(int index)
         {
             if (carousel.Focus(index))
+            {
                 view.Show(carousel);
+                return;
+            }
+
+            if (index != carousel.FocusedIndex)
+                view.Refuse();
         }
 
         private void OnEnterRequested()

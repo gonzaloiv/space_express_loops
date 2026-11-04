@@ -1,5 +1,4 @@
 ﻿<Solution>
-  <Project Path="DigitalLove.Game.SpaceShaping.Creator.csproj" />
   <Project Path="DigitalLove.Casual.UI.csproj" />
   <Project Path="DigitalLove.Player.csproj" />
   <Project Path="MegaFiers.csproj" />
@@ -24,6 +23,7 @@
   <Project Path="DigitalLove.Game.SpaceShaping.Views.csproj" />
   <Project Path="DigitalLove.UI.Behaviours.csproj" />
   <Project Path="DigitalLove.UI.DesignSystem.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Creator.csproj" />
   <Project Path="DigitalLove.VFX.Animation.csproj" />
   <Project Path="MegaFiers.MegaShape.Editor.csproj" />
   <Project Path="DigitalLove.Input.csproj" />

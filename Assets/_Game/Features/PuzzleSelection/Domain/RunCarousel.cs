@@ -33,6 +33,8 @@ namespace DigitalLove.Game.PuzzleSelection
         {
             if (!IsInRange(index) || index == focusedIndex)
                 return false;
+            if (jobs[index].State == JobState.Locked)
+                return false;
 
             focusedIndex = index;
             return true;

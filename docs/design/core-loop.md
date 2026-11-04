@@ -28,8 +28,9 @@ is a stronger well, `mass ∝ radius³`; a smaller one is a smaller obstacle). T
 the player what will happen, while the cues let them predict it. The ship stays at map size; the zone is
 what changes.
 
-Jobs 1–2 use a **fixed** cube: the only move is the grab-inside scale. Several placed zones enter at
-job 3, moving the cube at job 4, and multi-zone from job 5. Resize is deferred from the slice
+Jobs 1–4 use a **fixed** cube: the only move is the grab-inside scale (job 3 adds the shrink-to-clear
+direction, job 4 several placed zones). Moving the cube enters at job 5, multi-zone from job 6, and the
+capstone closes at job 8. Resize is deferred from the slice
 ([progression](systems/progression.md) §The learning path).
 
 ## 2. Session — one job (~1 minute)

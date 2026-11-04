@@ -40,7 +40,7 @@ player *decides*, not the number they read after solving.
 | Gesture | Trigger | Effect |
 |---|---|---|
 | **The scale** | a two-hand pinch **inside** the cube | scales the space *and* the content: the metric stretches (a shrunk zone is a **shortcut**), the planets **spread** and **scale** — a grown planet deepens its well and bends the path, a shrunken planet is a smaller obstacle and can clear it |
-| **The region** *(move at job 4; resize deferred)* | grab the cube's **edges / corners** | **moves / resizes** the cube — sets *where* you work; the soft brush blends several zones |
+| **The region** *(move at job 5; resize deferred)* | grab the cube's **edges / corners** | **moves / resizes** the cube — sets *where* you work; the soft brush blends several zones |
 
 **Multiple scales are the way.** The player scales **several** zones, and the soft brush blends them
 into one field — the core of the verb, not a later unlock. One zone can clear an obstacle while another

@@ -1465,7 +1465,9 @@ MonoBehaviour:
   playerData:
     userId: 
     sessionCount: 0
-    cookies: []
+    cookies:
+    - id: level_complete_01_01
+      metadata: 
   forceLocalPlayerData:
     value: 1
 --- !u!114 &284223193
@@ -2896,6 +2898,9 @@ MonoBehaviour:
   gameStartState: {fileID: 883682824}
   gesture: {fileID: 673349775}
   puzzleController: {fileID: 1132899469}
+  head: {fileID: 1806820792}
+  rotationStepDegrees: 15
+  rotationStepDistance: 0.08
 --- !u!1 &587785173
 GameObject:
   m_ObjectHideFlags: 0
@@ -3203,8 +3208,6 @@ MonoBehaviour:
   releaseGraceSecs: 0.4
   scaleOutMinDistance: 0.08
   scaleOutMaxRatio: 0.8
-  rotationMinSeparation: 0.12
-  rotationMaxVerticalRatio: 1
   logGesture: 1
 --- !u!4 &673349776
 Transform:
@@ -7084,7 +7087,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 723.08496, y: -50}
-  m_SizeDelta: {x: 0, y: 50}
+  m_SizeDelta: {x: 243.83, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1213392285
 MonoBehaviour:
@@ -9679,7 +9682,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.States.Setup::DigitalLove.Casual.Flow.Setup.PlayerDataChecker
   resetDataPanel: {fileID: 3258995010952126744}
   skip:
-    value: 0
+    value: 1
 --- !u!1 &1760187865
 GameObject:
   m_ObjectHideFlags: 0

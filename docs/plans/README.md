@@ -38,14 +38,14 @@ Loose ends that still need a home. Close one by linking the plan that finishes i
 
 - **Re-run Validation 1 on the current loop.** The gate for the slice; the test steps need a home now
   that the first-minute read plan is gone.
-- **Run authoring.** Jobs 1–5, the map/level selector, and the TTS intro (manual + tech voice) are
+- **Run authoring.** Jobs 1–8, the map/level selector, and the TTS intro (manual + tech voice) are
   designed but not built. The TTS intro now has a plan ([TTS job intro](backlog/tts-job-intro.md)); the
   rest still needs one before the 10-minute slice.
 - **Ship-zone cue.** The ship has a trail; there is no zone indicator. Fold it into the first-minute read
   plan or the feel pass.
 - **Resize.** Working, but the explanation (size is scope, not precision) is not ready. Deferred from the
   slice; next cut candidate.
-- **Capstone routes.** The design requires at least two routes for the capstone jobs (6–7); the bake
+- **Capstone routes.** The design requires at least two routes for the capstone jobs (7–8); the bake
   currently enforces only the movable single-zone case. Fix the bake before authoring them.
 
 ## Conventions

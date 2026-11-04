@@ -10,16 +10,18 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private MonoState gameStartState;
         [SerializeField] private TwoHandGestureInput gesture;
         [SerializeField] private SpaceShapingController puzzleController;
+        [SerializeField] private Transform head;
+        [SerializeField] private float rotationStepDegrees = 15f;
+        [SerializeField] private float rotationStepDistance = 0.08f;
 
         private ScaleOutGesture scaleOut;
-        private TwoHandYawGesture yaw;
+        private OneHandRotationGesture rotation;
 
         public override void Enter()
         {
             scaleOut = new ScaleOutGesture(
                 gesture.ScaleOutMinDistance, gesture.ScaleOutMaxRatio);
-            yaw = new TwoHandYawGesture(
-                gesture.RotationMinSeparation, gesture.RotationMaxVerticalRatio);
+            rotation = new OneHandRotationGesture(rotationStepDistance);
             gesture.StateChanged += OnGestureChanged;
         }
 
@@ -27,7 +29,7 @@ namespace DigitalLove.Game.Flow
         {
             gesture.StateChanged -= OnGestureChanged;
             scaleOut.Reset();
-            yaw.Reset();
+            rotation.Reset();
         }
 
         private void OnGestureChanged(TwoHandGestureState state)
@@ -38,9 +40,9 @@ namespace DigitalLove.Game.Flow
                 return;
             }
 
-            float delta = yaw.Update(state);
-            if (!Mathf.Approximately(delta, 0f))
-                puzzleController.Rotate(delta);
+            int steps = rotation.Update(state, head.right);
+            if (steps != 0)
+                puzzleController.Rotate(-steps * rotationStepDegrees);
         }
 
         private void ExitToSelection()

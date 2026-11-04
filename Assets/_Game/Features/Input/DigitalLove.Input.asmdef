@@ -2,6 +2,7 @@
     "name": "DigitalLove.Input",
     "rootNamespace": "",
     "references": [
+        "DigitalLove.Global",
         "Oculus.Interaction"
     ],
     "includePlatforms": [],

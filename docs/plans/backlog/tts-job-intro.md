@@ -72,12 +72,12 @@ jumbotron/console that can move around the field without becoming a camera overl
 - **Exit:** job 1 speaks the manual + tech lines; looking away stops the speech and returning resumes;
   the next job never overlaps; the screen re-docks at most once.
 
-### S3 — the seven intros
+### S3 — the eight intros
 
-- Write the seven job intros from [jobs](../../design/jobs.md) §The run — the lore skin: client, cargo,
+- Write the eight job intros from [jobs](../../design/jobs.md) §The run — the lore skin: client, cargo,
   manual entry, tech voice. One idea per entry; the manual arc is cheerful → bleak, the tech voice
   pride → doubt.
-- **Exit:** all seven jobs have their screen + voice; the two arcs read in order; the manual's opening and
+- **Exit:** all eight jobs have their screen + voice; the two arcs read in order; the manual's opening and
   the "eleven years" note land.
 
 ### S4 — the companion, only if wanted
@@ -106,7 +106,7 @@ jumbotron/console that can move around the field without becoming a camera overl
 - The re-dock moves along the perimeter, not across the field, and happens at most once.
 - The voice stops when the screen hides; looking away stops it; returning resumes the same entry; the next
   job does not overlap.
-- The seven intros exist and their keys resolve; no empty entries.
+- The eight intros exist and their keys resolve; no empty entries.
 
 ## 6. Out of scope
 

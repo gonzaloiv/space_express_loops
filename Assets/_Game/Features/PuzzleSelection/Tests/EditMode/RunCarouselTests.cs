@@ -45,14 +45,15 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
         }
 
         [Test]
-        public void Focus_AllowsLockedJobsButEnterRefuses()
+        public void Focus_RejectsLockedJobs()
         {
             RunCarousel carousel = RunCarousel.FromLevels(
                 Levels(3), RunProgress.FromSolved(3, 1, new[] { true, false, false }));
 
-            Assert.IsTrue(carousel.Focus(2));
-            Assert.AreEqual(JobState.Locked, carousel.Focused.State);
-            Assert.IsFalse(carousel.CanEnter);
+            Assert.IsFalse(carousel.Focus(2));
+            Assert.AreEqual(1, carousel.FocusedIndex);
+            Assert.AreEqual(JobState.Current, carousel.Focused.State);
+            Assert.IsTrue(carousel.CanEnter);
         }
 
         [Test]
@@ -71,7 +72,7 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
         public void Move_ClampsToTheRun()
         {
             RunCarousel carousel = RunCarousel.FromLevels(
-                Levels(3), RunProgress.FromSolved(3, 1, new[] { true, false, false }));
+                Levels(3), RunProgress.FromSolved(3, 2, new[] { true, true, false }));
 
             Assert.IsTrue(carousel.Move(-10));
             Assert.AreEqual(0, carousel.FocusedIndex);

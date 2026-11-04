@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10000000000000000000000000000016, type: 3}
-  m_Name: PuzzleSeed_Shape_Planets_Puzzle 2
+  m_Name: 01_01
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Domain::DigitalLove.Game.SpaceShaping.PuzzleData
-  id: 
+  id: 01_01
   prefab: {fileID: 0}
   origin: {x: 0.010621998, y: -0.046827503, z: -0.3398369}
   destination: {x: -0.24034396, y: -0.018123113, z: 0.2954752}
