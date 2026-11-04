@@ -16,6 +16,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         UnsupportedMechanism,
         WrongRoleRoute,
         StartNotBlocked,
-        StartTooStraight
+        StartTooStraight,
+        SunRuleFailed
     }
 }

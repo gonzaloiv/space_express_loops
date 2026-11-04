@@ -76,7 +76,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         public void Bake_RejectsASeedWithAShorterZone()
         {
             PuzzleSeed seed = ScriptableObject.CreateInstance<PuzzleSeed>();
-            seed.seed = 1;
+            seed.seed = 2;
             seed.translatable = true;
             seed.zones = 2;
             PuzzleBrief shorter = PuzzleBrief.From(seed, settings);

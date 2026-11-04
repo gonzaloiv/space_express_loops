@@ -18,22 +18,38 @@ first.
 
 | # | Teaches | Role | Brief (translatable · zones · resizable · ships) | Shape | Field (planets + sun · wells · depth) | Entropy scale (derived) | Why |
 |---|---|---|---|---|---|---|---|
-| 1 | the scale | Curve | fixed · 1 zone · no · 1 ship | Ring | 3 · single · tutorial | low | first contact: a viable three-planet field, no sun, one pinch |
+| 1 | the scale | Curve | fixed · 1 zone · no · 1 ship | Ring | 4 · single · tutorial | low | first contact: a viable four-planet field, no sun, one pinch |
 | 2 | the centre | Curve | fixed · 1 zone · no · 1 ship | Ring | 4–6 + sun · single · medium | medium | the fixed cube over the sun — the star is a source too |
 | 3 | the other direction | Clear | fixed · 1 zone · no · 1 ship | Ring | 5–6 + sun · single · medium | medium | a planet blocks the line; shrinking it clears the path — the same pinch, the opposite role |
-| 4 | several zones | Curve | fixed · 2+ zones · no · 1 ship | Ring | 6–8 + sun · multi | medium | "where do I scale" enters — the fixed cubes are on planets |
+| 4 | several zones | Mixed | fixed · 2+ zones · no · 1 ship | Ring | 6–8 + sun · multi | medium | "where do I scale" enters — one fixed cube shrinks the blocker, one grows a well |
 | 5 | the cube moves | Curve | **yes** · 1 zone · no · 1 ship | Spiral | 8–10 + sun · multi | medium | spawns at the centre; the solution is off-centre, so the move is required |
 | 6 | multi-zone intro | Curve | yes · 2+ zones · no · 1 ship | Spiral | 10–12 + sun · multi | medium | move + scale two zones — the combination enters |
-| 7 | efficiency | Curve | yes · 2+ zones · no · 1 ship | Cluster | 10–12 + sun · multi | high | the cheap answer is to spread the edit across zones |
+| 7 | efficiency | Curve | yes · 2+ zones · no · 1 ship | Cluster | 10 + sun · multi · deep | high | the cheap answer is to spread the edit across zones |
 | 8 | the capstone | Mixed | yes · 2+ zones · no · 1 ship | Cluster | 12 + sun · multi · deep | high | multi-zone + the centre + both roles — starts over the sun, shrinks the blocker, scales several zones |
+
+**The ramp by job.** Scramble is how far the start sits from the solved arrangement: it rises within an
+act and drops when a new verb lands, so the new idea arrives readable and is then tested. `Reuses` names
+the prior skill the job combines, so the ramp is cumulative, not additive.
+
+| # | Scramble | Reuses |
+|---|---|---|
+| 1 | low | — (tutorial) |
+| 2 | low | the scale |
+| 3 | medium | the scale, reversed |
+| 4 | medium | the scale + clear |
+| 5 | low | several zones |
+| 6 | medium | the move + several zones |
+| 7 | high | multi-zone |
+| 8 | high | everything: centre, move, zones, both roles |
 
 **The role.** Each job states the role its reference solution must teach: **Curve** (a well grew),
 **Clear** (an obstacle shrank), **Mixed** (both, at least two zones), or **Any** (no request). It is a
 **bake request**, not a player condition. The creator searches for a matching solve and rejects the seed
 when it cannot find one; it also rejects a seed when a **cheaper or equal wrong-role route** exists,
 because the taught role must be the best answer. More expensive alternate routes may remain. The 8-job
-spine requests **Curve** except job 3 (**Clear**) and job 8 (**Mixed**); the capstone is where the two
-roles meet ([archetypes](#the-run--archetypes)). A `Curve`/`Mixed` seed is rejected when its start path stays under
+spine requests **Curve** except job 3 (**Clear**), job 4 (**Mixed**), and job 8 (**Mixed**): job 4
+concludes the Ring act by combining the two roles, and the capstone brings them back with the centre
+([archetypes](#the-run--archetypes)). A `Curve`/`Mixed` seed is rejected when its start path stays under
 5% of the chord or 4° off it: the start must show the field. The bake reports the reference solution's
 `kind`; the player never sees the label. Multi-ship role requests are not supported yet.
 
@@ -62,7 +78,7 @@ omit it; the level can lock it; the settings size it.
 sun with a fixed cube over the centre, so the star is in the zone by construction. No lock; after job 2
 the sun is a normal source in the later levels.
 
-**Job 1 is a baked tutorial field.** It bakes from a normal seed — three planets, no sun, one fixed zone
+**Job 1 is a baked tutorial field.** It bakes from a normal seed — four planets, no sun, one fixed zone
 — with the tutorial flags (no fail, no stars). The field has more than one planet; the lesson is the
 cube's scale, not a single-source field. It still records a reference solution, so the budget stays `3×`
 and the star bands keep their shape. Job 1 has **no entropy fail and no stars**: the bar is
@@ -76,7 +92,9 @@ the first graded job. Job 1 has no fail and no stars; job 2 fails without stars.
 
 **The several-zones rung** is owned by [progression](systems/progression.md) §The several-zones rung:
 a fixed level places several cubes, so `zones ≥ 2` does not need a move. Job 4 teaches that; job 5
-adds the move; multi-zone follows at job 6; the capstone adds the centre at job 8.
+adds the move; multi-zone follows at job 6; the capstone adds the centre at job 8. Job 4 also brings the
+clear role back: one fixed cube sits on the blocker, one on a run planet, so the Ring act ends by
+combining the two roles.
 
 **Job 4 keeps the sun out of the zones.** The fixed cubes sit on planets; the sun is background, so the
 lesson stays "where do I scale," not "what is the star." Job 3 (the obstacle) also keeps the sun out of
@@ -118,13 +136,13 @@ creator bakes to them. Three groups.
 | Field | Means |
 |---|---|
 | **`mechanism`** | The role the bake's reference solution must have: **`Any`** (no request), **`Curve`** (a well grew), **`Clear`** (an obstacle shrank), or **`Mixed`** (both; needs ≥2 zones). The search filters to the requested role; a seed that cannot bake it is rejected, and so is a seed whose cheapest route has the wrong role. More expensive alternate routes may remain. |
-| **`minRoutes`** | Minimum distinct arriving routes the bake must offer. `0` = auto: 2 for a movable single-zone level, otherwise 1. The capstone jobs (7–8) set 2. |
+| **`minRoutes`** | Minimum distinct arriving routes the bake must offer. `0` = auto: 2 for a movable single-zone level, otherwise 1. Jobs 3, 4, 7, and 8 set 2. |
 
 **Baked results** — what the creator records, not a player condition:
 
 | Field | Means |
 |---|---|
-| **`routes`** | Distinct zone sets that arrive within budget. The bake enforces `minRoutes`: a movable single-zone level and the capstone jobs (7–8) need at least two; fixed and intro levels may have one. |
+| **`routes`** | Distinct zone sets that arrive within budget. The bake enforces `minRoutes`: a movable single-zone level, jobs 3–4, and the capstone jobs (7–8) need at least two; the tutorial and job 2 may have one. |
 | **`entropyBudget`** | **3×** the entropy of the bake's solution; the star thresholds are 1/3 and 2/3 of it. |
 | **`sources` / `frames`** | The baked field (planets, sun, positions) and the cube frames the level places. |
 
@@ -153,15 +171,15 @@ add a layout.
 | **Move** | `translatable`, `zones 1` | place the cube yourself | 5 |
 | **Multi-zone** | `zones ≥ 2`, `translatable` | place and blend several zones — a spread edit can spend less entropy | 6–7 |
 | **Capstone** | `zones ≥ 2`, `translatable`, cube over the sun | combine the centre + several zones + both roles | 8 |
-| **Mixed** | `zones ≥ 2`, one on the blocker, one on a run planet | clear with one zone, curve with another | 8 · capstone |
+| **Mixed** | `zones ≥ 2`, one on the blocker, one on a run planet | clear with one zone, curve with another | 4 · 8 |
 
 **The obstacle is the second role.** A body on the straight line is an obstacle; reducing its scale
 reduces its collision radius, so the path can pass. It is **job 3**: it lands after the centre and before
 placement, so the player learns both directions of the same pinch while the field is still fixed. The
 tutorial and the centre keep the curve. With several cubes, one can sit on the obstacle (shrink) and one
-on a run planet (grow) — a clear and a curve in one multi-zone solution, as the capstone (job 8) does.
-The creator tags the role so a job can request it. Job 3 requests `minRoutes: 2`: two blockers on or near
-the line, so the player chooses which one to shrink.
+on a run planet (grow) — a clear and a curve in one multi-zone solution, as job 4 and the capstone
+(job 8) do. The creator tags the role so a job can request it. Job 3 requests `minRoutes: 2`: two blockers
+on or near the line, so the player chooses which one to shrink.
 
 **Multi-zone as an efficiency lesson.** Each committed zone edit costs its net change from that zone's
 last committed scale, so a level can be authored so the **cheap** solution is to **move the cube** and

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using DigitalLove.Game.SpaceShaping;
 using TMPro;
@@ -16,23 +15,25 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField] private GameObject lockedState;
         [SerializeField] private GameObject focusedState;
         [SerializeField] private PuzzleDioramaView diorama;
-        [SerializeField] private RunSlotTouch touch;
 
         private Coroutine refusalRoutine;
-
-        public event Action Touched;
+        private Vector3 homeLocalPosition;
+        private Quaternion homeLocalRotation;
 
         public int JobIndex { get; private set; } = -1;
+        public Transform DioramaTransform => diorama.transform;
 
-        private void OnEnable() => touch.Touched += OnTouched;
-
-        private void OnDisable() => touch.Touched -= OnTouched;
+        private void Awake()
+        {
+            homeLocalPosition = diorama.transform.localPosition;
+            homeLocalRotation = diorama.transform.localRotation;
+        }
 
         public void Show(int index, PuzzleData puzzle, JobState state, int stars, bool focused)
         {
             JobIndex = index;
-            ResetScale();
             gameObject.SetActive(true);
+            ResetVisual();
             numberLabel.text = (index + 1).ToString();
             starsLabel.text = Stars(stars);
             currentState.SetActive(state == JobState.Current);
@@ -45,14 +46,16 @@ namespace DigitalLove.Game.PuzzleSelection
         public void Hide()
         {
             JobIndex = -1;
-            ResetScale();
+            ResetVisual();
             gameObject.SetActive(false);
         }
 
-        public void SetScale(float scale) =>
-            visualRoot.localScale = Vector3.one * Mathf.Clamp01(scale);
-
-        public void ResetScale() => visualRoot.localScale = Vector3.one;
+        public void ResetVisual()
+        {
+            diorama.transform.localPosition = homeLocalPosition;
+            diorama.transform.localRotation = homeLocalRotation;
+            diorama.transform.localScale = Vector3.one;
+        }
 
         public void PlayRefusal()
         {
@@ -61,8 +64,6 @@ namespace DigitalLove.Game.PuzzleSelection
 
             refusalRoutine = StartCoroutine(RefusalRoutine());
         }
-
-        private void OnTouched() => Touched?.Invoke();
 
         private IEnumerator RefusalRoutine()
         {

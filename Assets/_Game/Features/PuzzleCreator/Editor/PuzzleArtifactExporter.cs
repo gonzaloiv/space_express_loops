@@ -16,12 +16,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             Write(PuzzleArtifactFactory.Planets(shape), $"{shape.name}_Planets");
 
         public static void SaveVariant(PuzzleData variant, string name) =>
-            Write(variant, $"{name}_Puzzle");
+            SaveVariant(variant, name, GeneratedFolder);
 
-        private static T Write<T>(T asset, string name) where T : ScriptableObject
+        public static void SaveVariant(PuzzleData variant, string name, string folder) =>
+            Write(variant, $"{name}_Puzzle", folder);
+
+        private static T Write<T>(T asset, string name) where T : ScriptableObject =>
+            Write(asset, name, GeneratedFolder);
+
+        private static T Write<T>(T asset, string name, string folder) where T : ScriptableObject
         {
-            EnsureFolder();
-            string path = $"{GeneratedFolder}/{name}.asset";
+            EnsureFolder(folder);
+            string path = $"{folder}/{name}.asset";
             T existing = AssetDatabase.LoadAssetAtPath<T>(path);
             if (existing == null)
             {
@@ -42,10 +48,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             return existing;
         }
 
-        private static void EnsureFolder()
+        private static void EnsureFolder(string folder)
         {
-            if (!AssetDatabase.IsValidFolder(GeneratedFolder))
-                AssetDatabase.CreateFolder(SpaceShapingFolder, GeneratedName);
+            if (AssetDatabase.IsValidFolder(folder))
+                return;
+
+            string parent = System.IO.Path.GetDirectoryName(folder)?.Replace('\\', '/');
+            string leaf = System.IO.Path.GetFileName(folder);
+            if (string.IsNullOrEmpty(parent) || string.IsNullOrEmpty(leaf))
+                return;
+
+            EnsureFolder(parent);
+            AssetDatabase.CreateFolder(parent, leaf);
         }
     }
 }

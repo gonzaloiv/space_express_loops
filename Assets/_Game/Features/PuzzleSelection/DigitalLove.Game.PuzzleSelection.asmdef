@@ -7,6 +7,7 @@
         "DigitalLove.Casual.Levels",
         "DigitalLove.Input",
         "DigitalLove.Game.Nodes",
+        "DOTween.Modules",
         "Oculus.Interaction",
         "Unity.TextMeshPro"
     ],

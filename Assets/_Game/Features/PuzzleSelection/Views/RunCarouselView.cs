@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using DigitalLove.Input;
 using UnityEngine;
 
@@ -27,13 +28,16 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField] private float minSwipeDistance = 0.03f;
         [SerializeField] private float minSwipeSpeed = 0.25f;
         [SerializeField] private float swipeHorizontalDominance = 1.5f;
-        [SerializeField] private float enterTransitionSecs = 0.2f;
+        [SerializeField] private float enterTransitionSecs = 0.6f;
+        [SerializeField] private float enterPulseScale = 3f;
+        [SerializeField] private Transform enterPose;
+        [SerializeField] private Vector3 enterPoseOffset;
 
         private readonly List<RunSlotView> slots = new();
         private RunCarouselGesture gesture;
         private Quaternion arcBaseRotation;
         private Coroutine snapRoutine;
-        private Coroutine enterRoutine;
+        private Tween enterTween;
         private int focusedIndex = -1;
         private int jobCount;
         private float pendingSnapSpeed;
@@ -53,7 +57,7 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public void Show(RunCarousel carousel)
         {
-            StopEnterRoutine();
+            StopEnterTween();
             contentRoot.SetActive(true);
             isEntering = false;
             int previous = focusedIndex;
@@ -87,8 +91,8 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public void Refuse()
         {
-            StopEnterRoutine();
-            slots[1].ResetScale();
+            StopEnterTween();
+            slots[1].ResetVisual();
             slots[1].PlayRefusal();
         }
 
@@ -96,36 +100,30 @@ namespace DigitalLove.Game.PuzzleSelection
         {
             isEntering = true;
             Debug.Log("[Carousel] begin enter", this);
-            StopEnterRoutine();
-            enterRoutine = StartCoroutine(EnterRoutine());
+            StopEnterTween();
+            Transform target = slots[1].DioramaTransform;
+            Vector3 end = enterPose.TransformPoint(enterPoseOffset);
+            enterTween = DOTween.Sequence()
+                .Join(target.DOMove(end, enterTransitionSecs).SetEase(Ease.InOutSine))
+                .Join(target.DORotateQuaternion(enterPose.rotation, enterTransitionSecs)
+                    .SetEase(Ease.InOutSine))
+                .Join(target.DOScale(enterPose.lossyScale * enterPulseScale, enterTransitionSecs)
+                    .SetEase(Ease.InOutSine))
+                .OnComplete(OnEnterTransitionDone);
         }
 
-        private IEnumerator EnterRoutine()
+        private void OnEnterTransitionDone()
         {
-            float duration = Mathf.Max(enterTransitionSecs, 0.0001f);
-            float elapsed = 0f;
-            while (elapsed < duration)
-            {
-                elapsed += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsed / duration);
-                slots[1].SetScale(Mathf.Pow(1f - t, 3f));
-                yield return null;
-            }
-
-            slots[1].SetScale(0f);
-            enterRoutine = null;
+            enterTween = null;
             isEntering = false;
             Debug.Log("[Carousel] enter requested", this);
             EnterRequested?.Invoke();
         }
 
-        private void StopEnterRoutine()
+        private void StopEnterTween()
         {
-            if (enterRoutine == null)
-                return;
-
-            StopCoroutine(enterRoutine);
-            enterRoutine = null;
+            enterTween?.Kill();
+            enterTween = null;
         }
 
         public void Hide()
@@ -147,7 +145,6 @@ namespace DigitalLove.Game.PuzzleSelection
             slot.transform.localPosition = Vector3.zero;
             slot.transform.localRotation = Quaternion.identity;
             slot.gameObject.SetActive(false);
-            slot.Touched += () => OnSlotTouched(slot);
             return slot;
         }
 
@@ -161,15 +158,6 @@ namespace DigitalLove.Game.PuzzleSelection
 
             JobEntry entry = carousel[jobIndex];
             slots[slotIndex].Show(entry.Index, entry.Puzzle, entry.State, entry.Stars, focused);
-        }
-
-        private void OnSlotTouched(RunSlotView slot)
-        {
-            if (slot.JobIndex < 0)
-                return;
-
-            pendingSnapSpeed = 0f;
-            FocusRequested?.Invoke(slot.JobIndex);
         }
 
         private void RequestFocus(int index)
@@ -211,7 +199,7 @@ namespace DigitalLove.Game.PuzzleSelection
         private void ResetGesture()
         {
             gesture.Reset();
-            StopEnterRoutine();
+            StopEnterTween();
             if (snapRoutine != null)
                 StopCoroutine(snapRoutine);
 

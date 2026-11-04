@@ -16,9 +16,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         [Tooltip("Bake a sun at the field's centre, sized by the settings' sunRadius.")]
         public bool hasSun;
 
+        [Tooltip("What the solution must do with the sun: Any, InZone, CentredGrown, or OutOfZone.")]
+        public PuzzleSunRule sunRule = PuzzleSunRule.Any;
+
         [Header("Brief")]
         [Tooltip("The cube may be moved over the field. A fixed level places several cubes instead.")]
         public bool translatable;
+
+        [Tooltip("Where a movable level starts: the run midpoint, or the field centre (the sun).")]
+        public PuzzleStartRule startRule = PuzzleStartRule.RunMidpoint;
 
         [Tooltip("Zones the solution scales (1–3) — the bake's zone count, not the cubes placed. A fixed "
             + "level places that many cubes; a movable level ships one start frame the player moves.")]

@@ -11,6 +11,7 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private TwoHandGestureInput gesture;
         [SerializeField] private SpaceShapingController puzzleController;
         [SerializeField] private Transform head;
+        [SerializeField] private bool rotationEnabled;
         [SerializeField] private float rotationStepDegrees = 15f;
         [SerializeField] private float rotationStepDistance = 0.08f;
 
@@ -39,6 +40,9 @@ namespace DigitalLove.Game.Flow
                 ExitToSelection();
                 return;
             }
+
+            if (!rotationEnabled)
+                return;
 
             int steps = rotation.Update(state, head.right);
             if (steps != 0)

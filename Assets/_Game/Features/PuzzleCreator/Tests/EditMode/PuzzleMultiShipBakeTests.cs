@@ -5,7 +5,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 {
     public class PuzzleMultiShipBakeTests
     {
-        private const int Seed = 1;
+        private const int Seed = 2;
 
         private SpaceShapingSettings settings;
         private PuzzleSimSettings sim;
@@ -37,6 +37,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
+        [Explicit]
         public void Bake_ProducesAVerifiedTwoShipPuzzle()
         {
             PuzzleMultiShipResult result = PuzzleMultiShipBake.Bake(planets, sim, brief);

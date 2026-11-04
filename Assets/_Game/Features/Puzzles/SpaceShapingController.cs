@@ -1,4 +1,3 @@
-using System.Collections;
 using DigitalLove.Game.SpaceShaping.Cube;
 using UnityEngine;
 
@@ -12,10 +11,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         [SerializeField] private SpaceShapingSettings settings;
         [SerializeField] private SpaceShapingView view;
-        [SerializeField] private float spawnScaleSecs = 0.25f;
 
         private PuzzleRun run;
-        private Coroutine spawnScaleRoutine;
         private float nextPreviewTime;
         private float nextLatticeTime;
         private float nextReadoutTime;
@@ -24,15 +21,12 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void Enter(PuzzleData puzzleData)
         {
-            StopSpawnScale();
             view.gameObject.SetActive(true);
-            view.transform.localScale = Vector3.one * 0.01f;
             currentPuzzleData = puzzleData;
             view.ShipsCompleted += OnFlightCompleted;
             view.ResetRequested += ResetPuzzle;
             view.SetScaleEnvelope(settings.minScaleFactor, settings.maxScaleFactor);
             StartPuzzle();
-            PlaySpawnScale();
         }
 
         public void Exit()
@@ -40,47 +34,12 @@ namespace DigitalLove.Game.SpaceShaping
             view.ShipsCompleted -= OnFlightCompleted;
             view.ResetRequested -= ResetPuzzle;
             view.HideBaseline();
-            StopSpawnScale();
             run = null;
         }
 
         public void HideAll()
         {
-            StopSpawnScale();
             view.gameObject.SetActive(false);
-        }
-
-        private void PlaySpawnScale()
-        {
-            spawnScaleRoutine = StartCoroutine(SpawnScaleRoutine());
-        }
-
-        private IEnumerator SpawnScaleRoutine()
-        {
-            float duration = Mathf.Max(spawnScaleSecs, 0.0001f);
-            float elapsed = 0f;
-            while (elapsed < duration)
-            {
-                elapsed += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsed / duration);
-                float eased = 1f - Mathf.Pow(1f - t, 3f);
-                view.transform.localScale = Vector3.one * Mathf.Lerp(0.01f, 1f, eased);
-                yield return null;
-            }
-
-            view.transform.localScale = Vector3.one;
-            spawnScaleRoutine = null;
-        }
-
-        private void StopSpawnScale()
-        {
-            if (spawnScaleRoutine != null)
-            {
-                StopCoroutine(spawnScaleRoutine);
-                spawnScaleRoutine = null;
-            }
-
-            view.transform.localScale = Vector3.one;
         }
 
         public void Rotate(float degrees)

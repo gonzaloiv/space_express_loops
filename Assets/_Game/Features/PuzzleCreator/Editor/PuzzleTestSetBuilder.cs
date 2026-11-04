@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DigitalLove.Casual.Levels;
 using DigitalLove.Game.SpaceShaping;
 using UnityEditor;
@@ -8,129 +9,37 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
     public static class PuzzleTestSetBuilder
     {
         private const string SettingsPath =
-            "Assets/_Game/Features/Puzzles/Data/SpaceShapingSettings.asset";
-        private const string GeneratedFolder = "Assets/_Game/Features/Puzzles/Data";
+            "Assets/_Game/Features/PuzzleCreator/Data/SpaceShapingSettings.asset";
+        private const string GeneratedFolder = "Assets/_Game/Resources/Chapters/01";
         private const string ChapterPath = "Assets/_Game/Resources/Chapters/01.asset";
         private const int MazeSeed = 1;
         private const int MazePlanets = 6;
         private const int MazeAttempts = 8;
 
-        private struct Job
-        {
-            public readonly string Id;
-            public readonly int Seed;
-            public readonly int PlanetCount;
-            public readonly bool Translatable;
-            public readonly int Zones;
-            public readonly int MinRoutes;
-            public readonly int Attempts;
-
-            public Job(
-                string id, int seed, int planetCount, bool translatable, int zones,
-                int minRoutes, int attempts)
-            {
-                Id = id;
-                Seed = seed;
-                PlanetCount = planetCount;
-                Translatable = translatable;
-                Zones = zones;
-                MinRoutes = minRoutes;
-                Attempts = attempts;
-            }
-        }
-
-        private static readonly Job[] Jobs =
-        {
-            new Job("01_01", 1, 3, false, 1, 0, 4),
-            new Job("01_02", 1, 3, false, 1, 0, 6),
-            new Job("01_03", 1, 4, true, 1, 0, 4),
-            new Job("01_04", 1, 5, false, 1, 0, 4),
-            new Job("01_05", 2, 5, true, 2, 0, 4),
-            new Job("01_06", 3, 5, true, 2, 0, 4),
-            new Job("01_07", 4, 5, true, 2, 2, 4),
-            new Job("01_08", 5, 6, true, 2, 2, 4),
-        };
-
         [MenuItem("DigitalLove/Space Shaping/Build 8-Job Test Set")]
         public static void Build()
         {
-            SpaceShapingSettings settings =
-                AssetDatabase.LoadAssetAtPath<SpaceShapingSettings>(SettingsPath);
+            SpaceShapingSettings settings = LoadSettings("Test set");
             if (settings == null)
-            {
-                Debug.LogError($"Test set: missing settings at {SettingsPath}.");
                 return;
-            }
 
-            PuzzleData[] puzzles = new PuzzleData[Jobs.Length];
-            PuzzleData fallback = null;
-            for (int i = 0; i < Jobs.Length; i++)
-            {
-                Job job = Jobs[i];
-                PuzzleSeed seed = ScriptableObject.CreateInstance<PuzzleSeed>();
-                seed.seed = job.Seed;
-                seed.planetCount = job.PlanetCount;
-                seed.translatable = job.Translatable;
-                seed.zones = job.Zones;
-                seed.resizable = false;
-
-                PuzzleSeedScanResult result = PuzzleSeedScanner.Find(seed, settings, job.Attempts);
-                Object.DestroyImmediate(seed);
-
-                PuzzleData baked = result.Found ? result.Puzzle : null;
-                if (baked == null && job.Zones > 1)
-                {
-                    baked = TryBakeLoose(job, settings, out PuzzleBakeStatus looseStatus);
-                    if (baked != null)
-                    {
-                        Debug.LogWarning(
-                            $"Test set: {job.Id} used the loose 2-zone bake ({result.Status} -> " +
-                            $"{looseStatus}); a one-zone shortcut may exist.");
-                    }
-                }
-
-                if (baked == null)
-                {
-                    if (fallback == null)
-                    {
-                        Debug.LogError($"Test set: {job.Id} did not bake and there is no fallback.");
-                        continue;
-                    }
-
-                    baked = Object.Instantiate(fallback);
-                    Debug.LogWarning(
-                        $"Test set: {job.Id} did not bake ({result.Status}); duplicated {fallback.id}.");
-                }
-
-                baked.id = job.Id;
-                PuzzleArtifactExporter.SaveVariant(baked, "Job_" + job.Id);
-                string path = $"{GeneratedFolder}/Job_{job.Id}_Puzzle.asset";
-                PuzzleData saved = AssetDatabase.LoadAssetAtPath<PuzzleData>(path);
-                puzzles[i] = saved;
-                if (saved != null)
-                    fallback = saved;
-
-                Debug.Log(
-                    $"Test set: {job.Id} {result.Status} (seed {result.Seed}, {baked.zones} zone(s)) -> " +
-                    (saved != null ? "saved" : "MISSING"));
-            }
+            IReadOnlyList<PuzzleJobContract> jobs = PuzzleJobContracts.All;
+            PuzzleData[] puzzles = new PuzzleData[jobs.Count];
+            for (int i = 0; i < jobs.Count; i++)
+                puzzles[i] = BuildJob(jobs[i], settings);
 
             WireChapter(puzzles);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log($"Test set: {Jobs.Length} jobs built and wired into chapter 01.");
+            Debug.Log($"Test set: {jobs.Count} jobs built and wired into chapter 01.");
         }
 
         [MenuItem("DigitalLove/Space Shaping/Build Maze Test Level")]
         public static void BuildMaze()
         {
-            SpaceShapingSettings settings =
-                AssetDatabase.LoadAssetAtPath<SpaceShapingSettings>(SettingsPath);
+            SpaceShapingSettings settings = LoadSettings("Maze test");
             if (settings == null)
-            {
-                Debug.LogError($"Maze test: missing settings at {SettingsPath}.");
                 return;
-            }
 
             PuzzleSeed seed = ScriptableObject.CreateInstance<PuzzleSeed>();
             seed.seed = MazeSeed;
@@ -150,7 +59,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
             PuzzleData baked = result.Puzzle;
             baked.id = "MZ_01";
-            PuzzleArtifactExporter.SaveVariant(baked, "Maze_01");
+            PuzzleArtifactExporter.SaveVariant(baked, "Maze_01", GeneratedFolder);
             string path = $"{GeneratedFolder}/Maze_01_Puzzle.asset";
             PuzzleData saved = AssetDatabase.LoadAssetAtPath<PuzzleData>(path);
             if (saved == null)
@@ -165,28 +74,75 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             Debug.Log($"Maze test: baked Maze_01 (seed {result.Seed}, {baked.zones} zone(s)) and wired into chapter 01.");
         }
 
-        private static PuzzleData TryBakeLoose(
-            Job job, SpaceShapingSettings settings, out PuzzleBakeStatus status)
+        private static PuzzleData BuildJob(PuzzleJobContract job, SpaceShapingSettings settings)
+        {
+            PuzzleSeed seed = CreateSeed(job);
+            PuzzleSeedScanResult result = FindJob(job, settings, seed);
+            Object.DestroyImmediate(seed);
+
+            if (!result.Found)
+            {
+                Debug.LogError($"Test set: {job.Id} did not bake ({result.Status}).");
+                return null;
+            }
+
+            PuzzleData baked = result.Puzzle;
+            baked.id = job.Id;
+            PuzzleArtifactExporter.SaveVariant(baked, "Job_" + job.Id, GeneratedFolder);
+            string path = $"{GeneratedFolder}/Job_{job.Id}_Puzzle.asset";
+            PuzzleData saved = AssetDatabase.LoadAssetAtPath<PuzzleData>(path);
+            Debug.Log(
+                $"Test set: {job.Id} {result.Status} (seed {result.Seed}, {baked.zones} zone(s), " +
+                $"{result.Kind}) -> " + (saved != null ? "saved" : "MISSING"));
+            return saved;
+        }
+
+        private static PuzzleSeed CreateSeed(PuzzleJobContract job)
         {
             PuzzleSeed seed = ScriptableObject.CreateInstance<PuzzleSeed>();
             seed.seed = job.Seed;
             seed.planetCount = job.PlanetCount;
             seed.translatable = job.Translatable;
+            seed.startRule = job.StartRule;
             seed.zones = job.Zones;
             seed.minRoutes = job.MinRoutes;
+            seed.mechanism = job.Mechanism;
+            seed.hasSun = job.HasSun;
+            seed.sunRule = job.SunRule;
+            seed.noFail = job.NoFail;
+            seed.noGrade = job.NoGrade;
+            seed.fieldShape = job.FieldShape;
             seed.resizable = false;
-
-            PuzzlePlanetListAsset planets = Planets(seed, settings);
-            PuzzleBakeResult result = PuzzleFieldBake.BakeLoose(
-                planets, PuzzleSimSettings.From(settings), PuzzleBrief.From(seed, settings));
-            Object.DestroyImmediate(planets);
-            Object.DestroyImmediate(seed);
-            status = result.Status;
-            return result.Puzzle;
+            return seed;
         }
 
-        private static PuzzlePlanetListAsset Planets(PuzzleSeed seed, SpaceShapingSettings settings) =>
-            PuzzleArtifactFactory.PlanetsFor(seed, settings, seed.seed);
+        private static SpaceShapingSettings LoadSettings(string label)
+        {
+            SpaceShapingSettings settings =
+                AssetDatabase.LoadAssetAtPath<SpaceShapingSettings>(SettingsPath);
+            if (settings == null)
+                Debug.LogError($"{label}: missing settings at {SettingsPath}.");
+            return settings;
+        }
+
+        private static PuzzleSeedScanResult FindJob(
+            PuzzleJobContract job, SpaceShapingSettings settings, PuzzleSeed seed)
+        {
+            seed.mechanism = job.Mechanism;
+            PuzzleSeedScanResult result = default;
+            for (int attempt = 0; attempt < job.Attempts; attempt++)
+            {
+                seed.seed = job.Seed + attempt;
+                PuzzleSeedScanResult candidate = PuzzleSeedScanner.Find(seed, settings, 1);
+                if (candidate.Found)
+                    return candidate;
+
+                result = candidate;
+            }
+
+            result.Found = false;
+            return result;
+        }
 
         private static void WireChapter(PuzzleData[] puzzles)
         {

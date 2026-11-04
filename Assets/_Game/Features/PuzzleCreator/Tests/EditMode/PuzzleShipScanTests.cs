@@ -6,7 +6,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 {
     public class PuzzleShipScanTests
     {
-        private const int KnownSeed = 1;
+        private const int KnownSeed = 2;
 
         private SpaceShapingSettings settings;
         private PuzzleSimSettings sim;

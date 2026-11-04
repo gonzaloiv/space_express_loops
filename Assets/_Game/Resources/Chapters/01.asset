@@ -14,6 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Casual.Levels::DigitalLove.Casual.Levels.ChapterData
   id: 01
   levels:
-  - {fileID: 11400000, guid: c5344fe9be8a4aa4a8819da7aad6e1d8, type: 2}
-  - {fileID: 11400000, guid: 9a883c5e73888bc4f823656b294e35f2, type: 2}
-  - {fileID: 11400000, guid: f81c7fb3ac5a3c4408903e32f1973874, type: 2}
+  - {fileID: 11400000, guid: de49f4332097e3348a5b5ea677a4b655, type: 2}
+  - {fileID: 11400000, guid: 8b26e6c9d92baa6409f306ef01a2040f, type: 2}
+  - {fileID: 11400000, guid: 67b027b30caa1394ebd7f3e1018f8451, type: 2}
+  - {fileID: 11400000, guid: ac2995cb6baa69046ae7f5d4928a9623, type: 2}
+  - {fileID: 11400000, guid: 9254ecfe6d1374a46a1049428f63601e, type: 2}
+  - {fileID: 11400000, guid: 7becb7a263813184191031baffafeeef, type: 2}
+  - {fileID: 11400000, guid: cd11e77c6a9032c469460ecf834e7b4d, type: 2}
+  - {fileID: 11400000, guid: 6f6d811a3e383b04aa420c8711a9e530, type: 2}

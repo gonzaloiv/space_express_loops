@@ -48,15 +48,16 @@ The **level selector** is needed: a field of cubes, one per job.
 One new lesson at a time, so the player never faces two unrelated ideas at once:
 
 1. **Job 1 — the fixed cube, one zone.** A fixed region; the only move is the **grab-inside scale**.
-   One lever, one pinch. The field has three planets so the run can be blocked, but the count is not the
+   One lever, one pinch. The field has four planets so the run can be blocked, but the count is not the
    lesson ([jobs](../jobs.md) §The run).
 2. **Job 2 — the centre.** The fixed cube is placed over the sun; the player scales the star with the
    same verb. It lands before the move lesson, so the sun is met with a fixed cube.
 3. **Job 3 — the other direction.** A planet blocks the line; the fixed cube sits on it, and the player
    **shrinks** it to clear the path. Same pinch as job 1, opposite role — learned before placement.
-4. **Job 4 — several zones.** The level places **several fixed cubes**; the player scales each and the
-   soft brush blends them. No move — "where do I scale" is the lesson on its own, learned before the
-   cube can be placed.
+4. **Job 4 — several zones.** The level places **several fixed cubes**; one sits on the blocker (shrink)
+   and one on a run planet (grow), so the Ring act ends by combining the two roles. The player scales
+   each and the soft brush blends them. No move — "where do I scale" is the lesson on its own, learned
+   before the cube can be placed.
 5. **Job 5 — the cube moves.** The cube becomes **translatable**: the player chooses *where* to work,
    not just how much. "Where does the cube sit" is its own lesson, split from "several zones".
 6. **Jobs 6–7 — multi-zone.** The player moves the cube and scales several zones, spreading the edit to
@@ -70,7 +71,8 @@ is the next cut candidate.
 
 **The obstacle is job 3.** Shrinking a blocker to clear the chord is the opposite role of the curve; it
 lands right after the centre, before placement, so both directions of the pinch are learned on a fixed
-field. The tutorial and the centre keep the curve; the capstone (job 8) combines a clear with a curve.
+field. The tutorial and the centre keep the curve; job 4 and the capstone (job 8) combine a clear with a
+curve.
 
 ### The several-zones rung
 

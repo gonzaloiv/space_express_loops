@@ -118,8 +118,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         [Test]
         public void Matches_RequestedRole_IsStrict()
         {
-            Assert.IsTrue(PuzzleSolutionClassifier.Matches(
+            Assert.IsFalse(PuzzleSolutionClassifier.Matches(
                 PuzzleMechanism.Any, PuzzleSolutionKind.Other));
+            Assert.IsTrue(PuzzleSolutionClassifier.Matches(
+                PuzzleMechanism.Any, PuzzleSolutionKind.Curve));
+            Assert.IsTrue(PuzzleSolutionClassifier.Matches(
+                PuzzleMechanism.Any, PuzzleSolutionKind.Clear));
+            Assert.IsTrue(PuzzleSolutionClassifier.Matches(
+                PuzzleMechanism.Any, PuzzleSolutionKind.Mixed));
             Assert.IsTrue(PuzzleSolutionClassifier.Matches(
                 PuzzleMechanism.Curve, PuzzleSolutionKind.Curve));
             Assert.IsTrue(PuzzleSolutionClassifier.Matches(

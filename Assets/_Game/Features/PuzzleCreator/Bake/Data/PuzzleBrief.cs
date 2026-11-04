@@ -7,7 +7,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public float EndpointClearance;
         public float SunRadius;
         public bool SunScalable;
+        public PuzzleSunRule SunRule;
         public bool Translatable;
+        public PuzzleStartRule StartRule;
         public int Zones;
         public PuzzleMechanism Mechanism;
         public int MinRoutes;
@@ -28,7 +30,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             EndpointClearance = settings.endpointClearance,
             SunRadius = seed.EffectiveSunRadius(settings),
             SunScalable = true,
+            SunRule = seed.sunRule,
             Translatable = seed.translatable,
+            StartRule = seed.startRule,
             Zones = Mathf.Max(1, seed.zones),
             Mechanism = seed.mechanism,
             MinRoutes = ResolveMinRoutes(seed),

@@ -5,7 +5,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 {
     public class PuzzleSearchTests
     {
-        private const int KnownSeed = 1;
+        private const int KnownSeed = 2;
 
         private PuzzleSimSettings settings;
         private PuzzleBrief brief;

@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10000000000000000000000000000016, type: 3}
+  m_Name: Job_01_01_Puzzle
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Domain::DigitalLove.Game.SpaceShaping.PuzzleData
+  id: 01_01
+  prefab: {fileID: 0}
+  origin: {x: 0.08837857, y: 0.11431393, z: 0.11183343}
+  destination: {x: -0.21917978, y: 0.008222661, z: -0.3119778}
+  zoneCentre: {x: -0.0654006, y: 0.061268296, z: -0.10007219}
+  cubeSizeMin: 0.022
+  cubeSizeMax: 0.12681541
+  frames:
+  - centre: {x: 0.31846875, y: 0.023385733, z: 0.052862167}
+    size: 0.12681541
+  captureRadius: 0.041657455
+  translatable: 0
+  zones: 1
+  routes: 2
+  resizable: 0
+  entropyBudget: 0.5419353
+  noFail: 1
+  noGrade: 1
+  sources:
+  - home: {x: 0.08837857, y: 0.11431393, z: 0.11183343}
+    scale: 0.06913958
+    name: solmuigawa
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: -0.08131865, y: 0.06842288, z: -0.12350813}
+    scale: 0.052504603
+    name: xanzonides
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: -0.039309546, y: -0.11251639, z: 0.2091564}
+    scale: 0.089749485
+    name: thennilia
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: 0.039337214, y: 0.11323274, z: -0.20920216}
+    scale: 0.035071217
+    name: chelluna
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: -0.21368258, y: 0.04422001, z: 0.14963104}
+    scale: 0.026174063
+    name: teiter
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: 0.21309744, y: -0.059365947, z: -0.14866337}
+    scale: 0.02642873
+    name: thuamia
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: -0.31783202, y: -0.0069049485, z: -0.05391506}
+    scale: 0.019689659
+    name: gniviter
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: 0.31846875, y: 0.023385733, z: 0.052862167}
+    scale: 0.11528673
+    name: phexogantu
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: -0.21917978, y: 0.008222661, z: -0.3119778}
+    scale: 0.08331491
+    name: zippe 3VGR
+    fixedMass: 0
+    centreOnly: 0
+  ships: []

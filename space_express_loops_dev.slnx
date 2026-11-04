@@ -5,6 +5,7 @@
   <Project Path="DigitalLove.TTS.csproj" />
   <Project Path="DigitalLove.Interactables.Core.csproj" />
   <Project Path="DigitalLove.Interactables.OculusInteraction.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Creator.csproj" />
   <Project Path="DigitalLove.Game.PuzzleSelection.csproj" />
   <Project Path="MegaFiers.Editor.csproj" />
   <Project Path="DigitalLove.UI.DesignSystem.Localization.csproj" />
@@ -23,7 +24,6 @@
   <Project Path="DigitalLove.Game.SpaceShaping.Views.csproj" />
   <Project Path="DigitalLove.UI.Behaviours.csproj" />
   <Project Path="DigitalLove.UI.DesignSystem.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.Creator.csproj" />
   <Project Path="DigitalLove.VFX.Animation.csproj" />
   <Project Path="MegaFiers.MegaShape.Editor.csproj" />
   <Project Path="DigitalLove.Input.csproj" />

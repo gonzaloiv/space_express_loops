@@ -90,7 +90,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public static bool Matches(PuzzleMechanism requested, PuzzleSolutionKind kind)
         {
             if (requested == PuzzleMechanism.Any)
-                return true;
+                return kind != PuzzleSolutionKind.Other;
 
             if (requested == PuzzleMechanism.Curve)
                 return kind == PuzzleSolutionKind.Curve;

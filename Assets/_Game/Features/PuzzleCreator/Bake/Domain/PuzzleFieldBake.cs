@@ -7,13 +7,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     {
         public static PuzzleBakeResult Bake(
             PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief) =>
-            Run(planets, settings, brief, true);
-
-        // Loose skips the teaching checks (straight start, shorter zone, route count) so an editor
-        // tool can build a smoke-test set from a field that does not meet the full brief.
-        public static PuzzleBakeResult BakeLoose(
-            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief) =>
-            Run(planets, settings, brief, false);
+            Run(planets, settings, brief);
 
         public static bool Apply(
             PuzzleBrief brief, PuzzleData puzzle, PuzzlePlanetListAsset planets, PuzzleSimSettings settings)
@@ -28,9 +22,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.resizable = brief.Resizable;
             puzzle.noFail = brief.NoFail;
             puzzle.noGrade = brief.NoGrade;
-            if (!PuzzleRunChoice.TryPick(
-                planets.planets, settings.RunDistance, brief.EndpointClearance, brief.SunRadius,
-                out Vector3 origin, out Vector3 destination))
+            PuzzleRunRequest run = BuildRunRequest(brief, planets, settings);
+            if (!PuzzleRunChoice.TryPick(run, out Vector3 origin, out Vector3 destination))
                 return false;
 
             puzzle.origin = origin;
@@ -39,6 +32,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.zoneCentre = (origin + destination) * 0.5f;
             return true;
         }
+
+        private static PuzzleRunRequest BuildRunRequest(
+            PuzzleBrief brief, PuzzlePlanetListAsset planets, PuzzleSimSettings settings) => new()
+        {
+            Planets = planets.planets,
+            TargetRun = settings.RunDistance,
+            EndpointClearance = brief.EndpointClearance,
+            SunRadius = brief.SunRadius,
+            RequirePlanetBlocker = true,
+            AllowSunOnChord = brief.Mechanism != PuzzleMechanism.Curve
+                || brief.SunRule == PuzzleSunRule.InZone
+        };
 
         // The sun is a source at the field's centre, fixed or scalable as the seed says. It stays out of
         // the cube range so a planet-sized cube still reads as the player's tool, while the run choice
@@ -90,7 +95,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         }
 
         private static PuzzleBakeResult Run(
-            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief, bool strict)
+            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief)
         {
             PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
             if (!Apply(brief, field, planets, settings))
@@ -99,13 +104,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return Fail(PuzzleBakeStatus.NoRun);
             }
 
-            PuzzleBakeResult result = BakeField(field, settings, brief, strict);
+            PuzzleBakeResult result = BakeField(field, settings, brief);
             Object.DestroyImmediate(field);
             return result;
         }
 
         private static PuzzleBakeResult BakeField(
-            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, bool strict)
+            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief)
         {
             if (!brief.SupportsZones)
                 return Fail(PuzzleBakeStatus.UnsupportedBrief);
@@ -118,22 +123,19 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (selected != PuzzleBakeStatus.Baked)
                 return Fail(selected, kind);
 
-            if (strict)
-            {
-                PuzzleBakeStatus start = PuzzleStartCheck.Status(field, settings, brief);
-                if (start != PuzzleBakeStatus.Baked)
-                    return Fail(start);
+            PuzzleBakeStatus start = PuzzleStartCheck.Status(field, settings, brief);
+            if (start != PuzzleBakeStatus.Baked)
+                return Fail(start);
 
-                if (PuzzleSolutionSelection.HasShorter(field, settings, brief, found))
-                    return Fail(PuzzleBakeStatus.FewerZones);
-            }
+            if (PuzzleSolutionSelection.HasShorter(field, settings, brief, found))
+                return Fail(PuzzleBakeStatus.FewerZones);
 
-            return Confirm(field, settings, brief, found, kind, strict);
+            return Confirm(field, settings, brief, found, kind);
         }
 
         private static PuzzleBakeResult Confirm(
             PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, PuzzleSolution found,
-            PuzzleSolutionKind kind, bool strict)
+            PuzzleSolutionKind kind)
         {
             field.entropyBudget = found.EntropySpent * PuzzleGrade.BudgetFactor;
             PuzzleData variant = Variant(field, found, brief);
@@ -145,13 +147,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return Fail(PuzzleBakeStatus.Unverified, kind);
             }
 
-            if (!strict && !check.StartFails)
+            if (!PuzzleSunRuleCheck.Matches(variant, found.Zones, brief.SunRule))
             {
                 Object.DestroyImmediate(variant);
-                return Fail(PuzzleBakeStatus.StartNotFailed, kind);
+                return Fail(PuzzleBakeStatus.SunRuleFailed, kind);
             }
 
-            if (strict && !HasRoutes(variant, settings, brief, found.Zones))
+            if (!HasRoutes(variant, settings, brief, found.Zones))
             {
                 Object.DestroyImmediate(variant);
                 return Fail(PuzzleBakeStatus.SingleRoute, kind);
@@ -185,16 +187,19 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         }
 
         // A fixed level ships the solved zone geometry and the player finds the scales; a movable
-        // level ships one start frame at the run midpoint and the player moves and scales it.
+        // level ships one start frame at the brief's start rule and the player moves and scales it.
         public static PuzzleFrame[] BuildFrames(
             PuzzleData field, PuzzleSolution solution, PuzzleBrief brief)
         {
             if (!brief.Translatable)
                 return SolvedFrames(solution.Zones);
 
+            Vector3 centre = brief.StartRule == PuzzleStartRule.FieldCentre
+                ? Vector3.zero
+                : field.zoneCentre;
             return new[]
             {
-                new PuzzleFrame { centre = field.zoneCentre, size = solution.Zones[0].Width }
+                new PuzzleFrame { centre = centre, size = solution.Zones[0].Width }
             };
         }
 

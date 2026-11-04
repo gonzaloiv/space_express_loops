@@ -646,10 +646,10 @@ RectTransform:
   - {fileID: 1118358895}
   m_Father: {fileID: 94461206}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1000, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 600, y: -124}
+  m_SizeDelta: {x: 1000, y: 248}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &94592089
 MonoBehaviour:
@@ -2822,7 +2822,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 571470899}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2830,7 +2830,7 @@ Transform:
   - {fileID: 1671529660}
   - {fileID: 989476327}
   - {fileID: 1477343845}
-  m_Father: {fileID: 2100067764}
+  m_Father: {fileID: 1760187867}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &571470901
 MonoBehaviour:
@@ -2846,8 +2846,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Input::DigitalLove.Input.TwoHandGestureIndicator
   gesture: {fileID: 673349775}
   handLine: {fileID: 1671529661}
-  leftPinchMarker: {fileID: 989476327}
-  rightPinchMarker: {fileID: 1477343845}
+  leftPinchMarker: {fileID: 989476328}
+  rightPinchMarker: {fileID: 1477343846}
+  swipeColor: {fileID: 11400000, guid: 3aa4c7c2bdea4434aad4f233a423c200, type: 2}
+  twoHandColor: {fileID: 11400000, guid: c01d0000000000000000000000000001, type: 2}
+  leftMarkerColor: {fileID: 11400000, guid: 3aa4c7c2bdea4434aad4f233a423c200, type: 2}
+  rightMarkerColor: {fileID: 11400000, guid: c01d0000000000000000000000000001, type: 2}
   lineMaxMultiplier: 2.5
   lineTensionSpeed: 0.6
   logIndicator: 1
@@ -2899,6 +2903,7 @@ MonoBehaviour:
   gesture: {fileID: 673349775}
   puzzleController: {fileID: 1132899469}
   head: {fileID: 1806820792}
+  rotationEnabled: 0
   rotationStepDegrees: 15
   rotationStepDistance: 0.08
 --- !u!1 &587785173
@@ -2964,10 +2969,10 @@ RectTransform:
   - {fileID: 451249706}
   m_Father: {fileID: 94461206}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 50, y: -124}
+  m_SizeDelta: {x: 100, y: 248}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &599108725
 MonoBehaviour:
@@ -6431,9 +6436,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2086895692}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -140.85}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 885, y: -50}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &969171755
@@ -8430,11 +8435,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1608666266}
-  - component: {fileID: 1608666272}
-  - component: {fileID: 1608666271}
-  - component: {fileID: 1608666270}
-  - component: {fileID: 1608666269}
-  - component: {fileID: 1608666268}
   - component: {fileID: 1608666267}
   m_Layer: 0
   m_Name: SlotPrototype
@@ -8479,131 +8479,6 @@ MonoBehaviour:
   lockedState: {fileID: 834229216}
   focusedState: {fileID: 827143305}
   diorama: {fileID: 420113224}
-  touch: {fileID: 1608666268}
---- !u!114 &1608666268
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1608666265}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf9e0248b035e9440a49b829b6f984dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.PuzzleSelection::DigitalLove.Game.PuzzleSelection.RunSlotTouch
-  grabbable: {fileID: 1608666272}
---- !u!65 &1608666269
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1608666265}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.35, y: 0.35, z: 0.08}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &1608666270
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1608666265}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &1608666271
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1608666265}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9a7676b01585ce43908639a27765dfc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Oculus.Interaction::Oculus.Interaction.HandGrab.HandGrabInteractable
-  _interactorFilters: []
-  _maxInteractors: -1
-  _maxSelectingInteractors: -1
-  _data: {fileID: 0}
-  _pointableElement: {fileID: 1608666272}
-  _rigidbody: {fileID: 1608666270}
-  _resetGrabOnGrabsUpdated: 1
-  _scoringModifier:
-    _positionRotationWeight: 0.8
-  _slippiness: 0
-  _supportedGrabTypes: 1
-  _pinchGrabRules:
-    _thumbRequirement: 1
-    _indexRequirement: 1
-    _middleRequirement: 1
-    _ringRequirement: 0
-    _pinkyRequirement: 0
-    _unselectMode: 0
-  _palmGrabRules:
-    _thumbRequirement: 1
-    _indexRequirement: 2
-    _middleRequirement: 2
-    _ringRequirement: 2
-    _pinkyRequirement: 1
-    _unselectMode: 0
-  _movementProvider: {fileID: 0}
-  _handAligment: 1
-  _handGrabPoses: []
---- !u!114 &1608666272
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1608666265}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43f86b14a27b52f4f9298c33015b5c26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Oculus.Interaction::Oculus.Interaction.Grabbable
-  _transferOnSecondSelection: 0
-  _addNewPointsToFront: 0
-  _forwardElement: {fileID: 0}
-  _oneGrabTransformer: {fileID: 0}
-  _twoGrabTransformer: {fileID: 0}
-  _targetTransform: {fileID: 0}
-  _maxGrabPoints: -1
-  _rigidbody: {fileID: 1608666270}
-  _kinematicWhileSelected: 1
-  _throwWhenUnselected: 1
-  _forceKinematicDisabled: 0
 --- !u!1 &1628882964
 GameObject:
   m_ObjectHideFlags: 0
@@ -9466,7 +9341,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 475, y: -124}
-  m_SizeDelta: {x: 700, y: 0}
+  m_SizeDelta: {x: 700, y: 146.28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1718389706
 MonoBehaviour:
@@ -9734,6 +9609,7 @@ Transform:
   - {fileID: 1876506284}
   - {fileID: 924513525}
   - {fileID: 1959014590}
+  - {fileID: 571470900}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1799498462 stripped
@@ -10732,7 +10608,10 @@ MonoBehaviour:
   minSwipeDistance: 0.03
   minSwipeSpeed: 0.25
   swipeHorizontalDominance: 1.5
-  enterTransitionSecs: 0.2
+  enterTransitionSecs: 0.6
+  enterPulseScale: 3
+  enterPose: {fileID: 1132899470}
+  enterPoseOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &1967594103
 GameObject:
   m_ObjectHideFlags: 0
@@ -11246,7 +11125,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1846868698}
-  - {fileID: 571470900}
   m_Father: {fileID: 1959014590}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &52948691051531853
@@ -11413,6 +11291,18 @@ PrefabInstance:
       value: Puzzle
       objectReference: {fileID: 0}
     - target: {fileID: 8873963412626419105, guid: 1878e8ad8a8138442805b693007e4fec, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 8873963412626419105, guid: 1878e8ad8a8138442805b693007e4fec, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 8873963412626419105, guid: 1878e8ad8a8138442805b693007e4fec, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 8873963412626419105, guid: 1878e8ad8a8138442805b693007e4fec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -11451,6 +11341,10 @@ PrefabInstance:
     - target: {fileID: 8873963412626419105, guid: 1878e8ad8a8138442805b693007e4fec, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8873963412626419105, guid: 1878e8ad8a8138442805b693007e4fec, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

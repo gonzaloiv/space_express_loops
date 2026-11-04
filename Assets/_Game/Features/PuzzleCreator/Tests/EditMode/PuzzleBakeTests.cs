@@ -5,7 +5,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 {
     public class PuzzleBakeTests
     {
-        private const int KnownSeed = 1;
+        private const int KnownSeed = 2;
 
         private static SpaceShapingSettings settings;
         private static PuzzleSimSettings sim;

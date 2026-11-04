@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleSolutionSelection
@@ -21,8 +23,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             }
 
             kind = cheapest.Kind;
-            if (PuzzleSolutionSearch.TrySelect(field, settings, brief, out _))
+            if (PuzzleSolutionSearch.TrySelect(field, settings, brief, out PuzzleSolution role))
+            {
+                Debug.Log(
+                    $"[Puzzle role] cheapest {cheapest.Kind} {cheapest.EntropySpent:F3}, " +
+                    $"requested {brief.Mechanism} {role.EntropySpent:F3}");
                 return PuzzleBakeStatus.WrongRoleRoute;
+            }
 
             return Mismatch(brief.Mechanism);
         }
