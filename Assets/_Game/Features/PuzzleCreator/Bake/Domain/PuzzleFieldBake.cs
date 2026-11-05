@@ -114,7 +114,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             PuzzleBakeResult result = BakeField(field, settings, brief);
             result.RunReport = runReport;
-            result.PostClear = planets.postClear;
             Object.DestroyImmediate(field);
             return result;
         }
@@ -133,12 +132,19 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (selected != PuzzleBakeStatus.Baked)
                 return Fail(selected, kind);
 
+            return Check(field, settings, brief, found, kind);
+        }
+
+        private static PuzzleBakeResult Check(
+            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief,
+            PuzzleSolution found, PuzzleSolutionKind kind)
+        {
             PuzzleBakeStatus start = PuzzleStartCheck.Status(field, settings, brief);
             if (start != PuzzleBakeStatus.Baked)
-                return Fail(start);
+                return Fail(start, kind);
 
             if (PuzzleSolutionSelection.HasShorter(field, settings, brief, found))
-                return Fail(PuzzleBakeStatus.FewerZones);
+                return Fail(PuzzleBakeStatus.FewerZones, kind);
 
             return Confirm(field, settings, brief, found, kind);
         }

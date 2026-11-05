@@ -16,7 +16,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         private const int MazePlanets = 6;
         private const int MazeAttempts = 8;
 
-        [MenuItem("DigitalLove/Space Shaping/Build 8-Job Test Set")]
+        [MenuItem("DigitalLove/Space Shaping/Build Job Test Set")]
         public static void Build()
         {
             SpaceShapingSettings settings = LoadSettings("Test set");

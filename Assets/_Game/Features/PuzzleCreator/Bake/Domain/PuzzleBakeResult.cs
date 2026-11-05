@@ -7,7 +7,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public PuzzleZone[] Solution;
         public PuzzleSolutionKind Kind;
         public PuzzleRunReport RunReport;
-        public PuzzlePostClearReport PostClear;
 
         public bool Baked => Puzzle != null;
     }

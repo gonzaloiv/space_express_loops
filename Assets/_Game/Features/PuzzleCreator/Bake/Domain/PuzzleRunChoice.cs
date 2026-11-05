@@ -60,6 +60,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 int cj = IndexOf(request.Planets, request.CandidateDestination);
                 if (ci >= 0 && cj >= 0 && ci != cj)
                     Consider(ci, cj, request, ref choice);
+                else
+                    choice.Report.CandidateMiss++;
 
                 origin = choice.Origin;
                 destination = choice.Destination;

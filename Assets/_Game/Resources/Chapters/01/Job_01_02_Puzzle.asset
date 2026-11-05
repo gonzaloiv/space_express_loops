@@ -14,20 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Domain::DigitalLove.Game.SpaceShaping.PuzzleData
   id: 01_02
   prefab: {fileID: 0}
-  origin: {x: 0.15656412, y: -0.14963531, z: -0.11282076}
-  destination: {x: -0.035770506, y: 0.24692178, z: 0.1116787}
-  zoneCentre: {x: 0.060396805, y: 0.04864323, z: -0.0005710311}
-  cubeSizeMin: 0.038556207
-  cubeSizeMax: 0.12486781
+  origin: {x: -0.3098847, y: 0.08459707, z: -0.20857729}
+  destination: {x: -0.026711259, y: -0.029685669, z: 0.3793014}
+  zoneCentre: {x: -0.16829798, y: 0.027455702, z: 0.085362054}
+  cubeSizeMin: 0.05880186
+  cubeSizeMax: 0.1255004
   frames:
   - centre: {x: 0, y: 0, z: 0}
-    size: 0.038556207
-  captureRadius: 0.056758095
+    size: 0.05880186
+  captureRadius: 0.03399928
   translatable: 0
   zones: 1
   routes: 1
   resizable: 0
-  entropyBudget: 0.9677419
+  entropyBudget: 0.30967748
   noFail: 0
   noGrade: 1
   sources:
@@ -36,33 +36,33 @@ MonoBehaviour:
     name: gniviter
     fixedMass: 0
     centreOnly: 1
-  - home: {x: 0.019391235, y: -0.19521688, z: 0.19207083}
-    scale: 0.08631609
+  - home: {x: -0.2453891, y: 0.027455702, z: 0.12249583}
+    scale: 0.11409127
     name: solmuigawa
     fixedMass: 0
     centreOnly: 0
-  - home: {x: 0.15656412, y: -0.14963531, z: -0.11282076}
-    scale: 0.06861556
+  - home: {x: 0.25560483, y: 0.1785934, z: -0.10948661}
+    scale: 0.10005909
     name: xanzonides
     fixedMass: 0
     centreOnly: 0
-  - home: {x: -0.13637413, y: -0.10551509, z: -0.09368815}
-    scale: 0.036605585
+  - home: {x: 0.005065307, y: 0.17493163, z: 0.26535714}
+    scale: 0.07344141
     name: thennilia
     fixedMass: 0
     centreOnly: 0
-  - home: {x: 0.06661117, y: 0.0047545475, z: -0.14491326}
-    scale: 0.035051096
+  - home: {x: -0.3098847, y: 0.08459707, z: -0.20857729}
+    scale: 0.053456236
     name: chelluna
     fixedMass: 0
     centreOnly: 0
-  - home: {x: -0.035770506, y: 0.24692178, z: 0.1116787}
-    scale: 0.11351619
+  - home: {x: 0.3409905, y: -0.018098595, z: -0.16951883}
+    scale: 0.06727054
     name: teiter
     fixedMass: 0
     centreOnly: 0
-  - home: {x: 0.10148214, y: 0.18254688, z: -0.055024765}
-    scale: 0.07768874
+  - home: {x: -0.026711259, y: -0.029685669, z: 0.3793014}
+    scale: 0.06799856
     name: thuamia
     fixedMass: 0
     centreOnly: 0

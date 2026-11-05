@@ -15,13 +15,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         [Explicit]
         public void Tutorial_FourPlanetRing_BakesCurve()
         {
-            PuzzleJobContract contract = PuzzleJobContracts.All[0];
+            PuzzleJobContract contract = PuzzleJobContracts.ById("01_01");
             PuzzleSeedScanResult result = Bake(
                 contract, out PuzzleSeed seed, out SpaceShapingSettings settings);
 
             Assert.IsTrue(
                 result.Found,
-                $"{contract.Id}: {result.Status} [{result.RunReport}] post-clear [{result.PostClear}]");
+                $"{contract.Id}: {result.Status} [{result.RunReport}]");
             Assert.AreEqual(PuzzleSolutionKind.Curve, result.Kind);
             PuzzleVerification check = PuzzleVerifier.Verify(
                 result.Puzzle, result.Solution, PuzzleSimSettings.From(settings));
@@ -34,12 +34,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         [Explicit]
         public void Centre_SunCentredGrown()
         {
-            PuzzleJobContract contract = PuzzleJobContracts.All[1];
+            PuzzleJobContract contract = PuzzleJobContracts.ById("01_02");
             PuzzleSeedScanResult result = Bake(contract, out PuzzleSeed seed, out _);
 
             Assert.IsTrue(
                 result.Found,
-                $"{contract.Id}: {result.Status} [{result.RunReport}] post-clear [{result.PostClear}]");
+                $"{contract.Id}: {result.Status} [{result.RunReport}]");
             Assert.IsTrue(
                 PuzzleSunRuleCheck.Matches(result.Puzzle, result.Solution, PuzzleSunRule.CentredGrown),
                 $"{contract.Id}: the solved zone is not a centred, grown star");
@@ -51,13 +51,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         [Explicit]
         public void FixedJobs_KeepTheSunOutOfTheZones()
         {
-            for (int i = 2; i <= 3; i++)
+            for (int i = 0; i < PuzzleJobContracts.Enabled.Count; i++)
             {
-                PuzzleJobContract contract = PuzzleJobContracts.All[i];
+                PuzzleJobContract contract = PuzzleJobContracts.Enabled[i];
+                if (contract.Translatable || contract.SunRule != PuzzleSunRule.OutOfZone)
+                    continue;
                 PuzzleSeedScanResult result = Bake(contract, out PuzzleSeed seed, out _);
                 Assert.IsTrue(
                 result.Found,
-                $"{contract.Id}: {result.Status} [{result.RunReport}] post-clear [{result.PostClear}]");
+                $"{contract.Id}: {result.Status} [{result.RunReport}]");
                 Assert.IsTrue(
                     PuzzleSunRuleCheck.Matches(result.Puzzle, result.Solution, PuzzleSunRule.OutOfZone),
                     $"{contract.Id}: a solved zone contains the sun");
@@ -69,19 +71,27 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         [Explicit]
         public void JobSet_MeetsTheContract()
         {
-            for (int i = 0; i < PuzzleJobContracts.All.Count; i++)
+            List<string> failures = new List<string>();
+            for (int i = 0; i < PuzzleJobContracts.Enabled.Count; i++)
             {
-                PuzzleJobContract contract = PuzzleJobContracts.All[i];
+                PuzzleJobContract contract = PuzzleJobContracts.Enabled[i];
                 PuzzleSeedScanResult result = Bake(contract, out PuzzleSeed seed, out _);
-                Assert.IsTrue(
-                result.Found,
-                $"{contract.Id}: {result.Status} [{result.RunReport}] post-clear [{result.PostClear}]");
-                Assert.IsTrue(
-                    PuzzleJobValidator.Validate(
-                        result.Puzzle, result.Kind, result.Solution, contract, out List<string> failures),
-                    $"{contract.Id}: {string.Join("; ", failures)}");
+                if (!result.Found)
+                {
+                    failures.Add(
+                        $"{contract.Id}: {result.Status} seed {result.Seed} " +
+                        $"attempts {result.Attempts} [{result.RunReport}]");
+                }
+                else if (!PuzzleJobValidator.Validate(
+                        result.Puzzle, result.Kind, result.Solution, contract, out List<string> problems))
+                {
+                    failures.Add($"{contract.Id}: {string.Join("; ", problems)}");
+                }
+
                 Cleanup(result, seed);
             }
+
+            Assert.AreEqual(0, failures.Count, string.Join("\n", failures));
         }
 
         private static PuzzleSeedScanResult Bake(

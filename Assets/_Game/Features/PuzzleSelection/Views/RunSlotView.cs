@@ -7,9 +7,6 @@ namespace DigitalLove.Game.PuzzleSelection
     public class RunSlotView : MonoBehaviour
     {
         [SerializeField] private Transform visualRoot;
-        [SerializeField] private Transform currentState;
-        [SerializeField] private Transform solvedState;
-        [SerializeField] private Transform lockedState;
         [SerializeField] private PuzzleDioramaView diorama;
         [SerializeField, Range(0f, 0.1f)] private float idleBreathAmplitude = 0.02f;
         [SerializeField, Min(0f)] private float idleBreathSpeed = 1.2f;
@@ -36,9 +33,6 @@ namespace DigitalLove.Game.PuzzleSelection
             homeLocalPosition = diorama.transform.localPosition;
             homeLocalRotation = diorama.transform.localRotation;
             homeVisualScale = visualRoot.localScale;
-            currentState.gameObject.SetActive(false);
-            solvedState.gameObject.SetActive(false);
-            lockedState.gameObject.SetActive(false);
         }
 
         private void Update()

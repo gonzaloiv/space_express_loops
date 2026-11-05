@@ -55,13 +55,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleSeedScanResult candidate, ref PuzzleSeedScanResult best, ref Tally tally)
         {
             tally.Failures[(int)candidate.Status]++;
-            if (!best.Found)
+            if (!best.Found && !tally.HasReport)
             {
+                tally.HasReport = true;
+                best.Seed = candidate.Seed;
                 best.Status = candidate.Status;
                 best.Kind = candidate.Kind;
                 best.RunReport = candidate.RunReport;
-                if (candidate.PostClear.ClearWidth > best.PostClear.ClearWidth)
-                    best.PostClear = candidate.PostClear;
             }
             if (tally.HasFailure)
                 return;
@@ -99,7 +99,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Solution = baked.Solution,
                 Kind = baked.Kind,
                 RunReport = baked.RunReport,
-                PostClear = baked.PostClear,
                 Routes = baked.Baked ? baked.Puzzle.routes : 0
             };
         }
@@ -132,6 +131,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             public int Baked;
             public int[] Failures;
             public bool HasFailure;
+            public bool HasReport;
             public PuzzleBakeStatus FirstFailure;
         }
     }

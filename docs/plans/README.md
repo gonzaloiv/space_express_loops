@@ -10,12 +10,7 @@ the ship flies the deformed spacetime.
 
 Active work. The one thing being built.
 
-- [Puzzle map — the run as a global field](in-progress/puzzle-map.md) — puzzle fields in a galaxy
-  cluster; the selected field is a diorama, nearby full fields are culled by radius, and the selection
-  reads by a selection cube.
-
-- [Bake — role and sun alignment](in-progress/bake-role-sun-alignment.md) — make the bake produce the
-  designed roles (sun-Curve, Clear, Mixed) so the 8-job set stops falling back to Clear or duplicates.
+- Nothing active.
 
 ## Next
 
@@ -45,16 +40,14 @@ Loose ends that still need a home. Close one by linking the plan that finishes i
 
 - **Re-run Validation 1 on the current loop.** The gate for the slice; the test steps need a home now
   that the first-minute read plan is gone.
-- **Run authoring.** Jobs 1–8 and the TTS intro (manual + tech voice) are designed but not built. The
-  TTS intro has a plan ([TTS job intro](backlog/tts-job-intro.md)); the map/level selector now has
-  [Puzzle map](in-progress/puzzle-map.md). The job authoring still needs one before the 10-minute slice.
+- **Run authoring.** Jobs 1–7 are baked into Chapter 01 (seven jobs); job 8 is the deferred Mixed
+  capstone with its own future plan. The TTS intro and map plans are above.
 - **Ship-zone cue.** The ship has a trail; there is no zone indicator. Fold it into the first-minute read
   plan or the feel pass.
 - **Resize.** Working, but the explanation (size is scope, not precision) is not ready. Deferred from the
   slice; next cut candidate.
-- **Capstone routes.** The design requires at least two routes for the capstone jobs (7–8); the bake
-  currently enforces only the movable single-zone case. Fold into
-  [bake role and sun alignment](in-progress/bake-role-sun-alignment.md) before authoring them.
+- **Capstone routes (job 8).** The capstone is deferred to its own future plan; it still needs at least
+  two routes and a Mixed/InZone field that bakes. Not scheduled.
 
 ## Conventions
 

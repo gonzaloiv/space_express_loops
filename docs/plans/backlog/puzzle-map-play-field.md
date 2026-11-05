@@ -3,9 +3,8 @@
 **Status:** later · flow · updated 2026-11-05 — the selected map field becomes the shared play field;
 one session survives preview → play and the play-only group toggles in place.
 
-**Related:** [puzzle map](../in-progress/puzzle-map.md) ·
-[progression](../../design/systems/progression.md) · [core loop](../../design/core-loop.md) ·
-[Game.unity](../../../Assets/_Game/Game.unity)
+**Related:** [progression](../../design/systems/progression.md) · [jobs](../../design/jobs.md) ·
+[core loop](../../design/core-loop.md) · [Game.unity](../../../Assets/_Game/Game.unity)
 
 ## 1. Why
 
@@ -59,4 +58,4 @@ pose jump, no session rebuild.
   controllers or interactions.
 - **Enter vs play handoff.** The map runs a 0.5 s enter zoom before the state switch; confirm the cut
   after the zoom reads as one move; tune `enterSecs`, `enterScale`, and the transition rig.
-- **Scope.** Two slices; the map shell stays in [puzzle map](../in-progress/puzzle-map.md).
+- **Scope.** Two slices; the map shell is landed, and this plan covers only the play field.

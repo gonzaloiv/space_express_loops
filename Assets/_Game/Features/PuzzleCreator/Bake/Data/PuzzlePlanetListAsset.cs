@@ -13,6 +13,5 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         [System.NonSerialized] public Vector3 candidateDestination;
         [System.NonSerialized] public int blockerIndex = -1;
         [System.NonSerialized] public int wellIndex = -1;
-        [System.NonSerialized] public PuzzlePostClearReport postClear;
     }
 }

@@ -14,66 +14,56 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Domain::DigitalLove.Game.SpaceShaping.PuzzleData
   id: 01_03
   prefab: {fileID: 0}
-  origin: {x: 0.15656412, y: -0.14963531, z: -0.11282076}
-  destination: {x: -0.035770506, y: 0.24692178, z: 0.1116787}
-  zoneCentre: {x: 0.060396805, y: 0.04864323, z: -0.0005710311}
-  cubeSizeMin: 0.038556207
-  cubeSizeMax: 0.12486781
+  origin: {x: -0.35232568, y: -0.026055537, z: 0.14471012}
+  destination: {x: 0.05359787, y: -0.008141207, z: -0.37864488}
+  zoneCentre: {x: -0.1493639, y: -0.017098371, z: -0.11696738}
+  cubeSizeMin: 0.025646033
+  cubeSizeMax: 0.12585405
   frames:
-  - centre: {x: 0, y: 0, z: 0}
-    size: 0.12486781
-  captureRadius: 0.056758095
+  - centre: {x: -0.16904691, y: -0.017098371, z: -0.13223387}
+    size: 0.12585405
+  captureRadius: 0.047829796
   translatable: 0
   zones: 1
-  routes: 1
+  routes: 2
   resizable: 0
-  entropyBudget: 1.1999999
+  entropyBudget: 0.6193548
   noFail: 0
   noGrade: 0
   sources:
   - home: {x: 0, y: 0, z: 0}
     scale: 0.12
-    name: zippe 3VGR
+    name: gniviter
     fixedMass: 0
     centreOnly: 1
-  - home: {x: 0.019391235, y: -0.19521688, z: 0.19207083}
-    scale: 0.08631609
+  - home: {x: -0.16904691, y: -0.017098371, z: -0.13223387}
+    scale: 0.09963829
     name: solmuigawa
     fixedMass: 0
     centreOnly: 0
-  - home: {x: 0.15656412, y: -0.14963531, z: -0.11282076}
-    scale: 0.06861556
+  - home: {x: -0.022192039, y: -0.013088396, z: 0.17018308}
+    scale: 0.07341963
     name: xanzonides
     fixedMass: 0
     centreOnly: 0
-  - home: {x: -0.13637413, y: -0.10551509, z: -0.09368815}
-    scale: 0.036605585
+  - home: {x: 0.22820012, y: -0.16725883, z: 0.14921713}
+    scale: 0.11441277
     name: thennilia
     fixedMass: 0
     centreOnly: 0
-  - home: {x: 0.06661117, y: 0.0047545475, z: -0.14491326}
-    scale: 0.035051096
+  - home: {x: -0.35232568, y: -0.026055537, z: 0.14471012}
+    scale: 0.068383284
     name: chelluna
     fixedMass: 0
     centreOnly: 0
-  - home: {x: -0.035770506, y: 0.24692178, z: 0.1116787}
-    scale: 0.11351619
+  - home: {x: 0.05359787, y: -0.008141207, z: -0.37864488}
+    scale: 0.09565959
     name: teiter
     fixedMass: 0
     centreOnly: 0
-  - home: {x: 0.10148214, y: 0.18254688, z: -0.055024765}
-    scale: 0.07768874
+  - home: {x: 0.3030929, y: -0.00012125467, z: 0.2320442}
+    scale: 0.023314575
     name: thuamia
-    fixedMass: 0
-    centreOnly: 0
-  - home: {x: 0.095828556, y: -0.17640084, z: 0.05192038}
-    scale: 0.06748392
-    name: gniviter
-    fixedMass: 0
-    centreOnly: 0
-  - home: {x: -0.19739789, y: 0.08129061, z: -0.11217823}
-    scale: 0.10523176
-    name: phexogantu
     fixedMass: 0
     centreOnly: 0
   ships: []

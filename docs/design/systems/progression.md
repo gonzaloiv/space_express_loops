@@ -54,40 +54,29 @@ One new lesson at a time, so the player never faces two unrelated ideas at once:
    same verb. It lands before the move lesson, so the sun is met with a fixed cube.
 3. **Job 3 — the other direction.** A planet blocks the line; the fixed cube sits on it, and the player
    **shrinks** it to clear the path. Same pinch as job 1, opposite role — learned before placement.
-4. **Job 4 — several zones.** The level places **several fixed cubes**; one sits on the blocker (shrink)
-   and one on a run planet (grow), and the existing blocker is made fatal on the single-Curve path in
-   place/inside the run's block band and within the cube range/separation, so the single Clear fails the
-   well and the single Curve fails the blocker; the two-zone Mixed is the only route, so the Ring act
-   ends by combining the two roles. The player scales each and the soft brush blends them. No move — "where do I scale" is the
-   lesson on its own, learned before the cube can be placed.
-5. **Job 5 — the cube moves.** The cube becomes **translatable**: the player chooses *where* to work,
-   not just how much. "Where does the cube sit" is its own lesson, split from "several zones".
-6. **Jobs 6–7 — multi-zone.** The player moves the cube and scales several zones, spreading the edit to
-   spend less entropy.
-7. **Job 8 — the capstone.** The cube starts over the sun; the solution shrinks the blocker and scales
-   several zones, the star included. The finale combines every verb and both roles, not a new control.
+4. **Job 4 — the cube moves.** The cube becomes **translatable**: the player chooses *where* to work,
+   not just how much. "Where does the cube sit" is its own lesson.
+5. **Jobs 5–6 — multi-zone.** The player moves the cube and scales several zones, spreading the edit to
+   spend less entropy. This is where "several zones" now lands; the fixed-cube rung is retired.
+6. **Job 7 — the capstone.** The cube starts over the sun; the solution scales several zones with the star
+   included. The finale combines every verb except both roles; a future job 8 brings Mixed.
 
-So the run order is **scale → centre → clear → several zones → move → multi-zone → capstone**. **Resize is
+So the run order is **scale → centre → clear → move → multi-zone → capstone**. **Resize is
 deferred** from the slice: it works, but the explanation (size is scope, not precision) is not ready; it
 is the next cut candidate.
 
 **The obstacle is job 3.** Shrinking a blocker to clear the chord is the opposite role of the curve; it
 lands right after the centre, before placement, so both directions of the pinch are learned on a fixed
-field. The tutorial and the centre keep the curve; job 4 and the capstone (job 8) combine a clear with a
-curve; job 4 makes the existing blocker fatal on the single-Curve path in place/inside the run's block
-band and within the cube range/separation, so the single Clear fails the well and the single Curve fails
-the blocker, and the two-zone Mixed is the only route.
+field. The tutorial and the centre keep the curve; the capstone (job 7) is a Curve; a clear+curve Mixed is
+deferred to a future job 8.
 
 ### The several-zones rung
 
-**Several zones is its own rung (2026-10-29).** The old rule — a fixed cube covers one region, so
-`zones ≥ 2` implied `translatable` — was a limitation of the old timed win condition. With
-**arrival-only**, a level can simply **place several fixed cubes**, so "several zones" (job 4) and "the
-cube moves" (job 5) split into two lessons
-(see [the brief](../jobs.md#the-run--the-brief)). The placed-zone condition may recur
-in later jobs; for now it is job 4 only.
-
-A **tutorial** will be needed for this, but not yet — get the loop working first
+**The fixed-cube several-zones rung is retired (2026-11-05).** The generator could not force a two-zone
+`Curve` on the fixed-cube field, so the seven-job run (1–7) folds "several zones" into the multi-zone move at
+jobs 4–6: job 4 moves, job 5 introduces two zones, job 6 makes it efficient, job 7 is the capstone. A future
+job 8 can bring back the fixed rung with Mixed. The standalone fixed-cube rung is deferred, not claimed. A
+**tutorial** for it remains deferred until the loop is working
 ([vision](../vision.md) §6).
 
 ### The puzzle map
@@ -98,7 +87,7 @@ The **concrete run** — one row per job, with its brief fields, archetypes, fie
 **Multi-ship.** A job may carry more than one run; it is solved only when **every ship arrives**. The
 runs are baked with a relation — **fan-out** (one origin), **converge** (one destination), or
 **separate** (no shared planet) — so the shared field stays legible. Multi-ship is a variation axis,
-not a mode: the same cube, entropy and arrival rules apply. The 8-job spine is single-ship; a
+not a mode: the same cube, entropy and arrival rules apply. The seven-job spine is single-ship; a
 multi-ship job can be authored as a stretch or a later combine job.
 
 ### The company is lore only
@@ -120,7 +109,7 @@ None — progression never blocks a run on a score (see Open).
 
 ## Tuning — the shape
 
-**The full run is eight cubes**, ~1 minute each. The curve rises by **planet count**, **field depth**,
+**The full run is seven cubes**, ~1 minute each. The curve rises by **planet count**, **field depth**,
 and **solution cost**.
 
 **Entropy is derived, not hand-set.** The bake finds a solution and sets the budget to **3×** its
@@ -157,9 +146,9 @@ mid-flight (the seed is authoring-only).
   *cosmetics / bonus* later.
 - **The numbers:** reset per act, or run 1 → N? (The slice proposes one chapter, numbered 1 → N.)
 - **The rungs.** Re-analyze the learning-path order and count
-  (scale → centre → clear → several zones → move → multi-zone → capstone) after the run shape settles; the current
+  (scale → centre → clear → move → multi-zone → capstone) after the run shape settles; the current
   order is the working shape, not final.
 - **Entropy legibility.** The budget is derived from the bake's best solution; the player never sees
   that reference. Can they track spent vs remaining well enough from the readout?
 - **Run length.** What set fills a **10-minute session** and stays fun — 5, 7, or 8 jobs? The current
-  target is 8 × ~1 min; prove 3–5 first.
+  target is seven × ~1 min; prove 3–5 first.

@@ -12,9 +12,9 @@ namespace DigitalLove.Game.PuzzleSelection
         private readonly float alpha;
 
         public MapRouteLine(
-            Transform mapRoot, ColorValue source, float alpha, int count)
+            LineRenderer[] segments, ColorValue source, float alpha, int count)
         {
-            segments = mapRoot.GetComponentsInChildren<LineRenderer>(true);
+            this.segments = segments;
             points = new Vector3[count];
             color = source.value;
             this.alpha = Mathf.Clamp01(alpha);

@@ -9,10 +9,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public int SunOnChord;
         public int NoBlocker;
         public int Accepted;
+        public int CandidateMiss;
 
         public override string ToString() =>
             $"pairs {Pairs}, length {LengthRejected}, clearance {ClearanceRejected}, " +
             $"no planet {NoPlanetBlocker}, sun chord {SunOnChord}, no blocker {NoBlocker}, " +
-            $"accepted {Accepted}";
+            $"accepted {Accepted}, candidate miss {CandidateMiss}";
     }
 }

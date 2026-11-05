@@ -3,6 +3,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     public struct PuzzleJobContract
     {
         public string Id;
+        public bool Pending;
         public int Seed;
         public int Attempts;
         public int PlanetCount;

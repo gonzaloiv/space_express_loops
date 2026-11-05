@@ -29,7 +29,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleShapeAsset shape = Shape(probe, settings);
             PuzzlePlanetListAsset planets = Planets(shape);
             PuzzleBlockerPlacement.Apply(planets, probe, settings);
-            PuzzlePostClearPlacement.Apply(planets, probe, settings);
             Object.DestroyImmediate(shape);
             Object.DestroyImmediate(probe);
             return planets;

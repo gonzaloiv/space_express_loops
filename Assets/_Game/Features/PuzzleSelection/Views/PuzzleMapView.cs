@@ -24,6 +24,7 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField] private SelectionCubePalette selectionCubeColors;
         [SerializeField] private ColorValue routeColor;
         [SerializeField, Range(0f, 1f)] private float routeAlpha = 0.35f;
+        [SerializeField] private LineRenderer[] routeSegments;
         [SerializeField] private bool showAll;
 
         private ViewPool<RunSlotView> fields;
@@ -72,7 +73,7 @@ namespace DigitalLove.Game.PuzzleSelection
             wasDragging = false;
             enter.Reset();
             overview.Reset(showAll);
-            route = new MapRouteLine(mapRoot, routeColor, routeAlpha, map.Count);
+            route = new MapRouteLine(routeSegments, routeColor, routeAlpha, map.Count);
             pose.ShowAll = showAll;
             RenderFields();
             pose.SetPose(SunFocus, Focus);
