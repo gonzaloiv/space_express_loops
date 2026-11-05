@@ -5,6 +5,8 @@ namespace DigitalLove.Game.PuzzleSelection
 {
     public class CarouselTwoHandGesture
     {
+        private const float ReArmProgress = 0.5f;
+
         private readonly CarouselGestureSettings settings;
         private bool isActive;
         private bool scaleInSent;
@@ -21,11 +23,16 @@ namespace DigitalLove.Game.PuzzleSelection
                 return default;
 
             EnsureActive(state);
-            if (scaleInSent || !IsScaleIn(state))
-                return default;
+            float spread = ZoomProgress(state);
+            float overview = OverviewProgress(state);
+            if (spread < ReArmProgress)
+                scaleInSent = false;
 
-            scaleInSent = true;
-            return new CarouselGestureOutcome(0, true);
+            bool enter = !scaleInSent && spread >= 1f;
+            if (enter)
+                scaleInSent = true;
+
+            return new CarouselGestureOutcome(enter, spread, overview);
         }
 
         public void Reset()
@@ -44,15 +51,28 @@ namespace DigitalLove.Game.PuzzleSelection
             startDistance = state.Distance;
         }
 
-        private bool IsScaleIn(in TwoHandGestureState state)
+        private float ZoomProgress(in TwoHandGestureState state)
         {
-            if (startDistance <= 0.0001f)
-                return false;
+            if (startDistance <= 0.0001f || settings.ScaleInMinRatio <= 1f)
+                return 0f;
 
-            float farther = state.Distance - startDistance;
             float ratio = state.Distance / startDistance;
-            return farther >= settings.ScaleInMinDistance
-                && ratio >= settings.ScaleInMinRatio;
+            float ratioProgress = (ratio - 1f) / (settings.ScaleInMinRatio - 1f);
+            float farther = state.Distance - startDistance;
+            float distanceProgress = farther / Mathf.Max(settings.ScaleInMinDistance, 0.0001f);
+            return Mathf.Clamp01(Mathf.Min(ratioProgress, distanceProgress));
+        }
+
+        private float OverviewProgress(in TwoHandGestureState state)
+        {
+            if (startDistance <= 0.0001f || settings.OverviewMinRatio >= 1f)
+                return 0f;
+
+            float ratio = state.Distance / startDistance;
+            float closer = startDistance - state.Distance;
+            float ratioProgress = (1f - ratio) / (1f - settings.OverviewMinRatio);
+            float distanceProgress = closer / Mathf.Max(settings.OverviewMinDistance, 0.0001f);
+            return Mathf.Clamp01(Mathf.Min(ratioProgress, distanceProgress));
         }
     }
 }

@@ -13,22 +13,40 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private Transform sourceParent;
         [SerializeField] private SpaceShapingSettings settings;
         [SerializeField] private float previewSize = 0.16f;
+        [SerializeField] private bool labelsVisible;
 
         protected Transform ContentRoot => contentRoot;
         protected float PreviewSize => previewSize;
+
+        public string SunName { get; private set; } = string.Empty;
+
+        public Vector3 SunWorldPosition => planets.SunWorldPosition;
 
         private FieldPlanetSet planets;
 
         protected virtual void Awake()
         {
+            ClearGeneratedChildren(sourceParent);
             FieldPlanetSet.Prototypes prototypes = new(
                 sourcePrototype, sunPrototype, originPrototype, destinationPrototype);
             planets = new FieldPlanetSet(prototypes, null);
             planets.Initialize(sourceParent);
+            planets.SetLabelsVisible(labelsVisible);
+        }
+
+        private static void ClearGeneratedChildren(Transform parent)
+        {
+            for (int i = parent.childCount - 1; i >= 0; i--)
+            {
+                GameObject child = parent.GetChild(i).gameObject;
+                child.SetActive(false);
+                Destroy(child);
+            }
         }
 
         public virtual void Render(PuzzleData puzzle)
         {
+            SunName = string.Empty;
             if (puzzle == null)
             {
                 planets.Hide();
@@ -37,11 +55,30 @@ namespace DigitalLove.Game.SpaceShaping
 
             SpaceShapingSession session = new(
                 SpaceShapingSetup.Build(puzzle, PuzzleSimSettings.From(settings)));
+            SunName = FindSunName(session);
             planets.Apply(session);
             Fit(session);
         }
 
+        private static string FindSunName(SpaceShapingSession session)
+        {
+            for (int i = 0; i < session.SourceCount; i++)
+            {
+                if (session.IsSun(i))
+                    return session.Name(i);
+            }
+
+            return string.Empty;
+        }
+
         public virtual void Hide() => planets.Hide();
+
+        public void SetMapFade(Vector3 focus, float near, float far) =>
+            planets.SetMapFade(focus, near, far);
+
+        public void ClearMapFade() => planets.ClearMapFade();
+
+        protected void SetSunLabel(string text) => planets.ShowSunLabel(text);
 
         protected virtual void Fit(SpaceShapingSession session)
         {

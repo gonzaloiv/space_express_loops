@@ -20,7 +20,7 @@ namespace DigitalLove.Game.PuzzleSelection
                 ? positions[index]
                 : Vector3.zero;
 
-        public static PuzzleMapLayout Galaxy(int count, float radius = 0.5f, float height = 0.15f)
+        public static PuzzleMapLayout Galaxy(int count, float radius = 0.24f, float height = 0f)
         {
             if (count <= 0)
                 return new PuzzleMapLayout(System.Array.Empty<Vector3>());

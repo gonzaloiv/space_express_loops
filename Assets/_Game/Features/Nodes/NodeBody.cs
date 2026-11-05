@@ -6,11 +6,13 @@ namespace DigitalLove.Game.Nodes
     public class NodeBody : MonoBehaviour
     {
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+        private static readonly int ColorId = Shader.PropertyToID("_Color");
 
         [SerializeField] private Transform body;
         [SerializeField] private List<Renderer> renderers;
 
         private Renderer activeRenderer;
+        private MaterialPropertyBlock tintBlock;
 
         public void Init(float radius, int variantSeed)
         {
@@ -77,6 +79,24 @@ namespace DigitalLove.Game.Nodes
             Material material = activeRenderer.material;
             material.SetColor(BaseColorId, color);
             material.color = color;
+        }
+
+        public void SetTint(Color color)
+        {
+            if (activeRenderer == null)
+                return;
+
+            tintBlock ??= new MaterialPropertyBlock();
+            activeRenderer.GetPropertyBlock(tintBlock);
+            tintBlock.SetColor(BaseColorId, color);
+            tintBlock.SetColor(ColorId, color);
+            activeRenderer.SetPropertyBlock(tintBlock);
+        }
+
+        public void ClearTint()
+        {
+            if (activeRenderer != null)
+                activeRenderer.SetPropertyBlock(null);
         }
 
     }

@@ -11,8 +11,8 @@ the ship flies the deformed spacetime.
 Active work. The one thing being built.
 
 - [Puzzle map — the run as a global field](in-progress/puzzle-map.md) — puzzle fields in a galaxy
-  cluster; the selected field is a diorama, nearby full fields are culled by radius, the selection reads
-  by a selection cube, and S4 replaces the diorama with the shared full play field.
+  cluster; the selected field is a diorama, nearby full fields are culled by radius, and the selection
+  reads by a selection cube.
 
 - [Bake — role and sun alignment](in-progress/bake-role-sun-alignment.md) — make the bake produce the
   designed roles (sun-Curve, Clear, Mixed) so the 8-job set stops falling back to Clear or duplicates.
@@ -27,11 +27,11 @@ Queued. One plan moves to **Now** when it starts.
 
 Design-only or deferred. Nothing here is scheduled.
 
+- [Puzzle map — playable selected field](backlog/puzzle-map-play-field.md) — the selected map field
+  becomes the shared play field, with one session and an in-place play-only group.
+
 - [Puzzle map — selection info and onboarding](backlog/puzzle-map-info.md) — the cube carries the job
   name, state and stars, and the swipe/zoom verbs are taught in place.
-
-- [Space shaping — the scale ghost](backlog/space-shaping-scale-ghost.md) — one scale ladder shared by
-  the bake and the pinch, with a ghost preview of the value the hands are about to commit.
 
 - [TTS job intro — the contract screen](backlog/tts-job-intro.md) — a field-side contract screen
   (manual + tech voice) that can reposition around the field; the camera-operator companion is deferred.

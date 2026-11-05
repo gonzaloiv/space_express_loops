@@ -18,6 +18,7 @@ namespace DigitalLove.Game.Nodes
         [SerializeField] private float farScale = 0.6f;
 
         private Camera view;
+        private float fadeMultiplier = 1f;
         private Camera View => view != null ? view : view = Camera.main;
 
         private void Awake()
@@ -34,6 +35,8 @@ namespace DigitalLove.Game.Nodes
         }
 
         public void Hide() => label.enabled = false;
+
+        public void SetFade(float amount) => fadeMultiplier = 1f - Mathf.Clamp01(amount);
 
         private void LateUpdate() => Apply();
 
@@ -75,7 +78,7 @@ namespace DigitalLove.Game.Nodes
             float parentScale = transform.parent != null ? transform.parent.lossyScale.y : 1f;
             float scale = worldHeight * Mathf.Lerp(1f, farScale, fade) / Mathf.Max(parentScale, 0.00001f);
             transform.localScale = new Vector3(scale, scale, scale);
-            label.alpha = 1f - fade;
+            label.alpha = (1f - fade) * fadeMultiplier;
         }
     }
 }

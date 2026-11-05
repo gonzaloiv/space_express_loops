@@ -15,6 +15,7 @@ namespace DigitalLove.Game.SpaceShaping
         private FieldPlanetBehaviour sunPlanet;
         private FieldPlanetBehaviour originPlanet;
         private FieldPlanetBehaviour destinationPlanet;
+        private bool labelsVisible = true;
 
         public FieldPlanetSet(Prototypes prototypes, RouteColors? routeColors)
         {
@@ -30,6 +31,70 @@ namespace DigitalLove.Game.SpaceShaping
             sunPlanet = Create(prototypes.Sun);
             originPlanet = Create(prototypes.Origin);
             destinationPlanet = Create(prototypes.Destination);
+        }
+
+        public void SetLabelsVisible(bool visible)
+        {
+            labelsVisible = visible;
+            sources.ForEachFrom(0, view => view.SetLabelsVisible(visible));
+            sunPlanet.SetLabelsVisible(visible);
+            originPlanet.SetLabelsVisible(visible);
+            destinationPlanet.SetLabelsVisible(visible);
+        }
+
+        public Vector3 SunWorldPosition =>
+            sunPlanet != null ? sunPlanet.transform.position : parent.position;
+
+        public void ShowSunLabel(string text)
+        {
+            sources.ForEachFrom(0, view => view.SetLabelsVisible(false));
+            originPlanet.SetLabelsVisible(false);
+            destinationPlanet.SetLabelsVisible(false);
+            sunPlanet.SetLabelsVisible(true);
+            sunPlanet.SetLabel(text);
+        }
+
+        public void SetMapFade(Vector3 focus, float near, float far)
+        {
+            sources.ForEachFrom(0, view => ApplyFade(view, focus, near, far));
+            ApplyFade(sunPlanet, focus, near, far);
+            ApplyFade(originPlanet, focus, near, far);
+            ApplyFade(destinationPlanet, focus, near, far);
+        }
+
+        public void ClearMapFade()
+        {
+            sources.ForEachFrom(0, view => ClearFade(view));
+            ClearFade(sunPlanet);
+            ClearFade(originPlanet);
+            ClearFade(destinationPlanet);
+        }
+
+        private static void ClearFade(FieldPlanetBehaviour planet)
+        {
+            if (planet == null || !planet.gameObject.activeSelf)
+                return;
+
+            planet.SetCulled(false);
+            planet.SetFade(0f);
+        }
+
+        private static void ApplyFade(
+            FieldPlanetBehaviour planet, Vector3 focus, float near, float far)
+        {
+            if (planet == null || !planet.gameObject.activeSelf)
+                return;
+
+            float distance = Vector3.Distance(planet.transform.position, focus);
+            if (distance >= far)
+            {
+                planet.SetCulled(true);
+                planet.SetFade(1f);
+                return;
+            }
+
+            planet.SetCulled(false);
+            planet.SetFade(Mathf.InverseLerp(near, far, distance));
         }
 
         public void Apply(SpaceShapingSession session)
@@ -127,6 +192,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             FieldPlanetBehaviour planet = Object.Instantiate(prototype, parent);
             planet.Initialize();
+            planet.SetLabelsVisible(labelsVisible);
             return planet;
         }
 
@@ -139,6 +205,11 @@ namespace DigitalLove.Game.SpaceShaping
                 planet.Hide();
         }
 
-        private FieldPlanetBehaviour Source(int index) => sources.EnsureSlot(index);
+        private FieldPlanetBehaviour Source(int index)
+        {
+            FieldPlanetBehaviour source = sources.EnsureSlot(index);
+            source.SetLabelsVisible(labelsVisible);
+            return source;
+        }
     }
 }

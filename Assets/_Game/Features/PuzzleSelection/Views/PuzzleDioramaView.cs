@@ -32,6 +32,13 @@ namespace DigitalLove.Game.PuzzleSelection
             HideUnusedCubes(count);
         }
 
+        public void Render(int index, PuzzleData puzzle)
+        {
+            Render(puzzle);
+            if (puzzle != null)
+                SetSunLabel((index + 1) + " · " + SunName);
+        }
+
         public override void Hide()
         {
             base.Hide();

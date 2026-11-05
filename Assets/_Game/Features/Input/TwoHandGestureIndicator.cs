@@ -9,6 +9,7 @@ namespace DigitalLove.Input
         [SerializeField] private LineRenderer handLine;
         [SerializeField] private LineRenderer leftPinchMarker;
         [SerializeField] private LineRenderer rightPinchMarker;
+        [SerializeField] private LineRenderer startMarker;
         [SerializeField] private ColorValue swipeColor;
         [SerializeField] private ColorValue twoHandColor;
         [SerializeField] private ColorValue leftMarkerColor;
@@ -21,6 +22,7 @@ namespace DigitalLove.Input
         private bool wasVisible;
         private bool leftMarkerVisible;
         private bool rightMarkerVisible;
+        private bool startMarkerVisible;
 
         private void Awake()
         {
@@ -32,6 +34,7 @@ namespace DigitalLove.Input
             handLine.enabled = false;
             SetMarkerVisible(leftPinchMarker, false, ref leftMarkerVisible);
             SetMarkerVisible(rightPinchMarker, false, ref rightMarkerVisible);
+            SetMarkerVisible(startMarker, false, ref startMarkerVisible);
             wasVisible = false;
         }
 
@@ -47,17 +50,25 @@ namespace DigitalLove.Input
             bool right = state.IsRightPinching || both;
 
             handLine.enabled = single || both;
-            ShowMarkers(state, left, right);
+            ShowMarkers(state, single, left, right);
             LogVisibility(state, single, both, left, right);
 
             if (handLine.enabled)
                 DrawLine(state, single);
         }
 
-        private void ShowMarkers(TwoHandGestureState state, bool left, bool right)
+        private void ShowMarkers(
+            TwoHandGestureState state, bool single, bool left, bool right)
         {
             ShowMarker(leftPinchMarker, state.Left.Point, left, leftMarkerColor.value, ref leftMarkerVisible);
             ShowMarker(rightPinchMarker, state.Right.Point, right, rightMarkerColor.value, ref rightMarkerVisible);
+
+            Color startColor = state.IsLeftPinching
+                ? leftMarkerColor.value
+                : rightMarkerColor.value;
+            ShowMarker(
+                startMarker, state.DragStartPoint, single,
+                startColor, ref startMarkerVisible);
         }
 
         private void LogVisibility(

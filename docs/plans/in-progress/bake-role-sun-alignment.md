@@ -1,11 +1,15 @@
 # Bake — role and sun alignment
 
-**Status:** now · space shaping · updated 2026-11-05 — S1/S2 landed; jobs 1–3 bake; job 4’s
-well-on-post-clear removed the single `Clear` but not the single `Curve`. The second-blocker path is gone;
-**`MakeBlockerFatal` is implemented** and its dedicated test is in. The bounded 5×4 move/grow sweep is
-**done and negative** (`blocker 0, radius 0.018, moved=False, grown=False, width 0.071`); stop for the
-job/field decision. Keep `Mixed`/`Zones = 2`/`MinRoutes = 2`/`MinBlockers = 1`; a zone-width increase needs the cube max,
-`Zones = 1` is out of plan, and the contract is not relaxed. Job 4 remains 2/4; jobs 5–8 and S4 remain.
+**Status:** now · space shaping · updated 2026-11-05 — S1/S2 landed; jobs 1–3 bake; the rejected
+second-blocker probe is removed. **Job 4's block is provisional:** `MakeBlockerFatal` is implemented
+(original position, move-only, or grow in place at 1.5×/2×/2.5×/3×/4×); §6.6 (job-4 flag), §6.3's
+report/score, and §6.7's existence-only role probe/`Zones = 1` trap/cheap prefilter/`WellMove` gates are
+landed. **A+B is implemented and negative:** the 6-planet Ring home field is `NoSolution`
+(`pairs 0`, `accepted 0`, 6 planets, blocker 0 `r 0.029`), not `ClearSingle`/`Mixed StartTooStraight`; the
+6-planet variant has no run. **B is negative; the §7 C/D decision applies** — C (multi-zone Curve job 4,
+job 8 first Mixed) is the least invasive; D if schedule wins; E rejected. The contract stays `Mixed`/
+`Zones = 2`/`MinRoutes = 2`/`MinBlockers = 1`; `Zones = 1` and `Zones = 3` are out of plan. Jobs 5–8 and S4
+remain.
 
 **Related:** [vision](../../design/vision.md) · [jobs](../../design/jobs.md) ·
 [progression](../../design/systems/progression.md) · [core loop](../../design/core-loop.md) ·
@@ -26,56 +30,36 @@ sun/start rule, contract fields, paths, log, test-only validator, and loose-fall
 `PuzzleRunChoiceTests`/`PuzzleSolutionClassifierTests`/`PuzzleBakeTests`/`PuzzleSearchTests` pass 29/29
 (including the 18/18 run/validator tests). The S3 diagnostic is in: `PuzzleRunReport` shows job 2 as
 6 pairs / 2 length / 4 no-planet / 0 sun-chord, and job 3 as 10 pairs / 2 length / 8 no-planet / 0
-sun-chord; widening the planet band to 4× does not change the counts. The report counts `NoPlanetBlocker`
-before `SunOnChord`, so the sun-chord slot is masked and “the sun is not the problem” is not proven yet.
+sun-chord; widening the planet band to 4× does not change the counts. The report now counts
+`NoPlanetBlocker` and `SunOnChord` independently.
 The true pin, separate `SunOnChord`, independent report counts, `Fits` sun check, placement tests, edge
 offset (1.5×), six-planet job 3, and the role-dependent `Clear` offset (0.5×) are in;
 `PuzzleFieldTests` pass 26/26. The explicit `PuzzleJobBakeTests` is 2/4: jobs 1–3 bake (job 3 seed 146,
-two routes); job 4 is `NotMixed` with a pinned accepted run (`pairs 1`, `accepted 1`); jobs 5–8 are not
-reached by `JobSet`; the two-ship fixture is the remaining ordinary failure. The Mixed blocker/well has
-been tried at edge, far, in-band, and separated-fraction positions; the logs still show a single `Clear`
-at 0.286 against the `Mixed` 0.343 (and a single `Curve` at 0.571 against 0.686). The single-role route
-still solves, so random offsets cannot make `Mixed` cheapest. The first post-clear obstacle (a free
-third planet) removed the single `Clear` but left the single `Curve` at 0.571 against the `Mixed` 0.686.
-The single-role fallback then failed `FewerZones`: the two-zone Curve has a shorter one-zone route. The
-**well index** is now on `PuzzlePlanetListAsset`, and `PuzzlePostClearPlacement` moves the well itself onto
-the post-clear path. That removed the single `Clear`, but the single `Curve` remains 0.571 against the
-`Mixed` 0.686, so the `Mixed` is not cheapest. **Post-curve probe implemented.** `PuzzlePostClearPlacement`
-moves the well, rebuilds the field, simulates the single-Curve path, and tries one second-blocker
-candidate on that path within `clearWidth * 0.5` of the first blocker. It reports `PuzzlePostClearReport`
-through the bake/scanner and keeps the placement only after verifying:
-
-1. the single `Clear` still fails the well,
-2. the single `Curve` fails the blocker,
-3. the `Mixed` clears the required sources and grows the well,
-4. the `Mixed` is strictly cheapest,
-5. the `Mixed`'s two zones can cover the required sources.
-
-Keep `Mixed`/`Zones = 2`/`MinRoutes = 2`/`MinBlockers = 1`; the second blocker does not change those
-contract values, and `MinRoutes` covers the routes. The single-role `Zones = 1` with `MinRoutes` reset is
-a job change outside the plan (a `Zones = 2` single role fails `FewerZones`), not an in-plan fallback. If
-the probe fails, stop and make the job 4 job/field decision; do not silently switch to `Zones = 1`. The
-probe report and dedicated test are in. The test reports `Tried=True, kept=False, clear/curve/mixed false,
-reach 0.036, blocker 0`: no second-blocker candidate fits. The Mixed Clear half-width (0.036) cannot reach
-a second blocker that `Fits` keeps ~0.120 from the first; the Curve-zone alternative has the same
-zone/separation limit. The probe is conclusive: a second blocker cannot sit inside the 0.036 Clear
-half-width and stay 0.120 from the first. The job 4 decision is **`MakeBlockerFatal`**: make the existing
-blocker fatal on the single-Curve path (move it or grow its radius in place). The existing blocker is also
-the run blocker, so keep it inside the run's block band or grow its radius in place, and verify the pinned
-`TryPick`/`Apply` candidate still selects; then run the five checks. **Landed:** `MakeBlockerFatal` is in
-`PuzzlePostClearPlacement`; the second-blocker probe/report/test fields and `TryPickCandidate` are removed.
-The dedicated test now reports the blocker index/radius and moved/grown flags. Its latest result is
-`Tried=True, kept=False, blocker 0, radius 0.018, moved=False, grown=False, clear/curve/mixed false,
-width 0.071`: no fatal placement yet. The bounded **5×4 sweep** is done — the single-Curve solution's candidate points × radius scales
-1.5×/2×/2.5×/3×, each checking the run band, the pinned `TryPick`/`Apply`, the cube/`Fits`, and the five
-checks. It is **negative** (same report; 14.5 s); stop for the job/field decision. The grow path also changes the blocker radius,
-so verify the field's cube range (`PuzzleFieldBake.Apply`/`cubeSizeMin/Max`/`PuzzleZoneCandidates`) and the
-visual separation (`PuzzleBlockerPlacement.Fits`/`separationScale`; endpoints/other planets/sun). The
-zone-width alternative needs the `PuzzleZoneCandidates`/cube max check: the clear width is 0.072 and the
-required separation 0.120, so a covering zone needs a full width >0.120; if the cube max is below that, it
-is not viable. The single-role
-`Zones = 1`/`MinRoutes` reset is a job change outside the plan; do not relax. Then jobs 5–8, the
-collect-all harness, the filtered two-ship gate, and S4.
+two routes); the earlier job-4 scan reported `WrongRoleRoute` on its best post-clear attempt (seed 7 itself
+is `NoSolution`) with a pinned accepted run (`pairs 1`, `accepted 1`); jobs 5–8 are not
+reached by `JobSet`; the two-ship fixture is the remaining ordinary failure. Job 4 is **`MakeBlockerFatal`**: move the existing blocker or grow its radius in place while keeping it
+inside the run's block band, then verify the pinned `TryPick`/`Apply` candidate and the five checks:
+(1) the single `Clear` still fails the well, (2) the single `Curve` fails the blocker, (3) the `Mixed`
+clears the required sources and grows the well, (4) the `Mixed` is strictly cheapest, and (5) its
+two zones cover the required sources. **Landed:** `PuzzlePostClearPlacement` tries the original position,
+move-only candidates, and radius scales 1.5×/2×/2.5×/3×/4×; the rejected second-blocker probe, its
+report/test fields, and `TryPickCandidate` are removed. The `ref` plumbing and the best-candidate score
+are fixed. **The existence-only probe is landed:** `CheckRole` uses `TrySelect` + `Matches` +
+`PuzzleVerifier` + `SunRule`, skipping start/cheapest/routes; `CheckRoles` adds the `Zones = 1` singles;
+`CheckFull` runs the full `Bake` only for a Mixed existence route with `MixedCovers`; `WellMove.Try` requires
+a start crash, no single-zone Clear, a Mixed route with `MixedCovers`, and a Curve search path. **A+B is
+implemented:** the no-Curve branch now `Verify`s the home field and keeps it as `sweep.Best`, with no
+`WellMove`/sampling changes; job 4 is a 6-planet Ring. **The result is negative:** the 6-planet home field
+is `NoSolution` (`pairs 0`, `accepted 0`, blocker 0 `r 0.029`, width 0), not
+`ClearSingle`/`Mixed StartTooStraight`; the 6-planet variant has no run. **B is negative; take §7 C/D**
+(C: multi-zone Curve job 4, job 8 first Mixed; D if schedule wins). The rejected probe restores the well
+(its test passes), the ladder reaches `planetRadiusMax` (4×), and the scanner prefers the furthest stage.
+§6.6 scopes the probe to job 4; §6.7's existence/gates are in. The pin (§6.5) is not the
+immediate blocker. No second blocker fits (the old Clear half-width 0.036 vs the ~0.120 `Fits` separation);
+check `PuzzleZoneCandidates`/the cube max before treating it as viable. Keep
+`Mixed`/`Zones = 2`/`MinRoutes = 2`/`MinBlockers = 1`; `Zones = 1` is a job change outside the plan, so
+**job 4's block is provisional** — do not silently relax it. Jobs 5–8, the collect-all harness, the
+filtered two-ship gate, and S4 remain.
 
 ## 1. Why
 
@@ -190,15 +174,17 @@ the wrong lesson. Fix the bake, then author the run.
 - **Role-cost check.** The derived blocker must make the requested role the cheapest: `Clear` for job 3,
   and `Curve` for job 2 (the star grows). If the star growth cannot be the cheapest `Curve`, job 2 is a
   field decision — or an explicit job change outside this plan — not a forced `Curve`.
-- **Job 4 `MakeBlockerFatal`.** **Landed:** `PuzzlePostClearPlacement` takes the existing blocker
-  (`blockerIndex`), moves it or grows its radius in place within the run band/cube/separation; the
-  second-blocker path is removed. The first attempt is negative: one move and a 1.5× grow (`blocker 0,
-  radius 0.018, moved=False, grown=False, width 0.071`). Next: the **bounded sweep** — the single-Curve
-  solution's candidate points × radius scales 1.5×/2×/2.5×/3× within `planetRadiusMax`/the cube/zone;
-  each checks the run band, the pinned `TryPick`/`Apply`, the cube range/`Fits` separation, and the five
-  checks; cap 5×4. If none works, stop for the job/field decision. A zone-width increase is the
-  alternative only if the `PuzzleZoneCandidates`/cube max can exceed 0.120; `Zones = 1`/`MinRoutes` reset
-  is a job change outside the plan; do not relax.
+- **Job 4 `MakeBlockerFatal`.** **Landed; A+B is implemented.** §6.6 scopes the probe to job 4. §6.7's
+  `CheckRole` is existence-only (`TrySelect` + `Matches` + `PuzzleVerifier` + `SunRule`), `CheckRoles` adds
+  the `Zones = 1` singles, `CheckFull` runs the full `Bake` only for a Mixed existence route with
+  `MixedCovers`, and `WellMove.Try` keeps its start/no-single-Clear/Mixed/Curve gates. The no-Curve branch
+  now `Verify`s the home field and keeps it as `sweep.Best` (no `WellMove`/sampling changes), and job 4 is a
+  6-planet Ring. **The probe result is negative:** the 6-planet home field is `NoSolution`
+  (`pairs 0`, `accepted 0`, blocker 0 `r 0.029`), not `ClearSingle`/`Mixed StartTooStraight`; the 6-planet
+  variant has no run. **B is negative; §7 C/D applies** (C: multi-zone Curve job 4, job 8 first Mixed; D if
+  schedule wins). The growth ladder reaches `planetRadiusMax`; §6.2 remains. A 200-seed sweep
+  (7–206) finds no `Mixed` bake. `Zones = 1`/`MinRoutes` reset is a job change outside the plan. **Decision:
+  provisional; do not relax the contract.**
 - **Exit:** job 2 bakes a planet-blocked, sun-off-chord `Curve` whose zone is centred on the star and
   grown; job 3’s derived blockers make `Clear` cheapest and offer two routes; job 4’s existing blocker
   fatal on the single-Curve path makes the single `Clear` fail the well and the single `Curve` fail the
@@ -227,7 +213,9 @@ the wrong lesson. Fix the bake, then author the run.
   fixture.
 - **Exit:** eight assets, no duplicates/fallback warnings, chapter references the eight updated assets,
   log shows 1 `Curve`, 2 `Curve`, 3 `Clear`, 4 `Mixed`, 5 `Curve`, 6 `Curve`, 7 `Curve`, 8 `Mixed`,
-  routes ≥ 2 on 3/4/5/7/8, and the Creator bake tests are green.
+  routes ≥ 2 on 3/4/5/7/8, and the Creator bake tests are green. **Job 4 is excluded from the S4 gate
+  while its block is provisional:** either it bakes `Mixed` after the §6 fixes, or the §6.8 curriculum
+  fallback replaces it and the log/board show seven jobs.
 
 ## 3. Tests
 
@@ -246,12 +234,13 @@ the wrong lesson. Fix the bake, then author the run.
 - The `NoSolution` path carries the run report; `01_03` reports its pairs/filters instead of 0.
 - The derived blocker makes the requested role the cheapest: `Clear` for job 3, `Curve` for job 2; if the
   star growth cannot be cheapest, job 2 is a job/field decision.
-- Job 4: `MakeBlockerFatal` is landed; the bounded 5×4 sweep is **negative** (`blocker 0, radius 0.018,
-  moved/grown false, width 0.071`). Stop for the job/field decision; the zone-width increase is the
-  remaining field option (cube max permitting), and `Zones = 1` remains a job change outside the plan. The zone-width alternative needs the
-  `PuzzleZoneCandidates`/cube max check (clear width 0.072, separation 0.120). `01_04` is **pending** the
-  explicit rerun; it is not claimed yet. A single-role `Zones = 2` fails `FewerZones`; `Zones = 1` is a
-  job change outside the plan.
+- Job 4: `MakeBlockerFatal` is landed; **A+B is negative**: the 6-planet Ring home field is `NoSolution`
+  (`pairs 0`, `accepted 0`, 6 planets, blocker 0 `r 0.029`), so §7 C/D applies. The home-field-on-`NoCurve`
+  report is landed; Mixed-path/run-band sampling and `WellMove`-without-Curve were not taken (B used the
+  6-planet variant). The dedicated explicit tests are `Job4_MakeBlockerFatal_ReportsFiveChecks` (red by
+  design; not the green gate) and `Probe_Rejected_LeavesFieldUnchanged` (passes). The best-attempt metric
+  uses the furthest stage, then width; the 200-seed sweep is still a log artifact. `01_04` is
+  **provisional**, not claimed. `Zones = 1` remains a job change outside the plan.
 - Job 2 is `CentredGrown`; job 8 is `InZone`; jobs 3/4/5/6/7 are `OutOfZone` and have no solved zone on
   the sun. Jobs 5/8 start at the field centre; jobs 6/7 start at the run midpoint.
 - A four-planet `Ring` tutorial bakes a crash; a one-route field fails `minRoutes: 2` for jobs 3/4/5/7/8.
@@ -270,7 +259,7 @@ the wrong lesson. Fix the bake, then author the run.
 
 - Changing the job ladder, lore, or classroom copy.
 - Resize, multi-ship, or new gestures.
-- The scale ladder and ghost ([space-shaping-scale-ghost](../backlog/space-shaping-scale-ghost.md)).
+- The scale ladder and ghost.
 
 ## 5. Risks
 
@@ -282,19 +271,16 @@ the wrong lesson. Fix the bake, then author the run.
   count.
 - **Job 1 role fix.** `Clear` was cheaper than `Curve` on the 3-planet field; job 1 is now four planets so
   it has a non-blocker well.
-- **Job 4 `MakeBlockerFatal`.** The second blocker cannot fit: the Clear half-width 0.036 vs the `Fits`
-  separation 0.120. The existing blocker is also the run blocker, so moving it can invalidate the pinned
-  `TryPick`/`Apply` candidate; keep it inside the run's block band or grow its radius in place, and verify
-  the run candidate. The grow path changes the radius: verify the cube range/zone candidates and the visual
-  separation (`Fits`/`separationScale`); if the grown radius breaks the cube/zone or overlaps, use the move
-  path. The single `Clear` fails the well; the single `Curve` fails the existing blocker; the
-  `Mixed`'s Clear + Curve is the only route. `MakeBlockerFatal` is landed and the second-blocker path is
-  removed; the first attempt is negative (`blocker 0, radius 0.018, moved/grown false, width 0.071`). Next:
-  the bounded sweep (curve points × radius scales; the run band, the pinned `TryPick`/`Apply`, the
-  cube/`Fits`, the five checks; cap 5×4); if none, stop. The zone-width increase is the alternative only
-  if the cube max can exceed 0.120 (`PuzzleZoneCandidates`); `Zones = 1`/`MinRoutes` reset is a job change
-  outside the plan; do not relax. The blocker is a generator
-  rule, not a hand-edited field.
+- **Job 4 `MakeBlockerFatal`.** The existing blocker is also the run blocker; moving it can invalidate
+  the pinned candidate, and growing it changes the cube range and visual separation. The bounded sweep
+  (original + 1.5×/2×/2.5×/3×/4×) is negative, but **`NoCurve` is a probe deadlock**: `TrySweep` aborts
+  when no Curve path exists (`PuzzlePostClearPlacement.cs:150-162`), so the home field is never verified;
+  `WellMove.Try` requires the Curve path the job wants to eliminate (`:400-406`). The best pre-gate
+  `ClearSingle`/`Mixed StartTooStraight` is the real signal. Next: the §7 decision (home-field report, drop
+  the Curve requirement, sample from the Mixed path/run band; then a bounded field variant or §6.8). The
+  `ref` plumbing, best-candidate score, existence-only `CheckRole`, `Zones = 1`, `MixedCovers`, and well
+  restore are landed. Do not relax the contract. `Zones = 1`/`MinRoutes` reset is out of plan. The blocker
+  remains a generator rule, not a hand-edited field.
 - **Derived blocker.** Job 2/3 must stay derived: a generator rule places a blocker on the chosen chord;
   do not hand-edit `PuzzlePlanetListAsset`. Pin the candidate; the two job-3 blockers use **two runs, one
   each**, with `MinBlockers = 1` on the chosen run and `MinRoutes = 2`; keep `SunRule` for the solved zone
@@ -308,3 +294,98 @@ the wrong lesson. Fix the bake, then author the run.
 - **Test set.** The loose fallback is gone; the builder only ships strict bakes.
 - **Second truth.** A `PuzzleJobValidator` that rechecks the brief will drift from the creator; keep the
   checks in `PuzzleFieldBake` and keep the validator test-only, if it survives at all.
+
+## 6. Code-agent review actions (2026-11-05)
+
+The job-4 block is **provisional** until these land. The contract stays `Mixed`/`Zones = 2`/
+`MinRoutes = 2`/`MinBlockers = 1`; do not relax it.
+
+1. **Restore the well on a rejected probe.** `PlaceWellForClear` moves `planets.wellIndex`
+   (`PuzzlePostClearPlacement.cs:55-78,114`) and `Apply` restores it when the probe is not kept
+   (`:23-29,85-89`). **Landed:** `Probe_Rejected_LeavesFieldUnchanged` passes.
+2. **Widen the option the plan names.** The probe only grows the blocker
+   (`PuzzlePostClearPlacement.cs:251-254`); settings allow `planetRadiusMax = 0.06`
+   (`SpaceShapingSettings.asset:21`) and `CubeRange` allows 0.132 (`PuzzleFieldBake.cs:101-102`). The
+   ladder now includes 4× (0.018 → 0.060) and the last report shows `r 0.060`; the growth side is landed.
+   The search already sweeps `PuzzleZoneCandidates.Sizes`/`Scales` within that range, so the missing
+   experiment is a deliberately wider `cubeSizeMax` (or a targeted covering zone), not another width loop
+   inside the probe. Record the best result per scale before concluding a job/field change.
+3. **Record why a candidate failed — fix the best-candidate sentinel.** **Landed:** `Verify` passes the
+   report by `ref`; `Score` returns 0 for `!Tried`, ranks a Mixed-route field ahead of a no-route field,
+   and `MakeBlockerFatal` takes the base report's `Stage` after `TrySweep`. The full-gate best report is
+   `NoCurve` (the well move removed the Curve path); the earlier `(0.15,-0.01,-0.23)` /
+   `clear/curve True` / `mixed StartTooStraight` result was pre-full-gate and is superseded. `Moved`/`Grown`
+   still mean "kept."
+4. **Fix the best-attempt metric and commit the sweep.** `PuzzleSeedScanner.Record` now prefers stage, then
+   width (`PuzzleSeedScanner.cs:54-90`), and reports the matching seed/status/report; landed. Still open:
+   the 200-seed sweep (7–206) as an `[Explicit]` test or log artifact. **Landed:**
+   `Probe_Rejected_LeavesFieldUnchanged` now asserts the fixture is rejected instead of ignoring it.
+5. **Pin the run actually used — not the immediate job-4 blocker.** The real best candidate has
+   `pairs 1`/`accepted 1`; the pinned run is valid. Keep the index pin/fallback test for job 3's two-run
+   `Place` (`PuzzleBlockerPlacement.cs:72-80`), but the job-4 gap is pure-route removal and the Mixed start,
+   not the pin.
+6. **Scope `MakeBlockerFatal` to job 4.** `ShouldRun` gates on `seed.makeBlockerFatal`
+   (`PuzzlePostClearPlacement.cs:32-35`), not `Mixed` alone, and job 8 is Mixed
+   (`PuzzleJobContracts.cs:60-67`). **Landed:** `PuzzleJobContract.MakeBlockerFatal`/
+   `PuzzleSeed.makeBlockerFatal` gate the probe; job 4 is true and job 8 false.
+7. **Measure pure-role existence, not just cheapest.** This was the job-4 metric bug.
+   `RoleBakes` returned `baked.Baked` (`PuzzlePostClearPlacement.cs:217-226`), but
+   `PuzzleSolutionSelection.Select` returns `WrongRoleRoute` when a Clear/Curve search solution exists and
+   is merely more expensive (`PuzzleSolutionSelection.cs:25-32`). **Landed:** `CheckRole` is an
+   existence-only probe (`TrySelect` + `Matches` + `PuzzleVerifier` + `SunRule`, skipping
+   start/cheapest/routes); `CheckRoles` adds the `Zones = 1` singles; `CheckFull` runs the full `Bake` only
+   for a Mixed existence route with `MixedCovers`; `WellMove.Try` requires a start crash, no single-zone
+   Clear, a Mixed route with `MixedCovers`, and a Curve search path. **With A, the no-Curve branch verifies
+   the home field:** the 6-planet Ring variant reports `NoSolution` (`pairs 0`, `accepted 0`), so the
+   home-field diagnostic and B are both negative. **Take §7 C/D.** The 200-seed artifact remains open.
+8. **Decide the curriculum fallback (design-only, no code).** Job 4 is the Ring act's Mixed lesson. If it
+   stays blocked, decide whether the run ships seven jobs, substitutes a Mixed job, or brings job 8's
+   lesson forward; update `jobs.md` and the chapter. Do not leave job 4 in the S4 exit gate while
+   withholding it.
+
+**Next order:** B is negative; take C/D. Do not run another seed sweep or add probe features. §6.5 is job-3
+hygiene, not the job-4 blocker.
+
+## 7. Job 4 decision (2026-11-05)
+
+The probe is now sound; `NoCurve` is a sampling deadlock, not a field verdict. The best pre-gate candidate
+has `ClearSingle=True` and `Mixed StartTooStraight`, and the 200-seed sweep (7–206) is negative. The
+8-planet Ring is likely over-constrained; another probe feature or seed sweep is not a plan.
+
+**Decision (2026-11-05): A+B; B is negative.** The 6-planet Ring home field is `NoSolution`
+(`pairs 0`, `accepted 0`, 6 planets, blocker 0 `r 0.029`), not `ClearSingle`/`StartTooStraight`; the
+6-planet variant has no run. Take C (or D if schedule wins). E is rejected: do not relax "Mixed is the only
+route" without a design change.
+
+**Recommendation (record):** one last measurement, one bounded field variant, then the curriculum decision.
+
+1. **Last measurement (diagnostic only).** Evaluate the home field when no Curve path exists and report
+   the home-field `Mixed`/`ClearSingle`/`StartTooStraight`. Do **not** change `WellMove` or add
+   Mixed-path/run-band sampling in this step; those are probe features and the plan says no more probe
+   features. If the home-field report already shows `Mixed StartTooStraight` + `ClearSingle`, go straight to
+   the bounded variant.
+2. **One bounded field variant (one morning).** Try a **6-planet Ring** (design allows 6–8; this changes the
+   job contract from `PlanetCount = 8`, so update `PuzzleJobContracts`/`jobs.md`/the chapter if it wins),
+   with one bounded blocker placement sweep. Keep `Zones = 2`, `MinRoutes = 2`, and "Mixed is the only
+   route." `Zones = 3` is not authorized by the contract and is out of this plan.
+3. **If the variant is negative, take the curriculum fallback.** Least invasive: job 4 becomes a multi-zone
+   **Curve** (it still teaches "several zones") and job 8 becomes the first Mixed. Other options: ship seven
+   jobs or substitute a Mixed job.
+4. **Do not silently relax "only route."** If a pure Clear alternate is acceptable, that is a deliberate
+   `jobs.md` change to "Mixed is the cheapest route"; it skips the job-4 lesson and needs a design call.
+
+**Options**
+
+| # | Option | Cost | Risk |
+|---|---|---|---|
+| A | Last measurement on the current 8-planet field | small | may only confirm the field is negative |
+| B | A + 6-planet Ring / bounded blocker placement (contract `PlanetCount` change) | one morning | may still hit `ClearSingle`/`StartTooStraight` |
+| C | Job 4 becomes multi-zone Curve; job 8 is the first Mixed | content + chapter change | job 4 loses the Mixed lesson; job 8 carries it |
+| D | Ship seven jobs or substitute a Mixed job | content change | the Ring act loses its Mixed beat |
+| E | Relax "only route" to "Mixed cheapest" | design change | pure Clear escape skips the lesson |
+
+**Decision:** A+B is negative; take C (or D if schedule wins). E is rejected. Time-box to one morning; no
+more seed sweeps and no more probe features.
+
+**Decision rule:** if the home-field report shows `Mixed StartTooStraight` and no blocker placement can
+remove `ClearSingle`/`StartTooStraight`, the field/contract is the problem, not the probe. Then pick C or D.

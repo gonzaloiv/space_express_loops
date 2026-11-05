@@ -4,25 +4,22 @@ namespace DigitalLove.Game.PuzzleSelection
     {
         public readonly float ScaleInMinRatio;
         public readonly float ScaleInMinDistance;
-        public readonly float MinSwipeDistance;
-        public readonly float MinSwipeSpeed;
-        public readonly float SwipeHorizontalDominance;
+        public readonly float OverviewMinRatio;
+        public readonly float OverviewMinDistance;
 
         public CarouselGestureSettings(
             float scaleInMinRatio,
             float scaleInMinDistance,
-            float minSwipeDistance,
-            float minSwipeSpeed,
-            float swipeHorizontalDominance)
+            float overviewMinRatio,
+            float overviewMinDistance)
         {
             ScaleInMinRatio = scaleInMinRatio;
             ScaleInMinDistance = scaleInMinDistance;
-            MinSwipeDistance = minSwipeDistance;
-            MinSwipeSpeed = minSwipeSpeed;
-            SwipeHorizontalDominance = swipeHorizontalDominance;
+            OverviewMinRatio = overviewMinRatio;
+            OverviewMinDistance = overviewMinDistance;
         }
 
         public static CarouselGestureSettings Default => new(
-            1.15f, 0.06f, 0.03f, 0.25f, 1.5f);
+            1.5f, 0.08f, 0.6f, 0.08f);
     }
 }

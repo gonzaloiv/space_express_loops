@@ -2,12 +2,6 @@ using UnityEngine;
 
 namespace DigitalLove.Input
 {
-    public enum HandSide
-    {
-        Left,
-        Right
-    }
-
     public readonly struct HandPinchState
     {
         public readonly bool IsPinching;
@@ -47,7 +41,6 @@ namespace DigitalLove.Input
         public bool IsLeftPinching => Left.IsPinching;
         public bool IsRightPinching => Right.IsPinching;
         public bool IsSingleHandPinching => IsLeftPinching != IsRightPinching;
-        public bool IsAnyPinching => IsLeftPinching || IsRightPinching;
         public Vector3 DragPoint => IsLeftPinching ? Left.Point : Right.Point;
         public Vector3 DragStartPoint => IsLeftPinching ? Left.StartPoint : Right.StartPoint;
     }

@@ -5,135 +5,81 @@ namespace DigitalLove.Game.PuzzleSelection
 {
     public class RunCarouselGesture
     {
-        private readonly CarouselGestureSettings settings;
         private readonly CarouselTwoHandGesture twoHand;
         private bool wasSingleHand;
         private bool wasTwoHand;
         private bool suppressSwipe;
-        private bool swiping;
-        private Vector3 swipeStart;
-        private Vector3 swipeLast;
-        private float swipeStartSecs;
+        private bool dragging;
+        private Vector3 dragStart;
 
         public RunCarouselGesture(CarouselGestureSettings settings)
         {
-            this.settings = settings;
             twoHand = new CarouselTwoHandGesture(settings);
         }
 
-        public CarouselGestureOutcome Update(
-            in TwoHandGestureState state, Vector3 rightAxis, Vector3 upAxis, float nowSecs)
+        public CarouselGestureOutcome Update(in TwoHandGestureState state)
         {
-            bool twoHand = state.IsActive;
-            bool single = state.IsSingleHandPinching && !twoHand;
-            int focusDelta = 0;
-            bool enter = false;
-            Vector3 dragOffset = default;
-            bool isDragging = false;
+            bool twoHandActive = state.IsActive;
+            bool single = state.IsSingleHandPinching && !twoHandActive;
 
-            if (twoHand)
-                UpdateTwoHand(state, out focusDelta, out enter);
+            CarouselGestureOutcome outcome;
+            if (twoHandActive)
+                outcome = TwoHand(state);
             else if (single)
-            {
-                UpdateSingleHand(state, nowSecs);
-                isDragging = swiping;
-                dragOffset = isDragging ? swipeLast - swipeStart : default;
-            }
+                outcome = Drag(state);
             else
-                focusDelta = Release(rightAxis, upAxis, nowSecs).FocusDelta;
+                outcome = Release();
 
             wasSingleHand = single;
-            wasTwoHand = twoHand;
-            return new CarouselGestureOutcome(focusDelta, enter, dragOffset, isDragging);
+            wasTwoHand = twoHandActive;
+            return outcome;
         }
 
         public void Reset()
         {
-            ResetSwipe();
+            dragging = false;
+            dragStart = Vector3.zero;
             twoHand.Reset();
             wasSingleHand = false;
             wasTwoHand = false;
             suppressSwipe = false;
         }
 
-        private void UpdateTwoHand(
-            in TwoHandGestureState state, out int focusDelta, out bool enter)
+        private CarouselGestureOutcome TwoHand(in TwoHandGestureState state)
         {
             suppressSwipe = true;
-            if (wasSingleHand)
-                ResetSwipe();
-
+            dragging = false;
             CarouselGestureOutcome outcome = twoHand.Update(state);
-            focusDelta = outcome.FocusDelta;
-            enter = outcome.Enter;
+            return new CarouselGestureOutcome(
+                outcome.Enter, outcome.ZoomProgress, outcome.OverviewProgress);
         }
 
-        private void UpdateSingleHand(in TwoHandGestureState state, float nowSecs)
+        private CarouselGestureOutcome Drag(in TwoHandGestureState state)
         {
             if (wasTwoHand)
                 twoHand.Reset();
+
             if (suppressSwipe)
-                return;
-
-            if (!wasSingleHand || !swiping)
-                BeginSwipe(state, nowSecs);
-
-            swipeLast = state.DragPoint;
-        }
-
-        private CarouselGestureOutcome Release(Vector3 rightAxis, Vector3 upAxis, float nowSecs)
-        {
-            CarouselGestureOutcome outcome = default;
-            if (wasSingleHand && swiping)
-                outcome = CommitSwipe(rightAxis, upAxis, nowSecs);
-
-            if (wasTwoHand)
-                twoHand.Reset();
-
-            suppressSwipe = false;
-            return outcome;
-        }
-
-        private void BeginSwipe(in TwoHandGestureState state, float nowSecs)
-        {
-            swiping = true;
-            swipeStart = state.DragPoint;
-            swipeLast = swipeStart;
-            swipeStartSecs = nowSecs;
-        }
-
-        private CarouselGestureOutcome CommitSwipe(
-            Vector3 rightAxis, Vector3 upAxis, float nowSecs)
-        {
-            Vector3 delta = swipeLast - swipeStart;
-            Vector3 right = SafeAxis(rightAxis, Vector3.right);
-            Vector3 up = SafeAxis(upAxis, Vector3.up);
-            float horizontal = Vector3.Dot(delta, right);
-            float vertical = Vector3.Dot(delta, up);
-            float duration = Mathf.Max(nowSecs - swipeStartSecs, 0.016f);
-            float speed = delta.magnitude / duration;
-            bool horizontalEnough =
-                Mathf.Abs(horizontal) >= settings.SwipeHorizontalDominance * Mathf.Abs(vertical);
-            bool moves = delta.magnitude >= settings.MinSwipeDistance
-                || speed >= settings.MinSwipeSpeed;
-
-            ResetSwipe();
-            if (!horizontalEnough || !moves)
                 return default;
 
-            int focusDelta = horizontal > 0f ? 1 : -1;
-            return new CarouselGestureOutcome(focusDelta, false);
+            if (!wasSingleHand || !dragging)
+            {
+                dragging = true;
+                dragStart = state.DragPoint;
+            }
+
+            return new CarouselGestureOutcome(
+                false, 0f, 0f, state.DragPoint - dragStart, true);
         }
 
-        private void ResetSwipe()
+        private CarouselGestureOutcome Release()
         {
-            swiping = false;
-            swipeStart = Vector3.zero;
-            swipeLast = Vector3.zero;
-            swipeStartSecs = 0f;
-        }
+            if (wasTwoHand)
+                twoHand.Reset();
 
-        private static Vector3 SafeAxis(Vector3 axis, Vector3 fallback) =>
-            axis.sqrMagnitude > 0.000001f ? axis.normalized : fallback;
+            dragging = false;
+            suppressSwipe = false;
+            return default;
+        }
     }
 }

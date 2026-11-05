@@ -5,6 +5,7 @@
         "DigitalLove.Game.SpaceShaping.Domain",
         "DigitalLove.Game.SpaceShaping.FieldContent",
         "DigitalLove.Casual.Levels",
+        "DigitalLove.Global",
         "DigitalLove.Input",
         "DigitalLove.Game.Nodes",
         "Unity.TextMeshPro"

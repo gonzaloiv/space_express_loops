@@ -19,7 +19,6 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private TwoHandGestureInput gesture;
 
         [Header("Debug")]
-        [SerializeField] private bool skipMapOnFirstLaunch = true;
         [SerializeField] private DebugBool selectRandom;
         [SerializeField] private PuzzleData puzzleToSet;
 
@@ -30,12 +29,6 @@ namespace DigitalLove.Game.Flow
         public override void Enter()
         {
             PlayerData playerData = memoryDataClient.Get<PlayerData>();
-
-            if (skipMapOnFirstLaunch && playerData.GetLevelCompleteCookies().Count == 0)
-            {
-                EnterJob(levelSelector.GetLevelByGlobalIndex<PuzzleData>(0));
-                return;
-            }
 
             if (selectRandom.Value)
             {

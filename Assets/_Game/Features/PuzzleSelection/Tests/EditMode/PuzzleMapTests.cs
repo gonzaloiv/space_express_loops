@@ -46,12 +46,19 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
             Assert.AreEqual(2, map.SelectedIndex);
             Assert.IsFalse(map.CanEnter);
 
+            Assert.IsTrue(map.SelectNext(1));
+            Assert.AreEqual(3, map.SelectedIndex);
+            Assert.IsFalse(map.SelectNext(1));
+            Assert.AreEqual(3, map.SelectedIndex);
+            Assert.IsTrue(map.SelectNext(-1));
+            Assert.AreEqual(2, map.SelectedIndex);
             Assert.IsTrue(map.SelectNext(10));
             Assert.AreEqual(3, map.SelectedIndex);
-            Assert.IsFalse(map.SelectNext(10));
-
             Assert.IsTrue(map.SelectNext(-10));
             Assert.AreEqual(0, map.SelectedIndex);
+            Assert.IsFalse(map.SelectNext(-1));
+            Assert.AreEqual(0, map.SelectedIndex);
+
             Assert.IsFalse(map.SelectNext(0));
             Assert.IsTrue(map.Select(1));
             Assert.IsFalse(map.Select(1));

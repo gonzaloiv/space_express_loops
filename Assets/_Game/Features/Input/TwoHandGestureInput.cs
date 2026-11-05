@@ -39,6 +39,7 @@ namespace DigitalLove.Input
         private bool hasRightHand;
         private bool isLeftPinching;
         private bool isRightPinching;
+        private bool isHandBusy;
         private bool leftStarted;
         private bool rightStarted;
         private bool leftEnded;
@@ -55,41 +56,50 @@ namespace DigitalLove.Input
         public event Action<TwoHandGestureState> StateChanged;
         public event Action<TwoHandGestureState> GestureStarted;
         public event Action<TwoHandGestureState> GestureEnded;
-        public event Action<HandSide, Vector3> PinchStarted;
-        public event Action<HandSide> PinchEnded;
 
         private void Update()
         {
             bool wasActive = isActive;
+            ReadHands();
+            UpdateDistanceSpeed(isLeftPinching && isRightPinching);
+            UpdateActive(isLeftPinching && isRightPinching, hasLeftHand && hasRightHand);
+            Publish();
+            LogIfNeeded(wasActive);
+        }
+
+        private void ReadHands()
+        {
             hasLeftHand = TryGetPinchPoint(leftHandSource, out Vector3 leftPoint);
             hasRightHand = TryGetPinchPoint(rightHandSource, out Vector3 rightPoint);
-            bool isBusy = IsHandBusy();
+            isHandBusy = IsHandBusy();
 
             if (hasLeftHand)
                 leftPinchPoint = leftPoint;
             if (hasRightHand)
                 rightPinchPoint = rightPoint;
 
-            isLeftPinching = hasLeftHand && !isBusy && IsPinching(leftHandSource);
-            isRightPinching = hasRightHand && !isBusy && IsPinching(rightHandSource);
+            isLeftPinching = hasLeftHand && !isHandBusy && IsPinching(leftHandSource);
+            isRightPinching = hasRightHand && !isHandBusy && IsPinching(rightHandSource);
             handDistance = Vector3.Distance(leftPinchPoint, rightPinchPoint);
-
-            UpdateDistanceSpeed(isLeftPinching && isRightPinching);
-            UpdateActive(isLeftPinching && isRightPinching, hasLeftHand && hasRightHand);
-            Publish();
-
-            if (logGesture && (leftStarted || rightStarted || leftEnded || rightEnded || isActive != wasActive))
-            {
-                Debug.Log(
-                    $"[TwoHandGesture] L={hasLeftHand}/{isLeftPinching} R={hasRightHand}/{isRightPinching} " +
-                    $"busy={isBusy} active={isActive} distance={handDistance:F3} speed={handDistanceSpeed:F3}",
-                    this);
-            }
         }
 
-        private void UpdateDistanceSpeed(bool isPinching)
+        private void LogIfNeeded(bool wasActive)
         {
-            if (!isPinching || Time.deltaTime <= 0f)
+            if (!logGesture
+                || !(leftStarted || rightStarted || leftEnded || rightEnded || isActive != wasActive))
+            {
+                return;
+            }
+
+            Debug.Log(
+                $"[TwoHandGesture] L={hasLeftHand}/{isLeftPinching} R={hasRightHand}/{isRightPinching} " +
+                $"busy={isHandBusy} active={isActive} distance={handDistance:F3} speed={handDistanceSpeed:F3}",
+                this);
+        }
+
+        private void UpdateDistanceSpeed(bool bothPinching)
+        {
+            if (!bothPinching || Time.deltaTime <= 0f)
             {
                 handDistanceSpeed = 0f;
                 previousHandDistance = handDistance;
@@ -109,8 +119,12 @@ namespace DigitalLove.Input
             if (!bothPinching)
             {
                 bothPinchingSince = -1f;
-                if (isActive && (!isTracked || Time.unscaledTime - lastBothPinchTime > releaseGraceSecs))
+                bool onePinching = isLeftPinching || isRightPinching;
+                if (isActive && (onePinching || !isTracked
+                    || Time.unscaledTime - lastBothPinchTime > releaseGraceSecs))
+                {
                     isActive = false;
+                }
                 return;
             }
 
@@ -154,15 +168,6 @@ namespace DigitalLove.Input
 
         private void RaiseEvents(TwoHandGestureState next, bool wasActive)
         {
-            if (leftStarted)
-                PinchStarted?.Invoke(HandSide.Left, leftPinchPoint);
-            if (rightStarted)
-                PinchStarted?.Invoke(HandSide.Right, rightPinchPoint);
-            if (leftEnded)
-                PinchEnded?.Invoke(HandSide.Left);
-            if (rightEnded)
-                PinchEnded?.Invoke(HandSide.Right);
-
             if (isActive && !wasActive)
                 GestureStarted?.Invoke(next);
             else if (!isActive && wasActive)

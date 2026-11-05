@@ -1,9 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using DigitalLove.Game.Nodes;
 using DigitalLove.Game.SpaceShaping;
+using DigitalLove.Global;
 using DigitalLove.Input;
+using TMPro;
 using UnityEngine;
 
 namespace DigitalLove.Game.PuzzleSelection
@@ -12,22 +11,57 @@ namespace DigitalLove.Game.PuzzleSelection
     {
         [SerializeField] private Transform mapRoot;
         [SerializeField] private RunSlotView selectedSlot;
-        [SerializeField] private float viewRadius = 0.45f;
+        [SerializeField] private GameObject selectionCube;
+        [SerializeField] private Renderer selectionCubeRenderer;
+        [SerializeField] private TMP_Text selectionLabel;
+        [SerializeField] private float viewRadius = 0.5f;
         [SerializeField] private float panSecs = 0.25f;
+        [SerializeField] private float maxZoom = 2.2f;
+        [SerializeField] private float overviewScale = 0.55f;
+        [SerializeField] private float enterSecs = 0.5f;
+        [SerializeField] private float enterScale = 3.6f;
+        [SerializeField, Range(0f, 1f)] private float lockedZoomLimit = 0.06f;
+        [SerializeField] private SelectionCubePalette selectionCubeColors;
+        [SerializeField] private ColorValue routeColor;
+        [SerializeField, Range(0f, 1f)] private float routeAlpha = 0.35f;
+        [SerializeField] private bool showAll;
 
-        private readonly List<JobEntry> visibleJobs = new();
         private ViewPool<RunSlotView> fields;
         private RunCarouselGesture gesture;
+        private MapPose pose;
+        private MapZoom zoom;
+        private MapOverview overview;
+        private MapRouteLine route;
         private PuzzleMap map;
-        private Coroutine panRoutine;
-        private bool isDragging;
+        private bool wasDragging;
+        private int previewIndex = -1;
+        private MapEnter enter;
 
         public event Action EnterRequested;
+
+        private void Update()
+        {
+            pose.Tick(Time.unscaledDeltaTime);
+            if (route != null && map != null)
+            {
+                route.Update(
+                    map, selectedSlot, Focus, fields,
+                    selectionCube.transform.position, pose.FadeNear, pose.FadeFar);
+            }
+        }
 
         private void Awake()
         {
             fields = new ViewPool<RunSlotView>(selectedSlot, mapRoot, "Map Field", null);
             gesture = new RunCarouselGesture(CarouselGestureSettings.Default);
+            pose = new MapPose(
+                mapRoot, selectedSlot.transform, selectionCube.transform, fields, viewRadius);
+            pose.ShowAll = showAll;
+            overview = new MapOverview(mapRoot, pose, overviewScale);
+            SelectionCubeLens lens = new(
+                selectionCubeRenderer, selectionCube.transform, selectionCubeColors);
+            zoom = new MapZoom(selectedSlot, lens, maxZoom);
+            enter = new MapEnter(zoom, enterSecs, enterScale);
         }
 
         public void Show(PuzzleMap map)
@@ -35,10 +69,33 @@ namespace DigitalLove.Game.PuzzleSelection
             this.map = map;
             gameObject.SetActive(true);
 
-            StopPan();
-            isDragging = false;
+            wasDragging = false;
+            enter.Reset();
+            overview.Reset(showAll);
+            route = new MapRouteLine(mapRoot, routeColor, routeAlpha, map.Count);
+            pose.ShowAll = showAll;
             RenderFields();
-            SetPose(Focus, Focus);
+            pose.SetPose(SunFocus, Focus);
+            selectionCube.SetActive(true);
+        }
+
+        public bool ShowAll => showAll;
+
+        public void SimulateSwipe(int delta)
+        {
+            if (map == null)
+                return;
+
+            if (map.SelectNext(delta))
+                RenderFields();
+            AnimateTo(Focus);
+        }
+
+        public void SetShowAll(bool value)
+        {
+            showAll = value;
+            pose.ShowAll = value;
+            pose.ApplyFade();
         }
 
         public void ApplyGesture(TwoHandGestureState state)
@@ -46,48 +103,104 @@ namespace DigitalLove.Game.PuzzleSelection
             if (map == null)
                 return;
 
-            CarouselGestureOutcome outcome = gesture.Update(
-                state, transform.right, transform.up, Time.unscaledTime);
+            if (enter.IsActive)
+            {
+                if (!state.IsActive)
+                    enter.Cancel(map.Selected.State);
+                else if (enter.Tick(map.Selected.State, Time.unscaledDeltaTime))
+                    EnterRequested?.Invoke();
+                return;
+            }
+
+            CarouselGestureOutcome outcome = gesture.Update(state);
+            overview.Apply(outcome.OverviewProgress, showAll, SunFocus, Focus);
+            float zoomProgress = map.CanEnter
+                ? outcome.ZoomProgress
+                : Mathf.Min(outcome.ZoomProgress, lockedZoomLimit);
+            zoom.Update(state.IsActive, map.Selected.State, zoomProgress);
+
             if (outcome.Enter)
             {
-                StopPan();
-                isDragging = false;
-                EnterRequested?.Invoke();
+                StartEnter(outcome);
                 return;
             }
 
             if (outcome.IsDragging)
             {
-                StopPan();
-                isDragging = true;
-                ApplyDrag(outcome.DragOffset);
+                ApplyDrag(outcome);
                 return;
             }
 
-            if (outcome.FocusDelta != 0)
-            {
-                isDragging = false;
-                if (map.SelectNext(outcome.FocusDelta))
-                    RenderFields();
-                AnimateTo(Focus);
-                return;
-            }
-
-            if (isDragging)
-            {
-                isDragging = false;
-                AnimateTo(Focus);
-            }
+            SnapAfterDrag();
         }
 
-        public void Refuse() => selectedSlot.PlayRefusal();
+        private void StartEnter(CarouselGestureOutcome outcome)
+        {
+            if (!map.CanEnter)
+            {
+                Refuse();
+                return;
+            }
+
+            enter.Start(Mathf.Lerp(1f, maxZoom, outcome.ZoomProgress));
+            pose.StopPan();
+        }
+
+        private void ApplyDrag(CarouselGestureOutcome outcome)
+        {
+            pose.StopPan();
+            pose.ApplyDrag(Focus, outcome.DragOffset);
+            PreviewNearest();
+            wasDragging = true;
+        }
+
+        private void PreviewNearest()
+        {
+            int nearest = MapSnap.Nearest(map, mapRoot, selectionCube.transform.position);
+            if (nearest < 0 || nearest == previewIndex)
+                return;
+
+            JobEntry entry = map[nearest];
+            ShowSelectionInfo(entry);
+            zoom.Preview(entry.State);
+        }
+
+        private void SnapAfterDrag()
+        {
+            if (!wasDragging)
+                return;
+
+            wasDragging = false;
+            int nearest = MapSnap.Nearest(
+                map, mapRoot, selectionCube.transform.position);
+            if (nearest >= 0 && nearest != map.SelectedIndex && map.Select(nearest))
+                RenderFields();
+            AnimateTo(Focus);
+        }
+
+        public void Refuse()
+        {
+            gesture.Reset();
+            wasDragging = false;
+            enter.Reset();
+            overview.Reset(showAll);
+            ShowSelectionInfo(map.Selected);
+            zoom.Reset(map.Selected.State);
+            selectedSlot.PlayRefusal();
+        }
 
         public void Hide()
         {
-            StopPan();
-            isDragging = false;
+            pose.StopPan();
+            wasDragging = false;
+            enter.Reset();
+            overview.Reset(showAll);
+            route = null;
             gesture.Reset();
             map = null;
+            previewIndex = -1;
+            zoom.Clear();
+            selectionCube.SetActive(false);
             selectedSlot.Hide();
             fields.ForEachFrom(0, field => field.Hide());
             gameObject.SetActive(false);
@@ -95,83 +208,50 @@ namespace DigitalLove.Game.PuzzleSelection
 
         private Vector3 Focus => map.Position(map.SelectedIndex);
 
+        private Vector3 SunFocus => Focus + selectedSlot.SunLocalPosition;
+
         private void RenderFields()
         {
-            Vector3 focus = Focus;
-            selectedSlot.ShowMapField(
-                map.SelectedIndex, map.SelectedPuzzle, map.Selected.State, map.Selected.Stars, true);
+            RenderSelected();
+            RenderNeighbours();
+            pose.ApplyFade();
+        }
 
-            map.VisibleJobs(focus, viewRadius, visibleJobs);
+        private void RenderSelected()
+        {
+            JobEntry selected = map.Selected;
+            selectedSlot.ShowMapField(selected.Index, selected.Puzzle);
+            ShowSelectionInfo(selected);
+            zoom.Reset(selected.State);
+        }
+
+        private void ShowSelectionInfo(JobEntry entry)
+        {
+            previewIndex = entry.Index;
+            selectionLabel.text = MapSelectionLabel.Format(entry.State, entry.Stars);
+        }
+
+        private void RenderNeighbours()
+        {
             int slot = 0;
-            for (int i = 0; i < visibleJobs.Count; i++)
+            for (int i = 0; i < map.Count; i++)
             {
-                JobEntry entry = visibleJobs[i];
-                if (entry.Index == map.SelectedIndex)
+                if (i == map.SelectedIndex)
                     continue;
 
+                JobEntry entry = map[i];
                 RunSlotView field = fields.EnsureSlot(slot++);
-                field.transform.localPosition = map.Position(entry.Index);
-                field.ShowMapField(
-                    entry.Index, entry.Puzzle, entry.State, entry.Stars, false);
+                field.transform.localPosition = map.Position(i);
+                field.ShowMapField(i, entry.Puzzle);
             }
 
             fields.ForEachFrom(slot, field => field.Hide());
         }
 
-        private void ApplyDrag(Vector3 worldOffset)
-        {
-            Vector3 offset = mapRoot.InverseTransformVector(worldOffset);
-            offset.y = 0f;
-            mapRoot.localPosition = -Focus + offset;
-            selectedSlot.transform.localPosition = Focus;
-        }
-
         private void AnimateTo(Vector3 focus)
         {
-            StopPan();
-            if (panSecs <= 0.0001f)
-            {
-                SetPose(focus, focus);
-                return;
-            }
-
-            panRoutine = StartCoroutine(PanRoutine(focus));
-        }
-
-        private IEnumerator PanRoutine(Vector3 focus)
-        {
-            Vector3 mapStart = mapRoot.localPosition;
-            Vector3 slotStart = selectedSlot.transform.localPosition;
-            Vector3 mapTarget = -focus;
-            float elapsed = 0f;
-            while (elapsed < panSecs)
-            {
-                elapsed += Time.unscaledDeltaTime;
-                float t = Mathf.Clamp01(elapsed / panSecs);
-                float eased = t * t * (3f - 2f * t);
-                mapRoot.localPosition = Vector3.LerpUnclamped(mapStart, mapTarget, eased);
-                selectedSlot.transform.localPosition =
-                    Vector3.LerpUnclamped(slotStart, focus, eased);
-                yield return null;
-            }
-
-            SetPose(focus, focus);
-            panRoutine = null;
-        }
-
-        private void SetPose(Vector3 mapFocus, Vector3 slotFocus)
-        {
-            mapRoot.localPosition = -mapFocus;
-            selectedSlot.transform.localPosition = slotFocus;
-        }
-
-        private void StopPan()
-        {
-            if (panRoutine == null)
-                return;
-
-            StopCoroutine(panRoutine);
-            panRoutine = null;
+            zoom.Reset(map.Selected.State);
+            pose.BeginPan(SunFocus, Focus, panSecs);
         }
     }
 }

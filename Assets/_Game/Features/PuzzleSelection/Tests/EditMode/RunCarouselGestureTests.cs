@@ -6,8 +6,7 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
 {
     public class RunCarouselGestureTests
     {
-        private static readonly Vector3 RightAxis = Vector3.right;
-        private static readonly Vector3 UpAxis = Vector3.up;
+        private static readonly Vector3 Start = new(0f, 1f, 0.5f);
 
         private RunCarouselGesture gesture;
 
@@ -15,80 +14,76 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
         public void SetUp() => gesture = new RunCarouselGesture(CarouselGestureSettings.Default);
 
         [Test]
-        public void Swipe_CommitsOneStepOnRelease()
+        public void Drag_ReportsTheMapOffsetUntilRelease()
         {
-            Vector3 start = new(0f, 1f, 0.5f);
-            gesture.Update(Single(start, start), RightAxis, UpAxis, 0f);
-            gesture.Update(Single(start + new Vector3(0.05f, 0f, 0f), start), RightAxis, UpAxis, 0.1f);
-
-            CarouselGestureOutcome outcome = gesture.Update(None(), RightAxis, UpAxis, 0.12f);
-
-            Assert.AreEqual(1, outcome.FocusDelta);
-        }
-
-        [Test]
-        public void Drag_ReportsOffsetUntilRelease()
-        {
-            Vector3 start = new(0f, 1f, 0.5f);
-            gesture.Update(Single(start, start), RightAxis, UpAxis, 0f);
+            gesture.Update(Single(Start));
 
             CarouselGestureOutcome drag = gesture.Update(
-                Single(start + new Vector3(0.05f, 0f, 0f), start), RightAxis, UpAxis, 0.1f);
+                Single(Start + new Vector3(0.1f, 0f, 0f)));
 
             Assert.IsTrue(drag.IsDragging);
-            Assert.AreEqual(0.05f, drag.DragOffset.x, 0.0001f);
-
-            CarouselGestureOutcome release = gesture.Update(None(), RightAxis, UpAxis, 0.12f);
-
-            Assert.IsFalse(release.IsDragging);
-            Assert.AreEqual(1, release.FocusDelta);
+            Assert.AreEqual(0.1f, drag.DragOffset.x, 0.0001f);
         }
 
         [Test]
-        public void Swipe_IgnoresVerticalDrag()
+        public void Drag_IsCancelledByTwoHandPinch()
         {
-            Vector3 start = new(0f, 1f, 0.5f);
-            gesture.Update(Single(start, start), RightAxis, UpAxis, 0f);
-            gesture.Update(Single(start + new Vector3(0f, 0.05f, 0f), start), RightAxis, UpAxis, 0.1f);
+            gesture.Update(Single(Start));
+            gesture.Update(Single(Start + new Vector3(0.1f, 0f, 0f)));
+            gesture.Update(Both(new Vector3(-0.1f, 1f, 0f), new Vector3(0.1f, 1f, 0f), true));
 
-            CarouselGestureOutcome outcome = gesture.Update(None(), RightAxis, UpAxis, 0.12f);
+            CarouselGestureOutcome outcome = gesture.Update(None());
 
-            Assert.AreEqual(0, outcome.FocusDelta);
+            Assert.IsFalse(outcome.IsDragging);
         }
 
         [Test]
-        public void Swipe_IsCancelledWhenTheSecondHandPinches()
+        public void ScaleIn_ReportsZoomProgressAndEntersAtThreshold()
         {
-            Vector3 start = new(0f, 1f, 0.5f);
-            gesture.Update(Single(start, start), RightAxis, UpAxis, 0f);
-            gesture.Update(Single(start + new Vector3(0.05f, 0f, 0f), start), RightAxis, UpAxis, 0.1f);
-            gesture.Update(Both(new Vector3(-0.15f, 1f, 0.5f), new Vector3(0.15f, 1f, 0.5f), true), RightAxis, UpAxis, 0.12f);
+            gesture.Update(Both(new Vector3(-0.1f, 1f, 0f), new Vector3(0.1f, 1f, 0f), true));
 
-            CarouselGestureOutcome outcome = gesture.Update(None(), RightAxis, UpAxis, 0.2f);
+            CarouselGestureOutcome half = gesture.Update(
+                Both(new Vector3(-0.125f, 1f, 0f), new Vector3(0.125f, 1f, 0f), true));
+            CarouselGestureOutcome full = gesture.Update(
+                Both(new Vector3(-0.15f, 1f, 0f), new Vector3(0.15f, 1f, 0f), true));
 
-            Assert.AreEqual(0, outcome.FocusDelta);
+            Assert.AreEqual(0.5f, half.ZoomProgress, 0.01f);
+            Assert.IsFalse(half.Enter);
+            Assert.AreEqual(1f, full.ZoomProgress, 0.01f);
+            Assert.IsTrue(full.Enter);
         }
 
         [Test]
         public void ScaleIn_EntersOnce()
         {
-            gesture.Update(Both(new Vector3(-0.1f, 1f, 0f), new Vector3(0.1f, 1f, 0f), true), RightAxis, UpAxis, 0f);
+            gesture.Update(Both(new Vector3(-0.1f, 1f, 0f), new Vector3(0.1f, 1f, 0f), true));
 
             CarouselGestureOutcome first = gesture.Update(
-                Both(new Vector3(-0.15f, 1f, 0f), new Vector3(0.15f, 1f, 0f), true),
-                RightAxis, UpAxis, 0.1f);
+                Both(new Vector3(-0.15f, 1f, 0f), new Vector3(0.15f, 1f, 0f), true));
             CarouselGestureOutcome second = gesture.Update(
-                Both(new Vector3(-0.15f, 1f, 0f), new Vector3(0.15f, 1f, 0f), true),
-                RightAxis, UpAxis, 0.2f);
+                Both(new Vector3(-0.15f, 1f, 0f), new Vector3(0.15f, 1f, 0f), true));
 
             Assert.IsTrue(first.Enter);
             Assert.IsFalse(second.Enter);
         }
 
-        private static TwoHandGestureState Single(Vector3 point, Vector3 start) =>
+        [Test]
+        public void ScaleOut_ReportsOverviewProgress()
+        {
+            gesture.Update(Both(new Vector3(-0.15f, 1f, 0f), new Vector3(0.15f, 1f, 0f), true));
+
+            CarouselGestureOutcome outcome = gesture.Update(
+                Both(new Vector3(-0.1f, 1f, 0f), new Vector3(0.1f, 1f, 0f), true));
+
+            Assert.Greater(outcome.OverviewProgress, 0.5f);
+            Assert.AreEqual(0f, outcome.ZoomProgress, 0.01f);
+            Assert.IsFalse(outcome.Enter);
+        }
+
+        private static TwoHandGestureState Single(Vector3 point) =>
             new(
                 new HandPinchState(false, Vector3.zero, Vector3.zero),
-                new HandPinchState(true, point, start),
+                new HandPinchState(true, point, Start),
                 false,
                 0f,
                 0f);
