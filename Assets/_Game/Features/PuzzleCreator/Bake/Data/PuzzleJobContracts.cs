@@ -8,8 +8,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             new PuzzleJobContract
             {
-                Id = "01_01", Seed = 37, Attempts = 1, PlanetCount = 4, FieldShape = PuzzleFieldShape.Ring,
-                HasSun = false, SunOnChord = false, SunRule = PuzzleSunRule.Any, MinBlockers = 1,
+                Id = "01_01", Seed = 141, Attempts = 1, PlanetCount = 6, FieldShape = PuzzleFieldShape.Ring,
+                HasSun = true, SunOnChord = false, SunRule = PuzzleSunRule.OutOfZone, MinBlockers = 1,
                 Mechanism = PuzzleMechanism.Curve, Zones = 1, MinRoutes = 1,
                 Translatable = false, NoFail = true, NoGrade = true, NoIntro = true,
             },

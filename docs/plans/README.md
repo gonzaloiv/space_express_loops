@@ -13,7 +13,7 @@ morning) when it starts; a step that is already a plan links to it. Steps marked
 need a yes.
 
 1. **Land the current plan:** [loop completion](in-progress/loop-completion.md).
-2. **[Gesture prompts](backlog/gesture-prompts.md)** — job 1 opens with nothing else to teach the pinch.
+2. **[Gesture prompts](in-progress/gesture-prompts.md)** — job 1 opens with nothing else to teach the pinch.
 3. **[Job definition card](backlog/job-definition-card.md)** — the manual entry's only surface.
 4. **Tune the run on device.** Per-job scramble and planet count; bake-check job 6's "the field
    carries you" route as the cheapest.
@@ -40,13 +40,13 @@ Active work.
   a fail, the solve is saved so the map fills, and job 1 starts silent. **First:** it makes the run
   playable end to end.
 
+- [Gesture prompts — show each gesture the first time](in-progress/gesture-prompts.md) — scale, enter,
+  pan and move prompts on the cubes, shown where each is first needed and learned once per save.
+  **Code next:** events, learned store, prompt view; authored panels after.
+
 ## Next
 
 Queued. One plan moves to **Now** when it starts.
-
-- [Gesture prompts — show each gesture the first time](backlog/gesture-prompts.md) — scale, enter, pan
-  and move prompts on the cubes, shown where each is first needed and learned once per save.
-  **First after loop completion:** job 1 opens with nothing else to teach the pinch.
 
 - [Job definition card — the contract from job 2](backlog/job-definition-card.md) — client, cargo and the
   manual entry on a card that fades on its own; the puzzle stays live. After loop completion.

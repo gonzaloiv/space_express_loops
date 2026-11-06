@@ -34,7 +34,7 @@ complete/fail message); there is no in-solve hint.
   client, cargo, manual entry), and it cuts off like a CRT on its fade. Typing is part of the reading
   time: `cardSecs` starts after the last line lands.
 - **Shared style.** This plan builds the frame, monospace font asset and line-art material as one
-  authored terminal style; the [gesture prompts](gesture-prompts.md) reuse it, so this lands first.
+  authored terminal style; the [gesture prompts](../in-progress/gesture-prompts.md) reuse it, so this lands first.
 
 ## Units
 

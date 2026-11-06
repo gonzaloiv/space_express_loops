@@ -11,6 +11,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public int Accepted;
         public int CandidateMiss;
 
+        public void Add(PuzzleRunReport other)
+        {
+            Pairs += other.Pairs;
+            LengthRejected += other.LengthRejected;
+            ClearanceRejected += other.ClearanceRejected;
+            NoPlanetBlocker += other.NoPlanetBlocker;
+            SunOnChord += other.SunOnChord;
+            NoBlocker += other.NoBlocker;
+            Accepted += other.Accepted;
+            CandidateMiss += other.CandidateMiss;
+        }
+
         public override string ToString() =>
             $"pairs {Pairs}, length {LengthRejected}, clearance {ClearanceRejected}, " +
             $"no planet {NoPlanetBlocker}, sun chord {SunOnChord}, no blocker {NoBlocker}, " +

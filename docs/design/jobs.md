@@ -18,7 +18,7 @@ first.
 
 | # | Teaches | Role | Brief (translatable · zones · resizable · ships) | Shape | Field (planets + sun · wells · depth) | Entropy scale (derived) | Why |
 |---|---|---|---|---|---|---|---|
-| 1 | the scale | Curve | fixed · 1 zone · no · 1 ship | Ring | 4 · single · tutorial | low | first contact: a viable four-planet field, no sun, one pinch |
+| 1 | the scale | Curve | fixed · 1 zone · no · 1 ship | Ring | 6 + sun · single · tutorial | low | first contact: a viable six-planet field, the sun in the background, one pinch |
 | 2 | the centre | Curve | fixed · 1 zone · no · 1 ship | Ring | 4–6 + sun · single · medium | medium | the fixed cube over the sun — the star is a source too |
 | 3 | the other direction | Clear | fixed · 1 zone · no · 1 ship | Ring | 5–6 + sun · single · medium | medium | a planet blocks the line; shrinking it clears the path — the same pinch, the opposite role |
 | 4 | the cube moves | Curve | **yes** · 1 zone · no · 1 ship | Spiral | 8–10 + sun · multi | medium | spawns at the centre; the solution is off-centre, so the move is required |
@@ -75,9 +75,11 @@ only moves the star bar.
 never a run endpoint, and is not counted in the planet column ([the cube](systems/cube.md)). A seed can
 omit it; the level can lock it; the settings size it.
 
-**The sun in the first jobs.** Job 1 has **no sun**: the only sources are planets. Job 2 introduces the
-sun with a fixed cube over the centre, so the star is in the zone by construction. No lock; after job 2
-the sun is a normal source in the later levels.
+**The sun in the first jobs.** Job 1 has a sun in the field, but the cube stays off it, so the first
+lesson is still a planet. Job 2 makes the star the lesson: a fixed cube over the centre, so the star is
+in the zone by construction. No lock; after job 2 the sun is a normal source in the later levels. (A
+sunless four-planet field almost never bakes — the run picker needs a planet blocker on the line — so
+job 1 carries a sun that the cube does not cover.)
 
 **The pressures fade in one at a time.** This doc owns the per-job flags:
 
@@ -87,7 +89,7 @@ the sun is a normal source in the later levels.
 | 2 | yes | no (`noGrade`) | yes |
 | 3–7 | yes | yes | yes |
 
-Job 1 bakes from a normal seed — four planets, no sun, one fixed zone — and still records a reference
+Job 1 bakes from a normal seed — six planets and a sun the cube does not cover, one fixed zone — and still records a reference
 solution, so the budget rule holds ([core loop](core-loop.md) §3). The lesson is the cube's scale, not a
 single-source field. The entropy-scale column above is the absolute cost of the bake's solution.
 

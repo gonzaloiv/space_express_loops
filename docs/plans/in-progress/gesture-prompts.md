@@ -1,10 +1,12 @@
 # Gesture prompts — show each gesture the first time
 
-**Status:** next · presentation · updated 2026-11-06 — an authored prompt for each gesture, shown where
-the player first meets it and hidden once they do it; learned once per save.
+**Status:** now · presentation · updated 2026-11-06 — an authored prompt for each gesture, shown where
+the player first meets it and hidden once they do it; learned once per save. Landed: the learned store
+and its tests, the view first-use events, and the map pan watch. Next: authored panels and the state
+wiring.
 
 **Related:** [core loop](../../design/core-loop.md) · [the cube](../../design/systems/cube.md) ·
-[progression](../../design/systems/progression.md) · [loop completion](../in-progress/loop-completion.md) ·
+[progression](../../design/systems/progression.md) · [loop completion](loop-completion.md) ·
 [Game.unity](../../../Assets/_Game/Game.unity)
 
 ## Goal
@@ -62,7 +64,7 @@ or its time runs out.
 ### U1 — the prompt and the learned store
 
 - Reuses the shared terminal style (frame, monospace font asset, line-art material) built in the
-  [job card](job-definition-card.md) U1 — land that unit first. A `GesturePrompt` view (boot in / loop /
+  [job card](../backlog/job-definition-card.md) U1 — land that unit first. A `GesturePrompt` view (boot in / loop /
   cut off) and the four authored prompt objects, with their optional caption keys in the global
   localization table (`gesture_prompt_<scale|enter|pan|move>`). Each prompt gets its own `showSecs`, a non-scaling
   sibling anchor beside its cube (the cube transform's scale is not 1), and a gesture source it
@@ -76,14 +78,14 @@ or its time runs out.
 
 ### U2 — the puzzle prompts (Scale, Move)
 
-- `SpaceShapingController` raises `PinchCommitted` on the first committed edit and `CubeMoved` on the
-  first completed move of a run. The move itself lives below the view
-  (`ZoneGrabListener.Move` runs per frame): `ZoneGrabListener` reports the release of a grab that moved
-  the cube, `SpaceZoneView` raises `Moved`, `SpaceShapingView` forwards it, and the controller
-  re-raises it as `CubeMoved`.
+- `SpaceShapingView` reports first use: `PinchCommitted` after the first pinch that changes
+  `Zone.Scale`, and `CubeMoved` after the first completed frame move. The move lives below the view
+  (`ZoneGrabListener.Move` runs per frame): a completed grab that moved the cube raises
+  `MoveCompleted`, `SpaceZoneView` forwards it as `Moved`, `ZoneCubePool` collects it, and
+  `SpaceShapingView` turns the first one into `CubeMoved`.
 - `PuzzleEditionState` shows Scale and Move (the latter on a `translatable` job) when not learned; both
   may show on the same job, on separate anchors. Each panel holds for `showSecs` and cuts off on its
-  controller event. The state also subscribes to those events for the run, marks + persists on the
+  view event. The state also subscribes to those events for the run, marks + persists on the
   first completion (even if the panel already timed out), and hides the prompt. A timeout leaves the
   gesture unlearned until the player performs it. Prompts hide on state exit and on solve/fail, the
   same events that freeze the run.
@@ -94,8 +96,8 @@ or its time runs out.
 
 - `PuzzleMapView` raises `Panned` when a drag lands on a different node (the selection changed);
   `EnterRequested` already exists. A pan before `panPromptSecs` elapsed still marks Pan learned, so
-  the prompt never shows to someone who already panned.
-  `PuzzleMapView` owns the idle timer in its existing `Update` and resets it on any active gesture.
+  the prompt never shows to someone who already panned. `MapPanWatch` owns the idle timer, ticked from
+  the view's existing `Update` and reset on any active gesture.
 - `PuzzleSelectionState` shows Enter when not learned, then Pan after `panPromptSecs` idle when not
   learned. Both panels may be visible at once, on separate anchors; each holds for `showSecs` and cuts
   off on its map event. The state also listens to those events for the map's lifetime, marks +
@@ -139,7 +141,7 @@ or its time runs out.
 - **Two panels may share a cube (decided 2026-11-06).** Scale/Move and Enter/Pan can be up together
   when their moments overlap; each gets its own anchor and time so they stay clear of each other.
 - **Shared with the job card.** The frame, font and line-art material are one authored style, built by
-  the [job card](job-definition-card.md) U1; this plan reuses it.
+  the [job card](../backlog/job-definition-card.md) U1; this plan reuses it.
 
 ## Out of scope
 

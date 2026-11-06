@@ -22,7 +22,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         {
             scroll = EditorGUILayout.BeginScrollView(scroll);
             EditorGUILayout.LabelField("Chapter 01 jobs", EditorStyles.boldLabel);
-            scanCount = EditorGUILayout.IntSlider("Seeds per scan", scanCount, 1, 200);
+            scanCount = EditorGUILayout.IntSlider("Seeds per scan", scanCount, 1, 1000);
             IReadOnlyList<PuzzleJobContract> jobs = PuzzleJobContracts.Enabled;
             for (int i = 0; i < jobs.Count; i++)
                 DrawJob(jobs[i]);
@@ -79,6 +79,20 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             }
 
             EditorGUILayout.LabelField($"{shown} shown · {FailureSummary()}");
+            EditorGUILayout.LabelField($"NoRun pairs: {NoRunReport()}");
+        }
+
+        // Why the run picker rejected the pairs on NoRun seeds, summed over the scan.
+        private string NoRunReport()
+        {
+            PuzzleRunReport total = default;
+            for (int i = 0; i < scan.Count; i++)
+            {
+                if (scan[i].Status == PuzzleBakeStatus.NoRun)
+                    total.Add(scan[i].RunReport);
+            }
+
+            return total.ToString();
         }
 
         private string FailureSummary()

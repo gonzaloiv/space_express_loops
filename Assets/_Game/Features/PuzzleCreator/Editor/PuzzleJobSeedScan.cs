@@ -15,6 +15,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             public float Window;
             public PuzzleSolutionKind Kind;
             public PuzzleBakeStatus Status;
+            public PuzzleRunReport RunReport;
         }
 
         public static List<Entry> Scan(PuzzleJobContract job, int count)
@@ -56,7 +57,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 Seed = seed.seed,
                 Baked = result.Found,
                 Kind = result.Kind,
-                Status = result.Status
+                Status = result.Status,
+                RunReport = result.RunReport
             };
 
             if (result.Found)
