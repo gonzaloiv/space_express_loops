@@ -23,6 +23,31 @@ namespace DigitalLove.Game.SpaceShaping
         [Tooltip("Lattice fade: distance from the nearest planet or the run where the lattice is fully transparent, as a fraction of the field half-extent.")]
         [SerializeField] private float fadeFar = 0.55f;
 
+        private readonly SpaceShapingFirstUse firstUse = new();
+        private bool wasScaling;
+
+        private void OnEnable()
+        {
+            firstUse.Reset();
+            wasScaling = false;
+            spawner.Zones.Moved += OnCubeMoved;
+        }
+
+        private void OnDisable() => spawner.Zones.Moved -= OnCubeMoved;
+
+        private void LateUpdate()
+        {
+            bool scaling = IsScaling;
+            if (scaling && !wasScaling)
+                firstUse.ScalingStarted(Zone.Scale);
+            else if (!scaling && wasScaling)
+                firstUse.ScalingEnded(Zone.Scale);
+
+            wasScaling = scaling;
+        }
+
+        private void OnCubeMoved() => firstUse.Moved();
+
         public event Action<ZoneRefusal> Refused
         {
             add => spawner.Zones.Refused += value;
@@ -35,6 +60,18 @@ namespace DigitalLove.Game.SpaceShaping
             remove => spawner.Ships.Completed -= value;
         }
 
+        public event Action CubeMoved
+        {
+            add => firstUse.CubeMoved += value;
+            remove => firstUse.CubeMoved -= value;
+        }
+
+        public event Action PinchCommitted
+        {
+            add => firstUse.PinchCommitted += value;
+            remove => firstUse.PinchCommitted -= value;
+        }
+
         public event Action<PuzzleReadout> ReadoutChanged;
         public event Action ResetRequested;
 
@@ -45,6 +82,8 @@ namespace DigitalLove.Game.SpaceShaping
         public SpaceZone Zone => spawner.Zones.Zone;
 
         public bool IsScaling => spawner.Zones.IsScaling;
+
+        public Vector3 CubePosition => spawner.Zones.ActivePosition;
 
         public void ApplyFromSession(SpaceShapingSession session) => spawner.Planets.Apply(session);
 

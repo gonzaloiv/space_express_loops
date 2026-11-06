@@ -2,7 +2,7 @@
 
 **Status:** design · content · jobs.
 **Date:** 2026-10-27.
-**Revised:** 2026-11-05.
+**Revised:** 2026-11-07.
 
 **Related:** [progression](systems/progression.md) · [lore](world/lore.md) ·
 [the cube](systems/cube.md) · [glossary](glossary.md)
@@ -210,27 +210,43 @@ One line each; never exposition ([lore](world/lore.md)).
 
 | # | Client | Cargo | Tech voice | Manual entry |
 |---|---|---|---|---|
-| 1 | Blödmeyer & Sons (no sons) | a pallet of valves | "One pinch. You'll be fine." | "Welcome. Your Wrap does one thing. Do that one thing." |
+| 1 | Blödmeyer & Sons (no sons) | a pallet of valves | "One pinch. You'll be fine." | "Welcome. Your Wrap does one thing. Do that one thing. Set the console anywhere; there is no office." |
 | 2 | The Lighthouse Keepers' Union | one bulb | "The star is a source too." | "The star is not a planet. It bends the same way." |
 | 3 | Strait & Narrow Ltd. | a wide load | "Shrink the rock, not the cargo." | "The Wrap takes as well as gives. A smaller world is a wider door." |
-| 4 | Madame Fink's Discount Gravity | a piano | "Now move it. *Where* is a choice." | "The Wrap is yours to place. Where you work is a decision. Make it." |
+| 4 | Madame Fink's Discount Gravity | a piano | "Now move it. *Where* is a choice. Works everywhere." | "The Wrap is yours to place. Where you work is a decision. Make it." |
 | 5 | The Third Best Bakery | a wedding cake, still warm | "Several zones. Place it, scale them." | "The Wrap is yours to place. Use it more than once." |
 | 6 | Nobody & Co. | a body (a funeral) | "Tight. Really tight. Sorry." | "Every edit costs. The customer only ever sees the arrival." |
 | 7 | The Inheritance of Mr. Fink | the last of something | "…Good luck." | "This is the one the manual was written for." |
 
 ## The manual's arc
 
-The tip card is the company's **onboarding manual for new employees** ([lore](world/lore.md) §The tech
-team): short, dry, corporate, slightly out of date. It plays on the TTS card as the job's intro — the
-manual entry and the tech-voice line, two entries per job. Each entry introduces **one idea**, so it
-carries the teaching *and* the fiction. It opens warm and ends corporate-bleak; the "new employee" it
-keeps addressing never arrives. Two beats to keep:
+The job card is the company's **onboarding manual for new employees** ([lore](world/lore.md) §The tech
+team): short, dry, corporate, slightly out of date. The manual entry is read on the card: the selection
+map shows the contract before entry, and a smaller copy stays during the run. The TTS card plays only
+Jim's tech-voice line. Each entry introduces **one idea**, so it carries the teaching *and* the
+fiction. It opens warm and ends corporate-bleak; the "new employee" it keeps addressing never arrives.
+Two beats to keep:
 
 - The opening line: *"Welcome, new employee."*
 - A late note: *there has not been a new employee in eleven years.*
 
 **Two arcs:** the **tech voice** goes pride → doubt; the **manual** goes cheerful → bleak. The **client
 names stay absurd** — the tonal relief.
+
+**The console thread.** Remote work lives in the manual and Jim's receipts, never the client or cargo —
+the contract is the customer's, the office is Jim's, and the two never meet. It escalates once per act
+and never explains itself:
+
+- **Job 1 (establish):** the manual sets the console down — *"Set the console anywhere; there is no
+  office."*
+- **Job 4 (choose):** the manual already says *where you work is a decision*; the tech voice adds the
+  flat pitch, *"Works everywhere."*
+- **Job 7 (absent):** the manual's late note ends *"There is still no office."*, and Jim's receipt
+  closes *"The console stays where it is. Today the space. Tomorrow the time."*
+
+The exact strings live in `Levels_en` / `Levels_es` under the `init_manual_entry`, `init_01` and
+`complete` keys. Jobs 2, 3, 5 and 6 stay untouched: the thread is the company's condition, not a
+running joke.
 
 ## Seeds (later)
 

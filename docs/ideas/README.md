@@ -13,6 +13,9 @@ The detailed notes live beside this file; this is the index.
 - **[Cube rotation](cube-rotation.md)** — rotating the cube/region. *Why not now:* the region stays
   world-axis-aligned so the gestures and lattice stay predictable; revisit only if a puzzle needs a
   non-axis-aligned frame.
+- **[Explorable map](explorable-map.md)** — a solved counter, and puzzles near solved ones open up so
+  moving the cube is exploring. *Why not now:* the map cube lands first; the lesson order needs a
+  spine, and side puzzles need baking.
 - **[Playable map field](playable-map-field.md)** — the selected map node becomes the play field in place.
-  *Why not now:* [loop completion](../plans/in-progress/loop-completion.md) and Validation 1 come first; the
+  *Why not now:* Validation 1 and the gesture prompts come first; the
   transition/prefab work is a project.

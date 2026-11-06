@@ -51,8 +51,8 @@ The **level selector** is needed: a field of cubes, one per job.
 One new lesson at a time, so the player never faces two unrelated ideas at once:
 
 1. **Job 1 — the fixed cube, one zone.** A fixed region; the only move is the **grab-inside scale**.
-   One lever, one pinch. The field has four planets so the run can be blocked, but the count is not the
-   lesson ([jobs](../jobs.md) §The run).
+   One lever, one pinch. The field has six planets and a sun the cube does not cover, so the run can be
+   blocked, but the count is not the lesson ([jobs](../jobs.md) §The run).
 2. **Job 2 — the centre.** The fixed cube is placed over the sun; the player scales the star with the
    same verb. It lands before the move lesson, so the sun is met with a fixed cube.
 3. **Job 3 — the other direction.** A planet blocks the line; the fixed cube sits on it, and the player

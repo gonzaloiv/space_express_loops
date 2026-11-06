@@ -27,7 +27,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890860695553
-    m_Localized: Bienvenido. Tu Wrap hace una cosa. Haz esa cosa.
+    m_Localized: Bienvenido. Tu Wrap hace una cosa. Haz esa cosa. Coloca la consola donde quieras; no hay oficina.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890860695554
@@ -79,7 +79,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889867
-    m_Localized: "Ahora mu\xE9velo. D\xF3nde es una elecci\xF3n."
+    m_Localized: "Ahora mu\xE9velo. D\xF3nde es una elecci\xF3n. Funciona en todas partes."
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889868
@@ -123,7 +123,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889878
-    m_Localized: "Este es aquel para el que se escribi\xF3 el manual. Bienvenido, nuevo empleado. No ha habido un nuevo empleado en once a\xF1os."
+    m_Localized: "Este es aquel para el que se escribi\xF3 el manual. Bienvenido, nuevo empleado. No ha habido un nuevo empleado en once a\xF1os. Sigue sin haber oficina."
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889879
@@ -155,7 +155,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889890
-    m_Localized: "La herencia est\xE1 entregada. El patrimonio del Sr. Fink dice que no hay nada m\xE1s. El libro de cuentas est\xE1 contento. Por ahora. Hoy el espacio. Ma\xF1ana el tiempo."
+    m_Localized: "La herencia est\xE1 entregada. El patrimonio del Sr. Fink dice que no hay nada m\xE1s. El libro de cuentas est\xE1 contento. Por ahora. La consola se queda donde est\xE1. Hoy el espacio. Ma\xF1ana el tiempo."
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889891

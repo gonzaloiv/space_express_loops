@@ -32,7 +32,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         [Test]
         public void Validate_SunCentredGrown_Passes()
         {
-            PuzzleData puzzle = Puzzle(Sun(), Planet(Blocker()), Endpoint(-1f), Endpoint(1f));
+            PuzzleSource sun = Sun();
+            sun.scale = 0.07f;
+            PuzzleData puzzle = Puzzle(sun, Planet(Blocker()), Endpoint(-1f), Endpoint(1f));
             PuzzleJobContract contract = Contract(PuzzleMechanism.Curve);
             contract.SunRule = PuzzleSunRule.CentredGrown;
 
@@ -41,6 +43,22 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
                     puzzle, PuzzleSolutionKind.Curve, Zone(Vector3.zero, 1.4f), contract,
                     out List<string> failures),
                 string.Join("\n", failures));
+        }
+
+        [Test]
+        public void Validate_SunLargerThanCube_Fails()
+        {
+            PuzzleSource sun = Sun();
+            sun.scale = 0.2f;
+            PuzzleData puzzle = Puzzle(sun, Planet(Blocker()), Endpoint(-1f), Endpoint(1f));
+            PuzzleJobContract contract = Contract(PuzzleMechanism.Curve);
+            contract.SunRule = PuzzleSunRule.CentredGrown;
+
+            Assert.IsFalse(
+                PuzzleJobValidator.Validate(
+                    puzzle, PuzzleSolutionKind.Curve, Zone(Vector3.zero, 1.4f), contract,
+                    out List<string> failures));
+            Assert.That(failures, Does.Contain("sun rule CentredGrown failed"));
         }
 
         [Test]

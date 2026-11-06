@@ -8,19 +8,19 @@ namespace DigitalLove.Game.PuzzleSelection
         private readonly RunSlotView selectedSlot;
         private readonly ViewPool<RunSlotView> fields;
         private readonly MapNodeTint tint;
-        private readonly MapSelectionLabel label;
+        private readonly MapSelectionReadout readout;
         private readonly MapZoom zoom;
 
         public RunSlotView CurrentSlot { get; private set; }
 
         public MapFieldRenderer(
             RunSlotView selectedSlot, ViewPool<RunSlotView> fields,
-            MapNodeTint tint, MapSelectionLabel label, MapZoom zoom)
+            MapNodeTint tint, MapSelectionReadout readout, MapZoom zoom)
         {
             this.selectedSlot = selectedSlot;
             this.fields = fields;
             this.tint = tint;
-            this.label = label;
+            this.readout = readout;
             this.zoom = zoom;
         }
 
@@ -37,6 +37,17 @@ namespace DigitalLove.Game.PuzzleSelection
                 CurrentSlot.SetLabelColor(tint.CurrentAt(deltaSecs));
         }
 
+        public void PreviewNearest(PuzzleMap map, Transform mapRoot, Vector3 pointer)
+        {
+            int nearest = MapSnap.Nearest(map, mapRoot, pointer);
+            if (nearest < 0 || nearest == readout.PreviewIndex)
+                return;
+
+            JobEntry entry = map[nearest];
+            readout.ShowPreview(entry);
+            zoom.Preview(entry.State);
+        }
+
         public void Hide()
         {
             CurrentSlot = null;
@@ -48,7 +59,7 @@ namespace DigitalLove.Game.PuzzleSelection
         {
             JobEntry selected = map.Selected;
             selectedSlot.ShowMapField(selected, tint.For(selected.State));
-            label.Show(selected);
+            readout.Show(selected);
             zoom.Reset(selected.State);
             if (selected.State == JobState.Current)
                 CurrentSlot = selectedSlot;

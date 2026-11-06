@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using DigitalLove.DataAccess;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Persistence;
@@ -13,19 +14,21 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private MonoState nextState;
         [SerializeField] private SpaceShapingController puzzleController;
         [SerializeField] private TtsPresenter ttsPresenter;
+        [SerializeField] private float saveTimeoutSecs = 5f;
 
         [Inject] private MemoryDataClient memoryDataClient;
         [Inject] private UnityPlayerDataClient playerDataClient;
+
+        private Task pendingSave = Task.CompletedTask;
 
         public override void Enter()
         {
             PuzzleData puzzle = memoryDataClient.Get<PuzzleData>();
             PuzzleRunResult result = memoryDataClient.Get<PuzzleRunResult>();
-            if (result.Solved)
-                SaveSolve(puzzle, result.Grade);
+            pendingSave = result.Solved ? SaveSolve(puzzle, result.Grade) : Task.CompletedTask;
 
             string cue = result.Solved ? puzzle.CompleteKey : puzzle.FailKey;
-            ttsPresenter.Play(new[] { cue }, ReturnToSelection);
+            ttsPresenter.Play(new[] { cue }, ReturnWhenSaved);
         }
 
         public override void Exit()
@@ -33,7 +36,13 @@ namespace DigitalLove.Game.Flow
             ttsPresenter.Stop();
         }
 
-        private async void SaveSolve(PuzzleData puzzle, int grade)
+        private async void ReturnWhenSaved()
+        {
+            await Task.WhenAny(pendingSave, Task.Delay(System.TimeSpan.FromSeconds(saveTimeoutSecs)));
+            ReturnToSelection();
+        }
+
+        private async Task SaveSolve(PuzzleData puzzle, int grade)
         {
             PlayerData playerData = memoryDataClient.Get<PlayerData>();
             if (!RunProgressCookies.RecordSolve(playerData, puzzle.id, grade))

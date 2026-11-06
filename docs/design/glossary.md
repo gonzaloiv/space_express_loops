@@ -2,7 +2,7 @@
 
 **Status:** design · glossary — the one place terms are defined.
 **Date:** 2026-10-23.
-**Revised:** 2026-11-01.
+**Revised:** 2026-11-07.
 
 **Related:** [vision](vision.md) · [the cube](systems/cube.md) · [core loop](core-loop.md)
 
@@ -41,6 +41,7 @@ the UI. Do not introduce a third word for the same idea.
 | **multi-ship** | A job with more than one run; it is solved only when **every ship arrives**. The runs relate as fan-out, converge, or separate. |
 | **the seed** | The authoring recipe for a job — its field, brief conditions and dials; the **level** is the baked result. |
 | **the map (level selector)** | The field of numbered cubes, one per job; solving lights them. **Direct pick only**; the result offers Map/Retry. |
-| **the sun** | The source at the field centre. Scalable by its centre by default; a puzzle can lock it to fixed mass. Job 1 has no sun; the centre job introduces it. Never a run endpoint. |
+| **the sun** | The source at the field centre. Scalable by its centre by default; a puzzle can lock it to fixed mass. Job 1 has a sun the cube does not cover; the centre job makes it the lesson. Never a run endpoint. |
 | **the company** | The lore wrapper (identity, contracts); flavour only, no economy. |
+| **the console** | The company-issued Wrap client: a portable dispatch terminal that projects the bubble into the player's room and carries the contract map between jobs. It explains MR anchoring in-fiction; furniture and the map, not a second interactive system. |
 | **Room / Bubble** | The **bubble** is the play view (the miniature universe anchored in the room); **Room** is the legacy room-scale view, **cut** ([vision](vision.md) §3). |

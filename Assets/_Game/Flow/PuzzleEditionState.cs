@@ -1,8 +1,10 @@
 using DigitalLove.DataAccess;
 using DigitalLove.FlowControl;
+using DigitalLove.Game.PuzzleSelection;
 using DigitalLove.Game.SpaceShaping;
 using DigitalLove.Input;
 using DigitalLove.TTS;
+using DigitalLove.UI.Behaviours;
 using Reflex.Attributes;
 using UnityEngine;
 
@@ -14,6 +16,8 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private MonoState completeState;
         [SerializeField] private TwoHandGestureInput gesture;
         [SerializeField] private SpaceShapingController puzzleController;
+        [SerializeField] private GesturePromptPresenter prompts;
+        [SerializeField] private JobCardPanel contractCard;
         [SerializeField] private TtsPresenter ttsPresenter;
         [SerializeField] private Transform head;
         [SerializeField] private bool rotationEnabled;
@@ -33,6 +37,9 @@ namespace DigitalLove.Game.Flow
             gesture.StateChanged += OnGestureChanged;
             puzzleController.Solved += OnSolved;
             puzzleController.Failed += OnFailed;
+            PuzzleData puzzle = memoryDataClient.Get<PuzzleData>();
+            ShowPrompts(puzzle);
+            ShowContract(puzzle);
         }
 
         public override void Exit()
@@ -40,8 +47,23 @@ namespace DigitalLove.Game.Flow
             gesture.StateChanged -= OnGestureChanged;
             puzzleController.Solved -= OnSolved;
             puzzleController.Failed -= OnFailed;
-            scaleOut.Reset();
-            rotation.Reset();
+            scaleOut?.Reset();
+            rotation?.Reset();
+            prompts.HideAll();
+            contractCard.Hide();
+        }
+
+        private void ShowPrompts(PuzzleData puzzle)
+        {
+            prompts.Show(GestureKind.Scale);
+            if (puzzle.translatable)
+                prompts.Show(GestureKind.Move);
+        }
+
+        private void ShowContract(PuzzleData puzzle)
+        {
+            if (!puzzle.noIntro)
+                contractCard.ShowInstant(puzzle);
         }
 
         private void OnSolved() => EndRun(true);

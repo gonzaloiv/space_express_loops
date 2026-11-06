@@ -19,6 +19,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         public event Action<ZoneRefusal> Refused;
 
+        public event Action Moved;
+
         public SpaceZone Zone
         {
             get
@@ -29,6 +31,15 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         public bool IsScaling => pool.Views.AnyScaling();
+
+        public Vector3 ActivePosition
+        {
+            get
+            {
+                SpaceZoneView cube = pool.Views.Active();
+                return cube != null ? cube.transform.position : Vector3.zero;
+            }
+        }
 
         public void SetConditions(ZoneConditions value)
         {
@@ -81,8 +92,11 @@ namespace DigitalLove.Game.SpaceShaping
         {
             cube.SetInputLocked(inputLocked);
             cube.Refused += OnRefused;
+            cube.Moved += OnMoved;
         }
 
         private void OnRefused(ZoneRefusal reason) => Refused?.Invoke(reason);
+
+        private void OnMoved() => Moved?.Invoke();
     }
 }

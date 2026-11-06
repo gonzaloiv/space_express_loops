@@ -14,8 +14,10 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField] private GameObject selectionCube;
         [SerializeField] private Renderer selectionCubeRenderer;
         [SerializeField] private TMP_Text selectionLabel;
+        [SerializeField] private JobCardPanel contractCard;
         [SerializeField] private float viewRadius = 0.5f;
         [SerializeField] private float panSecs = 0.25f;
+        [SerializeField, Min(0.1f)] private float panPromptSecs = 5f;
         [SerializeField] private float maxZoom = 2.2f;
         [SerializeField] private float overviewScale = 0.55f;
         [SerializeField] private float enterSecs = 0.5f;
@@ -38,16 +40,37 @@ namespace DigitalLove.Game.PuzzleSelection
         private MapRouteLine route;
         private PuzzleMap map;
         private MapNodeTint tint;
-        private MapSelectionLabel readout;
+        private MapSelectionReadout readout;
         private MapFieldRenderer fieldView;
         private bool wasDragging;
         private MapEnter enter;
 
         public event Action EnterRequested;
 
+        public event Action Panned;
+
+        private MapPanWatch panWatch;
+
+        public MapPanWatch PanWatch
+        {
+            get
+            {
+                if (panWatch == null)
+                {
+                    panWatch = new MapPanWatch(panPromptSecs);
+                    panWatch.Panned += OnPanned;
+                }
+
+                return panWatch;
+            }
+        }
+
+        public Vector3 SelectionCubePosition => selectionCube.transform.position;
+
         private void Update()
         {
             float deltaSecs = Time.unscaledDeltaTime;
+            PanWatch.Tick(deltaSecs, map != null);
             pose.Tick(deltaSecs);
             fieldView.TickPulse(deltaSecs);
             if (route != null && map != null)
@@ -71,10 +94,12 @@ namespace DigitalLove.Game.PuzzleSelection
             zoom = new MapZoom(selectedSlot, lens, maxZoom);
             tint = new MapNodeTint(
                 selectionCubeColors, lockedBrightness, pulseSecs, pulseDepth);
-            readout = new MapSelectionLabel(selectionLabel);
+            readout = new MapSelectionReadout(selectionLabel, contractCard);
             fieldView = new MapFieldRenderer(selectedSlot, fields, tint, readout, zoom);
             enter = new MapEnter(zoom, enterSecs, enterScale);
         }
+
+        private void OnPanned() => Panned?.Invoke();
 
         public void Show(PuzzleMap map)
         {
@@ -82,6 +107,7 @@ namespace DigitalLove.Game.PuzzleSelection
             gameObject.SetActive(true);
 
             wasDragging = false;
+            PanWatch.Reset();
             enter.Reset();
             overview.Reset(showAll);
             route = new MapRouteLine(routeSegments, routeColor, routeAlpha, map.Count);
@@ -115,6 +141,8 @@ namespace DigitalLove.Game.PuzzleSelection
         {
             if (map == null)
                 return;
+
+            PanWatch.SetGestureActive(state.IsActive);
 
             if (enter.IsActive)
             {
@@ -165,19 +193,8 @@ namespace DigitalLove.Game.PuzzleSelection
                 pose.BeginDrag();
 
             pose.ApplyDrag(outcome.DragOffset);
-            PreviewNearest();
+            fieldView.PreviewNearest(map, mapRoot, selectionCube.transform.position);
             wasDragging = true;
-        }
-
-        private void PreviewNearest()
-        {
-            int nearest = MapSnap.Nearest(map, mapRoot, selectionCube.transform.position);
-            if (nearest < 0 || nearest == readout.PreviewIndex)
-                return;
-
-            JobEntry entry = map[nearest];
-            readout.Show(entry);
-            zoom.Preview(entry.State);
         }
 
         private void SnapAfterDrag()
@@ -189,7 +206,10 @@ namespace DigitalLove.Game.PuzzleSelection
             int nearest = MapSnap.Nearest(
                 map, mapRoot, selectionCube.transform.position);
             if (nearest >= 0 && nearest != map.SelectedIndex && map.Select(nearest))
+            {
                 RenderFields();
+                PanWatch.NotifyPanned();
+            }
             AnimateTo(Focus);
         }
 
@@ -207,6 +227,7 @@ namespace DigitalLove.Game.PuzzleSelection
         public void Hide()
         {
             pose.StopPan();
+            PanWatch.Reset();
             wasDragging = false;
             enter.Reset();
             overview.Reset(showAll);

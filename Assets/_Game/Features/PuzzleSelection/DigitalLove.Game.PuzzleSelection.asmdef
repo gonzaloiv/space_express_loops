@@ -6,9 +6,12 @@
         "DigitalLove.Game.SpaceShaping.FieldContent",
         "DigitalLove.Casual.Levels",
         "DigitalLove.Global",
+        "DigitalLove.Localization",
         "DigitalLove.Input",
         "DigitalLove.Game.Nodes",
-        "Unity.TextMeshPro"
+        "DigitalLove.UI.Behaviours",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

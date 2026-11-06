@@ -2,7 +2,7 @@
 
 **Status:** design · world · lore.
 **Date:** 2026-10-23.
-**Revised:** 2026-11-06.
+**Revised:** 2026-11-07.
 
 **Related:** [vision](../vision.md) · [core loop](../core-loop.md) ·
 [progression](../systems/progression.md) · [glossary](../glossary.md)
@@ -25,6 +25,9 @@ would say, not narration.
 - **Fuel is expensive.** Transport is a pure cost centre.
 - Trade still exists — goods still move between settlements. Only the *market* is fixed. Nobody
   needs more customers; everybody needs lower cost.
+- **Nobody has an office.** Premises are a cost the fixed pie cannot carry, so work is remote by
+  default — a company is a dispatch terminal in someone's kitchen. Remote work is not a perk here;
+  it is the cheapest way to stay alive.
 
 ## Who you are — Jim
 
@@ -37,8 +40,10 @@ would say, not narration.
   does not fully trust.
 - **The voice is his.** Dry, tired, adult; understatement, not exclamation. He never explains the
   physics — he complains about it.
-- **He is the face and voice of the job.** Jim introduces each job (one line on the jumbotron) and
+- **He is the face and voice of the job.** Jim introduces each job (one line on his call panel, beside the contract card) and
   relays the receipt or the silence at the end. He is the only voice in the run.
+- **He works from home.** The console is on his table; the company is two people who have never
+  shared a room.
 
 ## The tech: spacetime wrapping
 
@@ -51,6 +56,27 @@ would say, not narration.
   **literally destroy the universe**.
 - **It is the company's new plan.** In a fixed pie, the Wrap is how the firm means to make more money —
   and **Jim is the one who has to run it**, ready or not.
+
+## The console — the office is wherever you are
+
+- **The Wrap is portable.** The company issues a **console**: the Wrap's client, a dispatch terminal
+  that projects the bubble into whatever room it stands in. A kitchen is a valid dispatch station; the
+  universe does not care where the desk is.
+- **This is why the bubble is in your room.** The player's real room is not a convenience of the medium —
+  in the fiction, the console put the space there. Passthrough is the product working as intended.
+- **There is no office.** Our Space Corp is two people in two kitchens, and the tech team is remote too,
+  which is why it stays text and never a face. Nobody has met the client. In a fixed pie, a company that
+  survives is one with no premises and no commute.
+- **The map rides the console.** Between jobs the contract map sits on the console, on your own table.
+  Picking a cube brings its patch of spacetime into the room. The console never leaves the room, because
+  there is nowhere to go.
+- **The pitch.** Jim repeats the sales line without enthusiasm: *"Works everywhere."* The bleak reading
+  is the true one — everywhere is the same kitchen, at night, alone.
+- **No commute, no presence, no second system.** Remote means **sedentary**: the player never walks to
+  the console or carries it between rooms. The console is furniture and the map; the cube stays the
+  instrument.
+- **The missing employee.** The "new employee" the manual addresses never arrives, in part because there
+  is no office to arrive at. That is the manual's arc, not a second character.
 
 ## The progression (the frame for the run)
 
@@ -88,10 +114,15 @@ them together, and the promise is the same — everything arrives.
 - **The console is their look.** Everything the tech team "says" on screen — the manual entry on the
   job card and the gesture prompts — reads as the Wrap's dispatch terminal: a thin frame, monospace
   type, phosphor line art in the UI accent, a faint scanline/flicker, a blinking cursor; it boots in on
-  show and cuts off like a CRT on hide. Jim's panel is not the console — he is the person, with his face.
-- **No hints during the solve.** Help comes at the start (the job card's manual entry, the intro line,
-  a gesture prompt the first time a gesture is needed) and at the end (the complete or fail message) —
-  never a tip mid-puzzle.
+  show and cuts off like a CRT on hide. Jim is not the console's
+  voice — he is the person, with his face — but he reaches you **through** it: his panel is a call on
+  the console, in the console's frame, docked beside the contract card, with his own face and words
+  rather than terminal type.
+- **No reactive hints during the solve.** The job card is the contract, not a hint: the selection map
+  shows the full contract, and a smaller copy stays available during the run as the job's reference.
+  Otherwise help comes at the start (Jim's intro line, a gesture prompt the first time a gesture is
+  needed) and at the end (the complete or fail message); nothing reacts to the player being stuck or
+  offers a mid-solve tip.
 - **Their roadmap slogan:** *"Today the space, tomorrow the time."* The Wrap wraps **space** today;
   wrapping **time** is the team's next promise — a future feature (or DLC), not this run.
 
@@ -144,7 +175,7 @@ makes a small game stick.
   arrives. The arc lives in the text, not a second character.
 - **Per-job launch (the narrative fuel).** Once the launch is per-job, each job's *given* launch
   becomes a story beat — a launch that would fail, made to land.
-- **The lit map in the office.** The map as a physical object the firm lives around — lit cubes as quiet
+- **The lit map at home.** The map as a physical object the firm lives around — lit cubes as quiet
   pride, dark ones as the work left.
 
 ## Canon (settled)
@@ -155,5 +186,9 @@ makes a small game stick.
 - **The Wrap is the company's new plan** to make more money; Jim is the one forced to use it.
 - **Clients have absurd names**; the client is never a face.
 - **Jim is the only voice** — the face of the job intro and the end message. The tech team is text (the
-  manual on the job card); there are no in-solve hints.
+  manual on the job card); there are no reactive in-solve hints, and the contract card is a static
+  reference.
+- **Work is remote and the console is the company's.** The company issues the console; it projects the
+  bubble into the player's room and carries the map between jobs. MR anchoring is the fiction, not a
+  medium convenience.
 - **The reading stays ambiguous** — triumph or satire, unresolved.

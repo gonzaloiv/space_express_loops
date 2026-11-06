@@ -19,9 +19,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             puzzle.sources = WithSun(
                 PuzzleSourceBridge.ToSources(planets.planets), brief.SunRadius, brief.SunScalable);
-            CubeRange(planets, out float min, out float max);
-            puzzle.cubeSizeMin = min;
-            puzzle.cubeSizeMax = max;
+            ApplyCubeRange(puzzle, planets, brief);
             puzzle.translatable = brief.Translatable;
             puzzle.zones = brief.Zones;
             puzzle.resizable = brief.Resizable;
@@ -83,6 +81,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             PlanetNames names = PlanetNames.Instance;
             return names != null ? names.NameAt(planetCount) : string.Empty;
+        }
+
+        // A job that puts the cube over the star must be allowed a cube wide enough to cover it.
+        private static void ApplyCubeRange(
+            PuzzleData puzzle, PuzzlePlanetListAsset planets, PuzzleBrief brief)
+        {
+            CubeRange(planets, out float min, out float max);
+            puzzle.cubeSizeMin = min;
+            puzzle.cubeSizeMax = brief.SunRule == PuzzleSunRule.CentredGrown
+                ? Mathf.Max(max, PuzzleSunRuleCheck.SunEnclosingSize(brief.SunRadius * 2f))
+                : max;
         }
 
         // The cube must enclose the planet it covers, so the range spans the field's planets with the

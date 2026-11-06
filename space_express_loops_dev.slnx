@@ -22,6 +22,7 @@
   <Project Path="Vendor.GameAnalytics.csproj" />
   <Project Path="DigitalLove.Interactables.XRI.csproj" />
   <Project Path="DigitalLove.Audio.Runtime.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="DigitalLove.UI.Behaviours.csproj" />
   <Project Path="DigitalLove.UI.DesignSystem.csproj" />
   <Project Path="DigitalLove.VFX.Animation.csproj" />
@@ -37,7 +38,6 @@
   <Project Path="DigitalLove.Interactables.OculusInteraction.Samples.csproj" />
   <Project Path="DigitalLove.Game.Sectors.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.Hands.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Vendor.UnityGif.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Zone.csproj" />
   <Project Path="DigitalLove.Analytics.csproj" />

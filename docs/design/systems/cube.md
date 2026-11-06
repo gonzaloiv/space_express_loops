@@ -63,8 +63,8 @@ count.
   `mass ∝ radius³` rule.
 - **The sun is scalable by default.** It sits at the field centre and is never an endpoint. A cube
   containing its centre scales it; a level can lock it (`fixedMass`), pinning min and max scale to the
-  baked radius. Job 1 has no sun; the centre (job 2) introduces it with the cube over its centre;
-  after that it is a normal source.
+  baked radius. Job 1 has a sun the cube does not cover; the centre (job 2) makes it the lesson with the cube
+  over its centre; after that it is a normal source.
 - **A translatable level starts the cube at the centre.** The solution includes an off-centre zone, so the
   move is required; the player chooses where to work.
 - **Planets cannot fuse.** The separation constraint (`SourceConstraints`, 1.2 × the sum of radii,

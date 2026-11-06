@@ -59,12 +59,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11382832575991808
-    m_Localized: "I\u2019m Gonzalo, the solo dev behind Space Express Loops. Your
-      reviews keep this project alive! Got 10 seconds to leave a rating?"
+    m_Localized: "I\u2019m Gonzalo, the solo dev behind Space Express Loops. Your reviews keep this project alive! Got 10 seconds to leave a rating?"
     m_Metadata:
       m_Items: []
   - m_Id: 11382832575991809
     m_Localized: Select to Review
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72242031941570560
+    m_Localized: '> PINCH TO SCALE'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72242031996096512
+    m_Localized: '> SPREAD TO ENTER'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72242031996096513
+    m_Localized: '> DRAG TO PAN'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72242031996096514
+    m_Localized: '> GRAB TO MOVE'
     m_Metadata:
       m_Items: []
   references:

@@ -5,7 +5,7 @@
         "DigitalLove.Game.Persistence",
         "DigitalLove.Game.PuzzleSelection",
         "DigitalLove.Casual.Levels",
-        "DigitalLove.DataAccess.Remote",
+        "DigitalLove.DataAccess.Remote","DigitalLove.UI.Behaviours",
         "DigitalLove.Game.SpaceShaping.Domain",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"

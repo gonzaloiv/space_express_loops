@@ -31,6 +31,12 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         public bool CanResize => conditions.Resizable;
 
+        public event Action Moved
+        {
+            add => listener.MoveCompleted += value;
+            remove => listener.MoveCompleted -= value;
+        }
+
         public bool CanPlace(Vector3 centre, Vector3 size)
         {
             SpaceZone candidate = new(centre, size * 0.5f, scale, falloff);
@@ -60,7 +66,11 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         private void Awake() => ApplyContentVisual();
 
-        private void OnValidate() => ApplyContentVisual();
+        private void OnValidate()
+        {
+            if (contentVisual != null)
+                ApplyContentVisual();
+        }
 
         public void SetFrame(Vector3 centre, Vector3 size)
         {

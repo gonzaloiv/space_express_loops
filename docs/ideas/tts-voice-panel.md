@@ -5,9 +5,10 @@ jumbotron TTS panel landed.
 
 **Related:** [jobs](../design/jobs.md)
 
-**Current fit (2026-11-06).** The game is seated MR with a state-launched TTS panel, not a persistent
-card. The jumbotron is an authored field-side panel with the speaker's face; it stays at the side and
-does not follow or gate on visibility. The travel/parking below is a later feel-pass variant, only if
+**Current fit (2026-11-07).** The game is seated MR with a state-launched TTS panel, not a persistent
+card. The panel is Jim's call on the console: the console's terminal frame around his face and words,
+docked to the left of the edition contract card (same parent, same depth); it does not follow or gate
+on visibility. The travel/parking below is a later feel-pass variant, only if
 the panel should persist during play.
 
 ## Goal

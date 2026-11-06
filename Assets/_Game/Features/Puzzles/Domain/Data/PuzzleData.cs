@@ -32,12 +32,19 @@ namespace DigitalLove.Game.SpaceShaping
         public bool noFail;
         [Tooltip("The tutorial does not award or show stars.")]
         public bool noGrade;
-        [Tooltip("The job plays no intro cue on start (job 1).")]
+        [Tooltip("The job plays no intro cue on start and shows no Edition card (job 1); the map "
+            + "card still shows its contract.")]
         public bool noIntro;
         public PuzzleSource[] sources;
         [Tooltip("Extra ships. Empty is the single-ship puzzle (origin/destination); two or more makes "
             + "it a multi-ship level, solved when every ship arrives.")]
         public PuzzleShip[] ships;
+
+        public string ClientKey => IntroKey + "_client";
+
+        public string CargoKey => IntroKey + "_cargo";
+
+        public string ManualKey => IntroKey + "_manual_entry";
 
         public Vector3 Origin => origin;
 

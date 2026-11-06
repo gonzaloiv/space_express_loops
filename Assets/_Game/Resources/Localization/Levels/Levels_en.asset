@@ -27,7 +27,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890860695553
-    m_Localized: Welcome. Your Wrap does one thing. Do that one thing.
+    m_Localized: Welcome. Your Wrap does one thing. Do that one thing. Set the console anywhere; there is no office.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890860695554
@@ -79,7 +79,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889867
-    m_Localized: Now move it. Where is a choice.
+    m_Localized: Now move it. Where is a choice. Works everywhere.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889868
@@ -123,7 +123,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889878
-    m_Localized: This is the one the manual was written for. Welcome, new employee. There has not been a new employee in eleven years.
+    m_Localized: This is the one the manual was written for. Welcome, new employee. There has not been a new employee in eleven years. There is still no office.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889879
@@ -155,7 +155,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889890
-    m_Localized: The inheritance is delivered. Mr. Fink's estate says there's nothing else. The ledger is happy. For now. Today the space. Tomorrow the time.
+    m_Localized: The inheritance is delivered. Mr. Fink's estate says there's nothing else. The ledger is happy. For now. The console stays where it is. Today the space. Tomorrow the time.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889891

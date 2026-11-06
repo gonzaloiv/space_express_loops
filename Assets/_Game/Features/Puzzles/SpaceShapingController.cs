@@ -6,23 +6,29 @@ namespace DigitalLove.Game.SpaceShaping
 {
     public class SpaceShapingController : MonoBehaviour
     {
-        private const float PreviewIntervalSecs = 0.075f;
-        private const float LatticeIntervalSecs = 1f / 30f;
-        private const float ReadoutIntervalSecs = 0.1f;
-
         [SerializeField] private SpaceShapingSettings settings;
         [SerializeField] private SpaceShapingView view;
 
         private PuzzleRun run;
-        private float nextPreviewTime;
-        private float nextLatticeTime;
-        private float nextReadoutTime;
+        private readonly PreviewClock clock = new();
         private bool wasScaling;
         private bool frozen;
         private PuzzleData currentPuzzleData;
 
         public event Action Solved;
         public event Action Failed;
+
+        public event Action PinchCommitted
+        {
+            add => view.PinchCommitted += value;
+            remove => view.PinchCommitted -= value;
+        }
+
+        public event Action CubeMoved
+        {
+            add => view.CubeMoved += value;
+            remove => view.CubeMoved -= value;
+        }
 
         public void Enter(PuzzleData puzzleData)
         {
@@ -115,7 +121,7 @@ namespace DigitalLove.Game.SpaceShaping
             {
                 view.StopShips();
                 view.ClearPrediction();
-                ClearTimers();
+                clock.Reset();
             }
 
             run.PreviewZone(view.Zone);
@@ -125,28 +131,19 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void RenderPreview()
         {
-            if (Time.unscaledTime >= nextLatticeTime)
-            {
-                nextLatticeTime = Time.unscaledTime + LatticeIntervalSecs;
+            if (clock.TakeLattice(Time.unscaledTime))
                 ApplyAndRender();
-            }
 
-            if (Time.unscaledTime >= nextReadoutTime)
-            {
-                nextReadoutTime = Time.unscaledTime + ReadoutIntervalSecs;
+            if (clock.TakeReadout(Time.unscaledTime))
                 view.ShowReadout(PuzzleReadout.Pending(run.Session));
-            }
 
             PreviewPath();
         }
 
         private void PreviewPath()
         {
-            if (Time.unscaledTime < nextPreviewTime)
-                return;
-
-            nextPreviewTime = Time.unscaledTime + PreviewIntervalSecs;
-            view.ShowTrajectories(run.Session, run.SimulatePreview(), true);
+            if (clock.TakePreview(Time.unscaledTime))
+                view.ShowTrajectories(run.Session, run.SimulatePreview(), true);
         }
 
         private void ApplyAndRender()
@@ -184,7 +181,7 @@ namespace DigitalLove.Game.SpaceShaping
         private void PreparePuzzle()
         {
             wasScaling = false;
-            ClearTimers();
+            clock.Reset();
             ResetView();
         }
 
@@ -233,13 +230,6 @@ namespace DigitalLove.Game.SpaceShaping
                 return;
 
             view.ShowReadout(run.Readout());
-        }
-
-        private void ClearTimers()
-        {
-            nextPreviewTime = 0f;
-            nextLatticeTime = 0f;
-            nextReadoutTime = 0f;
         }
 
         public SpaceShapingSetup BuildSetup() =>

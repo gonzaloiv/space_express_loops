@@ -19,8 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 1002513813504
-    m_Localized: La realidad aumentada no es compatible. Se requiere Meta Quest 3
-      o Meta Quest 3S.
+    m_Localized: La realidad aumentada no es compatible. Se requiere Meta Quest 3 o Meta Quest 3S.
     m_Metadata:
       m_Items: []
   - m_Id: 1002538979328
@@ -28,8 +27,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1002538979329
-    m_Localized: "Aseg\xFArese de que haya una escena de realidad aumentada configurada
-      en su dispositivo para reproducirla."
+    m_Localized: "Aseg\xFArese de que haya una escena de realidad aumentada configurada en su dispositivo para reproducirla."
     m_Metadata:
       m_Items: []
   - m_Id: 1002538979330
@@ -61,13 +59,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11382832575991808
-    m_Localized: "Soy Gonzalo, el desarrollador independiente de Space Express Loops.
-      \xA1Tus rese\xF1as mantienen vivo este proyecto! \xBFTienes 10 segundos para
-      dejar una valoraci\xF3n?"
+    m_Localized: "Soy Gonzalo, el desarrollador independiente de Space Express Loops. \xA1Tus rese\xF1as mantienen vivo este proyecto! \xBFTienes 10 segundos para dejar una valoraci\xF3n?"
     m_Metadata:
       m_Items: []
   - m_Id: 11382832575991809
     m_Localized: Seleccione para revisar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72242031941570560
+    m_Localized: '> PELLIZCA PARA ESCALAR'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72242031996096512
+    m_Localized: '> SEPARA PARA ENTRAR'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72242031996096513
+    m_Localized: '> ARRASTRA PARA DESPLAZAR'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72242031996096514
+    m_Localized: '> AGARRA PARA MOVER'
     m_Metadata:
       m_Items: []
   references:

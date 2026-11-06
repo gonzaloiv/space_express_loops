@@ -9,6 +9,7 @@ using Reflex.Attributes;
 using UnityEngine;
 using DigitalLove.Global;
 using DigitalLove.TTS;
+using DigitalLove.UI.Behaviours;
 
 namespace DigitalLove.Game.Flow
 {
@@ -19,6 +20,9 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private PuzzleMapView view;
         [SerializeField] private TwoHandGestureInput gesture;
         [SerializeField] private TtsPresenter ttsPresenter;
+        [SerializeField] private GesturePromptPresenter prompts;
+        [Tooltip("Solved jobs before the Pan prompt can appear; Pan is not needed to progress.")]
+        [SerializeField, Min(0)] private int panPromptSolvedCount = 2;
 
         [Header("Debug")]
         [SerializeField] private DebugBool selectRandom;
@@ -62,17 +66,22 @@ namespace DigitalLove.Game.Flow
         {
             view.EnterRequested += OnEnterRequested;
             gesture.StateChanged += OnGestureChanged;
+            if (progress.SolvedCount >= panPromptSolvedCount)
+                view.PanWatch.Due += OnPanPromptDue;
 
             PuzzleData[] levels = ReadLevels();
             map = PuzzleMap.FromLevels(
                 levels, progress, PuzzleMapLayout.Galaxy(levels.Length));
             view.Show(map);
+            prompts.Show(GestureKind.Enter);
         }
 
         public override void Exit()
         {
             view.EnterRequested -= OnEnterRequested;
             gesture.StateChanged -= OnGestureChanged;
+            view.PanWatch.Due -= OnPanPromptDue;
+            prompts.HideAll();
 
             if (map == null)
                 return;
@@ -80,6 +89,8 @@ namespace DigitalLove.Game.Flow
             view.Hide();
             map = null;
         }
+
+        private void OnPanPromptDue() => prompts.Show(GestureKind.Pan);
 
         private void OnGestureChanged(TwoHandGestureState state) => view.ApplyGesture(state);
 

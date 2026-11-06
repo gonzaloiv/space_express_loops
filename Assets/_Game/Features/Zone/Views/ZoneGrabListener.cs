@@ -48,15 +48,17 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         private Vector3 grabOffset;
         private Vector3 grabOrigin;
 
-        private bool hovering;
-        private Vector3 hoverWorld;
         private bool locked;
+
+        private readonly ZoneHoverTracker hover = new();
 
         public event Action<ZoneRefusal> Refused
         {
             add => feedback.Refused += value;
             remove => feedback.Refused -= value;
         }
+
+        public event Action MoveCompleted;
 
         private void Awake() => feedback = new ZoneFeedback(frameRenderer, fillRenderer, BuildPalette());
 
@@ -79,21 +81,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         public void Refuse(ZoneRefusal reason) => feedback.Refuse(reason);
 
-        private void OnPointerEvent(PointerEvent evt)
-        {
-            switch (evt.Type)
-            {
-                case PointerEventType.Hover:
-                case PointerEventType.Move:
-                    hoverWorld = evt.Pose.position;
-                    hovering = true;
-                    break;
-                case PointerEventType.Unhover:
-                case PointerEventType.Cancel:
-                    hovering = false;
-                    break;
-            }
-        }
+        private void OnPointerEvent(PointerEvent evt) => hover.Track(evt);
 
         private void Update()
         {
@@ -118,6 +106,9 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         private void EndGesture()
         {
+            if (moved)
+                MoveCompleted?.Invoke();
+
             if (moved && !scaled)
                 zone.ResetScale();
 
@@ -130,7 +121,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         }
 
         private void ApplyFeedback(int count) =>
-            feedback.Apply(zone, count, frameGrab, hovering, hoverWorld);
+            feedback.Apply(zone, count, frameGrab, hover.Hovering, hover.World);
 
         private void TrackCount(int count)
         {

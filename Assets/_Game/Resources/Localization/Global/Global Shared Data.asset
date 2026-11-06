@@ -63,6 +63,22 @@ MonoBehaviour:
     m_Key: review_panel_button
     m_Metadata:
       m_Items: []
+  - m_Id: 72242031941570560
+    m_Key: gesture_prompt_scale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72242031996096512
+    m_Key: gesture_prompt_enter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72242031996096513
+    m_Key: gesture_prompt_pan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72242031996096514
+    m_Key: gesture_prompt_move
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

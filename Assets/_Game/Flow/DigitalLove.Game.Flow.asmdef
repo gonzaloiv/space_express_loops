@@ -14,7 +14,10 @@
         "DigitalLove.Game.SpaceShaping.Domain",
         "DigitalLove.DataAccess.Remote",
         "DigitalLove.Game.Persistence",
-        "DigitalLove.TTS"
+        "DigitalLove.TTS",
+        "DigitalLove.UI.Behaviours",
+        "DigitalLove.Game.SpaceShaping.FieldContent",
+        "GUID:f02f0a5f08e71e247b7f99ba97077bb2"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
