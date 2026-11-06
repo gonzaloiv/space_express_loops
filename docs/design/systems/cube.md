@@ -40,7 +40,7 @@ player *decides*, not the number they read after solving.
 | Gesture | Trigger | Effect |
 |---|---|---|
 | **The scale** | a two-hand pinch **inside** the cube | scales the space *and* the content: the metric stretches (a shrunk zone is a **shortcut**), the planets **spread** and **scale** — a grown planet deepens its well and bends the path, a shrunken planet is a smaller obstacle and can clear it |
-| **The region** *(move at job 5; resize deferred)* | grab the cube's **edges / corners** | **moves / resizes** the cube — sets *where* you work; the soft brush blends several zones |
+| **The region** *(move at job 4; resize deferred)* | grab the cube's **edges / corners** | **moves / resizes** the cube — sets *where* you work; the soft brush blends several zones |
 
 **Multiple scales are the way.** The player scales **several** zones, and the soft brush blends them
 into one field — the core of the verb, not a later unlock. One zone can clear an obstacle while another
@@ -48,8 +48,8 @@ grows a well: the same gesture with two roles. The region's size must stay **sep
 coupling them is the bug.
 
 **The brief selects the gestures.** A fixed level locks the move, a locked frame locks the resize, and
-the scale inside the cube is always available. Several zones do not require a movable cube; the
-[progression](progression.md) §The several-zones rung owns that rule. The game never shows a move
+the scale inside the cube is always available. In the seven-job run, several zones arrive with the
+movable cube ([progression](progression.md) §The several-zones rung). The game never shows a move
 count.
 
 ## Rules
@@ -73,8 +73,8 @@ count.
   separate.
 - **The verb is continuous.** The cube is apply-anywhere; no discrete steps, no move counts.
   Discreteness lives only in authoring ([vision](../vision.md) §8).
-- **Undo refunds the last edit.** The session can unwind a committed zone; surfacing the control is
-  later ([plans board](../../plans/README.md)).
+- **No undo in the slice.** A refund would make probing free and the entropy fail unreachable; reset is
+  the only way back ([core loop](../core-loop.md) §3).
 
 ## Feedback
 

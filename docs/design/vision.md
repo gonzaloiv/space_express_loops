@@ -35,9 +35,9 @@ loop inside the MR bubble, with the run's jobs and progression. Build status liv
    deforms the universe". It gets the polish budget (feel, sound, haptics, the visible
    field-warp).
 3. **Scale the space and the content together.** One gesture does both; the centre arrives at job 2,
-   the shrink-to-clear direction at job 3, several placed zones at job 4, moving the cube (the region)
-   at job 5, multi-zone from job 6, the capstone at job 8. Resize is deferred: it works, but the
-   explanation is not ready. The field is derived, never edited.
+   the shrink-to-clear direction at job 3, moving the cube (the region) at job 4, multi-zone at job 5,
+   the field-carries-you lesson at job 6, the capstone at job 7 ([jobs](jobs.md)). Resize is deferred:
+   it works, but the explanation is not ready. The field is derived, never edited.
 4. **One budget, one score.** Entropy is the budget: spend it all before you solve and the job
    **fails**. Entropy left is the **eco rating**; **arriving** is the goal — the launch is only a check.
    The field itself shows the spend — calm at full, strained as it drains, about to blow near empty —
@@ -139,12 +139,12 @@ mechanic before writing another plan.
 | The cube is "just a group drag" | **Resolved.** The scale is a metric stretch plus content spread/growth, not a drag ([the cube](systems/cube.md)). |
 | Field illegibility | **Partly open.** Lattice warp, planet size/well and the live trajectory are in; the **start run** is shown as the blocked reference ([plans board](../plans/README.md)). |
 | Sun reads as another planet | **Open.** The sun is a flat `Sun.prefab`; the reference marker is the S4 look pass. |
-| Sun scale is a free win | **Open.** `mass ∝ radius³` makes a grown sun strong fast; the bake must verify scalable-by-default, otherwise lock it per puzzle. The centre (job 2) is the first test; the capstone (job 8) must also hold. |
+| Sun scale is a free win | **Open.** `mass ∝ radius³` makes a grown sun strong fast; the bake must verify scalable-by-default, otherwise lock it per puzzle. The centre (job 2) is the first test; the capstone (job 7) must also hold. |
 | Ship-zone legibility | **Partial.** The ship has a trail; there is no zone tint or "which zone" indicator ([plans board](../plans/README.md)). |
 | Prediction trust | **Mitigated in the lab.** The live trajectory previews while shaping and the ship flies on release; the missing straight-line baseline is the read-side hole. |
 | Identity | **Resolved** by the transport-company pivot and the name "Our Space". |
 | Competition scope | **Active.** The current spend is the field pass (S4); run authoring (jobs, map, TTS) is unplanned; Validation 1 is the gate before further investment ([plans board](../plans/README.md)). |
 | Room-scale legacy drag | **Active in code.** `UniverseViewMode.Room` still exists and is fanned out; freeze or remove it. |
-| Content ceiling | **Valid, narrower.** Authored multi-ship is fine; simultaneous unscripted multi-ship is "near-chaotic". The 8-job spine is single-ship; multi-ship is a stretch. |
+| Content ceiling | **Valid, narrower.** Authored multi-ship is fine; simultaneous unscripted multi-ship is "near-chaotic". The 7-job spine is single-ship; multi-ship is a stretch. |
 | Entropy legibility | **Open.** The budget is derived from the bake's best solution; the player never sees that reference. The field itself must carry the spend (strains near empty), with the bar in the field ([progression](systems/progression.md) §Open questions). |
-| Run length | **Open.** The target is a 10-minute session; 8 × ~1 min is the current shape, with 3–5 first ([progression](systems/progression.md) §Open questions). |
+| Run length | **Open.** The target is a 10-minute session; 7 × ~1 min is the current shape, with 3–5 first ([progression](systems/progression.md) §Open questions). |

@@ -23,11 +23,11 @@ first.
 | 3 | the other direction | Clear | fixed · 1 zone · no · 1 ship | Ring | 5–6 + sun · single · medium | medium | a planet blocks the line; shrinking it clears the path — the same pinch, the opposite role |
 | 4 | the cube moves | Curve | **yes** · 1 zone · no · 1 ship | Spiral | 8–10 + sun · multi | medium | spawns at the centre; the solution is off-centre, so the move is required |
 | 5 | multi-zone intro | Curve | yes · 2+ zones · no · 1 ship | Spiral | 10–12 + sun · multi | medium | move + scale two zones — the combination enters |
-| 6 | efficiency | Curve | yes · 2+ zones · no · 1 ship | Cluster | 10 + sun · multi · deep | high | the cheap answer is to spread the edit across zones |
+| 6 | the field carries you | Curve | yes · 2+ zones · no · 1 ship | Cluster | 10 + sun · multi · deep | high | a deep well already near the line does most of the bend; the cheap answer is a few small edits that use it |
 | 7 | the capstone | Curve | yes · 2+ zones · no · 1 ship | Cluster | 12 + sun · multi · deep | high | multi-zone + the centre + the star + several routes — both roles deferred to a future job 8 |
 
-**The run is seven jobs (2026-11-05): 1 scale, 2 centre, 3 clear, 4 move, 5 multi-zone, 6 efficiency,
-7 capstone `Curve`.** The fixed-cube several-zones rung is retired; "several zones" lands with the move at
+**The run is seven jobs (2026-11-05): 1 scale, 2 centre, 3 clear, 4 move, 5 multi-zone, 6 the field
+carries you, 7 capstone `Curve`.** The fixed-cube several-zones rung is retired; "several zones" lands with the move at
 job 5. Job 8 (**Mixed**) is open for a future plan and is not part of the seven-job run.
 
 **The ramp by job.** Scramble is how far the start sits from the solved arrangement: it rises within an
@@ -41,7 +41,7 @@ the prior skill the job combines, so the ramp is cumulative, not additive.
 | 3 | medium | the scale, reversed |
 | 4 | low | the scale + clear |
 | 5 | medium | the move + several zones |
-| 6 | high | multi-zone |
+| 6 | high | multi-zone + the read (use the field's wells) |
 | 7 | high | everything: centre, move, zones, star; Mixed deferred |
 
 **The role.** Each job states the role its reference solution must teach: **Curve** (a well grew),
@@ -57,12 +57,12 @@ spine requests **Curve** except job 3 (**Clear**): the capstone is a `Curve` wit
 **The field is a galaxy, not a handful of balls.** The planet column is the **source** count — the bodies
 that bend the path. The field also carries **decor** (dust, moons, distant planets) from
 [the element pack](../ideas/element-pack.md) once that lands, so the playfield reads as a populated system
-without every body becoming a well. The tutorial stays sparse at three; the count rises by act, so the
+without every body becoming a well. The tutorial stays sparse at four; the count rises by act, so the
 galaxy grows with the run.
 
 **The shape.** Each job states its `fieldShape`; `Auto` is for experiments only. Shape is a read axis,
 not a difficulty dial — it never changes a rule — so it marks an **act**: **Ring** carries the
-fixed-cube opening (1–3), **Spiral** the move act (5–6), **Cluster** the mastery act (7–8). A job may
+fixed-cube opening (1–3), **Spiral** the move act (4–5), **Cluster** the mastery act (6–7). A job may
 turn the silhouette when the act turns; the new verb is still the lesson.
 
 **The ramp is three dials, not the budget.** The entropy budget is always `3×` the bake's solution, so
@@ -93,8 +93,8 @@ the first graded job. Job 1 has no fail and no stars; job 2 fails without stars.
 
 **The several-zones rung is retired with the old job 4 (2026-11-05).** A fixed level can place several cubes,
 but the generator could not force a two-zone `Curve`, so the seven-job run folds "several zones" into the
-multi-zone move at jobs 4–6. Job 4 adds the move; job 5 introduces two zones; job 6 makes it efficient; the
-capstone adds the centre and the star at job 7. A future job 8 can bring back the fixed several-zones rung
+multi-zone move at jobs 4–6. Job 4 adds the move; job 5 introduces two zones; job 6 teaches the field to
+carry the ship; the capstone adds the centre and the star at job 7. A future job 8 can bring back the fixed several-zones rung
 with Mixed.
 
 **Job 3 keeps the sun out of the zones.** The blocker is a planet; the star is background, so the lesson
@@ -136,13 +136,13 @@ creator bakes to them. Three groups.
 | Field | Means |
 |---|---|
 | **`mechanism`** | The role the bake's reference solution must have: **`Any`** (no request), **`Curve`** (a well grew), **`Clear`** (an obstacle shrank), or **`Mixed`** (both; needs ≥2 zones). The search filters to the requested role; a seed that cannot bake it is rejected, and so is a seed whose cheapest route has the wrong role. More expensive alternate routes may remain. |
-| **`minRoutes`** | Minimum distinct arriving routes the bake must offer. `0` = auto: 2 for a movable single-zone level, otherwise 1. Jobs 3, 7, and 8 set 2. |
+| **`minRoutes`** | Minimum distinct arriving routes the bake must offer. `0` = auto: 2 for a movable single-zone level, otherwise 1. Jobs 3 and 7 set 2 (and a future job 8). |
 
 **Baked results** — what the creator records, not a player condition:
 
 | Field | Means |
 |---|---|
-| **`routes`** | Distinct zone sets that arrive within budget. The bake enforces `minRoutes`: a movable single-zone level, job 3, and the capstone jobs (7–8) need at least two; the tutorial and job 2 may have one. |
+| **`routes`** | Distinct zone sets that arrive within budget. The bake enforces `minRoutes`: a movable single-zone level, job 3, and the capstone (job 7, and a future job 8) need at least two; the tutorial and job 2 may have one. |
 | **`entropyBudget`** | **3×** the entropy of the bake's solution; the star thresholds are 1/3 and 2/3 of it. |
 | **`sources` / `frames`** | The baked field (planets, sun, positions) and the cube frames the level places. |
 
@@ -168,7 +168,8 @@ add a layout.
 | **Centre** | `zones 1`, fixed cube over the sun | scale the star itself | 2 |
 | **Obstacle** | `zones 1`, fixed cube on a body on the line | shrink the blocker so the path clears | 3 |
 | **Move** | `translatable`, `zones 1` | place the cube yourself | 4 |
-| **Multi-zone** | `zones ≥ 2`, `translatable` | place and blend several zones — a spread edit can spend less entropy | 5–6 |
+| **Multi-zone** | `zones ≥ 2`, `translatable` | place and blend several zones | 5 |
+| **Assist** | `zones ≥ 2`, `translatable`, a deep well near the line | let the field do the bend; a few small edits beat one big one | 6 |
 | **Capstone** | `zones ≥ 2`, `translatable`, cube over the sun | combine the centre + several zones + the star | 7 |
 | **Mixed** | `zones ≥ 2`, one on the blocker, one on a run planet | clear with one zone, curve with another | 8 (future) |
 
@@ -180,10 +181,12 @@ on a run planet (grow) — a clear and a curve in one multi-zone solution, defer
 seven-job capstone is a `Curve`. The creator tags the role so a job can request it. Job 3 requests `minRoutes: 2`: two blockers on or near the line, so
 the player chooses which one to shrink.
 
-**Multi-zone as an efficiency lesson.** Each committed zone edit costs its net change from that zone's
-last committed scale, so a level can be authored so the **cheap** solution is to **move the cube** and
-scale **several zones a little**, rather than one zone a lot — spreading the edit beats one big edit on
-the grade.
+**Job 6 — the field carries you.** Each committed zone edit costs its net change, so spreading an edit
+is not cheaper on its own; what is cheaper is **using the field**. Job 6 is authored so a deep well
+already sits near the line: the cheap solution nudges the path into it with a few small edits (a
+gravity assist), while the expensive one fights the field with one big edit. The lesson is read, not
+bookkeeping, so it needs the **3★ band** to read distinctly on the in-field bar while shaping
+([core loop](core-loop.md) §3).
 
 **The centre is the reveal.** Job 2 **fixes** the cube over the sun, so the star is in the zone by
 construction and the player scales it with the same verb as a planet. It lands before the move lesson, so
@@ -244,5 +247,5 @@ names stay absurd** — the tonal relief.
 
 - **Routes as a mechanic?** If a late job (7–8) has more than one route, multiple routes stops being an
   authoring guard and becomes a principal mechanic. Decide whether the run teaches it.
-- **The capstone jobs.** What job 6 varies (planet count, entropy scale), and whether job 7 combines the
-  centre + multi-zone as the finale or a future job 8 introduces Mixed.
+- **Job 6's bake.** Can the creator guarantee the assist route is the cheapest (a deep well near the
+  line), and reject seeds where one big edit is as cheap?

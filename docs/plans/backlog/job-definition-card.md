@@ -1,69 +1,60 @@
-# Job definition card — the contract before the job
+# Job definition card — the contract from job 2
 
-**Status:** later · presentation · updated 2026-11-06 — an authored job card (client, cargo, lesson)
-shown at job start; the TTS panel speaks the job's voice.
+**Status:** next · presentation · updated 2026-11-06 — client, cargo and the manual entry on an authored
+card that fades on its own; job 2+ only; the puzzle stays live.
 
 **Related:** [jobs](../../design/jobs.md) · [lore](../../design/world/lore.md) ·
-[TTS messages](../in-progress/tts-messages.md) · [Game.unity](../../../Assets/_Game/Game.unity)
+[loop completion](../in-progress/loop-completion.md) · [TTS messages](../in-progress/tts-messages.md) ·
+[Game.unity](../../../Assets/_Game/Game.unity)
 
-## 1. Why
+## Goal
 
 Each job is a contract: a client, a cargo, and the manual entry that teaches its lesson
-([jobs](../../design/jobs.md) §The run — the lore skin). The definition should read as a card the player
-takes, not a label on the map or a line in the TTS panel. The card carries the definition; the jumbotron
-carries the voice.
+([jobs](../../design/jobs.md) §The run — the lore skin). Loop completion cuts the intro to Jim's tech
+line, so the card is now the **only** surface for the manual entry, and it must land before
+Validation 1. Help reaches the player at the start (this card, Jim's line) and the end (the
+complete/fail message); there is no in-solve hint.
 
-## 2. The fit
+## Contract
 
-- **An authored card.** World-space, held or placed at job start, with the client, cargo, and the manual
-  entry. No runtime hierarchy; no camera follow.
-- **One runtime contract asset.** `JobContractData` per job: client, cargo, manual key, tech key, complete
-  key, keyed by `PuzzleData.id`. Keep it in the runtime assembly; the Creator contracts are Editor-only.
-- **Card and voice are separate.** The card shows the definition; the TTS panel plays the manual and tech
-  lines. The panel is at the side; the card is the thing the player accepts.
-- **Job start only.** Show on `PuzzleStartState`; dismiss on accept or after the intro. No replay on reset
-  or retry.
-- **No block after accept.** The card must not cover the run, the cube, or the TTS panel once dismissed.
+- **Job 2+ only.** The same `noIntro` flag that silences job 1's intro hides its card.
+- **What it shows:** client, cargo, the manual entry. Jim's TTS line (`_01`) plays alongside; the card
+  never speaks, and the TTS panel never reads the manual.
+- **Timed fade, no input.** The card shows on `PuzzleStartState` and fades on its own once the intro
+  line finishes, or after `cardSecs` when there is no line. The puzzle is live underneath; pinching
+  does not wait for the card.
+- **No replay** on reset or retry.
+- **Keys come from the id.** `PuzzleData` derives `ClientKey`, `CargoKey` and `ManualKey`
+  (`level_<id>_init_client`, `_init_cargo`, `_init_manual_entry`) beside `IntroKey` and `CompleteKey`.
+  No contract asset; `jobs.md` stays the design source.
+- **Placement:** authored, world-space, clear of the field, the cube and the TTS panel; no follow.
 
-## 3. Slices
+## Units
 
-### S1 — the card
+### U1 — the card
 
-- Author the card view; show/hide; placement; client, cargo, and manual text.
-- **Exit:** job 1's card reads client/cargo/manual and sits clear of the field.
+- Author the card view in `Game.unity` (TMP client, cargo, manual entry); show / fade / hide with an
+  authored `cardSecs`.
+- Add the derived keys on `PuzzleData`; a missing key leaves its line empty, it never blocks.
+- **Exit:** job 2's card shows its client, cargo and manual entry, sits clear of the field and fades.
 
-### S2 — the data
+### U2 — the state hook
 
-- Add `JobContractData` and resolve it by `PuzzleData.id`; fill job 1.
-- **Exit:** the card reads authored data; a missing contract fails loudly.
+- `PuzzleStartState` shows the card with the intro (skipped on `noIntro`); the fade follows the intro
+  line's completion, else `cardSecs`; `Exit` hides it.
+- **Exit:** job 1 shows no card; job 2 shows it and fades after Jim's line; reset does not replay it;
+  leaving the job hides it.
 
-### S3 — accept and state hook
+## Manual check (headset)
 
-- Show the card on `PuzzleStartState`; accept dismisses it and starts the job; the TTS panel is launched by
-  the same state or immediately after.
-- **Exit:** job 1 shows the card, accept starts the job, the panel speaks, and the card hides.
+1. Open job 1: no card, no voice.
+2. Open job 2: the card shows client, cargo and the manual entry; Jim says one line.
+3. Pinch while the card is up: the puzzle responds; the card does not block.
+4. The card fades after Jim's line; it never covers the field, the cube or the TTS panel.
+5. Reset job 2: the card does not return.
+6. Read it at bubble distance over passthrough: size and contrast hold.
 
-## 4. What it touches
+## Out of scope
 
-- `JobDefinitionCardView` (new), `JobContractData` (new), `PuzzleData.id`, `PuzzleStartState`.
-- `Levels` keys for client/cargo/manual; `TtsPresenter` reads the manual/tech keys.
-
-## 5. Tests
-
-- The card shows job 1's client/cargo/manual; accept dismisses; no replay on reset.
-- The card does not cover the run or the TTS panel; a missing contract fails loudly.
-- The keys resolve in both locales.
-
-## 6. Out of scope
-
-- The map selection info, the TTS panel, the tip/attention panels.
-- Final copy and audio.
-
-## 7. Risks
-
-- **Two job-start surfaces.** Card and TTS panel can compete; sequence them (card first, voice with or
-  after it) and keep the panel at the side.
-- **Duplicated copy.** `jobs.md` is the design source; the runtime asset is the authored data. Do not
-  copy the table into code.
-- **Creator assembly.** Keep `JobContractData` runtime-side; do not reference the Editor-only contracts.
-- **Reading time.** Do not block the puzzle beyond the accept.
+- Final copy, recordings and the Spanish pass (TTS S4).
+- An accept button, a held/physical card, or a manual book.

@@ -16,6 +16,7 @@
   <Project Path="Vendor.GameAnalytics.Editor.csproj" />
   <Project Path="DigitalLove.Global.csproj" />
   <Project Path="DigitalLove.DataAccess.Remote.csproj" />
+  <Project Path="DigitalLove.Game.Flow.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.csproj" />
   <Project Path="DigitalLove.Game.States.Setup.csproj" />
   <Project Path="Vendor.GameAnalytics.csproj" />
@@ -60,7 +61,6 @@
   <Project Path="DigitalLove.Game.SpaceShaping.Grid.csproj" />
   <Project Path="DigitalLove.Timeline.Integrations.csproj" />
   <Project Path="DigitalLove.XR.MetaPlatform.csproj" />
-  <Project Path="DigitalLove.Game.Flow.csproj" />
   <Project Path="DigitalLove.Analytics.GameAnalytics.csproj" />
   <Project Path="DigitalLove.VFX.Materials.csproj" />
   <Project Path="DigitalLove.Game.Nodes.csproj" />

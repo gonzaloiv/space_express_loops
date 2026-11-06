@@ -2,7 +2,7 @@
 
 **Status:** design · world · lore.
 **Date:** 2026-10-23.
-**Revised:** 2026-11-01.
+**Revised:** 2026-11-06.
 
 **Related:** [vision](../vision.md) · [core loop](../core-loop.md) ·
 [progression](../systems/progression.md) · [glossary](../glossary.md)
@@ -34,6 +34,8 @@ would say, not narration.
   does not fully trust.
 - **The voice is his.** Dry, tired, adult; understatement, not exclamation. He never explains the
   physics — he complains about it.
+- **He is the face and voice of the job.** Jim introduces each job (one line on the jumbotron) and
+  relays the receipt or the silence at the end. He is the only voice in the run.
 
 ## The tech: spacetime wrapping
 
@@ -77,10 +79,11 @@ them together, and the promise is the same — everything arrives.
 
 ## The tech team
 
-- **One voice.** The team that built the Wrap is heard as **a single character** who talks — with voice
-  — through the run. Not a cast; a colleague.
-- **Anonymous tip panels** carry the rest: short, in-world hints when the player needs them,
-  unattributed and diegetic (a console readout, not a tutorial box).
+- **Text, not a voice.** The team that built the Wrap is heard only through its **onboarding manual** —
+  the entry on each job card, short, dry, slightly out of date. Jim reads the room; the manual reads the
+  rules. Not a cast and not a second voice; a colleague in the fiction, never on screen.
+- **No hints during the solve.** Help comes at the start (the job card's manual entry, the intro line)
+  and at the end (the complete or fail message) — never a tip mid-puzzle.
 - **Their roadmap slogan:** *"Today the space, tomorrow the time."* The Wrap wraps **space** today;
   wrapping **time** is the team's next promise — a future feature (or DLC), not this run.
 
@@ -129,8 +132,8 @@ makes a small game stick.
 
 - **Externalised costs.** A cheap route that grazes an inhabited world, or a crew put in a time
   well, as a social/human price hidden from the ledger.
-- **The tech voice as a person.** Give the single character an arc across the run — pride, doubt, and the
-  thing they will not say about the Wrap.
+- **The manual's arc.** The entries open cheerful and end bleak — the "new employee" they address never
+  arrives. The arc lives in the text, not a second character.
 - **Per-job launch (the narrative fuel).** Once the launch is per-job, each job's *given* launch
   becomes a story beat — a launch that would fail, made to land.
 - **The lit map in the office.** The map as a physical object the firm lives around — lit cubes as quiet
@@ -142,5 +145,6 @@ makes a small game stick.
 - **Jim, the CEO**, is the player and the voice; he runs the Wrap himself, in a small firm.
 - **The Wrap is the company's new plan** to make more money; Jim is the one forced to use it.
 - **Clients have absurd names**; the client is never a face.
-- **The tech team is one voiced character**, with anonymous tip panels for hints.
+- **Jim is the only voice** — the face of the job intro and the end message. The tech team is text (the
+  manual on the job card); there are no in-solve hints.
 - **The reading stays ambiguous** — triumph or satire, unresolved.

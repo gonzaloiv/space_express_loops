@@ -15,200 +15,136 @@ MonoBehaviour:
   m_TableCollectionName: Levels
   m_TableCollectionNameGuidString: a02e01ee9c8597e479b3ddb25f58e717
   m_Entries:
-  - m_Id: 10940126708027392
+  - m_Id: 72150890814558208
+    m_Key: level_01_01_init_client
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890860695552
+    m_Key: level_01_01_init_cargo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890860695553
+    m_Key: level_01_01_init_manual_entry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890860695554
     m_Key: level_01_01_init_01
     m_Metadata:
       m_Items: []
-  - m_Id: 11382778796625920
-    m_Key: level_01_01_init_02_win
+  - m_Id: 72150890864889856
+    m_Key: level_01_02_init_client
     m_Metadata:
       m_Items: []
-  - m_Id: 11382778813403136
-    m_Key: level_01_01_init_03_confused
+  - m_Id: 72150890864889857
+    m_Key: level_01_02_init_cargo
     m_Metadata:
       m_Items: []
-  - m_Id: 10940126712221698
-    m_Key: level_01_01_init_04
+  - m_Id: 72150890864889858
+    m_Key: level_01_02_init_manual_entry
     m_Metadata:
       m_Items: []
-  - m_Id: 10940126712221699
-    m_Key: level_01_01_init_05
+  - m_Id: 72150890864889859
+    m_Key: level_01_02_init_01
     m_Metadata:
       m_Items: []
-  - m_Id: 11382778813403137
-    m_Key: level_01_01_init_06_win
+  - m_Id: 72150890864889860
+    m_Key: level_01_03_init_client
     m_Metadata:
       m_Items: []
-  - m_Id: 10940126712221701
-    m_Key: level_01_01_init_07
+  - m_Id: 72150890864889861
+    m_Key: level_01_03_init_cargo
     m_Metadata:
       m_Items: []
-  - m_Id: 11382778813403138
-    m_Key: level_01_01_init_08_laughing
+  - m_Id: 72150890864889862
+    m_Key: level_01_03_init_manual_entry
     m_Metadata:
       m_Items: []
-  - m_Id: 11382778813403139
-    m_Key: level_01_02_init_01_surprised
+  - m_Id: 72150890864889863
+    m_Key: level_01_03_init_01
     m_Metadata:
       m_Items: []
-  - m_Id: 10940126712221704
-    m_Key: level_01_02_init_02
+  - m_Id: 72150890864889864
+    m_Key: level_01_04_init_client
     m_Metadata:
       m_Items: []
-  - m_Id: 10940126712221705
-    m_Key: level_01_02_init_03
+  - m_Id: 72150890864889865
+    m_Key: level_01_04_init_cargo
     m_Metadata:
       m_Items: []
-  - m_Id: 10940126712221706
-    m_Key: level_01_02_init_04
+  - m_Id: 72150890864889866
+    m_Key: level_01_04_init_manual_entry
     m_Metadata:
       m_Items: []
-  - m_Id: 11382778813403140
-    m_Key: level_01_02_init_05_win
+  - m_Id: 72150890864889867
+    m_Key: level_01_04_init_01
     m_Metadata:
       m_Items: []
-  - m_Id: 11382778813403141
-    m_Key: level_01_02_init_06_laughing
+  - m_Id: 72150890864889868
+    m_Key: level_01_05_init_client
     m_Metadata:
       m_Items: []
-  - m_Id: 11382778813403142
-    m_Key: level_01_03_init_01_annoyed
+  - m_Id: 72150890864889869
+    m_Key: level_01_05_init_cargo
     m_Metadata:
       m_Items: []
-  - m_Id: 10940126712221710
-    m_Key: level_01_03_init_02
+  - m_Id: 72150890864889870
+    m_Key: level_01_05_init_manual_entry
     m_Metadata:
       m_Items: []
-  - m_Id: 10940126712221711
-    m_Key: level_01_03_init_03
+  - m_Id: 72150890864889871
+    m_Key: level_01_05_init_01
     m_Metadata:
       m_Items: []
-  - m_Id: 11382778813403143
-    m_Key: level_01_03_init_04_win
+  - m_Id: 72150890864889872
+    m_Key: level_01_06_init_client
     m_Metadata:
       m_Items: []
-  - m_Id: 10940126712221713
-    m_Key: level_01_03_init_05
+  - m_Id: 72150890864889873
+    m_Key: level_01_06_init_cargo
     m_Metadata:
       m_Items: []
-  - m_Id: 11382778813403144
-    m_Key: level_01_03_init_06_win
+  - m_Id: 72150890864889874
+    m_Key: level_01_06_init_manual_entry
     m_Metadata:
       m_Items: []
-  - m_Id: 11382778813403145
-    m_Key: level_02_01_init_01_laughing
+  - m_Id: 72150890864889875
+    m_Key: level_01_06_init_01
     m_Metadata:
       m_Items: []
-  - m_Id: 11382778813403146
-    m_Key: level_02_01_init_02_win
+  - m_Id: 72150890864889876
+    m_Key: level_01_07_init_client
     m_Metadata:
       m_Items: []
-  - m_Id: 10940126712221717
-    m_Key: level_02_01_init_03
+  - m_Id: 72150890864889877
+    m_Key: level_01_07_init_cargo
     m_Metadata:
       m_Items: []
-  - m_Id: 10940126712221718
-    m_Key: level_02_01_init_04
+  - m_Id: 72150890864889878
+    m_Key: level_01_07_init_manual_entry
     m_Metadata:
       m_Items: []
-  - m_Id: 11382778813403147
-    m_Key: level_02_01_init_05_laughing
+  - m_Id: 72150890864889879
+    m_Key: level_01_07_init_01
     m_Metadata:
       m_Items: []
-  - m_Id: 11382778813403148
-    m_Key: level_02_02_init_01_surprised
+  - m_Id: 72150890864889880
+    m_Key: level_01_08_init_client
     m_Metadata:
       m_Items: []
-  - m_Id: 10940126712221721
-    m_Key: level_02_02_init_02
+  - m_Id: 72150890864889881
+    m_Key: level_01_08_init_cargo
     m_Metadata:
       m_Items: []
-  - m_Id: 11382778813403149
-    m_Key: level_02_02_init_03_confused
+  - m_Id: 72150890864889882
+    m_Key: level_01_08_init_manual_entry
     m_Metadata:
       m_Items: []
-  - m_Id: 11382778813403150
-    m_Key: level_02_02_init_04_annoyed
+  - m_Id: 72150890864889883
+    m_Key: level_01_08_init_01
     m_Metadata:
       m_Items: []
-  - m_Id: 11382778813403151
-    m_Key: level_02_02_init_05_win
-    m_Metadata:
-      m_Items: []
-  - m_Id: 10940126712221725
-    m_Key: level_02_03_init_01
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11382778813403152
-    m_Key: level_02_03_init_02_laughing
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11382778813403153
-    m_Key: level_02_03_init_03_win
-    m_Metadata:
-      m_Items: []
-  - m_Id: 10940126712221728
-    m_Key: level_03_01_init_01
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11382778813403154
-    m_Key: level_03_01_init_02_win
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11382778813403155
-    m_Key: level_03_02_init_01_annoyed
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11382778813403156
-    m_Key: level_03_02_init_02_win
-    m_Metadata:
-      m_Items: []
-  - m_Id: 10940126712221732
-    m_Key: welcome_message_01
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11382778813403157
-    m_Key: welcome_message_02_laughing
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11382778813403158
-    m_Key: welcome_message_03_win
-    m_Metadata:
-      m_Items: []
-  - m_Id: 10940126712221735
-    m_Key: welcome_message_04
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11382778813403159
-    m_Key: welcome_message_05_surprised
-    m_Metadata:
-      m_Items: []
-  - m_Id: 10940126712221737
-    m_Key: welcome_message_06
-    m_Metadata:
-      m_Items: []
-  - m_Id: 10940126712221738
-    m_Key: welcome_message_07
-    m_Metadata:
-      m_Items: []
-  - m_Id: 11382778813403160
-    m_Key: welcome_message_08_win
-    m_Metadata:
-      m_Items: []
-  - m_Id: 10940126712221740
-    m_Key: welcome_back_message_01
-    m_Metadata:
-      m_Items: []
-  - m_Id: 10940126712221741
-    m_Key: welcome_back_message_02_confused
-    m_Metadata:
-      m_Items: []
-  - m_Id: 10940126712221742
-    m_Key: welcome_back_message_03
-    m_Metadata:
-      m_Items: []
-  - m_Id: 10940126712221743
-    m_Key: welcome_back_message_04_win
+  - m_Id: 72150890864889884
+    m_Key: level_01_01_complete
     m_Metadata:
       m_Items: []
   m_Metadata:

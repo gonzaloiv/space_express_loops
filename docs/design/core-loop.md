@@ -28,9 +28,9 @@ is a stronger well, `mass ∝ radius³`; a smaller one is a smaller obstacle). T
 the player what will happen, while the cues let them predict it. The ship stays at map size; the zone is
 what changes.
 
-Jobs 1–4 use a **fixed** cube: the only move is the grab-inside scale (job 3 adds the shrink-to-clear
-direction, job 4 several placed zones). Moving the cube enters at job 5, multi-zone from job 6, and the
-capstone closes at job 8. Resize is deferred from the slice
+Jobs 1–3 use a **fixed** cube: the only move is the grab-inside scale (job 3 adds the shrink-to-clear
+direction). Moving the cube enters at job 4, multi-zone at job 5, and the capstone closes at job 7.
+Resize is deferred from the slice
 ([progression](systems/progression.md) §The learning path).
 
 ## 2. Session — one job (~1 minute)
@@ -66,8 +66,9 @@ Entropy is the Wrap's cost and the only resource the player manages: a **budget*
 - **Every completed modification burns it.** Each committed pinch costs **|new scale − the last
   committed scale for that zone|**, charged when the pinch finishes. Within one pinch the pending cost
   is free to undo: return the hands to the committed value before release and it costs nothing. After
-  release, moving the zone back costs again; **undo refunds the last committed edit**. **Reset/retry is
-  free.** Only committed modifications cost.
+  release, moving the zone back costs again. **There is no undo in the slice** — a refund would make
+  probing free and the fail unreachable. **Reset/retry is free** and restarts the budget with the field.
+  Only committed modifications cost.
 - **The budget is derived by the bake.** The creator finds a solution, then sets the job's budget to
   **3× that solution's entropy**. Stars are **1/3 and 2/3 of the budget**: 3★ means spending no more
   than the bake's solution, 2★ up to twice that, otherwise 1★. The thresholds are the same shape every
@@ -88,7 +89,9 @@ in the fiction as the company's cost ([lore](world/lore.md)). The readout shows 
 the entropy bar lives **in the field**, world-anchored to the run — not in a screen-space panel; the lab
 panel is a diagnostic. The bar shows **remaining entropy**, the pending pinch and the last committed
 edit's cost; moving the cube and launching are visibly free. The **1/3 and 2/3** marks are cost bands,
-not stars: the grade is awarded on a solve and shown in the reward/readout, never on the bar.
+not stars: the grade is awarded on a solve and shown in the reward/readout, never on the bar. The
+**first band** (spend ≤ the bake's solution) must read distinctly from the others, so the player can
+tell an efficient solve while shaping, not only after it.
 
 **The bar is the meter.** Entropy is read from the in-field bar, not a screen-space panel. The lattice
 tint already shows the zone warp, so entropy must not reuse it; a field-wide stress (rim or pulse) is

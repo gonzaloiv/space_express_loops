@@ -7,7 +7,7 @@ to [loop completion](loop-completion.md); S4 content is pending.
 **Related:** [jobs](../../design/jobs.md) · [lore](../../design/world/lore.md) ·
 [vision](../../design/vision.md) · [core loop](../../design/core-loop.md) ·
 [TTS companion idea](../../ideas/tts-voice-panel.md) ·
-[job definition card](../backlog/job-definition-card.md) · [tip panel](../backlog/tip-panel.md) ·
+[job definition card](../backlog/job-definition-card.md) ·
 [Game.unity](../../../Assets/_Game/Game.unity)
 
 ## 1. Why
@@ -90,7 +90,7 @@ companion stays deferred.
 
 - Follow, parking, re-dock, visibility gating, and resume.
 - New voices; final lines and recordings (S4).
-- The job definition card, tip panel, and attention overlay.
+- The job definition card.
 - The camera-operator companion.
 
 ## 7. Risks

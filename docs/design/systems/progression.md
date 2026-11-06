@@ -23,7 +23,7 @@ Two things: **what advances**, and **what gates**.
 ### Three layers
 
 1. **The spine (what gates).** Solve job N → job N+1 opens. A linear *order* paces the run; you
-   cannot wander into job 8 at minute one.
+   cannot wander into job 7 at minute one.
 2. **The network (what you build).** The map *is* the company: solved cubes lit, current
    highlighted, locked dark. Every solve **grows the network**.
 3. **The score (what you chase).** Per-job **stars** (the entropy left / eco rating, 1–3) plus a
@@ -56,12 +56,14 @@ One new lesson at a time, so the player never faces two unrelated ideas at once:
    **shrinks** it to clear the path. Same pinch as job 1, opposite role — learned before placement.
 4. **Job 4 — the cube moves.** The cube becomes **translatable**: the player chooses *where* to work,
    not just how much. "Where does the cube sit" is its own lesson.
-5. **Jobs 5–6 — multi-zone.** The player moves the cube and scales several zones, spreading the edit to
-   spend less entropy. This is where "several zones" now lands; the fixed-cube rung is retired.
-6. **Job 7 — the capstone.** The cube starts over the sun; the solution scales several zones with the star
+5. **Job 5 — multi-zone.** The player moves the cube and scales several zones. This is where "several
+   zones" now lands; the fixed-cube rung is retired.
+6. **Job 6 — the field carries you.** A deep well already sits near the line; a few small edits that use
+   it beat one big edit that fights the field.
+7. **Job 7 — the capstone.** The cube starts over the sun; the solution scales several zones with the star
    included. The finale combines every verb except both roles; a future job 8 brings Mixed.
 
-So the run order is **scale → centre → clear → move → multi-zone → capstone**. **Resize is
+So the run order is **scale → centre → clear → move → multi-zone → assist → capstone**. **Resize is
 deferred** from the slice: it works, but the explanation (size is scope, not precision) is not ready; it
 is the next cut candidate.
 
@@ -74,7 +76,7 @@ deferred to a future job 8.
 
 **The fixed-cube several-zones rung is retired (2026-11-05).** The generator could not force a two-zone
 `Curve` on the fixed-cube field, so the seven-job run (1–7) folds "several zones" into the multi-zone move at
-jobs 4–6: job 4 moves, job 5 introduces two zones, job 6 makes it efficient, job 7 is the capstone. A future
+jobs 4–6: job 4 moves, job 5 introduces two zones, job 6 uses the field, job 7 is the capstone. A future
 job 8 can bring back the fixed rung with Mixed. The standalone fixed-cube rung is deferred, not claimed. A
 **tutorial** for it remains deferred until the loop is working
 ([vision](../vision.md) §6).
@@ -122,7 +124,7 @@ field sets the absolute cost and how hard it is to read.
 
 The verb is always the **scale**, so variety comes from the field and the brief:
 
-1. **Planet count** — 3 (tutorial) → 12 sources by act; the field grows into a little galaxy.
+1. **Planet count** — 4 (tutorial) → 12 sources by act; the field grows into a little galaxy.
 2. **Solution cost** — cheap → expensive; the bake triples it into the budget, so this sets the
    absolute bar, not the star thresholds.
 3. **Well depth** — shallow → deep (a deeper well bends the path more).
@@ -146,7 +148,7 @@ mid-flight (the seed is authoring-only).
   *cosmetics / bonus* later.
 - **The numbers:** reset per act, or run 1 → N? (The slice proposes one chapter, numbered 1 → N.)
 - **The rungs.** Re-analyze the learning-path order and count
-  (scale → centre → clear → move → multi-zone → capstone) after the run shape settles; the current
+  (scale → centre → clear → move → multi-zone → assist → capstone) after the run shape settles; the current
   order is the working shape, not final.
 - **Entropy legibility.** The budget is derived from the bake's best solution; the player never sees
   that reference. Can they track spent vs remaining well enough from the readout?

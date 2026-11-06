@@ -8,42 +8,43 @@ the ship flies the deformed spacetime.
 
 ## Now
 
-Active work. The one thing being built.
+Active work.
 
-- Nothing active.
+- [Loop completion — solve, fail, return](in-progress/loop-completion.md) — a job ends once on a solve or
+  a fail, the solve is saved so the map fills, and job 1 starts silent. **First:** it unblocks
+  Validation 1.
+
+- [TTS messages — the jumbotron panel](in-progress/tts-messages.md) — one state-launched TTS panel (the
+  jumbotron, with Jim's face) for the job intro and complete message; legacy TTS content removed.
 
 ## Next
 
 Queued. One plan moves to **Now** when it starts.
 
-- Nothing queued.
+- [Job definition card — the contract from job 2](backlog/job-definition-card.md) — client, cargo and the
+  manual entry on a card that fades on its own; the puzzle stays live. After loop completion, before
+  Validation 1.
 
 ## Later
 
 Design-only or deferred. Nothing here is scheduled.
 
-- [Puzzle map — playable selected field](backlog/puzzle-map-play-field.md) — the selected map field
-  becomes the shared play field, with one session and an in-place play-only group.
-
-- [Puzzle map — selection info and onboarding](backlog/puzzle-map-info.md) — the cube carries the job
-  name, state and stars, and the swipe/zoom verbs are taught in place.
-
-- [TTS job intro — the contract screen](backlog/tts-job-intro.md) — a field-side contract screen
-  (manual + tech voice) that can reposition around the field; the camera-operator companion is deferred.
+- Nothing deferred. Help reaches the player only at the start (the card, Jim's line) and the end (the
+  complete/fail message) — no in-solve hint surface.
 
 Candidate ideas (not plans) live in [docs/ideas](../ideas/README.md): variations, element pack,
-hologram look, TTS companion (deferred), feel polish.
+hologram look, TTS companion (deferred), feel polish, playable map field.
 
 ## Open tails
 
 Loose ends that still need a home. Close one by linking the plan that finishes it.
 
-- **Re-run Validation 1 on the current loop.** The gate for the slice; the test steps need a home now
-  that the first-minute read plan is gone.
+- **Re-run Validation 1 on the current loop.** The gate for the slice; runs once
+  [loop completion](in-progress/loop-completion.md) lands. The test steps still need a home.
 - **Run authoring.** Jobs 1–7 are baked into Chapter 01 (seven jobs); job 8 is the deferred Mixed
-  capstone with its own future plan. The TTS intro and map plans are above.
-- **Ship-zone cue.** The ship has a trail; there is no zone indicator. Fold it into the first-minute read
-  plan or the feel pass.
+  capstone with its own future plan. The TTS and job-card plans are above.
+- **Ship-zone cue.** The ship has a trail; there is no zone indicator. Fold it into the in-puzzle read
+  plan (after Validation 1) or the feel pass.
 - **Resize.** Working, but the explanation (size is scope, not precision) is not ready. Deferred from the
   slice; next cut candidate.
 - **Capstone routes (job 8).** The capstone is deferred to its own future plan; it still needs at least
