@@ -1,5 +1,6 @@
 using System.Collections;
 using DigitalLove.Game.SpaceShaping;
+using TMPro;
 using UnityEngine;
 
 namespace DigitalLove.Game.PuzzleSelection
@@ -8,6 +9,7 @@ namespace DigitalLove.Game.PuzzleSelection
     {
         [SerializeField] private Transform visualRoot;
         [SerializeField] private PuzzleDioramaView diorama;
+        [SerializeField] private TMP_Text starsLabel;
         [SerializeField, Range(0f, 0.1f)] private float idleBreathAmplitude = 0.02f;
         [SerializeField, Min(0f)] private float idleBreathSpeed = 1.2f;
 
@@ -16,10 +18,25 @@ namespace DigitalLove.Game.PuzzleSelection
             transform.InverseTransformPoint(diorama.SunWorldPosition);
         public int MapIndex { get; private set; } = -1;
 
-        public void SetMapFade(Vector3 focus, float near, float far) =>
+        public void SetMapFade(Vector3 focus, float near, float far)
+        {
             diorama.SetMapFade(focus, near, far);
+            ApplyCulled(Vector3.Distance(transform.position, focus) >= far);
+        }
 
-        public void ClearMapFade() => diorama.ClearMapFade();
+        public void ClearMapFade()
+        {
+            diorama.ClearMapFade();
+            ApplyCulled(false);
+        }
+
+        public void SetLabelColor(Color color) => diorama.SetLabelColor(color);
+
+        private void ApplyCulled(bool value)
+        {
+            culled = value;
+            starsLabel.gameObject.SetActive(hasStars && !culled);
+        }
 
         private Coroutine refusalRoutine;
         private PuzzleData renderedPuzzle;
@@ -27,6 +44,8 @@ namespace DigitalLove.Game.PuzzleSelection
         private Quaternion homeLocalRotation;
         private Vector3 homeVisualScale;
         private float idlePhase;
+        private bool culled;
+        private bool hasStars;
 
         private void Awake()
         {
@@ -45,18 +64,29 @@ namespace DigitalLove.Game.PuzzleSelection
             diorama.transform.localScale = Vector3.one * breath;
         }
 
-        public void ShowMapField(int index, PuzzleData puzzle)
+        public void ShowMapField(JobEntry entry, Color tint)
         {
-            bool unchanged = MapIndex == index && renderedPuzzle == puzzle;
-            MapIndex = index;
+            bool unchanged = MapIndex == entry.Index && renderedPuzzle == entry.Puzzle;
+            MapIndex = entry.Index;
             if (unchanged)
             {
                 gameObject.SetActive(true);
-                return;
+            }
+            else
+            {
+                diorama.SetCubesVisible(false);
+                Show(entry.Index, entry.Puzzle);
             }
 
-            diorama.SetCubesVisible(false);
-            Show(index, puzzle);
+            ShowMapState(entry, tint);
+        }
+
+        private void ShowMapState(JobEntry entry, Color tint)
+        {
+            hasStars = entry.ShowsStars;
+            starsLabel.text = hasStars ? new string('★', entry.Stars) : string.Empty;
+            ApplyCulled(culled);
+            diorama.SetLabelColor(tint);
         }
 
         public void SetZoom(float scale)
@@ -69,6 +99,9 @@ namespace DigitalLove.Game.PuzzleSelection
         {
             MapIndex = -1;
             renderedPuzzle = null;
+            hasStars = false;
+            culled = false;
+            starsLabel.gameObject.SetActive(false);
             ResetVisual();
             gameObject.SetActive(false);
         }

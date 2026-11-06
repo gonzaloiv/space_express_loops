@@ -27,6 +27,7 @@ namespace DigitalLove.Game.Flow
         [Inject] private MemoryDataClient memoryDataClient;
 
         private PuzzleMap map;
+        private bool autoEntryUsed;
 
         public override void Enter()
         {
@@ -47,8 +48,9 @@ namespace DigitalLove.Game.Flow
             }
 
             RunProgress progress = RunProgressCookies.Build(levelSelector, playerData);
-            if (progress.IsFresh)
+            if (progress.IsFresh && !autoEntryUsed)
             {
+                autoEntryUsed = true;
                 EnterJob(levelSelector.GetLevelByGlobalIndex<PuzzleData>(0));
                 return;
             }

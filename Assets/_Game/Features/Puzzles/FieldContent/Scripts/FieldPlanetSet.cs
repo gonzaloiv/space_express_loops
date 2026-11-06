@@ -45,11 +45,24 @@ namespace DigitalLove.Game.SpaceShaping
         public Vector3 SunWorldPosition =>
             sunPlanet != null ? sunPlanet.transform.position : parent.position;
 
-        public void ShowSunLabel(string text)
+        public void ShowSunLabel(string text) => ShowOnlySunLabel(text, false);
+
+        public void ShowCentreLabel(string text) => ShowOnlySunLabel(text, true);
+
+        public void SetSunLabelColor(Color color) => sunPlanet.SetLabelColor(color);
+
+        private void ShowOnlySunLabel(string text, bool labelOnly)
         {
             sources.ForEachFrom(0, view => view.SetLabelsVisible(false));
             originPlanet.SetLabelsVisible(false);
             destinationPlanet.SetLabelsVisible(false);
+            if (labelOnly)
+            {
+                sunPlanet.transform.localPosition = Vector3.zero;
+                sunPlanet.ShowLabelOnly(text);
+                return;
+            }
+
             sunPlanet.SetLabelsVisible(true);
             sunPlanet.SetLabel(text);
         }

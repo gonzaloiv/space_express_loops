@@ -23,16 +23,40 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             if (settings == null)
                 return;
 
-            IReadOnlyList<PuzzleJobContract> jobs = PuzzleJobContracts.All;
-            PuzzleData[] puzzles = new PuzzleData[jobs.Count];
+            IReadOnlyList<PuzzleJobContract> jobs = PuzzleJobContracts.Enabled;
             for (int i = 0; i < jobs.Count; i++)
-                puzzles[i] = BuildJob(jobs[i], settings);
+                BuildJob(jobs[i], settings);
 
-            WireChapter(puzzles);
+            WireChapter(LoadJobs());
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log($"Test set: {jobs.Count} jobs built and wired into chapter 01.");
         }
+
+        public static void BuildOne(PuzzleJobContract job)
+        {
+            SpaceShapingSettings settings = LoadSettings("Test set");
+            if (settings == null)
+                return;
+
+            BuildJob(job, settings);
+            WireChapter(LoadJobs());
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log($"Test set: {job.Id} rebuilt; chapter 01 rewired.");
+        }
+
+        private static PuzzleData[] LoadJobs()
+        {
+            IReadOnlyList<PuzzleJobContract> jobs = PuzzleJobContracts.Enabled;
+            PuzzleData[] puzzles = new PuzzleData[jobs.Count];
+            for (int i = 0; i < jobs.Count; i++)
+                puzzles[i] = AssetDatabase.LoadAssetAtPath<PuzzleData>(JobPath(jobs[i].Id));
+
+            return puzzles;
+        }
+
+        private static string JobPath(string id) => $"{GeneratedFolder}/Job_{id}_Puzzle.asset";
 
         [MenuItem("DigitalLove/Space Shaping/Build Maze Test Level")]
         public static void BuildMaze()
@@ -89,8 +113,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             PuzzleData baked = result.Puzzle;
             baked.id = job.Id;
             PuzzleArtifactExporter.SaveVariant(baked, "Job_" + job.Id, GeneratedFolder);
-            string path = $"{GeneratedFolder}/Job_{job.Id}_Puzzle.asset";
-            PuzzleData saved = AssetDatabase.LoadAssetAtPath<PuzzleData>(path);
+            PuzzleData saved = AssetDatabase.LoadAssetAtPath<PuzzleData>(JobPath(job.Id));
             Debug.Log(
                 $"Test set: {job.Id} {result.Status} (seed {result.Seed}, {baked.zones} zone(s), " +
                 $"{result.Kind}) -> " + (saved != null ? "saved" : "MISSING"));

@@ -21,6 +21,9 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField] private float enterSecs = 0.5f;
         [SerializeField] private float enterScale = 3.6f;
         [SerializeField, Range(0f, 1f)] private float lockedZoomLimit = 0.06f;
+        [SerializeField, Min(0.1f)] private float pulseSecs = 2.4f;
+        [SerializeField, Range(0f, 1f)] private float pulseDepth = 0.35f;
+        [SerializeField, Range(0f, 1f)] private float lockedBrightness = 0.55f;
         [SerializeField] private SelectionCubePalette selectionCubeColors;
         [SerializeField] private ColorValue routeColor;
         [SerializeField, Range(0f, 1f)] private float routeAlpha = 0.35f;
@@ -34,15 +37,19 @@ namespace DigitalLove.Game.PuzzleSelection
         private MapOverview overview;
         private MapRouteLine route;
         private PuzzleMap map;
+        private MapNodeTint tint;
+        private MapSelectionLabel readout;
+        private MapFieldRenderer fieldView;
         private bool wasDragging;
-        private int previewIndex = -1;
         private MapEnter enter;
 
         public event Action EnterRequested;
 
         private void Update()
         {
-            pose.Tick(Time.unscaledDeltaTime);
+            float deltaSecs = Time.unscaledDeltaTime;
+            pose.Tick(deltaSecs);
+            fieldView.TickPulse(deltaSecs);
             if (route != null && map != null)
             {
                 route.Update(
@@ -62,6 +69,10 @@ namespace DigitalLove.Game.PuzzleSelection
             SelectionCubeLens lens = new(
                 selectionCubeRenderer, selectionCube.transform, selectionCubeColors);
             zoom = new MapZoom(selectedSlot, lens, maxZoom);
+            tint = new MapNodeTint(
+                selectionCubeColors, lockedBrightness, pulseSecs, pulseDepth);
+            readout = new MapSelectionLabel(selectionLabel);
+            fieldView = new MapFieldRenderer(selectedSlot, fields, tint, readout, zoom);
             enter = new MapEnter(zoom, enterSecs, enterScale);
         }
 
@@ -75,6 +86,7 @@ namespace DigitalLove.Game.PuzzleSelection
             overview.Reset(showAll);
             route = new MapRouteLine(routeSegments, routeColor, routeAlpha, map.Count);
             pose.ShowAll = showAll;
+            tint.Reset();
             RenderFields();
             pose.SetPose(SunFocus, Focus);
             selectionCube.SetActive(true);
@@ -160,11 +172,11 @@ namespace DigitalLove.Game.PuzzleSelection
         private void PreviewNearest()
         {
             int nearest = MapSnap.Nearest(map, mapRoot, selectionCube.transform.position);
-            if (nearest < 0 || nearest == previewIndex)
+            if (nearest < 0 || nearest == readout.PreviewIndex)
                 return;
 
             JobEntry entry = map[nearest];
-            ShowSelectionInfo(entry);
+            readout.Show(entry);
             zoom.Preview(entry.State);
         }
 
@@ -187,7 +199,7 @@ namespace DigitalLove.Game.PuzzleSelection
             wasDragging = false;
             enter.Reset();
             overview.Reset(showAll);
-            ShowSelectionInfo(map.Selected);
+            readout.Show(map.Selected);
             zoom.Reset(map.Selected.State);
             selectedSlot.PlayRefusal();
         }
@@ -201,11 +213,10 @@ namespace DigitalLove.Game.PuzzleSelection
             route = null;
             gesture.Reset();
             map = null;
-            previewIndex = -1;
+            readout.Reset();
             zoom.Clear();
             selectionCube.SetActive(false);
-            selectedSlot.Hide();
-            fields.ForEachFrom(0, field => field.Hide());
+            fieldView.Hide();
             gameObject.SetActive(false);
         }
 
@@ -215,40 +226,8 @@ namespace DigitalLove.Game.PuzzleSelection
 
         private void RenderFields()
         {
-            RenderSelected();
-            RenderNeighbours();
+            fieldView.Render(map);
             pose.ApplyFade();
-        }
-
-        private void RenderSelected()
-        {
-            JobEntry selected = map.Selected;
-            selectedSlot.ShowMapField(selected.Index, selected.Puzzle);
-            ShowSelectionInfo(selected);
-            zoom.Reset(selected.State);
-        }
-
-        private void ShowSelectionInfo(JobEntry entry)
-        {
-            previewIndex = entry.Index;
-            selectionLabel.text = MapSelectionLabel.Format(entry.State, entry.Stars);
-        }
-
-        private void RenderNeighbours()
-        {
-            int slot = 0;
-            for (int i = 0; i < map.Count; i++)
-            {
-                if (i == map.SelectedIndex)
-                    continue;
-
-                JobEntry entry = map[i];
-                RunSlotView field = fields.EnsureSlot(slot++);
-                field.transform.localPosition = map.Position(i);
-                field.ShowMapField(i, entry.Puzzle);
-            }
-
-            fields.ForEachFrom(slot, field => field.Hide());
         }
 
         private void AnimateTo(Vector3 focus)

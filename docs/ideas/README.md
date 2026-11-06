@@ -9,8 +9,7 @@ The detailed notes live beside this file; this is the index.
   moon, dust. The sun is now a real source in the field plan, not a candidate. *Why:* the field should
   look like a real galaxy.
 - **[TTS voice companion](tts-voice-panel.md)** — the panel as a camera-operator companion; deferred, the
-  first fit is the [jumbotron TTS panel](../plans/in-progress/tts-messages.md). *Why:* the tech voice feels
-  present.
+  jumbotron TTS panel landed. *Why:* the tech voice feels present.
 - **[Cube rotation](cube-rotation.md)** — rotating the cube/region. *Why not now:* the region stays
   world-axis-aligned so the gestures and lattice stay predictable; revisit only if a puzzle needs a
   non-axis-aligned frame.

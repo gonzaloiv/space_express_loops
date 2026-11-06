@@ -4,15 +4,14 @@
 card that fades on its own; job 2+ only; the puzzle stays live.
 
 **Related:** [jobs](../../design/jobs.md) · [lore](../../design/world/lore.md) ·
-[loop completion](../in-progress/loop-completion.md) · [TTS messages](../in-progress/tts-messages.md) ·
+[loop completion](../in-progress/loop-completion.md) · TTS panel (landed) ·
 [Game.unity](../../../Assets/_Game/Game.unity)
 
 ## Goal
 
 Each job is a contract: a client, a cargo, and the manual entry that teaches its lesson
 ([jobs](../../design/jobs.md) §The run — the lore skin). Loop completion cuts the intro to Jim's tech
-line, so the card is now the **only** surface for the manual entry, and it must land before
-Validation 1. Help reaches the player at the start (this card, Jim's line) and the end (the
+line, so the card is now the **only** surface for the manual entry. Help reaches the player at the start (this card, Jim's line) and the end (the
 complete/fail message); there is no in-solve hint.
 
 ## Contract

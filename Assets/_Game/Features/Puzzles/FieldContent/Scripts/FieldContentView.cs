@@ -80,6 +80,10 @@ namespace DigitalLove.Game.SpaceShaping
 
         protected void SetSunLabel(string text) => planets.ShowSunLabel(text);
 
+        protected void SetCentreLabel(string text) => planets.ShowCentreLabel(text);
+
+        protected void SetSunLabelColor(Color color) => planets.SetSunLabelColor(color);
+
         protected virtual void Fit(SpaceShapingSession session)
         {
             BoundsBuilder builder = new();

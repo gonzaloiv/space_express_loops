@@ -19,12 +19,21 @@ namespace DigitalLove.Game.Nodes
 
         private Camera view;
         private float fadeMultiplier = 1f;
+        private Color tint;
         private Camera View => view != null ? view : view = Camera.main;
 
         private void Awake()
         {
             if (surfaceGap < 0f)
                 surfaceGap = 0f;
+
+            tint = label.color;
+        }
+
+        public void SetColor(Color color)
+        {
+            tint = color;
+            label.color = color;
         }
 
         public void Place(string text)
@@ -78,6 +87,7 @@ namespace DigitalLove.Game.Nodes
             float parentScale = transform.parent != null ? transform.parent.lossyScale.y : 1f;
             float scale = worldHeight * Mathf.Lerp(1f, farScale, fade) / Mathf.Max(parentScale, 0.00001f);
             transform.localScale = new Vector3(scale, scale, scale);
+            label.color = tint;
             label.alpha = (1f - fade) * fadeMultiplier;
         }
     }

@@ -99,6 +99,33 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
             Assert.AreEqual(Vector3.zero, PuzzleMapLayout.Galaxy(1).At(0));
         }
 
+        [Test]
+        public void NoGradeTutorial_ShowsNoStars()
+        {
+            PuzzleData[] levels = Levels(1);
+            levels[0].noGrade = true;
+            PuzzleMap map = PuzzleMap.FromLevels(
+                levels, RunProgress.FromSolved(1, 0, new[] { true }, new[] { 0 }),
+                PuzzleMapLayout.Galaxy(1));
+
+            Assert.AreEqual(JobState.Solved, map[0].State);
+            Assert.IsTrue(map[0].NoGrade);
+            Assert.IsFalse(map[0].ShowsStars);
+        }
+
+        [Test]
+        public void SolvedGradedJob_ShowsItsStars()
+        {
+            PuzzleData[] levels = Levels(1);
+            PuzzleMap map = PuzzleMap.FromLevels(
+                levels, RunProgress.FromSolved(1, 0, new[] { true }, new[] { 2 }),
+                PuzzleMapLayout.Galaxy(1));
+
+            Assert.IsFalse(map[0].NoGrade);
+            Assert.IsTrue(map[0].ShowsStars);
+            Assert.AreEqual(2, map[0].Stars);
+        }
+
         private PuzzleData[] Levels(int count)
         {
             PuzzleData[] levels = new PuzzleData[count];

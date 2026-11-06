@@ -50,6 +50,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         private bool hovering;
         private Vector3 hoverWorld;
+        private bool locked;
 
         public event Action<ZoneRefusal> Refused
         {
@@ -62,6 +63,13 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         private void OnEnable() => grabbable.WhenPointerEventRaised += OnPointerEvent;
 
         private void OnDisable() => grabbable.WhenPointerEventRaised -= OnPointerEvent;
+
+        public void SetLocked(bool value)
+        {
+            locked = value;
+            if (locked)
+                EndGesture();
+        }
 
         public void SetScaleEnvelope(float min, float max) => feedback.SetScaleEnvelope(min, max);
 
@@ -89,6 +97,9 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         private void Update()
         {
+            if (locked)
+                return;
+
             int count = grabbable.SelectingPointsCount;
             if (count == 0)
             {

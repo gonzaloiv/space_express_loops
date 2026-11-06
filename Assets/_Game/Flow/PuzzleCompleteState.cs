@@ -36,8 +36,17 @@ namespace DigitalLove.Game.Flow
         private async void SaveSolve(PuzzleData puzzle, int grade)
         {
             PlayerData playerData = memoryDataClient.Get<PlayerData>();
-            if (RunProgressCookies.RecordSolve(playerData, puzzle.id, grade))
+            if (!RunProgressCookies.RecordSolve(playerData, puzzle.id, grade))
+                return;
+
+            try
+            {
                 await playerDataClient.Put(playerData);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Failed to save the solve for {puzzle.id}: {e}");
+            }
         }
 
         private void ReturnToSelection()

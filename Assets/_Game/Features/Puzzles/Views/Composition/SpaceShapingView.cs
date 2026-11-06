@@ -60,6 +60,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void SetConditions(ZoneConditions value) => spawner.Zones.SetConditions(value);
 
+        public void SetZonesLocked(bool value) => spawner.Zones.SetInputLocked(value);
+
         public void PlaceFrames(PuzzleFrame[] frames, float falloff) =>
             spawner.Zones.ShowFrames(frames, falloff);
 

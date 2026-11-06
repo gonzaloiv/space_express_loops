@@ -101,6 +101,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         public void Refuse(ZoneRefusal reason) => listener.Refuse(reason);
 
+        public void SetInputLocked(bool value) => listener.SetLocked(value);
+
         public void SetScaling(bool value)
         {
             if (scaling == value)

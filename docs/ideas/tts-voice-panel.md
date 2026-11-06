@@ -1,14 +1,14 @@
 # TTS Voice Panel — Camera-Operator Companion
 
 **Status:** idea · presentation · revised 2026-11-06 — the camera-operator companion is deferred; the
-current fit is the jumbotron TTS panel ([plan](../plans/in-progress/tts-messages.md)).
+jumbotron TTS panel landed.
 
-**Related:** [jobs](../design/jobs.md) · [TTS messages plan](../plans/in-progress/tts-messages.md)
+**Related:** [jobs](../design/jobs.md)
 
 **Current fit (2026-11-06).** The game is seated MR with a state-launched TTS panel, not a persistent
-card. The [TTS messages plan](../plans/in-progress/tts-messages.md) builds the jumbotron: an authored
-field-side panel with the speaker's face that stays at the side and does not follow or gate on visibility.
-The travel/parking below is a later feel-pass variant, only if the panel should persist during play.
+card. The jumbotron is an authored field-side panel with the speaker's face; it stays at the side and
+does not follow or gate on visibility. The travel/parking below is a later feel-pass variant, only if
+the panel should persist during play.
 
 ## Goal
 

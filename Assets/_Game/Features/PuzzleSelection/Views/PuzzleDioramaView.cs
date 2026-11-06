@@ -35,9 +35,17 @@ namespace DigitalLove.Game.PuzzleSelection
         public void Render(int index, PuzzleData puzzle)
         {
             Render(puzzle);
-            if (puzzle != null)
-                SetSunLabel((index + 1) + " · " + SunName);
+            if (puzzle == null)
+                return;
+
+            string number = (index + 1).ToString();
+            if (string.IsNullOrEmpty(SunName))
+                SetCentreLabel(number);
+            else
+                SetSunLabel(number + " · " + SunName);
         }
+
+        public void SetLabelColor(Color color) => SetSunLabelColor(color);
 
         public override void Hide()
         {

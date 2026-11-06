@@ -34,8 +34,7 @@ namespace DigitalLove.Game.PuzzleSelection
 
             elapsed += deltaSecs;
             float t = Mathf.Clamp01(elapsed / secs);
-            float eased = t * t * (3f - 2f * t);
-            zoom.ApplyScale(state, Mathf.Lerp(startScale, targetScale, eased));
+            zoom.ApplyScale(state, Mathf.Lerp(startScale, targetScale, t));
             if (t < 1f)
                 return false;
 

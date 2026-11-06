@@ -1,14 +1,14 @@
 # Loop completion — solve, fail, return
 
-**Status:** now · flow · updated 2026-11-06 — U1–U3 landed; open: lock the cube's zone gesture while
-frozen, log a failed save, restart persistence (U4), and a fresh save starting straight in job 1 (U5).
+**Status:** now · flow · updated 2026-11-06 — U1–U5 landed in code; open: manual check on device (step 7
+restart, and the U4/U5 exits).
 
 **Related:** [core loop](../../design/core-loop.md) · [progression](../../design/systems/progression.md) ·
-[TTS messages](tts-messages.md) · [vision](../../design/vision.md) §7
+[vision](../../design/vision.md) §7
 
 ## Goal
 
-Make the run playable end to end so Validation 1 can run. Today a solve is not saved (the map never
+Make the run playable end to end. Today a solve is not saved (the map never
 fills), a spent budget leaves the player stuck, the puzzle stays live during the receipt, and job 1
 opens with Jim talking.
 
@@ -18,8 +18,7 @@ opens with Jim talking.
   never fails and has **infinite spend**: `NoFail` removes the budget cap (`IsOverBudget` is false), so
   nothing clamps or refuses an edit; the player keeps shaping until the solve.
 - On a solve the progress is saved: the solved cookie plus the grade (stars). On return, the next job
-  is selected (`PuzzleMap` selects `progress.CurrentIndex`). Per-node state on the map is
-  [map visibility](../backlog/map-visibility.md), not this plan.
+  is selected (`PuzzleMap` selects `progress.CurrentIndex`).
 - A fail saves nothing. The player returns to the map and can pick the job again; Retry is a later
   call.
 - From the end of the job until the return, the run is frozen: no pinch, no spend, no relaunch.
@@ -69,7 +68,7 @@ opens with Jim talking.
 - **Exit:** job 1 starts silent; job 2 plays one tech line; a solve plays the receipt, a fail plays the
   fail line; no cue overlaps the next job.
 
-### U4 — close the gaps (open)
+### U4 — close the gaps (landed in code)
 
 Review of the landed U1–U3 (2026-11-06):
 
@@ -86,7 +85,7 @@ Review of the landed U1–U3 (2026-11-06):
 - **Exit:** pinching during the receipt shows no cube response; a forced `Put` failure logs once;
   manual step 7 passes on device.
 
-### U5 — first session goes straight into job 1
+### U5 — first session goes straight into job 1 (landed in code)
 
 - On a fresh save (`RunProgress.IsFresh`: nothing solved, job 1 current), the **first** entry into
   `PuzzleSelectionState` in an app session skips the map and enters job 1 directly — the player meets
@@ -115,5 +114,5 @@ Review of the landed U1–U3 (2026-11-06):
 
 - The result readout/grade card on complete (the reward look); the stars show on the map.
 - Retry from the complete state; the map stays the only navigation.
-- The in-field entropy bar and the read pass — the next plan, after Validation 1.
-- Recordings and final copy (TTS S5); the reading timer, skip removal and TTS cleanup (TTS S3–S4).
+- The read pass (baseline, ship-zone cue) — a later plan.
+- Recordings and final copy.

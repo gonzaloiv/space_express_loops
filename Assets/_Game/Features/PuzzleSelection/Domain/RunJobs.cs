@@ -19,7 +19,8 @@ namespace DigitalLove.Game.PuzzleSelection
         private static JobEntry Entry(PuzzleData puzzle, int index, RunProgress progress)
         {
             JobState state = StateAt(index, progress);
-            return new JobEntry(index, puzzle, state, progress.Stars(index));
+            bool noGrade = puzzle != null && puzzle.noGrade;
+            return new JobEntry(index, puzzle, state, progress.Stars(index), noGrade);
         }
 
         private static JobState StateAt(int index, RunProgress progress)

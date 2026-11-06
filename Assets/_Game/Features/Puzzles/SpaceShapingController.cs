@@ -39,6 +39,7 @@ namespace DigitalLove.Game.SpaceShaping
             view.ShipsCompleted -= OnFlightCompleted;
             view.ResetRequested -= ResetPuzzle;
             view.HideBaseline();
+            view.SetZonesLocked(false);
             frozen = false;
             run = null;
         }
@@ -219,6 +220,7 @@ namespace DigitalLove.Game.SpaceShaping
                 return;
 
             frozen = true;
+            view.SetZonesLocked(true);
             if (solved)
                 Solved?.Invoke();
             else

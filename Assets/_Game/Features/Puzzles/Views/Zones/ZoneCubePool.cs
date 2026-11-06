@@ -12,6 +12,7 @@ namespace DigitalLove.Game.SpaceShaping
         private float falloff = 0.5f;
         private float minScale = 0.6f;
         private float maxScale = 1.8f;
+        private bool inputLocked;
 
         public ZoneCubePool(SpaceZoneView prototype, Transform parent) =>
             pool = new ViewPool<SpaceZoneView>(prototype, parent, "Zone", OnCreated);
@@ -63,6 +64,12 @@ namespace DigitalLove.Game.SpaceShaping
                 cube.Refuse(reason);
         }
 
+        public void SetInputLocked(bool value)
+        {
+            inputLocked = value;
+            pool.ForEachFrom(0, view => view.SetInputLocked(value));
+        }
+
         private void Place(SpaceZoneView cube, PuzzleFrame frame)
         {
             cube.SetConditions(conditions);
@@ -70,7 +77,11 @@ namespace DigitalLove.Game.SpaceShaping
             cube.Place(frame.centre, frame.BoxSize, falloff);
         }
 
-        private void OnCreated(SpaceZoneView cube) => cube.Refused += OnRefused;
+        private void OnCreated(SpaceZoneView cube)
+        {
+            cube.SetInputLocked(inputLocked);
+            cube.Refused += OnRefused;
+        }
 
         private void OnRefused(ZoneRefusal reason) => Refused?.Invoke(reason);
     }
