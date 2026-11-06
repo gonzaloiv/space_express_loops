@@ -1,3 +1,4 @@
+using System;
 using DigitalLove.Game.SpaceShaping;
 using UnityEngine;
 
@@ -20,6 +21,10 @@ namespace DigitalLove.Game.PuzzleSelection
         private Vector3 panTarget;
         private float panElapsed;
         private float panSecs;
+        private Vector3 dragBase;
+        private Vector3 dragSlotBase;
+        private Vector3 fadeFocus;
+        private readonly Action<RunSlotView> applyFieldFade;
 
         public bool ShowAll { get; set; }
 
@@ -39,6 +44,7 @@ namespace DigitalLove.Game.PuzzleSelection
             this.cube = cube;
             this.fields = fields;
             this.viewRadius = viewRadius;
+            applyFieldFade = ApplyFieldFade;
         }
 
         public Vector3 MapOffset(Vector3 focus) =>
@@ -90,14 +96,19 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public void StopPan() => panning = false;
 
-        public void ApplyDrag(Vector3 focus, Vector3 worldOffset)
+        public void BeginDrag()
         {
             panning = false;
+            dragBase = mapRoot.localPosition;
+            dragSlotBase = selectedSlot.localPosition;
+        }
+
+        public void ApplyDrag(Vector3 worldOffset)
+        {
             Vector3 offset = mapRoot.InverseTransformVector(worldOffset);
             offset.y = 0f;
-            offset = LimitDrag(offset);
-            mapRoot.localPosition = MapOffset(focus) + offset;
-            selectedSlot.localPosition = focus;
+            mapRoot.localPosition = dragBase + LimitDrag(offset);
+            selectedSlot.localPosition = dragSlotBase;
             ApplyFade();
         }
 
@@ -125,8 +136,11 @@ namespace DigitalLove.Game.PuzzleSelection
                 return;
             }
 
-            Vector3 focus = cube.position;
-            fields.ForEachFrom(0, field => field.SetMapFade(focus, FadeNear, FadeFar));
+            fadeFocus = cube.position;
+            fields.ForEachFrom(0, applyFieldFade);
         }
+
+        private void ApplyFieldFade(RunSlotView field) =>
+            field.SetMapFade(fadeFocus, FadeNear, FadeFar);
     }
 }

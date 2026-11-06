@@ -1,3 +1,4 @@
+using System;
 using DigitalLove.Game.SpaceShaping;
 using DigitalLove.Global;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace DigitalLove.Game.PuzzleSelection
         private readonly Vector3[] points;
         private readonly Color color;
         private readonly float alpha;
+        private readonly Action<RunSlotView> storeFieldPoint;
 
         public MapRouteLine(
             LineRenderer[] segments, ColorValue source, float alpha, int count)
@@ -18,6 +20,7 @@ namespace DigitalLove.Game.PuzzleSelection
             points = new Vector3[count];
             color = source.value;
             this.alpha = Mathf.Clamp01(alpha);
+            storeFieldPoint = StoreFieldPoint;
             for (int i = 0; i < segments.Length; i++)
             {
                 segments[i].useWorldSpace = false;
@@ -46,14 +49,13 @@ namespace DigitalLove.Game.PuzzleSelection
             ViewPool<RunSlotView> fields)
         {
             points[map.SelectedIndex] = focus + selected.SunLocalPosition;
-            fields.ForEachFrom(0, field =>
-            {
-                if (field.MapIndex >= 0 && field.MapIndex < points.Length)
-                {
-                    points[field.MapIndex] =
-                        field.transform.localPosition + field.SunLocalPosition;
-                }
-            });
+            fields.ForEachFrom(0, storeFieldPoint);
+        }
+
+        private void StoreFieldPoint(RunSlotView field)
+        {
+            if (field.MapIndex >= 0 && field.MapIndex < points.Length)
+                points[field.MapIndex] = field.transform.localPosition + field.SunLocalPosition;
         }
 
         private void DrawSegment(int index, Vector3 cullFocus, float near, float far)

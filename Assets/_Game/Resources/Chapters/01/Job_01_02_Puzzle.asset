@@ -30,6 +30,7 @@ MonoBehaviour:
   entropyBudget: 0.30967748
   noFail: 0
   noGrade: 1
+  noIntro: 0
   sources:
   - home: {x: 0, y: 0, z: 0}
     scale: 0.12

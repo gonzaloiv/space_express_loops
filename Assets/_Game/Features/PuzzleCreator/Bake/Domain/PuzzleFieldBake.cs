@@ -27,6 +27,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.resizable = brief.Resizable;
             puzzle.noFail = brief.NoFail;
             puzzle.noGrade = brief.NoGrade;
+            puzzle.noIntro = brief.NoIntro;
             PuzzleRunRequest run = BuildRunRequest(brief, planets, settings);
             if (!PuzzleRunChoice.TryPick(
                     run, out Vector3 origin, out Vector3 destination, out runReport))

@@ -1,7 +1,9 @@
+using DigitalLove.DataAccess;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.SpaceShaping;
 using DigitalLove.Input;
 using DigitalLove.TTS;
+using Reflex.Attributes;
 using UnityEngine;
 
 namespace DigitalLove.Game.Flow
@@ -18,6 +20,8 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private float rotationStepDegrees = 15f;
         [SerializeField] private float rotationStepDistance = 0.08f;
 
+        [Inject] private MemoryDataClient memoryDataClient;
+
         private ScaleOutGesture scaleOut;
         private OneHandRotationGesture rotation;
 
@@ -28,17 +32,27 @@ namespace DigitalLove.Game.Flow
             rotation = new OneHandRotationGesture(rotationStepDistance);
             gesture.StateChanged += OnGestureChanged;
             puzzleController.Solved += OnSolved;
+            puzzleController.Failed += OnFailed;
         }
 
         public override void Exit()
         {
             gesture.StateChanged -= OnGestureChanged;
             puzzleController.Solved -= OnSolved;
+            puzzleController.Failed -= OnFailed;
             scaleOut.Reset();
             rotation.Reset();
         }
 
-        private void OnSolved() => parent.SetCurrentState(completeState.RouteId);
+        private void OnSolved() => EndRun(true);
+
+        private void OnFailed() => EndRun(false);
+
+        private void EndRun(bool solved)
+        {
+            memoryDataClient.Put(new PuzzleRunResult(solved, puzzleController.Grade));
+            parent.SetCurrentState(completeState.RouteId);
+        }
 
         private void OnGestureChanged(TwoHandGestureState state)
         {

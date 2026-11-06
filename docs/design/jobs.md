@@ -65,8 +65,8 @@ not a difficulty dial — it never changes a rule — so it marks an **act**: **
 fixed-cube opening (1–3), **Spiral** the move act (4–5), **Cluster** the mastery act (6–7). A job may
 turn the silhouette when the act turns; the new verb is still the lesson.
 
-**The ramp is three dials, not the budget.** The entropy budget is always `3×` the bake's solution, so
-the star thresholds keep the same shape every job; difficulty comes from **scramble** (how far the start
+**The ramp is three dials, not the budget.** The budget and star bands keep the same shape every job
+([core loop](core-loop.md) §3); difficulty comes from **scramble** (how far the start
 sits from the solved arrangement), **planet count**, and **depth**. Turn all three up by act: the
 tutorial is nearly solved, the act ends are scrambled. Do not tighten the budget to add difficulty; that
 only moves the star bar.
@@ -79,17 +79,17 @@ omit it; the level can lock it; the settings size it.
 sun with a fixed cube over the centre, so the star is in the zone by construction. No lock; after job 2
 the sun is a normal source in the later levels.
 
-**Job 1 is a baked tutorial field.** It bakes from a normal seed — four planets, no sun, one fixed zone
-— with the tutorial flags (no fail, no stars). The field has more than one planet; the lesson is the
-cube's scale, not a single-source field. It still records a reference solution, so the budget stays `3×`
-and the star bands keep their shape. Job 1 has **no entropy fail and no stars**: the bar is
-informational. The fail starts at job 2; stars start at job 3, so the two pressures fade in one at a
-time. The read test runs without the brief/TTS line.
+**The pressures fade in one at a time.** This doc owns the per-job flags:
 
-**Entropy scale.** The bake sets the budget to **3×** its solution's entropy; the labels are the
-absolute cost of that solution. The star thresholds stay **1/3 and 2/3** of the budget, so the grade
-pressure has the same shape every graded job ([progression](systems/progression.md) §Tuning); job 3 is
-the first graded job. Job 1 has no fail and no stars; job 2 fails without stars.
+| Job | Fail | Stars | Intro |
+|---|---|---|---|
+| 1 | no (`noFail`, unlimited spend) | no (`noGrade`) | no (`noIntro`) |
+| 2 | yes | no (`noGrade`) | yes |
+| 3–7 | yes | yes | yes |
+
+Job 1 bakes from a normal seed — four planets, no sun, one fixed zone — and still records a reference
+solution, so the budget rule holds ([core loop](core-loop.md) §3). The lesson is the cube's scale, not a
+single-source field. The entropy-scale column above is the absolute cost of the bake's solution.
 
 **The several-zones rung is retired with the old job 4 (2026-11-05).** A fixed level can place several cubes,
 but the generator could not force a two-zone `Curve`, so the seven-job run folds "several zones" into the
@@ -107,15 +107,12 @@ includes an off-centre zone, so the player must move the cube.
 scales several zones with the star included, so the player must move out to the other zones. It combines
 every verb except both roles; both roles are deferred to a future job 8.
 
-**Resize is deferred.** `resizable` works, but the slice does not use it: the explanation (size is scope,
-not precision) is not ready. It is the next cut candidate.
+**Resize** is off in every job (`resizable: no`); why is in [the cube](systems/cube.md) §Open questions.
 
 **The slice.** Jobs 1–7 are the full seven-job run, ~1 minute each.
 
-**Multi-ship.** A job may carry more than one run; it is solved only when **every ship arrives**. The
-runs are baked as **fan-out**, **converge**, or **separate**, so the shared field stays legible.
-Multi-ship is available now; the seven-job spine above is single-ship. A multi-ship job can be authored as
-a stretch or a later combine job.
+**Multi-ship.** The seven-job spine is single-ship; the rule is in
+[progression](systems/progression.md) §The puzzle map.
 
 ## The run — the brief
 

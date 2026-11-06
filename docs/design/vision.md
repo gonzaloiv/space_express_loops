@@ -36,8 +36,8 @@ loop inside the MR bubble, with the run's jobs and progression. Build status liv
    field-warp).
 3. **Scale the space and the content together.** One gesture does both; the centre arrives at job 2,
    the shrink-to-clear direction at job 3, moving the cube (the region) at job 4, multi-zone at job 5,
-   the field-carries-you lesson at job 6, the capstone at job 7 ([jobs](jobs.md)). Resize is deferred:
-   it works, but the explanation is not ready. The field is derived, never edited.
+   the field-carries-you lesson at job 6, the capstone at job 7 ([jobs](jobs.md)). The field is
+   derived, never edited.
 4. **One budget, one score.** Entropy is the budget: spend it all before you solve and the job
    **fails**. Entropy left is the **eco rating**; **arriving** is the goal — the launch is only a check.
    The field itself shows the spend — calm at full, strained as it drains, about to blow near empty —
@@ -58,12 +58,11 @@ loop inside the MR bubble, with the run's jobs and progression. Build status liv
 - **Legacy (cut):** room-scale *gameplay* — planets scattered around your physical
   room, walking to them. A seated player does not walk to a planet.
 - **One view, one instrument: the cube.** There is no Map/Sculpt mode split. The cube
-  is a tangible MR tool you **move** over the bubble (resize is deferred); the space **inside** it scales
-  reality/the field — it transforms the zone it covers ([the cube](systems/cube.md)). **The cube's
-  size is the aperture:** it sets the *scope* of an edit — how many planets and lattice cells one
-  pinch touches — not its precision. The pinch sets the magnitude. The level sets the cube's size;
-  resize is deferred (it works, but the explanation is not ready). The whole map stays visible in the
-  background, so you get overview and detail at once, with no transition.
+  is a tangible MR tool you **move** over the bubble; the space **inside** it scales reality/the
+  field — it transforms the zone it covers ([the cube](systems/cube.md)). **The cube's size is the
+  aperture:** it sets the *scope* of an edit, not its precision; the pinch sets the magnitude and the
+  level sets the size. The whole map stays visible in the background, so you get overview and detail
+  at once, with no transition.
 
 So: the *room* is the backdrop and the anchor; the *bubble* is the playfield; the
 *cube* is how you touch it.

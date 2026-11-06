@@ -1,107 +1,92 @@
 # TTS messages — the jumbotron panel
 
-**Status:** now · presentation · updated 2026-11-06 — S1–S2 wired: the existing TTS panel is the
-jumbotron and legacy clips are removed. S3's remainder (job 1 silent, tech line only, the fail cue) moved
-to [loop completion](loop-completion.md); S4 content is pending.
+**Status:** now · presentation · updated 2026-11-06 — S1–S3 landed and most of S4; open: the last
+cleanup items in S4 and the headset check. The intro/complete/fail hooks are in
+[loop completion](loop-completion.md) U3; content is S5.
 
 **Related:** [jobs](../../design/jobs.md) · [lore](../../design/world/lore.md) ·
-[vision](../../design/vision.md) · [core loop](../../design/core-loop.md) ·
-[TTS companion idea](../../ideas/tts-voice-panel.md) ·
-[job definition card](../backlog/job-definition-card.md) ·
-[Game.unity](../../../Assets/_Game/Game.unity)
+[loop completion](loop-completion.md) · [job definition card](../backlog/job-definition-card.md) ·
+[TTS companion idea](../../ideas/tts-voice-panel.md) · [Game.unity](../../../Assets/_Game/Game.unity)
 
-## 1. Why
+## Goal
 
-The run's voice is the job's intro — the manual entry and the tech line — plus the message when the job
-is complete ([jobs](../../design/jobs.md) §The manual's arc). The POC has no TTS panel; the in-scene TTS
-stack is legacy and unwired, and the legacy content (49 clips, the old `level_*` and `welcome_*` keys)
-belongs to a different game.
+Jim is the only voice: one line at the start of a job and one message at the end. The jumbotron (the
+authored `Features/TTSVoice` panel with Jim's face) shows it at the side while the player keeps playing.
+The manual entry is on the [job card](../backlog/job-definition-card.md), never spoken.
 
-The jumbotron **is** the TTS panel: an authored field-side panel with the speaker's face (Jim). It is not
-a camera overlay and not a companion that follows the head. It sits at the side, reads at distance, and
-never covers the run. The panel does not follow, park, or re-dock in this plan; the camera-operator
-companion stays deferred.
+## Contract
 
-## 2. The fit
+- **What plays.** Intro: the tech line `<intro>_01` only; job 1 has none (`noIntro`). End: `_complete`
+  on a solve, `_fail` on a fail. Both are launched by states — owned by loop completion U3.
+- **Never a gate.** No skip button, no input. The panel sits at its authored side spot; the puzzle is
+  live under the intro; a pinch never stops the line. `Stop` on state exit is the only interruption.
+- **Readable when text-only.** A line stays up for a reading time that scales with its length, or for
+  the clip's length when a clip exists — whichever is longer.
+- **Clips are optional per line.** A clip named after the key plays if it exists; otherwise the line is
+  text-only. No global toggle.
+- **One line at a time;** stale callbacks are dropped (`TtsPresenter` generation token).
 
-- **The jumbotron is the TTS panel.** An authored panel in the scene: TMP text, Jim's face, show/hide,
-  fixed side placement. Reuse the in-scene TTS module and the authored panel pattern; do not share the
-  splash's `SubtitlesLikeFollow` object.
-- **One line at a time.** The manual entry, then the tech line; the complete message is its own cue. The
-  skip button ends the current cue.
-- **States launch the cues.** `PuzzleStartState` launches the intro; a new `PuzzleCompleteState` launches
-  the complete message and returns to the map. No controller-owned TTS; no presentation Flow state beyond
-  the complete state.
-- **Keep the `Levels` table.** The authored keys are `level_<id>_init_client`, `_cargo`, `_manual_entry`,
-  `_01` (the tech line), and a new `_complete`. Remove the 49 legacy mp3s.
-- **System and panel first.** Final copy, keys, and recordings are a later content pass. Placeholders are
-  text-only; `LocalizedTTSVoice` gets a minimum reading time instead of blocking the line.
-- **No resume, no gate.** The voice keeps playing while the player pinches; the panel stays at the side.
-  There is no visibility stop/resume, and `Stop` on state exit is enough.
-- **Puzzle live underneath.** The intro does not block the solve; the panel is peripheral and quiet.
+## Slices
 
-## 3. Slices
+### S1–S2 — landed
 
-### S1 — strip legacy and wire the scene
+The panel is the jumbotron; `TtsPresenter` sits on it and drives ordered keys with no overlap; the 49
+legacy mp3s and the legacy `welcome_` / `_init_0N_*` keys are gone; all four states hold the presenter.
 
-- Remove the 49 legacy mp3s; keep the `Levels` table and its authored job keys.
-- Reuse the authored `Features/TTSVoice` panel (`CardPanel` + Jim) as the jumbotron; wire `TtsPresenter`
-  on the same GameObject. No runtime `AddComponent`.
-- Add `level_01_01_complete` as the first placeholder; jobs without a complete key fall back to a short
-  wait.
-- **Exit:** job 1's intro lines show on the existing panel through the TTS module; no legacy clip can play.
+### S3 — reading timer
 
-### S2 — the presenter and the panel
+- Replace the flat `minEntrySecs` in `LocalizedTTSVoice` with a reading time:
+  `max(minEntrySecs, baseSecs + secsPerChar × length)`, all three authored on the voice. The clip, when
+  present, sets the floor.
+- **Exit:** job 1's three-sentence receipt stays up long enough to read at bubble distance; a one-word
+  line still holds `minEntrySecs`.
 
-- Add `TtsPresenter` (one voice, ordered key fragments, stop on state exit, no overlap) above the TTS
-  module. `LocalizedTTSVoice` gets a minimum reading time so text-only lines are readable.
-- The panel stays at its authored side spot; no resume and no visibility gate. A pinch does not stop it.
-- **Exit:** the intro plays manual then tech; the panel sits at the side; leaving the job stops it.
+### S4 — no skip, and the cleanup
 
-### S3 — state hooks and the complete state
+- **No skip.** Remove the skip button and its panel from `Features/TTSVoice`, and the skip path in
+  `LocalizedTTSVoice` (`SetupSkipButton`, `skipButtonClick`, `HasSkipButton`) and the wrapper's
+  `SkipButtonClick`.
+- **No `useClips`.** Remove the flag from `StreamingAssetsSpeaker`; a missing file already falls back
+  (`File.Exists` on desktop, a failed request on Android) and the line stays text-only.
+- **Dead code.** `TtsPresenter.IsPlaying` (no callers); the empty `PuzzleStartState.Exit`; the
+  wrapper's `SwapPanel`, `RestorePanel`, `SpeakAt`, `SpeakRandom` and `LocalizedTTSVoice`'s swapped-panel
+  path and `SetPanelWorldPosition` — no callers outside the TTS module. Check other projects that share
+  `_Modules/TTS` before deleting the public ones.
+- **Wiring rule.** Drop the null checks on `LocalizedTTSVoice`'s serialized `panel`; a missing
+  reference is a broken prefab.
+- **Exit:** the panel has no button; a line plays and fades with no input; the module compiles with no
+  unused members; the scene has no dangling skip references.
+- **Landed (2026-11-06):** the skip button and path, `useClips`, `IsPlaying`, the panel-swap / position
+  APIs and the `panel` null check are gone. **Still open:**
+  - Remove the empty `PuzzleStartState.Exit` override.
+  - Drop the null checks on `LocalizedTTSVoice`'s serialized `id` (`Id != null`).
+  - `MarkdownTTSVoiceWrapper`: wire `LocalizedTTSVoice` as a `[SerializeField]` instead of the lazy
+    `GetComponent`, and drop the `jumpEntries != null` check (it is serialized; assign it).
+  - Leave the sample scene (`Samples/StreamingAssetsSpeaker`) alone.
 
-- `PuzzleStartState` launches the intro on enter. Add `PuzzleCompleteState`; it launches the complete
-  message and returns to the map after the cue. The edition view keeps the readout visible until then.
-- No intro on reset or retry; stop the previous cue before the next; hide the panel on state exit.
-- **Exit:** start and complete both come from states; returning to the map stops the voice; the next job
-  never overlaps.
+### S5 — content (later)
 
-### S4 — content pass (later)
+- Write the intro lines (jobs 2–7), job 1's first message, and the complete/fail lines for jobs 2–7;
+  record clips named by key; fill both locales.
+- **Exit:** the content pass is its own authoring job.
 
-- Write the seven job intros and complete lines, record the clips, and fill both locales.
-- **Exit:** the content pass is its own authoring job; the system/panel exit is S1–S3.
+## Manual check (headset)
 
-## 4. What it touches
+1. Open job 2: Jim's one line shows at the side; there is no button.
+2. Pinch while it shows: the puzzle responds; the line keeps going.
+3. Solve job 1: the receipt stays up long enough to read all three sentences.
+4. A line with no clip shows text for its reading time; a line with a clip plays the clip.
+5. Leave a job mid-line: the voice stops; nothing carries into the map or the next job.
 
-- `PuzzleStartState`, `PuzzleEditionState`, new `PuzzleCompleteState`.
-- `LocalizedTTSVoice` (minimum reading time, no resume), `StreamingAssetsSpeaker`.
-- `TtsPresenter` (new, same GameObject as the panel).
-- `Game.unity` jumbotron; `Levels` keys.
+## Out of scope
 
-## 5. Tests
+- The hooks (intro / complete / fail, `noIntro`) — loop completion U3.
+- The manual entry on screen — the job card.
+- Follow, parking, re-dock, visibility gating, resume; the camera-operator companion.
 
-- The panel shows on state enter and hides on state exit; no legacy line appears.
-- The intro plays manual then tech; the complete cue plays once; the next cue does not overlap.
-- A pinch does not stop the panel or the voice; the player can keep playing.
-- Reset/retry does not replay the intro; returning to the map stops it.
-- A missing clip shows the line for its minimum reading time; a missing key does not leave the panel stuck.
+## Risks
 
-## 6. Out of scope
-
-- Follow, parking, re-dock, visibility gating, and resume.
-- New voices; final lines and recordings (S4).
-- The job definition card.
-- The camera-operator companion.
-
-## 7. Risks
-
-- **Sharing the splash panel.** `SubtitlesLikeFollow` serves the splash; the TTS panel is the authored
-  `Features/TTSVoice` object, not the splash card.
-- **Card coupling.** The `CardPanel` on `Features/TTSVoice` is the jumbotron in this plan; no new view.
-- **Substring keys.** `GetKeysThatContain` is a substring match; the presenter passes explicit key
-  fragments (`_manual_entry` then `_01`), so the client/cargo keys are not spoken.
-- **Audio naming.** The clip is named by the localization key; placeholders must not depend on a clip to
-  advance.
+- **Shared module.** `_Modules/TTS` may serve other projects; delete public members only after checking.
+- **Substring keys.** `GetKeysThatContain` is a substring match; pass full keys so `_init_client` /
+  `_init_cargo` are never spoken.
 - **Competing with the read.** Side, low contrast, no motion during the solve; the face is a small inset.
-- **State ownership.** Stop the cue in `Exit`; a stale coroutine or clip across the map would overlap the
-  next job.

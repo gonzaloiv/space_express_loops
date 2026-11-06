@@ -18,10 +18,11 @@ namespace DigitalLove.Game.SpaceShaping
         private float nextLatticeTime;
         private float nextReadoutTime;
         private bool wasScaling;
-        private bool solvedFired;
+        private bool frozen;
         private PuzzleData currentPuzzleData;
 
         public event Action Solved;
+        public event Action Failed;
 
         public void Enter(PuzzleData puzzleData)
         {
@@ -38,6 +39,7 @@ namespace DigitalLove.Game.SpaceShaping
             view.ShipsCompleted -= OnFlightCompleted;
             view.ResetRequested -= ResetPuzzle;
             view.HideBaseline();
+            frozen = false;
             run = null;
         }
 
@@ -46,9 +48,11 @@ namespace DigitalLove.Game.SpaceShaping
             view.gameObject.SetActive(false);
         }
 
+        public int Grade => run.Session.Grade();
+
         public void Rotate(float degrees)
         {
-            if (run == null || Mathf.Approximately(degrees, 0f))
+            if (run == null || frozen || Mathf.Approximately(degrees, 0f))
                 return;
 
             FieldFrame.Measure(run.Session, out Vector3 centre, out _);
@@ -58,6 +62,9 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void ResetPuzzle()
         {
+            if (frozen)
+                return;
+
             PreparePuzzle();
             run.Reset();
             view.SoftResetShips(run.Session);
@@ -77,7 +84,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void LateUpdate()
         {
-            if (run == null)
+            if (run == null || frozen)
                 return;
 
             TrackGesture();
@@ -176,7 +183,6 @@ namespace DigitalLove.Game.SpaceShaping
         private void PreparePuzzle()
         {
             wasScaling = false;
-            solvedFired = false;
             ClearTimers();
             ResetView();
         }
@@ -198,7 +204,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void OnFlightCompleted()
         {
-            if (run == null || run.LastResults == null)
+            if (run == null || frozen || run.LastResults == null)
                 return;
 
             run.Check();
@@ -209,11 +215,14 @@ namespace DigitalLove.Game.SpaceShaping
                 view.ShowBaseline(run.Session);
             view.PulseTrajectories();
             PublishReadout();
-            if (solved && !solvedFired)
-            {
-                solvedFired = true;
+            if (!solved && !run.Session.IsFailed(run.LastResults))
+                return;
+
+            frozen = true;
+            if (solved)
                 Solved?.Invoke();
-            }
+            else
+                Failed?.Invoke();
         }
 
         private void PublishReadout()

@@ -66,6 +66,45 @@ namespace DigitalLove.Game.Persistence.Tests
             Assert.AreEqual(JobState.Solved, entries[1].State);
         }
 
+        [Test]
+        public void RecordSolve_AddsCookieWithGrade()
+        {
+            PlayerData playerData = new();
+
+            bool changed = RunProgressCookies.RecordSolve(playerData, "01_01", 2);
+
+            Assert.IsTrue(changed);
+            Assert.IsNotNull(playerData.GetCookieById("level_complete_01_01"));
+            Assert.AreEqual(2, Score(playerData, "01_01"));
+        }
+
+        [Test]
+        public void RecordSolve_KeepsTheBestGrade()
+        {
+            PlayerData playerData = new();
+            AddComplete(playerData, "01_03", 2);
+
+            Assert.IsFalse(RunProgressCookies.RecordSolve(playerData, "01_03", 1));
+            Assert.IsFalse(RunProgressCookies.RecordSolve(playerData, "01_03", 2));
+            Assert.AreEqual(2, Score(playerData, "01_03"));
+            Assert.IsTrue(RunProgressCookies.RecordSolve(playerData, "01_03", 3));
+            Assert.AreEqual(3, Score(playerData, "01_03"));
+            Assert.AreEqual(1, playerData.cookies.Count);
+        }
+
+        [Test]
+        public void RecordSolve_UngradedSolveStillMarksTheJob()
+        {
+            LevelSelector selector = Selector(Puzzle("01_01"));
+            PlayerData playerData = new();
+
+            RunProgressCookies.RecordSolve(playerData, "01_01", 0);
+            RunProgress progress = RunProgressCookies.Build(selector, playerData);
+
+            Assert.IsTrue(progress.IsSolved(0));
+            Assert.AreEqual(0, progress.Stars(0));
+        }
+
         private LevelSelector Selector(params PuzzleData[] levels)
         {
             ChapterData chapter = ScriptableObject.CreateInstance<ChapterData>();
@@ -98,5 +137,8 @@ namespace DigitalLove.Game.Persistence.Tests
             cookie.SetMetadata(metadata.Serialize<LevelCompleteCookieMetadata>());
             playerData.cookies.Add(cookie);
         }
+
+        private static int Score(PlayerData playerData, string levelId) =>
+            playerData.GetLevelCompleteCookies().GetByLevelId(levelId).Score;
     }
 }

@@ -119,6 +119,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             seed.startRule = contract.StartRule;
             seed.noFail = contract.NoFail;
             seed.noGrade = contract.NoGrade;
+            seed.noIntro = contract.NoIntro;
             return seed;
         }
 

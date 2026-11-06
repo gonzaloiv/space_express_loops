@@ -19,6 +19,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public PuzzleShipRelation Relation;
         public bool NoFail;
         public bool NoGrade;
+        public bool NoIntro;
 
         public bool SupportsZones =>
             Zones <= 3;
@@ -42,7 +43,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             Ships = Mathf.Max(1, seed.ships),
             Relation = seed.relation,
             NoFail = seed.noFail,
-            NoGrade = seed.noGrade
+            NoGrade = seed.noGrade,
+            NoIntro = seed.noIntro
         };
 
         private static int ResolveMinRoutes(PuzzleSeed seed)

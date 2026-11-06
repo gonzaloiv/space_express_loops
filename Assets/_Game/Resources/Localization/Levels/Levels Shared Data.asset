@@ -147,6 +147,54 @@ MonoBehaviour:
     m_Key: level_01_01_complete
     m_Metadata:
       m_Items: []
+  - m_Id: 72150890864889885
+    m_Key: level_01_02_complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889886
+    m_Key: level_01_03_complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889887
+    m_Key: level_01_04_complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889888
+    m_Key: level_01_05_complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889889
+    m_Key: level_01_06_complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889890
+    m_Key: level_01_07_complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889891
+    m_Key: level_01_02_fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889892
+    m_Key: level_01_03_fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889893
+    m_Key: level_01_04_fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889894
+    m_Key: level_01_05_fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889895
+    m_Key: level_01_06_fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889896
+    m_Key: level_01_07_fail
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -63,6 +63,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         [Tooltip("The tutorial does not award or show stars.")]
         public bool noGrade;
 
+        [Tooltip("The job plays no intro cue on start.")]
+        public bool noIntro;
+
         public float EffectiveSunRadius(SpaceShapingSettings settings) =>
             hasSun ? settings.sunRadius : 0f;
     }

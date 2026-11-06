@@ -29,17 +29,13 @@ namespace DigitalLove.Game.Flow
             ovrOrigin.Setup();
             PuzzleData puzzle = memoryDataClient.Get<PuzzleData>();
             puzzleController.Enter(puzzle);
-            ttsPresenter.Play(new[]
-            {
-                puzzle.IntroKey + "_manual_entry",
-                puzzle.IntroKey + "_01",
-            });
+            if (!puzzle.noIntro)
+                ttsPresenter.Play(new[] { puzzle.IntroKey + "_01" });
             parent.SetCurrentState(nextState.RouteId);
         }
 
         public override void Exit()
         {
-
         }
     }
 }

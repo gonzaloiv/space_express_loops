@@ -112,6 +112,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             seed.sunOnChord = job.SunOnChord;
             seed.noFail = job.NoFail;
             seed.noGrade = job.NoGrade;
+            seed.noIntro = job.NoIntro;
             seed.fieldShape = job.FieldShape;
             seed.resizable = false;
             return seed;

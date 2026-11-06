@@ -18,40 +18,168 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 72150890864889858
-    m_Localized: The star is not a planet. It bends the same way.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 72150890864889857
-    m_Localized: one bulb
-    m_Metadata:
-      m_Items: []
-  - m_Id: 72150890860695554
-    m_Localized: One pinch. You'll be fine.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 72150890860695553
-    m_Localized: Welcome. Your Wrap does one thing. Do that one thing.
+  - m_Id: 72150890814558208
+    m_Localized: "Bl\xF6dmeyer & Sons (no sons)"
     m_Metadata:
       m_Items: []
   - m_Id: 72150890860695552
     m_Localized: a pallet of valves
     m_Metadata:
       m_Items: []
-  - m_Id: 72150890814558208
-    m_Localized: "Bl\xF6dmeyer & Sons (no sons)"
+  - m_Id: 72150890860695553
+    m_Localized: Welcome. Your Wrap does one thing. Do that one thing.
     m_Metadata:
       m_Items: []
-  - m_Id: 72150890864889859
-    m_Localized: The star is a source too.
+  - m_Id: 72150890860695554
+    m_Localized: One pinch. You'll be fine.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889856
     m_Localized: The Lighthouse Keepers' Union
     m_Metadata:
       m_Items: []
+  - m_Id: 72150890864889857
+    m_Localized: one bulb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889858
+    m_Localized: The star is not a planet. It bends the same way.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889859
+    m_Localized: The star is a source too.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889860
+    m_Localized: Strait & Narrow Ltd.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889861
+    m_Localized: a wide load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889862
+    m_Localized: The Wrap takes as well as gives. A smaller world is a wider door.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889863
+    m_Localized: Shrink the rock, not the cargo.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889864
+    m_Localized: Madame Fink's Discount Gravity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889865
+    m_Localized: a piano
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889866
+    m_Localized: The Wrap is yours to place. Where you work is a decision. Make it.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889867
+    m_Localized: Now move it. Where is a choice.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889868
+    m_Localized: The Third Best Bakery
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889869
+    m_Localized: a wedding cake, still warm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889870
+    m_Localized: The Wrap is yours to place. Use it more than once.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889871
+    m_Localized: Several zones. Place it, scale them.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889872
+    m_Localized: Nobody & Co.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889873
+    m_Localized: a body (a funeral)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889874
+    m_Localized: Every edit costs. The customer only ever sees the arrival.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889875
+    m_Localized: Tight. Really tight. Sorry.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889876
+    m_Localized: The Inheritance of Mr. Fink
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889877
+    m_Localized: the last of something
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889878
+    m_Localized: This is the one the manual was written for. Welcome, new employee. There has not been a new employee in eleven years.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889879
+    m_Localized: "…Good luck."
+    m_Metadata:
+      m_Items: []
   - m_Id: 72150890864889884
-    m_Localized: Contract closed. The client will hear about the delay.
+    m_Localized: "Contract closed. Bl\xF6dmeyer has the valves. I'm Jim. This is Our Space Corp. We do this one at a time."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889885
+    m_Localized: The bulb is delivered. The Keepers say it's the right colour. The ledger is happy.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889886
+    m_Localized: The wide load is through. Strait & Narrow measured it twice. The ledger is happy.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889887
+    m_Localized: The piano is delivered. Madame Fink says it plays. The ledger is happy.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889888
+    m_Localized: The cake arrived still warm. The Third Best Bakery says it's the best they've done. The ledger is happy.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889889
+    m_Localized: The body is delivered. Nobody & Co. says the funeral can start on time. The ledger is happy.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889890
+    m_Localized: The inheritance is delivered. Mr. Fink's estate says there's nothing else. The ledger is happy. For now. Today the space. Tomorrow the time.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889891
+    m_Localized: We didn't arrive. The Keepers are still waiting. Try it again.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889892
+    m_Localized: We didn't arrive. The wide load is still here. Try it again.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889893
+    m_Localized: We didn't arrive. Madame Fink's piano is still here. Try it again.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889894
+    m_Localized: We didn't arrive. The cake is cold now. Try it again.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889895
+    m_Localized: We didn't arrive. Nobody is waiting. Try it again.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889896
+    m_Localized: We didn't arrive. The estate is still waiting. Try it again.
     m_Metadata:
       m_Items: []
   references:

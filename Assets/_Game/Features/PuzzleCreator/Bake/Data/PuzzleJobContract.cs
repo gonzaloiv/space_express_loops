@@ -19,5 +19,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public PuzzleStartRule StartRule;
         public bool NoFail;
         public bool NoGrade;
+        public bool NoIntro;
     }
 }

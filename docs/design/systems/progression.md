@@ -42,6 +42,9 @@ The **level selector** is needed: a field of cubes, one per job.
   puzzle field is the play space.
 - **Direct pick only (decided 2026-10-27):** the map is the only navigation; the result offers
   Map/Retry, not Next. Solved and current cubes are pickable; locked cubes refuse visibly.
+- **The first session skips the map (decided 2026-11-06).** On a fresh save the game opens straight
+  in job 1; the map is first seen after job 1 (or on leaving it), so the player meets the cube before
+  the map and enters the map's spread gesture already knowing it.
 
 ### The learning path — the cube grows
 
@@ -63,9 +66,8 @@ One new lesson at a time, so the player never faces two unrelated ideas at once:
 7. **Job 7 — the capstone.** The cube starts over the sun; the solution scales several zones with the star
    included. The finale combines every verb except both roles; a future job 8 brings Mixed.
 
-So the run order is **scale → centre → clear → move → multi-zone → assist → capstone**. **Resize is
-deferred** from the slice: it works, but the explanation (size is scope, not precision) is not ready; it
-is the next cut candidate.
+So the run order is **scale → centre → clear → move → multi-zone → assist → capstone**. Resize is not
+in the run ([the cube](cube.md) §Open questions).
 
 **The obstacle is job 3.** Shrinking a blocker to clear the chord is the opposite role of the curve; it
 lands right after the centre, before placement, so both directions of the pinch are learned on a fixed
@@ -74,12 +76,8 @@ deferred to a future job 8.
 
 ### The several-zones rung
 
-**The fixed-cube several-zones rung is retired (2026-11-05).** The generator could not force a two-zone
-`Curve` on the fixed-cube field, so the seven-job run (1–7) folds "several zones" into the multi-zone move at
-jobs 4–6: job 4 moves, job 5 introduces two zones, job 6 uses the field, job 7 is the capstone. A future
-job 8 can bring back the fixed rung with Mixed. The standalone fixed-cube rung is deferred, not claimed. A
-**tutorial** for it remains deferred until the loop is working
-([vision](../vision.md) §6).
+Retired (2026-11-05): several zones arrive with the movable cube at job 5. Why, and the future job 8
+that could bring the fixed rung back with Mixed, is in [jobs](../jobs.md) §The run — the mechanics.
 
 ### The puzzle map
 
@@ -114,11 +112,9 @@ None — progression never blocks a run on a score (see Open).
 **The full run is seven cubes**, ~1 minute each. The curve rises by **planet count**, **field depth**,
 and **solution cost**.
 
-**Entropy is derived, not hand-set.** The bake finds a solution and sets the budget to **3×** its
-entropy cost; stars are **1/3 and 2/3** of that budget. So 3★ means spending no more than the bake's
-solution, 2★ up to twice it, otherwise 1★. The thresholds are the same shape every graded job; job 1 is
-the tutorial exception (no fail, no stars), and job 2 adds the fail but stays unstarred until job 3. The
-field sets the absolute cost and how hard it is to read.
+**Entropy is derived, not hand-set** — the budget and star rule is in [core loop](../core-loop.md) §3,
+and which jobs fail or grade is in [jobs](../jobs.md). The field sets the absolute cost and how hard it
+is to read.
 
 ### Variation axes (enough for ~7 distinct jobs)
 

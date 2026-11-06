@@ -18,8 +18,168 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
+  - m_Id: 72150890814558208
+    m_Localized: "Bl\xF6dmeyer e Hijos (sin hijos)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890860695552
+    m_Localized: "un pal\xE9 de v\xE1lvulas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890860695553
+    m_Localized: Bienvenido. Tu Wrap hace una cosa. Haz esa cosa.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890860695554
+    m_Localized: "Un pellizco. Estar\xE1s bien."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889856
+    m_Localized: El Sindicato de Fareros
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889857
+    m_Localized: una bombilla
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889858
+    m_Localized: La estrella no es un planeta. Se curva igual.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889859
+    m_Localized: "La estrella tambi\xE9n es una fuente."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889860
+    m_Localized: Estrecho y Angosto S.L.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889861
+    m_Localized: una carga ancha
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889862
+    m_Localized: "El Wrap quita tanto como da. Un mundo m\xE1s peque\xF1o es una puerta m\xE1s ancha."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889863
+    m_Localized: Encoge la roca, no la carga.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889864
+    m_Localized: Gravedad a Descuento de Madame Fink
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889865
+    m_Localized: un piano
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889866
+    m_Localized: "El Wrap es tuyo para colocarlo. D\xF3nde trabajas es una decisi\xF3n. T\xF3mala."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889867
+    m_Localized: "Ahora mu\xE9velo. D\xF3nde es una elecci\xF3n."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889868
+    m_Localized: "La Tercera Mejor Panader\xEDa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889869
+    m_Localized: "un pastel de boda, a\xFAn caliente"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889870
+    m_Localized: "El Wrap es tuyo para colocarlo. \xDAsalo m\xE1s de una vez."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889871
+    m_Localized: "Varias zonas. Col\xF3calo, esc\xE1lalas."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889872
+    m_Localized: "Nadie y C\xEDa."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889873
+    m_Localized: un cuerpo (un funeral)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889874
+    m_Localized: "Cada edici\xF3n cuesta. El cliente solo ve la llegada."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889875
+    m_Localized: Ajustado. Muy ajustado. Lo siento.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889876
+    m_Localized: La Herencia del Sr. Fink
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889877
+    m_Localized: lo último de algo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889878
+    m_Localized: "Este es aquel para el que se escribi\xF3 el manual. Bienvenido, nuevo empleado. No ha habido un nuevo empleado en once a\xF1os."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889879
+    m_Localized: "…Buena suerte."
+    m_Metadata:
+      m_Items: []
   - m_Id: 72150890864889884
-    m_Localized: Contrato cerrado.
+    m_Localized: "Contrato cerrado. Bl\xF6dmeyer tiene las v\xE1lvulas. Soy Jim. Esto es Our Space Corp. Vamos uno a uno."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889885
+    m_Localized: "La bombilla est\xE1 entregada. Los Fareros dicen que es del color correcto. El libro de cuentas est\xE1 contento."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889886
+    m_Localized: "La carga ancha ha pasado. Estrecho y Angosto la midi\xF3 dos veces. El libro de cuentas est\xE1 contento."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889887
+    m_Localized: "El piano est\xE1 entregado. Madame Fink dice que suena. El libro de cuentas est\xE1 contento."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889888
+    m_Localized: "El pastel lleg\xF3 a\xFAn caliente. La Tercera Mejor Panader\xEDa dice que es lo mejor que han hecho. El libro de cuentas est\xE1 contento."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889889
+    m_Localized: "El cuerpo est\xE1 entregado. Nadie y C\xEDa. dice que el funeral puede empezar a tiempo. El libro de cuentas est\xE1 contento."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889890
+    m_Localized: "La herencia est\xE1 entregada. El patrimonio del Sr. Fink dice que no hay nada m\xE1s. El libro de cuentas est\xE1 contento. Por ahora. Hoy el espacio. Ma\xF1ana el tiempo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889891
+    m_Localized: "No llegamos. Los Fareros siguen esperando. Int\xE9ntalo otra vez."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889892
+    m_Localized: "No llegamos. La carga ancha sigue aqu\xED. Int\xE9ntalo otra vez."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889893
+    m_Localized: "No llegamos. El piano de Madame Fink sigue aqu\xED. Int\xE9ntalo otra vez."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889894
+    m_Localized: "No llegamos. El pastel ya est\xE1 fr\xEDo. Int\xE9ntalo otra vez."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889895
+    m_Localized: "No llegamos. Nadie est\xE1 esperando. Int\xE9ntalo otra vez."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889896
+    m_Localized: "No llegamos. El patrimonio sigue esperando. Int\xE9ntalo otra vez."
     m_Metadata:
       m_Items: []
   references:

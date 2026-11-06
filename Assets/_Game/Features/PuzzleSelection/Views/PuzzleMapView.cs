@@ -149,8 +149,10 @@ namespace DigitalLove.Game.PuzzleSelection
 
         private void ApplyDrag(CarouselGestureOutcome outcome)
         {
-            pose.StopPan();
-            pose.ApplyDrag(Focus, outcome.DragOffset);
+            if (!wasDragging)
+                pose.BeginDrag();
+
+            pose.ApplyDrag(outcome.DragOffset);
             PreviewNearest();
             wasDragging = true;
         }

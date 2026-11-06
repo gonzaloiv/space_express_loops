@@ -32,6 +32,8 @@ namespace DigitalLove.Game.SpaceShaping
         public bool noFail;
         [Tooltip("The tutorial does not award or show stars.")]
         public bool noGrade;
+        [Tooltip("The job plays no intro cue on start (job 1).")]
+        public bool noIntro;
         public PuzzleSource[] sources;
         [Tooltip("Extra ships. Empty is the single-ship puzzle (origin/destination); two or more makes "
             + "it a multi-ship level, solved when every ship arrives.")]

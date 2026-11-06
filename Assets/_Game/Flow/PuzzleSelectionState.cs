@@ -46,10 +46,21 @@ namespace DigitalLove.Game.Flow
                 return;
             }
 
+            RunProgress progress = RunProgressCookies.Build(levelSelector, playerData);
+            if (progress.IsFresh)
+            {
+                EnterJob(levelSelector.GetLevelByGlobalIndex<PuzzleData>(0));
+                return;
+            }
+
+            ShowMap(progress);
+        }
+
+        private void ShowMap(RunProgress progress)
+        {
             view.EnterRequested += OnEnterRequested;
             gesture.StateChanged += OnGestureChanged;
 
-            RunProgress progress = RunProgressCookies.Build(levelSelector, playerData);
             PuzzleData[] levels = ReadLevels();
             map = PuzzleMap.FromLevels(
                 levels, progress, PuzzleMapLayout.Galaxy(levels.Length));

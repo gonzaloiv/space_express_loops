@@ -14,23 +14,30 @@ Active work.
   a fail, the solve is saved so the map fills, and job 1 starts silent. **First:** it unblocks
   Validation 1.
 
-- [TTS messages — the jumbotron panel](in-progress/tts-messages.md) — one state-launched TTS panel (the
-  jumbotron, with Jim's face) for the job intro and complete message; legacy TTS content removed.
+- [TTS messages — the jumbotron panel](in-progress/tts-messages.md) — panel and presenter landed; next a
+  reading timer, no skip (the panel never blocks play), and the TTS cleanup.
 
 ## Next
 
 Queued. One plan moves to **Now** when it starts.
 
+- [Gesture prompts — show each gesture the first time](backlog/gesture-prompts.md) — scale, enter, pan
+  and move prompts on the cubes, shown where each is first needed and learned once per save.
+  **First after loop completion:** job 1 opens with nothing else to teach the pinch.
+
 - [Job definition card — the contract from job 2](backlog/job-definition-card.md) — client, cargo and the
   manual entry on a card that fades on its own; the puzzle stays live. After loop completion, before
   Validation 1.
+
+- [Map visibility — see progress on the current map](backlog/map-visibility.md) — state and stars on
+  each node's label (current pulses, locked dim); same view and culling.
 
 ## Later
 
 Design-only or deferred. Nothing here is scheduled.
 
-- Nothing deferred. Help reaches the player only at the start (the card, Jim's line) and the end (the
-  complete/fail message) — no in-solve hint surface.
+- Nothing deferred. Help reaches the player only at the start (the card, Jim's line, the gesture
+  prompts) and the end (the complete/fail message) — no in-solve hint surface.
 
 Candidate ideas (not plans) live in [docs/ideas](../ideas/README.md): variations, element pack,
 hologram look, TTS companion (deferred), feel polish, playable map field.

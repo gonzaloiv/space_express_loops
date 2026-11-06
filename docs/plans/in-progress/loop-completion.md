@@ -1,7 +1,7 @@
 # Loop completion — solve, fail, return
 
-**Status:** now · flow · updated 2026-11-06 — a job ends once, on a solve or a fail; the solve is saved
-and the map fills; job 1 starts silent.
+**Status:** now · flow · updated 2026-11-06 — U1–U3 landed; open: lock the cube's zone gesture while
+frozen, log a failed save, restart persistence (U4), and a fresh save starting straight in job 1 (U5).
 
 **Related:** [core loop](../../design/core-loop.md) · [progression](../../design/systems/progression.md) ·
 [TTS messages](tts-messages.md) · [vision](../../design/vision.md) §7
@@ -17,12 +17,15 @@ opens with Jim talking.
 - A job ends **once**: on a solve, or on a fail (budget spent and the ship did not arrive). Job 1
   never fails and has **infinite spend**: `NoFail` removes the budget cap (`IsOverBudget` is false), so
   nothing clamps or refuses an edit; the player keeps shaping until the solve.
-- On a solve the progress is saved: the solved cookie plus the grade (stars). On return, the solved
-  node lights and the next node is current.
+- On a solve the progress is saved: the solved cookie plus the grade (stars). On return, the next job
+  is selected (`PuzzleMap` selects `progress.CurrentIndex`). Per-node state on the map is
+  [map visibility](../backlog/map-visibility.md), not this plan.
 - A fail saves nothing. The player returns to the map and can pick the job again; Retry is a later
   call.
 - From the end of the job until the return, the run is frozen: no pinch, no spend, no relaunch.
 - The intro plays only the tech line (`_01`); the card owns the manual entry. Job 1 has no intro.
+- A fresh save (nothing solved, index 0) opens job 1 straight from selection; the map shows after its
+  solve, and on every later entry.
 - The complete and fail cues are Jim's. A missing key is **skipped** (`TtsPresenter` completes the
   sequence next frame), so a job without its `_complete` returns to the map at once; accepted until the
   content pass. Only an empty key list waits `emptyCueSecs`.
@@ -61,16 +64,46 @@ opens with Jim talking.
 - `noIntro` follows the `noFail` chain: `PuzzleJobContract.NoIntro` → `PuzzleSeed.noIntro` →
   `PuzzleBrief.NoIntro` → `PuzzleData.noIntro`, with a `PuzzleJobValidator` check against the contract.
   Job 1 sets it; rebake Chapter 01. Not inferred from `noFail` or the index.
-- Add the `_fail` keys for jobs 2–7 with placeholder text (one dry line each: "We didn't arrive. … Reset
-  it."); the final copy is TTS S4.
+- The `_complete` and `_fail` keys for jobs 2–7 are in `Levels` (en + es, first pass); the final copy
+  and recordings are TTS S5.
 - **Exit:** job 1 starts silent; job 2 plays one tech line; a solve plays the receipt, a fail plays the
   fail line; no cue overlaps the next job.
 
+### U4 — close the gaps (open)
+
+Review of the landed U1–U3 (2026-11-06):
+
+- **Freeze the cube too.** The controller ignores input once frozen, but the zone gesture lives on the
+  view (`SpaceShapingView` → `spawner.Zones`): a pinch during the receipt still scales the cube's inner
+  volume and then does nothing. On freeze, lock the zones (the same path as a locked gesture, no
+  refusal flash) or hide the cube; unlock on `Exit`.
+- **Log a failed save.** `PuzzleCompleteState.SaveSolve` is `async void`; catch and log a failed
+  `UnityPlayerDataClient.Put` so a lost save is visible. The in-memory cookie still makes the map
+  correct for this session.
+- **Confirm restart persistence.** `Main` still seeds a fresh `PlayerData` unless
+  `forceLocalPlayerData` is set; find where the saved data loads back on launch, and fix it if nothing
+  does. Manual step 7 decides it.
+- **Exit:** pinching during the receipt shows no cube response; a forced `Put` failure logs once;
+  manual step 7 passes on device.
+
+### U5 — first session goes straight into job 1
+
+- On a fresh save (`RunProgress.IsFresh`: nothing solved, job 1 current), the **first** entry into
+  `PuzzleSelectionState` in an app session skips the map and enters job 1 directly — the player meets
+  the cube before the map.
+- Only that first entry: leaving job 1 with the scale-out gesture, or returning after its solve, shows
+  the map. So the map is first seen with job 2 selected, and its two-hand spread to enter is the verb
+  job 1 just taught.
+- The decision lives in `PuzzleSelectionState` (flow), reusing `EnterJob`; a session flag (not saved)
+  marks that the auto-enter already ran. The debug `selectRandom` / `puzzleToSet` paths keep priority.
+- **Exit:** fresh save → app start lands in job 1 with no map; scale-out from job 1 shows the map;
+  solve job 1 → the map shows with job 2 selected; a save with job 1 solved starts on the map.
+
 ## Manual check (headset)
 
-1. Fresh save: open job 1; no voice before the first pinch.
-2. Solve job 1: the receipt plays; pinching during it does nothing.
-3. Back on the map: job 1 lit, job 2 current, the route segment lit.
+1. Fresh save: the app starts straight in job 1 (no map); no voice before the first pinch.
+2. Solve job 1: the receipt plays; pinching during it does nothing — the cube does not respond.
+3. Back on the map: job 2 is selected; pan to job 1 and the selection cube reads solved.
 4. Open job 2: one tech line plays; the puzzle is live under it.
 5. Spend the full budget without arriving: the fail line plays and the map returns; job 2 is still
    current.
@@ -83,4 +116,4 @@ opens with Jim talking.
 - The result readout/grade card on complete (the reward look); the stars show on the map.
 - Retry from the complete state; the map stays the only navigation.
 - The in-field entropy bar and the read pass — the next plan, after Validation 1.
-- Recordings and final copy (TTS S4).
+- Recordings and final copy (TTS S5); the reading timer, skip removal and TTS cleanup (TTS S3–S4).

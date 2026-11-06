@@ -28,6 +28,9 @@ would say, not narration.
 
 ## Who you are — Jim
 
+- **The firm is Our Space Corp.** The grand suffix on a two-person company is the joke. The name
+  appears where the firm introduces itself: Jim's first message (job 1's receipt) and the header of
+  every job card.
 - **Jim runs the company.** A small firm; he is the **CEO** and the **dispatcher** — he works the Wrap
   himself, because there is no one else.
 - **The Wrap is not his idea.** He is not an enthusiast — he is a man doing his job with a machine he
@@ -82,8 +85,13 @@ them together, and the promise is the same — everything arrives.
 - **Text, not a voice.** The team that built the Wrap is heard only through its **onboarding manual** —
   the entry on each job card, short, dry, slightly out of date. Jim reads the room; the manual reads the
   rules. Not a cast and not a second voice; a colleague in the fiction, never on screen.
-- **No hints during the solve.** Help comes at the start (the job card's manual entry, the intro line)
-  and at the end (the complete or fail message) — never a tip mid-puzzle.
+- **The console is their look.** Everything the tech team "says" on screen — the manual entry on the
+  job card and the gesture prompts — reads as the Wrap's dispatch terminal: a thin frame, monospace
+  type, phosphor line art in the UI accent, a faint scanline/flicker, a blinking cursor; it boots in on
+  show and cuts off like a CRT on hide. Jim's panel is not the console — he is the person, with his face.
+- **No hints during the solve.** Help comes at the start (the job card's manual entry, the intro line,
+  a gesture prompt the first time a gesture is needed) and at the end (the complete or fail message) —
+  never a tip mid-puzzle.
 - **Their roadmap slogan:** *"Today the space, tomorrow the time."* The Wrap wraps **space** today;
   wrapping **time** is the team's next promise — a future feature (or DLC), not this run.
 
@@ -143,6 +151,7 @@ makes a small game stick.
 
 - **Static because demographic collapse** — nobody chose it; the fixed pie is a symptom.
 - **Jim, the CEO**, is the player and the voice; he runs the Wrap himself, in a small firm.
+- **The firm is Our Space Corp.** — named in Jim's introduction and on the job cards.
 - **The Wrap is the company's new plan** to make more money; Jim is the one forced to use it.
 - **Clients have absurd names**; the client is never a face.
 - **Jim is the only voice** — the face of the job intro and the end message. The tech team is text (the
