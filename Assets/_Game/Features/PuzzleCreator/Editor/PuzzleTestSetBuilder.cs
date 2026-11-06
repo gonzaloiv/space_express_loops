@@ -120,7 +120,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             return saved;
         }
 
-        private static PuzzleSeed CreateSeed(PuzzleJobContract job)
+        public static PuzzleSeed CreateSeed(PuzzleJobContract job)
         {
             PuzzleSeed seed = ScriptableObject.CreateInstance<PuzzleSeed>();
             seed.seed = job.Seed;
@@ -141,7 +141,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             return seed;
         }
 
-        private static SpaceShapingSettings LoadSettings(string label)
+        public static SpaceShapingSettings LoadSettings(string label)
         {
             SpaceShapingSettings settings =
                 AssetDatabase.LoadAssetAtPath<SpaceShapingSettings>(SettingsPath);

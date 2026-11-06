@@ -33,13 +33,15 @@ complete/fail message); there is no in-solve hint.
   thin frame, faint scanline, blinking cursor. It boots in, the lines **type in** in order (header,
   client, cargo, manual entry), and it cuts off like a CRT on its fade. Typing is part of the reading
   time: `cardSecs` starts after the last line lands.
-- **Shared style.** The frame, font and material are the same authored style as the
-  [gesture prompts](gesture-prompts.md); whichever plan lands first builds it, the other reuses it.
+- **Shared style.** This plan builds the frame, monospace font asset and line-art material as one
+  authored terminal style; the [gesture prompts](gesture-prompts.md) reuse it, so this lands first.
 
 ## Units
 
 ### U1 — the card
 
+- Build the shared terminal style (frame, monospace font asset, line-art material) as reusable authored
+  assets for the gesture prompts.
 - Author the card view in `Game.unity` in the terminal style (TMP header, client, cargo, manual entry);
   boot in, type the lines in with an authored `typeCharsPerSec`, then hold `cardSecs` and cut off.
 - Add the derived keys on `PuzzleData`; a missing key leaves its line empty, it never blocks.
