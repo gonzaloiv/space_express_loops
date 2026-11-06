@@ -4,6 +4,7 @@ using DigitalLove.XR;
 using Reflex.Attributes;
 using DigitalLove.Game.SpaceShaping;
 using DigitalLove.DataAccess;
+using DigitalLove.TTS;
 
 namespace DigitalLove.Game.Flow
 {
@@ -12,6 +13,7 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private MonoState nextState;
         [SerializeField] private OVROriginBehaviour ovrOrigin;
         [SerializeField] private SpaceShapingController puzzleController;
+        [SerializeField] private TtsPresenter ttsPresenter;
 
         [Inject] private MemoryDataClient memoryDataClient;
 
@@ -19,12 +21,19 @@ namespace DigitalLove.Game.Flow
         {
             base.Init(parent);
             puzzleController.HideAll();
+            ttsPresenter.Stop();
         }
 
         public override void Enter()
         {
             ovrOrigin.Setup();
-            puzzleController.Enter(memoryDataClient.Get<PuzzleData>());
+            PuzzleData puzzle = memoryDataClient.Get<PuzzleData>();
+            puzzleController.Enter(puzzle);
+            ttsPresenter.Play(new[]
+            {
+                puzzle.IntroKey + "_manual_entry",
+                puzzle.IntroKey + "_01",
+            });
             parent.SetCurrentState(nextState.RouteId);
         }
 

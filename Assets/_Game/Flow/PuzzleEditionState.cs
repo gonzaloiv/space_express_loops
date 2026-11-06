@@ -1,6 +1,7 @@
 using DigitalLove.FlowControl;
 using DigitalLove.Game.SpaceShaping;
 using DigitalLove.Input;
+using DigitalLove.TTS;
 using UnityEngine;
 
 namespace DigitalLove.Game.Flow
@@ -8,8 +9,10 @@ namespace DigitalLove.Game.Flow
     public class PuzzleEditionState : MonoState
     {
         [SerializeField] private MonoState gameStartState;
+        [SerializeField] private MonoState completeState;
         [SerializeField] private TwoHandGestureInput gesture;
         [SerializeField] private SpaceShapingController puzzleController;
+        [SerializeField] private TtsPresenter ttsPresenter;
         [SerializeField] private Transform head;
         [SerializeField] private bool rotationEnabled;
         [SerializeField] private float rotationStepDegrees = 15f;
@@ -24,14 +27,18 @@ namespace DigitalLove.Game.Flow
                 gesture.ScaleOutMinDistance, gesture.ScaleOutMaxRatio);
             rotation = new OneHandRotationGesture(rotationStepDistance);
             gesture.StateChanged += OnGestureChanged;
+            puzzleController.Solved += OnSolved;
         }
 
         public override void Exit()
         {
             gesture.StateChanged -= OnGestureChanged;
+            puzzleController.Solved -= OnSolved;
             scaleOut.Reset();
             rotation.Reset();
         }
+
+        private void OnSolved() => parent.SetCurrentState(completeState.RouteId);
 
         private void OnGestureChanged(TwoHandGestureState state)
         {
@@ -51,6 +58,7 @@ namespace DigitalLove.Game.Flow
 
         private void ExitToSelection()
         {
+            ttsPresenter.Stop();
             puzzleController.Exit();
             puzzleController.HideAll();
             parent.SetCurrentState(gameStartState.RouteId);

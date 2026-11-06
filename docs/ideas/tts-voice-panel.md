@@ -1,18 +1,18 @@
 # TTS Voice Panel — Camera-Operator Companion
 
-**Status:** idea · presentation · revised 2026-11-02 — the camera-operator companion is deferred; the
-first fit is the field-side contract screen ([plan](../plans/backlog/tts-job-intro.md)).
+**Status:** idea · presentation · revised 2026-11-06 — the camera-operator companion is deferred; the
+current fit is the jumbotron TTS panel ([plan](../plans/in-progress/tts-messages.md)).
 
-**Related:** [jobs](../design/jobs.md) · [job intro plan](../plans/backlog/tts-job-intro.md)
+**Related:** [jobs](../design/jobs.md) · [TTS messages plan](../plans/in-progress/tts-messages.md)
 
-**Current fit (2026-11-02).** The game is seated MR with a per-job intro screen, not the legacy persistent
-card. The [job intro plan](../plans/backlog/tts-job-intro.md) builds a field-side contract screen that can
-reposition around the field; the travel/parking below is a later feel-pass variant, only if the screen
-should persist during play.
+**Current fit (2026-11-06).** The game is seated MR with a state-launched TTS panel, not a persistent
+card. The [TTS messages plan](../plans/in-progress/tts-messages.md) builds the jumbotron: an authored
+field-side panel with the speaker's face that stays at the side and does not follow or gate on visibility.
+The travel/parking below is a later feel-pass variant, only if the panel should persist during play.
 
 ## Goal
 
-Turn the TTS voice card into a persistent, character-like companion that behaves like a camera operator:
+Turn the TTS voice panel into a persistent, character-like companion that behaves like a camera operator:
 it enters from the nearest view edge, stays world-anchored in the lower third while it speaks, travels
 back into view when the player turns away instead of teleporting, and parks out of sight between
 sessions. Speech stops while it is fully out of view and restarts the current entry when it is seen
@@ -23,12 +23,12 @@ again. This is a presentation and speech-gating change — no new dialogue, voic
 | State | Player sees | Behaviour |
 |---|---|---|
 | **Dormant** | Nothing | Before the first session or when disabled |
-| **Speaking** | Full card with avatar and text | Enters if needed, stays in view, speech plays |
+| **Speaking** | Full panel with face and text | Enters if needed, stays in view, speech plays |
 | **Idle parked** | Nothing in view | Holds the idle expression, parked outside view and hands |
 
-A session starts on the first `TTSHelper.Say(...)`: cancel parking → enter from the nearest edge →
+A session starts on a state-launched cue (`TtsPresenter`): cancel parking → enter from the nearest edge →
 speak the entries → show the idle expression → after `idleParkDelaySecs`, park outside the view and the
-hand volume → stay parked until the next `Say`.
+hand volume → stay parked until the next cue.
 
 ## The rules that matter
 
@@ -45,11 +45,10 @@ hand volume → stay parked until the next `Say`.
 
 ## What it touches
 
-`SubtitlesLikeFollow.cs` (owns visibility and the panel motion — it also serves `GameEndPanel`, so its
-instant `ShowInCameraView()` path must stay intact) · `TTSHelper.cs` (owns the visibility↔speech
-binding) · `LocalizedTTSVoice.cs` (needs a `SetVisible(bool)` that stops and restarts the current
-entry, with a generation guard against double-advance) · `StreamingAssetsSpeaker.cs` (Stop only, no
-pause) · `GameStartState` / `EditionState` (drop the old `SetInFrontOfCameraOrDefault` calls).
+`SubtitlesLikeFollow.cs` (serves the splash — give the TTS panel its own authored instance) ·
+`LocalizedTTSVoice.cs` (entry text/complete port; no resume in the current plan) ·
+`StreamingAssetsSpeaker.cs` (Stop only) · `VoicesPlayer.cs` / `MarkdownVoices.cs` (scene-wired; no
+runtime `AddComponent`) · `PuzzleStartState` / new `PuzzleCompleteState` (launch the cues).
 
 ## Non-goals
 
@@ -63,10 +62,10 @@ pause) · `GameStartState` / `EditionState` (drop the old `SetInFrontOfCameraOrD
 | Risk | Why now |
 |---|---|
 | Speech starts while parked or offscreen | Spatial speaker at the parked spot sweeps the room. Gate on `IsInView`; seed visibility before speaking. |
-| Restart double-advance | Stopping a coroutine and restarting races the old completion callback. Generation token in `LocalizedTTSVoice`. |
+| Restart double-advance | Stopping a coroutine and restarting races the old completion callback. A generation token is needed only if resume returns. |
 | No valid parking spot | Tight rooms can invalidate every candidate. Check clearance, clamp above the floor, fall back to the last valid spot. |
 | Panel collider corrupts occlusion | The panel's own trigger is hit by visibility rays. Move it to the UI layer and exclude UI from the mask. |
-| Shared `SubtitlesLikeFollow` | `GameEndPanel` depends on the same component. Keep its instant path side-effect free. |
+| Shared `SubtitlesLikeFollow` | The splash depends on the same component. Give the TTS panel its own instance and keep the splash path intact. |
 
 ## Open questions
 

@@ -1,3 +1,4 @@
+using System;
 using DigitalLove.Game.SpaceShaping.Cube;
 using UnityEngine;
 
@@ -17,7 +18,10 @@ namespace DigitalLove.Game.SpaceShaping
         private float nextLatticeTime;
         private float nextReadoutTime;
         private bool wasScaling;
+        private bool solvedFired;
         private PuzzleData currentPuzzleData;
+
+        public event Action Solved;
 
         public void Enter(PuzzleData puzzleData)
         {
@@ -172,6 +176,7 @@ namespace DigitalLove.Game.SpaceShaping
         private void PreparePuzzle()
         {
             wasScaling = false;
+            solvedFired = false;
             ClearTimers();
             ResetView();
         }
@@ -204,6 +209,11 @@ namespace DigitalLove.Game.SpaceShaping
                 view.ShowBaseline(run.Session);
             view.PulseTrajectories();
             PublishReadout();
+            if (solved && !solvedFired)
+            {
+                solvedFired = true;
+                Solved?.Invoke();
+            }
         }
 
         private void PublishReadout()

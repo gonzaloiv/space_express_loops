@@ -8,6 +8,7 @@ using DigitalLove.Input;
 using Reflex.Attributes;
 using UnityEngine;
 using DigitalLove.Global;
+using DigitalLove.TTS;
 
 namespace DigitalLove.Game.Flow
 {
@@ -17,6 +18,7 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private LevelSelector levelSelector;
         [SerializeField] private PuzzleMapView view;
         [SerializeField] private TwoHandGestureInput gesture;
+        [SerializeField] private TtsPresenter ttsPresenter;
 
         [Header("Debug")]
         [SerializeField] private DebugBool selectRandom;
@@ -28,6 +30,7 @@ namespace DigitalLove.Game.Flow
 
         public override void Enter()
         {
+            ttsPresenter.Stop();
             PlayerData playerData = memoryDataClient.Get<PlayerData>();
 
             if (selectRandom.Value)

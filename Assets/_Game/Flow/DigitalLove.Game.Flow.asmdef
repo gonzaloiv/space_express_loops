@@ -13,7 +13,8 @@
         "DigitalLove.Global",
         "DigitalLove.Game.SpaceShaping.Domain",
         "DigitalLove.DataAccess.Remote",
-        "DigitalLove.Game.Persistence"
+        "DigitalLove.Game.Persistence",
+        "DigitalLove.TTS"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

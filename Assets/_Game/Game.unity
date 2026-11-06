@@ -1623,6 +1623,7 @@ Transform:
   - {fileID: 883682823}
   - {fileID: 1324782178}
   - {fileID: 586903604}
+  - {fileID: 1603056069}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &284223192
@@ -1642,6 +1643,7 @@ MonoBehaviour:
   - {fileID: 883682824}
   - {fileID: 1324782179}
   - {fileID: 586903605}
+  - {fileID: 1603056068}
   initialState: {fileID: 1730347950}
   locale: {fileID: 11400000, guid: ef5f93a95eb7b214c98395886e20e196, type: 2}
   analyticsProviderInstaller: {fileID: 1210227671}
@@ -3206,8 +3208,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Flow::DigitalLove.Game.Flow.PuzzleEditionState
   gameStartState: {fileID: 883682824}
+  completeState: {fileID: 1603056068}
   gesture: {fileID: 673349775}
   puzzleController: {fileID: 1132899469}
+  ttsPresenter: {fileID: 1654487134}
   head: {fileID: 1806820792}
   rotationEnabled: 0
   rotationStepDegrees: 15
@@ -4024,6 +4028,7 @@ MonoBehaviour:
   levelSelector: {fileID: 11400000, guid: b85b9bd1f1508454b8fed75d4331c4ec, type: 2}
   view: {fileID: 967966616}
   gesture: {fileID: 673349775}
+  ttsPresenter: {fileID: 1654487134}
   selectRandom:
     value: 0
   puzzleToSet: {fileID: 0}
@@ -8322,6 +8327,7 @@ MonoBehaviour:
   nextState: {fileID: 586903605}
   ovrOrigin: {fileID: 1760187866}
   puzzleController: {fileID: 1132899469}
+  ttsPresenter: {fileID: 1654487134}
 --- !u!1 &1351310010
 GameObject:
   m_ObjectHideFlags: 0
@@ -9401,6 +9407,53 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0.09}
   m_SizeDelta: {x: 0.5, y: 0.2}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1603056067
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1603056069}
+  - component: {fileID: 1603056068}
+  m_Layer: 0
+  m_Name: PuzzleComplete
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1603056068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1603056067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bc81d44e0a47784980aa44e07ad80c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Flow::DigitalLove.Game.Flow.PuzzleCompleteState
+  nextState: {fileID: 883682824}
+  puzzleController: {fileID: 1132899469}
+  ttsPresenter: {fileID: 1654487134}
+--- !u!4 &1603056069
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1603056067}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 284223191}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1634309635
 GameObject:
   m_ObjectHideFlags: 0
@@ -9618,6 +9671,7 @@ GameObject:
   - component: {fileID: 1654487129}
   - component: {fileID: 1654487131}
   - component: {fileID: 1654487133}
+  - component: {fileID: 1654487134}
   m_Layer: 0
   m_Name: TTSVoice
   m_TagString: Untagged
@@ -9640,6 +9694,7 @@ MonoBehaviour:
   id: {fileID: 11400000, guid: 2aa5ba1746c4e274d931838a67d5c884, type: 2}
   speaker: {fileID: 5117775345025900649}
   localizationTableName: Levels
+  minEntrySecs: 2
   panel: {fileID: 781987392}
   skipButton: {fileID: 781987398}
   skipButtonPanel: {fileID: 2086895691}
@@ -9652,7 +9707,7 @@ Transform:
   m_GameObject: {fileID: 1654487128}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1, y: 0, z: 0}
+  m_LocalPosition: {x: 0.45, y: 0, z: 0.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9676,7 +9731,7 @@ MonoBehaviour:
   tableName: Levels
   secsToCompleteWithoutEntries: 1
   jumpEntries:
-    value: 1
+    value: 0
 --- !u!114 &1654487133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9701,6 +9756,20 @@ MonoBehaviour:
   isFollowing: 0
   secsToMove: 0.66
   updateCheckSecs: 1
+--- !u!114 &1654487134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1654487128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f67d665fbc8d11b40bf55349844a6e93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.TTS::DigitalLove.TTS.TtsPresenter
+  voice: {fileID: 1654487131}
+  emptyCueSecs: 1
 --- !u!4 &1659655773 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8702425413754196322, guid: 0a7d2469f24041c4284c66706f84c45e, type: 3}
@@ -12704,6 +12773,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.TTS::DigitalLove.TTS.StreamingAssetsSpeaker
   audioSource: {fileID: 3710031469948875600}
   extension: .mp3
+  useClips: 0
 --- !u!114 &5117775345025900650
 MonoBehaviour:
   m_ObjectHideFlags: 0
