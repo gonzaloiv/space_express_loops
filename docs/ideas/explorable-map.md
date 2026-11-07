@@ -4,7 +4,7 @@
 near what you have solved open up, so moving the cube around the map is part of the game.
 
 **The idea.** The map shows a counter ("7 of 10 passed"). Instead of a single "next" job in a list,
-every puzzle near a solved one is playable. With the [map cube](../plans/in-progress/map-cube.md),
+every puzzle near a solved one is playable. With the map cube ([the cube](../design/systems/cube.md) §The map uses the same cube),
 moving the cube and the cull around it reveal places the player can actually go, not only a view.
 
 **The tension: the lessons are ordered.** Jobs 1–7 are a curriculum, one lesson each (the scale, the
@@ -29,5 +29,5 @@ near their spine node, and the Move prompt on the map.
 **Why not now.** The map cube lands first; it is the same under either unlock rule. Extra puzzles need
 bake time (job 1 showed how narrow a contract can be).
 
-**Related:** [map cube](../plans/in-progress/map-cube.md) · [jobs](../design/jobs.md) ·
+**Related:** [the cube](../design/systems/cube.md) · [jobs](../design/jobs.md) ·
 [progression](../design/systems/progression.md)

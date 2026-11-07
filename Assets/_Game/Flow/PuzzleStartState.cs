@@ -29,6 +29,7 @@ namespace DigitalLove.Game.Flow
             ovrOrigin.Setup();
             PuzzleData puzzle = memoryDataClient.Get<PuzzleData>();
             puzzleController.Enter(puzzle);
+            puzzleController.Glitch();
             if (!puzzle.noIntro)
                 ttsPresenter.Play(new[] { puzzle.IntroKey + "_01" });
             parent.SetCurrentState(nextState.RouteId);

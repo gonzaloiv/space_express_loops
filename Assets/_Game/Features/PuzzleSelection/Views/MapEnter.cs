@@ -2,9 +2,11 @@ using UnityEngine;
 
 namespace DigitalLove.Game.PuzzleSelection
 {
+    // Once the pinch passes the threshold the entry commits: the diorama keeps growing to the
+    // target on its own, then the job is entered.
     internal class MapEnter
     {
-        private readonly MapZoom zoom;
+        private readonly RunSlotView slot;
         private readonly float secs;
         private readonly float targetScale;
         private bool active;
@@ -13,9 +15,11 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public bool IsActive => active;
 
-        public MapEnter(MapZoom zoom, float secs, float targetScale)
+        public float Progress => Mathf.Clamp01(elapsed / secs);
+
+        public MapEnter(RunSlotView slot, float secs, float targetScale)
         {
-            this.zoom = zoom;
+            this.slot = slot;
             this.secs = Mathf.Max(secs, 0.0001f);
             this.targetScale = targetScale;
         }
@@ -27,28 +31,19 @@ namespace DigitalLove.Game.PuzzleSelection
             startScale = scale;
         }
 
-        public bool Tick(JobState state, float deltaSecs)
+        public bool Tick(float deltaSecs)
         {
             if (!active)
                 return false;
 
             elapsed += deltaSecs;
             float t = Mathf.Clamp01(elapsed / secs);
-            zoom.ApplyScale(state, Mathf.Lerp(startScale, targetScale, t));
+            slot.SetZoom(Mathf.Lerp(startScale, targetScale, t * t * (3f - 2f * t)));
             if (t < 1f)
                 return false;
 
             active = false;
             return true;
-        }
-
-        public void Cancel(JobState state)
-        {
-            if (!active)
-                return;
-
-            active = false;
-            zoom.Update(false, state, 0f);
         }
 
         public void Reset() => active = false;

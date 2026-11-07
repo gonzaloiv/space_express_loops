@@ -1,0 +1,28 @@
+{
+    "name": "DigitalLove.Game.GesturePrompts",
+    "rootNamespace": "",
+    "references": [
+        "DigitalLove.Game.SpaceShaping",
+        "DigitalLove.Game.SpaceShaping.Views",
+        "DigitalLove.Game.SpaceShaping.FieldContent",
+        "DigitalLove.Game.SpaceShaping.Domain",
+        "DigitalLove.Game.PuzzleSelection",
+        "DigitalLove.Casual.Levels",
+        "DigitalLove.DataAccess.Local",
+        "DigitalLove.DataAccess.Remote",
+        "DigitalLove.Global",
+        "DigitalLove.Localization",
+        "DigitalLove.UI.Behaviours",
+        "Reflex",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

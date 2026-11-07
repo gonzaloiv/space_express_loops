@@ -17,5 +17,16 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
 
             Object.DestroyImmediate(puzzle);
         }
+
+        [Test]
+        public void ManualRevision_IsTheJobNumber()
+        {
+            PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
+            puzzle.id = "01_04";
+
+            Assert.AreEqual(4, puzzle.ManualRevision);
+
+            Object.DestroyImmediate(puzzle);
+        }
     }
 }

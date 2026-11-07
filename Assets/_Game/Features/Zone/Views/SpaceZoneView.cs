@@ -37,8 +37,14 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             remove => listener.MoveCompleted -= value;
         }
 
+        public Vector3 ConstrainMove(Vector3 centre) =>
+            conditions.Planar ? new Vector3(centre.x, Centre.y, centre.z) : centre;
+
         public bool CanPlace(Vector3 centre, Vector3 size)
         {
+            if (conditions.IgnoresEndpoints)
+                return true;
+
             SpaceZone candidate = new(centre, size * 0.5f, scale, falloff);
             return !candidate.Influences(conditions.Origin)
                 && !candidate.Influences(conditions.Destination);

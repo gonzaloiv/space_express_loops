@@ -38,6 +38,8 @@ the UI. Do not introduce a third word for the same idea.
 | **readout** | The derived surface for one run: result, entropy and stars. The final bar lives **in the field**, not a panel; the lab panel is a diagnostic. |
 | **bubble** | The playfield: the miniature universe anchored in the room. |
 | **job (level, contract)** | One delivery — a cube on the map; ~1 minute each, **3–5 first**, 7 in the run. **Contract** is the fiction word. |
+| **chapter** | An ordered set of jobs that teaches one idea; numbers restart per chapter ([chapters](chapters.md)). |
+| **freelance contract** | An optional prebaked job outside the chapters, graded by exact entropy left, with no story. The **daily contract** is one per day, the same for everyone. |
 | **multi-ship** | A job with more than one run; it is solved only when **every ship arrives**. The runs relate as fan-out, converge, or separate. |
 | **the seed** | The authoring recipe for a job — its field, brief conditions and dials; the **level** is the baked result. |
 | **the map (level selector)** | The field of numbered cubes, one per job; solving lights them. **Direct pick only**; the result offers Map/Retry. |

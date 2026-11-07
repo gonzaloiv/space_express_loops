@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using DigitalLove.Game.SpaceShaping;
 using DigitalLove.Localization;
@@ -10,9 +11,7 @@ namespace DigitalLove.Game.PuzzleSelection
     public class JobCardPanel : MonoBehaviour
     {
         private const string TableName = "Levels";
-        private const string ClientLabel = "CLIENT   ";
-        private const string CargoLabel = "CARGO    ";
-        private const string ManualLabel = "MANUAL   ";
+        private const int LabelWidth = 11;
 
         [SerializeField] private Transform cardRoot;
         [SerializeField] private TMP_Text header;
@@ -27,6 +26,7 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField, Min(0.05f)] private float cursorBlinkSecs = 0.5f;
 
         private Vector3? fullScale;
+        private string headerTitle;
         private Coroutine bootRoutine;
         private Coroutine revealRoutine;
         private Coroutine closeRoutine;
@@ -85,12 +85,20 @@ namespace DigitalLove.Game.PuzzleSelection
             bootRoutine = StartCoroutine(BootIn());
         }
 
+        // The header carries the console's clock: the player's own local time, usually late.
         private void ApplyContent(PuzzleData puzzle, bool includeManual)
         {
-            client.text = Line(ClientLabel, puzzle.ClientKey);
-            cargo.text = Line(CargoLabel, puzzle.CargoKey);
-            manual.text = includeManual ? Line(ManualLabel, puzzle.ManualKey) : string.Empty;
+            header.text = $"{HeaderTitle}   {DateTime.Now:HH:mm}";
+            client.text = Line(Label("CLIENT"), puzzle.ClientKey);
+            cargo.text = Line(Label("CARGO"), puzzle.CargoKey);
+            manual.text = includeManual
+                ? Line(Label($"MANUAL r{puzzle.ManualRevision}"), puzzle.ManualKey)
+                : string.Empty;
         }
+
+        private string HeaderTitle => headerTitle ??= header.text;
+
+        private static string Label(string name) => name.PadRight(LabelWidth);
 
         private static string Line(string label, string key)
         {

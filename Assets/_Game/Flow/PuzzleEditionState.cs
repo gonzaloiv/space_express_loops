@@ -4,7 +4,7 @@ using DigitalLove.Game.PuzzleSelection;
 using DigitalLove.Game.SpaceShaping;
 using DigitalLove.Input;
 using DigitalLove.TTS;
-using DigitalLove.UI.Behaviours;
+using DigitalLove.Game.GesturePrompts;
 using Reflex.Attributes;
 using UnityEngine;
 

@@ -71,11 +71,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72242031996096512
-    m_Localized: '> SPREAD TO ENTER'
-    m_Metadata:
-      m_Items: []
-  - m_Id: 72242031996096513
-    m_Localized: '> DRAG TO PAN'
+    m_Localized: '> PINCH INSIDE TO ENTER'
     m_Metadata:
       m_Items: []
   - m_Id: 72242031996096514

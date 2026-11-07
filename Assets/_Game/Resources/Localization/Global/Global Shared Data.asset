@@ -71,10 +71,6 @@ MonoBehaviour:
     m_Key: gesture_prompt_enter
     m_Metadata:
       m_Items: []
-  - m_Id: 72242031996096513
-    m_Key: gesture_prompt_pan
-    m_Metadata:
-      m_Items: []
   - m_Id: 72242031996096514
     m_Key: gesture_prompt_move
     m_Metadata:

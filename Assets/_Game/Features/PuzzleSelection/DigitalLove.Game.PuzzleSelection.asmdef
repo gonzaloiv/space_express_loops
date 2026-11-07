@@ -7,9 +7,9 @@
         "DigitalLove.Casual.Levels",
         "DigitalLove.Global",
         "DigitalLove.Localization",
-        "DigitalLove.Input",
         "DigitalLove.Game.Nodes",
         "DigitalLove.UI.Behaviours",
+        "DigitalLove.Game.SpaceShaping.Zone",
         "Unity.TextMeshPro",
         "UnityEngine.UI"
     ],

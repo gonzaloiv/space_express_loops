@@ -71,11 +71,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72242031996096512
-    m_Localized: '> SEPARA PARA ENTRAR'
-    m_Metadata:
-      m_Items: []
-  - m_Id: 72242031996096513
-    m_Localized: '> ARRASTRA PARA DESPLAZAR'
+    m_Localized: '> PELLIZCA DENTRO PARA ENTRAR'
     m_Metadata:
       m_Items: []
   - m_Id: 72242031996096514

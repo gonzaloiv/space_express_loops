@@ -44,7 +44,8 @@ The **level selector** is needed: a field of cubes, one per job.
   Map/Retry, not Next. Solved and current cubes are pickable; locked cubes refuse visibly.
 - **The first session skips the map (decided 2026-11-06).** On a fresh save the game opens straight
   in job 1; the map is first seen after job 1 (or on leaving it), so the player meets the cube before
-  the map and enters the map's spread gesture already knowing it.
+  the map, and the map's enter is the same pinch inside the same cube
+  ([the cube](cube.md) §The map uses the same cube).
 
 ### The learning path — the cube grows
 
@@ -87,8 +88,8 @@ The **concrete run** — one row per job, with its brief fields, archetypes, fie
 **Multi-ship.** A job may carry more than one run; it is solved only when **every ship arrives**. The
 runs are baked with a relation — **fan-out** (one origin), **converge** (one destination), or
 **separate** (no shared planet) — so the shared field stays legible. Multi-ship is a variation axis,
-not a mode: the same cube, entropy and arrival rules apply. The seven-job spine is single-ship; a
-multi-ship job can be authored as a stretch or a later combine job.
+not a mode: the same cube, entropy and arrival rules apply. The seven-job spine is single-ship;
+multi-ship is the store release's chapter 2 ([chapters](../chapters.md)).
 
 ### The company is lore only
 
@@ -142,7 +143,8 @@ mid-flight (the seed is authoring-only).
 
 - **Star-gating?** No, in the demo — never block a run on a score. Stars feed a rating, or unlock
   *cosmetics / bonus* later.
-- **The numbers:** reset per act, or run 1 → N? (The slice proposes one chapter, numbered 1 → N.)
+- **The numbers:** settled (2026-11-07) — numbers restart per chapter (`01_01`…, `02_01`…); the map
+  joins the chapters into one ordered run ([chapters](../chapters.md)).
 - **The rungs.** Re-analyze the learning-path order and count
   (scale → centre → clear → move → multi-zone → assist → capstone) after the run shape settles; the current
   order is the working shape, not final.

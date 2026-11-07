@@ -50,6 +50,8 @@ namespace DigitalLove.Game.SpaceShaping
             run = null;
         }
 
+        public void Glitch() => view.Glitch();
+
         public void HideAll()
         {
             view.gameObject.SetActive(false);

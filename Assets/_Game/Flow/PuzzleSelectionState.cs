@@ -4,12 +4,11 @@ using DigitalLove.FlowControl;
 using DigitalLove.Game.PuzzleSelection;
 using DigitalLove.Game.Persistence;
 using DigitalLove.Game.SpaceShaping;
-using DigitalLove.Input;
 using Reflex.Attributes;
 using UnityEngine;
 using DigitalLove.Global;
 using DigitalLove.TTS;
-using DigitalLove.UI.Behaviours;
+using DigitalLove.Game.GesturePrompts;
 
 namespace DigitalLove.Game.Flow
 {
@@ -18,11 +17,8 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private MonoState nextState;
         [SerializeField] private LevelSelector levelSelector;
         [SerializeField] private PuzzleMapView view;
-        [SerializeField] private TwoHandGestureInput gesture;
         [SerializeField] private TtsPresenter ttsPresenter;
         [SerializeField] private GesturePromptPresenter prompts;
-        [Tooltip("Solved jobs before the Pan prompt can appear; Pan is not needed to progress.")]
-        [SerializeField, Min(0)] private int panPromptSolvedCount = 2;
 
         [Header("Debug")]
         [SerializeField] private DebugBool selectRandom;
@@ -65,9 +61,6 @@ namespace DigitalLove.Game.Flow
         private void ShowMap(RunProgress progress)
         {
             view.EnterRequested += OnEnterRequested;
-            gesture.StateChanged += OnGestureChanged;
-            if (progress.SolvedCount >= panPromptSolvedCount)
-                view.PanWatch.Due += OnPanPromptDue;
 
             PuzzleData[] levels = ReadLevels();
             map = PuzzleMap.FromLevels(
@@ -79,8 +72,6 @@ namespace DigitalLove.Game.Flow
         public override void Exit()
         {
             view.EnterRequested -= OnEnterRequested;
-            gesture.StateChanged -= OnGestureChanged;
-            view.PanWatch.Due -= OnPanPromptDue;
             prompts.HideAll();
 
             if (map == null)
@@ -89,10 +80,6 @@ namespace DigitalLove.Game.Flow
             view.Hide();
             map = null;
         }
-
-        private void OnPanPromptDue() => prompts.Show(GestureKind.Pan);
-
-        private void OnGestureChanged(TwoHandGestureState state) => view.ApplyGesture(state);
 
         private void OnEnterRequested()
         {

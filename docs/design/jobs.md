@@ -12,7 +12,7 @@
 The **concrete run**: the jobs the player actually plays, one row each — their brief, field and entropy
 scale (the shape [progression](systems/progression.md) sets), plus their **lore skin**. Progression is
 the general system; this is the specific development of it. Counts are a **stretch goal** — prove 3–5
-first.
+first. This doc is **chapter 1**; the store release's chapters 2–3 are in [chapters](chapters.md).
 
 ## The run — the mechanics
 
@@ -28,7 +28,8 @@ first.
 
 **The run is seven jobs (2026-11-05): 1 scale, 2 centre, 3 clear, 4 move, 5 multi-zone, 6 the field
 carries you, 7 capstone `Curve`.** The fixed-cube several-zones rung is retired; "several zones" lands with the move at
-job 5. Job 8 (**Mixed**) is open for a future plan and is not part of the seven-job run.
+job 5. Job 8 (**Mixed**) is not part of the competition's seven-job run; it closes chapter 1 in the
+store release if it bakes ([chapters](chapters.md)).
 
 **The ramp by job.** Scramble is how far the start sits from the solved arrangement: it rises within an
 act and drops when a new verb lands, so the new idea arrives readable and is then tested. `Reuses` names
@@ -114,7 +115,8 @@ every verb except both roles; both roles are deferred to a future job 8.
 **The slice.** Jobs 1–7 are the full seven-job run, ~1 minute each.
 
 **Multi-ship.** The seven-job spine is single-ship; the rule is in
-[progression](systems/progression.md) §The puzzle map.
+[progression](systems/progression.md) §The puzzle map; multi-ship is chapter 2
+([chapters](chapters.md)).
 
 ## The run — the brief
 
@@ -224,11 +226,12 @@ The job card is the company's **onboarding manual for new employees** ([lore](wo
 team): short, dry, corporate, slightly out of date. The manual entry is read on the card: the selection
 map shows the contract before entry, and a smaller copy stays during the run. The TTS card plays only
 Jim's tech-voice line. Each entry introduces **one idea**, so it carries the teaching *and* the
-fiction. It opens warm and ends corporate-bleak; the "new employee" it keeps addressing never arrives.
+fiction. It opens warm and ends corporate-bleak; the "new employee" it keeps addressing is the player,
+who arrived in a kitchen instead of an office.
 Two beats to keep:
 
 - The opening line: *"Welcome, new employee."*
-- A late note: *there has not been a new employee in eleven years.*
+- A late note: *you are the first new employee in eleven years.*
 
 **Two arcs:** the **tech voice** goes pride → doubt; the **manual** goes cheerful → bleak. The **client
 names stay absurd** — the tonal relief.

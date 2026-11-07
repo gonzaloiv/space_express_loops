@@ -46,6 +46,9 @@ namespace DigitalLove.Game.SpaceShaping
 
         public string ManualKey => IntroKey + "_manual_entry";
 
+        // The tech team rewrites the manual after each delivery; job N reads revision N.
+        public int ManualRevision => AsIndex(id);
+
         public Vector3 Origin => origin;
 
         public Vector3 Destination => destination;

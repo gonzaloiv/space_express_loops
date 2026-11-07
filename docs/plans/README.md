@@ -12,31 +12,44 @@ The ordered actions to a first "final" version (decided 2026-11-06). Each step b
 morning) when it starts; a step that is already a plan links to it. Steps marked *(proposed)* still
 need a yes.
 
-1. **[Map cube](in-progress/map-cube.md)** — select a job with the game's own cube.
-2. **Tune the run on device.** Per-job scramble and planet count; bake-check job 6's "the field
+1. **Tune the run on device.** Per-job scramble and planet count; bake-check job 6's "the field
    carries you" route as the cheapest.
-3. **The solve moment.** Arrival payoff at the destination (flash + sound), then the stars stamped in
+2. **The solve moment.** Arrival payoff at the destination (flash + sound), then the stars stamped in
    (terminal style), then Jim's receipt — what makes the player want the next job.
-4. **The ending** *(proposed)*. After job 7: the whole map lit, total stars, the "Our Space" title, an
+3. **The ending** *(proposed)*. After job 7: the whole map lit, total stars, the "Our Space" title, an
    invitation to replay for 3★.
-5. **Minimum sound and haptics** *(proposed)*. Pinch grab tick, stretch tone, release, arrive chime,
+4. **Minimum sound and haptics** *(proposed)*. Pinch grab tick, stretch tone, release, arrive chime,
    crash, fail sting, quiet ambient bed.
-6. **The first 30 seconds** *(proposed)*. App open → bubble at a comfortable seated reach without
+5. **The first 30 seconds** *(proposed)*. App open → bubble at a comfortable seated reach without
    setup → title beat → the Scale prompt.
-7. **Quest 3S performance pass at 72 fps** *(proposed)*. Map dioramas, trajectory previews, lattice.
-8. **Voice and content** *(proposed)*. Jim's clips, job 6's lines for the new lesson, the Spanish review.
-9. **Competition deliverables.** Capture, a short trailer, the submission page.
+6. **Quest 3S performance pass at 72 fps** *(proposed)*. Map dioramas, trajectory previews, lattice.
+7. **Voice and content** *(proposed)*. Jim's clips, job 6's lines for the new lesson, the Spanish review.
+8. **Competition deliverables.** Capture, a short trailer, the submission page.
 
 **Out of v1:** job 8 (Mixed), resize, multi-ship jobs, reactive in-solve tips, the playable map field,
 more chapters.
+
+## Road to the store
+
+After v1 (decided 2026-11-07): a **~€5 Meta store release** sooner, then chapters as updates. The game
+shape is in [chapters](../design/chapters.md); the demo is the store's own option.
+
+1. **Job 8 (Mixed)** closes chapter 1 — bake it, or ship chapter 1 at seven jobs and land it before
+   chapter 2 opens.
+2. **Chapter 2 — the fleet.** [Plan](backlog/chapter-2-fleet.md).
+3. **Freelance contracts.** ~150 prebaked jobs, tiers, the quality filter, the exact-entropy score.
+4. **The daily contract.** One pool job per day, Meta platform leaderboard.
+5. **Price check.** Measure minutes per job on the headset; confirm ~€5 and the pool size.
+6. **Store release.** Store page, capture, the Meta demo option.
+7. **Chapter 3 — the instrument** (first update): resize, then rotate.
 
 ## Now
 
 Active work.
 
-- [Map cube — select a job with the game's own cube](in-progress/map-cube.md) — the selection cube
-  becomes the edition cube: pinch inside to scale and enter, grab to move in X-Z with snap; the cull
-  follows the cube. Replaces the two-hand map drag and the Pan prompt.
+- [Wrap glitch — the projection strains](in-progress/wrap-glitch.md) — short glitches on the console
+  panels and the field at its beats; dust per Field Elements tier 3. **U1 (panels) and U2 (field beats) are in;**
+  headset check, then U3 (dust).
 
 ## Next
 
@@ -46,7 +59,9 @@ Nothing queued.
 
 Design-only or deferred. Nothing here is scheduled.
 
-- Nothing deferred. The contract card stays available during the run as a static reference; otherwise
+- [Chapter 2 — the fleet](backlog/chapter-2-fleet.md) — job 8 (Mixed) closes chapter 1;
+  chapter 2 (five jobs) brings in multi-ship. Post-v1.
+- The contract card stays available during the run as a static reference; otherwise
   help reaches the player at the start (Jim's line, the gesture prompts) and the end (the complete/fail
   message) — no reactive in-solve hint surface.
 
@@ -58,19 +73,20 @@ hologram look, TTS companion (deferred), feel polish, playable map field.
 Loose ends that still need a home. Close one by linking the plan that finishes it.
 
 - **Gesture prompt icons.** The prompts landed (2026-11-07, validated in the headset) with one
-  placeholder frame each. Polish: animated line-art icons for Scale and Move (Enter and Pan wait for
-  the [map cube](in-progress/map-cube.md), which changes them). Frames live on the
+  placeholder frame each. Polish: animated line-art icons for Scale, Enter and Move (the Pan prompt
+  went with the map cube; Enter is now the in-cube pinch). Frames live on the
   `GesturePromptContent` assets in `Resources/GesturePrompts`.
 - **Run authoring.** Jobs 1–7 are baked into Chapter 01 (seven jobs); job 8 is the deferred Mixed
-  capstone with its own future plan. The job card landed (2026-11-07). Job 1 was rebaked (2026-11-06) with
+  closer, step 1 of the road to the store. The job card landed (2026-11-07). Job 1 was rebaked (2026-11-06) with
   six planets and a sun the cube does not cover (seed 141) — a sunless four-planet field almost never
   bakes. `PuzzleJobBakeTests` and a headset read of job 1 are still open.
 - **Ship-zone cue.** The ship has a trail; there is no zone indicator. Fold it into the in-puzzle read
   plan or the feel pass.
 - **Resize.** Working, but the explanation (size is scope, not precision) is not ready. Deferred from the
-  slice; next cut candidate.
+  slice; chapter 3's first lesson ([chapters](../design/chapters.md)).
 - **Capstone routes (job 8).** The capstone is deferred to its own future plan; it still needs at least
-  two routes and a Mixed/InZone field that bakes. Not scheduled.
+  two routes and a Mixed/InZone field that bakes. Planned in
+  [chapter 2](backlog/chapter-2-fleet.md) U1; not scheduled.
 
 ## Conventions
 

@@ -13,6 +13,7 @@ namespace DigitalLove.Game.SpaceShaping
     {
         [SerializeField] private SpaceShapingSpawner spawner;
         [SerializeField] private SpacetimeMeshView mesh;
+        [SerializeField] private FieldGlitch glitch;
         [Tooltip("Minimum clearance between a planet's surface and the trajectory/ship at both caps, in metres.")]
         [FormerlySerializedAs("launchGap")]
         [SerializeField] private float capGap = 0.001f;
@@ -179,6 +180,8 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         public void HideBaseline() => spawner.Baselines.Hide();
+
+        public void Glitch() => glitch.Play();
 
         public void HideTrajectories() => spawner.Lines.Hide();
 

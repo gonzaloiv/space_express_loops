@@ -927,6 +927,7 @@ GameObject:
   - component: {fileID: 1214712785813484872}
   - component: {fileID: 8957689414746236742}
   - component: {fileID: 6528027483687676806}
+  - component: {fileID: 3141592653589790001}
   m_Layer: 0
   m_Name: Puzzle
   m_TagString: Untagged
@@ -982,6 +983,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.SpaceShapingView
   spawner: {fileID: 8957689414746236742}
   mesh: {fileID: 7751609013794806803}
+  glitch: {fileID: 3141592653589790001}
   capGap: 0.001
   capGapFraction: 0.15
   fadeNear: 0.15
@@ -1357,3 +1359,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10000000000000000000000000000020, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.SpacetimeMeshView
+--- !u!114 &3141592653589790001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8509498066115354100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd11b68ec6c3c80665669b3fa797a4b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 8873963412626419105}
+  bursts: 3
+  burstSecs: 0.08
+  gapSecs: 0.07
+  shake: 0.015

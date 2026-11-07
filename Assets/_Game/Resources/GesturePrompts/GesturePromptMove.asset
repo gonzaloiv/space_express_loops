@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14bdf3484adc96e4ba806474253bce8c, type: 3}
   m_Name: GesturePromptMove
   m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.GesturePromptContent
-  kind: 3
+  kind: 2
   frames:
   - {fileID: 21300000, guid: 5ee13102ef2715845b9dc9254c7d8f55, type: 3}
   frameSecs: 0.12

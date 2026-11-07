@@ -14,8 +14,9 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField, Min(0f)] private float idleBreathSpeed = 1.2f;
 
         public string SunName => diorama.SunName;
-        public Vector3 SunLocalPosition =>
-            transform.InverseTransformPoint(diorama.SunWorldPosition);
+        // The sun in the map's space (this slot's parent).
+        public Vector3 SunMapPosition =>
+            transform.parent.InverseTransformPoint(diorama.SunWorldPosition);
         public int MapIndex { get; private set; } = -1;
 
         public void SetMapFade(Vector3 focus, float near, float far)
@@ -87,6 +88,13 @@ namespace DigitalLove.Game.PuzzleSelection
             starsLabel.text = hasStars ? new string('★', entry.Stars) : string.Empty;
             ApplyCulled(culled);
             diorama.SetLabelColor(tint);
+        }
+
+        // Every sun sits at its node's height, so the map cube slides on one level over all jobs.
+        public void PlaceSunAt(Vector3 node)
+        {
+            transform.localPosition = node;
+            transform.localPosition += Vector3.up * (node.y - SunMapPosition.y);
         }
 
         public void SetZoom(float scale)

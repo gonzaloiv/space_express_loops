@@ -26,6 +26,7 @@ namespace DigitalLove.Game.Flow
             PuzzleData puzzle = memoryDataClient.Get<PuzzleData>();
             PuzzleRunResult result = memoryDataClient.Get<PuzzleRunResult>();
             pendingSave = result.Solved ? SaveSolve(puzzle, result.Grade) : Task.CompletedTask;
+            puzzleController.Glitch();
 
             string cue = result.Solved ? puzzle.CompleteKey : puzzle.FailKey;
             ttsPresenter.Play(new[] { cue }, ReturnWhenSaved);

@@ -174,7 +174,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 return;
             }
 
-            Vector3 centre = HandLocal() + grabOffset;
+            Vector3 centre = zone.ConstrainMove(HandLocal() + grabOffset);
             if (!zone.CanPlace(centre, zone.Size))
             {
                 Refuse(ZoneRefusal.OutOfBounds);

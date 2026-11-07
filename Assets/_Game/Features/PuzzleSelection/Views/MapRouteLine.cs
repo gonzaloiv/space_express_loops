@@ -30,7 +30,7 @@ namespace DigitalLove.Game.PuzzleSelection
         }
 
         public void Update(
-            PuzzleMap map, RunSlotView selected, Vector3 focus,
+            PuzzleMap map, RunSlotView selected,
             ViewPool<RunSlotView> fields, Vector3 cullFocus, float near, float far)
         {
             if (points.Length == 0)
@@ -39,23 +39,23 @@ namespace DigitalLove.Game.PuzzleSelection
                 return;
             }
 
-            UpdatePoints(map, selected, focus, fields);
+            UpdatePoints(map, selected, fields);
             for (int i = 0; i < segments.Length; i++)
                 DrawSegment(i, cullFocus, near, far);
         }
 
         private void UpdatePoints(
-            PuzzleMap map, RunSlotView selected, Vector3 focus,
+            PuzzleMap map, RunSlotView selected,
             ViewPool<RunSlotView> fields)
         {
-            points[map.SelectedIndex] = focus + selected.SunLocalPosition;
+            points[map.SelectedIndex] = selected.SunMapPosition;
             fields.ForEachFrom(0, storeFieldPoint);
         }
 
         private void StoreFieldPoint(RunSlotView field)
         {
             if (field.MapIndex >= 0 && field.MapIndex < points.Length)
-                points[field.MapIndex] = field.transform.localPosition + field.SunLocalPosition;
+                points[field.MapIndex] = field.SunMapPosition;
         }
 
         private void DrawSegment(int index, Vector3 cullFocus, float near, float far)

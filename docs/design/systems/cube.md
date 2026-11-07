@@ -47,6 +47,13 @@ into one field — the core of the verb, not a later unlock. One zone can clear 
 grows a well: the same gesture with two roles. The region's size must stay **separate from the scale** —
 coupling them is the bug.
 
+**The map uses the same cube (decided 2026-11-07).** The selection map's cube is this cube. A pinch
+inside it grows the selected job's diorama, and past a threshold the job is entered; shrinking does
+nothing there. A one-hand grab on its frame slides it over the map (X-Z only) and snaps it to the
+nearest job on release; the map stays still and the fields fade in around the cube as it travels.
+A locked job lets the pinch start but stops it early and refuses. The map never teaches the move:
+the next job is preselected, so moving is optional until job 4 teaches it.
+
 **The brief selects the gestures.** A fixed level locks the move, a locked frame locks the resize, and
 the scale inside the cube is always available. In the seven-job run, several zones arrive with the
 movable cube ([progression](progression.md) §The several-zones rung). The game never shows a move
@@ -117,4 +124,5 @@ solve ([core loop](../core-loop.md) §3), and the job-1 tutorial is exempt.
 - Multi-zone solutions: the search and bake are a separate plan; the region/scale decoupling is
   settled — they stay separate.
 - **Resize explanation:** the mechanic works, but the player needs a clear "size is scope, not
-  precision" lesson before it enters the run. Deferred; next cut candidate.
+  precision" lesson before it enters the run. It is chapter 3's first lesson, with rotating the content
+  inside the cube after it ([chapters](../chapters.md)).

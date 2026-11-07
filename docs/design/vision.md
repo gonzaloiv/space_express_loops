@@ -101,6 +101,8 @@ routes; keep the economy *between* jobs. Then the management layer is a wrapper
   (the per-job manual card is in — [jobs](jobs.md)), and the whole feel pass. **Out until proven:**
   sectors as gameplay (the ambient sector field stays the map backdrop) and runtime/procedural level
   generation.
+- **After the slice: the store release** — ~€5 on the Meta store with chapters 1–2 and the freelance
+  contracts, chapter 3 as the first update ([chapters](chapters.md)).
 - **Technical target:** Meta Quest 3S, **72 fps**.
 - **Validation first:** do not invest past the validation (§7) until it passes.
 
@@ -144,6 +146,6 @@ mechanic before writing another plan.
 | Identity | **Resolved** by the transport-company pivot and the name "Our Space". |
 | Competition scope | **Active.** The current spend is the field pass (S4); run authoring (jobs, map, TTS) is unplanned; Validation 1 is the gate before further investment ([plans board](../plans/README.md)). |
 | Room-scale legacy drag | **Active in code.** `UniverseViewMode.Room` still exists and is fanned out; freeze or remove it. |
-| Content ceiling | **Valid, narrower.** Authored multi-ship is fine; simultaneous unscripted multi-ship is "near-chaotic". The 7-job spine is single-ship; multi-ship is a stretch. |
+| Content ceiling | **Valid, narrower.** Authored multi-ship is fine; simultaneous unscripted multi-ship is "near-chaotic". The 7-job spine is single-ship; multi-ship is the store release's chapter 2 ([chapters](chapters.md)). |
 | Entropy legibility | **Open.** The budget is derived from the bake's best solution; the player never sees that reference. The field itself must carry the spend (strains near empty), with the bar in the field ([progression](systems/progression.md) §Open questions). |
 | Run length | **Open.** The target is a 10-minute session; 7 × ~1 min is the current shape, with 3–5 first ([progression](systems/progression.md) §Open questions). |
