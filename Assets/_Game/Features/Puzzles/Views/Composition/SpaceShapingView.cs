@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DigitalLove.Game.Nodes;
 using DigitalLove.Game.SpaceShaping.Cube;
 using DigitalLove.Game.SpaceShaping.Grid;
 using UnityEngine;
@@ -15,6 +16,12 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private SpacetimeMeshView mesh;
         [SerializeField] private FieldGlitch glitch;
         [SerializeField] private FieldDust dust;
+        [SerializeField] private ParticleSystem arrivalBurst;
+        [SerializeField] private StarStampView stamp;
+        [Tooltip("How long the arrival beat holds before the stars stamp in.")]
+        [SerializeField] private float arrivalSecs = 0.6f;
+        [Tooltip("Gap between the destination's surface and the stamp, in metres.")]
+        [SerializeField] private float stampGap = 0.02f;
         [Tooltip("Minimum clearance between a planet's surface and the trajectory/ship at both caps, in metres.")]
         [FormerlySerializedAs("launchGap")]
         [SerializeField] private float capGap = 0.001f;
@@ -89,11 +96,16 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void ApplyFromSession(SpaceShapingSession session) => spawner.Planets.Apply(session);
 
-        public void SetPuzzle(PuzzleData puzzle) => CurrentPuzzle = puzzle;
+        public void SetPuzzle(PuzzleData puzzle)
+        {
+            CurrentPuzzle = puzzle;
+            stamp.Stop();
+        }
 
         public void ShowReadout(PuzzleReadout readout)
         {
             Readout = readout;
+            spawner.Zones.SetStrain(readout.Strain);
             ReadoutChanged?.Invoke(readout);
         }
 
@@ -183,7 +195,31 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void HideBaseline() => spawner.Baselines.Hide();
 
-        public void Glitch() => glitch.Play();
+        public float PlayArrival()
+        {
+            FieldPlanetBehaviour destination = spawner.Planets.Destination;
+            destination.PlayArrival(arrivalSecs);
+            arrivalBurst.transform.position = destination.transform.position;
+            arrivalBurst.Clear(true);
+            arrivalBurst.Play(true);
+            return arrivalSecs;
+        }
+
+        public float PlayStamp(int grade)
+        {
+            FieldPlanetBehaviour destination = spawner.Planets.Destination;
+            Vector3 position = destination.transform.position
+                + Vector3.up * (destination.Radius * 0.5f + stampGap);
+            return stamp.Play(grade, position);
+        }
+
+        public event Action<int> StarStamped
+        {
+            add => stamp.StarStamped += value;
+            remove => stamp.StarStamped -= value;
+        }
+
+        public float Glitch() => glitch.Play();
 
         public void HideTrajectories() => spawner.Lines.Hide();
 

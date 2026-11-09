@@ -48,5 +48,34 @@ namespace DigitalLove.Game.SpaceShaping
 
         private static float Gap(float radius, float capGap, float capGapFraction) =>
             Mathf.Max(capGap, radius * capGapFraction);
+
+        // The index-space fraction (0-1 over the point list) where a ship parks `gap` metres before
+        // the end of the drawn run. Used only on a landing so the ship stops clear of the planet.
+        public static float ParkProgress(IReadOnlyList<Vector3> points, float gap)
+        {
+            int last = points.Count - 1;
+            if (last < 1 || gap <= 0f)
+                return 1f;
+
+            float total = 0f;
+            for (int i = 0; i < last; i++)
+                total += Vector3.Distance(points[i], points[i + 1]);
+
+            float target = Mathf.Max(total - gap, 0f);
+            float walked = 0f;
+            for (int i = 0; i < last; i++)
+            {
+                float segment = Vector3.Distance(points[i], points[i + 1]);
+                if (walked + segment >= target)
+                {
+                    float within = segment > 0.000001f ? (target - walked) / segment : 0f;
+                    return (i + within) / last;
+                }
+
+                walked += segment;
+            }
+
+            return 1f;
+        }
     }
 }

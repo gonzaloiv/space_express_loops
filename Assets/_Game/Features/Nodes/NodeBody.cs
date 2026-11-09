@@ -7,13 +7,19 @@ namespace DigitalLove.Game.Nodes
     {
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");
+        private static readonly int RimIntensityId = Shader.PropertyToID("_RimIntensity");
 
         [SerializeField] private Transform body;
         [SerializeField] private List<Renderer> renderers;
+        [Tooltip("How much the arrival pulse swells the body's radius.")]
+        [SerializeField] private float pulseSwell = 0.12f;
+        [Tooltip("Rim glow added at the peak of the arrival pulse.")]
+        [SerializeField] private float pulseRim = 1.6f;
 
         private Renderer activeRenderer;
         private MaterialPropertyBlock tintBlock;
         private bool visible = true;
+        private float radius = 0.1f;
 
         public void Init(float radius, int variantSeed)
         {
@@ -21,8 +27,24 @@ namespace DigitalLove.Game.Nodes
             SetActiveRendererBySeed(variantSeed);
         }
 
-        public void SetRadius(float radius) =>
+        public void SetRadius(float value)
+        {
+            radius = value;
             body.localScale = new Vector3(radius, radius, radius);
+        }
+
+        public void SetPulse(float amount)
+        {
+            float pulse = Mathf.Clamp01(amount);
+            body.localScale = new Vector3(radius, radius, radius) * (1f + pulse * pulseSwell);
+            if (activeRenderer == null)
+                return;
+
+            tintBlock ??= new MaterialPropertyBlock();
+            activeRenderer.GetPropertyBlock(tintBlock);
+            tintBlock.SetFloat(RimIntensityId, pulse * pulseRim);
+            activeRenderer.SetPropertyBlock(tintBlock);
+        }
 
         public void SetVisible(bool value)
         {

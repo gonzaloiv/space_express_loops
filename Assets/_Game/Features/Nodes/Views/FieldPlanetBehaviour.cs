@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace DigitalLove.Game.Nodes
@@ -14,9 +15,44 @@ namespace DigitalLove.Game.Nodes
         private float radius = 0.1f;
         private int variantSeed;
         private string currentLabel = string.Empty;
+        private Coroutine pulse;
 
         public bool IsVisible => isVisible;
         public float Radius => radius;
+
+        // A short swell of the body and its rim: the destination's arrival on a solve.
+        public void PlayArrival(float secs)
+        {
+            StopArrival();
+            pulse = StartCoroutine(PulseArrival(Mathf.Max(secs, 0.0001f)));
+        }
+
+        private void StopArrival()
+        {
+            if (pulse != null)
+            {
+                StopCoroutine(pulse);
+                pulse = null;
+            }
+
+            nodeBody.SetPulse(0f);
+        }
+
+        private IEnumerator PulseArrival(float secs)
+        {
+            float elapsed = 0f;
+            while (elapsed < secs)
+            {
+                nodeBody.SetPulse(Mathf.Sin(Mathf.PI * Mathf.Clamp01(elapsed / secs)));
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            nodeBody.SetPulse(0f);
+            pulse = null;
+        }
+
+        private void OnDisable() => StopArrival();
 
         public void SetLabelsVisible(bool visible)
         {
@@ -70,6 +106,7 @@ namespace DigitalLove.Game.Nodes
 
         public void Initialize()
         {
+            StopArrival();
             radius = 0.1f;
             hasVariant = false;
             labelOnly = false;
@@ -82,6 +119,7 @@ namespace DigitalLove.Game.Nodes
 
         public void Spawn(Vector3 localPosition, float spawnRadius, int seed, string name)
         {
+            StopArrival();
             radius = spawnRadius;
             labelOnly = false;
             transform.localPosition = localPosition;
@@ -102,6 +140,7 @@ namespace DigitalLove.Game.Nodes
 
         public void Hide()
         {
+            StopArrival();
             labelOnly = false;
             SetVisible(false);
             nameLabel.Hide();

@@ -40,7 +40,7 @@ has its ending.
 - **Crash and miss keep today's ending.** `Travel` already receives the run's `TrajectoryResult`, so the
   view knows the outcome before it flies: arrive → park; crash or miss → the current shrink.
 - **The destination plays the arrival.** `FieldPlanetBehaviour` gets an arrival pulse (a short scale and
-  brightness swell of its surface); an authored burst in the `DustCube` look, on the puzzle prefab, is
+  rim-brightness swell of its surface); an authored burst in the `DustCube` look, on the puzzle prefab, is
   moved to the destination and played with it. `SpaceShapingView` exposes one `PlayArrival` that does both.
   `FieldPlanetSet` keeps the destination planet private (`:17,33`), so it needs one read-only accessor
   (the planet or its world pose) for that. The brightness swell belongs on `NodeBody`: it writes
@@ -56,11 +56,13 @@ has its ending.
 - An authored world-space text on the puzzle prefab, using the `UI Phosphor Screen` material so it shares
   the panels' screen look; the puzzle already carries a world-space canvas (`Puzzle.prefab`, RenderMode 2).
   Position it from the destination pose at play time rather than hard-coding a field-local point.
+- `ECO` is TMP in the IBM Plex Mono font; the star glyphs are not in that font asset, so the stars are
+  authored icons (`Star Particle` texture) beside it, in the same `UI Phosphor Screen` material.
 - The stamp must report the end of its typing (a completion callback or event) so the flow can start
   Jim's line; a hand-tuned wait in the state will drift from the art.
 - The grade is `PuzzleRunResult.Grade` — the value the flow has already saved (`PuzzleEditionState:100`) —
-  not `SpaceShapingController.Grade`, so the stamped stars always match the recorded ones. `PuzzleData.noGrade`
-  skips the stamp; pass the flag explicitly (grade 0 is also the noGrade value).
+  not `SpaceShapingController.Grade`, so the stamped stars always match the recorded ones.
+  `PuzzleData.noGrade` skips the stamp; pass the flag explicitly (grade 0 is also the noGrade value).
 - **The tick is an event, not a sound call:** the stamp raises one event per star; the cue player
   ([cube sound](cube-sound.md) U3) plays the tick. Until that lands, the stamp is silent.
 - **Exit:** a graded solve shows its stars, one by one; `noGrade` jobs show none.
@@ -88,6 +90,6 @@ EditMode suite); the stamp gating and the state's timing are manual checks.
    arrival; no stars; then Jim speaks.
 2. Solve job 3: the burst, then 1–3 stars stamp one by one, then Jim speaks.
 3. The burst never flashes the whole view and reads as part of the field.
-4. Fail a job: the glitch plays, no burst, no stars.
+4. Fail a job: the glitch plays, no burst, no stars, then Jim speaks.
 5. From arrival to Jim's first word feels like one beat, not a wait.
 6. The return to the map still works after both a solve and a fail.

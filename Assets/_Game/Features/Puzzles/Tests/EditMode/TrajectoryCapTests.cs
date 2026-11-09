@@ -69,5 +69,21 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
 
             Assert.IsFalse(clipped.HasPoints);
         }
+
+        [Test]
+        public void ParkProgress_StopsTheGapBeforeTheEnd()
+        {
+            List<Vector3> points = new() { Vector3.zero, Vector3.right, Vector3.right * 2f };
+
+            Assert.AreEqual(0.9f, ShipRunGeometry.ParkProgress(points, 0.2f), 0.0001f);
+        }
+
+        [Test]
+        public void ParkProgress_GapLongerThanTheRun_ParksAtTheStart()
+        {
+            List<Vector3> points = new() { Vector3.zero, Vector3.right };
+
+            Assert.AreEqual(0f, ShipRunGeometry.ParkProgress(points, 5f), 0.0001f);
+        }
     }
 }

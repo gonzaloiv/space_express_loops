@@ -45,6 +45,8 @@ namespace DigitalLove.Game.SpaceShaping
         public Vector3 SunWorldPosition =>
             sunPlanet != null ? sunPlanet.transform.position : parent.position;
 
+        public FieldPlanetBehaviour Destination => destinationPlanet;
+
         public void ShowSunLabel(string text) => ShowOnlySunLabel(text, false);
 
         public void ShowCentreLabel(string text) => ShowOnlySunLabel(text, true);

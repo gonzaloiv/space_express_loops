@@ -10,13 +10,14 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private SpaceShapingView view;
 
         private PuzzleRun run;
-        private readonly PreviewClock clock = new();
+        private readonly PuzzlePreview preview = new();
         private bool wasScaling;
         private bool frozen;
         private PuzzleData currentPuzzleData;
 
         public event Action Solved;
         public event Action Failed;
+        public event Action FlightCrashed;
 
         public event Action PinchCommitted
         {
@@ -28,6 +29,12 @@ namespace DigitalLove.Game.SpaceShaping
         {
             add => view.CubeMoved += value;
             remove => view.CubeMoved -= value;
+        }
+
+        public event Action<ZoneRefusal> Refused
+        {
+            add => view.Refused += value;
+            remove => view.Refused -= value;
         }
 
         public void Enter(PuzzleData puzzleData)
@@ -50,12 +57,19 @@ namespace DigitalLove.Game.SpaceShaping
             run = null;
         }
 
-        public void Glitch() => view.Glitch();
+        public float Glitch() => view.Glitch();
 
-        public void HideAll()
+        public float PlayArrival() => view.PlayArrival();
+
+        public float PlayStamp(int grade) => view.PlayStamp(grade);
+
+        public event Action<int> StarStamped
         {
-            view.gameObject.SetActive(false);
+            add => view.StarStamped += value;
+            remove => view.StarStamped -= value;
         }
+
+        public void HideAll() => view.gameObject.SetActive(false);
 
         public int Grade => run.Session.Grade();
 
@@ -82,14 +96,7 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         [ContextMenu("Preview field")]
-        public void PreviewField()
-        {
-            PuzzleRun preview = new(BuildSetup());
-            TrajectoryResult[] results = preview.SimulatePreview();
-            view.Render(preview.Session);
-            view.ShowBaseline(preview.Session);
-            view.ShowTrajectories(preview.Session, results, false);
-        }
+        public void PreviewField() => PuzzleFieldPreview.Show(BuildSetup(), view);
 
         private void LateUpdate()
         {
@@ -123,7 +130,7 @@ namespace DigitalLove.Game.SpaceShaping
             {
                 view.StopShips();
                 view.ClearPrediction();
-                clock.Reset();
+                preview.Reset();
             }
 
             run.PreviewZone(view.Zone);
@@ -131,28 +138,7 @@ namespace DigitalLove.Game.SpaceShaping
             RenderPreview();
         }
 
-        private void RenderPreview()
-        {
-            if (clock.TakeLattice(Time.unscaledTime))
-                ApplyAndRender();
-
-            if (clock.TakeReadout(Time.unscaledTime))
-                view.ShowReadout(PuzzleReadout.Pending(run.Session));
-
-            PreviewPath();
-        }
-
-        private void PreviewPath()
-        {
-            if (clock.TakePreview(Time.unscaledTime))
-                view.ShowTrajectories(run.Session, run.SimulatePreview(), true);
-        }
-
-        private void ApplyAndRender()
-        {
-            view.ApplyFromSession(run.Session);
-            view.Render(run.Session);
-        }
+        private void RenderPreview() => preview.Render(run, view);
 
         private void CommitScale()
         {
@@ -183,7 +169,7 @@ namespace DigitalLove.Game.SpaceShaping
         private void PreparePuzzle()
         {
             wasScaling = false;
-            clock.Reset();
+            preview.Reset();
             ResetView();
         }
 
@@ -197,7 +183,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             view.StopShips();
             TrajectoryResult[] results = run.Simulate();
-            ApplyAndRender();
+            PuzzlePreview.Apply(run, view);
             view.ShowTrajectories(run.Session, results, pendingPath);
             PublishReadout();
         }
@@ -209,15 +195,25 @@ namespace DigitalLove.Game.SpaceShaping
 
             run.Check();
             bool solved = run.Session.IsSolved(run.LastResults);
+            PublishFlight(solved);
+            if (solved || run.Session.IsFailed(run.LastResults))
+                FinishRun(solved);
+            else if (run.LastResults.Worst() == TrajectoryOutcome.Crash)
+                FlightCrashed?.Invoke();
+        }
+
+        private void PublishFlight(bool solved)
+        {
             view.SetPrediction(solved, run.LastResults.Worst());
             view.ShowTrajectories(run.Session, run.LastResults, false);
             if (!solved)
                 view.ShowBaseline(run.Session);
             view.PulseTrajectories();
             PublishReadout();
-            if (!solved && !run.Session.IsFailed(run.LastResults))
-                return;
+        }
 
+        private void FinishRun(bool solved)
+        {
             frozen = true;
             view.SetZonesLocked(true);
             if (solved)
@@ -234,7 +230,6 @@ namespace DigitalLove.Game.SpaceShaping
             view.ShowReadout(run.Readout());
         }
 
-        public SpaceShapingSetup BuildSetup() =>
-            SpaceShapingSetup.Build(currentPuzzleData, PuzzleSimSettings.From(settings));
+        public SpaceShapingSetup BuildSetup() => SpaceShapingSetup.Build(currentPuzzleData, PuzzleSimSettings.From(settings));
     }
 }

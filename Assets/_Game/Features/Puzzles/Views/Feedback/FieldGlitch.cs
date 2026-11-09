@@ -22,11 +22,12 @@ namespace DigitalLove.Game.SpaceShaping
         private Coroutine routine;
         private Vector3 home;
 
-        public void Play()
+        public float Play()
         {
             Stop();
             home = target.localPosition;
             routine = StartCoroutine(Run());
+            return bursts * (Mathf.Max(burstSecs, 0f) + Mathf.Max(gapSecs, 0f));
         }
 
         private IEnumerator Run()

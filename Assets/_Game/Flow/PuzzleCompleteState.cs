@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Threading.Tasks;
+using DigitalLove.Audio;
 using DigitalLove.DataAccess;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Persistence;
@@ -14,27 +16,62 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private MonoState nextState;
         [SerializeField] private SpaceShapingController puzzleController;
         [SerializeField] private TtsPresenter ttsPresenter;
+        [SerializeField] private SynthCuePlayer cuePlayer;
+        [SerializeField] private SynthPatch arriveCue;
+        [SerializeField] private SynthPatch failCue;
+        [SerializeField] private SynthPatch starCue;
         [SerializeField] private float saveTimeoutSecs = 5f;
 
         [Inject] private MemoryDataClient memoryDataClient;
         [Inject] private UnityPlayerDataClient playerDataClient;
 
         private Task pendingSave = Task.CompletedTask;
+        private Coroutine sequence;
 
         public override void Enter()
         {
             PuzzleData puzzle = memoryDataClient.Get<PuzzleData>();
             PuzzleRunResult result = memoryDataClient.Get<PuzzleRunResult>();
             pendingSave = result.Solved ? SaveSolve(puzzle, result.Grade) : Task.CompletedTask;
-            puzzleController.Glitch();
-
-            string cue = result.Solved ? puzzle.CompleteKey : puzzle.FailKey;
-            ttsPresenter.Play(new[] { cue }, ReturnWhenSaved);
+            cuePlayer.Play(result.Solved ? arriveCue : failCue);
+            puzzleController.StarStamped += OnStarStamped;
+            sequence = result.Solved
+                ? StartCoroutine(PlaySolve(puzzle, result))
+                : StartCoroutine(PlayFail(puzzle));
         }
 
         public override void Exit()
         {
+            puzzleController.StarStamped -= OnStarStamped;
+            if (sequence != null)
+            {
+                StopCoroutine(sequence);
+                sequence = null;
+            }
+
             ttsPresenter.Stop();
+        }
+
+        private IEnumerator PlaySolve(PuzzleData puzzle, PuzzleRunResult result)
+        {
+            yield return new WaitForSeconds(puzzleController.PlayArrival());
+            if (!puzzle.noGrade)
+                yield return new WaitForSeconds(puzzleController.PlayStamp(result.Grade));
+            Speak(puzzle, true);
+        }
+
+        private IEnumerator PlayFail(PuzzleData puzzle)
+        {
+            yield return new WaitForSeconds(puzzleController.Glitch());
+            Speak(puzzle, false);
+        }
+
+        private void OnStarStamped(int index) => cuePlayer.Play(starCue);
+
+        private void Speak(PuzzleData puzzle, bool solved)
+        {
+            string cue = solved ? puzzle.CompleteKey : puzzle.FailKey;
+            ttsPresenter.Play(new[] { cue }, ReturnWhenSaved);
         }
 
         private async void ReturnWhenSaved()

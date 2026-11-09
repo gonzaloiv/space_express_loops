@@ -13,6 +13,8 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private float travelTimeScale = 4f;
         [SerializeField] private float launchDelaySecs = 0.09f;
         [SerializeField] private float landFadeSecs = 0.18f;
+        [Tooltip("How far short of the arrival cap the ship parks on a landing, in metres.")]
+        [SerializeField] private float parkGap = 0.02f;
         [SerializeField] private float turnDegPerSec = 720f;
         [SerializeField] private TrailRenderer trail;
 
@@ -45,8 +47,9 @@ namespace DigitalLove.Game.SpaceShaping
             FaceHeading(points);
             trail.Clear();
             trail.emitting = false;
+            bool lands = result.Outcome == TrajectoryOutcome.Arrive;
             flight = StartCoroutine(
-                Fly(points, TravelSecs(simSecs), Mathf.Max(launchDelaySecs + delaySecs, 0f)));
+                Fly(points, TravelSecs(simSecs), Mathf.Max(launchDelaySecs + delaySecs, 0f), lands));
         }
 
         public void Stop()
@@ -66,28 +69,39 @@ namespace DigitalLove.Game.SpaceShaping
                 Mathf.Max(minFlightSecs, 0.0001f),
                 Mathf.Max(maxFlightSecs, minFlightSecs));
 
-        private IEnumerator Fly(List<Vector3> points, float travel, float delay)
+        private IEnumerator Fly(List<Vector3> points, float travel, float delay, bool park)
         {
             if (delay > 0f)
                 yield return new WaitForSeconds(delay);
 
             trail.emitting = true;
+            float end = park ? ShipRunGeometry.ParkProgress(points, parkGap) : 1f;
+            yield return FlyAlong(points, travel, end);
+            trail.emitting = false;
+            if (!park)
+            {
+                yield return Land();
+                gameObject.SetActive(false);
+            }
+
+            flight = null;
+            Completed?.Invoke();
+        }
+
+        private IEnumerator FlyAlong(List<Vector3> points, float travel, float end)
+        {
             int last = points.Count - 1;
             float progress = 0f;
-            while (progress < 1f)
+            while (progress < end)
             {
-                progress = Mathf.Min(progress + Mathf.Max(Time.deltaTime / travel, 0.0001f), 1f);
+                progress = Mathf.Min(progress + Mathf.Max(Time.deltaTime / travel, 0.0001f), end);
                 float index = progress * last;
                 MoveTo(Sample(points, index), Heading(points, index), Time.deltaTime);
                 yield return null;
             }
 
-            transform.localPosition = points[last];
-            trail.emitting = false;
-            yield return Land();
-            gameObject.SetActive(false);
-            flight = null;
-            Completed?.Invoke();
+            float finalIndex = end * last;
+            MoveTo(Sample(points, finalIndex), Heading(points, finalIndex), 1f);
         }
 
         private IEnumerator Land()
