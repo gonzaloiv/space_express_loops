@@ -127,59 +127,175 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889879
-    m_Localized: "…Good luck."
+    m_Localized: "\u2026Good luck."
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889884
-    m_Localized: "Contract closed. Bl\xF6dmeyer has the valves. I'm Jim. This is Our Space Corp. We do this one at a time."
+    m_Localized: Contract closed.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889885
-    m_Localized: The bulb is delivered. The Keepers say it's the right colour. The ledger is happy.
+    m_Localized: The bulb is delivered.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889886
-    m_Localized: The wide load is through. Strait & Narrow measured it twice. The ledger is happy.
+    m_Localized: The wide load is through.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889887
-    m_Localized: The piano is delivered. Madame Fink says it plays. The ledger is happy.
+    m_Localized: The piano is delivered.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889888
-    m_Localized: The cake arrived still warm. The Third Best Bakery says it's the best they've done. The ledger is happy.
+    m_Localized: The cake arrived still warm.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889889
-    m_Localized: The body is delivered. Nobody & Co. says the funeral can start on time. The ledger is happy.
+    m_Localized: The body is delivered.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889890
-    m_Localized: The inheritance is delivered. Mr. Fink's estate says there's nothing else. The ledger is happy. For now. The console stays where it is. Today the space. Tomorrow the time.
+    m_Localized: The inheritance is delivered.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889891
-    m_Localized: We didn't arrive. The Keepers are still waiting. Try it again.
+    m_Localized: We didn't arrive.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889892
-    m_Localized: We didn't arrive. The wide load is still here. Try it again.
+    m_Localized: We didn't arrive.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889893
-    m_Localized: We didn't arrive. Madame Fink's piano is still here. Try it again.
+    m_Localized: We didn't arrive.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889894
-    m_Localized: We didn't arrive. The cake is cold now. Try it again.
+    m_Localized: We didn't arrive.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889895
-    m_Localized: We didn't arrive. Nobody is waiting. Try it again.
+    m_Localized: We didn't arrive.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889896
-    m_Localized: We didn't arrive. The estate is still waiting. Try it again.
+    m_Localized: We didn't arrive.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399591899136
+    m_Localized: "Bl\xF6dmeyer has the valves."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230784
+    m_Localized: I'm Jim. This is Our Space Corp.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230785
+    m_Localized: We do this one at a time.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230786
+    m_Localized: The Keepers say it's the right colour.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230787
+    m_Localized: The ledger is happy.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230788
+    m_Localized: Strait & Narrow measured it twice.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230789
+    m_Localized: The ledger is happy.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230790
+    m_Localized: Madame Fink says it plays.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230791
+    m_Localized: The ledger is happy.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230792
+    m_Localized: The Third Best Bakery says it's the best they've done.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230793
+    m_Localized: The ledger is happy.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230794
+    m_Localized: Nobody & Co. says the funeral can start on time.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230795
+    m_Localized: The ledger is happy.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230796
+    m_Localized: Mr. Fink's estate says there's nothing else.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230797
+    m_Localized: The ledger is happy. For now.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230798
+    m_Localized: The console stays where it is.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230799
+    m_Localized: Today the space. Tomorrow the time.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230800
+    m_Localized: The Keepers are still waiting.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230801
+    m_Localized: Try it again.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230802
+    m_Localized: The wide load is still here.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230803
+    m_Localized: Try it again.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230804
+    m_Localized: Madame Fink's piano is still here.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230805
+    m_Localized: Try it again.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230806
+    m_Localized: The cake is cold now.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230807
+    m_Localized: Try it again.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230808
+    m_Localized: Nobody is waiting.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230809
+    m_Localized: Try it again.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230810
+    m_Localized: The estate is still waiting.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230811
+    m_Localized: Try it again.
     m_Metadata:
       m_Items: []
   references:

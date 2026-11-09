@@ -64,6 +64,18 @@ check, `OVRSpaceSetup` (places the origin in front of the head right away), the 
   *(proposed)*; Jim's first line stays job 1's completion receipt (already true: job 1 is `noIntro`).
 - **Exit:** a first-timer pinches inside the cube within 15 s of the boot ending.
 
+### U4 — the boot is the loader
+
+- The boot opens as setup starts, not after it: the header types at once, then one row per setup step
+  types as it runs and gets its `OK` when it finishes — `> LINK` (services), `> SEAT` (placement),
+  `> LEDGER` (player data). The title lines follow once setup is done.
+- `SetupState` (`_Modules`) reports steps to the splash through no-op virtuals on `BaseSplashScreen`
+  (`Open`, `BeginStep`, `EndStep`, `Close`), so the other splashes are unchanged. A failed check cuts
+  the boot off before its panel shows.
+- No panel behind the boot: the text floats in the room, so the space itself is the terminal.
+- **Exit:** from launch, something is on screen within a frame of setup starting; a slow step visibly
+  waits on its own row.
+
 ## Out of scope
 
 New console art beyond the existing frame, a second speaking character, a separate tutorial flow,
@@ -82,3 +94,5 @@ table detection from the room scan, and changes to job 1's bake.
    move it.
 8. No Jim line plays before job 1's completion.
 9. Airplane-seat pass: seated, two-foot radius, no reach outside comfort.
+10. Cold launch: the boot header shows right away; LINK, SEAT and LEDGER each type and get their OK,
+    then the title.
