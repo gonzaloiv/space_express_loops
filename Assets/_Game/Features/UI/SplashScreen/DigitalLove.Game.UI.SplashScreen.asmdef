@@ -1,0 +1,25 @@
+{
+    "name": "DigitalLove.Game.UI.SplashScreen",
+    "rootNamespace": "",
+    "references": [
+        "DigitalLove.Game.States.Setup",
+        "DigitalLove.UI.Behaviours",
+        "DigitalLove.Global",
+        "DigitalLove.Casual.Levels",
+        "DigitalLove.Game.Persistence",
+        "DigitalLove.Game.PuzzleSelection",
+        "DigitalLove.DataAccess.Local",
+        "DigitalLove.DataAccess.Remote",
+        "Reflex",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

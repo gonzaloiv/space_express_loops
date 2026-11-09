@@ -1,6 +1,5 @@
 using DigitalLove.FlowControl;
 using UnityEngine;
-using DigitalLove.XR;
 using Reflex.Attributes;
 using DigitalLove.Game.SpaceShaping;
 using DigitalLove.DataAccess;
@@ -11,7 +10,6 @@ namespace DigitalLove.Game.Flow
     public class PuzzleStartState : MonoState
     {
         [SerializeField] private MonoState nextState;
-        [SerializeField] private OVROriginBehaviour ovrOrigin;
         [SerializeField] private SpaceShapingController puzzleController;
         [SerializeField] private TtsPresenter ttsPresenter;
 
@@ -26,7 +24,6 @@ namespace DigitalLove.Game.Flow
 
         public override void Enter()
         {
-            ovrOrigin.Setup();
             PuzzleData puzzle = memoryDataClient.Get<PuzzleData>();
             puzzleController.Enter(puzzle);
             puzzleController.Glitch();
