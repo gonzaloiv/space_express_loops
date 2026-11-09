@@ -77,7 +77,7 @@ namespace DigitalLove.Game.PuzzleSelection
 
         private void Update()
         {
-            if (map == null || PauseController.IsPaused)
+            if (map == null || Time.timeScale <= 0f)
                 return;
 
             float deltaSecs = Time.unscaledDeltaTime;

@@ -1235,6 +1235,7 @@ GameObject:
   - component: {fileID: 284223191}
   - component: {fileID: 284223193}
   - component: {fileID: 284223192}
+  - component: {fileID: 284223194}
   m_Layer: 0
   m_Name: Main
   m_TagString: Untagged
@@ -12976,6 +12977,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8891660876628434792}
   m_CullTransparentMesh: 1
+--- !u!114 &284223194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 284223190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51034e09927ce444095e0bc7c253d379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.Flow::DigitalLove.Game.Flow.PauseController
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

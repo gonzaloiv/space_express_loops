@@ -23,35 +23,32 @@ can commit behind the system menu.
 
 ### U1 — the pause controller
 
-- Focus-aware is on (`OculusProjectConfig focusAware: 1`), so the existing
-  `OVRSessionHelper.hasPaused/hasUnpaused` fire behind the system menu. The helper is already on the rig
-  in `Game.unity`; feed both `OnApplicationFocus` and `OnApplicationPause` into one idempotent
-  transition so the menu and the headset coming off cannot double-fire. No new scene component.
-- A shared `PauseController` (Global) holds the paused flag and sets `Time.timeScale = 0` and
-  `AudioListener.pause = true`; resume reverses both. Music and the synth voices freeze on the paused
-  listener and resume.
+- `PauseController` is an app-level component (on `Main` in `Game.unity`), not a module. It listens to
+  the Unity messages itself — `OnApplicationFocus` and `OnApplicationPause` — and feeds both into one
+  idempotent transition. `OVRSessionHelper` stays as it is.
+- Pause sets `Time.timeScale = 0` and `AudioListener.pause = true`; resume reverses both. Music and the
+  synth voices freeze on the paused listener and resume.
 - Ship flight is scaled time (`ShipTravelView.cs:75,97,113`), so `timeScale = 0` already keeps
   `OnFlightCompleted` from deciding the solve.
 - **Exit:** open the menu mid-flight: the ship and the sound stop; close it: they continue.
 
 ### U2 — the voice replays
 
-- No pause-aware clock. On pause, stop the TTS presenter; on resume, restart the interrupted request
-  from its first line. `TtsPresenter` remembers the last `Play(...)` and replays it, and the receipt's
-  `onComplete` must not fire while paused. This sidesteps the realtime/unscaled TTS chain
-  (`LocalizedTTSVoice.cs:72-82`, `StreamingAssetsSpeaker.cs:49`) that would otherwise skip lines behind
-  the menu.
+- Pause is TTS's own: `TtsPresenter` handles the same Unity messages, stops on pause and restarts the
+  interrupted request from its first line on resume. It remembers the last `Play(...)` and replays it,
+  and the receipt's `onComplete` must not fire while paused. This sidesteps the realtime/unscaled TTS
+  chain (`LocalizedTTSVoice.cs:72-82`, `StreamingAssetsSpeaker.cs:49`) that would otherwise skip lines
+  behind the menu.
 - **Exit:** open the menu mid-line: Jim stops; close it: the line replays from its start, and a solve's
   return to the map still happens once.
 
 ### U3 — gate the unscaled clocks
 
-- Input: `TwoHandGestureInput` still runs at `timeScale = 0` and its dwell/grace timers use
-  `Time.unscaledTime` (`TwoHandGestureInput.cs:158,165,169`), so a held scale-out can exit the job while
-  paused. Gate it on the paused flag and clear its pinch timers/edges on pause, so nothing is stale when
-  focus returns.
-- Puzzle: skip `SpaceShapingController.LateUpdate` (`:102`) while paused (its preview clock is
-  unscaled, `PuzzlePreview.cs:14-20`).
+- Input: `TwoHandGestureInput` handles the same Unity messages, skips its `Update` while paused and
+  clears its pinch timers/edges, so a held scale-out cannot exit the job and nothing is stale at resume
+  (`Time.unscaledTime` at `:158,165,169`).
+- Puzzle: skip `SpaceShapingController.LateUpdate` (`:102`) while `Time.timeScale <= 0` (its preview
+  clock is unscaled, `PuzzlePreview.cs:14-20`).
 - Map: `PuzzleMapView.Update` ticks on `Time.unscaledDeltaTime` (`PuzzleMapView.cs:78`), so a committed
   pinch-to-enter (`MapEnter`) finishes and enters the job behind the menu. Skip it while paused.
 - The other unscaled timers (`FieldGlitch`, `FieldDust`, `JobCardTypewriter`, `GesturePromptPanel`,

@@ -1,5 +1,4 @@
 using System;
-using DigitalLove.Global;
 using Oculus.Interaction;
 using Oculus.Interaction.Input;
 using UnityEngine;
@@ -28,6 +27,7 @@ namespace DigitalLove.Input
         [Header("Debug")]
         [SerializeField] private bool logGesture;
 
+        private bool paused;
         private bool isActive;
         private float bothPinchingSince = -1f;
         private float lastBothPinchTime;
@@ -58,10 +58,21 @@ namespace DigitalLove.Input
         public event Action<TwoHandGestureState> GestureStarted;
         public event Action<TwoHandGestureState> GestureEnded;
 
+        // Paused by the app (PauseController stops time): skip, and start clean on resume so a dwell
+        // held behind the system menu cannot fire.
         private void Update()
         {
-            if (PauseController.IsPaused)
+            if (Time.timeScale <= 0f)
+            {
+                paused = true;
                 return;
+            }
+
+            if (paused)
+            {
+                paused = false;
+                ResetGesture();
+            }
 
             bool wasActive = isActive;
             ReadHands();
@@ -71,19 +82,7 @@ namespace DigitalLove.Input
             LogIfNeeded(wasActive);
         }
 
-        private void OnEnable()
-        {
-            ResetGesture();
-            PauseController.Changed += OnPauseChanged;
-        }
-
-        private void OnDisable() => PauseController.Changed -= OnPauseChanged;
-
-        private void OnPauseChanged(bool paused)
-        {
-            if (paused)
-                ResetGesture();
-        }
+        private void OnEnable() => ResetGesture();
 
         private void ResetGesture()
         {

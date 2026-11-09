@@ -6,8 +6,7 @@
         "DigitalLove.Game.SpaceShaping.Views",
         "DigitalLove.Game.SpaceShaping.Cube",
         "DigitalLove.FlowControl",
-        "DigitalLove.Casual.Levels",
-        "DigitalLove.Global"
+        "DigitalLove.Casual.Levels"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
