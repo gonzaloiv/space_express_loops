@@ -19,6 +19,21 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         }
 
         [Test]
+        public void IntroLinesKey_GathersTheNumberedLinesOnly()
+        {
+            PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
+            puzzle.id = "01_04";
+
+            StringAssert.Contains(puzzle.IntroLinesKey, "level_01_04_init_01");
+            StringAssert.Contains(puzzle.IntroLinesKey, "level_01_04_init_02");
+            StringAssert.DoesNotContain(puzzle.IntroLinesKey, puzzle.ClientKey);
+            StringAssert.DoesNotContain(puzzle.IntroLinesKey, puzzle.CargoKey);
+            StringAssert.DoesNotContain(puzzle.IntroLinesKey, puzzle.ManualKey);
+
+            Object.DestroyImmediate(puzzle);
+        }
+
+        [Test]
         public void ManualRevision_IsTheJobNumber()
         {
             PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();

@@ -27,10 +27,6 @@ MonoBehaviour:
     m_Key: level_01_01_init_manual_entry
     m_Metadata:
       m_Items: []
-  - m_Id: 72150890860695554
-    m_Key: level_01_01_init_01
-    m_Metadata:
-      m_Items: []
   - m_Id: 72150890864889856
     m_Key: level_01_02_init_client
     m_Metadata:

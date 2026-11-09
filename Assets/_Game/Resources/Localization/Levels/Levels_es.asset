@@ -30,10 +30,6 @@ MonoBehaviour:
     m_Localized: Bienvenido. Tu Wrap hace una cosa. Haz esa cosa. Coloca la consola donde quieras; no hay oficina.
     m_Metadata:
       m_Items: []
-  - m_Id: 72150890860695554
-    m_Localized: "Un pellizco. Estar\xE1s bien."
-    m_Metadata:
-      m_Items: []
   - m_Id: 72150890864889856
     m_Localized: El Sindicato de Fareros
     m_Metadata:

@@ -30,10 +30,6 @@ MonoBehaviour:
     m_Localized: Welcome. Your Wrap does one thing. Do that one thing. Set the console anywhere; there is no office.
     m_Metadata:
       m_Items: []
-  - m_Id: 72150890860695554
-    m_Localized: One pinch. You'll be fine.
-    m_Metadata:
-      m_Items: []
   - m_Id: 72150890864889856
     m_Localized: The Lighthouse Keepers' Union
     m_Metadata:

@@ -24,8 +24,8 @@ need a yes.
    seated reach without setup → title beat → the Scale prompt.
 6. **Quest 3S hitches at 72 fps** *(proposed)*. Sudden frame drops, not sustained low fps: map
    dioramas, trajectory previews, lattice.
-7. **Voice and content** *(proposed)*. Jim's clips and job 6's lines for the new lesson. Jim's complete and fail lines
-   are split into one-sentence TTS entries (done 2026-11-09). The music duck under Jim (deferred from the soundscape) is tuned with his clips. English only: Spanish is kept just to prove the localization system works.
+7. **Voice and content** *(proposed)*. Job 6's lines for the new lesson. Jim's complete and fail lines
+   are split into one-sentence TTS entries and his clips are downloaded (done 2026-11-09). The music duck under Jim (deferred from the soundscape) is tuned with his clips. English only: Spanish is kept just to prove the localization system works.
 8. **Competition deliverables — due Friday 2026-11-13; work starts Wednesday 2026-11-11.** The entry
    is frozen at the deadline. The angle, hero moment and video outline are in [pitch](../design/pitch.md);
    until Wednesday the time goes to the game.

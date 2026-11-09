@@ -2,7 +2,8 @@
 
 **Status:** now · presentation · updated 2026-11-09 — launch → the console boot → the field placed
 where the player actually is → the first pinch, with no setup and no extra taps. Road step 5.
-U1 (the boot) and U2 (`Features/Placement`, `SeatPlacement`) are in, pending the headset pass; U3 is open.
+U1 (the boot), U2 (`Features/Placement`, `SeatPlacement`, the console arc around the real head) and U4
+(the boot as loader) are in; U3's code side is done. All four wait on the headset pass.
 
 **Related:** [lore](../../design/world/lore.md) §The console / §In the game ·
 [vision](../../design/vision.md) §2 · [pitch](../../design/pitch.md) ·
@@ -60,8 +61,9 @@ check, `OVRSpaceSetup` (places the origin in front of the head right away), the 
 ### U3 — the first read
 
 - Job 1 opens with no card; the Scale prompt is visible before the hand reaches the cube.
-- Job 1's unused tech-voice line ("One pinch. You'll be fine.") leaves [jobs](../../design/jobs.md)
-  *(proposed)*; Jim's first line stays job 1's completion receipt (already true: job 1 is `noIntro`).
+- Job 1's unused tech-voice line ("One pinch. You'll be fine.") is gone from [jobs](../../design/jobs.md)
+  and the `Levels` tables (2026-11-09); Jim's first line stays job 1's completion receipt (job 1 is
+  `noIntro`, so it shows no card and only the Scale prompt).
 - **Exit:** a first-timer pinches inside the cube within 15 s of the boot ending.
 
 ### U4 — the boot is the loader

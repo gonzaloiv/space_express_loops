@@ -212,7 +212,7 @@ One line each; never exposition ([lore](world/lore.md)).
 
 | # | Client | Cargo | Tech voice | Manual entry |
 |---|---|---|---|---|
-| 1 | Blödmeyer & Sons (no sons) | a pallet of valves | "One pinch. You'll be fine." | "Welcome. Your Wrap does one thing. Do that one thing. Set the console anywhere; there is no office." |
+| 1 | Blödmeyer & Sons (no sons) | a pallet of valves | — (no intro: the Scale prompt teaches it) | "Welcome. Your Wrap does one thing. Do that one thing. Set the console anywhere; there is no office." |
 | 2 | The Lighthouse Keepers' Union | one bulb | "The star is a source too." | "The star is not a planet. It bends the same way." |
 | 3 | Strait & Narrow Ltd. | a wide load | "Shrink the rock, not the cargo." | "The Wrap takes as well as gives. A smaller world is a wider door." |
 | 4 | Madame Fink's Discount Gravity | a piano | "Now move it. *Where* is a choice. Works everywhere." | "The Wrap is yours to place. Where you work is a decision. Make it." |
@@ -248,7 +248,9 @@ and never explains itself:
   closes *"The console stays where it is. Today the space. Tomorrow the time."*
 
 The exact strings live in `Levels_en` / `Levels_es` under the `init_manual_entry`, `init_01` and
-`complete` keys. Jobs 2, 3, 5 and 6 stay untouched: the thread is the company's condition, not a
+`complete` keys. A spoken line longer than one short sentence is split into numbered entries that
+play in order: `init_01`, `init_02`, … (up to `_09`), and `complete`, `complete_02`, … (the same for
+`fail`). Jobs 2, 3, 5 and 6 stay untouched: the thread is the company's condition, not a
 running joke.
 
 ## Seeds (later)

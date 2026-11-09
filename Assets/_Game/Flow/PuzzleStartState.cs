@@ -32,7 +32,7 @@ namespace DigitalLove.Game.Flow
             puzzleController.Enter(puzzle);
             puzzleController.Glitch();
             if (!puzzle.noIntro)
-                ttsPresenter.Play(new[] { puzzle.IntroKey + "_01" });
+                ttsPresenter.Play(new[] { puzzle.IntroLinesKey });
             parent.SetCurrentState(nextState.RouteId);
         }
 
