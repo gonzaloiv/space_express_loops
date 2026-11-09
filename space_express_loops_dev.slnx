@@ -17,6 +17,7 @@
   <Project Path="DigitalLove.Global.csproj" />
   <Project Path="DigitalLove.DataAccess.Remote.csproj" />
   <Project Path="DigitalLove.Game.Flow.csproj" />
+  <Project Path="DigitalLove.Audio.PxSynth.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.csproj" />
   <Project Path="DigitalLove.Game.States.Setup.csproj" />
   <Project Path="Vendor.GameAnalytics.csproj" />
@@ -40,8 +41,8 @@
   <Project Path="DigitalLove.Game.Sectors.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.Hands.csproj" />
   <Project Path="Vendor.UnityGif.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Cube.csproj" />
   <Project Path="DigitalLove.Game.GesturePrompts.Editor.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.Zone.csproj" />
   <Project Path="DigitalLove.Analytics.csproj" />
   <Project Path="DigitalLove.VFX.Materials.Editor.csproj" />
   <Project Path="DigitalLove.XR.OVR.csproj" />

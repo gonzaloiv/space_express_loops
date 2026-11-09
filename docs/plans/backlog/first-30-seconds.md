@@ -1,76 +1,83 @@
 # The first 30 seconds — the console boots
 
-**Status:** next · presentation · updated 2026-11-09 — launch → seated bubble → title beat → the Scale
-prompt, with no setup and no extra taps. Road step 5.
+**Status:** next · presentation · updated 2026-11-09 — launch → the console boot → the field placed
+where the player actually is → the first pinch, with no setup and no extra taps. Road step 5.
 
 **Related:** [lore](../../design/world/lore.md) §The console / §In the game ·
-[vision](../../design/vision.md) §2 · [pitch](../../design/pitch.md) (video 0:00–0:30) ·
-[gesture prompts](../README.md) (Scale unlocks in job 1) · [plans board](../README.md)
+[vision](../../design/vision.md) §2 · [pitch](../../design/pitch.md) ·
+[offline and pause](offline-and-pause.md) (the launch's other judge tests) · [plans board](../README.md)
 
 ## Goal
 
 The judge's one-bus-stop test starts at launch, not at the first puzzle. A cold launch should read as
-the company's console booting, put the bubble at seated reach, and reach job 1's first pinch fast. A
-fresh save already auto-enters job 1 (`PuzzleSelectionState`), so the missing work is the boot/title
-beat and the first read, not a new flow.
+the company's console booting, put the field at seated reach in front of the player — even when the
+headset was lying on the desk at launch — and reach job 1's first pinch fast.
+
+**What already runs at launch** (`SetupState`, the scene's initial state): an internet check, a device
+check, `OVRSpaceSetup` (places the origin in front of the head right away), the player-data check, then
+`AnimatorSplashScreen` — authored, but `skip: true`. A fresh save then auto-enters job 1
+(`PuzzleSelectionState`); a returning save opens the map. The origin is placed again at every job start
+(`PuzzleStartState`) and on a system recenter.
 
 ## Contract
 
-- **Diegetic, no new system.** The beat is the tech team's console: thin frame, monospace, phosphor
+- **Diegetic, no new system.** The boot is the tech team's console: thin frame, monospace, phosphor
   line art, CRT boot/cut ([lore](../../design/world/lore.md) §The tech team). No second character.
 - **No new input.** Launch → the first pinch; nothing to tap, scan, or place by hand.
-- **Short.** The pitch's first 10 seconds are the stretch, so the boot and title must not push the hero
-  moment back.
-- **Fresh save vs returning save.** Fresh: boot → job 1. Returning: boot → the map.
-- **No reactive hints.** Text comes from the console or the job card, never from the player being stuck.
+- **Short.** The judge plays from a cold launch, so the boot must not delay the first pinch (the video
+  is edited and can open on the stretch either way).
+- **Straight to play.** Fresh save: boot → job 1, no card. Returning save: boot → the map.
+- **No reactive hints.** Text comes from the console or the prompts, never from the player being stuck.
 
 ## Units
 
-### U1 — the boot and the title
+### U1 — the boot
 
-- The console boots with `OUR SPACE CORP · DISPATCH CONSOLE · REMOTE SEAT 2`; carry the poster line
-  *"Revenue is relative."* as a console line, never spoken.
-- A short `OUR SPACE` title follows, then the flow continues. Target ≤3 s to the bubble.
-- **Exit:** a cold launch reads as the console, not a menu, and the title beat never replays inside a
-  session.
+- A console boot view, played as the content of the existing splash (turn `skip` off), with its own
+  small controller that types the lines and reports when done.
+- Lines: `OUR SPACE CORP · DISPATCH CONSOLE · REMOTE SEAT 2`, then *"Revenue is relative."*, then the
+  `OUR SPACE` title. **On a fresh save only**, add `WELCOME, NEW EMPLOYEE.` — the manual's opening line,
+  seen once with no card *(proposed)*.
+- Target ≤3 s, never spoken, once per launch.
+- **Exit:** a cold launch reads as the console, not a menu; the welcome line shows only on a fresh save.
 
-### U2 — the bubble at seated reach
+### U2 — placed where the player is
 
-- The first bubble sits at a comfortable seated arm's reach over the player's real table/desk.
-- Remove any setup prompt or hand-placement beat on the critical path; keep the same pose on a returning
-  launch.
-- **Exit:** a seated player can reach the cube and the field without standing, turning, or walking.
+- **Wait for a player, then place.** Today the origin is placed as soon as setup runs, so a headset
+  lying on the desk at launch puts the field wherever the headset was pointing. Place only once the
+  headset is worn (user present) and the head pose has settled; the boot plays in front of the head at
+  that moment, and the field is placed as the boot ends.
+- **Head for direction and distance, hands for height.** Forward from the head's yaw (ignoring pitch)
+  at seated reach. When the hands are tracked and resting in front, set the field just above them — the
+  hands find the desk; otherwise fall back to a fixed offset below the head. Clamp the height to a
+  comfortable band.
+- **Re-place on the right events only:** putting the headset back on after taking it off, and a system
+  recenter. A job start keeps the current placement (today it re-places every job).
+- **Exit:** launch with the headset on the desk, put it on — the field appears at seated reach in front
+  of you; hands on the desk put it just above them.
 
-### U3 — the first read: manual + Scale prompt
+### U3 — the first read
 
-- Job 1 opens; the manual's opening entry and the Scale prompt need to land together. Today job 1 has
-  `noIntro`, so it skips the Edition card — decide whether the first-run manual entry is shown on entry
-  or stays on the map card only.
-- The Scale prompt must be visible before the hand reaches the cube.
-- **Exit:** a first-timer knows to pinch inside the cube within 15 s, and the manual's *"Welcome, new
-  employee"* line is seen once.
-
-### U4 — No Jim before the first solve
-
-- No Jim line before the first puzzle is completed; the manual and the Scale prompt carry the first
-  beat.
-- Jim first speaks on job 1's completion receipt, and per-job from job 2.
-- **Exit:** a fresh launch reaches the first pinch with no VO; the first Jim cue is the job-1
-  completion.
+- Job 1 opens with no card; the Scale prompt is visible before the hand reaches the cube.
+- Job 1's unused tech-voice line ("One pinch. You'll be fine.") leaves [jobs](../../design/jobs.md)
+  *(proposed)*; Jim's first line stays job 1's completion receipt (already true: job 1 is `noIntro`).
+- **Exit:** a first-timer pinches inside the cube within 15 s of the boot ending.
 
 ## Out of scope
 
-New console art beyond the existing frame, a second speaking character, a separate tutorial flow, and
-changes to job 1's bake.
+New console art beyond the existing frame, a second speaking character, a separate tutorial flow,
+table detection from the room scan, and changes to job 1's bake.
 
 ## Manual check (headset)
 
-1. Erase the save, launch: the console boot and title play, then job 1 opens.
-2. The bubble is at seated reach with no scan or placement step.
-3. The Scale prompt is visible before the hand reaches the cube.
-4. Launch to first pinch is ≤30 s.
-5. A returning save goes to the map, not job 1.
-6. The boot/title never replay mid-session.
-7. No Jim line plays before the first pinch or during job 1's start; the first cue is the completion.
-8. Airplane-seat pass: seated, two-foot radius, no reach outside comfort.
-9. Video pass: the first 10 seconds still show the stretch.
+1. Erase the save, launch with the headset on: the boot shows the welcome line, then job 1 opens.
+2. Launch with the headset lying on the desk, then put it on: the field appears in front of you at
+   seated reach, not where the headset was pointing.
+3. Hands resting on the desk at placement: the field sits just above them.
+4. The Scale prompt is visible before the hand reaches the cube.
+5. Launch to first pinch is ≤30 s.
+6. A returning save shows no welcome line and goes to the map.
+7. Take the headset off and on mid-job: the field re-places in front of you; a job start alone does not
+   move it.
+8. No Jim line plays before job 1's completion.
+9. Airplane-seat pass: seated, two-foot radius, no reach outside comfort.

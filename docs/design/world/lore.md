@@ -89,7 +89,7 @@ would say, not narration.
 
 The run is the company **proving the Wrap**, one delivery at a time. All backdrop:
 
-- **The map is the contracts.** Each **numbered cube** is a prepared delivery; the number is the tech
+- **The map is the contracts.** Each **numbered node** is a prepared delivery; the number is the tech
   team's order of readiness, not a menu. Pinching into a contract brings its patch of spacetime into
   the room ([progression](../systems/progression.md)).
 - **The order is calibration.** The Wrap is new, so it is proven **step by step** — each delivery that

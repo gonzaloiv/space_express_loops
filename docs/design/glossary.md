@@ -16,7 +16,7 @@ the UI. Do not introduce a third word for the same idea.
 |---|---|
 | **Our Space** | The game's name (your space + outer space). |
 | **the cube (the lens)** | The one instrument: the cube frame plus the grab-inside scale, taken together. Use **cube** in design prose; **lens** is the concept alias, not a second object. |
-| **zone** | The space inside the cube that a scale is applied to; the unit the scale acts on. |
+| **zone** | The space inside the cube that a scale is applied to; the unit the scale acts on. **Cube** is what the player sees and touches; **zone** is the region of space it transforms — in code, the views are `Cube*`, the domain data is `*Zone*`. |
 | **zones** | The brief field: how many zones the solution scales (1–3). Not a move count. |
 | **moves** | The player moving the cube; the `translatable` permission, not a count. The brief field for the zone count is **zones**. |
 | **the scale** | The verb: a two-hand pinch *inside* the cube, scaling the space and the content. |
@@ -37,12 +37,12 @@ the UI. Do not introduce a third word for the same idea.
 | **curve / clear** | The two roles of the scale: **grow to curve** (a well bends the path), **shrink to clear** (a smaller obstacle leaves the line). A multi-zone solution can mix them. |
 | **readout** | The derived surface for one run: result, entropy and stars. The final bar lives **in the field**, not a panel; the lab panel is a diagnostic. |
 | **bubble** | The playfield: the miniature universe anchored in the room. |
-| **job (level, contract)** | One delivery — a cube on the map; ~1 minute each, 7 in the run. **Contract** is the fiction word. |
+| **job (level, contract)** | One delivery — a node on the map; ~1 minute each, 7 in the run. **Contract** is the fiction word. |
 | **chapter** | An ordered set of jobs that teaches one idea; numbers restart per chapter ([chapters](chapters.md)). |
 | **freelance contract** | An optional prebaked job outside the chapters, graded by exact entropy left, with no story. The **daily contract** is one per day, the same for everyone. |
 | **multi-ship** | A job with more than one run; it is solved only when **every ship arrives**. The runs relate as fan-out, converge, or separate. |
 | **the seed** | The authoring recipe for a job — its field, brief conditions and dials; the **level** is the baked result. |
-| **the map (level selector)** | The field of numbered cubes, one per job; solving lights them. **Direct pick only**; the result offers Map/Retry. |
+| **the map (level selector)** | The field of numbered **nodes**, one per job; solving lights them. The cube picks a node. **Direct pick only**; the result offers Map/Retry. |
 | **the sun** | The source at the field centre. Scalable by its centre by default; a puzzle can lock it to fixed mass. Job 1 has a sun the cube does not cover; the centre job makes it the lesson. Never a run endpoint. |
 | **the company** | The lore wrapper (identity, contracts); flavour only, no economy. |
 | **the console** | The company-issued Wrap client: a portable dispatch terminal that projects the bubble into the player's room and carries the contract map between jobs. It explains MR anchoring in-fiction; furniture and the map, not a second interactive system. |

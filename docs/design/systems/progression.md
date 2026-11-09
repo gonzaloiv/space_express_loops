@@ -31,17 +31,18 @@ Two things: **what advances**, and **what gates**.
 
 So progression has **two axes** — breadth (light every cube) and depth (3-star each).
 
-### The map — numbered cubes in a big universe
+### The map — numbered nodes in a big universe
 
-The **level selector** is needed: a field of cubes, one per job.
+The **level selector** is needed: a field of nodes, one per job. The **cube** on the map is the
+player's instrument, used to pick a node ([the cube](cube.md) §The map uses the same cube).
 
-- A **big universe** (the bounded sector field) holds the cubes, one per job.
-- Each cube carries a **number** — the number *is* the order. The graph is **implied**, not drawn.
-- **A level is a cube on the map:** picking it brings the cube into the play space, and its
+- A **big universe** (the bounded sector field) holds the nodes, one per job.
+- Each node carries a **number** — the number *is* the order. The graph is **implied**, not drawn.
+- **A level is a node on the map:** entering it brings its field into the play space, and its
   number/seed generates (offline) the puzzle's **own field** — the campaign map is the backdrop, the
   puzzle field is the play space.
 - **Direct pick only (decided 2026-10-27):** the map is the only navigation; the result offers
-  Map/Retry, not Next. Solved and current cubes are pickable; locked cubes refuse visibly.
+  Map/Retry, not Next. Solved and current nodes are pickable; locked nodes refuse visibly.
 - **The first session skips the map (decided 2026-11-06).** On a fresh save the game opens straight
   in job 1; the map is first seen after job 1 (or on leaving it), so the player meets the cube before
   the map, and the map's enter is the same pinch inside the same cube

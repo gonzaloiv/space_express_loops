@@ -65,8 +65,10 @@ Active work.
 
 ## Next
 
-- [The first 30 seconds](backlog/first-30-seconds.md) — the console boot, the seated bubble, and the
-  first Scale prompt. Road step 5.
+- [The first 30 seconds](backlog/first-30-seconds.md) — the console boot, the field placed from the
+  head and hands once the headset is worn, straight to job 1. Road step 5.
+- [Offline and pause](backlog/offline-and-pause.md) — progress kept locally (PlayerPrefs, mirrored to
+  the cloud), no internet gate, a clean pause behind the system menu. The judge tests.
 
 ## Later
 

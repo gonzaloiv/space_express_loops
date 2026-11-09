@@ -48,21 +48,35 @@ What needs fixing before it ships:
 
 ### U1 — bring in the engine
 
-- Move `pxStrax`, `pxLope`, `pxLFO` to the vendor module; fix the sample rate and channels.
+- Move `pxStrax`, `pxLope`, `pxLFO` to `Assets/_Modules/Audio/Vendor/PxSynth` with **their own asmdef**
+  (`DigitalLove.Audio.PxSynth`): today they compile into Assembly-CSharp, which the game's asmdefs cannot
+  reference. The `_Ignore` demos keep compiling against the moved types.
+- Fix the sample rate (`pxStrax` and `pxLope` both hard-code 44100) and the channel loop.
+- A voice is a GameObject with an `AudioSource` (no clip, playing) and the synth component, since
+  `OnAudioFilterRead` only runs on a playing source. Route it to an SFX group on
+  `Features/Audio/MainMixer` that sits under the voice.
 - **Exit:** one Strax voice plays a note on the Quest with no crackle and no frame cost.
 
 ### U2 — the stretch voice
 
-- A cube sound view on the puzzle prefab: pinch start → grab tick and a sustained voice; the zone's
-  scale drives pitch and cutoff each frame; release → key off and a release blip.
-- The same voice on the map cube's pinch-to-enter.
+- A cube voice (`CubeVoice`) on `Cube.prefab`, beside `CubeView`: both the puzzle's cubes and the map cube are
+  this prefab, so one component serves both. It reads the zone's `IsScaling` and `Scale` each frame:
+  pinch start → grab tick and a sustained voice; scale drives pitch and cutoff; release → key off and a
+  release blip. The source sits on the cube (3D, so the sound comes from the cube in the room).
+- **The strain is pushed in, not read:** the zone does not know the budget, so the controller sets a
+  0–1 strain on the voice from the readout (`(EntropySpent + EntropyPending) / EntropyBudget`). The map
+  has no budget, so its strain stays 0.
 - **Exit:** pinching sounds like stretching; the tone tracks the scale both ways and wobbles near an
   empty budget; the map pinch sounds the same.
 
 ### U3 — the cues
 
-- Authored patches for the arrive chime, crash, fail sting, refusal and star tick, played by a small cue
-  player (two pooled voices). `PuzzleCompleteState` and the controller's events trigger them.
+- Authored patches (a small `SynthPatch` asset: notes, step time, envelope, filter, distortion) for the
+  arrive chime, crash, fail sting, refusal and star tick, played by a cue player with two pooled voices.
+- **Who triggers what:** the arrive chime and fail sting from `PuzzleCompleteState`; the crash from
+  `PuzzleEditionState` on a crashed flight that does not end the job (the controller raises the flight's
+  outcome); the refusal from `SpaceShapingView.Refused`; the star ticks from the stamp's per-star event
+  ([solve moment](solve-moment.md) U2).
 - **Exit:** every beat in the loop has its sound; the solve moment's chime and ticks play in sequence.
 
 ## Manual check (headset)
