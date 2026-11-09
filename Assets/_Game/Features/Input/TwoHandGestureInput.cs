@@ -1,4 +1,5 @@
 using System;
+using DigitalLove.Global;
 using Oculus.Interaction;
 using Oculus.Interaction.Input;
 using UnityEngine;
@@ -59,12 +60,45 @@ namespace DigitalLove.Input
 
         private void Update()
         {
+            if (PauseController.IsPaused)
+                return;
+
             bool wasActive = isActive;
             ReadHands();
             UpdateDistanceSpeed(isLeftPinching && isRightPinching);
             UpdateActive(isLeftPinching && isRightPinching, hasLeftHand && hasRightHand);
             Publish();
             LogIfNeeded(wasActive);
+        }
+
+        private void OnEnable()
+        {
+            ResetGesture();
+            PauseController.Changed += OnPauseChanged;
+        }
+
+        private void OnDisable() => PauseController.Changed -= OnPauseChanged;
+
+        private void OnPauseChanged(bool paused)
+        {
+            if (paused)
+                ResetGesture();
+        }
+
+        private void ResetGesture()
+        {
+            isActive = false;
+            bothPinchingSince = -1f;
+            lastBothPinchTime = 0f;
+            previousHandDistance = 0f;
+            handDistanceSpeed = 0f;
+            hasPreviousHandDistance = false;
+            wasLeftPinching = false;
+            wasRightPinching = false;
+            leftStarted = false;
+            rightStarted = false;
+            leftEnded = false;
+            rightEnded = false;
         }
 
         private void ReadHands()

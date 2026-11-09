@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Cube
 {
-    public class SpaceZoneView : MonoBehaviour
+    public class CubeView : MonoBehaviour
     {
         [SerializeField] private float falloff = 0.5f;
         [SerializeField] private float contentInsetFraction = 0.05f;
@@ -11,7 +11,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         [SerializeField] private float scaleMarginFraction = 0.25f;
         [SerializeField] private float throbAmount = 0.5f;
         [SerializeField] private Transform contentVisual;
-        [SerializeField] private ZoneGrabListener listener;
+        [SerializeField] private CubeGrabListener listener;
+        [SerializeField] private CubeVoice voice;
 
         private float scale = 1f;
         private bool scaling;
@@ -96,6 +97,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         public void SetConditions(ZoneConditions value) => conditions = value;
 
         public void SetFalloff(float value) => falloff = Mathf.Max(value, 0f);
+
+        internal void SetStrain(float value) => voice.SetStrain(value);
 
         public void SetScale(float value)
         {

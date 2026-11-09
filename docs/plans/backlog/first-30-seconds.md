@@ -5,7 +5,7 @@ where the player actually is → the first pinch, with no setup and no extra tap
 
 **Related:** [lore](../../design/world/lore.md) §The console / §In the game ·
 [vision](../../design/vision.md) §2 · [pitch](../../design/pitch.md) ·
-[offline and pause](offline-and-pause.md) (the launch's other judge tests) · [plans board](../README.md)
+[pause](../in-progress/pause.md) and [offline](offline.md) (the launch's other judge tests) · [plans board](../README.md)
 
 ## Goal
 

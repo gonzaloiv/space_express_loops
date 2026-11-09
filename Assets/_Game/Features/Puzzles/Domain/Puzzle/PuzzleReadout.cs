@@ -23,6 +23,11 @@ namespace DigitalLove.Game.SpaceShaping
         public float LastEditCost { get; }
         public Vector3 LastEditCentre { get; }
 
+        // How close the run is to its entropy budget: the voice's strain, 0 when there is no budget.
+        public float Strain => EntropyBudget > 0f
+            ? Mathf.Clamp01((EntropySpent + EntropyPending) / EntropyBudget)
+            : 0f;
+
         private PuzzleReadout(
             SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results,
             bool isChecked, bool isFlying)

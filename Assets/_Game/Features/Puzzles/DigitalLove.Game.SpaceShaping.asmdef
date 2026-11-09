@@ -4,9 +4,10 @@
     "references": [
         "DigitalLove.Game.SpaceShaping.Domain",
         "DigitalLove.Game.SpaceShaping.Views",
-        "DigitalLove.Game.SpaceShaping.Zone",
+        "DigitalLove.Game.SpaceShaping.Cube",
         "DigitalLove.FlowControl",
-        "DigitalLove.Casual.Levels"
+        "DigitalLove.Casual.Levels",
+        "DigitalLove.Global"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

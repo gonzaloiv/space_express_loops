@@ -6,7 +6,7 @@
         "DigitalLove.Game.Sectors",
         "DigitalLove.Casual.Levels",
         "DigitalLove.Global",
-        "DigitalLove.Game.SpaceShaping.Zone"
+        "DigitalLove.Game.SpaceShaping.Cube"
     ],
     "includePlatforms": [
         "Editor"

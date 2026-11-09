@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Cube
 {
-    internal sealed class ZoneHoverTracker
+    internal sealed class CubeHoverTracker
     {
         private bool hovering;
         private Vector3 world;

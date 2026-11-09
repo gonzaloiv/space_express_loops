@@ -3,7 +3,7 @@ using UnityEngine;
 namespace DigitalLove.Game.SpaceShaping.Cube
 {
     // The zone's colour scheme: frame and fill tints for prediction, refusal, hover, and scale.
-    public sealed class ZonePalette
+    public sealed class CubePalette
     {
         public Color Neutral;
         public Color Accent;

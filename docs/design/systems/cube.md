@@ -62,7 +62,10 @@ count.
 ## Rules
 
 - **Soft brush.** The cube's influence falls off at the edges so neighbouring zones blend; a hard
-  edge would tear the mesh.
+  edge would tear the mesh. The falloff lives **inside** the frame — nothing outside the cube changes —
+  and eases in and out (a smooth ramp with rounded corners, decided 2026-11-09), so the lattice bends
+  as a gradient. The physics and the lattice share the one profile (`SpaceZone.InsideFactor`): the
+  grid never shows a warp the ship does not fly through.
 - **The field is derived, never edited.** The player scales the space and the content; the field,
   lattice and trajectory are computed from the result.
 - **Planets stay the field's sources.** The *verb* changes, not the physics (`SpacetimeField`,

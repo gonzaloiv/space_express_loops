@@ -7,15 +7,15 @@ namespace DigitalLove.Game.SpaceShaping
     // The zone cube set: lazy slots, per-puzzle framing, and bulk conditions, prediction, and refusal.
     public class ZoneCubePool
     {
-        private readonly ViewPool<SpaceZoneView> pool;
+        private readonly ViewPool<CubeView> pool;
         private ZoneConditions conditions;
         private float falloff = 0.5f;
         private float minScale = 0.6f;
         private float maxScale = 1.8f;
         private bool inputLocked;
 
-        public ZoneCubePool(SpaceZoneView prototype, Transform parent) =>
-            pool = new ViewPool<SpaceZoneView>(prototype, parent, "Zone", OnCreated);
+        public ZoneCubePool(CubeView prototype, Transform parent) =>
+            pool = new ViewPool<CubeView>(prototype, parent, "Zone", OnCreated);
 
         public event Action<ZoneRefusal> Refused;
 
@@ -25,7 +25,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             get
             {
-                SpaceZoneView cube = pool.Views.Active();
+                CubeView cube = pool.Views.Active();
                 return cube != null ? cube.Zone : default;
             }
         }
@@ -36,7 +36,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             get
             {
-                SpaceZoneView cube = pool.Views.Active();
+                CubeView cube = pool.Views.Active();
                 return cube != null ? cube.transform.position : Vector3.zero;
             }
         }
@@ -68,9 +68,11 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void ClearPredictions() => pool.Views.ClearPredictions();
 
+        public void SetStrain(float value) => pool.Views.ApplyStrain(value);
+
         public void Refuse(ZoneRefusal reason)
         {
-            SpaceZoneView cube = pool.Views.Active();
+            CubeView cube = pool.Views.Active();
             if (cube != null)
                 cube.Refuse(reason);
         }
@@ -81,14 +83,14 @@ namespace DigitalLove.Game.SpaceShaping
             pool.ForEachFrom(0, view => view.SetInputLocked(value));
         }
 
-        private void Place(SpaceZoneView cube, PuzzleFrame frame)
+        private void Place(CubeView cube, PuzzleFrame frame)
         {
             cube.SetConditions(conditions);
             cube.SetScaleEnvelope(minScale, maxScale);
             cube.Place(frame.centre, frame.BoxSize, falloff);
         }
 
-        private void OnCreated(SpaceZoneView cube)
+        private void OnCreated(CubeView cube)
         {
             cube.SetInputLocked(inputLocked);
             cube.Refused += OnRefused;

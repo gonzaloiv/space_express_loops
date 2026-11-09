@@ -1,5 +1,6 @@
 using System;
 using DigitalLove.Game.SpaceShaping.Cube;
+using DigitalLove.Global;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
@@ -100,7 +101,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void LateUpdate()
         {
-            if (run == null || frozen)
+            if (run == null || frozen || PauseController.IsPaused)
                 return;
 
             TrackGesture();

@@ -158,7 +158,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cdd78fb1c2b517349b8bc7f72f7d5375, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Cube::DigitalLove.Game.SpaceShaping.Cube.ZoneGrabListener
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Cube::DigitalLove.Game.SpaceShaping.Cube.CubeGrabListener
   grabbable: {fileID: 1907182571821500481}
   zone: {fileID: 5572121854155305578}
   frameRenderer: {fileID: 27529119412877910}
@@ -188,8 +188,13 @@ GameObject:
   - component: {fileID: 3458409085423053124}
   - component: {fileID: 27529119412877910}
   - component: {fileID: 5572121854155305578}
+  - component: {fileID: 7700000000000000011}
+  - component: {fileID: 7700000000000000012}
+  - component: {fileID: 7700000000000000013}
+  - component: {fileID: 7700000000000000014}
+  - component: {fileID: 4213745259660598342}
   m_Layer: 0
-  m_Name: Zone
+  m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -280,13 +285,200 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 28b8a23edbf65ed4bafb92e2ffdeb179, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Cube::DigitalLove.Game.SpaceShaping.Cube.SpaceZoneView
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Cube::DigitalLove.Game.SpaceShaping.Cube.CubeView
   falloff: 0.5
   contentInsetFraction: 0.075
   scaleMarginFraction: 0.25
   throbAmount: 0.5
   contentVisual: {fileID: 929135511502200135}
   listener: {fileID: 5660060481010103316}
+  voice: {fileID: 7700000000000000014}
+--- !u!82 &7700000000000000011
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6340765332551876216}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: -2849236478096412129, guid: f57371f841e86a04380f7f02e737a6b1, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 1
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0
+  MinDistance: 0.08
+  MaxDistance: 2.5
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &7700000000000000012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6340765332551876216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ccbd4af8581042cbbc4be224228915b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Audio.PxSynth::pxStrax
+  sampleRate: 48000
+  volume: 0.16
+  cutoff: 0.2
+  resonance: 0.3
+  envelope: 0.01
+  harmonic: 1
+  osc2Mix: 0.85
+  distortion: 0.03
+  lfoRate: 1.2
+  lfoAmp: 0
+  attack: 0.008
+  release: 0.12
+  sustain: 1
+--- !u!114 &7700000000000000013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6340765332551876216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b2c3d4e5f60718293a4b5c6d7e8f901, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Audio.Runtime::DigitalLove.Audio.SynthVoice
+  source: {fileID: 7700000000000000011}
+  synth: {fileID: 7700000000000000012}
+  volume: 0.16
+  attackSecs: 0.008
+  releaseSecs: 0.12
+  resonance: 0.3
+  harmonic: 1
+  osc2Mix: 0.85
+  distortion: 0.03
+  strainLfoAmp: 0.08
+  strainLfoRate: 3.5
+  restingLfoRate: 1.2
+  strainWobbleCents: 8
+--- !u!114 &7700000000000000014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6340765332551876216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d4e5f60718293a4b5c6d7e8f9011223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Cube::DigitalLove.Game.SpaceShaping.Cube.CubeVoice
+  zone: {fileID: 5572121854155305578}
+  voice: {fileID: 7700000000000000013}
+  baseNote: 52
+  semitonesPerOctave: 12
+  minScale: 0.6
+  maxScale: 1.8
+  cutoffShrunk: 0.05
+  cutoffGrown: 0.2
+  grabTickSecs: 0.09
+  grabTickSemitones: 5
+  releaseDropSemitones: 3
+--- !u!114 &4213745259660598342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6340765332551876216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a07f270ac36c49789466c75ceb88424c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Meta.XR.Audio::MetaXRAudioSource
+  enableSpatialization: 1
+  gainBoostDb: 0
+  enableAcoustics: 1
+  reverbSendDb: 0
 --- !u!1 &6637559019825712861
 GameObject:
   m_ObjectHideFlags: 0

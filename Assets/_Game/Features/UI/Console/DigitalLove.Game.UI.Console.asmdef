@@ -1,10 +1,7 @@
 {
-    "name": "DigitalLove.Game.SpaceShaping.Zone",
+    "name": "DigitalLove.Game.UI.Console",
     "rootNamespace": "",
-    "references": [
-        "DigitalLove.Global",
-        "Oculus.Interaction"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

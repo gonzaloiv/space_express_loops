@@ -24,7 +24,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         [Test]
         public void ZoneView_ExposesTheLockedGestures()
         {
-            GameObject zoneObject = ZoneObject(out SpaceZoneView zone);
+            GameObject zoneObject = ZoneObject(out CubeView zone);
             zone.SetConditions(new ZoneConditions(false, true));
 
             Assert.IsFalse(zone.CanMove);
@@ -35,7 +35,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         [Test]
         public void ZoneView_RefusesTheRunAnchors()
         {
-            GameObject zoneObject = ZoneObject(out SpaceZoneView zone);
+            GameObject zoneObject = ZoneObject(out CubeView zone);
             zone.SetConditions(new ZoneConditions(
                 true, true, Vector3.zero, new Vector3(1f, 0f, 0f)));
 
@@ -44,13 +44,13 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             Object.DestroyImmediate(zoneObject);
         }
 
-        private static GameObject ZoneObject(out SpaceZoneView zone)
+        private static GameObject ZoneObject(out CubeView zone)
         {
             GameObject content = new("Content");
             GameObject zoneObject = new("Zone");
             zoneObject.SetActive(false);
             content.transform.SetParent(zoneObject.transform, false);
-            zone = zoneObject.AddComponent<SpaceZoneView>();
+            zone = zoneObject.AddComponent<CubeView>();
 
             SerializedObject serialized = new(zone);
             serialized.FindProperty("contentVisual").objectReferenceValue = content.transform;

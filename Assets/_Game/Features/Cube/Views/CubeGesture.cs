@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Cube
 {
-    public static class ZoneGesture
+    public static class CubeGesture
     {
-        public static bool HandInsideScale(SpaceZoneView zone, Grabbable grabbable) =>
+        public static bool HandInsideScale(CubeView zone, Grabbable grabbable) =>
             zone.ScaleContains(HandWorld(zone, grabbable));
 
-        public static bool AllHandsInsideScale(SpaceZoneView zone, Grabbable grabbable)
+        public static bool AllHandsInsideScale(CubeView zone, Grabbable grabbable)
         {
             for (int i = 0; i < grabbable.GrabPoints.Count; i++)
             {
@@ -19,10 +19,10 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             return true;
         }
 
-        public static Vector3 HandWorld(SpaceZoneView zone, Grabbable grabbable) =>
+        public static Vector3 HandWorld(CubeView zone, Grabbable grabbable) =>
             grabbable.GrabPoints.Count > 0 ? grabbable.GrabPoints[0].position : zone.transform.position;
 
-        public static Vector3 HandLocal(SpaceZoneView zone, Grabbable grabbable) =>
+        public static Vector3 HandLocal(CubeView zone, Grabbable grabbable) =>
             zone.ToLocal(HandWorld(zone, grabbable));
 
         public static float HandDistance(Grabbable grabbable)

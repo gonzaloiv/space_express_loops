@@ -19,7 +19,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private float shipStaggerSecs = 0.08f;
         [SerializeField] private Transform shipsParent;
         [SerializeField] private Transform linesParent;
-        [SerializeField] private SpaceZoneView cubePrototype;
+        [SerializeField] private CubeView cubePrototype;
         [SerializeField] private Transform cubeParent;
 
         [Header("Endpoints")]

@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Cube
 {
-    public class ZoneGrabListener : MonoBehaviour
+    public class CubeGrabListener : MonoBehaviour
     {
         [SerializeField] private Grabbable grabbable;
-        [SerializeField] private SpaceZoneView zone;
+        [SerializeField] private CubeView zone;
         [SerializeField] private Renderer frameRenderer;
         [SerializeField] private Renderer fillRenderer;
 
@@ -35,7 +35,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         [Header("Refuse")]
         [SerializeField] private float refuseSecs = 0.18f;
 
-        private ZoneFeedback feedback;
+        private CubeFeedback feedback;
 
         private bool classified;
         private bool frameGrab;
@@ -50,7 +50,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         private bool locked;
 
-        private readonly ZoneHoverTracker hover = new();
+        private readonly CubeHoverTracker hover = new();
 
         public event Action<ZoneRefusal> Refused
         {
@@ -60,7 +60,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         public event Action MoveCompleted;
 
-        private void Awake() => feedback = new ZoneFeedback(frameRenderer, fillRenderer, BuildPalette());
+        private void Awake() => feedback = new CubeFeedback(frameRenderer, fillRenderer, BuildPalette());
 
         private void OnEnable() => grabbable.WhenPointerEventRaised += OnPointerEvent;
 
@@ -127,10 +127,10 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         {
             if (count >= 2 && lastCount < 2)
             {
-                startHandDistance = ZoneGesture.HandDistance(grabbable);
+                startHandDistance = CubeGesture.HandDistance(grabbable);
                 startScale = zone.Scale;
                 startSize = zone.Size;
-                frameGrab = !ZoneGesture.AllHandsInsideScale(zone, grabbable);
+                frameGrab = !CubeGesture.AllHandsInsideScale(zone, grabbable);
             }
 
             if (count == 1 && lastCount != 1)
@@ -160,7 +160,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             classified = true;
             moved = false;
             scaled = false;
-            frameGrab = !ZoneGesture.HandInsideScale(zone, grabbable);
+            frameGrab = !CubeGesture.HandInsideScale(zone, grabbable);
             grabOffset = zone.Centre - HandLocal();
             grabOrigin = HandLocal();
         }
@@ -190,8 +190,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             if (startHandDistance < 0.0001f)
                 return;
 
-            float target = ZoneGesture.ScaleTarget(
-                startScale, ZoneGesture.HandDistance(grabbable) / startHandDistance, scaleGain,
+            float target = CubeGesture.ScaleTarget(
+                startScale, CubeGesture.HandDistance(grabbable) / startHandDistance, scaleGain,
                 feedback.MinScale, feedback.MaxScale);
             float blend = 1f - Mathf.Exp(-Time.deltaTime / Mathf.Max(scaleSmoothSecs, 0.001f));
             zone.SetScale(Mathf.Lerp(zone.Scale, target, blend));
@@ -202,7 +202,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             if (startHandDistance < 0.0001f)
                 return;
 
-            float ratio = ZoneGesture.HandDistance(grabbable) / startHandDistance;
+            float ratio = CubeGesture.HandDistance(grabbable) / startHandDistance;
             if (!zone.CanResize)
             {
                 if (Mathf.Abs(ratio - 1f) > resizeRefuseRatio)
@@ -210,7 +210,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 return;
             }
 
-            Vector3 size = startSize * ZoneGesture.ResizeFactor(ratio, frameGain, frameGrowRatio);
+            Vector3 size = startSize * CubeGesture.ResizeFactor(ratio, frameGain, frameGrowRatio);
             if (!zone.CanPlace(zone.Centre, size))
             {
                 Refuse(ZoneRefusal.OutOfBounds);
@@ -220,7 +220,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             zone.SetFrame(zone.Centre, size);
         }
 
-        private ZonePalette BuildPalette() =>
+        private CubePalette BuildPalette() =>
             new()
             {
                 Neutral = neutral.value,
@@ -232,6 +232,6 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 RefuseSecs = refuseSecs
             };
 
-        private Vector3 HandLocal() => ZoneGesture.HandLocal(zone, grabbable);
+        private Vector3 HandLocal() => CubeGesture.HandLocal(zone, grabbable);
     }
 }

@@ -11,12 +11,12 @@ namespace DigitalLove.Game.PuzzleSelection
         private const float EnvelopeHeadroom = 1.05f;
         private const float RefuseScale = 1.01f;
 
-        private readonly SpaceZoneView zone;
+        private readonly CubeView zone;
         private readonly Vector3 size;
         private readonly float enterAt;
         private readonly float lockedCeiling;
 
-        public MapCube(SpaceZoneView zone, float size, float enterAt, float lockedLimit)
+        public MapCube(CubeView zone, float size, float enterAt, float lockedLimit)
         {
             this.zone = zone;
             this.size = Vector3.one * size;

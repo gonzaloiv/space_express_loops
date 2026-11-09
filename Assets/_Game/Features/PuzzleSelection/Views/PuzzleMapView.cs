@@ -15,7 +15,7 @@ namespace DigitalLove.Game.PuzzleSelection
 
         [SerializeField] private Transform mapRoot;
         [SerializeField] private RunSlotView selectedSlot;
-        [SerializeField] private SpaceZoneView cube;
+        [SerializeField] private CubeView cube;
         [Tooltip("Edge of the selection cube, in map units.")]
         [SerializeField, Min(0.01f)] private float cubeSize = 0.119f;
         [SerializeField] private TMP_Text selectionLabel;
@@ -77,7 +77,7 @@ namespace DigitalLove.Game.PuzzleSelection
 
         private void Update()
         {
-            if (map == null)
+            if (map == null || PauseController.IsPaused)
                 return;
 
             float deltaSecs = Time.unscaledDeltaTime;

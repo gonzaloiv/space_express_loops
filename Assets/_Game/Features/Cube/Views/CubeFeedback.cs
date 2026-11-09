@@ -5,11 +5,11 @@ using UnityEngine;
 namespace DigitalLove.Game.SpaceShaping.Cube
 {
     // Presents a zone's frame and fill: prediction, refusal, hover, and scale colour. Owns no input.
-    public sealed class ZoneFeedback
+    public sealed class CubeFeedback
     {
         private readonly Renderer frameRenderer;
         private readonly Renderer fillRenderer;
-        private readonly ZonePalette palette;
+        private readonly CubePalette palette;
 
         private RendererTint frameTint;
         private RendererTint fillTint;
@@ -21,7 +21,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         private ZoneRefusal refusal;
         private float refusedUntil;
 
-        public ZoneFeedback(Renderer frameRenderer, Renderer fillRenderer, ZonePalette palette)
+        public CubeFeedback(Renderer frameRenderer, Renderer fillRenderer, CubePalette palette)
         {
             this.frameRenderer = frameRenderer;
             this.fillRenderer = fillRenderer;
@@ -58,7 +58,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         }
 
         public void Apply(
-            SpaceZoneView zone, int selectingPoints, bool frameGrab, bool hovering, Vector3 hoverWorld)
+            CubeView zone, int selectingPoints, bool frameGrab, bool hovering, Vector3 hoverWorld)
         {
             if (IsRefusing)
             {
@@ -85,7 +85,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         private bool IsRefusing => Time.unscaledTime < refusedUntil;
 
-        private void ApplyIdle(SpaceZoneView zone, bool hovering, Vector3 hoverWorld)
+        private void ApplyIdle(CubeView zone, bool hovering, Vector3 hoverWorld)
         {
             bool hoverInside = hovering && zone.ContentContains(hoverWorld);
             Color fallback = hovering ? palette.Accent : palette.Neutral;
@@ -95,7 +95,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 : palette.Neutral.WithAlpha(palette.FillIdleAlpha));
         }
 
-        private Color FrameActive(SpaceZoneView zone, int selectingPoints)
+        private Color FrameActive(CubeView zone, int selectingPoints)
         {
             if (selectingPoints >= 2)
                 return zone.CanResize ? palette.Accent : palette.Neutral;

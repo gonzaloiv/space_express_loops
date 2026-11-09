@@ -1,7 +1,9 @@
 using DigitalLove.DataAccess;
+using DigitalLove.Audio;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.PuzzleSelection;
 using DigitalLove.Game.SpaceShaping;
+using DigitalLove.Game.SpaceShaping.Cube;
 using DigitalLove.Input;
 using DigitalLove.TTS;
 using DigitalLove.Game.GesturePrompts;
@@ -20,6 +22,10 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private GameGesturePromptSource promptSource;
         [SerializeField] private JobCardPanel contractCard;
         [SerializeField] private TtsPresenter ttsPresenter;
+        [SerializeField] private SynthCuePlayer cuePlayer;
+        [SerializeField] private SynthPatch crashCue;
+        [SerializeField] private SynthPatch refusalCue;
+        [SerializeField] private float refusalCueCooldownSecs = 0.7f;
         [SerializeField] private Transform head;
         [SerializeField] private bool rotationEnabled;
         [SerializeField] private float rotationStepDegrees = 15f;
@@ -29,6 +35,7 @@ namespace DigitalLove.Game.Flow
 
         private ScaleOutGesture scaleOut;
         private OneHandRotationGesture rotation;
+        private float nextRefusalCueAt;
 
         public override void Enter()
         {
@@ -38,6 +45,8 @@ namespace DigitalLove.Game.Flow
             gesture.StateChanged += OnGestureChanged;
             puzzleController.Solved += OnSolved;
             puzzleController.Failed += OnFailed;
+            puzzleController.FlightCrashed += OnFlightCrashed;
+            puzzleController.Refused += OnRefused;
             PuzzleData puzzle = memoryDataClient.Get<PuzzleData>();
             ShowPrompts(puzzle);
             ShowContract(puzzle);
@@ -48,6 +57,8 @@ namespace DigitalLove.Game.Flow
             gesture.StateChanged -= OnGestureChanged;
             puzzleController.Solved -= OnSolved;
             puzzleController.Failed -= OnFailed;
+            puzzleController.FlightCrashed -= OnFlightCrashed;
+            puzzleController.Refused -= OnRefused;
             scaleOut?.Reset();
             rotation?.Reset();
             prompts.HideAll();
@@ -72,6 +83,17 @@ namespace DigitalLove.Game.Flow
         private void OnSolved() => EndRun(true);
 
         private void OnFailed() => EndRun(false);
+
+        private void OnFlightCrashed() => cuePlayer.Play(crashCue);
+
+        private void OnRefused(ZoneRefusal reason)
+        {
+            if (reason != ZoneRefusal.OutOfEntropy || Time.unscaledTime < nextRefusalCueAt)
+                return;
+
+            nextRefusalCueAt = Time.unscaledTime + refusalCueCooldownSecs;
+            cuePlayer.Play(refusalCue);
+        }
 
         private void EndRun(bool solved)
         {

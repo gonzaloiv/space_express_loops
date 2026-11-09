@@ -17,15 +17,15 @@ MonoBehaviour:
   origin: {x: -0.3098847, y: 0.08459707, z: -0.20857729}
   destination: {x: -0.026711259, y: -0.029685669, z: 0.3793014}
   zoneCentre: {x: -0.16829798, y: 0.027455702, z: 0.085362054}
-  cubeSizeMin: 0.05880186
-  cubeSizeMax: 0.1255004
+  cubeSizeMin: 0.162
+  cubeSizeMax: 0.162
   frames:
   - centre: {x: 0, y: 0, z: 0}
-    size: 0.05880186
+    size: 0.162
   captureRadius: 0.03399928
   translatable: 0
   zones: 1
-  routes: 1
+  routes: 2
   resizable: 0
   entropyBudget: 0.30967748
   noFail: 0

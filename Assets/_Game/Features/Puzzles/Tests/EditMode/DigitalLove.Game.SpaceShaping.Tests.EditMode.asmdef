@@ -4,7 +4,7 @@
     "references": [
         "DigitalLove.Casual.Levels",
         "DigitalLove.Game.SpaceShaping.Domain",
-        "DigitalLove.Game.SpaceShaping.Zone",
+        "DigitalLove.Game.SpaceShaping.Cube",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

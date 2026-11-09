@@ -77,18 +77,26 @@ namespace DigitalLove.Game.SpaceShaping.Grid
             Matrix4x4 parentToLocal = transform.worldToLocalMatrix * transform.parent.localToWorldMatrix;
             bounds = new Bounds(Vector3.zero, Vector3.zero);
 
-            for (int v = 0; v < vertices.Length; v++)
+            // A tube ring's `sides` vertices are consecutive and share one node: warp and fade it once.
+            for (int v = 0; v < vertices.Length; v += sides)
             {
                 Vector3 fraction = nodeFractions[v];
                 Vector3 node = new(
                     (fraction.x * 2f - 1f) * half,
                     (fraction.y * 2f - 1f) * half,
                     (fraction.z * 2f - 1f) * half);
-                Vector3 warpNode = localToParent.MultiplyPoint3x4(node);
-                Vector3 warped = warp(warpNode);
-                colors[v] = new Color(1f, 1f, 1f, fade(warped));
-                Vector3 local = parentToLocal.MultiplyPoint3x4(warped) + ringOffsets[v] * radius;
+                Vector3 warped = warp(localToParent.MultiplyPoint3x4(node));
+                WriteRing(v, parentToLocal.MultiplyPoint3x4(warped), new Color(1f, 1f, 1f, fade(warped)));
+            }
+        }
+
+        private void WriteRing(int first, Vector3 centre, Color color)
+        {
+            for (int v = first; v < first + sides; v++)
+            {
+                Vector3 local = centre + ringOffsets[v] * radius;
                 vertices[v] = local;
+                colors[v] = color;
                 bounds.Encapsulate(local);
             }
         }

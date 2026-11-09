@@ -9,7 +9,7 @@
         "DigitalLove.Localization",
         "DigitalLove.Game.Nodes",
         "DigitalLove.UI.Behaviours",
-        "DigitalLove.Game.SpaceShaping.Zone",
+        "DigitalLove.Game.SpaceShaping.Cube",
         "Unity.TextMeshPro",
         "UnityEngine.UI"
     ],

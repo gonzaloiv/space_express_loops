@@ -62,13 +62,17 @@ Active work.
   receipt. Road step 2.
 - [Cube sound](in-progress/cube-sound.md) — the PX synth voice: a live stretch tone and the job's cues.
   Road step 4, sound only.
+- [Pause](in-progress/pause.md) — a clean stop behind the system menu: voice, sound and ship freeze,
+  nothing commits, Jim's line replays on resume. The judge tests; do this one before offline.
 
 ## Next
 
 - [The first 30 seconds](backlog/first-30-seconds.md) — the console boot, the field placed from the
   head and hands once the headset is worn, straight to job 1. Road step 5.
-- [Offline and pause](backlog/offline-and-pause.md) — progress kept locally (PlayerPrefs, mirrored to
-  the cloud), no internet gate, a clean pause behind the system menu. The judge tests.
+- [Soundscape](backlog/soundscape.md) — the mix pass, the field's hum, the ship's flight, and the
+  system's ticks and transitions, so the stretch tone is not the only sound. Road step 4.
+- [Offline](backlog/offline.md) — progress kept locally (PlayerPrefs, mirrored to the cloud), no
+  internet gate on launch. The judge tests.
 
 ## Later
 

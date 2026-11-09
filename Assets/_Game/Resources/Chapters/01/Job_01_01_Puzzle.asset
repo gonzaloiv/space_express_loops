@@ -21,13 +21,13 @@ MonoBehaviour:
   cubeSizeMax: 0.116946466
   frames:
   - centre: {x: -0.048534516, y: 0.016717834, z: 0.22000581}
-    size: 0.116946466
+    size: 0.076222695
   captureRadius: 0.05190203
   translatable: 0
   zones: 1
   routes: 2
   resizable: 0
-  entropyBudget: 1.4709678
+  entropyBudget: 1.5870967
   noFail: 1
   noGrade: 1
   noIntro: 1

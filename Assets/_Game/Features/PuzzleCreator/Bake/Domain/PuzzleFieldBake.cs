@@ -83,15 +83,23 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return names != null ? names.NameAt(planetCount) : string.Empty;
         }
 
-        // A job that puts the cube over the star must be allowed a cube wide enough to cover it.
+        // A job that puts the cube over the star must use a cube wide enough to cover it — never a
+        // smaller one, or the search can scale the star from its centre point with a cube the player
+        // would see sitting inside the star.
         private static void ApplyCubeRange(
             PuzzleData puzzle, PuzzlePlanetListAsset planets, PuzzleBrief brief)
         {
             CubeRange(planets, out float min, out float max);
-            puzzle.cubeSizeMin = min;
-            puzzle.cubeSizeMax = brief.SunRule == PuzzleSunRule.CentredGrown
-                ? Mathf.Max(max, PuzzleSunRuleCheck.SunEnclosingSize(brief.SunRadius * 2f))
-                : max;
+            if (brief.SunRule != PuzzleSunRule.CentredGrown)
+            {
+                puzzle.cubeSizeMin = min;
+                puzzle.cubeSizeMax = max;
+                return;
+            }
+
+            float enclosing = PuzzleSunRuleCheck.SunEnclosingSize(brief.SunRadius * 2f);
+            puzzle.cubeSizeMax = Mathf.Max(max, enclosing);
+            puzzle.cubeSizeMin = Mathf.Max(min, enclosing);
         }
 
         // The cube must enclose the planet it covers, so the range spans the field's planets with the

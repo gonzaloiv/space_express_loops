@@ -4,10 +4,11 @@ using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
 {
+    // Draws the zones exactly as the physics applies them: each zone transforms the point with the same
+    // profile SpaceZone.ApplyTo uses on the planets, in the same order, so the lattice never shows a warp
+    // the ship does not fly through.
     public readonly struct LatticeWarp
     {
-        private const float ZoneShells = 3f;
-
         private readonly IReadOnlyList<SpaceZone> zones;
 
         public LatticeWarp(IReadOnlyList<SpaceZone> zones)
@@ -18,29 +19,16 @@ namespace DigitalLove.Game.SpaceShaping
         public Vector3 Warp(Vector3 node)
         {
             Vector3 warped = node;
-            if (zones != null)
-            {
-                for (int i = 0; i < zones.Count; i++)
-                {
-                    SpaceZone zone = zones[i];
-                    if (!zone.IsActive)
-                        continue;
+            if (zones == null)
+                return warped;
 
-                    float inside = VisualInsideFactor(zone, node);
-                    warped = Vector3.Lerp(
-                        warped, zone.Centre + (warped - zone.Centre) * zone.Scale, inside);
-                }
+            for (int i = 0; i < zones.Count; i++)
+            {
+                if (zones[i].IsActive)
+                    warped = zones[i].Transform(warped);
             }
 
             return warped;
-        }
-
-        private static float VisualInsideFactor(SpaceZone zone, Vector3 node)
-        {
-            float edge = Mathf.Max(zone.Falloff * zone.Extent, 0.0001f);
-            float outside = edge * Mathf.Max(ZoneShells, 0f);
-            float t = Mathf.Clamp01((zone.Margin(node) + outside) / (edge + outside));
-            return Mathf.SmoothStep(0f, 1f, t);
         }
     }
 }

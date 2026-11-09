@@ -6,6 +6,9 @@ namespace DigitalLove.Game.SpaceShaping.Cube
     {
         private const float MinEffect = 0.1f;
 
+        // How far (as a fraction of the falloff band) the diagonals are rounded off.
+        private const float CornerRounding = 0.5f;
+
         public readonly Vector3 Centre;
         public readonly Vector3 HalfExtents;
         public readonly float Scale;
@@ -69,7 +72,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 if (specs[i].FixedMass)
                     continue;
 
-                float factor = Mathf.Lerp(1f, Scale, InsideFactor(positions[i]));
+                float factor = FactorAt(positions[i]);
                 positions[i] = Centre + (positions[i] - Centre) * factor;
                 scales[i] *= factor;
                 specs[i] = specs[i].Scaled(Centre, factor);
@@ -77,15 +80,39 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         }
 
         public float StepDivisor(Vector3 position) =>
-            IsActive ? Mathf.Lerp(1f, Scale, InsideFactor(position)) : 1f;
+            IsActive ? FactorAt(position) : 1f;
 
+        // How strongly the zone acts at a point: 0 on and outside the cube's faces, 1 deeper inside than
+        // the falloff band. The depth is a smooth minimum of the three axis insets (no crease along the
+        // cube's diagonals) and the ramp is smootherstep (no kink at the face or the band's inner edge),
+        // so the field — and the lattice drawing it — changes as a gradient.
         public float InsideFactor(Vector3 position)
         {
-            float margin = Margin(position);
+            Vector3 inset = HalfExtents - Abs(position - Centre);
             if (Falloff <= 0f)
-                return margin >= 0f ? 1f : 0f;
+                return Mathf.Min(inset.x, Mathf.Min(inset.y, inset.z)) >= 0f ? 1f : 0f;
 
-            return Mathf.Clamp01(margin / (Falloff * Extent));
+            float band = Falloff * Extent;
+            float rounding = band * CornerRounding;
+            float depth = SmoothMin(SmoothMin(inset.x, inset.y, rounding), inset.z, rounding);
+            return Ramp(depth, band);
+        }
+
+        private static float SmoothMin(float a, float b, float k)
+        {
+            float h = Mathf.Max(k - Mathf.Abs(a - b), 0f) / k;
+            return Mathf.Min(a, b) - h * h * k * 0.25f;
+        }
+
+        // The scale applied at a point: 1 outside, the zone's scale in its core.
+        public float FactorAt(Vector3 position) => Mathf.Lerp(1f, Scale, InsideFactor(position));
+
+        public Vector3 Transform(Vector3 position) => Centre + (position - Centre) * FactorAt(position);
+
+        private static float Ramp(float inset, float band)
+        {
+            float t = Mathf.Clamp01(inset / band);
+            return t * t * t * (t * (t * 6f - 15f) + 10f);
         }
 
         private static Vector3 Abs(Vector3 value) =>
