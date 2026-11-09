@@ -1,37 +1,46 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace DigitalLove.Game.UI.Console
 {
     // Lays the console's windows out like one desktop around the seated player: every window on the
     // same arc around the head, facing it, top edges aligned, tiled outward from the field with the
     // same gap. The field owns the centre; the windows take the sides. Lives on the origin, so the
-    // whole desk moves with it.
+    // whole desk moves with it; the seat placement re-arranges it around the real head, so the windows
+    // stay at eye level when the field is set lower.
     public class ConsoleLayout : MonoBehaviour
     {
-        [Tooltip("The player's head in this transform's space (the origin is placed below and in front of it).")]
-        [SerializeField] private Vector3 head = new(0f, 0.15f, -0.45f);
+        [Tooltip("The player's head in this transform's space until the seat is placed (and in the editor).")]
+        [FormerlySerializedAs("head")]
+        [SerializeField] private Vector3 defaultHead = new(0f, 0.15f, -0.45f);
         [Tooltip("Distance from the head to every window, in metres.")]
         [SerializeField, Min(0.1f)] private float radius = 0.5f;
         [Tooltip("Where the first window on each side starts, in degrees from straight ahead — clear of the field.")]
         [SerializeField, Range(0f, 80f)] private float innerAngle = 28f;
         [Tooltip("Gap between neighbouring windows, in degrees.")]
         [SerializeField, Range(0f, 10f)] private float gapAngle = 2f;
-        [Tooltip("Height of every window's top edge, in this transform's space.")]
-        [SerializeField] private float topHeight = 0.2f;
+        [Tooltip("Height of every window's top edge above the eyes, in metres.")]
+        [SerializeField] private float topAboveEyes = 0.05f;
         [Tooltip("Slots from the field outward, on the player's left.")]
         [SerializeField] private ConsoleSlot[] left;
         [Tooltip("Slots from the field outward, on the player's right.")]
         [SerializeField] private ConsoleSlot[] right;
 
-        private void Awake() => Arrange();
+        private Vector3 head;
 
-        [ContextMenu("Arrange")]
-        public void Arrange()
+        private void Awake() => ArrangeAroundDefault();
+
+        // Lays the windows out around a head given in this transform's space.
+        public void ArrangeAround(Vector3 localHead)
         {
+            head = localHead;
             Tile(left, -1f);
             Tile(right, 1f);
         }
+
+        [ContextMenu("Arrange")]
+        private void ArrangeAroundDefault() => ArrangeAround(defaultHead);
 
         private void Tile(ConsoleSlot[] slots, float side)
         {
@@ -53,7 +62,7 @@ namespace DigitalLove.Game.UI.Console
             float rad = degrees * Mathf.Deg2Rad;
             Vector3 flat = new(Mathf.Sin(rad), 0f, Mathf.Cos(rad));
             Vector3 centre = head + flat * radius;
-            centre.y = topHeight - ConsoleSlot.SizeOf(window).y * 0.5f;
+            centre.y = head.y + topAboveEyes - ConsoleSlot.SizeOf(window).y * 0.5f;
 
             window.rotation = transform.rotation * Quaternion.LookRotation(centre - head);
             Vector3 target = transform.TransformPoint(centre);

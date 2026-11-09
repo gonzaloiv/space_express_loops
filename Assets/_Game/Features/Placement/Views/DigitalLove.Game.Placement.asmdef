@@ -4,6 +4,7 @@
     "references": [
         "DigitalLove.Game.Placement.Domain",
         "DigitalLove.Game.States.Setup",
+        "DigitalLove.Game.UI.Console",
         "DigitalLove.XR.OVR",
         "Oculus.VR",
         "Oculus.Interaction"

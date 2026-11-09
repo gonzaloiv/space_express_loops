@@ -10503,6 +10503,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Placement::DigitalLove.Game.Placement.SeatPlacement
   origin: {fileID: 1760187866}
+  console: {fileID: 1760187868}
   head: {fileID: 1806820792}
   leftHand: {fileID: 190861782}
   rightHand: {fileID: 190861781}
@@ -10586,11 +10587,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc5f6de9137480642af4e739ccf012b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.UI.Console::DigitalLove.Game.UI.Console.ConsoleLayout
-  head: {x: 0, y: 0.15, z: -0.45}
+  defaultHead: {x: 0, y: 0.15, z: -0.45}
   radius: 0.5
   innerAngle: 28
   gapAngle: 2
-  topHeight: 0.2
+  topAboveEyes: 0.05
   left:
   - windows:
     - {fileID: 781987389}

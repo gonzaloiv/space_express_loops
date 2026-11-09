@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using DigitalLove.Casual.Flow.Setup;
+using DigitalLove.Game.UI.Console;
 using DigitalLove.XR;
 using Oculus.Interaction.Input;
 using UnityEngine;
@@ -9,11 +10,12 @@ namespace DigitalLove.Game.Placement
 {
     // Places the field where the seated player actually is. Setup waits until the headset is worn and
     // the head has settled (a headset lying on the desk at launch places nothing), then places from
-    // the head and the resting hands. Re-places when the headset goes back on and on a system recenter;
+    // the head and the resting hands, then lays the console arc around the real head. Re-places when the headset goes back on and on a system recenter;
     // a job start keeps the placement. The editor keeps the scene's authored layout.
     public class SeatPlacement : XRSpaceSetup
     {
         [SerializeField] private OVROriginBehaviour origin;
+        [SerializeField] private ConsoleLayout console;
         [SerializeField] private Transform head;
         [SerializeField] private Hand leftHand;
         [SerializeField] private Hand rightHand;
@@ -88,6 +90,7 @@ namespace DigitalLove.Game.Placement
             SeatPose pose = SeatPose.From(
                 head.position, head.rotation, PalmOf(leftHand), PalmOf(rightHand), settings);
             origin.Setup(pose.Position, pose.Forward);
+            console.ArrangeAround(origin.transform.InverseTransformPoint(head.position));
         }
 
         private static bool IsWorn() =>
