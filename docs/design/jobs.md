@@ -2,7 +2,7 @@
 
 **Status:** design · content · jobs.
 **Date:** 2026-10-27.
-**Revised:** 2026-11-07.
+**Revised:** 2026-11-09.
 
 **Related:** [progression](systems/progression.md) · [lore](world/lore.md) ·
 [the cube](systems/cube.md) · [glossary](glossary.md)
@@ -11,8 +11,8 @@
 
 The **concrete run**: the jobs the player actually plays, one row each — their brief, field and entropy
 scale (the shape [progression](systems/progression.md) sets), plus their **lore skin**. Progression is
-the general system; this is the specific development of it. Counts are a **stretch goal** — prove 3–5
-first. This doc is **chapter 1**; the store release's chapters 2–3 are in [chapters](chapters.md).
+the general system; this is the specific development of it. All seven jobs are baked.
+This doc is **chapter 1**; the store release's chapters 2–3 are in [chapters](chapters.md).
 
 ## The run — the mechanics
 
@@ -58,8 +58,8 @@ spine requests **Curve** except job 3 (**Clear**): the capstone is a `Curve` wit
 **The field is a galaxy, not a handful of balls.** The planet column is the **source** count — the bodies
 that bend the path. The field also carries **decor** (dust, moons, distant planets) from
 [the element pack](../ideas/element-pack.md) once that lands, so the playfield reads as a populated system
-without every body becoming a well. The tutorial stays sparse at four; the count rises by act, so the
-galaxy grows with the run.
+without every body becoming a well. The tutorial stays sparse at six planets plus the sun; the count
+rises by act, so the galaxy grows with the run.
 
 **The shape.** Each job states its `fieldShape`; `Auto` is for experiments only. Shape is a read axis,
 not a difficulty dial — it never changes a rule — so it marks an **act**: **Ring** carries the

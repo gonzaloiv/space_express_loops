@@ -9,17 +9,19 @@ namespace DigitalLove.Game.PuzzleSelection
         private readonly ViewPool<RunSlotView> fields;
         private readonly MapNodeTint tint;
         private readonly MapSelectionReadout readout;
+        private readonly bool showFrames;
 
         public RunSlotView CurrentSlot { get; private set; }
 
         public MapFieldRenderer(
             RunSlotView selectedSlot, ViewPool<RunSlotView> fields,
-            MapNodeTint tint, MapSelectionReadout readout)
+            MapNodeTint tint, MapSelectionReadout readout, bool showFrames)
         {
             this.selectedSlot = selectedSlot;
             this.fields = fields;
             this.tint = tint;
             this.readout = readout;
+            this.showFrames = showFrames;
         }
 
         public void Render(PuzzleMap map)
@@ -55,7 +57,7 @@ namespace DigitalLove.Game.PuzzleSelection
         private void RenderSelected(PuzzleMap map)
         {
             JobEntry selected = map.Selected;
-            selectedSlot.ShowMapField(selected, tint.For(selected.State));
+            selectedSlot.ShowMapField(selected, tint.For(selected.State), showFrames);
             readout.Show(selected);
             selectedSlot.SetZoom(1f);
             if (selected.State == JobState.Current)
@@ -72,7 +74,7 @@ namespace DigitalLove.Game.PuzzleSelection
 
                 JobEntry entry = map[i];
                 RunSlotView field = fields.EnsureSlot(slot++);
-                field.ShowMapField(entry, tint.For(entry.State));
+                field.ShowMapField(entry, tint.For(entry.State), showFrames);
                 field.PlaceSunAt(map.Position(i));
                 if (entry.State == JobState.Current)
                     CurrentSlot = field;

@@ -78,6 +78,10 @@ MonoBehaviour:
     m_Localized: '> GRAB TO MOVE'
     m_Metadata:
       m_Items: []
+  - m_Id: 73233989640048640
+    m_Localized: '> TWO PINCHES TOGETHER TO EXIT'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -14,6 +14,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private SpaceShapingSpawner spawner;
         [SerializeField] private SpacetimeMeshView mesh;
         [SerializeField] private FieldGlitch glitch;
+        [SerializeField] private FieldDust dust;
         [Tooltip("Minimum clearance between a planet's surface and the trajectory/ship at both caps, in metres.")]
         [FormerlySerializedAs("launchGap")]
         [SerializeField] private float capGap = 0.001f;
@@ -125,6 +126,7 @@ namespace DigitalLove.Game.SpaceShaping
             LatticeWarp warp = new(session.Zones);
             ContentFade fade = new(session, half * fadeNear, half * fadeFar);
             mesh.Render(warp.Warp, fade.Alpha, session.Zones.StrongestScaleOffset(), centre, half);
+            dust.Render(warp.Warp, centre, half);
         }
 
         public void SoftResetShips(SpaceShapingSession session)

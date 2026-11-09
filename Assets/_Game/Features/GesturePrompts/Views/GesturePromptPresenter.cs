@@ -10,17 +10,19 @@ namespace DigitalLove.Game.GesturePrompts
     // beside its cube. The panel owns the timer and closes itself; the recorder persists the learn.
     public class GesturePromptPresenter : MonoBehaviour
     {
-        private const int KindCount = 3;
+        private const int KindCount = 4;
 
         [SerializeField] private GesturePromptPool pool;
         [SerializeField] private GesturePromptContent scale;
         [SerializeField] private GesturePromptContent enter;
         [SerializeField] private GesturePromptContent move;
+        [SerializeField] private GesturePromptContent exit;
         [SerializeField] private SpaceShapingView shapingView;
         [SerializeField] private PuzzleMapView mapView;
         [SerializeField] private Vector3 scaleOffset = new(0.12f, 0.12f, 0f);
         [SerializeField] private Vector3 moveOffset = new(-0.12f, 0.12f, 0f);
         [SerializeField] private Vector3 enterOffset = new(0.12f, 0.12f, 0f);
+        [SerializeField] private Vector3 exitOffset = new(0f, 0.22f, 0f);
 
         [Inject] private MemoryDataClient memoryDataClient;
 
@@ -58,6 +60,8 @@ namespace DigitalLove.Game.GesturePrompts
                     return shapingView.CubePosition + scaleOffset;
                 case GestureKind.Move:
                     return shapingView.CubePosition + moveOffset;
+                case GestureKind.Exit:
+                    return shapingView.CubePosition + exitOffset;
                 default:
                     return mapView.SelectionCubePosition + enterOffset;
             }
@@ -71,6 +75,8 @@ namespace DigitalLove.Game.GesturePrompts
                     return scale;
                 case GestureKind.Enter:
                     return enter;
+                case GestureKind.Exit:
+                    return exit;
                 default:
                     return move;
             }

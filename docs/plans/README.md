@@ -14,17 +14,28 @@ need a yes.
 
 1. **Tune the run on device.** Per-job scramble and planet count; bake-check job 6's "the field
    carries you" route as the cheapest.
-2. **The solve moment.** Arrival payoff at the destination (flash + sound), then the stars stamped in
+2. **The solve moment** — [plan](in-progress/solve-moment.md). Arrival payoff at the destination (flash + sound), then the stars stamped in
    (terminal style), then Jim's receipt — what makes the player want the next job.
 3. **The ending** *(proposed)*. After job 7: the whole map lit, total stars, the "Our Space" title, an
    invitation to replay for 3★.
-4. **Minimum sound and haptics** *(proposed)*. Pinch grab tick, stretch tone, release, arrive chime,
-   crash, fail sting, quiet ambient bed.
-5. **The first 30 seconds** *(proposed)*. App open → bubble at a comfortable seated reach without
-   setup → title beat → the Scale prompt.
-6. **Quest 3S performance pass at 72 fps** *(proposed)*. Map dioramas, trajectory previews, lattice.
+4. **Minimum sound** — [plan](in-progress/cube-sound.md). Pinch grab tick, stretch tone, release,
+   arrive chime, crash, fail sting. No haptics: the game is hands-only.
+5. **The first 30 seconds** — [plan](backlog/first-30-seconds.md). App open → bubble at a comfortable
+   seated reach without setup → title beat → the Scale prompt.
+6. **Quest 3S hitches at 72 fps** *(proposed)*. Sudden frame drops, not sustained low fps: map
+   dioramas, trajectory previews, lattice.
 7. **Voice and content** *(proposed)*. Jim's clips, job 6's lines for the new lesson, the Spanish review.
-8. **Competition deliverables.** Capture, a short trailer, the submission page.
+8. **Competition deliverables — due Friday 2026-11-13; work starts Wednesday 2026-11-11.** The entry
+   is frozen at the deadline. The angle, hero moment and video outline are in [pitch](../design/pitch.md);
+   until Wednesday the time goes to the game.
+   - **Build:** APK on a new release channel named "Competition" in the developer dashboard, plus an
+     Invite URL for judges; it must stay launchable through judging.
+   - **Video:** under 3 minutes, on-device footage, public on YouTube or Vimeo; the best material in
+     the first seconds (judges may stop early).
+   - **Form:** name, tagline (≤140 characters), track (**Gaming**), division (**New Experience**), a ≤500-word description (inspiration, how it was built, future plans), how hand
+     interactions are used, target launch date, team names, emails and roles.
+   - **Judge tests to pass:** fully hands-only end to end; the airplane-seat test (two-foot radius);
+     the one-bus-stop test (a complete moment fast, clean pause/resume).
 
 **Out of v1:** job 8 (Mixed), resize, multi-ship jobs, reactive in-solve tips, the playable map field,
 more chapters.
@@ -47,13 +58,15 @@ shape is in [chapters](../design/chapters.md); the demo is the store's own optio
 
 Active work.
 
-- [Wrap glitch — the projection strains](in-progress/wrap-glitch.md) — short glitches on the console
-  panels and the field at its beats; dust per Field Elements tier 3. **U1 (panels) and U2 (field beats) are in;**
-  headset check, then U3 (dust).
+- [The solve moment](in-progress/solve-moment.md) — the arrival burst, the stars stamp, then Jim's
+  receipt. Road step 2.
+- [Cube sound](in-progress/cube-sound.md) — the PX synth voice: a live stretch tone and the job's cues.
+  Road step 4, sound only.
 
 ## Next
 
-Nothing queued.
+- [The first 30 seconds](backlog/first-30-seconds.md) — the console boot, the seated bubble, and the
+  first Scale prompt. Road step 5.
 
 ## Later
 
@@ -72,10 +85,10 @@ hologram look, TTS companion (deferred), feel polish, playable map field.
 
 Loose ends that still need a home. Close one by linking the plan that finishes it.
 
-- **Gesture prompt icons.** The prompts landed (2026-11-07, validated in the headset) with one
-  placeholder frame each. Polish: animated line-art icons for Scale, Enter and Move (the Pan prompt
-  went with the map cube; Enter is now the in-cube pinch). Frames live on the
-  `GesturePromptContent` assets in `Resources/GesturePrompts`.
+- **Gesture prompt icons — headset read.** Scale, Enter, Move and Exit (new 2026-11-09, shown from
+  job 2) now play 12-frame line-art loops rendered from Meta's own hand mesh by
+  `Tools/Our Space/Render Gesture Prompt Art` (`GesturePrompts/Editor`); re-run it after tuning a motion.
+  Still open: read them in the headset (size, speed, legibility at arm's length).
 - **Run authoring.** Jobs 1–7 are baked into Chapter 01 (seven jobs); job 8 is the deferred Mixed
   closer, step 1 of the road to the store. The job card landed (2026-11-07). Job 1 was rebaked (2026-11-06) with
   six planets and a sun the cube does not cover (seed 141) — a sunless four-planet field almost never

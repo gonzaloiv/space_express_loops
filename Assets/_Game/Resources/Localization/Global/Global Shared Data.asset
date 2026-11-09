@@ -75,6 +75,10 @@ MonoBehaviour:
     m_Key: gesture_prompt_move
     m_Metadata:
       m_Items: []
+  - m_Id: 73233989640048640
+    m_Key: gesture_prompt_exit
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

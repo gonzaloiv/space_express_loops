@@ -75,8 +75,9 @@ one authored mesh) plus a seed.
 
 This is the biggest galaxy read for the cost: it is what makes empty space read as *space*.
 
-Open: a shader veil on the existing lattice (cheapest, no new mesh) or noise-scattered points (more
-depth, one authored mesh). Either way it is authored or computed — never instantiated at runtime.
+Decided (2026-11-09): **seeded points drawn by an authored particle system** — `DustLayout` +
+`FieldDust`. The particle system only draws; positions are computed and pushed through the lattice
+warp, so nothing is simulated or instantiated.
 
 Not in the current sun plan: dust waits until rings have carried the planet-variety read, because the
 transparent layer is the larger perf and read risk.

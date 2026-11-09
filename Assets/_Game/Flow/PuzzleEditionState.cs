@@ -17,6 +17,7 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private TwoHandGestureInput gesture;
         [SerializeField] private SpaceShapingController puzzleController;
         [SerializeField] private GesturePromptPresenter prompts;
+        [SerializeField] private GameGesturePromptSource promptSource;
         [SerializeField] private JobCardPanel contractCard;
         [SerializeField] private TtsPresenter ttsPresenter;
         [SerializeField] private Transform head;
@@ -58,6 +59,8 @@ namespace DigitalLove.Game.Flow
             prompts.Show(GestureKind.Scale);
             if (puzzle.translatable)
                 prompts.Show(GestureKind.Move);
+            if (!puzzle.noIntro)
+                prompts.Show(GestureKind.Exit);
         }
 
         private void ShowContract(PuzzleData puzzle)
@@ -94,6 +97,7 @@ namespace DigitalLove.Game.Flow
 
         private void ExitToSelection()
         {
+            promptSource.ReportExit();
             ttsPresenter.Stop();
             puzzleController.Exit();
             puzzleController.HideAll();

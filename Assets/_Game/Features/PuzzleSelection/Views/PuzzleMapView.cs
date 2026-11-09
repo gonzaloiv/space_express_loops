@@ -36,6 +36,8 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField] private ColorValue routeColor;
         [SerializeField, Range(0f, 1f)] private float routeAlpha = 0.35f;
         [SerializeField] private LineRenderer[] routeSegments;
+        [Tooltip("Show each preview's zone frames on the map.")]
+        [SerializeField] private bool showFrames;
         [SerializeField] private bool showAll;
 
         private ViewPool<RunSlotView> fields;
@@ -65,7 +67,7 @@ namespace DigitalLove.Game.PuzzleSelection
             tint = new MapNodeTint(
                 selectionCubeColors, lockedBrightness, pulseSecs, pulseDepth);
             readout = new MapSelectionReadout(selectionLabel, contractCard);
-            fieldView = new MapFieldRenderer(selectedSlot, fields, tint, readout);
+            fieldView = new MapFieldRenderer(selectedSlot, fields, tint, readout, showFrames);
             enter = new MapEnter(selectedSlot, enterSecs, enterScale);
         }
 

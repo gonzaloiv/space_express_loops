@@ -5,6 +5,7 @@ namespace DigitalLove.Game.GesturePrompts
     {
         Scale,
         Enter,
-        Move
+        Move,
+        Exit
     }
 }

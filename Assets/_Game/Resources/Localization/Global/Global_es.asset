@@ -78,6 +78,10 @@ MonoBehaviour:
     m_Localized: '> AGARRA PARA MOVER'
     m_Metadata:
       m_Items: []
+  - m_Id: 73233989640048640
+    m_Localized: '> JUNTA DOS PELLIZCOS PARA SALIR'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

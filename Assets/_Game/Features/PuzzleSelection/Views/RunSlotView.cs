@@ -43,6 +43,7 @@ namespace DigitalLove.Game.PuzzleSelection
         private PuzzleData renderedPuzzle;
         private Vector3 homeLocalPosition;
         private Quaternion homeLocalRotation;
+        private Quaternion homeVisualRotation;
         private Vector3 homeVisualScale;
         private float idlePhase;
         private bool culled;
@@ -52,6 +53,7 @@ namespace DigitalLove.Game.PuzzleSelection
         {
             homeLocalPosition = diorama.transform.localPosition;
             homeLocalRotation = diorama.transform.localRotation;
+            homeVisualRotation = visualRoot.localRotation;
             homeVisualScale = visualRoot.localScale;
         }
 
@@ -65,7 +67,7 @@ namespace DigitalLove.Game.PuzzleSelection
             diorama.transform.localScale = Vector3.one * breath;
         }
 
-        public void ShowMapField(JobEntry entry, Color tint)
+        public void ShowMapField(JobEntry entry, Color tint, bool showFrames)
         {
             bool unchanged = MapIndex == entry.Index && renderedPuzzle == entry.Puzzle;
             MapIndex = entry.Index;
@@ -75,10 +77,10 @@ namespace DigitalLove.Game.PuzzleSelection
             }
             else
             {
-                diorama.SetCubesVisible(false);
                 Show(entry.Index, entry.Puzzle);
             }
 
+            diorama.SetCubesVisible(showFrames);
             ShowMapState(entry, tint);
         }
 
@@ -100,7 +102,17 @@ namespace DigitalLove.Game.PuzzleSelection
         public void SetZoom(float scale)
         {
             StopRefusal();
-            visualRoot.localScale = homeVisualScale * Mathf.Max(scale, 0f);
+            float zoom = Mathf.Max(scale, 0f);
+            visualRoot.localScale = homeVisualScale * zoom;
+            visualRoot.localPosition = SunLocalAtRest() * (1f - zoom);
+        }
+
+        // The diorama grows around its sun, not the slot's origin, so the sun holds its node
+        // while the field scales up to enter.
+        private Vector3 SunLocalAtRest()
+        {
+            Vector3 inside = visualRoot.InverseTransformPoint(diorama.SunWorldPosition);
+            return homeVisualRotation * Vector3.Scale(homeVisualScale, inside);
         }
 
         public void Hide()

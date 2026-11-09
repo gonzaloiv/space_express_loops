@@ -5,7 +5,7 @@
 **Target:** Meta VR Start Developer Competition 2026 · **seated mixed reality** ·
 hand-tracking first-class.
 **Date:** 2026-10-23.
-**Revised:** 2026-11-01.
+**Revised:** 2026-11-09.
 
 **Related:** [core loop](core-loop.md) · [the cube](systems/cube.md) ·
 [progression](systems/progression.md) · [jobs](jobs.md) ·
@@ -21,11 +21,10 @@ the space stretches (a shrunk zone is a shortcut) and the planets spread and gro
 deform the spacetime the ship flies through until the delivery **arrives** — and cheaply.
 Relativity is the language, and the cube is how you speak it.
 
-**Current shape.** The bubble and the cube work in the lab: the pinch scales a zone, the ship
-flies the result, and the field pass is in progress — depth, a central sun, and the look pass.
-The room-scale game is legacy. What is missing is **one fused, playable seated slice** — the lab
-loop inside the MR bubble, with the run's jobs and progression. Build status lives on the
-[plans board](../plans/README.md); this doc does not track it.
+**Current shape.** The seated slice is playable in the MR bubble: the map (the same cube picks the
+job), the seven baked jobs of chapter 1, the job card, Jim's panel, the gesture prompts and the solve
+window. The room-scale game is removed. Build status lives on the [plans board](../plans/README.md);
+this doc does not track it.
 
 ## 2. Design pillars
 
@@ -42,8 +41,8 @@ loop inside the MR bubble, with the run's jobs and progression. Build status liv
    **fails**. Entropy left is the **eco rating**; **arriving** is the goal — the launch is only a check.
    The field itself shows the spend — calm at full, strained as it drains, about to blow near empty —
    and the bar lives in it, not on a panel. The launch itself is given, not a lever.
-5. **Discrete jobs.** ~1 minute each; a **10-minute experience**, about **7 levels** — **3–5
-   first**, extended only if the variation axes hold.
+5. **Discrete jobs.** ~1 minute each; a **10-minute experience**, **seven jobs** in the run, all
+   baked.
    Nothing live-ticking.
 6. **Relativity is the language.** The theme and the feel, not a simulation — the cube speaks it.
 
@@ -94,9 +93,10 @@ routes; keep the economy *between* jobs. Then the management layer is a wrapper
 
 ## 6. Scope: the competition slice
 
-- **In:** the **full run** — the bubble, the cube, the **level selector** and **3–5 jobs first
-  (7 as the run)**, the grade, player progression, and **multi-ship** support ([core loop](core-loop.md),
-  [progression](systems/progression.md), [jobs](jobs.md)).
+- **In:** the **full run** — the bubble, the cube, the **map** (level selector), the **seven-job run**,
+  the grade and player progression ([core loop](core-loop.md),
+  [progression](systems/progression.md), [jobs](jobs.md)). **Multi-ship** is out of the slice: it is
+  the store release's chapter 2 ([chapters](chapters.md)).
 - **Out of the first run:** resize (working, but the explanation is not ready), a separate tutorial flow
   (the per-job manual card is in — [jobs](jobs.md)), and the whole feel pass. **Out until proven:**
   sectors as gameplay (the ambient sector field stays the map backdrop) and runtime/procedural level
@@ -136,16 +136,16 @@ mechanic before writing another plan.
 
 | Risk | Current state / mitigation |
 |---|---|
-| Toy, not game (no stake) | **Designed, not validated.** The entropy fail, arrival goal and grade are in the loop and the panel ([core loop](core-loop.md) §3); Validation 1 is still an open tail ([plans board](../plans/README.md)). |
+| Toy, not game (no stake) | **Designed, not validated.** The entropy fail, arrival goal and grade are in the loop and the panel ([core loop](core-loop.md) §3); no outside playtest is scheduled before the submission. |
 | The cube is "just a group drag" | **Resolved.** The scale is a metric stretch plus content spread/growth, not a drag ([the cube](systems/cube.md)). |
-| Field illegibility | **Partly open.** Lattice warp, planet size/well and the live trajectory are in; the **start run** is shown as the blocked reference ([plans board](../plans/README.md)). |
-| Sun reads as another planet | **Open.** The sun is a flat `Sun.prefab`; the reference marker is the S4 look pass. |
+| Field illegibility | **Partly open.** Lattice warp, planet size/well, the live trajectory and the straight-line baseline are in; the start run's read is not yet validated on device ([plans board](../plans/README.md)). |
+| Sun reads as another planet | **Accepted.** The current `Sun.prefab` look reads as intended; no S4 look pass. |
 | Sun scale is a free win | **Open.** `mass ∝ radius³` makes a grown sun strong fast; the bake must verify scalable-by-default, otherwise lock it per puzzle. The centre (job 2) is the first test; the capstone (job 7) must also hold. |
-| Ship-zone legibility | **Partial.** The ship has a trail; there is no zone tint or "which zone" indicator ([plans board](../plans/README.md)). |
-| Prediction trust | **Mitigated in the lab.** The live trajectory previews while shaping and the ship flies on release; the missing straight-line baseline is the read-side hole. |
+| Ship-zone legibility | **Deferred.** Multi-zone jobs are not in this version; the zone tint lands with them in chapter 2 ([plans board](../plans/README.md)). |
+| Prediction trust | **Mitigated in the lab.** The live trajectory previews while shaping, the ship flies on release, and the straight-line baseline shows on the start check and after a miss; the start run's read is the remaining question. |
 | Identity | **Resolved** by the transport-company pivot and the name "Our Space". |
-| Competition scope | **Active.** The current spend is the field pass (S4); run authoring (jobs, map, TTS) is unplanned; Validation 1 is the gate before further investment ([plans board](../plans/README.md)). |
-| Room-scale legacy drag | **Active in code.** `UniverseViewMode.Room` still exists and is fanned out; freeze or remove it. |
+| Competition scope | **Active.** The run is authored (seven jobs, the map, Jim's panel); what remains is the road to v1 and the deliverables, due 2026-11-13 ([plans board](../plans/README.md)). |
+| Room-scale legacy drag | **Resolved.** The room view mode is removed from the code. |
 | Content ceiling | **Valid, narrower.** Authored multi-ship is fine; simultaneous unscripted multi-ship is "near-chaotic". The 7-job spine is single-ship; multi-ship is the store release's chapter 2 ([chapters](chapters.md)). |
-| Entropy legibility | **Open.** The budget is derived from the bake's best solution; the player never sees that reference. The field itself must carry the spend (strains near empty), with the bar in the field ([progression](systems/progression.md) §Open questions). |
-| Run length | **Open.** The target is a 10-minute session; 7 × ~1 min is the current shape, with 3–5 first ([progression](systems/progression.md) §Open questions). |
+| Entropy legibility | **In, tuning.** The in-field bar and the passthrough strain carry the spend; the budget is derived from the bake's best solution, so the 3★ band still needs a headset read ([progression](systems/progression.md) §Open questions). |
+| Run length | **Measuring.** The target is a 10-minute session; seven jobs × ~1 min are baked and the headset timing pass is scheduled for 2026-11-09 ([progression](systems/progression.md) §Open questions). |

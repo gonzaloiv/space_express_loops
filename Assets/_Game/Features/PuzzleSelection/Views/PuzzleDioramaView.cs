@@ -7,7 +7,7 @@ namespace DigitalLove.Game.PuzzleSelection
     {
         [SerializeField] private Transform cubePrototype;
         [SerializeField] private Transform cubeParent;
-        [SerializeField] private bool cubesVisible = true;
+        private bool cubesVisible;
 
         private ViewPool<Transform> cubes;
         private PuzzleFrame[] frames;
@@ -55,9 +55,15 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public void SetCubesVisible(bool visible)
         {
+            if (cubesVisible == visible)
+                return;
+
             cubesVisible = visible;
-            if (!visible && cubes != null)
-                HideUnusedCubes(0);
+            if (cubes == null)
+                return;
+
+            int count = visible ? RenderCubes(frames) : 0;
+            HideUnusedCubes(count);
         }
 
         protected override void AddContentBounds(BoundsBuilder builder)

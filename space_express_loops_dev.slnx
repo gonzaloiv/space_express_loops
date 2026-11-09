@@ -40,6 +40,7 @@
   <Project Path="DigitalLove.Game.Sectors.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.Hands.csproj" />
   <Project Path="Vendor.UnityGif.csproj" />
+  <Project Path="DigitalLove.Game.GesturePrompts.Editor.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Zone.csproj" />
   <Project Path="DigitalLove.Analytics.csproj" />
   <Project Path="DigitalLove.VFX.Materials.Editor.csproj" />

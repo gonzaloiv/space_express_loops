@@ -13,6 +13,7 @@ namespace DigitalLove.Game.Nodes
 
         private Renderer activeRenderer;
         private MaterialPropertyBlock tintBlock;
+        private bool visible = true;
 
         public void Init(float radius, int variantSeed)
         {
@@ -23,10 +24,11 @@ namespace DigitalLove.Game.Nodes
         public void SetRadius(float radius) =>
             body.localScale = new Vector3(radius, radius, radius);
 
-        public void SetVisible(bool visible)
+        public void SetVisible(bool value)
         {
+            visible = value;
             if (activeRenderer != null)
-                activeRenderer.enabled = visible;
+                activeRenderer.enabled = value;
         }
 
         private void SetActiveRendererBySeed(int seed)
@@ -54,6 +56,7 @@ namespace DigitalLove.Game.Nodes
                     renderers[i].gameObject.SetActive(i == index);
             }
             activeRenderer = renderers[index];
+            activeRenderer.enabled = visible;
         }
 
         private void EnsureReadyForRouteColor()

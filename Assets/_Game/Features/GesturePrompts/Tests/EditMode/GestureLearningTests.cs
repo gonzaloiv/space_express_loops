@@ -14,6 +14,13 @@ namespace DigitalLove.Game.GesturePrompts.Tests
             Assert.IsFalse(GestureLearning.IsLearned(playerData, GestureKind.Scale));
             Assert.IsFalse(GestureLearning.IsLearned(playerData, GestureKind.Enter));
             Assert.IsFalse(GestureLearning.IsLearned(playerData, GestureKind.Move));
+            Assert.IsFalse(GestureLearning.IsLearned(playerData, GestureKind.Exit));
+        }
+
+        [Test]
+        public void Exit_HasItsOwnKey()
+        {
+            Assert.AreEqual("gesture_learned_exit", GestureLearning.Key(GestureKind.Exit));
         }
 
         [Test]

@@ -2,7 +2,7 @@
 
 **Status:** design · system · progression.
 **Date:** 2026-10-23.
-**Revised:** 2026-11-01.
+**Revised:** 2026-11-09.
 
 **Related:** [vision](../vision.md) · [core loop](../core-loop.md) · [the cube](cube.md) ·
 [lore](../world/lore.md) · [jobs](../jobs.md)
@@ -10,7 +10,7 @@
 ## Goal
 
 How the game advances across jobs — and what gates it. The competition slice is the **full run** —
-**3–5 jobs first**, the rest as stretch — not a single job, so progression is **in scope**.
+the **seven jobs** of chapter 1 — not a single job, so progression is **in scope**.
 
 ## Inputs
 
@@ -150,5 +150,5 @@ mid-flight (the seed is authoring-only).
   order is the working shape, not final.
 - **Entropy legibility.** The budget is derived from the bake's best solution; the player never sees
   that reference. Can they track spent vs remaining well enough from the readout?
-- **Run length.** What set fills a **10-minute session** and stays fun — 5, 7, or 8 jobs? The current
-  target is seven × ~1 min; prove 3–5 first.
+- **Run length.** What set fills a **10-minute session** and stays fun — 5, 7, or 8 jobs? Seven × ~1 min
+  are baked; measure minutes per job on the headset.

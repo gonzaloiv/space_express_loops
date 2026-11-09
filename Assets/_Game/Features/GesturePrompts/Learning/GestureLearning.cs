@@ -40,6 +40,8 @@ namespace DigitalLove.Game.GesturePrompts
                     return "scale";
                 case GestureKind.Enter:
                     return "enter";
+                case GestureKind.Exit:
+                    return "exit";
                 default:
                     return "move";
             }

@@ -15,7 +15,9 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField, Min(0f)] private float burstSecs = 0.08f;
         [SerializeField, Min(0f)] private float gapSecs = 0.07f;
         [Tooltip("Largest jump of the field, in metres.")]
-        [SerializeField, Min(0f)] private float shake = 0.015f;
+        [SerializeField, Min(0f)] private float shake = 0.004f;
+        [Tooltip("How hard the lattice tears, drops bands and flares during a burst (0 = not at all, 1 = full).")]
+        [SerializeField, Range(0f, 1f)] private float intensity = 0.3f;
 
         private Coroutine routine;
         private Vector3 home;
@@ -41,7 +43,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private IEnumerator Burst()
         {
-            Shader.SetGlobalFloat(GlitchId, 1f);
+            Shader.SetGlobalFloat(GlitchId, intensity);
             float elapsed = 0f;
             while (elapsed < burstSecs)
             {
