@@ -28,7 +28,7 @@ namespace DigitalLove.Game.SpaceShaping
                 pool.EnsureSlot(i).SoftReset(origins[i]);
         }
 
-        public void Travel(IReadOnlyList<TrajectoryResult> results, float stepSecs)
+        public void Travel(IReadOnlyList<TrajectoryResult> results, float stepSecs, bool audible)
         {
             Stop();
             float step = Mathf.Max(stepSecs, 0f);
@@ -39,7 +39,8 @@ namespace DigitalLove.Game.SpaceShaping
 
                 flying++;
                 float simSecs = (results[i].Points.Count - 1) * step;
-                pool.EnsureSlot(i).Travel(results[i], simSecs, (flying - 1) * staggerSecs);
+                pool.EnsureSlot(i).Travel(
+                    results[i], simSecs, (flying - 1) * staggerSecs, audible);
             }
 
             if (flying == 0)

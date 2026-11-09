@@ -99,45 +99,13 @@ namespace DigitalLove.Game.UI.SplashScreen
                 if (!IsShown(line, fresh))
                     continue;
 
-                yield return Reveal(line.Text);
+                yield return TerminalTypewriter.Reveal(line.Text, charsPerSec);
 
                 if (lineGapSecs > 0f)
                     yield return new WaitForSecondsRealtime(lineGapSecs);
             }
         }
 
-        private IEnumerator Reveal(TMP_Text text)
-        {
-            text.ForceMeshUpdate();
-            int total = text.textInfo.characterCount;
-            if (charsPerSec <= 0f)
-            {
-                text.maxVisibleCharacters = total;
-                yield break;
-            }
-
-            if (total > 0)
-                yield return RevealChars(text, total);
-        }
-
-        private IEnumerator RevealChars(TMP_Text text, int total)
-        {
-            float secsPerChar = 1f / charsPerSec;
-            float elapsed = 0f;
-            int shown = 0;
-            while (shown < total)
-            {
-                elapsed += Time.unscaledDeltaTime;
-                int next = Mathf.Min(total, Mathf.FloorToInt(elapsed / secsPerChar));
-                if (next > shown)
-                {
-                    shown = next;
-                    text.maxVisibleCharacters = shown;
-                }
-
-                yield return null;
-            }
-        }
         private static bool IsShown(BootLine line, bool fresh) => !line.FreshOnly || fresh;
 
         private void Complete()

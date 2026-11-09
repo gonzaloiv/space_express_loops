@@ -53,6 +53,7 @@ namespace DigitalLove.Game.PuzzleSelection
         private Vector3 lastCubePosition;
 
         public event Action EnterRequested;
+        public event Action SelectionChanged;
 
         public Vector3 SelectionCubePosition => mapCube.Position;
 
@@ -213,7 +214,10 @@ namespace DigitalLove.Game.PuzzleSelection
 
             int nearest = MapSnap.Nearest(map, mapRoot, mapCube.Position);
             if (nearest >= 0 && nearest != map.SelectedIndex && map.Select(nearest))
+            {
                 RenderFields();
+                SelectionChanged?.Invoke();
+            }
             else
                 readout.Show(map.Selected);
 

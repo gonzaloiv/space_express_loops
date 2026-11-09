@@ -16,6 +16,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private SpacetimeMeshView mesh;
         [SerializeField] private FieldGlitch glitch;
         [SerializeField] private FieldDust dust;
+        [SerializeField] private FieldHum hum;
         [SerializeField] private ParticleSystem arrivalBurst;
         [SerializeField] private StarStampView stamp;
         [Tooltip("How long the arrival beat holds before the stars stamp in.")]
@@ -52,6 +53,7 @@ namespace DigitalLove.Game.SpaceShaping
             else if (!scaling && wasScaling)
                 firstUse.ScalingEnded(Zone.Scale);
 
+            hum.SetPinching(scaling);
             wasScaling = scaling;
         }
 
@@ -106,6 +108,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             Readout = readout;
             spawner.Zones.SetStrain(readout.Strain);
+            hum.SetStrain(readout.Strain);
             ReadoutChanged?.Invoke(readout);
         }
 
@@ -153,10 +156,12 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void StopShips() => spawner.Ships.Stop();
 
-        public void TravelShips(SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results) =>
+        public void TravelShips(
+            SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results, bool audible) =>
             spawner.Ships.Travel(
                 ShipRunGeometry.Visible(session, results, capGap, capGapFraction),
-                session.StepSecs);
+                session.StepSecs,
+                audible);
 
         public void ShowTrajectories(
             SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results, bool pending)

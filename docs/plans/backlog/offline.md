@@ -4,7 +4,7 @@
 online; no internet gate on launch. The judges' one-bus-stop test (fast cold start). Split from
 [pause](../in-progress/pause.md), which goes first. Checked against the code 2026-11-09.
 
-**Related:** [pause](../in-progress/pause.md) · [the first 30 seconds](first-30-seconds.md) ·
+**Related:** [pause](../in-progress/pause.md) · [the first 30 seconds](../in-progress/first-30-seconds.md) ·
 [plans board](../README.md) (Road step 8, judge tests)
 
 ## Goal

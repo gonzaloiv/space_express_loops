@@ -23,8 +23,10 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private JobCardPanel contractCard;
         [SerializeField] private TtsPresenter ttsPresenter;
         [SerializeField] private SynthCuePlayer cuePlayer;
+        [SerializeField] private SynthCuePlayer systemPlayer;
         [SerializeField] private SynthPatch crashCue;
         [SerializeField] private SynthPatch refusalCue;
+        [SerializeField] private SynthPatch exitCue;
         [SerializeField] private float refusalCueCooldownSecs = 0.7f;
         [SerializeField] private Transform head;
         [SerializeField] private bool rotationEnabled;
@@ -123,6 +125,7 @@ namespace DigitalLove.Game.Flow
             ttsPresenter.Stop();
             puzzleController.Exit();
             puzzleController.HideAll();
+            systemPlayer.Play(exitCue);
             parent.SetCurrentState(gameStartState.RouteId);
         }
     }

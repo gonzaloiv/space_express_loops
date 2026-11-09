@@ -17,9 +17,12 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private SpaceShapingController puzzleController;
         [SerializeField] private TtsPresenter ttsPresenter;
         [SerializeField] private SynthCuePlayer cuePlayer;
+        [SerializeField] private SynthCuePlayer systemPlayer;
         [SerializeField] private SynthPatch arriveCue;
         [SerializeField] private SynthPatch failCue;
         [SerializeField] private SynthPatch starCue;
+        [SerializeField] private SynthPatch exitCue;
+        [SerializeField] private SynthPatch glitchCue;
         [SerializeField] private float saveTimeoutSecs = 5f;
 
         [Inject] private MemoryDataClient memoryDataClient;
@@ -62,6 +65,7 @@ namespace DigitalLove.Game.Flow
 
         private IEnumerator PlayFail(PuzzleData puzzle)
         {
+            systemPlayer.PlayOver(glitchCue);
             yield return new WaitForSeconds(puzzleController.Glitch());
             Speak(puzzle, false);
         }
@@ -100,6 +104,7 @@ namespace DigitalLove.Game.Flow
         {
             puzzleController.Exit();
             puzzleController.HideAll();
+            systemPlayer.Play(exitCue);
             parent.SetCurrentState(nextState.RouteId);
         }
     }

@@ -4,6 +4,7 @@
     "references": [
         "DigitalLove.Global",
         "DigitalLove.Game.Nodes",
+        "DigitalLove.Audio.Runtime",
         "DigitalLove.Game.SpaceShaping.Domain",
         "DigitalLove.Game.SpaceShaping.FieldContent",
         "DigitalLove.Game.SpaceShaping.Cube",

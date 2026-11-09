@@ -1,6 +1,7 @@
 using DigitalLove.FlowControl;
 using UnityEngine;
 using Reflex.Attributes;
+using DigitalLove.Audio;
 using DigitalLove.Game.SpaceShaping;
 using DigitalLove.DataAccess;
 using DigitalLove.TTS;
@@ -12,6 +13,8 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private MonoState nextState;
         [SerializeField] private SpaceShapingController puzzleController;
         [SerializeField] private TtsPresenter ttsPresenter;
+        [SerializeField] private SynthCuePlayer systemPlayer;
+        [SerializeField] private SynthPatch enterCue;
 
         [Inject] private MemoryDataClient memoryDataClient;
 
@@ -24,6 +27,7 @@ namespace DigitalLove.Game.Flow
 
         public override void Enter()
         {
+            systemPlayer.Play(enterCue);
             PuzzleData puzzle = memoryDataClient.Get<PuzzleData>();
             puzzleController.Enter(puzzle);
             puzzleController.Glitch();

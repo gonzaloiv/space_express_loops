@@ -1,11 +1,12 @@
 # The first 30 seconds — the console boots
 
-**Status:** next · presentation · updated 2026-11-09 — launch → the console boot → the field placed
+**Status:** now · presentation · updated 2026-11-09 — launch → the console boot → the field placed
 where the player actually is → the first pinch, with no setup and no extra taps. Road step 5.
+U1 (the boot) and U2 (`Features/Placement`, `SeatPlacement`) are in, pending the headset pass; U3 is open.
 
 **Related:** [lore](../../design/world/lore.md) §The console / §In the game ·
 [vision](../../design/vision.md) §2 · [pitch](../../design/pitch.md) ·
-[pause](../in-progress/pause.md) and [offline](offline.md) (the launch's other judge tests) · [plans board](../README.md)
+[pause](pause.md) and [offline](../backlog/offline.md) (the launch's other judge tests) · [plans board](../README.md)
 
 ## Goal
 

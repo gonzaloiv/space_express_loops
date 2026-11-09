@@ -32,6 +32,9 @@ namespace DigitalLove.Game.PuzzleSelection
         private Coroutine closeRoutine;
         private float cursorElapsed;
 
+        public event Action Opened;
+        public event Action LineTyped;
+
         public void Show(PuzzleData puzzle, bool includeManual = true)
         {
             Open(puzzle, includeManual, typed: true);
@@ -66,6 +69,8 @@ namespace DigitalLove.Game.PuzzleSelection
             StopBoot();
             ApplyContent(puzzle, includeManual);
             gameObject.SetActive(true);
+            if (typed)
+                Opened?.Invoke();
             if (typed || !wasActive)
                 StartBoot();
             else
@@ -111,7 +116,8 @@ namespace DigitalLove.Game.PuzzleSelection
             StopReveal();
             revealRoutine = StartCoroutine(
                 JobCardTypewriter.Reveal(
-                    header, client, cargo, manual, typeCharsPerSec, lineGapSecs));
+                    header, client, cargo, manual, typeCharsPerSec, lineGapSecs,
+                    () => LineTyped?.Invoke()));
         }
 
         private void RevealAll()

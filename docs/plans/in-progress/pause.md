@@ -4,7 +4,7 @@
 the headset comes off. The judges' one-bus-stop test (clean pause/resume). Split from
 [offline](../backlog/offline.md); do this one first.
 
-**Related:** [offline](../backlog/offline.md) · [the first 30 seconds](../backlog/first-30-seconds.md) ·
+**Related:** [offline](../backlog/offline.md) · [the first 30 seconds](first-30-seconds.md) ·
 [plans board](../README.md) (Road step 8, judge tests)
 
 ## Goal

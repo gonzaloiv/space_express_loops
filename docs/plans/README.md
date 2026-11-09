@@ -14,17 +14,18 @@ need a yes.
 
 1. **Tune the run on device.** Per-job scramble and planet count; bake-check job 6's "the field
    carries you" route as the cheapest.
-2. **The solve moment** — [plan](in-progress/solve-moment.md). Arrival payoff at the destination (flash + sound), then the stars stamped in
+2. **The solve moment** — done (2026-11-09). Arrival payoff at the destination (flash + sound), then the stars stamped in
    (terminal style), then Jim's receipt — what makes the player want the next job.
 3. **The ending** *(proposed)*. After job 7: the whole map lit, total stars, the "Our Space" title, an
    invitation to replay for 3★.
-4. **Minimum sound** — [plan](in-progress/cube-sound.md). Pinch grab tick, stretch tone, release,
+4. **Minimum sound** — done (2026-11-09); the [soundscape](in-progress/soundscape.md) builds on it. Pinch grab tick, stretch tone, release,
    arrive chime, crash, fail sting. No haptics: the game is hands-only.
-5. **The first 30 seconds** — [plan](backlog/first-30-seconds.md). App open → bubble at a comfortable
+5. **The first 30 seconds** — [plan](in-progress/first-30-seconds.md). App open → bubble at a comfortable
    seated reach without setup → title beat → the Scale prompt.
 6. **Quest 3S hitches at 72 fps** *(proposed)*. Sudden frame drops, not sustained low fps: map
    dioramas, trajectory previews, lattice.
-7. **Voice and content** *(proposed)*. Jim's clips, job 6's lines for the new lesson, the Spanish review.
+7. **Voice and content** *(proposed)*. Jim's clips, job 6's lines for the new lesson, and Jim's entries split into short
+   lines for the TTS. The music duck under Jim (deferred from the soundscape) is tuned with his clips. English only: Spanish is kept just to prove the localization system works.
 8. **Competition deliverables — due Friday 2026-11-13; work starts Wednesday 2026-11-11.** The entry
    is frozen at the deadline. The angle, hero moment and video outline are in [pitch](../design/pitch.md);
    until Wednesday the time goes to the game.
@@ -58,19 +59,15 @@ shape is in [chapters](../design/chapters.md); the demo is the store's own optio
 
 Active work.
 
-- [The solve moment](in-progress/solve-moment.md) — the arrival burst, the stars stamp, then Jim's
-  receipt. Road step 2.
-- [Cube sound](in-progress/cube-sound.md) — the PX synth voice: a live stretch tone and the job's cues.
-  Road step 4, sound only.
 - [Pause](in-progress/pause.md) — a clean stop behind the system menu: voice, sound and ship freeze,
   nothing commits, Jim's line replays on resume. The judge tests; do this one before offline.
+- [The first 30 seconds](in-progress/first-30-seconds.md) — the console boot, the field placed from the
+  head and hands once the headset is worn, straight to job 1. Road step 5.
+- [Soundscape](in-progress/soundscape.md) — the mix pass, the field's hum, the ship's flight, and the
+  system's ticks and transitions, so the stretch tone is not the only sound. Road step 4.
 
 ## Next
 
-- [The first 30 seconds](backlog/first-30-seconds.md) — the console boot, the field placed from the
-  head and hands once the headset is worn, straight to job 1. Road step 5.
-- [Soundscape](backlog/soundscape.md) — the mix pass, the field's hum, the ship's flight, and the
-  system's ticks and transitions, so the stretch tone is not the only sound. Road step 4.
 - [Offline](backlog/offline.md) — progress kept locally (PlayerPrefs, mirrored to the cloud), no
   internet gate on launch. The judge tests.
 

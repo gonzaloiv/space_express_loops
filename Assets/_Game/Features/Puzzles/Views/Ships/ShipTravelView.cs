@@ -17,6 +17,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private float parkGap = 0.02f;
         [SerializeField] private float turnDegPerSec = 720f;
         [SerializeField] private TrailRenderer trail;
+        [SerializeField] private ShipEngine engine;
 
         private Coroutine flight;
         private Vector3 baseScale = Vector3.one;
@@ -35,7 +36,8 @@ namespace DigitalLove.Game.SpaceShaping
             gameObject.SetActive(false);
         }
 
-        public void Travel(TrajectoryResult result, float simSecs, float delaySecs)
+        public void Travel(
+            TrajectoryResult result, float simSecs, float delaySecs, bool audible)
         {
             Stop();
             List<Vector3> points = result.Points;
@@ -48,8 +50,11 @@ namespace DigitalLove.Game.SpaceShaping
             trail.Clear();
             trail.emitting = false;
             bool lands = result.Outcome == TrajectoryOutcome.Arrive;
+            float travel = TravelSecs(simSecs);
+            if (audible)
+                engine.Begin();
             flight = StartCoroutine(
-                Fly(points, TravelSecs(simSecs), Mathf.Max(launchDelaySecs + delaySecs, 0f), lands));
+                Fly(points, travel, Mathf.Max(launchDelaySecs + delaySecs, 0f), lands));
         }
 
         public void Stop()
@@ -60,6 +65,7 @@ namespace DigitalLove.Game.SpaceShaping
             trail.emitting = false;
             trail.Clear();
             transform.localScale = baseScale;
+            engine.Stop();
             gameObject.SetActive(false);
         }
 
@@ -77,6 +83,7 @@ namespace DigitalLove.Game.SpaceShaping
             trail.emitting = true;
             float end = park ? ShipRunGeometry.ParkProgress(points, parkGap) : 1f;
             yield return FlyAlong(points, travel, end);
+            engine.Stop();
             trail.emitting = false;
             if (!park)
             {
@@ -92,11 +99,17 @@ namespace DigitalLove.Game.SpaceShaping
         {
             int last = points.Count - 1;
             float progress = 0f;
+            Vector3 previous = transform.localPosition;
             while (progress < end)
             {
                 progress = Mathf.Min(progress + Mathf.Max(Time.deltaTime / travel, 0.0001f), end);
                 float index = progress * last;
-                MoveTo(Sample(points, index), Heading(points, index), Time.deltaTime);
+                Vector3 next = Sample(points, index);
+                float delta = Time.deltaTime;
+                engine.Drive(
+                    Vector3.Distance(previous, next) / Mathf.Max(delta, 0.0001f), delta);
+                MoveTo(next, Heading(points, index), delta);
+                previous = next;
                 yield return null;
             }
 

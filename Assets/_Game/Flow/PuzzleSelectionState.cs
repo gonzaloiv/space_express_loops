@@ -1,5 +1,6 @@
 using DigitalLove.Casual.Levels;
 using DigitalLove.DataAccess;
+using DigitalLove.Audio;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.PuzzleSelection;
 using DigitalLove.Game.Persistence;
@@ -19,6 +20,12 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private PuzzleMapView view;
         [SerializeField] private TtsPresenter ttsPresenter;
         [SerializeField] private GesturePromptPresenter prompts;
+        [SerializeField] private SynthCuePlayer systemPlayer;
+        [SerializeField] private SynthPatch selectCue;
+        [SerializeField] private SynthPatch openCue;
+        [SerializeField] private SynthPatch typeCue;
+        [SerializeField] private JobCardPanel card;
+        [SerializeField, Min(0f)] private float tickCooldownSecs = 0.06f;
 
         [Header("Debug")]
         [SerializeField] private DebugBool selectRandom;
@@ -28,10 +35,14 @@ namespace DigitalLove.Game.Flow
 
         private PuzzleMap map;
         private bool autoEntryUsed;
+        private float nextTickAt;
 
         public override void Enter()
         {
             ttsPresenter.Stop();
+            view.SelectionChanged += OnSelectionChanged;
+            card.Opened += OnCardOpened;
+            card.LineTyped += OnLineTyped;
             PlayerData playerData = memoryDataClient.Get<PlayerData>();
 
             if (selectRandom.Value)
@@ -72,6 +83,9 @@ namespace DigitalLove.Game.Flow
         public override void Exit()
         {
             view.EnterRequested -= OnEnterRequested;
+            view.SelectionChanged -= OnSelectionChanged;
+            card.Opened -= OnCardOpened;
+            card.LineTyped -= OnLineTyped;
             prompts.HideAll();
 
             if (map == null)
@@ -105,6 +119,21 @@ namespace DigitalLove.Game.Flow
                 this);
             memoryDataClient.Put(puzzle);
             parent.SetCurrentState(nextState.RouteId);
+        }
+
+        private void OnSelectionChanged() => Tick(selectCue);
+
+        private void OnCardOpened() => Tick(openCue);
+
+        private void OnLineTyped() => Tick(typeCue);
+
+        private void Tick(SynthPatch patch)
+        {
+            if (Time.unscaledTime < nextTickAt)
+                return;
+
+            nextTickAt = Time.unscaledTime + tickCooldownSecs;
+            systemPlayer.PlayOver(patch);
         }
 
         private PuzzleData[] ReadLevels()

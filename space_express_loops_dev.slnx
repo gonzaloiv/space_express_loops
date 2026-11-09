@@ -60,6 +60,7 @@
   <Project Path="DigitalLove.Casual.Levels.csproj" />
   <Project Path="DigitalLove.Theming.csproj" />
   <Project Path="DigitalLove.XR.Samples.csproj" />
+  <Project Path="DigitalLove.Game.Placement.csproj" />
   <Project Path="DigitalLove.DataAccess.Local.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Grid.csproj" />
   <Project Path="DigitalLove.Timeline.Integrations.csproj" />
@@ -68,6 +69,7 @@
   <Project Path="DigitalLove.VFX.Materials.csproj" />
   <Project Path="DigitalLove.Game.Nodes.csproj" />
   <Project Path="DigitalLove.XR.ARFoundation.csproj" />
+  <Project Path="DigitalLove.Game.Placement.Domain.csproj" />
   <Project Path="DigitalLove.Audio.TheRadio.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.csproj" />
   <Project Path="Unity.XR.Hands.Samples.VisualizerSample.csproj" />
@@ -90,6 +92,8 @@
   <Project Path="DigitalLove.Reflex.csproj" />
   <Project Path="DigitalLove.Game.Persistence.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Analytics.Integrations.csproj" />
+  <Project Path="DigitalLove.Game.UI.SplashScreen.csproj" />
+  <Project Path="DigitalLove.Game.Placement.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.FlowControl.Routes.Editor.csproj" />
   <Project Path="DigitalLove.Game.UI.Console.csproj" />
   <Project Path="DigitalLove.Audio.Samples.csproj" />

@@ -1,4 +1,5 @@
 using System;
+using DigitalLove.Audio;
 using DigitalLove.Game.SpaceShaping.Cube;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ namespace DigitalLove.Game.SpaceShaping
     {
         [SerializeField] private SpaceShapingSettings settings;
         [SerializeField] private SpaceShapingView view;
+        [SerializeField] private SynthCuePlayer cuePlayer;
+        [SerializeField] private SynthPatch launchCue;
 
         private PuzzleRun run;
         private readonly PuzzlePreview preview = new();
@@ -146,7 +149,8 @@ namespace DigitalLove.Game.SpaceShaping
             run.CommitPreview();
             PushField();
             view.HideBaseline();
-            view.TravelShips(run.Session, run.LastResults);
+            view.TravelShips(run.Session, run.LastResults, true);
+            cuePlayer.Play(launchCue);
         }
 
         private void ResetView()
@@ -176,7 +180,7 @@ namespace DigitalLove.Game.SpaceShaping
         private void PlayStartCheck()
         {
             PushField(false);
-            view.TravelShips(run.Session, run.LastResults);
+            view.TravelShips(run.Session, run.LastResults, false);
         }
 
         private void PushField(bool pendingPath = true)
