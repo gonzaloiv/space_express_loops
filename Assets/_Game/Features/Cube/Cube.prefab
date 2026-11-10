@@ -82,7 +82,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.5, y: 1.5, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1907182571821500481
 MonoBehaviour:
@@ -288,7 +288,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Cube::DigitalLove.Game.SpaceShaping.Cube.CubeView
   falloff: 0.5
   contentInsetFraction: 0.075
-  scaleMarginFraction: 0.25
+  scaleMarginFraction: 0.5
   throbAmount: 0.5
   contentVisual: {fileID: 929135511502200135}
   listener: {fileID: 5660060481010103316}

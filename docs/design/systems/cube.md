@@ -113,6 +113,11 @@ solve ([core loop](../core-loop.md) §3), and the job-1 tutorial is exempt.
 
 ## Tuning
 
+- **Pinch forgiveness (2026-11-10).** The cube is ~12 cm in the room, too small to put two pinches
+  inside. The grab volume is 1.5× the frame, and two hands scale when the point between them is on
+  the cube (content + 50% margin). A locked frame has nothing to resize, so two hands always scale.
+  The zone itself does not change: forgiveness is input only. Tune the collider size and
+  `scaleMarginFraction` on `Cube.prefab`.
 - Falloff width (soft-brush blend) — tune in the lab.
 - Scale smoothing — the gesture eases toward its target so the scale, spread and warp move smoothly.
 - Entropy bar — the in-field bar's drain, band marks and last-edit segment; do not reuse the lattice tint.

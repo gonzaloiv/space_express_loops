@@ -87,7 +87,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         private void ApplyIdle(CubeView zone, bool hovering, Vector3 hoverWorld)
         {
-            bool hoverInside = hovering && zone.ContentContains(hoverWorld);
+            bool hoverInside = hovering && zone.ScaleContains(hoverWorld);
             Color fallback = hovering ? palette.Accent : palette.Neutral;
             frameTint.Set(frameRenderer, PredictionColor(fallback));
             fillTint.Set(fillRenderer, hovering && hoverInside

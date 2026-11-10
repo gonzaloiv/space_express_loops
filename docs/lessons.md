@@ -28,6 +28,9 @@ closes.
   other splashes.
 - **Surprised:** placing at setup used wherever the headset was pointing, often at the desk. Placement
   has to wait until the headset is worn and the head pose has settled.
+- **Surprised:** putting the headset on restarted the placement wait and dropped setup's callback,
+  so the boot hung on `> SEAT`. A step that can be restarted by a system event keeps its caller's
+  callback outside the coroutine.
 - **Next time:** treat launch as the first moment of play. The judge's clock starts at the app icon,
   not at job 1.
 

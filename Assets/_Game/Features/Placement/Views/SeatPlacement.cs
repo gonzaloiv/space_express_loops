@@ -32,7 +32,15 @@ namespace DigitalLove.Game.Placement
 
         private Coroutine placing;
 
-        public override void Setup(Action onComplete) => PlaceWhenWorn(onComplete);
+        // Setup's callback survives a restart: putting the headset on mid-wait restarts the wait,
+        // and setup must still hear about the placement that follows.
+        private Action pendingPlaced;
+
+        public override void Setup(Action onComplete)
+        {
+            pendingPlaced = onComplete;
+            PlaceWhenWorn();
+        }
 
         private void OnEnable()
         {
@@ -46,16 +54,16 @@ namespace DigitalLove.Game.Placement
             session.hasRecenteredPose -= Place;
         }
 
-        private void OnMounted() => PlaceWhenWorn(null);
+        private void OnMounted() => PlaceWhenWorn();
 
-        private void PlaceWhenWorn(Action onPlaced)
+        private void PlaceWhenWorn()
         {
             if (placing != null)
                 StopCoroutine(placing);
-            placing = StartCoroutine(WaitAndPlace(onPlaced));
+            placing = StartCoroutine(WaitAndPlace());
         }
 
-        private IEnumerator WaitAndPlace(Action onPlaced)
+        private IEnumerator WaitAndPlace()
         {
             while (!IsWorn())
                 yield return null;
@@ -63,7 +71,9 @@ namespace DigitalLove.Game.Placement
             yield return Settle();
             Place();
             placing = null;
-            onPlaced?.Invoke();
+            Action placed = pendingPlaced;
+            pendingPlaced = null;
+            placed?.Invoke();
         }
 
         private IEnumerator Settle()

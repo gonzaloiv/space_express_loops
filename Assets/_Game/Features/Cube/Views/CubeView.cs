@@ -63,8 +63,6 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             return parent != null ? parent.InverseTransformPoint(world) : world;
         }
 
-        public bool ContentContains(Vector3 world) => Contains(world, ContentSize * 0.5f);
-
         public bool ScaleContains(Vector3 world) =>
             Contains(world, ContentSize * 0.5f * (1f + Mathf.Max(scaleMarginFraction, 0f)));
 

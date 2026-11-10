@@ -40,12 +40,14 @@ namespace DigitalLove.Game.GesturePrompts.Editor
         // The visible pinch ring sits above the tip bones' midpoint; lifting the cube keeps it inside.
         private static readonly Vector2 CubeLift = new(0f, 0.14f);
 
+        // Scale and enter straddle the cube: the pinches start on its faces and pull out past them,
+        // the comfortable pose (the point between the hands is what must be on the cube).
         public static readonly GestureMotion[] All =
         {
             new("scale", "GesturePromptScale", (grip, move) =>
-                HandFrame.TwoHands(grip, 0.17f + 0.19f * move, CubeLift, 0.8f)),
+                HandFrame.TwoHands(grip, 0.25f + 0.15f * move, CubeLift, 0.5f)),
             new("enter", "GesturePromptEnter", (grip, move) =>
-                HandFrame.TwoHands(grip, 0.17f + 0.19f * move, CubeLift, 0.45f + 0.4f * move)),
+                HandFrame.TwoHands(grip, 0.22f + 0.16f * move, CubeLift, 0.4f + 0.3f * move)),
             new("move", "GesturePromptMove", (grip, move) =>
                 HandFrame.OneHand(grip, new Vector2(-0.5f + 0.45f * move, CubeLift.y), 0.55f)),
             new("exit", "GesturePromptExit", (grip, move) =>

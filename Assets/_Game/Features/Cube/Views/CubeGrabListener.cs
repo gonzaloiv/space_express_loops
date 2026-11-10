@@ -130,7 +130,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 startHandDistance = CubeGesture.HandDistance(grabbable);
                 startScale = zone.Scale;
                 startSize = zone.Size;
-                frameGrab = !CubeGesture.AllHandsInsideScale(zone, grabbable);
+                // A locked frame has nothing to resize: two hands always scale.
+                frameGrab = zone.CanResize && !CubeGesture.PinchCentreInsideScale(zone, grabbable);
             }
 
             if (count == 1 && lastCount != 1)
