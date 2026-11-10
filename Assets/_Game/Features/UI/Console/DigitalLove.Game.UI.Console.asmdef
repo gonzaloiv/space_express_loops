@@ -1,7 +1,9 @@
 {
     "name": "DigitalLove.Game.UI.Console",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "DigitalLove.UI.Behaviours"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

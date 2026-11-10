@@ -99,6 +99,14 @@ namespace DigitalLove.Game.SpaceShaping
 
         public float FieldHalf { get; private set; }
 
+        // The grid's bottom-left-back corner and rotation, in the Origin's space (the field's parent).
+        public Vector3 FieldCorner =>
+            transform.parent.InverseTransformPoint(
+                transform.TransformPoint(FieldCentre + new Vector3(-FieldHalf, -FieldHalf, FieldHalf)));
+
+        public Quaternion FieldRotation =>
+            Quaternion.Inverse(transform.parent.rotation) * transform.rotation;
+
         public void ApplyFromSession(SpaceShapingSession session) => spawner.Planets.Apply(session);
 
         public void StopStamp() => stamp.Stop();

@@ -52,11 +52,29 @@ namespace DigitalLove.Game.PuzzleSelection
         private Vector3 lastCubePosition;
 
         public event Action EnterRequested;
+        public event Action EnterStarted;
         public event Action SelectionChanged;
 
         public Vector3 SelectionCubePosition => mapCube.Position;
 
         public bool ShowAll => showAll;
+
+        // The selected field's bottom-left-back corner and rotation, in the Origin's space. Read at
+        // rest: the console pair frames this, not the live breathing/zoomed diorama.
+        public Vector3 FieldCorner
+        {
+            get
+            {
+                float half = selectedSlot.FieldHalfMap;
+                Vector3 corner = selectedSlot.FieldRotationMap * new Vector3(-half, -half, half);
+                return transform.parent.InverseTransformPoint(
+                    mapRoot.TransformPoint(selectedSlot.FieldCentreMap + corner));
+            }
+        }
+
+        public Quaternion FieldRotation =>
+            Quaternion.Inverse(transform.parent.rotation)
+            * (mapRoot.rotation * selectedSlot.FieldRotationMap);
 
         private void Awake()
         {
@@ -185,6 +203,7 @@ namespace DigitalLove.Game.PuzzleSelection
             float scale = mapCube.Scale;
             mapCube.Lock();
             enter.Start(scale);
+            EnterStarted?.Invoke();
         }
 
         private void ReleaseScale()
