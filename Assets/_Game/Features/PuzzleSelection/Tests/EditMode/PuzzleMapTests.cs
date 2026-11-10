@@ -148,6 +148,26 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
             Assert.AreEqual(0.5f, stars.Share, 0.0001f);
         }
 
+        [Test]
+        public void ChapterStars_MarksOneBoundaryFewerThanTheGradedJobs()
+        {
+            PuzzleData[] levels = Levels(7);
+            levels[0].noGrade = true;
+            levels[1].noGrade = true;
+            PuzzleMap map = PuzzleMap.FromLevels(
+                levels,
+                RunProgress.FromSolved(
+                    7, 2, new[] { true, true, false, false, false, false, false }),
+                PuzzleMapLayout.Galaxy(7));
+
+            ChapterStars stars = ChapterStars.From(map);
+
+            Assert.AreEqual(5, stars.GradedJobs);
+            Assert.AreEqual(4, stars.JobBoundaries);
+            Assert.AreEqual(0, new ChapterStars(0, 0, 0).JobBoundaries);
+            Assert.AreEqual(0, new ChapterStars(0, 3, 1).JobBoundaries);
+        }
+
         private PuzzleData[] Levels(int count)
         {
             PuzzleData[] levels = new PuzzleData[count];

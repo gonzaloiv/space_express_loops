@@ -18,5 +18,9 @@ namespace DigitalLove.Game.SpaceShaping
 
             return new Vector3(side * (4f * half - distance), -half, half);
         }
+
+        // Where tick i sits on an arm split into (ticks + 1) equal bands.
+        public static float TickShare(int index, int ticks) =>
+            (index + 1f) / (ticks + 1f);
     }
 }

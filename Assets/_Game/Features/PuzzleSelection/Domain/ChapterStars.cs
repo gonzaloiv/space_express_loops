@@ -18,6 +18,9 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public int GradedJobs { get; }
 
+        // The marks between the jobs on the meter: one fewer than the graded jobs.
+        public int JobBoundaries => Mathf.Max(GradedJobs - 1, 0);
+
         public float Share => Possible > 0 ? Earned / (float)Possible : 0f;
 
         public static ChapterStars From(PuzzleMap map)

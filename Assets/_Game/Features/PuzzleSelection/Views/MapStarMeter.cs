@@ -23,7 +23,7 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public void Show(ChapterStars stars)
         {
-            ticks = stars.GradedJobs;
+            ticks = stars.JobBoundaries;
             float share = stars.Share;
             Color earned = accent.value;
             Color rest = neutral.value;

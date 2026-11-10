@@ -61,7 +61,7 @@ namespace DigitalLove.Game.SpaceShaping
 
             for (int i = 0; i < count; i++)
             {
-                float s = (i + 1f) / (count + 1f);
+                float s = FieldEdgePath.TickShare(i, count);
                 LayTick(ticks[i], s, -1f, half);
                 LayTick(ticks[max + i], s, 1f, half);
             }
