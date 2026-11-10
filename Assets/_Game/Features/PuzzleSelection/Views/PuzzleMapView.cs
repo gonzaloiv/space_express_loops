@@ -241,6 +241,7 @@ namespace DigitalLove.Game.PuzzleSelection
         private void RenderFields()
         {
             fieldView.Render(map);
+            starMeter.Show(ChapterStars.From(map));
             pose.PlaceSelected(Focus);
             mapCube.SetEnterable(map.CanEnter);
         }

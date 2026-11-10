@@ -20,6 +20,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         private ZoneVerdict prediction;
         private ZoneRefusal refusal;
         private float refusedUntil;
+        private bool dormant;
 
         public CubeFeedback(Renderer frameRenderer, Renderer fillRenderer, CubePalette palette)
         {
@@ -33,6 +34,10 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         public float MinScale => minScale;
 
         public float MaxScale => maxScale;
+
+        public bool IsDormant => dormant;
+
+        public void SetDormant(bool value) => dormant = value;
 
         public void SetScaleEnvelope(float min, float max)
         {
@@ -60,6 +65,15 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         public void Apply(
             CubeView zone, int selectingPoints, bool frameGrab, bool hovering, Vector3 hoverWorld)
         {
+            if (dormant)
+            {
+                // Danger is the map's locked colour; a dormant cube keeps it at idle alpha.
+                Color dim = palette.Danger.WithAlpha(palette.FillIdleAlpha);
+                frameTint.Set(frameRenderer, dim);
+                fillTint.Set(fillRenderer, dim);
+                return;
+            }
+
             if (IsRefusing)
             {
                 frameTint.Set(frameRenderer, palette.Danger);

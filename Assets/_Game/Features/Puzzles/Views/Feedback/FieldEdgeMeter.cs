@@ -25,20 +25,12 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField, Min(0f)] private float labelHeight = 0.012f;
         [SerializeField, Min(0f)] private float labelOutset = 0.008f;
 
-        private readonly GradientColorKey[] colorKeys = new GradientColorKey[4];
-        private readonly GradientAlphaKey[] alphaKeys = new GradientAlphaKey[4];
-        private Gradient gradient;
-        private Vector3 laidCentre;
-        private float laidHalf = -1f;
         private bool? labelOverBudget;
-
-        private Gradient Gradient => gradient ??= new Gradient { mode = GradientMode.Fixed };
 
         private void OnEnable()
         {
             view.ReadoutChanged += Render;
             LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
-            laidHalf = -1f;
             Render(view.Readout);
         }
 
@@ -62,13 +54,10 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void LateUpdate()
         {
-            if (view.FieldHalf == laidHalf && view.FieldCentre == laidCentre)
-                return;
-
-            laidCentre = view.FieldCentre;
-            laidHalf = view.FieldHalf;
-            drawing.Layout(laidCentre, laidHalf, 2);
-            labelRoot.localPosition = new Vector3(0f, -laidHalf + labelHeight, -laidHalf - labelOutset);
+            drawing.Layout(
+                view.FieldCentre, view.FieldHalf, 2, PuzzleGrade.ThreeStarUse, PuzzleGrade.TwoStarUse);
+            labelRoot.localPosition = new Vector3(
+                0f, -view.FieldHalf + labelHeight, -view.FieldHalf - labelOutset);
         }
 
         // Along each arm: spent (dim), the last edit, the in-flight preview, then what remains.
@@ -77,12 +66,11 @@ namespace DigitalLove.Game.SpaceShaping
             EntropyBar bar = EntropyBar.From(readout);
             float spent = bar.Committed;
             float preview = Mathf.Min(spent + bar.Pending, 1f);
-            SetKey(0, Mathf.Max(spent - bar.LastEdit, 0f), neutral.value, spentAlpha);
-            SetKey(1, spent, neutral.value, 1f);
-            SetKey(2, preview, bar.Overflow ? danger.value : accent.value, 1f);
-            SetKey(3, 1f, accent.value, 1f);
-            Gradient.SetKeys(colorKeys, alphaKeys);
-            drawing.SetGradient(Gradient);
+            drawing.SetBands(new MeterBands(
+                new MeterBand(Mathf.Max(spent - bar.LastEdit, 0f), neutral.value, spentAlpha),
+                new MeterBand(spent, neutral.value, 1f),
+                new MeterBand(preview, bar.Overflow ? danger.value : accent.value, 1f),
+                new MeterBand(1f, accent.value, 1f)));
             SetLabel(bar.Overflow);
         }
 
@@ -94,12 +82,6 @@ namespace DigitalLove.Game.SpaceShaping
             labelOverBudget = overBudget;
             label.text = LocalizationUtil.GetValue(overBudget ? overBudgetKey : entropyKey);
             label.color = overBudget ? danger.value : neutral.value;
-        }
-
-        private void SetKey(int index, float time, Color color, float alpha)
-        {
-            colorKeys[index] = new GradientColorKey(color, time);
-            alphaKeys[index] = new GradientAlphaKey(alpha, time);
         }
     }
 }

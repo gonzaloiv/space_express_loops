@@ -1,3 +1,4 @@
+using DigitalLove.Casual.Levels;
 using UnityEngine;
 
 namespace DigitalLove.Game.PuzzleSelection
@@ -25,12 +26,16 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public static ChapterStars From(PuzzleMap map)
         {
+            string chapter = ChapterOf(map.Selected);
             int earned = 0;
             int possible = 0;
             int graded = 0;
             for (int i = 0; i < map.Count; i++)
             {
                 JobEntry entry = map[i];
+                if (chapter != null && ChapterOf(entry) != chapter)
+                    continue;
+
                 if (entry.NoGrade)
                     continue;
 
@@ -40,6 +45,15 @@ namespace DigitalLove.Game.PuzzleSelection
             }
 
             return new ChapterStars(earned, possible, graded);
+        }
+
+        // The map can carry several chapters; the meter reads only the one the selection is in.
+        private static string ChapterOf(JobEntry entry)
+        {
+            string id = entry.Puzzle != null ? entry.Puzzle.id : null;
+            return !string.IsNullOrEmpty(id) && id.IndexOf('_') > 0
+                ? LevelData.GetChapterId(id)
+                : null;
         }
     }
 }

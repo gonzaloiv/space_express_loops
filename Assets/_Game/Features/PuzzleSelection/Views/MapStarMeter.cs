@@ -5,7 +5,7 @@ using UnityEngine;
 namespace DigitalLove.Game.PuzzleSelection
 {
     // The chapter's stars on the map field's base edge: earned from the front on both arms, one tick
-    // per graded job, the rest dim. No preview or last-edit segments here.
+    // per job boundary, the rest dim. No preview or last-edit segments here.
     public class MapStarMeter : MonoBehaviour
     {
         [SerializeField] private FieldEdgeMeterView drawing;
@@ -14,38 +14,29 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField] private ColorValue neutral;
         [SerializeField, Range(0f, 1f)] private float dimAlpha = 0.12f;
 
-        private readonly GradientColorKey[] colorKeys = new GradientColorKey[4];
-        private readonly GradientAlphaKey[] alphaKeys = new GradientAlphaKey[4];
-        private Gradient gradient;
         private int ticks;
-
-        private Gradient Gradient => gradient ??= new Gradient { mode = GradientMode.Fixed };
 
         public void Show(ChapterStars stars)
         {
             ticks = stars.JobBoundaries;
             float share = stars.Share;
-            Color earned = accent.value;
-            Color rest = neutral.value;
-            Color fill = share > 0f ? earned : rest;
-            SetKey(0, 0f, fill, share > 0f ? 1f : dimAlpha);
-            SetKey(1, share, fill, share > 0f ? 1f : dimAlpha);
-            SetKey(2, share, rest, dimAlpha);
-            SetKey(3, 1f, rest, dimAlpha);
-            Gradient.SetKeys(colorKeys, alphaKeys);
-            drawing.SetGradient(Gradient);
+            bool earned = share > 0f;
+            Color fill = earned ? accent.value : neutral.value;
+            float fillAlpha = earned ? 1f : dimAlpha;
+            drawing.SetBands(new MeterBands(
+                new MeterBand(0f, fill, fillAlpha),
+                new MeterBand(share, fill, fillAlpha),
+                new MeterBand(share, neutral.value, dimAlpha),
+                new MeterBand(1f, neutral.value, dimAlpha)));
         }
 
         private void LateUpdate()
         {
-            drawing.Layout(field.FieldCentreMap, field.FieldHalfMap, ticks);
+            int count = ticks;
+            float first = count > 0 ? FieldEdgePath.TickShare(0, count) : 0f;
+            float last = count > 0 ? FieldEdgePath.TickShare(count - 1, count) : 0f;
+            drawing.Layout(field.FieldCentreMap, field.FieldHalfMap, count, first, last);
             transform.localRotation = field.FieldRotationMap;
-        }
-
-        private void SetKey(int index, float time, Color color, float alpha)
-        {
-            colorKeys[index] = new GradientColorKey(color, time);
-            alphaKeys[index] = new GradientAlphaKey(alpha, time);
         }
     }
 }

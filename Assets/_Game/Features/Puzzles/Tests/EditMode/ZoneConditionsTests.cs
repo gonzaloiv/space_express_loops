@@ -44,6 +44,49 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             Object.DestroyImmediate(zoneObject);
         }
 
+        [Test]
+        public void CubeFeedback_DormantUsesTheLockedColor()
+        {
+            GameObject zoneObject = ZoneObject(out CubeView zone);
+            GameObject frameObject = new("Frame");
+            GameObject fillObject = new("Fill");
+            MeshRenderer frame = frameObject.AddComponent<MeshRenderer>();
+            MeshRenderer fill = fillObject.AddComponent<MeshRenderer>();
+            CubePalette palette = new()
+            {
+                Neutral = Color.white,
+                Accent = Color.blue,
+                Danger = Color.red,
+                FillIdleAlpha = 0.1f,
+                FillActiveAlpha = 0.45f
+            };
+            CubeFeedback feedback = new(frame, fill, palette);
+
+            feedback.SetDormant(true);
+            feedback.Apply(zone, 2, false, false, Vector3.zero);
+            Color dormant = ReadBaseColor(fill);
+            Assert.IsTrue(feedback.IsDormant);
+            Assert.AreEqual(1f, dormant.r, 1e-4f);
+            Assert.AreEqual(0f, dormant.g, 1e-4f);
+            Assert.AreEqual(0f, dormant.b, 1e-4f);
+            Assert.AreEqual(0.1f, dormant.a, 1e-4f);
+
+            feedback.SetDormant(false);
+            feedback.Apply(zone, 2, false, false, Vector3.zero);
+            Assert.AreNotEqual(dormant, ReadBaseColor(fill));
+
+            Object.DestroyImmediate(zoneObject);
+            Object.DestroyImmediate(frameObject);
+            Object.DestroyImmediate(fillObject);
+        }
+
+        private static Color ReadBaseColor(Renderer renderer)
+        {
+            MaterialPropertyBlock block = new();
+            renderer.GetPropertyBlock(block);
+            return block.GetColor(Shader.PropertyToID("_BaseColor"));
+        }
+
         private static GameObject ZoneObject(out CubeView zone)
         {
             GameObject content = new("Content");

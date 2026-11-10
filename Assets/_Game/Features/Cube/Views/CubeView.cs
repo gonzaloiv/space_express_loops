@@ -120,6 +120,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         public void SetInputLocked(bool value) => listener.SetLocked(value);
 
+        public void SetDormant(bool value) => listener.SetDormant(value);
+
         public void SetScaling(bool value)
         {
             if (scaling == value)

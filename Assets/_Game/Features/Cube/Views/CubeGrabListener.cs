@@ -68,6 +68,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         public void SetScaleEnvelope(float min, float max) => feedback.SetScaleEnvelope(min, max);
 
+        public void SetDormant(bool value) => feedback.SetDormant(value);
+
         public void SetPrediction(ZoneVerdict verdict) => feedback.SetPrediction(verdict);
 
         public void ClearPrediction() => feedback.ClearPrediction();

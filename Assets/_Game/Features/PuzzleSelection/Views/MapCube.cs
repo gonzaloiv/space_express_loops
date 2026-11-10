@@ -48,15 +48,22 @@ namespace DigitalLove.Game.PuzzleSelection
             SetEnterable(canEnter);
         }
 
-        // Shrinking does nothing on the map; a locked node stops early.
-        public void SetEnterable(bool canEnter) =>
+        // Shrinking does nothing on the map; a locked node stops early and reads dark.
+        public void SetEnterable(bool canEnter)
+        {
             zone.SetScaleEnvelope(1f, canEnter ? enterAt * EnvelopeHeadroom : lockedCeiling);
+            zone.SetDormant(!canEnter);
+        }
 
         public void SnapTo(Vector3 centre) => zone.SetFrame(centre, size);
 
         public void Release() => zone.ResetScale();
 
-        public void Lock() => zone.SetInputLocked(true);
+        public void Lock()
+        {
+            zone.SetDormant(false);
+            zone.SetInputLocked(true);
+        }
 
         public void Refuse() => zone.Refuse(ZoneRefusal.Locked);
 
@@ -64,6 +71,7 @@ namespace DigitalLove.Game.PuzzleSelection
         {
             zone.SetInputLocked(false);
             zone.ResetScale();
+            zone.SetDormant(false);
             zone.gameObject.SetActive(false);
         }
     }

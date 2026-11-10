@@ -14,13 +14,30 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField, Min(0f)] private float refusalSecs = 0.26f;
         [SerializeField, Range(0f, 1f)] private float lockedDim = 0.65f;
 
+        private Coroutine refusalRoutine;
+        private PuzzleData renderedPuzzle;
+        private Vector3 homeLocalPosition;
+        private Quaternion homeLocalRotation;
+        private Quaternion homeVisualRotation;
+        private Vector3 homeVisualScale;
+        private Vector3 homeCentreLocal;
+        private float homeDioramaScale = 1f;
+        private float idlePhase;
+        private bool culled;
+        private bool hasStars;
+        private bool breathe;
+        private int lastStars;
+
         // The sun in the map's space (this slot's parent).
         public Vector3 SunMapPosition =>
             transform.parent.InverseTransformPoint(diorama.SunWorldPosition);
+
+        // Read at rest: the diorama's breathing and enter pinch do not move the map frame.
         public Vector3 FieldCentreMap =>
-            transform.parent.InverseTransformPoint(diorama.transform.position);
+            transform.parent.InverseTransformPoint(transform.TransformPoint(homeCentreLocal));
         public float FieldHalfMap =>
-            diorama.PreviewHalf * diorama.transform.lossyScale.x / transform.parent.lossyScale.x;
+            diorama.FrameHalf * homeDioramaScale * homeVisualScale.x
+            * transform.lossyScale.x / transform.parent.lossyScale.x;
         public Quaternion FieldRotationMap =>
             Quaternion.Inverse(transform.parent.rotation) * diorama.transform.rotation;
         public int MapIndex { get; private set; } = -1;
@@ -45,24 +62,14 @@ namespace DigitalLove.Game.PuzzleSelection
             stars.gameObject.SetActive(hasStars && !culled);
         }
 
-        private Coroutine refusalRoutine;
-        private PuzzleData renderedPuzzle;
-        private Vector3 homeLocalPosition;
-        private Quaternion homeLocalRotation;
-        private Quaternion homeVisualRotation;
-        private Vector3 homeVisualScale;
-        private float idlePhase;
-        private bool culled;
-        private bool hasStars;
-        private bool breathe;
-        private int lastStars;
-
         private void Awake()
         {
             homeLocalPosition = diorama.transform.localPosition;
             homeLocalRotation = diorama.transform.localRotation;
             homeVisualRotation = visualRoot.localRotation;
             homeVisualScale = visualRoot.localScale;
+            homeCentreLocal = transform.InverseTransformPoint(diorama.transform.position);
+            homeDioramaScale = diorama.transform.localScale.x;
         }
 
         private void Update()

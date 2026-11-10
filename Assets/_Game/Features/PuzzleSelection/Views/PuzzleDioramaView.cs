@@ -49,6 +49,9 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public float PreviewHalf => PreviewSize * 0.5f;
 
+        // The field's half including the grid's frame padding, in the diorama's local space.
+        public float FrameHalf => PreviewHalf + FieldFrame.Padding * PreviewScale;
+
         public void SetStateDim(float amount) => SetPlanetStateDim(amount);
 
         public override void Hide()

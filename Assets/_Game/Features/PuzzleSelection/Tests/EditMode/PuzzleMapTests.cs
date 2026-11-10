@@ -168,6 +168,32 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
             Assert.AreEqual(0, new ChapterStars(0, 3, 1).JobBoundaries);
         }
 
+        [Test]
+        public void ChapterStars_CountsOnlyTheSelectedJobsChapter()
+        {
+            PuzzleData[] levels = Levels(4);
+            levels[0].id = "01_01";
+            levels[1].id = "01_02";
+            levels[2].id = "99_01";
+            levels[3].id = "99_02";
+            PuzzleMap map = PuzzleMap.FromLevels(
+                levels,
+                RunProgress.FromSolved(
+                    4, 2, new[] { true, true, true, false }, new[] { 3, 3, 2, 0 }),
+                PuzzleMapLayout.Galaxy(4));
+
+            ChapterStars chapter99 = ChapterStars.From(map);
+            Assert.AreEqual(2, chapter99.GradedJobs);
+            Assert.AreEqual(6, chapter99.Possible);
+            Assert.AreEqual(2, chapter99.Earned);
+
+            Assert.IsTrue(map.Select(0));
+            ChapterStars chapter01 = ChapterStars.From(map);
+            Assert.AreEqual(2, chapter01.GradedJobs);
+            Assert.AreEqual(6, chapter01.Possible);
+            Assert.AreEqual(6, chapter01.Earned);
+        }
+
         private PuzzleData[] Levels(int count)
         {
             PuzzleData[] levels = new PuzzleData[count];
