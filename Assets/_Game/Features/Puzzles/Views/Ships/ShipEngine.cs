@@ -9,6 +9,7 @@ namespace DigitalLove.Game.SpaceShaping
     public class ShipEngine : MonoBehaviour
     {
         [SerializeField] private SynthVoice voice;
+        [SerializeField] private SynthPatch tone;
         [SerializeField] private int slowNote = 45;
         [SerializeField] private int fastNote = 57;
         [SerializeField, Min(0f)] private float minSpeed = 0.02f;
@@ -26,7 +27,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             running = true;
             speed = minSpeed;
-            voice.BeginSustain(slowNote, cutoff, lfoAmp, lfoRate);
+            voice.BeginSustain(tone, slowNote,cutoff, lfoAmp, lfoRate);
             voice.SetVolume(volume);
         }
 

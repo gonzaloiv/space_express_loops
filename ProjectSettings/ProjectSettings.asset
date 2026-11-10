@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: Digital Love
-  productName: Our Space
+  productName: Our Space - Chapter 01
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 1, g: 1, b: 1, a: 1}
@@ -155,8 +155,6 @@ PlayerSettings:
   - {fileID: 11400000, guid: ddc8f7adf80734d38aacb23732fb753c, type: 2}
   - {fileID: 11400000, guid: 392aa8cc9b9494043bdc310e091d8073, type: 2}
   - {fileID: 11400000, guid: 5f062e4e346c3834d998f93bedb680f2, type: 2}
-  - {fileID: -2264778514210020867, guid: 136958f90a130274b8b70a31eed352fb, type: 2}
-  - {fileID: -3728528452315536981, guid: 2462f957eee75f940a3393fd6f039795, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   xboxOneDisableKinectGpuReservation: 1

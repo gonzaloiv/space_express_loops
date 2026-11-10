@@ -172,17 +172,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Audio.Runtime::DigitalLove.Audio.SynthVoice
   source: {fileID: 4942731860027057301}
   synth: {fileID: 2270764475650175303}
-  volume: 0.05
-  attackSecs: 0.12
-  releaseSecs: 0.25
-  resonance: 0.2
-  harmonic: 1
-  osc2Mix: 0.6
-  distortion: 0.02
-  strainLfoAmp: 0.02
-  strainLfoRate: 0.4
-  restingLfoRate: 0.4
-  strainWobbleCents: 0
 --- !u!114 &5348074894969422721
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,6 +201,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Views::DigitalLove.Game.SpaceShaping.ShipEngine
   voice: {fileID: 8596132392190461229}
+  tone: {fileID: 11400000, guid: 123c24870a314ca7b01a1d7198da8917, type: 2}
   slowNote: 45
   fastNote: 57
   slowSecs: 2.2

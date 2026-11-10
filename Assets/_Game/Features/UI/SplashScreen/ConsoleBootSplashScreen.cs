@@ -68,7 +68,14 @@ namespace DigitalLove.Game.UI.SplashScreen
 
         public override void BeginStep(SetupStep step) => checklist.Begin(step);
 
-        public override void EndStep(SetupStep step) => checklist.End(step);
+        public override void EndStep(SetupStep step)
+        {
+            checklist.End(step);
+            // The boot opens before the headset is worn; once the seat is placed the head is settled,
+            // so the line moves to where the player is actually looking.
+            if (step == SetupStep.Space && open)
+                view.ShowInCameraView();
+        }
 
         public override void Play(Action onComplete)
         {

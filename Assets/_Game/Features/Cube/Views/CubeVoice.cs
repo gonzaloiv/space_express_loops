@@ -10,6 +10,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
     {
         [SerializeField] private CubeView zone;
         [SerializeField] private SynthVoice voice;
+        [SerializeField] private SynthPatch tone;
 
         [Header("Stretch")]
         [SerializeField] private int baseNote = 52;
@@ -24,6 +25,13 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         [SerializeField] private float grabTickSemitones = 5f;
         [SerializeField] private float releaseDropSemitones = 3f;
 
+        [Header("Strain")]
+        [SerializeField, Range(0f, 1f)] private float strainLfoAmp = 0.08f;
+        [SerializeField, Min(0.01f)] private float strainLfoRate = 3.5f;
+        [SerializeField, Min(0.01f)] private float restingLfoRate = 1.2f;
+        [SerializeField, Min(0f)] private float strainWobbleCents = 8f;
+
+        private float wobblePhase;
         private bool wasScaling;
         private float strain;
         private float grabStart;
@@ -61,27 +69,28 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             releaseUntil = 0f;
             grabStart = Time.unscaledTime;
             lastNote = StretchNote() + grabTickSemitones;
-            voice.BeginStretch(lastNote, Cutoff(), strain);
+            wobblePhase = 0f;
+            voice.BeginSustain(tone, lastNote, Cutoff(), StrainLfoAmp(), StrainLfoRate());
         }
 
         private void Drive()
         {
             lastNote = StretchNote() + GrabTickOffset();
-            voice.DriveStretch(lastNote, Cutoff(), strain);
+            voice.DriveSustain(lastNote + StrainWobble(), Cutoff(), StrainLfoAmp(), StrainLfoRate());
         }
 
         private void BeginRelease()
         {
             releaseNote = lastNote;
             releaseStart = Time.unscaledTime;
-            releaseUntil = releaseStart + voice.ReleaseSecs;
-            voice.EndStretch();
+            releaseUntil = releaseStart + tone.ReleaseSecs;
+            voice.EndSustain();
         }
 
         private void UpdateRelease()
         {
             float elapsed = Time.unscaledTime - releaseStart;
-            float drop = releaseDropSemitones * Mathf.Clamp01(elapsed / voice.ReleaseSecs);
+            float drop = releaseDropSemitones * Mathf.Clamp01(elapsed / tone.ReleaseSecs);
             voice.SetNote(releaseNote - drop);
 
             if (Time.unscaledTime >= releaseUntil)
@@ -93,6 +102,18 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         private float Cutoff() =>
             Mathf.Lerp(cutoffShrunk, cutoffGrown, Mathf.InverseLerp(minScale, maxScale, zone.Scale));
+
+        private float StrainLfoAmp() => strain * strainLfoAmp;
+
+        private float StrainLfoRate() => Mathf.Lerp(restingLfoRate, strainLfoRate, strain);
+
+        // A pitch wobble that grows with strain, so a stretch near the budget sounds strained.
+        private float StrainWobble()
+        {
+            wobblePhase = Mathf.Repeat(
+                wobblePhase + Mathf.PI * 2f * StrainLfoRate() * Time.deltaTime, Mathf.PI * 2f);
+            return Mathf.Sin(wobblePhase) * strainWobbleCents * 0.01f * strain;
+        }
 
         private float GrabTickOffset() =>
             grabTickSemitones * Mathf.Clamp01(1f - (Time.unscaledTime - grabStart) / grabTickSecs);

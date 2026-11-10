@@ -6164,17 +6164,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Audio.Runtime::DigitalLove.Audio.SynthVoice
   source: {fileID: 6604236039230266095}
   synth: {fileID: 7517037962010999811}
-  volume: 0.06
-  attackSecs: 0.35
-  releaseSecs: 0.6
-  resonance: 0.2
-  harmonic: 1
-  osc2Mix: 0.5
-  distortion: 0.02
-  strainLfoAmp: 0.03
-  strainLfoRate: 0.55
-  restingLfoRate: 0.18
-  strainWobbleCents: 0
 --- !u!114 &8690131569407827242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6204,6 +6193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Views::DigitalLove.Game.SpaceShaping.FieldHum
   voice: {fileID: 8947869848348570928}
+  tone: {fileID: 11400000, guid: 5fa7755eff084c499851c3e83f06e9b2, type: 2}
   note: 45
   cutoffResting: 0.05
   cutoffStrain: 0.14

@@ -8,6 +8,7 @@ namespace DigitalLove.Game.SpaceShaping
     public class FieldHum : MonoBehaviour
     {
         [SerializeField] private SynthVoice voice;
+        [SerializeField] private SynthPatch tone;
         [SerializeField] private int note = 45;
         [SerializeField, Range(0f, 1f)] private float cutoffResting = 0.05f;
         [SerializeField, Range(0f, 1f)] private float cutoffStrain = 0.14f;
@@ -50,7 +51,7 @@ namespace DigitalLove.Game.SpaceShaping
         private void Begin()
         {
             running = true;
-            voice.BeginSustain(note, cutoffResting, lfoAmpResting, lfoRateResting);
+            voice.BeginSustain(tone, note,cutoffResting, lfoAmpResting, lfoRateResting);
             Drive();
             voice.SetVolume(volume * Mathf.Lerp(1f, 1f - dip, pinch));
         }
