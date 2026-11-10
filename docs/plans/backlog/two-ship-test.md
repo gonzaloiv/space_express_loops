@@ -1,16 +1,18 @@
 # Two-ship test — try multi-ship before deciding
 
-**Status:** now · space shaping · updated 2026-11-10 — the first two-ship level played well (2026-11-10);
-next, a few more two-ship levels to play (U3) before deciding on a two-ship job 8. Route colours and the
-cube's keep-out moved to [transit routes](transit-routes.md).
+**Status:** next · space shaping · updated 2026-11-10 — the first two-ship level played well (2026-11-10),
+but the rest is queued, not active: U3's extra levels and the job 8 decision wait. U1's
+`PuzzleShipScanTests` run is still open. Route colours and the cube's keep-out moved to
+[transit routes](transit-routes.md).
 
-**Related:** [chapter 2 — the fleet](../backlog/chapter-2-fleet.md) (2-1 is the same brief) ·
+**Related:** [chapter 2 — the fleet](chapter-2-fleet.md) (2-1 is the same brief) ·
 [puzzle creator](../../../Assets/_Game/Features/PuzzleCreator/README.md) · [plans board](../README.md)
 
 ## Goal
 
 Multi-ship is out of v1 and untested on the headset. A test level decides whether it plays well
-enough to become job 8 (two ships, separate runs) for the competition build. Mixed is dropped as job 8.
+enough to become job 8 (two ships, separate runs) for the competition build. Mixed stays out of v1
+(still the post-v1 closer in [chapter 2](chapter-2-fleet.md) unless this test replaces it).
 
 ## Contract
 
@@ -23,7 +25,9 @@ enough to become job 8 (two ships, separate runs) for the competition build. Mix
 
 ### U1 — the bake keeps the sun out — code in (2026-11-10)
 
-- Run `PuzzleShipScanTests` once the project compiles; the first run hit stale assemblies.
+- Re-baked 2026-11-10 with the sun on: `TwoShips_Test_Puzzle` (seed 1) and a second version
+  `TwoShips_B_Puzzle` (`PuzzleSeed_TwoShips_B`, seed 201); 12 planets + sun, no ship on the sun.
+  Still open: run `PuzzleShipScanTests` (the project did not compile at the time).
 
 - `PuzzleShipScan` skips any pair whose origin or destination is a centre-only source, both in the
   pristine cache and in the rescue scan, so the probe never counts a sun run.

@@ -38,7 +38,7 @@ need a yes.
    - **Judge tests to pass:** fully hands-only end to end; the airplane-seat test (two-foot radius);
      the one-bus-stop test (a complete moment fast, clean pause/resume).
 
-**Out of v1:** job 8 (Mixed), resize, multi-ship jobs, reactive in-solve tips, the playable map field,
+**Out of v1:** job 8 (Mixed), resize, multi-ship jobs (unless the [two-ship test](backlog/two-ship-test.md) promotes a two-ship job 8), reactive in-solve tips, the playable map field,
 more chapters.
 
 ## Road to the store
@@ -47,7 +47,7 @@ After v1 (decided 2026-11-07): a **~€5 Meta store release** sooner, then chapt
 shape is in [chapters](../design/chapters.md); the demo is the store's own option.
 
 1. **Job 8 (Mixed)** closes chapter 1 — bake it, or ship chapter 1 at seven jobs and land it before
-   chapter 2 opens.
+   chapter 2 opens. The [two-ship test](backlog/two-ship-test.md) may replace it.
 2. **Chapter 2 — the fleet.** [Plan](backlog/chapter-2-fleet.md).
 3. **Freelance contracts.** ~150 prebaked jobs, tiers, the quality filter, the exact-entropy score.
 4. **The daily contract.** One pool job per day, Meta platform leaderboard.
@@ -59,18 +59,17 @@ shape is in [chapters](../design/chapters.md); the demo is the store's own optio
 
 Active work.
 
-- [Two-ship test](in-progress/two-ship-test.md) — the first two-ship level played well; next a few more
-  (separate, fan-out, converge) to decide on a two-ship job 8 for v1.
-- [Transit routes](in-progress/transit-routes.md) — one colour per route in every job, the outcome on the
-  line's end, and the cube's keep-out shown and covering every ship.
-- [The field meter](in-progress/field-meter.md) — the bar and its prompts are in; next the same square
-  under the map for the chapter's stars.
+- [The field meter](in-progress/field-meter.md) — the bar, its prompts and the map's star square are
+  built; open: U4 review fixes (dark map cube over locked jobs) and the headset check.
+- [The panel bank](in-progress/panel-bank.md) — the console windows, smaller, hang on two arms from the
+  grid's bottom-left-back corner (one at 45°, one straight up).
 
 ## Next
 
-- [The panel bank](backlog/panel-bank.md) — the console windows, smaller, hang from one bank behind the
-  field, built from the grid's lines. U1 (smaller windows) can start now; U2 waits on the field meter's
-  map square.
+- [Two-ship test](backlog/two-ship-test.md) — the first two-ship level played well; queued, not active:
+  a few more levels (separate, fan-out, converge) and the two-ship job 8 decision.
+- [Transit routes](backlog/transit-routes.md) — queued, not active: the cube's keep-out for every ship
+  (U1), route colours on the lines (U2), then endpoint shapes and interchanges (U3).
 
 ## Later
 
@@ -97,8 +96,7 @@ Loose ends that still need a home. Close one by linking the plan that finishes i
   closer, step 1 of the road to the store. The job card landed (2026-11-07). Job 1 was rebaked (2026-11-06) with
   six planets and a sun the cube does not cover (seed 141) — a sunless four-planet field almost never
   bakes. `PuzzleJobBakeTests` and a headset read of job 1 are still open.
-- **Ship-zone cue.** The ship has a trail; there is no zone indicator. Fold it into the in-puzzle read
-  plan or the feel pass.
+- **Ship-zone cue.** The ship has a trail; there is no zone indicator. No plan owns it yet.
 - **Resize.** Working, but the explanation (size is scope, not precision) is not ready. Deferred from the
   slice; chapter 3's first lesson ([chapters](../design/chapters.md)).
 - **Capstone routes (job 8).** The capstone is deferred to its own future plan; it still needs at least

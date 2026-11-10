@@ -17,7 +17,8 @@ the pressure by making several ships share one field and one entropy budget.
 ## Contract
 
 - **Job 8 stays in chapter 1 (`01_08`).** It is the single-ship closer: clear + curve, before ships
-  change what the player tracks.
+  change what the player tracks — unless the [two-ship test](two-ship-test.md) replaces it with a
+  two-ship job 8.
 - **Chapter 2 is its own chapter (`02_01`–`02_05`).** `LevelSelector` already joins chapters into one
   ordered run, and the map and saved progress go by that order, so the fleet follows chapter 1 without
   runtime changes. Its ids do not depend on job 8 baking.
@@ -66,7 +67,7 @@ This is more than a morning; each unit is its own sitting.
   Raise `Attempts` on multi-ship rows (the search probes fewer seeds per pass).
 - Replace the builder's hard-coded `Chapters/01` paths: each contract's chapter comes from its id, and
   the builder writes `Chapters/NN/Job_NN_MM_Puzzle.asset` and wires `Chapters/NN.asset`.
-- The sun is kept out of ship runs by the [two-ship test](../in-progress/two-ship-test.md) plan (U1).
+- The sun is kept out of ship runs by the [two-ship test](two-ship-test.md) plan (U1).
 - **Exit:** a two-ship `02_01` row builds through *Build Job Test Set* into chapter 2; chapter 1 still
   rebuilds unchanged.
 

@@ -2,8 +2,8 @@
 
 **Status:** now · presentation · updated 2026-11-10 — U1, U2 and U2b are in: the entropy bar is the
 bottom edge of the field's grid, and the prompts teach it (Spend and Stars, leader lines, the ENTROPY
-label). Next: the same square under the map (U3); the console bank moved to
-[its own plan](../backlog/panel-bank.md).
+label). U3's map square is built and its tick count fixed; U4's review fixes are in. Open: the headset
+check below. The console bank moved to [its own plan](panel-bank.md).
 
 **Related:** [core loop](../../design/core-loop.md) §The bar is the meter · [the cube](../../design/systems/cube.md) ·
 [plans board](../README.md)
@@ -78,8 +78,8 @@ Do these before U3; they touch the same prompt code.
    beside or behind the meter. Express every offset in its owner's frame
    (`shapingView.transform.TransformVector` for the job prompts, `mapView.transform.TransformVector`
    for Enter); do it for Spend/Stars and the older prompts.
-3. **Prompt kind count is hard-coded.** `GesturePromptPresenter.KindCount = 6` (L13): a seventh kind
-   would silently stop following its subject. Derive it once from `GestureKind` (a static count, not
+3. **Prompt kind count was hard-coded at 6** (`GesturePromptPresenter`): a seventh kind would silently
+   stop following its subject. It now derives once from `GestureKind` (a static count, not
    `Enum.GetValues` per frame).
 4. **The leader line is laid out twice a frame:** `GesturePromptPool.Move` → `Follow` →
    `LayoutLeader` (`GesturePromptPanel.cs:43-47`, `GesturePromptPool.cs:41-50`), and again in
@@ -93,7 +93,7 @@ Do these before U3; they touch the same prompt code.
   turned 90°, every prompt (Spend, Stars, Scale, Move, Exit, Enter) keeps its offset in its owner's
   frame; one leader layout per frame.
 
-### U3 — the square under the map
+### U3 — the square under the map — built 2026-11-10, awaiting the headset check
 
 - The map gets the same square under its field: a second meter instance on the map (author it next to
   the map field in `Game.unity` › `PuzzleMapView`), framed from the map field's bounds.
@@ -102,8 +102,9 @@ Do these before U3; they touch the same prompt code.
   each fill it. Do not copy the layout code.
 - Map shares: both arms fill with **stars earned / stars possible** in the chapter, from the front.
   Possible = 3 × graded jobs (skip `NoGrade` jobs). Source: `RunProgress.Stars(i)` and `JobEntry`
-  (`PuzzleSelection/Domain`). One tick per graded job along each arm instead of the ⅓/⅔ ticks; the
-  meter needs a tick count, not four fixed ticks (author the maximum and hide the rest).
+  (`PuzzleSelection/Domain`). A tick on each job boundary along each arm (one fewer than the graded
+  jobs) instead of the ⅓/⅔ ticks; the meter needs a tick count, not four fixed ticks (author the
+  maximum and hide the rest).
 - No last-edit or preview segments on the map; one colour for earned (accent), dim for the rest.
 - **No word over the selected job.** Remove `MapSelectionLabel` (hard-coded, unlocalized "locked" /
   "next" / "solved · n/3") and its text object; each state is shown by the field instead:
@@ -114,9 +115,65 @@ Do these before U3; they touch the same prompt code.
     glyphs as the solve moment (`StarStampView` look).
   - Check `MapNodeTint` / `RunSlotView` / `PuzzleDioramaView` first; extend what they already do
     rather than adding a parallel tint.
+- **Built:** `MapStarMeter` (`PuzzleSelection/Views`) + the shared `FieldEdgeMeterView`,
+  `ChapterStars` (tested in `PuzzleMapTests`), the `Star Meter` object under `PuzzleMapView`, and the
+  stamped stars on the slots; `MapSelectionLabel` is gone.
+- **Ticks (fixed 2026-11-10):** `MapStarMeter` was passing the job count where `FieldEdgeMeterView`
+  takes boundaries, so chapter 1's five graded jobs drew ticks at 1/6…5/6 instead of 1/5…4/5.
+  `ChapterStars.JobBoundaries` now supplies the count and `FieldEdgePath.TickShare` owns the spacing;
+  both are tested.
 - **Exit:** the map shows the square under its field; solving a job for more stars lengthens both arms
   on return; a fresh save shows an empty square with its ticks; locked, next and solved jobs are told
   apart with no text over the selection.
+
+### U4 — review fixes (review 2026-11-10) — done (2026-11-10)
+
+Close the plan after these.
+
+1. **The map cube goes dark over a locked job** (decided 2026-11-10). Today the fill never changes:
+   `MapCube.SetEnterable` only caps the scale envelope (`MapCube.cs:52`), so the player learns a job
+   is locked only from the refusal after a pinch.
+   - Give the cube a locked look: its fill and frame drop to `SelectionCubePalette.Locked` (dark, low
+     alpha), and hover and pinch feedback stay dim. Today `CubeGrabListener` builds its palette once in
+     `Awake` and has no state for this; add one public verb on the cube (e.g. `SetDormant(bool)`, owned
+     by `CubeFeedback`), not a second tint path.
+   - `MapCube.SetEnterable` sets it with the envelope, so it follows `Show`, `RenderFields` and every
+     snap. Entering a job (`Lock`) and `Hide` clear it.
+   - The refusal still plays on a pinch, from the dark state.
+   - *Suggested, confirm in the headset:* hide the zone frames on locked jobs (`RunSlotView.cs:108`
+     shows them for `Locked`) so a locked job is only dim planets. The frames also refit the locked
+     diorama around them (`PuzzleDioramaView.AddContentBounds`), so the map square changes size.
+   - Test: `CubeFeedback` stays dormant until cleared (`ZoneConditionsTests`); `MapCube`'s wiring is
+     the one call in `SetEnterable`.
+2. **The gradient is built twice.** `FieldEdgeMeter` (`L28-35`, `L99-103`) and `MapStarMeter`
+   (`L17-22`, `L45-49`) each keep the four keys, the lazy `Gradient` and `SetKey`. U3 asked for one
+   view that takes the frame and the shares. Move the band gradient into `FieldEdgeMeterView` (it
+   takes the band stops and colours); the two meters pass only their numbers.
+3. **Job ticks assume equal thirds.** `FieldEdgeMeter.LateUpdate` lays `2` evenly spaced ticks
+   (`L70`), which matches `PuzzleGrade` only while the limits are ⅓ and ⅔. Lay the job ticks at
+   `PuzzleGrade.ThreeStarUse` / `TwoStarUse` (the view takes explicit shares; the map keeps
+   `FieldEdgePath.TickShare`).
+4. **The map square counts every chapter.** `ChapterStars.From` sums every map entry
+   (`ChapterStars.cs:31`), and the map reads all levels across chapters. With the two-ship test's
+   chapter 99 or chapter 2 loaded, chapter 1's square mixes them. Count only the selected job's
+   chapter; test it with a two-chapter map. Do this before two-ship-test U3 bakes into chapter 99.
+5. *(Minor)* The map square re-lays both arms every frame: the selected diorama breathes, so
+   `FieldEdgeMeterView.Layout`'s cache never hits (`MapStarMeter.cs:41`). Lay it from the slot's rest
+   frame; panel-bank U2 needs the same accessor, so build it once.
+6. *(Minor)* `FieldEdgeMeter.LateUpdate` repeats the view's layout cache; keep one. The map square has
+   no padding (the job grid adds `FieldFrame` 0.02), so planets touch it. `RunSlotView` declares fields
+   mid-class (`L48-58`).
+
+- **Done (2026-11-10):** the map cube is dormant over locked jobs (`CubeFeedback` + `MapCube`), one
+  gradient builder (`FieldEdgeMeterView.SetBands`), job ticks at `PuzzleGrade`'s limits, the map counts
+  only the selected chapter, the square reads the slot's rest frame with the grid padding, and one
+  layout cache. `CubeFeedback_DormantUsesTheLockedColor` and
+  `ChapterStars_CountsOnlyTheSelectedJobsChapter` cover the new rules; both EditMode suites pass
+  (88/88 and 19/19). Hiding the locked job's zone frames is still a headset decision.
+- **Checked fine:** the map ticks (`JobBoundaries` + `TickShare`, tested), the label follows the field
+  centre (it is a child of the drawing), the locale refresh, and the job gradient's bands.
+- **Exit:** the map cube is dark over every locked job and lit over enterable ones; one gradient builder; job ticks on `PuzzleGrade`'s limits; the
+  map square counts one chapter; the headset check passes.
 
 ## Manual check (headset)
 
@@ -131,7 +188,9 @@ Do these before U3; they touch the same prompt code.
    job 3 shows Stars; neither returns on replay.
 8. Every prompt's line lands on its subject (cube, map cube, meter); Exit has none.
 9. The meter reads `ENTROPY`, and `OVER BUDGET` during an overrunning preview.
-10. Map: the square shows the chapter's stars, one tick per graded job; a better solve lengthens it.
-    Locked jobs are outline-only and the cube stays dark over them; solved jobs show stamped stars;
-    no word above the selection.
+10. Map: slide the cube onto a locked job, it goes dark before any pinch; back on an open job it lights. The square shows the chapter's stars, a tick on each graded-job boundary (four for chapter 1's
+    five graded jobs); a better solve lengthens it. Locked jobs are outline-only and the cube stays
+    dark over them; solved jobs show stamped stars; no word above the selection.
 11. Tuning: line width and brightness against the lattice; never brighter than the trajectory line.
+12. Map, pinch to enter: the square stays on the field's rest edge while the diorama grows and is gone
+    before the job starts, with no stranded or flashing meter.
