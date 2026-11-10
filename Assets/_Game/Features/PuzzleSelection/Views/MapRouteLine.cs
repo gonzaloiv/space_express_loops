@@ -29,9 +29,9 @@ namespace DigitalLove.Game.PuzzleSelection
             }
         }
 
-        public void Update(
+        public void Tick(
             PuzzleMap map, RunSlotView selected,
-            ViewPool<RunSlotView> fields, Vector3 cullFocus, float near, float far)
+            ViewPool<RunSlotView> fields, MapFade fade)
         {
             if (points.Length == 0)
             {
@@ -40,8 +40,9 @@ namespace DigitalLove.Game.PuzzleSelection
             }
 
             UpdatePoints(map, selected, fields);
+            int end = EndIndex(map);
             for (int i = 0; i < segments.Length; i++)
-                DrawSegment(i, cullFocus, near, far);
+                DrawSegment(i, end, fade);
         }
 
         private void UpdatePoints(
@@ -58,34 +59,67 @@ namespace DigitalLove.Game.PuzzleSelection
                 points[field.MapIndex] = field.SunMapPosition;
         }
 
-        private void DrawSegment(int index, Vector3 cullFocus, float near, float far)
+        private void DrawSegment(int index, int end, MapFade fade)
         {
             LineRenderer segment = segments[index];
-            if (index >= points.Length)
+            if (index >= end || index + 1 >= points.Length)
             {
                 segment.enabled = false;
                 return;
             }
 
             Vector3 start = points[index];
-            Vector3 end = points[(index + 1) % points.Length];
-            float distance = Vector3.Distance((start + end) * 0.5f, cullFocus);
-            segment.enabled = distance < far;
+            Vector3 endPoint = points[index + 1];
+            float distance = Vector3.Distance((start + endPoint) * 0.5f, fade.Focus);
+            segment.enabled = distance < fade.Far;
             if (!segment.enabled)
                 return;
 
             Color tint = color;
-            tint.a = alpha * (1f - Mathf.InverseLerp(near, far, distance));
+            tint.a = alpha * (1f - Mathf.InverseLerp(fade.Near, fade.Far, distance));
             segment.startColor = tint;
             segment.endColor = tint;
             segment.SetPosition(0, start);
-            segment.SetPosition(1, end);
+            segment.SetPosition(1, endPoint);
+        }
+
+        // The route is the open chain up to the job that is next, not a ring around the map.
+        private static int EndIndex(PuzzleMap map)
+        {
+            for (int i = 0; i < map.Count; i++)
+            {
+                if (map[i].State == JobState.Current)
+                    return i;
+            }
+
+            int lastSolved = -1;
+            for (int i = 0; i < map.Count; i++)
+            {
+                if (map[i].State == JobState.Solved)
+                    lastSolved = i;
+            }
+
+            return lastSolved >= 0 ? lastSolved : Mathf.Max(map.SelectedIndex, 0);
         }
 
         private void HideAll()
         {
             for (int i = 0; i < segments.Length; i++)
                 segments[i].enabled = false;
+        }
+    }
+
+    internal readonly struct MapFade
+    {
+        public readonly Vector3 Focus;
+        public readonly float Near;
+        public readonly float Far;
+
+        public MapFade(Vector3 focus, float near, float far)
+        {
+            Focus = focus;
+            Near = near;
+            Far = far;
         }
     }
 }

@@ -23,7 +23,7 @@ namespace DigitalLove.Game.Placement
             Vector3 forward = YawForward(headRotation);
             Vector3 position = head + forward * settings.distance;
             float drop = settings.defaultDrop;
-            if (TryRestHeight(head, forward, left, right, settings, out float handsY))
+            if (TryRestHeight(head, forward, new Hands(left, right), settings, out float handsY))
                 drop = head.y - (handsY + settings.aboveHands);
 
             position.y = head.y - Mathf.Clamp(drop, settings.minDrop, settings.maxDrop);
@@ -39,24 +39,23 @@ namespace DigitalLove.Game.Placement
         }
 
         private static bool TryRestHeight(
-            Vector3 head, Vector3 forward, Vector3? left, Vector3? right, SeatSettings settings, out float y)
+            Vector3 head, Vector3 forward, Hands hands, SeatSettings settings, out float y)
         {
-            int count = 0;
-            float sum = 0f;
-            AddIfResting(head, forward, left, settings, ref count, ref sum);
-            AddIfResting(head, forward, right, settings, ref count, ref sum);
-            y = count > 0 ? sum / count : 0f;
-            return count > 0;
+            RestHeight rest = default;
+            AddIfResting(head, forward, hands.Left, settings, ref rest);
+            AddIfResting(head, forward, hands.Right, settings, ref rest);
+            y = rest.Count > 0 ? rest.Sum / rest.Count : 0f;
+            return rest.Count > 0;
         }
 
         private static void AddIfResting(
-            Vector3 head, Vector3 forward, Vector3? hand, SeatSettings settings, ref int count, ref float sum)
+            Vector3 head, Vector3 forward, Vector3? hand, SeatSettings settings, ref RestHeight rest)
         {
             if (!hand.HasValue || !IsResting(head, forward, hand.Value, settings))
                 return;
 
-            count++;
-            sum += hand.Value.y;
+            rest.Count++;
+            rest.Sum += hand.Value.y;
         }
 
         private static bool IsResting(Vector3 head, Vector3 forward, Vector3 hand, SeatSettings settings)
@@ -68,6 +67,24 @@ namespace DigitalLove.Game.Placement
             return reach >= settings.restReach.x && reach <= settings.restReach.y
                 && side <= settings.restSide
                 && drop >= settings.restDrop.x && drop <= settings.restDrop.y;
+        }
+
+        private readonly struct Hands
+        {
+            public readonly Vector3? Left;
+            public readonly Vector3? Right;
+
+            public Hands(Vector3? left, Vector3? right)
+            {
+                Left = left;
+                Right = right;
+            }
+        }
+
+        private struct RestHeight
+        {
+            public int Count;
+            public float Sum;
         }
     }
 }

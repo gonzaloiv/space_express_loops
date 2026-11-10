@@ -36,18 +36,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         [SerializeField] private float refuseSecs = 0.18f;
 
         private CubeFeedback feedback;
-
-        private bool classified;
-        private bool frameGrab;
-        private bool moved;
-        private bool scaled;
-        private int lastCount;
-        private float startHandDistance;
-        private float startScale;
-        private Vector3 startSize;
-        private Vector3 grabOffset;
-        private Vector3 grabOrigin;
-
+        private CubeGestureSession gesture;
         private bool locked;
 
         private readonly CubeHoverTracker hover = new();
@@ -60,7 +49,11 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         public event Action MoveCompleted;
 
-        private void Awake() => feedback = new CubeFeedback(frameRenderer, fillRenderer, BuildPalette());
+        private void Awake()
+        {
+            feedback = new CubeFeedback(frameRenderer, fillRenderer, BuildPalette());
+            gesture = new CubeGestureSession(zone, grabbable, feedback, BuildGestureSettings());
+        }
 
         private void OnEnable() => grabbable.WhenPointerEventRaised += OnPointerEvent;
 
@@ -95,28 +88,21 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 return;
             }
 
-            if (!classified)
-                BeginGesture();
-
-            TrackCount(count);
-            ApplyGesture(count);
+            gesture.Tick(count);
             ApplyFeedback(count);
-            lastCount = count;
         }
 
         private void EndGesture()
         {
+            bool moved = gesture.Moved;
+            bool scaled = gesture.Scaled;
             if (moved)
                 MoveCompleted?.Invoke();
 
             if (moved && !scaled)
                 zone.ResetScale();
 
-            moved = false;
-            scaled = false;
-            zone.SetScaling(false);
-            classified = false;
-            lastCount = 0;
+            gesture.End();
             SnapGrabVolumeHome();
             ApplyFeedback(0);
         }
@@ -130,105 +116,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         }
 
         private void ApplyFeedback(int count) =>
-            feedback.Apply(zone, count, frameGrab, hover.Hovering, hover.World);
-
-        private void TrackCount(int count)
-        {
-            if (count >= 2 && lastCount < 2)
-            {
-                startHandDistance = CubeGesture.HandDistance(grabbable);
-                startScale = zone.Scale;
-                startSize = zone.Size;
-                // A locked frame has nothing to resize: two hands always scale.
-                frameGrab = zone.CanResize && !CubeGesture.PinchCentreInsideScale(zone, grabbable);
-            }
-
-            if (count == 1 && lastCount != 1)
-            {
-                grabOffset = zone.Centre - HandLocal();
-                grabOrigin = HandLocal();
-            }
-        }
-
-        private void ApplyGesture(int count)
-        {
-            if (count == 1)
-                Move();
-            else if (frameGrab)
-                ResizeFrame();
-            else
-            {
-                scaled = true;
-                ScaleUniverse();
-            }
-
-            zone.SetScaling(count >= 2 && !frameGrab);
-        }
-
-        private void BeginGesture()
-        {
-            classified = true;
-            moved = false;
-            scaled = false;
-            frameGrab = !CubeGesture.HandInsideScale(zone, grabbable);
-            grabOffset = zone.Centre - HandLocal();
-            grabOrigin = HandLocal();
-        }
-
-        private void Move()
-        {
-            if (!zone.CanMove)
-            {
-                if ((HandLocal() - grabOrigin).sqrMagnitude > moveRefuseDistance * moveRefuseDistance)
-                    Refuse(ZoneRefusal.Locked);
-                return;
-            }
-
-            Vector3 centre = zone.ConstrainMove(HandLocal() + grabOffset);
-            if (!zone.CanPlace(centre, zone.Size))
-            {
-                Refuse(ZoneRefusal.OutOfBounds);
-                return;
-            }
-
-            zone.SetFrame(centre, zone.Size);
-            moved = true;
-        }
-
-        private void ScaleUniverse()
-        {
-            if (startHandDistance < 0.0001f)
-                return;
-
-            float target = CubeGesture.ScaleTarget(
-                startScale, CubeGesture.HandDistance(grabbable) / startHandDistance, scaleGain,
-                feedback.MinScale, feedback.MaxScale);
-            float blend = 1f - Mathf.Exp(-Time.deltaTime / Mathf.Max(scaleSmoothSecs, 0.001f));
-            zone.SetScale(Mathf.Lerp(zone.Scale, target, blend));
-        }
-
-        private void ResizeFrame()
-        {
-            if (startHandDistance < 0.0001f)
-                return;
-
-            float ratio = CubeGesture.HandDistance(grabbable) / startHandDistance;
-            if (!zone.CanResize)
-            {
-                if (Mathf.Abs(ratio - 1f) > resizeRefuseRatio)
-                    Refuse(ZoneRefusal.Locked);
-                return;
-            }
-
-            Vector3 size = startSize * CubeGesture.ResizeFactor(ratio, frameGain, frameGrowRatio);
-            if (!zone.CanPlace(zone.Centre, size))
-            {
-                Refuse(ZoneRefusal.OutOfBounds);
-                return;
-            }
-
-            zone.SetFrame(zone.Centre, size);
-        }
+            feedback.Apply(zone, count, gesture.FrameGrab, hover.Hovering, hover.World);
 
         private CubePalette BuildPalette() =>
             new()
@@ -242,6 +130,15 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 RefuseSecs = refuseSecs
             };
 
-        private Vector3 HandLocal() => CubeGesture.HandLocal(zone, grabbable);
+        private CubeGestureSettings BuildGestureSettings() =>
+            new()
+            {
+                ScaleGain = scaleGain,
+                ScaleSmoothSecs = scaleSmoothSecs,
+                MoveRefuseDistance = moveRefuseDistance,
+                ResizeRefuseRatio = resizeRefuseRatio,
+                FrameGain = frameGain,
+                FrameGrowRatio = frameGrowRatio
+            };
     }
 }

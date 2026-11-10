@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using DigitalLove.DataAccess;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace DigitalLove.Game.GesturePrompts
         public static bool MarkLearned(PlayerData playerData, GestureKind kind) =>
             playerData.AddCookie(new Cookie(Key(kind)));
 
-        public static async void Save(
+        public static async Task Save(
             PlayerData playerData, GestureKind kind, IDataProvider dataProvider)
         {
             if (!MarkLearned(playerData, kind))

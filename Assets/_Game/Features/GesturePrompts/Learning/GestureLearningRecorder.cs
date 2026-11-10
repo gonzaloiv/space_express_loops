@@ -16,7 +16,7 @@ namespace DigitalLove.Game.GesturePrompts
 
         private void OnDisable() => source.Completed -= OnCompleted;
 
-        private void OnCompleted(GestureKind kind)
+        private async void OnCompleted(GestureKind kind)
         {
             PlayerData playerData = memoryDataClient.Get<PlayerData>();
             if (playerData == null)
@@ -25,7 +25,7 @@ namespace DigitalLove.Game.GesturePrompts
                 return;
             }
 
-            GestureLearning.Save(playerData, kind, dataProvider);
+            await GestureLearning.Save(playerData, kind, dataProvider);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             running = true;
             speed = minSpeed;
-            voice.BeginSustain(tone, slowNote,cutoff, lfoAmp, lfoRate);
+            voice.BeginSustain(tone, slowNote, cutoff, lfoAmp, lfoRate);
             voice.SetVolume(volume);
         }
 

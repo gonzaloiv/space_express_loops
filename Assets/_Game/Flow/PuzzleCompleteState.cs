@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Threading.Tasks;
 using DigitalLove.Audio;
@@ -80,7 +81,7 @@ namespace DigitalLove.Game.Flow
 
         private async void ReturnWhenSaved()
         {
-            await Task.WhenAny(pendingSave, Task.Delay(System.TimeSpan.FromSeconds(saveTimeoutSecs)));
+            await Task.WhenAny(pendingSave, Task.Delay(TimeSpan.FromSeconds(saveTimeoutSecs)));
             ReturnToSelection();
         }
 
@@ -94,7 +95,7 @@ namespace DigitalLove.Game.Flow
             {
                 await dataProvider.Put(playerData);
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Debug.LogError($"Failed to save the solve for {puzzle.id}: {e}");
             }

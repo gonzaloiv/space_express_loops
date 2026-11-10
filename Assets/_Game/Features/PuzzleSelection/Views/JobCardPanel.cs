@@ -116,8 +116,8 @@ namespace DigitalLove.Game.PuzzleSelection
             StopReveal();
             revealRoutine = StartCoroutine(
                 JobCardTypewriter.Reveal(
-                    header, client, cargo, manual, typeCharsPerSec, lineGapSecs,
-                    () => LineTyped?.Invoke()));
+                    new CardLines(header, client, cargo, manual),
+                    typeCharsPerSec, lineGapSecs, () => LineTyped?.Invoke()));
         }
 
         private void RevealAll()
@@ -129,22 +129,14 @@ namespace DigitalLove.Game.PuzzleSelection
             manual.maxVisibleCharacters = int.MaxValue;
         }
 
-        private void StopReveal()
-        {
-            if (revealRoutine == null)
-                return;
-
-            StopCoroutine(revealRoutine);
-            revealRoutine = null;
-        }
+        private void StopReveal() => StopRoutine(ref revealRoutine);
 
         private void StopClose()
         {
             if (closeRoutine == null)
                 return;
 
-            StopCoroutine(closeRoutine);
-            closeRoutine = null;
+            StopRoutine(ref closeRoutine);
             cardRoot.localScale = FullScale;
         }
 
@@ -154,13 +146,15 @@ namespace DigitalLove.Game.PuzzleSelection
             bootRoutine = null;
         }
 
-        private void StopBoot()
+        private void StopBoot() => StopRoutine(ref bootRoutine);
+
+        private void StopRoutine(ref Coroutine routine)
         {
-            if (bootRoutine == null)
+            if (routine == null)
                 return;
 
-            StopCoroutine(bootRoutine);
-            bootRoutine = null;
+            StopCoroutine(routine);
+            routine = null;
         }
 
         private IEnumerator ShrinkOut()

@@ -96,7 +96,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         public void SetFalloff(float value) => falloff = Mathf.Max(value, 0f);
 
-        internal void SetStrain(float value) => voice.SetStrain(value);
+        public void SetStrain(float value) => voice.SetStrain(value);
 
         public void SetScale(float value)
         {

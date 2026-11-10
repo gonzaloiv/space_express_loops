@@ -87,9 +87,9 @@ namespace DigitalLove.Game.PuzzleSelection
             if (map == null)
                 return; // entering a job hid the map mid-frame
 
-            route.Update(
+            route.Tick(
                 map, selectedSlot, fields,
-                mapCube.Position, pose.FadeNear, pose.FadeFar);
+                new MapFade(mapCube.Position, pose.FadeNear, pose.FadeFar));
         }
 
         public void Show(PuzzleMap map)

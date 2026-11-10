@@ -54,20 +54,6 @@ namespace DigitalLove.Game.PuzzleSelection
             return Select(target);
         }
 
-        public int VisibleJobs(Vector3 focus, float radius, List<JobEntry> buffer)
-        {
-            buffer.Clear();
-            float squaredRadius = Mathf.Max(radius, 0f);
-            squaredRadius *= squaredRadius;
-            for (int i = 0; i < entries.Length; i++)
-            {
-                if ((positions[i] - focus).sqrMagnitude <= squaredRadius)
-                    buffer.Add(entries[i]);
-            }
-
-            return buffer.Count;
-        }
-
         public static PuzzleMap FromLevels(
             IReadOnlyList<PuzzleData> levels, RunProgress progress, PuzzleMapLayout layout)
         {

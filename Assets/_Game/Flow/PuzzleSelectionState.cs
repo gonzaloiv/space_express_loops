@@ -1,15 +1,15 @@
+using DigitalLove.Audio;
 using DigitalLove.Casual.Levels;
 using DigitalLove.DataAccess;
-using DigitalLove.Audio;
 using DigitalLove.FlowControl;
-using DigitalLove.Game.PuzzleSelection;
+using DigitalLove.Game.GesturePrompts;
 using DigitalLove.Game.Persistence;
+using DigitalLove.Game.PuzzleSelection;
 using DigitalLove.Game.SpaceShaping;
-using Reflex.Attributes;
-using UnityEngine;
 using DigitalLove.Global;
 using DigitalLove.TTS;
-using DigitalLove.Game.GesturePrompts;
+using Reflex.Attributes;
+using UnityEngine;
 
 namespace DigitalLove.Game.Flow
 {
@@ -106,12 +106,6 @@ namespace DigitalLove.Game.Flow
 
         private void OnEnterRequested()
         {
-            Debug.Log(
-                $"[PuzzleSelection] enter can={map.CanEnter} index={map.SelectedIndex} " +
-                $"state={map.Selected.State} puzzle={(map.SelectedPuzzle == null ? "null" : map.SelectedPuzzle.name)} " +
-                $"next={nextState.RouteId}",
-                this);
-
             if (!map.CanEnter)
             {
                 view.Refuse();
@@ -123,9 +117,6 @@ namespace DigitalLove.Game.Flow
 
         private void EnterJob(PuzzleData puzzle)
         {
-            Debug.Log(
-                $"[PuzzleSelection] route {nextState.RouteId} puzzle={(puzzle == null ? "null" : puzzle.name)}",
-                this);
             memoryDataClient.Put(puzzle);
             parent.SetCurrentState(nextState.RouteId);
         }

@@ -51,7 +51,7 @@ namespace DigitalLove.Game.SpaceShaping
         private void Begin()
         {
             running = true;
-            voice.BeginSustain(tone, note,cutoffResting, lfoAmpResting, lfoRateResting);
+            voice.BeginSustain(tone, note, cutoffResting, lfoAmpResting, lfoRateResting);
             Drive();
             voice.SetVolume(volume * Mathf.Lerp(1f, 1f - dip, pinch));
         }

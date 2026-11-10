@@ -22,21 +22,6 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public int Stars(int index) => IsInRange(index) ? stars[index] : 0;
 
-        public int SolvedCount
-        {
-            get
-            {
-                int count = 0;
-                for (int i = 0; i < solved.Length; i++)
-                {
-                    if (solved[i])
-                        count++;
-                }
-
-                return count;
-            }
-        }
-
         public bool IsFresh
         {
             get

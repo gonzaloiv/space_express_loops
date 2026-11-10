@@ -40,7 +40,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         private float releaseNote;
         private float lastNote;
 
-        internal void SetStrain(float value) => strain = Mathf.Clamp01(value);
+        public void SetStrain(float value) => strain = Mathf.Clamp01(value);
 
         private void OnDisable()
         {

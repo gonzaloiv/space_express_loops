@@ -66,22 +66,6 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
         }
 
         [Test]
-        public void VisibleJobs_RespectsRadius()
-        {
-            PuzzleMap map = PuzzleMap.FromLevels(
-                Levels(4), RunProgress.FromSolved(4, 1, new[] { true, false, false, false }),
-                PuzzleMapLayout.Galaxy(4));
-            List<JobEntry> visible = new();
-
-            int near = map.VisibleJobs(map.Position(1), 0.01f, visible);
-            Assert.AreEqual(1, near);
-            Assert.AreEqual(1, visible[0].Index);
-
-            int all = map.VisibleJobs(map.Position(1), 100f, visible);
-            Assert.AreEqual(4, all);
-        }
-
-        [Test]
         public void GalaxyLayout_IsDeterministicAndUnique()
         {
             PuzzleMapLayout first = PuzzleMapLayout.Galaxy(8);
