@@ -37,10 +37,10 @@ MonoBehaviour:
   - Digital Love
   SelectedPlatformGame:
   - Space Express Loops
-  SelectedPlatformGameID: 78340500
-  SelectedOrganization: 01000000
-  SelectedStudio: 01000000
-  SelectedGame: 01000000
+  SelectedPlatformGameID: 78340500i
+  SelectedOrganization: 01000000i
+  SelectedStudio: 01000000i
+  SelectedGame: 01000000i
   NewVersion: 
   Changes: 
   SignUpOpen: 0
@@ -62,7 +62,7 @@ MonoBehaviour:
   ResourceItemTypes: []
   ResourceCurrencies: []
   LastCreatedGamePlatform: -1
-  Platforms: 0b000000
+  Platforms: 0b000000i
   CurrentInspectorState: 1
   ClosedHints: 
   DisplayHints: 0
@@ -90,7 +90,7 @@ MonoBehaviour:
   IncludeGooglePlay: 1
   FpsCriticalThreshold: 20
   FpsCirticalSubmitInterval: 1
-  PlatformFoldOut: 01
+  PlatformFoldOut: 01y
   CustomDimensions01FoldOut: 0
   CustomDimensions02FoldOut: 0
   CustomDimensions03FoldOut: 0

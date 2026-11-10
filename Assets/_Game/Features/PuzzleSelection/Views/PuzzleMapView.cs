@@ -84,6 +84,9 @@ namespace DigitalLove.Game.PuzzleSelection
             float deltaSecs = Time.unscaledDeltaTime;
             fieldView.TickPulse(deltaSecs);
             TrackCube(deltaSecs);
+            if (map == null)
+                return; // entering a job hid the map mid-frame
+
             route.Update(
                 map, selectedSlot, fields,
                 mapCube.Position, pose.FadeNear, pose.FadeFar);

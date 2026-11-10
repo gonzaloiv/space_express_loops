@@ -7175,17 +7175,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Audio.Runtime::DigitalLove.Audio.SynthVoice
   source: {fileID: 1217891573}
   synth: {fileID: 1217891572}
-  volume: 0.18
-  attackSecs: 0.004
-  releaseSecs: 0.12
-  resonance: 0.4
-  harmonic: 1
-  osc2Mix: 0.15
-  distortion: 0.2
-  strainLfoAmp: 0.18
-  strainLfoRate: 6
-  restingLfoRate: 1.2
-  strainWobbleCents: 8
 --- !u!114 &1217891572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10711,17 +10700,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Audio.Runtime::DigitalLove.Audio.SynthVoice
   source: {fileID: 1716484826}
   synth: {fileID: 1716484825}
-  volume: 0.18
-  attackSecs: 0.004
-  releaseSecs: 0.12
-  resonance: 0.4
-  harmonic: 1
-  osc2Mix: 0.15
-  distortion: 0.2
-  strainLfoAmp: 0.18
-  strainLfoRate: 6
-  restingLfoRate: 1.2
-  strainWobbleCents: 8
 --- !u!114 &1716484825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13006,17 +12984,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Audio.Runtime::DigitalLove.Audio.SynthVoice
   source: {fileID: 9100000000000022}
   synth: {fileID: 9100000000000023}
-  volume: 0.18
-  attackSecs: 0.004
-  releaseSecs: 0.12
-  resonance: 0.4
-  harmonic: 1
-  osc2Mix: 0.15
-  distortion: 0.2
-  strainLfoAmp: 0.18
-  strainLfoRate: 6
-  restingLfoRate: 1.2
-  strainWobbleCents: 8
 --- !u!1 &9100000000000030
 GameObject:
   m_ObjectHideFlags: 0
@@ -13187,17 +13154,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Audio.Runtime::DigitalLove.Audio.SynthVoice
   source: {fileID: 9100000000000032}
   synth: {fileID: 9100000000000033}
-  volume: 0.18
-  attackSecs: 0.004
-  releaseSecs: 0.12
-  resonance: 0.4
-  harmonic: 1
-  osc2Mix: 0.15
-  distortion: 0.2
-  strainLfoAmp: 0.18
-  strainLfoRate: 6
-  restingLfoRate: 1.2
-  strainWobbleCents: 8
 --- !u!1 &52948691051531853
 GameObject:
   m_ObjectHideFlags: 0
@@ -13695,7 +13651,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.TTS::DigitalLove.TTS.StreamingAssetsSpeaker
   audioSource: {fileID: 3710031469948875600}
-  extension: .mp3
+  extension: .wav
 --- !u!114 &5117775345025900650
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1495,7 +1495,7 @@ MonoBehaviour:
           m_Calls: []
   RequestSettings:
     _configuration: {fileID: 11400000, guid: 271261338e01fcc43a79fbdfb518400e, type: 2}
-    audioType: 2
+    audioType: 1
     audioStream: 1
     useEvents: 0
     maxConcurrentRequests: -1
