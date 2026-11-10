@@ -4,6 +4,36 @@ Short post-mortems, written when a plan closes (rule in [AGENTS.md](../AGENTS.md
 morning). Newest first. Each entry: what worked, what surprised us, the rule for next time. One idea per
 bullet; the code and tests are the record of what was built.
 
+## 2026-11-10 — The panel bank (rolled back)
+
+- **Rolled back:** the windows on two arms from the grid's corner did not read well in the headset;
+  the code went back to the earlier `ConsoleLayout` placement and sizes the same day.
+- **Next time:** mock a layout change in the headset (fixed transforms, no code) before building the
+  geometry, tests and flow wiring around it.
+- **Surprised:** "outside the field's silhouette" was impossible from the eye. The near face projects
+  wider than the back corner, so the contract became draw order instead.
+- **Surprised:** a line renderer's width is world metres and ignores its parent's scale. The prompt
+  leader line, authored at 0.32 under a 0.005-scaled panel, drew 32 cm slabs.
+- **Next time:** one root per animated group. Cards left under other parents escaped the console's
+  CRT until they moved under the bank.
+- **Next time:** check a contract's geometry from the eye position before writing it.
+
+## 2026-11-10 — The field meter
+
+- **Worked:** the field carries the feedback. The bar on the grid edge and a dark map cube over locked
+  jobs replaced a floating bar and the words over the selection.
+- **Surprised:** the chapter's star square under the selected map field read as that job's result;
+  it was removed the same day for the selected job's own stars over its sun. A total drawn on one
+  item's frame reads as that item.
+- **Surprised:** marks drawn from counts drift from the rules they show: the map ticks were off by one
+  (sixths instead of fifths), and the job ticks assumed equal thirds. Draw marks from the domain
+  values (`PuzzleGrade`).
+- **Surprised:** in the editor the Origin sits at the world origin, so world-axis prompt offsets and a
+  world/parent mix in the console layout passed every editor check and broke only once the seat
+  moved the Origin.
+- **Next time:** anything laid out relative to the field or the map converts through its owner's
+  transform, and its test runs under a moved and yawed parent (rule added to AGENTS.md).
+
 ## 2026-11-10 — Offline
 
 - **Surprised:** the plan first missed `MemoryDataClient`, the in-session copy every caller reads.

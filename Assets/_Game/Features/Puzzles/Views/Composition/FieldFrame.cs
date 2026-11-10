@@ -5,7 +5,7 @@ namespace DigitalLove.Game.SpaceShaping
     // The cube the grid and lattice are framed to: every planet, and every run's endpoints.
     public static class FieldFrame
     {
-        public const float Padding = 0.02f;
+        private const float Padding = 0.02f;
 
         public static void Measure(SpaceShapingSession session, out Vector3 centre, out float half)
         {

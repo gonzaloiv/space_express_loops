@@ -57,7 +57,7 @@ namespace DigitalLove.Game.PuzzleSelection
         private void RenderSelected(PuzzleMap map)
         {
             JobEntry selected = map.Selected;
-            selectedSlot.ShowMapField(selected, tint.For(selected.State), showFrames);
+            selectedSlot.ShowMapField(selected, tint.For(selected.State), showFrames, true);
             readout.Show(selected);
             selectedSlot.SetZoom(1f);
             if (selected.State == JobState.Current)
@@ -74,7 +74,7 @@ namespace DigitalLove.Game.PuzzleSelection
 
                 JobEntry entry = map[i];
                 RunSlotView field = fields.EnsureSlot(slot++);
-                field.ShowMapField(entry, tint.For(entry.State), showFrames);
+                field.ShowMapField(entry, tint.For(entry.State), showFrames, false);
                 field.PlaceSunAt(map.Position(i));
                 if (entry.State == JobState.Current)
                     CurrentSlot = field;

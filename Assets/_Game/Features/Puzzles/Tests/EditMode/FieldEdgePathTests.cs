@@ -37,15 +37,6 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             Assert.AreEqual(first, second, 1e-5f);
         }
 
-        [Test]
-        public void Ticks_SplitTheArmIntoOneMoreBandThanTicks()
-        {
-            Assert.AreEqual(1f / 3f, FieldEdgePath.TickShare(0, 2), 1e-5f);
-            Assert.AreEqual(2f / 3f, FieldEdgePath.TickShare(1, 2), 1e-5f);
-            Assert.AreEqual(0.2f, FieldEdgePath.TickShare(0, 4), 1e-5f);
-            Assert.AreEqual(0.8f, FieldEdgePath.TickShare(3, 4), 1e-5f);
-        }
-
         private static void AssertNear(Vector3 expected, Vector3 actual) =>
             Assert.Less(Vector3.Distance(expected, actual), 1e-5f, $"expected {expected}, got {actual}");
     }

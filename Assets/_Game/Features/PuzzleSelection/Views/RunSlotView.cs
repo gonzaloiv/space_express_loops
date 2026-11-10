@@ -13,6 +13,8 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField, Min(0f)] private float idleBreathSpeed = 1.2f;
         [SerializeField, Min(0f)] private float refusalSecs = 0.26f;
         [SerializeField, Range(0f, 1f)] private float lockedDim = 0.65f;
+        [Tooltip("Height of the stars over the sun, in this slot's space.")]
+        [SerializeField, Min(0f)] private float starsAboveSun = 0.03f;
 
         private Coroutine refusalRoutine;
         private PuzzleData renderedPuzzle;
@@ -20,8 +22,6 @@ namespace DigitalLove.Game.PuzzleSelection
         private Quaternion homeLocalRotation;
         private Quaternion homeVisualRotation;
         private Vector3 homeVisualScale;
-        private Vector3 homeCentreLocal;
-        private float homeDioramaScale = 1f;
         private float idlePhase;
         private bool culled;
         private bool hasStars;
@@ -31,15 +31,6 @@ namespace DigitalLove.Game.PuzzleSelection
         // The sun in the map's space (this slot's parent).
         public Vector3 SunMapPosition =>
             transform.parent.InverseTransformPoint(diorama.SunWorldPosition);
-
-        // Read at rest: the diorama's breathing and enter pinch do not move the map frame.
-        public Vector3 FieldCentreMap =>
-            transform.parent.InverseTransformPoint(transform.TransformPoint(homeCentreLocal));
-        public float FieldHalfMap =>
-            diorama.FrameHalf * homeDioramaScale * homeVisualScale.x
-            * transform.lossyScale.x / transform.parent.lossyScale.x;
-        public Quaternion FieldRotationMap =>
-            Quaternion.Inverse(transform.parent.rotation) * diorama.transform.rotation;
         public int MapIndex { get; private set; } = -1;
 
         public void SetMapFade(Vector3 focus, float near, float far)
@@ -68,8 +59,6 @@ namespace DigitalLove.Game.PuzzleSelection
             homeLocalRotation = diorama.transform.localRotation;
             homeVisualRotation = visualRoot.localRotation;
             homeVisualScale = visualRoot.localScale;
-            homeCentreLocal = transform.InverseTransformPoint(diorama.transform.position);
-            homeDioramaScale = diorama.transform.localScale.x;
         }
 
         private void Update()
@@ -85,7 +74,18 @@ namespace DigitalLove.Game.PuzzleSelection
             diorama.transform.localScale = Vector3.one * breath;
         }
 
-        public void ShowMapField(JobEntry entry, Color tint, bool showFrames)
+        // The stars ride over the sun through the breath and the enter pinch.
+        private void LateUpdate()
+        {
+            if (!hasStars || culled)
+                return;
+
+            stars.transform.position =
+                diorama.SunWorldPosition + transform.TransformVector(Vector3.up * starsAboveSun);
+        }
+
+        // Only the selected job shows its stars, over its sun, once it is solved.
+        public void ShowMapField(JobEntry entry, Color tint, bool showFrames, bool showStars)
         {
             bool unchanged = MapIndex == entry.Index && renderedPuzzle == entry.Puzzle;
             MapIndex = entry.Index;
@@ -98,12 +98,12 @@ namespace DigitalLove.Game.PuzzleSelection
                 Show(entry.Index, entry.Puzzle);
             }
 
-            ShowMapState(entry, tint, showFrames);
+            ShowMapState(entry, tint, showFrames, showStars);
         }
 
-        private void ShowMapState(JobEntry entry, Color tint, bool showFrames)
+        private void ShowMapState(JobEntry entry, Color tint, bool showFrames, bool showStars)
         {
-            hasStars = entry.ShowsStars;
+            hasStars = showStars && entry.ShowsStars;
             lastStars = entry.Stars;
             breathe = entry.State == JobState.Current;
             if (hasStars)
@@ -112,7 +112,7 @@ namespace DigitalLove.Game.PuzzleSelection
                 stars.Hide();
 
             ApplyCulled(culled);
-            diorama.SetCubesVisible(showFrames || entry.State == JobState.Locked);
+            diorama.SetCubesVisible(showFrames);
             diorama.SetStateDim(entry.State == JobState.Locked ? lockedDim : 0f);
             diorama.SetLabelColor(tint);
         }

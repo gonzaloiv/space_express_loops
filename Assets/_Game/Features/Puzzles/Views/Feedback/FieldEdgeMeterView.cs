@@ -1,19 +1,25 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace DigitalLove.Game.SpaceShaping
 {
-    // Draws the meter's two arms and its tick rows from a frame, and builds the band gradient.
-    // The job meter and the map's star meter feed it numbers, so one layout serves both.
+    // Draws the entropy post on the grid's front-left vertical edge: one line from the grid's floor to
+    // its top, a notch at each star limit and a star beside each band. The owner supplies the colours;
+    // this only lays out and tints authored objects.
     public class FieldEdgeMeterView : MonoBehaviour
     {
-        // 96 segments per arm, so both corners (s = 0.25 and 0.75) land on a vertex.
-        private const int Points = 97;
+        // Enough vertices for the fixed gradient's band edges to land close to their heights.
+        private const int Points = 65;
 
-        [SerializeField] private LineRenderer leftArm;
-        [SerializeField] private LineRenderer rightArm;
-        [Tooltip("Left ticks first, then right. One tick per band on each arm.")]
-        [SerializeField] private LineRenderer[] ticks;
-        [SerializeField, Min(0f)] private float tickHeight = 0.012f;
+        [SerializeField] private LineRenderer post;
+        [Tooltip("Top to bottom: the 3-star limit, then the 2-star limit.")]
+        [SerializeField] private LineRenderer[] notches;
+        [SerializeField] private RectTransform starsRoot;
+        [Tooltip("Top to bottom: 3 stars, 2 stars, 1 star.")]
+        [SerializeField] private RawImage[] stars;
+        [SerializeField, Min(0f)] private float postOutset = 0.006f;
+        [SerializeField, Min(0f)] private float notchLength = 0.012f;
+        [SerializeField, Min(0f)] private float starSide = 0.022f;
 
         private readonly Vector3[] points = new Vector3[Points];
         private readonly GradientColorKey[] colorKeys = new GradientColorKey[4];
@@ -21,35 +27,25 @@ namespace DigitalLove.Game.SpaceShaping
         private Gradient gradient;
         private Vector3 laidCentre;
         private float laidHalf = -1f;
-        private int laidTicks = -1;
-        private float laidFirst;
-        private float laidLast;
 
         private Gradient Gradient => gradient ??= new Gradient { mode = GradientMode.Fixed };
 
-        // ticksPerArm counts the marks between bands; firstShare and lastShare pin where they sit.
-        public void Layout(
-            Vector3 centre, float half, int ticksPerArm, float firstShare, float lastShare)
+        // starHeights: one per star, top to bottom, as heights from the foot (0) to the top (1).
+        public void Layout(Vector3 centre, float half, float[] starHeights)
         {
-            int max = ticks.Length / 2;
-            int count = Mathf.Clamp(ticksPerArm, 0, max);
-            if (centre == laidCentre && Mathf.Approximately(half, laidHalf) && count == laidTicks
-                && Mathf.Approximately(firstShare, laidFirst)
-                && Mathf.Approximately(lastShare, laidLast))
+            if (centre == laidCentre && Mathf.Approximately(half, laidHalf))
                 return;
 
             laidCentre = centre;
             laidHalf = half;
-            laidTicks = count;
-            laidFirst = firstShare;
-            laidLast = lastShare;
             transform.localPosition = centre;
-            LayArm(leftArm, -1f, half);
-            LayArm(rightArm, 1f, half);
-            LayTicks(max, count, half, firstShare, lastShare);
+            Vector3 foot = new(-half - postOutset, -half, -half - postOutset);
+            LayPost(foot, half * 2f);
+            LayNotches(foot, half * 2f, starHeights);
+            LayStars(foot, half * 2f, starHeights);
         }
 
-        // The stops must be in ascending time order.
+        // The stops must be in ascending height order.
         public void SetBands(in MeterBands bands)
         {
             SetKey(0, bands.First);
@@ -57,9 +53,10 @@ namespace DigitalLove.Game.SpaceShaping
             SetKey(2, bands.Third);
             SetKey(3, bands.Fourth);
             Gradient.SetKeys(colorKeys, alphaKeys);
-            leftArm.colorGradient = Gradient;
-            rightArm.colorGradient = Gradient;
+            post.colorGradient = Gradient;
         }
+
+        public void SetStar(int index, Color color) => stars[index].color = color;
 
         private void SetKey(int index, MeterBand band)
         {
@@ -67,42 +64,39 @@ namespace DigitalLove.Game.SpaceShaping
             alphaKeys[index] = new GradientAlphaKey(band.Alpha, band.At);
         }
 
-        private void LayArm(LineRenderer arm, float side, float half)
+        private void LayPost(Vector3 foot, float height)
         {
             for (int i = 0; i < Points; i++)
-                points[i] = FieldEdgePath.Point(i / (Points - 1f), side, half);
+                points[i] = foot + Vector3.up * (height * i / (Points - 1f));
 
-            arm.positionCount = Points;
-            arm.SetPositions(points);
+            post.positionCount = Points;
+            post.SetPositions(points);
         }
 
-        private void LayTicks(int max, int count, float half, float first, float last)
+        private void LayNotches(Vector3 foot, float height, float[] starHeights)
         {
-            for (int i = 0; i < ticks.Length; i++)
+            for (int i = 0; i < notches.Length; i++)
             {
-                ticks[i].positionCount = 0;
-                ticks[i].enabled = false;
-            }
-
-            for (int i = 0; i < count; i++)
-            {
-                float s = count > 1 ? Mathf.Lerp(first, last, i / (count - 1f)) : first;
-                LayTick(ticks[i], s, -1f, half);
-                LayTick(ticks[max + i], s, 1f, half);
+                Vector3 at = foot + Vector3.up * (height * starHeights[i]);
+                notches[i].positionCount = 2;
+                notches[i].SetPosition(0, at);
+                notches[i].SetPosition(1, at + Vector3.left * notchLength);
             }
         }
 
-        private void LayTick(LineRenderer tick, float s, float side, float half)
+        private void LayStars(Vector3 foot, float height, float[] starHeights)
         {
-            Vector3 foot = FieldEdgePath.Point(s, side, half);
-            tick.positionCount = 2;
-            tick.enabled = true;
-            tick.SetPosition(0, foot);
-            tick.SetPosition(1, foot + Vector3.up * tickHeight);
+            starsRoot.localPosition = foot;
+            float unit = Mathf.Max(starsRoot.localScale.x, 0.000001f);
+            for (int i = 0; i < stars.Length; i++)
+            {
+                stars[i].rectTransform.localPosition =
+                    new Vector3(-starSide, height * starHeights[i], 0f) / unit;
+            }
         }
     }
 
-    // One stop in the meter's arm gradient: position along the arm, colour, and alpha.
+    // One stop in the post's gradient: height along the post, colour, and alpha.
     public readonly struct MeterBand
     {
         public readonly float At;
@@ -117,7 +111,7 @@ namespace DigitalLove.Game.SpaceShaping
         }
     }
 
-    // The four stops the meter's arms share.
+    // The four stops the post's gradient uses.
     public readonly struct MeterBands
     {
         public readonly MeterBand First;

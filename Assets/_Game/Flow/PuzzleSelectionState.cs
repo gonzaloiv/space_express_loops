@@ -6,7 +6,6 @@ using DigitalLove.Game.GesturePrompts;
 using DigitalLove.Game.Persistence;
 using DigitalLove.Game.PuzzleSelection;
 using DigitalLove.Game.SpaceShaping;
-using DigitalLove.Game.UI.Console;
 using DigitalLove.Global;
 using DigitalLove.TTS;
 using Reflex.Attributes;
@@ -26,7 +25,6 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private SynthPatch openCue;
         [SerializeField] private SynthPatch typeCue;
         [SerializeField] private JobCardPanel card;
-        [SerializeField] private ConsoleBank bank;
         [SerializeField, Min(0f)] private float tickCooldownSecs = 0.06f;
 
         [Header("Debug")]
@@ -43,7 +41,6 @@ namespace DigitalLove.Game.Flow
         {
             ttsPresenter.Stop();
             view.SelectionChanged += OnSelectionChanged;
-            view.EnterStarted += OnEnterStarted;
             card.Opened += OnCardOpened;
             card.LineTyped += OnLineTyped;
             ApplyPendingCloud();
@@ -88,25 +85,16 @@ namespace DigitalLove.Game.Flow
             map = PuzzleMap.FromLevels(
                 levels, progress, PuzzleMapLayout.Galaxy(levels.Length));
             view.Show(map);
-            ShowBank();
             prompts.Show(GestureKind.Enter);
-        }
-
-        private void ShowBank()
-        {
-            bank.Layout(view.FieldCorner, view.FieldRotation);
-            bank.Show();
         }
 
         public override void Exit()
         {
             view.EnterRequested -= OnEnterRequested;
             view.SelectionChanged -= OnSelectionChanged;
-            view.EnterStarted -= OnEnterStarted;
             card.Opened -= OnCardOpened;
             card.LineTyped -= OnLineTyped;
             prompts.HideAll();
-            bank.Hide();
 
             if (map == null)
                 return;
@@ -132,13 +120,7 @@ namespace DigitalLove.Game.Flow
             parent.SetCurrentState(nextState.RouteId);
         }
 
-        private void OnSelectionChanged()
-        {
-            bank.Layout(view.FieldCorner, view.FieldRotation);
-            Tick(selectCue);
-        }
-
-        private void OnEnterStarted() => bank.CutOff();
+        private void OnSelectionChanged() => Tick(selectCue);
 
         private void OnCardOpened() => Tick(openCue);
 

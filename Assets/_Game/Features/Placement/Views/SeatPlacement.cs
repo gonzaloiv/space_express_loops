@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using DigitalLove.Casual.Flow.Setup;
+using DigitalLove.Game.UI.Console;
 using DigitalLove.XR;
 using Oculus.Interaction.Input;
 using UnityEngine;
@@ -14,6 +15,7 @@ namespace DigitalLove.Game.Placement
     public class SeatPlacement : XRSpaceSetup
     {
         [SerializeField] private OVROriginBehaviour origin;
+        [SerializeField] private ConsoleLayout console;
         [SerializeField] private Transform head;
         [SerializeField] private Hand leftHand;
         [SerializeField] private Hand rightHand;
@@ -98,6 +100,7 @@ namespace DigitalLove.Game.Placement
             SeatPose pose = SeatPose.From(
                 head.position, head.rotation, PalmOf(leftHand), PalmOf(rightHand), settings);
             origin.Setup(pose.Position, pose.Forward);
+            console.ArrangeAround(origin.transform.InverseTransformPoint(head.position));
         }
 
         private static bool IsWorn() =>

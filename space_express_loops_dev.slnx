@@ -73,7 +73,6 @@
   <Project Path="DigitalLove.Game.Placement.Domain.csproj" />
   <Project Path="DigitalLove.Audio.TheRadio.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.csproj" />
-  <Project Path="DigitalLove.Game.UI.Console.csproj" />
   <Project Path="Unity.XR.Hands.Samples.VisualizerSample.csproj" />
   <Project Path="DigitalLove.VFX.MegaFiers.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Grid.Editor.csproj" />
@@ -96,7 +95,7 @@
   <Project Path="DigitalLove.Analytics.Integrations.csproj" />
   <Project Path="DigitalLove.Game.Placement.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.FlowControl.Routes.Editor.csproj" />
-  <Project Path="DigitalLove.Game.UI.Console.Tests.EditMode.csproj" />
+  <Project Path="DigitalLove.Game.UI.Console.csproj" />
   <Project Path="DigitalLove.Audio.Samples.csproj" />
   <Project Path="DigitalLove.Game.GesturePrompts.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Interactables.Keypad.csproj" />

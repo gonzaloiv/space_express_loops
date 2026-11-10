@@ -32,15 +32,26 @@ namespace DigitalLove.Game.GesturePrompts
 
         public GestureKind? Kind => content != null ? content.Kind : null;
 
-        public void Show(GesturePromptContent value, Vector3 position, Vector3? leaderSubject)
+        public void Show(
+            GesturePromptContent value, Vector3 position, Quaternion? facing, Vector3? leaderSubject)
         {
             content = value;
-            transform.position = position;
+            Place(position, facing);
             Follow(leaderSubject);
             gameObject.SetActive(true);
         }
 
         public void Follow(Vector3? leaderSubject) => subject = leaderSubject;
+
+        // No facing keeps the authored orientation under the prompts root (a reused panel resets).
+        public void Place(Vector3 position, Quaternion? facing)
+        {
+            transform.position = position;
+            if (facing.HasValue)
+                transform.rotation = facing.Value;
+            else
+                transform.localRotation = Quaternion.identity;
+        }
 
         public void Hide()
         {

@@ -59,10 +59,8 @@ shape is in [chapters](../design/chapters.md); the demo is the store's own optio
 
 Active work.
 
-- [The field meter](in-progress/field-meter.md) — the bar, its prompts and the map's star square are
-  built; open: U4 review fixes (dark map cube over locked jobs) and the headset check.
-- [The panel bank](in-progress/panel-bank.md) — the console windows, smaller, hang on two arms from the
-  grid's bottom-left-back corner (one at 45°, one straight up).
+Nothing active. The field meter closed 2026-11-10; the panel bank was rolled back the same day (see
+[lessons](../lessons.md)).
 
 ## Next
 

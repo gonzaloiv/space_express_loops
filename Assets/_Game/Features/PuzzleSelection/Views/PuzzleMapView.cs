@@ -17,7 +17,6 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField] private CubeView cube;
         [Tooltip("Edge of the selection cube, in map units.")]
         [SerializeField, Min(0.01f)] private float cubeSize = 0.119f;
-        [SerializeField] private MapStarMeter starMeter;
         [SerializeField] private JobCardPanel contractCard;
         [SerializeField] private float viewRadius = 0.5f;
         [Tooltip("Cube scale at which a pinch commits to entering the job.")]
@@ -52,29 +51,11 @@ namespace DigitalLove.Game.PuzzleSelection
         private Vector3 lastCubePosition;
 
         public event Action EnterRequested;
-        public event Action EnterStarted;
         public event Action SelectionChanged;
 
         public Vector3 SelectionCubePosition => mapCube.Position;
 
         public bool ShowAll => showAll;
-
-        // The selected field's bottom-left-back corner and rotation, in the Origin's space. Read at
-        // rest: the console pair frames this, not the live breathing/zoomed diorama.
-        public Vector3 FieldCorner
-        {
-            get
-            {
-                float half = selectedSlot.FieldHalfMap;
-                Vector3 corner = selectedSlot.FieldRotationMap * new Vector3(-half, -half, half);
-                return transform.parent.InverseTransformPoint(
-                    mapRoot.TransformPoint(selectedSlot.FieldCentreMap + corner));
-            }
-        }
-
-        public Quaternion FieldRotation =>
-            Quaternion.Inverse(transform.parent.rotation)
-            * (mapRoot.rotation * selectedSlot.FieldRotationMap);
 
         private void Awake()
         {
@@ -120,7 +101,6 @@ namespace DigitalLove.Game.PuzzleSelection
             pose.ShowAll = showAll;
             tint.Reset();
             fieldView.Render(map);
-            starMeter.Show(ChapterStars.From(map));
             pose.SetPose(Focus);
             mapCube.Show(SunFocus, map.CanEnter);
             lastCubePosition = mapCube.Position;
@@ -203,7 +183,6 @@ namespace DigitalLove.Game.PuzzleSelection
             float scale = mapCube.Scale;
             mapCube.Lock();
             enter.Start(scale);
-            EnterStarted?.Invoke();
         }
 
         private void ReleaseScale()
@@ -260,7 +239,6 @@ namespace DigitalLove.Game.PuzzleSelection
         private void RenderFields()
         {
             fieldView.Render(map);
-            starMeter.Show(ChapterStars.From(map));
             pose.PlaceSelected(Focus);
             mapCube.SetEnterable(map.CanEnter);
         }

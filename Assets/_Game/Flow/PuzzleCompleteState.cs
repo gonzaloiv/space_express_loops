@@ -6,7 +6,6 @@ using DigitalLove.DataAccess;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Persistence;
 using DigitalLove.Game.SpaceShaping;
-using DigitalLove.Game.UI.Console;
 using DigitalLove.TTS;
 using Reflex.Attributes;
 using UnityEngine;
@@ -17,7 +16,6 @@ namespace DigitalLove.Game.Flow
     {
         [SerializeField] private MonoState nextState;
         [SerializeField] private SpaceShapingController puzzleController;
-        [SerializeField] private ConsoleBank bank;
         [SerializeField] private TtsPresenter ttsPresenter;
         [SerializeField] private SynthCuePlayer cuePlayer;
         [SerializeField] private SynthCuePlayer systemPlayer;
@@ -107,7 +105,6 @@ namespace DigitalLove.Game.Flow
         {
             puzzleController.Exit();
             puzzleController.HideAll();
-            bank.Hide();
             systemPlayer.Play(exitCue);
             parent.SetCurrentState(nextState.RouteId);
         }

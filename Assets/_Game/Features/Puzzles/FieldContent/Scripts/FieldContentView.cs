@@ -17,7 +17,6 @@ namespace DigitalLove.Game.SpaceShaping
 
         protected Transform ContentRoot => contentRoot;
         protected float PreviewSize => previewSize;
-        protected float PreviewScale { get; private set; } = 1f;
 
         public string SunName { get; private set; } = string.Empty;
 
@@ -98,14 +97,12 @@ namespace DigitalLove.Game.SpaceShaping
             builder.AddPoint(session.Destination);
             if (!builder.TryGet(out Vector3 centre, out float extent))
             {
-                PreviewScale = 1f;
                 ContentRoot.localScale = Vector3.one;
                 ContentRoot.localPosition = Vector3.zero;
                 return;
             }
 
             float scale = PreviewSize / Mathf.Max(extent * 2f, 0.0001f);
-            PreviewScale = scale;
             ContentRoot.localScale = Vector3.one * scale;
             ContentRoot.localPosition = -centre * scale;
         }

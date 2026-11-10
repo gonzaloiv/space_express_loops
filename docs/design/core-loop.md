@@ -86,13 +86,14 @@ Entropy is the Wrap's cost and the only resource the player manages: a **budget*
 
 **Fuel is not a lever.** The launch is **given** — one global speed, the same for every job — and lives
 in the fiction as the company's cost ([lore](world/lore.md)). The readout shows the result and the stars;
-the entropy bar lives **in the field**, drawn on the grid's base edge (two arms from the near side round
-to the back; spending cuts them from the front, decided 2026-11-10) — not in a panel; the lab panel is
-a diagnostic. The bar shows **remaining entropy**, the pending pinch and the last committed
-edit's cost; moving the cube and launching are visibly free. The **1/3 and 2/3** marks are cost bands,
-not stars: the grade is awarded on a solve and shown in the reward/readout, never on the bar. The
-**first band** (spend ≤ the bake's solution) must read distinctly from the others, so the player can
-tell an efficient solve while shaping, not only after it.
+the entropy bar lives **in the field**, as a **post on the grid's front-left vertical edge** (decided
+2026-11-10, replacing the base-edge arms) — not in a panel; the lab panel is a diagnostic. The post is
+the **remaining entropy**: spending cuts it from the top, a pinch shows its cost just below the top
+before it commits (danger if it would overrun), and the last committed edit sits dimmed above. Moving
+the cube and launching are visibly free. Notches at the **1/3 and 2/3** use limits carry a **star beside
+each band**: a star holds while the top stays above its notch, flickers while a pinch would cost it, and
+goes dark once spent past — so the player sees which star an edit is worth before releasing. The grade
+itself is still awarded on a solve.
 
 **The bar is the meter.** Entropy is read from the in-field bar, not a screen-space panel. The lattice
 tint already shows the zone warp, so entropy must not reuse it; a field-wide stress (rim or pulse) is

@@ -32,9 +32,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             Vector3[] centres = PuzzleZoneCandidates.Centres(field, field.cubeSizeMax);
             float[] sizes = PuzzleZoneCandidates.Sizes(field);
 
+            // Largest size first: the cube does not resize, so on a tie the biggest cube that rescues
+            // every ship ships, like the single-ship jobs' full-size cube.
             for (int c = 0; c < centres.Length; c++)
             {
-                for (int s = 0; s < sizes.Length; s++)
+                for (int s = sizes.Length - 1; s >= 0; s--)
                     Consider(centres[c], sizes[s], ref best);
             }
 

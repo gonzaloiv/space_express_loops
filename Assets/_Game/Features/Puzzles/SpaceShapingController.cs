@@ -76,10 +76,6 @@ namespace DigitalLove.Game.SpaceShaping
 
         public int Grade => run.Session.Grade();
 
-        public Vector3 FieldCorner => view.FieldCorner;
-
-        public Quaternion FieldRotation => view.FieldRotation;
-
         public void Rotate(float degrees)
         {
             if (run == null || frozen || Mathf.Approximately(degrees, 0f))

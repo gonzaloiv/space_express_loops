@@ -16,8 +16,9 @@ namespace DigitalLove.Game.GesturePrompts
             pool ??= new ViewPool<GesturePromptPanel>(
                 prototype, promptsParent, "Gesture Prompt", null);
 
-        public void Show(GesturePromptContent content, Vector3 position, Vector3? subject) =>
-            Take(content.Kind).Show(content, position, subject);
+        public void Show(
+            GesturePromptContent content, Vector3 position, Quaternion? facing, Vector3? subject) =>
+            Take(content.Kind).Show(content, position, facing, subject);
 
         public void HideAll()
         {
@@ -38,14 +39,14 @@ namespace DigitalLove.Game.GesturePrompts
             return false;
         }
 
-        public void Move(GestureKind kind, Vector3 position, Vector3? subject)
+        public void Move(GestureKind kind, Vector3 position, Quaternion? facing, Vector3? subject)
         {
             ViewPool<GesturePromptPanel> views = Pool;
             for (int i = 0; i < views.Views.Count; i++)
             {
                 if (views.Views[i].Kind == kind)
                 {
-                    views.Views[i].transform.position = position;
+                    views.Views[i].Place(position, facing);
                     views.Views[i].Follow(subject);
                 }
             }

@@ -7,7 +7,6 @@ using DigitalLove.Game.SpaceShaping.Cube;
 using DigitalLove.Input;
 using DigitalLove.TTS;
 using DigitalLove.Game.GesturePrompts;
-using DigitalLove.Game.UI.Console;
 using Reflex.Attributes;
 using UnityEngine;
 
@@ -22,7 +21,6 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private GesturePromptPresenter prompts;
         [SerializeField] private GameGesturePromptSource promptSource;
         [SerializeField] private JobCardPanel contractCard;
-        [SerializeField] private ConsoleBank bank;
         [SerializeField] private TtsPresenter ttsPresenter;
         [SerializeField] private SynthCuePlayer cuePlayer;
         [SerializeField] private SynthCuePlayer systemPlayer;
@@ -56,14 +54,6 @@ namespace DigitalLove.Game.Flow
             puzzle = memoryDataClient.Get<PuzzleData>();
             ShowPrompts(puzzle);
             ShowContract(puzzle);
-            ShowBank();
-        }
-
-        private void ShowBank()
-        {
-            bank.Layout(puzzleController.FieldCorner, puzzleController.FieldRotation);
-            bank.Show();
-            bank.Boot();
         }
 
         public override void Exit()
@@ -154,7 +144,6 @@ namespace DigitalLove.Game.Flow
             ttsPresenter.Stop();
             puzzleController.Exit();
             puzzleController.HideAll();
-            bank.Hide();
             systemPlayer.Play(exitCue);
             parent.SetCurrentState(gameStartState.RouteId);
         }

@@ -27,6 +27,8 @@ enough to become job 8 (two ships, separate runs) for the competition build. Mix
 
 - Re-baked 2026-11-10 with the sun on: `TwoShips_Test_Puzzle` (seed 1) and a second version
   `TwoShips_B_Puzzle` (`PuzzleSeed_TwoShips_B`, seed 201); 12 planets + sun, no ship on the sun.
+  Re-baked again the same day: `PuzzleMultiShipProbe` now tries sizes largest first, so the
+  non-resizable cube ships full size (12.7 / 12.3 cm, was 7.4 / 2.2 cm).
   Still open: run `PuzzleShipScanTests` (the project did not compile at the time).
 
 - `PuzzleShipScan` skips any pair whose origin or destination is a centre-only source, both in the

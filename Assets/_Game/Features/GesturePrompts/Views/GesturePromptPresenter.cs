@@ -26,8 +26,10 @@ namespace DigitalLove.Game.GesturePrompts
         [SerializeField] private Vector3 moveOffset = new(-0.12f, 0.12f, 0f);
         [SerializeField] private Vector3 enterOffset = new(0.12f, 0.12f, 0f);
         [SerializeField] private Vector3 exitOffset = new(0f, 0.22f, 0f);
-        [SerializeField] private Vector3 spendOffset = new(0.18f, 0.04f, 0f);
-        [SerializeField] private Vector3 starsOffset = new(-0.18f, 0.04f, 0f);
+        [SerializeField] private Vector3 spendOffset = new(-0.14f, 0.06f, 0f);
+        [SerializeField] private Vector3 starsOffset = new(-0.14f, -0.06f, 0f);
+        [Tooltip("How far Spend and Stars tip back to face up from the field's base (90 = flat).")]
+        [SerializeField, Range(0f, 90f)] private float meterTiltDegrees = 60f;
 
         [Inject] private MemoryDataClient memoryDataClient;
 
@@ -36,17 +38,17 @@ namespace DigitalLove.Game.GesturePrompts
 
         public bool SpendShown { get; private set; }
 
-        // The meter's front-centre, where Spend and Stars point and sit.
-        private Vector3 MeterFront =>
+        // The middle of the entropy post on the grid's front-left edge, where Spend and Stars point and sit.
+        private Vector3 MeterPost =>
             shapingView.transform.TransformPoint(
-                shapingView.FieldCentre + new Vector3(0f, -shapingView.FieldHalf, -shapingView.FieldHalf));
+                shapingView.FieldCentre + new Vector3(-shapingView.FieldHalf, 0f, -shapingView.FieldHalf));
 
         public void Show(GestureKind kind)
         {
             if (IsLearned(kind) || pool.IsShowing(kind))
                 return;
 
-            pool.Show(Content(kind), Position(kind), Subject(kind));
+            pool.Show(Content(kind), Position(kind), Facing(kind), Subject(kind));
             if (kind == GestureKind.Spend)
                 SpendShown = true;
         }
@@ -75,7 +77,7 @@ namespace DigitalLove.Game.GesturePrompts
             {
                 GestureKind kind = (GestureKind)i;
                 if (pool.IsShowing(kind))
-                    pool.Move(kind, Position(kind), Subject(kind));
+                    pool.Move(kind, Position(kind), Facing(kind), Subject(kind));
             }
 
             if (spendPending && !pool.IsShowing(GestureKind.Scale))
@@ -102,12 +104,21 @@ namespace DigitalLove.Game.GesturePrompts
                 case GestureKind.Exit:
                     return shapingView.CubePosition + FieldOffset(exitOffset);
                 case GestureKind.Spend:
-                    return MeterFront + FieldOffset(spendOffset);
+                    return MeterPost + FieldOffset(spendOffset);
                 case GestureKind.Stars:
-                    return MeterFront + FieldOffset(starsOffset);
+                    return MeterPost + FieldOffset(starsOffset);
                 default:
                     return mapView.SelectionCubePosition + MapOffset(enterOffset);
             }
+        }
+
+        // Spend and Stars sit on the meter at the field's base, below the eyes, so they tip back to face up.
+        private Quaternion? Facing(GestureKind kind)
+        {
+            if (kind != GestureKind.Spend && kind != GestureKind.Stars)
+                return null;
+
+            return shapingView.transform.rotation * Quaternion.Euler(meterTiltDegrees, 0f, 0f);
         }
 
         private Vector3 FieldOffset(Vector3 offset) => shapingView.transform.TransformVector(offset);
@@ -125,7 +136,7 @@ namespace DigitalLove.Game.GesturePrompts
                     return mapView.SelectionCubePosition;
                 case GestureKind.Spend:
                 case GestureKind.Stars:
-                    return MeterFront;
+                    return MeterPost;
                 default:
                     return null;
             }

@@ -56,6 +56,15 @@ Unity/vendor/package APIs and Editor tooling that must bind to them. Skip `**/Ve
 - Runtime code may position, scale, show, or hide authored objects; it must not invent them.
 - This applies to UI, VFX, line renderers, ghost previews, and interaction proxies.
 
+## Field-relative layout
+
+- Anything placed relative to the field, the map or the seat converts through its owner's transform
+  (`TransformPoint` / `TransformVector`, parent-space inputs through the local transform). Never add a
+  world-axis offset to a field position.
+- In the editor the `Origin` sits at the world origin, so world/parent mix-ups pass every editor check
+  and break only on the headset. Test such layouts under a moved and yawed parent.
+- A `LineRenderer`'s width is world metres and ignores its parent's scale; author it in metres.
+
 ## Spawned content
 
 Content that is generated or pooled at runtime **from an authored prototype** is fine — the puzzle field's planets (`FieldPlanetSet` + `ViewPool`) and spawned ships (`SpaceShapingSpawner` + `ShipFlightPool`) are the precedent. Spawn from a serialized prototype and pool it; never invent a mesh, material, or hierarchy with no authored source.
@@ -92,10 +101,9 @@ Organize first-party code into folders that describe what it does, so the tree r
 
 ## Tests — pick the suite, do not launch everything
 
-Three EditMode suites, very different cost:
+Two EditMode suites, very different cost:
 
 - `DigitalLove.Game.SpaceShaping.Tests.EditMode` — **fast** (seconds). This is the default pass.
-- `DigitalLove.Game.UI.Console.Tests.EditMode` — **fast** (seconds). The console arm and layout math.
 - `DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode` — **bake-heavy**: a full solution search per test, tens of seconds in total. Run it deliberately, not on every change.
 
 `PuzzleShipSweepTests` and `PuzzleShipPlateauTests` are `[Explicit]`: they only run when named. Keep their field/sample counts small — they are smoke checks now, not the original feasibility sweep.
