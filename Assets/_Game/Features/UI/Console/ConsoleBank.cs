@@ -1,4 +1,5 @@
 using System.Collections;
+using DigitalLove.Global;
 using DigitalLove.UI.Behaviours;
 using UnityEngine;
 
@@ -19,7 +20,8 @@ namespace DigitalLove.Game.UI.Console
         [SerializeField, Min(0f)] private float verticalGap = 0.02f;
         [SerializeField, Min(0f)] private float bootSecs = 0.18f;
         [SerializeField, Min(0f)] private float cutSecs = 0.18f;
-        [SerializeField] private Color armColor = Color.white;
+        [Tooltip("The meter's palette colour, so the arms match the grid and the meter.")]
+        [SerializeField] private ColorValue armColor;
 
         private Coroutine routine;
         private Vector3 fullScale;
@@ -33,10 +35,12 @@ namespace DigitalLove.Game.UI.Console
             SetArmColor(jimArm);
         }
 
+        // The inputs are in this transform's parent (the Origin) space, so convert through the bank's
+        // local transform: the Origin moves and yaws with the seat.
         public void Layout(Vector3 corner, Quaternion rotation)
         {
-            Vector3 localCorner = transform.InverseTransformPoint(corner);
-            Quaternion localRotation = Quaternion.Inverse(transform.rotation) * rotation;
+            Vector3 localCorner = ParentToLocal(corner);
+            Quaternion localRotation = Quaternion.Inverse(transform.localRotation) * rotation;
             Vector3 cardInner = ConsoleArmGeometry.DiagonalEnd(
                 localCorner, localRotation, cardArmLength);
             Vector3 jimInner = ConsoleArmGeometry.VerticalEnd(
@@ -100,11 +104,13 @@ namespace DigitalLove.Game.UI.Console
             routine = null;
         }
 
+        // Windows sit directly under the bank or an identity holder, so their local scale is their size
+        // in the bank's space; the bank's own scale (a CRT mid-collapse) does not distort the layout.
         private void Place(RectTransform window, Vector3 topInner, Quaternion localRotation)
         {
             Vector2 size = new(
-                window.rect.width * window.lossyScale.x,
-                window.rect.height * window.lossyScale.y);
+                window.rect.width * window.localScale.x,
+                window.rect.height * window.localScale.y);
             window.localRotation = localRotation;
             window.localPosition = ConsoleArmGeometry.WindowCentre(topInner, localRotation, size);
         }
@@ -118,8 +124,15 @@ namespace DigitalLove.Game.UI.Console
 
         private void SetArmColor(LineRenderer arm)
         {
-            arm.startColor = armColor;
-            arm.endColor = armColor;
+            arm.startColor = armColor.value;
+            arm.endColor = armColor.value;
+        }
+
+        private Vector3 ParentToLocal(Vector3 point)
+        {
+            Matrix4x4 local = Matrix4x4.TRS(
+                transform.localPosition, transform.localRotation, transform.localScale);
+            return local.inverse.MultiplyPoint3x4(point);
         }
     }
 }

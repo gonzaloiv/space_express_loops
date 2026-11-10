@@ -7,8 +7,6 @@ namespace DigitalLove.Game.UI.Console
     // line renderers and the windows hang from their ends.
     public static class ConsoleArmGeometry
     {
-        public const float DiagonalDegrees = 45f;
-
         // The grid's bottom-left-back corner, from the field's frame (centre and half in the same space).
         public static Vector3 Corner(Vector3 fieldCentre, float half) =>
             fieldCentre + new Vector3(-half, -half, half);

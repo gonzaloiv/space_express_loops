@@ -92,9 +92,10 @@ Organize first-party code into folders that describe what it does, so the tree r
 
 ## Tests — pick the suite, do not launch everything
 
-Two EditMode suites, very different cost:
+Three EditMode suites, very different cost:
 
 - `DigitalLove.Game.SpaceShaping.Tests.EditMode` — **fast** (seconds). This is the default pass.
+- `DigitalLove.Game.UI.Console.Tests.EditMode` — **fast** (seconds). The console arm and layout math.
 - `DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode` — **bake-heavy**: a full solution search per test, tens of seconds in total. Run it deliberately, not on every change.
 
 `PuzzleShipSweepTests` and `PuzzleShipPlateauTests` are `[Explicit]`: they only run when named. Keep their field/sample counts small — they are smoke checks now, not the original feasibility sweep.

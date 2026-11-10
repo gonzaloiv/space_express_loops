@@ -203,9 +203,8 @@ Transform:
   m_Children:
   - {fileID: 545250331}
   - {fileID: 176536380}
-  - {fileID: 659125323}
-  - {fileID: 476077591}
   - {fileID: 781987389}
+  - {fileID: 475310422}
   m_Father: {fileID: 1760187867}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &72828306
@@ -231,7 +230,7 @@ MonoBehaviour:
   verticalGap: 0.02
   bootSecs: 0.18
   cutSecs: 0.18
-  armColor: {r: 1, g: 1, b: 1, a: 1}
+  armColor: {fileID: 11400000, guid: c01d0000000000000000000000000001, type: 2}
 --- !u!1 &83098461
 GameObject:
   m_ObjectHideFlags: 0
@@ -2329,13 +2328,46 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.078431375}
   m_EffectDistance: {x: 5, y: 5}
   m_UseGraphicAlpha: 1
+--- !u!1 &475310421
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 475310422}
+  m_Layer: 0
+  m_Name: Card Slot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &475310422
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 475310421}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 476077591}
+  - {fileID: 659125323}
+  m_Father: {fileID: 72828305}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &476077589
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 967966615}
+    m_TransformParent: {fileID: 475310422}
     m_Modifications:
     - target: {fileID: 5571167437877330341, guid: bdb69cec93a8e094b866ab907b797d80, type: 3}
       propertyPath: m_Name
@@ -2375,7 +2407,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5659079990071783093, guid: bdb69cec93a8e094b866ab907b797d80, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.001
+      value: 0.0010000002
       objectReference: {fileID: 0}
     - target: {fileID: 5659079990071783093, guid: bdb69cec93a8e094b866ab907b797d80, type: 3}
       propertyPath: m_LocalScale.y
@@ -3128,7 +3160,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 904848684}
+    m_TransformParent: {fileID: 475310422}
     m_Modifications:
     - target: {fileID: 849936218389375915, guid: bdb69cec93a8e094b866ab907b797d80, type: 3}
       propertyPath: m_text
@@ -3880,7 +3912,6 @@ Transform:
   m_Children:
   - {fileID: 1654487130}
   - {fileID: 257544994}
-  - {fileID: 659125323}
   m_Father: {fileID: 1760187867}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &924513524
@@ -6470,7 +6501,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 232612889}
-  - {fileID: 476077591}
   m_Father: {fileID: 1760187867}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &967966616
@@ -8071,8 +8101,6 @@ MonoBehaviour:
     - step: 2
       text: {fileID: 1372170072}
   lines:
-  - text: {fileID: 1590268705}
-    freshOnly: 0
   - text: {fileID: 1590268704}
     freshOnly: 0
   - text: {fileID: 1590268703}
@@ -8084,7 +8112,7 @@ MonoBehaviour:
   bootSecs: 0.18
   cutOffSecs: 0.12
   skip:
-    value: 0
+    value: 1
 --- !u!114 &1363334526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9364,6 +9392,7 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 1127192775196774943, guid: bdb69cec93a8e094b866ab907b797d80, type: 3}
     - {fileID: 4044956532647162990, guid: bdb69cec93a8e094b866ab907b797d80, type: 3}
+    - {fileID: 5737150481647924502, guid: bdb69cec93a8e094b866ab907b797d80, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 571753393270455815, guid: bdb69cec93a8e094b866ab907b797d80, type: 3}
       insertIndex: 1
@@ -9390,17 +9419,6 @@ MonoBehaviour:
 --- !u!114 &1590268704 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1674825546141324315, guid: bdb69cec93a8e094b866ab907b797d80, type: 3}
-  m_PrefabInstance: {fileID: 1590268702}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
---- !u!114 &1590268705 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 849936218389375915, guid: bdb69cec93a8e094b866ab907b797d80, type: 3}
   m_PrefabInstance: {fileID: 1590268702}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -10868,8 +10886,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -250}
-  m_SizeDelta: {x: 400, y: 0}
+  m_AnchoredPosition: {x: 166.5, y: -374.17}
+  m_SizeDelta: {x: 233, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1718389706
 MonoBehaviour:
@@ -13120,7 +13138,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.32
+    widthMultiplier: 0.002
     widthCurve:
       serializedVersion: 2
       m_Curve:

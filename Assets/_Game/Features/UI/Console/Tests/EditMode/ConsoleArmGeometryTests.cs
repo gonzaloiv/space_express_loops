@@ -2,7 +2,7 @@ using DigitalLove.Game.UI.Console;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
+namespace DigitalLove.Game.UI.Console.Tests.EditMode
 {
     public class ConsoleArmGeometryTests
     {
@@ -51,17 +51,16 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         }
 
         [Test]
-        public void BothArmEnds_StayLeftOfTheFieldCentre_ForEveryFrame()
+        public void BothArmEnds_StayLeftOfTheGridEdge_ForEveryFrame()
         {
             float[] halves = { SmallestHalf, LargestHalf, MapHalf };
             for (int i = 0; i < halves.Length; i++)
             {
-                Vector3 centre = Vector3.zero;
-                Vector3 corner = ConsoleArmGeometry.Corner(centre, halves[i]);
+                Vector3 corner = ConsoleArmGeometry.Corner(Vector3.zero, halves[i]);
                 Vector3 card = ConsoleArmGeometry.DiagonalEnd(corner, Quaternion.identity, 0.24f);
                 Vector3 jim = ConsoleArmGeometry.VerticalEnd(corner, Quaternion.identity, 0.28f, 0.02f);
-                Assert.Less(card.x, centre.x, $"card arm for half {halves[i]}");
-                Assert.Less(jim.x, centre.x, $"jim arm for half {halves[i]}");
+                Assert.Less(card.x, corner.x, $"card arm for half {halves[i]}");
+                Assert.Less(jim.x, corner.x, $"jim arm for half {halves[i]}");
                 Assert.Greater(card.y, corner.y, $"card arm for half {halves[i]}");
                 Assert.Greater(jim.y, corner.y, $"jim arm for half {halves[i]}");
             }

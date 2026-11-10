@@ -144,7 +144,9 @@ The tagline. Three readings stack:
 
 The payoff is (3): the fiction's economics and the mechanic's physics are the **same idea**.
 
-**How to use it:** as an *in-world* slogan — a poster the tech team hung, which Jim rolls his eyes at.
+**How to use it:** as background for now (decided 2026-11-10; it was cut from the boot screen). If an obvious
+moment appears in the game's lines, it may surface once as an *in-world* slogan — a poster the tech
+team hung, which Jim rolls his eyes at.
 **Not** as the pitch line: the double meaning only lands once the player knows the game is about
 relativity.
 
@@ -177,7 +179,7 @@ an object, not a line. Where each one lives:
 | The manual is written to you, and keeps being rewritten | The manual line reads *MANUAL r2, r3…*: a new revision per delivery | live |
 | Jim is remote too | His call panel: his kitchen behind him (night window, mug), a faint call timestamp | planned (art) |
 | The lit map is the firm's reach | A coverage count on the console (*SECTOR COVERAGE 7/10*) | idea ([explorable map](../../ideas/explorable-map.md)) |
-| "Revenue is relative" | One poster-style line on the boot screen, never spoken | planned |
+| "Revenue is relative" | Nothing yet: background for writing the world. Add it only where a game line earns it (after the player has seen spending less pay more); never at boot, never spoken | background |
 
 ## Guardrails
 

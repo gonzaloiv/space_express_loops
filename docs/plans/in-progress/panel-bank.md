@@ -1,11 +1,11 @@
 # The panel bank — the console on two arms from the grid
 
-**Status:** now · presentation · updated 2026-11-10 — implemented; the console windows leave the head arc and hang,
-smaller, on two arms from the grid's bottom-left-back corner: one at 45° out to the left, one straight
-up. Split from [the field meter](field-meter.md). The pair draws above the field (canvases sort 30)
-instead of the impossible "outside the near silhouette" test. U1's footprint and U2 are in; open: the
-U3 review fixes (the layout breaks once the seat moves Origin), the headset check and the card's
-text re-authoring.
+**Status:** now · presentation · updated 2026-11-10 — implemented; the console windows leave the head
+arc and hang, smaller, on two arms from the grid's bottom-left-back corner: one at 45° out to the
+left, one straight up. Split from [the field meter](field-meter.md). The pair draws above the field
+(canvases sort 30) instead of the impossible "outside the near silhouette" test. U1's footprint, U2
+and the U3 review fixes are in; open: the headset check (U1 text, 1.8× pinch, draw-order depth) and
+the card's text re-authoring.
 
 **Related:** [the field meter](field-meter.md) · [lore](../../design/world/lore.md) §The console ·
 [plans board](../README.md)
@@ -76,50 +76,50 @@ then back down to the field. Make the windows, the field and its meter read as o
   start, `PuzzleSelectionState` on map show and whenever the map's rest frame changes. Keep
   `Features/UI/Console` free of Puzzle / PuzzleSelection references. Show and hide with the field
   (`SpaceShapingController.HideAll`, the map's `Show` / `Hide`).
-- **Tests.** `ConsoleArmGeometryTests` in the fast `SpaceShaping.Tests.EditMode` suite: the corner for
-  the largest and smallest job frames and the map rest frame, the 45° direction, the vertical arm, the
-  window centre, and both arm ends left of the field centre.
+- **Tests.** `ConsoleArmGeometryTests` and `ConsoleBankLayoutTests` in the fast
+  `UI.Console.Tests.EditMode` suite: the corner for the largest and smallest job frames and the map
+  rest frame, the 45° direction, the vertical arm, the window centre, both arm ends left of the grid
+  edge, and the layout's parent-space conversion under a moved and rotated Origin.
 - **Exit:** in every job and on the map, both windows hang on their arms on the left of the field,
   joined at the corner, never crossed by the field's content, and readable without turning the head to
   the other side.
 
-### U3 — review fixes (review 2026-11-10)
+### U3 — review fixes — in
 
-Do 1 and 2 before the headset check; 1 breaks the layout on the device.
+1, 2, 5 and 6 are in; 3 was already true in `RunSlotView`; 4 is the headset caveat.
 
-1. **Layout mixes spaces.** The owners pass the corner and rotation in Origin space
+1. **Layout mixes spaces — fixed.** The owners pass the corner and rotation in Origin space
    (`SpaceShapingView.FieldCorner`/`FieldRotation`, `PuzzleMapView.FieldCorner`/`FieldRotation`), but
    `ConsoleBank.Layout` converts them as world values (`transform.InverseTransformPoint`,
    `Inverse(transform.rotation)`, `ConsoleBank.cs:38-39`). Console Bank sits at identity under
    `Origin`, and in the editor Origin is at the world origin, so the errors cancel. On the headset
    `SeatPlacement` moves and yaws Origin (`OVROriginBehaviour.Setup`), so windows and arms land offset
    by the seat pose. Treat the inputs as parent space (convert through the bank's local transform, not
-   its world one). Test: `Layout` under a moved and rotated parent puts the corner where the field's is.
-2. **The cards are outside the one root.** Only Jim's panel and the arms are under `Origin/Console
-   Bank`; the job card is under `Origin/UI` and the map card under `PuzzleMapView`. `Boot` / `CutOff`
-   scale only the bank, so on map enter the arms and Jim collapse while the card stays. `Place` also
-   sets each card's `localPosition` in its own parent, which works only because those parents are at
-   identity. Move the card slot under the bank (a holder for both cards); keep the card's own
-   `ShrinkOut` for content swaps.
-3. **The map corner is not at rest.** `PuzzleMapView.FieldCorner` says it reads at rest but uses
-   `RunSlotView.FieldHalfMap` / `FieldCentreMap`, which include the zoom and the breath. Read only on
-   show and selection change, so the error is small (~2 %), but the rest-frame accessor the plan asked
-   for does not exist. Build it once for both this and [field-meter](field-meter.md) U4 item 5. Still
-   open from U2: check the 1.8× pinch preview stays clear of the windows.
+   its world one). Test: `ConsoleBankLayoutTests.Layout_UnderAMovedAndRotatedOrigin_PutsTheCornerOnTheField`.
+2. **The cards are outside the one root — fixed.** Both cards now sit under `Origin/Console Bank/Card
+   Slot`, so `Boot` / `CutOff` scale the arms, Jim and the card together; `Place` writes the cards'
+   locals against the identity holder. The card keeps its own `ShrinkOut` for content swaps.
+3. **The map corner is not at rest — checked, no change.** `RunSlotView.FieldCentreMap` /
+   `FieldHalfMap` already read the captured home frame (`homeCentreLocal`, `homeDioramaScale`,
+   `homeVisualScale`), so the zoom and breath do not move it; `PuzzleMapView.FieldCorner` uses them.
+   The accessor asked for exists; no new work. Still open from U2: the headset check that the 1.8×
+   pinch preview stays clear of the windows.
 4. **Draw order does not beat depth.** The canvases sort at 30, which orders transparent queues only;
    anything that writes depth (opaque or grown planets) still hides text when in front. The contract
    change (outside the silhouette → above in draw order) stands; the headset check item 3 decides
    whether the windows need more clearance or the text a depth-ignoring material.
-5. **Arm colour is hard-coded.** `armColor` is a raw `Color` applied at runtime
-   (`ConsoleBank.cs:22,119-123`). Use the meter's `ColorValue` (same palette as `FieldEdgeMeter`).
-6. *(Minor)* Tests cover the geometry but not `ConsoleBank.Layout`'s space conversion (item 1's test
-   closes that); "both arm ends left of the field centre" is trivially true, so assert left of the
-   grid's left edge instead. `ConsoleArmGeometryTests` lives in `Puzzles/Tests` while the type is in
-   `UI/Console`. The map shows the pair without `Boot`; boot it there too or note it as intended.
+5. **Arm colour is hard-coded — fixed.** `armColor` is a `ColorValue` (the meter's Accent), applied to
+   both arms; no raw colour remains.
+6. *(Minor) — done.* `ConsoleBankLayoutTests` covers the layout space conversion; the arm test asserts
+   left of the grid's edge. `ConsoleArmGeometryTests` moved to `UI/Console/Tests/EditMode` with the
+   new `DigitalLove.Game.UI.Console.Tests.EditMode` suite. The map's pair is left un-booted on
+   purpose: the map card runs its own typed `BootIn`; the pair appears with the map.
 
 - **Checked fine:** `SeatPlacement` no longer arranges the console (no `ConsoleLayout` callers),
   `EnterStarted` is public and wired to `CutOff`, the Console assembly references no Puzzle or
-  PuzzleSelection code, the arms use `FieldMeter.mat` in local space, both windows' canvases sort 30.
+  PuzzleSelection code, the arms use `FieldMeter.mat` in local space, both windows' canvases sort 30,
+  the bank converts its parent-space inputs through its local transform, and the cards share the
+  bank's Card Slot.
 - **Exit:** with Origin moved and yawed, the pair hangs from the grid's corner; one CRT boots and cuts
   arms, Jim and the card together; one rest-frame accessor serves the map corner and the map square.
 

@@ -2,6 +2,7 @@
     "name": "DigitalLove.Game.UI.Console",
     "rootNamespace": "",
     "references": [
+        "DigitalLove.Global",
         "DigitalLove.UI.Behaviours"
     ],
     "includePlatforms": [],
