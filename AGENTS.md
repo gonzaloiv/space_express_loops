@@ -14,6 +14,11 @@ A plan is **one sitting of work**, not a roadmap. Keep it to what one agent can 
   growing in place.
 - **Done plans are removed.** When a plan lands, delete its file and its board row; the code and tests
   are the record. Do not archive it in a `done/` folder.
+- **Close with a post-mortem.** Before deleting a plan, add a few lines to
+  [`docs/lessons.md`](docs/lessons.md): what worked, what surprised us, and the rule for next time.
+  Three to six bullets, one idea each, no history of the work. If a lesson changes how we build, also
+  put it where it applies (this file, a design doc, a standard). This is required with or without
+  `ce-compound`.
 - The **plans board** ([`docs/plans/README.md`](docs/plans/README.md)) is the entry point; run
   `docs/check.ps1` after moving files.
 

@@ -26,7 +26,7 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private float saveTimeoutSecs = 5f;
 
         [Inject] private MemoryDataClient memoryDataClient;
-        [Inject] private UnityPlayerDataClient playerDataClient;
+        [Inject] private IDataProvider dataProvider;
 
         private Task pendingSave = Task.CompletedTask;
         private Coroutine sequence;
@@ -92,7 +92,7 @@ namespace DigitalLove.Game.Flow
 
             try
             {
-                await playerDataClient.Put(playerData);
+                await dataProvider.Put(playerData);
             }
             catch (System.Exception e)
             {

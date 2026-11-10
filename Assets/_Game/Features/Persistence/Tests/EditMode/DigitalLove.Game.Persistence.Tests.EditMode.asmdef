@@ -6,6 +6,8 @@
         "DigitalLove.Game.PuzzleSelection",
         "DigitalLove.Casual.Levels",
         "DigitalLove.DataAccess.Remote",
+        "DigitalLove.DataAccess.Local",
+        "DigitalLove.Global",
         "DigitalLove.Game.SpaceShaping.Domain",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"

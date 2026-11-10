@@ -10,7 +10,7 @@ namespace DigitalLove.Game.GesturePrompts
         [SerializeField] private GesturePromptSource source;
 
         [Inject] private MemoryDataClient memoryDataClient;
-        [Inject] private UnityPlayerDataClient playerDataClient;
+        [Inject] private IDataProvider dataProvider;
 
         private void OnEnable() => source.Completed += OnCompleted;
 
@@ -25,7 +25,7 @@ namespace DigitalLove.Game.GesturePrompts
                 return;
             }
 
-            GestureLearning.Save(playerData, kind, playerDataClient);
+            GestureLearning.Save(playerData, kind, dataProvider);
         }
     }
 }

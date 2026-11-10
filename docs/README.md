@@ -3,6 +3,7 @@
 - [design/](design/) — the game's design, one concern per doc ([index](design/README.md)).
 - [plans/](plans/) — the engineering board: **Now → Next → Later** ([board](plans/README.md)).
 - [ideas/](ideas/) — candidate ideas and detailed notes; not scheduled.
+- [lessons](lessons.md) — post-mortems written when a plan closes.
 
 **Start here:** [vision](design/vision.md).
 

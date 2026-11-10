@@ -48,10 +48,10 @@ their own quiet voices so the stretch sits inside a machine that is already humm
 
 ### U2 — the sustain API and the field hum
 
-- **A generic sustain on `SynthVoice`.** Today `DriveStretch` is the only filter/LFO writer and sets
-  `lfoAmp = strain * strainLfoAmp` (zero at rest), and there is no volume setter (`SynthVoice.cs:14`,
-  `:62-73`). Add `BeginSustain(note, cutoff)`, `DriveSustain(note, cutoff, lfoAmp, lfoRate)` and
-  `SetVolume(value)`; `BeginStretch`/`DriveStretch` become thin wrappers so `CubeVoice` is unchanged.
+- **A generic sustain on `SynthVoice`** — done (2026-11-10). `SynthVoice` carries no tuning:
+  `BeginSustain(patch, note, cutoff, lfoAmp, lfoRate)` takes the timbre from a `SynthPatch`
+  (`Features/Audio/Synth/Tones/`), then `DriveSustain`, `SetVolume`, `EndSustain`. The stretch API is
+  gone; the cube's strain wobble and LFO live in `CubeVoice`.
 - **The hum:** a sustained `SynthVoice` on `Puzzle.prefab` at the field centre: A (note 33–45), a closed
   filter, a slow resting LFO. `SpaceShapingView` keys it on when the job opens and off when it closes.
 - The strain the readout already pushes (`SpaceShapingView.ShowReadout` → `SetStrain`) also opens the

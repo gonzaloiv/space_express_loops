@@ -62,7 +62,6 @@
   <Project Path="DigitalLove.Theming.csproj" />
   <Project Path="DigitalLove.XR.Samples.csproj" />
   <Project Path="DigitalLove.Game.Placement.csproj" />
-  <Project Path="DigitalLove.DataAccess.Local.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Grid.csproj" />
   <Project Path="DigitalLove.Timeline.Integrations.csproj" />
   <Project Path="DigitalLove.XR.MetaPlatform.csproj" />
@@ -91,6 +90,7 @@
   <Project Path="Vendor.VHS.csproj" />
   <Project Path="DigitalLove.Casual.Flow.Setup.MRUK.csproj" />
   <Project Path="DigitalLove.Reflex.csproj" />
+  <Project Path="DigitalLove.DataAccess.Local.csproj" />
   <Project Path="DigitalLove.Game.Persistence.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Analytics.Integrations.csproj" />
   <Project Path="DigitalLove.Game.Placement.Tests.EditMode.csproj" />

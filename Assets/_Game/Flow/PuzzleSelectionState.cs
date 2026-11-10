@@ -32,6 +32,7 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private PuzzleData puzzleToSet;
 
         [Inject] private MemoryDataClient memoryDataClient;
+        [Inject] private PlayerDataProvider playerDataProvider;
 
         private PuzzleMap map;
         private bool autoEntryUsed;
@@ -43,6 +44,7 @@ namespace DigitalLove.Game.Flow
             view.SelectionChanged += OnSelectionChanged;
             card.Opened += OnCardOpened;
             card.LineTyped += OnLineTyped;
+            ApplyPendingCloud();
             PlayerData playerData = memoryDataClient.Get<PlayerData>();
 
             if (selectRandom.Value)
@@ -67,6 +69,13 @@ namespace DigitalLove.Game.Flow
             }
 
             ShowMap(progress);
+        }
+
+        private void ApplyPendingCloud()
+        {
+            PlayerData pending = playerDataProvider.ApplyPendingCloud();
+            if (pending != null)
+                memoryDataClient.Put(pending);
         }
 
         private void ShowMap(RunProgress progress)

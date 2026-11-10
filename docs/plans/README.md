@@ -112,7 +112,8 @@ Loose ends that still need a home. Close one by linking the plan that finishes i
 - `<area>` is one of `space shaping`, `universe`, `presentation`, `flow`.
 - Folders: `now` → `in-progress/`; `next` and `later` → `backlog/`. Move the file and update this
   board in the same change.
-- **Done plans are removed.** When a plan lands, delete its file and its board row; the code and tests
-  are the record. Do not archive it in a `done/` folder.
+- **Done plans are removed.** When a plan lands, add its post-mortem to [lessons](../lessons.md),
+  then delete its file and its board row; the code and tests are the record. Do not archive it in a
+  `done/` folder.
 - Run `docs/check.ps1` after moving files — it runs `check-plans.ps1` (links, status/folder, board) and
   `check-docs.ps1` (design docs).

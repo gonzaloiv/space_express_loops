@@ -54,11 +54,11 @@ go only to Cloud Save. A judge without a connection loses the game before playin
   awaiting Unity Services; run initialization, sign-in and the cloud reconcile in the background.
   Today `Main.InitializeServicesAsync` is awaited before the first state (`Main.cs:102-113`), so the
   internet check alone changes nothing: offline the boot still waits on the services timeout.
-- `SetupState` stops referencing `InternetChecker`: it goes straight to the device/CXR check and the
-  splash. Add an explicit launch option instead — `Main` gets a serialized `requireInternet` (default
-  off). When on, the services result gates the flow with a bounded wait and shows the "internet
-  required" panel and quits; when off, offline is the normal path. Retire `InternetChecker` and move its
-  funnel event to `Main`/`SetupState`.
+- Keep `InternetChecker` as the gate: add an explicit launch option — `Main` gets a serialized
+  `requireInternet` (default off). When on, the checker waits a bounded time for services and shows the
+  "internet required" panel and quits; when off, it passes straight through and offline is the normal
+  path. `SetupState` keeps sequencing the check; move the old `services_initialized` funnel event to
+  `Main`, which sends it only when services actually initialize.
 - The cloud pull can land after the flow starts. When the cloud has more completed jobs, hold it and
   swap it into `MemoryDataClient` (and local storage) at the next return to job selection, never
   mid-job. Until the swap, the wrapper does not mirror to the cloud, so a local save cannot overwrite

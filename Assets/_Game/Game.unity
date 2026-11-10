@@ -1376,12 +1376,10 @@ MonoBehaviour:
   - {fileID: 1603056068}
   initialState: {fileID: 1730347950}
   locale: {fileID: 11400000, guid: ef5f93a95eb7b214c98395886e20e196, type: 2}
+  requireInternet: 0
   analyticsProviderInstaller: {fileID: 1210227671}
   playerControllerInstaller: {fileID: 194917959}
-  playerData:
-    userId: 
-    sessionCount: 0
-    cookies: []
+  setupFunnelHelper: {fileID: 1210227667}
   forceLocalPlayerData:
     value: 1
 --- !u!114 &284223193

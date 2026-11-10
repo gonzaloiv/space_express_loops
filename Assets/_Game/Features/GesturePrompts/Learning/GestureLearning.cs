@@ -17,14 +17,14 @@ namespace DigitalLove.Game.GesturePrompts
             playerData.AddCookie(new Cookie(Key(kind)));
 
         public static async void Save(
-            PlayerData playerData, GestureKind kind, UnityPlayerDataClient client)
+            PlayerData playerData, GestureKind kind, IDataProvider dataProvider)
         {
             if (!MarkLearned(playerData, kind))
                 return;
 
             try
             {
-                await client.Put(playerData);
+                await dataProvider.Put(playerData);
             }
             catch (Exception e)
             {
