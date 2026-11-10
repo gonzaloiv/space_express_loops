@@ -1,35 +1,31 @@
-using TMPro;
-
 namespace DigitalLove.Game.PuzzleSelection
 {
     internal class MapSelectionReadout
     {
-        private readonly MapSelectionLabel label;
         private readonly JobCardPanel card;
 
-        public int PreviewIndex => label.PreviewIndex;
+        public int PreviewIndex { get; private set; } = -1;
 
-        public MapSelectionReadout(TMP_Text label, JobCardPanel card)
+        public MapSelectionReadout(JobCardPanel card)
         {
-            this.label = new MapSelectionLabel(label);
             this.card = card;
         }
 
         public void Show(JobEntry entry)
         {
-            label.Show(entry);
+            PreviewIndex = entry.Index;
             card.Show(entry.Puzzle, entry.State != JobState.Locked);
         }
 
         public void ShowPreview(JobEntry entry)
         {
-            label.Show(entry);
+            PreviewIndex = entry.Index;
             card.ShowInstant(entry.Puzzle, entry.State != JobState.Locked);
         }
 
         public void Reset()
         {
-            label.Reset();
+            PreviewIndex = -1;
             card.Hide();
         }
     }

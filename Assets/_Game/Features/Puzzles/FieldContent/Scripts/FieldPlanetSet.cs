@@ -53,6 +53,14 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void SetSunLabelColor(Color color) => sunPlanet.SetLabelColor(color);
 
+        public void SetStateDim(float amount)
+        {
+            sources.ForEachFrom(0, view => view.SetStateDim(amount));
+            sunPlanet.SetStateDim(amount);
+            originPlanet.SetStateDim(amount);
+            destinationPlanet.SetStateDim(amount);
+        }
+
         private void ShowOnlySunLabel(string text, bool labelOnly)
         {
             sources.ForEachFrom(0, view => view.SetLabelsVisible(false));

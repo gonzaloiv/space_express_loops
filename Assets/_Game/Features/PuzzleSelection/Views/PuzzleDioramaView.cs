@@ -47,6 +47,10 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public void SetLabelColor(Color color) => SetSunLabelColor(color);
 
+        public float PreviewHalf => PreviewSize * 0.5f;
+
+        public void SetStateDim(float amount) => SetPlanetStateDim(amount);
+
         public override void Hide()
         {
             base.Hide();

@@ -36,7 +36,6 @@ namespace DigitalLove.Game.Flow
 
         private PuzzleMap map;
         private bool autoEntryUsed;
-        private float nextTickAt;
 
         public override void Enter()
         {
@@ -127,14 +126,7 @@ namespace DigitalLove.Game.Flow
 
         private void OnLineTyped() => Tick(typeCue);
 
-        private void Tick(SynthPatch patch)
-        {
-            if (Time.unscaledTime < nextTickAt)
-                return;
-
-            nextTickAt = Time.unscaledTime + tickCooldownSecs;
-            systemPlayer.PlayOver(patch);
-        }
+        private void Tick(SynthPatch patch) => systemPlayer.PlayTick(patch, tickCooldownSecs);
 
         private PuzzleData[] ReadLevels()
         {

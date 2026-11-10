@@ -4,6 +4,7 @@
     "references": [
         "DigitalLove.Global",
         "DigitalLove.Localization",
+        "Unity.Localization",
         "DigitalLove.Game.Nodes",
         "DigitalLove.Audio.Runtime",
         "DigitalLove.Game.SpaceShaping.Domain",

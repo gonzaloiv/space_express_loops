@@ -13,6 +13,8 @@ namespace DigitalLove.Game.Nodes
         private bool labelOnly;
         private bool hasVariant;
         private float radius = 0.1f;
+        private float fade;
+        private float stateDim;
         private int variantSeed;
         private string currentLabel = string.Empty;
         private Coroutine pulse;
@@ -90,6 +92,19 @@ namespace DigitalLove.Game.Nodes
 
         public void SetFade(float amount)
         {
+            fade = Mathf.Clamp01(amount);
+            ApplyTint();
+        }
+
+        public void SetStateDim(float amount)
+        {
+            stateDim = Mathf.Clamp01(amount);
+            ApplyTint();
+        }
+
+        private void ApplyTint()
+        {
+            float amount = Mathf.Max(fade, stateDim);
             nameLabel.SetFade(amount);
             if (labelOnly)
                 return;
@@ -110,6 +125,8 @@ namespace DigitalLove.Game.Nodes
             radius = 0.1f;
             hasVariant = false;
             labelOnly = false;
+            fade = 0f;
+            stateDim = 0f;
             currentLabel = string.Empty;
             nodeBody.Init(radius, 0);
             isVisible = false;

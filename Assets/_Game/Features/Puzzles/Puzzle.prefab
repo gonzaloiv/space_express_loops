@@ -234,6 +234,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4041331095251875251}
   - component: {fileID: 3896477236602263625}
+  - component: {fileID: 9100000000000650}
   m_Layer: 0
   m_Name: FieldMeter
   m_TagString: Untagged
@@ -276,13 +277,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Views::DigitalLove.Game.SpaceShaping.FieldEdgeMeter
   view: {fileID: 1214712785813484872}
-  leftArm: {fileID: 7605251702567792842}
-  rightArm: {fileID: 3453769779230569433}
-  ticks:
-  - {fileID: 5286008843054791738}
-  - {fileID: 2590445094679800201}
-  - {fileID: 1036470438108802607}
-  - {fileID: 3160326999265953665}
+  drawing: {fileID: 9100000000000650}
   accent: {fileID: 11400000, guid: c01d0000000000000000000000000001, type: 2}
   neutral: {fileID: 11400000, guid: c01d0000000000000000000000000007, type: 2}
   danger: {fileID: 11400000, guid: c01d0000000000000000000000000003, type: 2}
@@ -291,7 +286,6 @@ MonoBehaviour:
   entropyKey: field_meter_entropy
   overBudgetKey: field_meter_over_budget
   spentAlpha: 0.12
-  tickHeight: 0.012
   labelHeight: 0.012
   labelOutset: 0.008
 --- !u!1 &2256343264443593116
@@ -6580,14 +6574,14 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9100000000000600}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.0004, y: 0.0004, z: 0.0004}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9100000000000604}
   m_Father: {fileID: 4041331095251875251}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -6754,3 +6748,23 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &9100000000000650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1117798212696241134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7b8c9d0e1f23456789abcdef0123456, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Views::DigitalLove.Game.SpaceShaping.FieldEdgeMeterView
+  leftArm: {fileID: 7605251702567792842}
+  rightArm: {fileID: 3453769779230569433}
+  ticks:
+  - {fileID: 5286008843054791738}
+  - {fileID: 1036470438108802607}
+  - {fileID: 2590445094679800201}
+  - {fileID: 3160326999265953665}
+  tickHeight: 0.012

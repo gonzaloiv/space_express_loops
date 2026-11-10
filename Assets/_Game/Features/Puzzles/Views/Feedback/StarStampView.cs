@@ -37,6 +37,20 @@ namespace DigitalLove.Game.SpaceShaping
             return Mathf.Max(starStepSecs, 0f) * stars.Length;
         }
 
+        public void ShowStatic(int grade)
+        {
+            StopTyping();
+            gameObject.SetActive(true);
+            int filledCount = Mathf.Clamp(grade, 0, stars.Length);
+            for (int i = 0; i < stars.Length; i++)
+            {
+                stars[i].enabled = true;
+                stars[i].color = i < filledCount ? filled : empty;
+            }
+        }
+
+        public void Hide() => gameObject.SetActive(false);
+
         public void Stop()
         {
             StopTyping();

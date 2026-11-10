@@ -5,6 +5,7 @@
         "DigitalLove.Game.States.Setup",
         "DigitalLove.UI.Behaviours",
         "DigitalLove.Global",
+        "DigitalLove.Audio.Runtime",
         "DigitalLove.Casual.Levels",
         "DigitalLove.Game.Persistence",
         "DigitalLove.Game.PuzzleSelection",

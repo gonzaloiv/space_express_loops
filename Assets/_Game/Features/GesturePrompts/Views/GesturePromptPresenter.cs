@@ -1,3 +1,4 @@
+using System;
 using DigitalLove.DataAccess;
 using DigitalLove.Game.PuzzleSelection;
 using DigitalLove.Game.SpaceShaping;
@@ -10,7 +11,7 @@ namespace DigitalLove.Game.GesturePrompts
     // beside its subject. The panel owns the timer and closes itself; the recorder persists the learn.
     public class GesturePromptPresenter : MonoBehaviour
     {
-        private const int KindCount = 6;
+        private static readonly int KindCount = Enum.GetValues(typeof(GestureKind)).Length;
 
         [SerializeField] private GesturePromptPool pool;
         [SerializeField] private GesturePromptContent scale;
@@ -33,6 +34,8 @@ namespace DigitalLove.Game.GesturePrompts
         private bool spendPending;
         private bool spendRequested;
 
+        public bool SpendShown { get; private set; }
+
         // The meter's front-centre, where Spend and Stars point and sit.
         private Vector3 MeterFront =>
             shapingView.transform.TransformPoint(
@@ -44,6 +47,8 @@ namespace DigitalLove.Game.GesturePrompts
                 return;
 
             pool.Show(Content(kind), Position(kind), Subject(kind));
+            if (kind == GestureKind.Spend)
+                SpendShown = true;
         }
 
         // Spend waits for the first committed pinch, then for Scale to leave so the two never stack.
@@ -60,6 +65,7 @@ namespace DigitalLove.Game.GesturePrompts
         {
             spendRequested = false;
             spendPending = false;
+            SpendShown = false;
             pool.HideAll();
         }
 
@@ -90,19 +96,23 @@ namespace DigitalLove.Game.GesturePrompts
             switch (kind)
             {
                 case GestureKind.Scale:
-                    return shapingView.CubePosition + scaleOffset;
+                    return shapingView.CubePosition + FieldOffset(scaleOffset);
                 case GestureKind.Move:
-                    return shapingView.CubePosition + moveOffset;
+                    return shapingView.CubePosition + FieldOffset(moveOffset);
                 case GestureKind.Exit:
-                    return shapingView.CubePosition + exitOffset;
+                    return shapingView.CubePosition + FieldOffset(exitOffset);
                 case GestureKind.Spend:
-                    return MeterFront + spendOffset;
+                    return MeterFront + FieldOffset(spendOffset);
                 case GestureKind.Stars:
-                    return MeterFront + starsOffset;
+                    return MeterFront + FieldOffset(starsOffset);
                 default:
-                    return mapView.SelectionCubePosition + enterOffset;
+                    return mapView.SelectionCubePosition + MapOffset(enterOffset);
             }
         }
+
+        private Vector3 FieldOffset(Vector3 offset) => shapingView.transform.TransformVector(offset);
+
+        private Vector3 MapOffset(Vector3 offset) => mapView.transform.TransformVector(offset);
 
         private Vector3? Subject(GestureKind kind)
         {

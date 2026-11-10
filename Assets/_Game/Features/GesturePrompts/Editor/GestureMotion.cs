@@ -55,13 +55,13 @@ namespace DigitalLove.Game.GesturePrompts.Editor
             new("spend", "GesturePromptSpend", (grip, move) =>
                 new HandFrame(
                     grip, new Vector2(-Spread(move), 0f), new Vector2(Spread(move), 0f), CubeLift, 0.5f)
-                { Meter = new MeterFrame(0.05f + 0.7f * move, 0f) }),
+                    .WithMeter(new MeterFrame(0.05f + 0.7f * move, 0f))),
             new("stars", "GesturePromptStars", (_, move) =>
             {
                 float spend = 0.05f + 0.65f * move;
                 float star = Mathf.Lerp(1f, 0.28f, Mathf.InverseLerp(1f / 3f, 0.45f, spend));
                 return new HandFrame(0f, null, null, Vector2.zero, 0f)
-                    { Meter = new MeterFrame(spend, star) };
+                    .WithMeter(new MeterFrame(spend, star));
             }),
         };
 
@@ -92,6 +92,17 @@ namespace DigitalLove.Game.GesturePrompts.Editor
             Right = right;
             CubeCentre = cubeCentre;
             CubeSize = cubeSize;
+            Meter = null;
+        }
+
+        private HandFrame(HandFrame source, MeterFrame meter)
+        {
+            Grip = source.Grip;
+            Left = source.Left;
+            Right = source.Right;
+            CubeCentre = source.CubeCentre;
+            CubeSize = source.CubeSize;
+            Meter = meter;
         }
 
         public float Grip { get; }
@@ -104,7 +115,9 @@ namespace DigitalLove.Game.GesturePrompts.Editor
 
         public float CubeSize { get; }
 
-        public MeterFrame? Meter { get; init; }
+        public MeterFrame? Meter { get; }
+
+        public HandFrame WithMeter(MeterFrame meter) => new(this, meter);
 
         public static HandFrame TwoHands(float grip, float halfSpread, Vector2 cube, float cubeSize) =>
             new(grip, new Vector2(-halfSpread, 0f), new Vector2(halfSpread, 0f), cube, cubeSize);

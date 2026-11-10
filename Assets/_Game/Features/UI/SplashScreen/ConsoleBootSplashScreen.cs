@@ -46,6 +46,12 @@ namespace DigitalLove.Game.UI.SplashScreen
 
         [Inject] private MemoryDataClient memoryDataClient;
 
+        // For the boot's sound: the CRT power-on, characters typing, a setup row getting its OK, the cut.
+        public event Action Booted;
+        public event Action Typed;
+        public event Action StepConfirmed;
+        public event Action CuttingOff;
+
         private Vector3 fullScale;
         private bool open;
         private bool playRequested;
@@ -103,6 +109,7 @@ namespace DigitalLove.Game.UI.SplashScreen
 
         private IEnumerator Run()
         {
+            Booted?.Invoke();
             yield return CrtTransition.Boot(content, fullScale, bootSecs);
             yield return Type(header, int.MaxValue);
             yield return TypeChecklist();
@@ -124,6 +131,8 @@ namespace DigitalLove.Game.UI.SplashScreen
 
                 (TMP_Text line, int count) = checklist.Next();
                 yield return Type(line, count);
+                if (line.maxVisibleCharacters >= line.textInfo.characterCount)
+                    StepConfirmed?.Invoke();
             }
         }
 
@@ -152,11 +161,14 @@ namespace DigitalLove.Game.UI.SplashScreen
                 current = line;
             }
 
-            yield return TerminalTypewriter.RevealTo(line, count, charsPerSec);
+            yield return TerminalTypewriter.RevealTo(line, count, charsPerSec, OnTyped);
         }
+
+        private void OnTyped() => Typed?.Invoke();
 
         private IEnumerator CutOff()
         {
+            CuttingOff?.Invoke();
             yield return CrtTransition.CutOff(content, fullScale, cutOffSecs);
             content.gameObject.SetActive(false);
             content.localScale = fullScale;

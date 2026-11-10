@@ -110,6 +110,44 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
             Assert.AreEqual(2, map[0].Stars);
         }
 
+        [Test]
+        public void ChapterStars_CountsOnlyGradedJobs()
+        {
+            PuzzleData[] levels = Levels(4);
+            levels[0].noGrade = true;
+            levels[1].noGrade = true;
+            PuzzleMap map = PuzzleMap.FromLevels(
+                levels,
+                RunProgress.FromSolved(4, 2, new[] { true, true, false, false }),
+                PuzzleMapLayout.Galaxy(4));
+
+            ChapterStars stars = ChapterStars.From(map);
+
+            Assert.AreEqual(2, stars.GradedJobs);
+            Assert.AreEqual(6, stars.Possible);
+            Assert.AreEqual(0, stars.Earned);
+            Assert.AreEqual(0f, stars.Share);
+        }
+
+        [Test]
+        public void ChapterStars_SumsEarnedAndClampsEachJob()
+        {
+            PuzzleData[] levels = Levels(3);
+            levels[0].noGrade = true;
+            PuzzleMap map = PuzzleMap.FromLevels(
+                levels,
+                RunProgress.FromSolved(
+                    3, 1, new[] { true, true, false }, new[] { 0, 5, 0 }),
+                PuzzleMapLayout.Galaxy(3));
+
+            ChapterStars stars = ChapterStars.From(map);
+
+            Assert.AreEqual(2, stars.GradedJobs);
+            Assert.AreEqual(6, stars.Possible);
+            Assert.AreEqual(3, stars.Earned);
+            Assert.AreEqual(0.5f, stars.Share, 0.0001f);
+        }
+
         private PuzzleData[] Levels(int count)
         {
             PuzzleData[] levels = new PuzzleData[count];

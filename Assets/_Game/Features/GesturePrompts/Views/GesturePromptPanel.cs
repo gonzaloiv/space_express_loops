@@ -40,11 +40,7 @@ namespace DigitalLove.Game.GesturePrompts
             gameObject.SetActive(true);
         }
 
-        public void Follow(Vector3? leaderSubject)
-        {
-            subject = leaderSubject;
-            LayoutLeader();
-        }
+        public void Follow(Vector3? leaderSubject) => subject = leaderSubject;
 
         public void Hide()
         {

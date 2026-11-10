@@ -2,7 +2,6 @@ using System;
 using DigitalLove.Game.SpaceShaping;
 using DigitalLove.Game.SpaceShaping.Cube;
 using DigitalLove.Global;
-using TMPro;
 using UnityEngine;
 
 namespace DigitalLove.Game.PuzzleSelection
@@ -18,7 +17,7 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField] private CubeView cube;
         [Tooltip("Edge of the selection cube, in map units.")]
         [SerializeField, Min(0.01f)] private float cubeSize = 0.119f;
-        [SerializeField] private TMP_Text selectionLabel;
+        [SerializeField] private MapStarMeter starMeter;
         [SerializeField] private JobCardPanel contractCard;
         [SerializeField] private float viewRadius = 0.5f;
         [Tooltip("Cube scale at which a pinch commits to entering the job.")]
@@ -67,7 +66,7 @@ namespace DigitalLove.Game.PuzzleSelection
             pose.ShowAll = showAll;
             tint = new MapNodeTint(
                 selectionCubeColors, lockedBrightness, pulseSecs, pulseDepth);
-            readout = new MapSelectionReadout(selectionLabel, contractCard);
+            readout = new MapSelectionReadout(contractCard);
             fieldView = new MapFieldRenderer(selectedSlot, fields, tint, readout, showFrames);
             enter = new MapEnter(selectedSlot, enterSecs, enterScale);
         }
@@ -103,6 +102,7 @@ namespace DigitalLove.Game.PuzzleSelection
             pose.ShowAll = showAll;
             tint.Reset();
             fieldView.Render(map);
+            starMeter.Show(ChapterStars.From(map));
             pose.SetPose(Focus);
             mapCube.Show(SunFocus, map.CanEnter);
             lastCubePosition = mapCube.Position;

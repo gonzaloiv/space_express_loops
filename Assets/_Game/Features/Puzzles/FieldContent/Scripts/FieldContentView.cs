@@ -84,6 +84,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         protected void SetSunLabelColor(Color color) => planets.SetSunLabelColor(color);
 
+        protected void SetPlanetStateDim(float amount) => planets.SetStateDim(amount);
+
         protected virtual void Fit(SpaceShapingSession session)
         {
             BoundsBuilder builder = new();

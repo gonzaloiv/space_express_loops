@@ -116,7 +116,7 @@ namespace DigitalLove.Game.Flow
 
         private void EndRun(bool solved)
         {
-            if (!puzzle.noFail)
+            if (!puzzle.noFail && prompts.SpendShown)
                 promptSource.ReportSpend();
             memoryDataClient.Put(new PuzzleRunResult(solved, puzzleController.Grade));
             parent.SetCurrentState(completeState.RouteId);

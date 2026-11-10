@@ -2,6 +2,8 @@ using DigitalLove.Global;
 using DigitalLove.Localization;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 namespace DigitalLove.Game.SpaceShaping
 {
@@ -10,14 +12,8 @@ namespace DigitalLove.Game.SpaceShaping
     // arms and ticks are authored line renderers; this only sets their points and colours.
     public class FieldEdgeMeter : MonoBehaviour
     {
-        // 96 segments per arm, so both corners (s = 0.25 and 0.75) land on a vertex.
-        private const int Points = 97;
-
         [SerializeField] private SpaceShapingView view;
-        [SerializeField] private LineRenderer leftArm;
-        [SerializeField] private LineRenderer rightArm;
-        [Tooltip("Left then right tick at each star band: 3★ left, 3★ right, 2★ left, 2★ right.")]
-        [SerializeField] private LineRenderer[] ticks;
+        [SerializeField] private FieldEdgeMeterView drawing;
         [SerializeField] private ColorValue accent;
         [SerializeField] private ColorValue neutral;
         [SerializeField] private ColorValue danger;
@@ -26,11 +22,9 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private string entropyKey = "field_meter_entropy";
         [SerializeField] private string overBudgetKey = "field_meter_over_budget";
         [SerializeField, Range(0f, 1f)] private float spentAlpha = 0.12f;
-        [SerializeField, Min(0f)] private float tickHeight = 0.012f;
         [SerializeField, Min(0f)] private float labelHeight = 0.012f;
         [SerializeField, Min(0f)] private float labelOutset = 0.008f;
 
-        private readonly Vector3[] points = new Vector3[Points];
         private readonly GradientColorKey[] colorKeys = new GradientColorKey[4];
         private readonly GradientAlphaKey[] alphaKeys = new GradientAlphaKey[4];
         private Gradient gradient;
@@ -43,47 +37,38 @@ namespace DigitalLove.Game.SpaceShaping
         private void OnEnable()
         {
             view.ReadoutChanged += Render;
+            LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
             laidHalf = -1f;
             Render(view.Readout);
         }
 
-        private void OnDisable() => view.ReadoutChanged -= Render;
+        private void OnDisable()
+        {
+            view.ReadoutChanged -= Render;
+            LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
+        }
+
+        private void OnLocaleChanged(Locale locale) => RefreshLabel();
+
+        private void RefreshLabel()
+        {
+            if (!labelOverBudget.HasValue)
+                return;
+
+            bool overBudget = labelOverBudget.Value;
+            labelOverBudget = null;
+            SetLabel(overBudget);
+        }
 
         private void LateUpdate()
         {
-            if (view.FieldHalf != laidHalf || view.FieldCentre != laidCentre)
-                Layout(view.FieldCentre, view.FieldHalf);
-        }
+            if (view.FieldHalf == laidHalf && view.FieldCentre == laidCentre)
+                return;
 
-        private void Layout(Vector3 centre, float half)
-        {
-            laidCentre = centre;
-            laidHalf = half;
-            transform.localPosition = centre;
-            labelRoot.localPosition = new Vector3(0f, -half + labelHeight, -half - labelOutset);
-            LayArm(leftArm, -1f, half);
-            LayArm(rightArm, 1f, half);
-            LayTick(ticks[0], PuzzleGrade.ThreeStarUse, -1f, half);
-            LayTick(ticks[1], PuzzleGrade.ThreeStarUse, 1f, half);
-            LayTick(ticks[2], PuzzleGrade.TwoStarUse, -1f, half);
-            LayTick(ticks[3], PuzzleGrade.TwoStarUse, 1f, half);
-        }
-
-        private void LayArm(LineRenderer arm, float side, float half)
-        {
-            for (int i = 0; i < Points; i++)
-                points[i] = FieldEdgePath.Point(i / (Points - 1f), side, half);
-
-            arm.positionCount = Points;
-            arm.SetPositions(points);
-        }
-
-        private void LayTick(LineRenderer tick, float s, float side, float half)
-        {
-            Vector3 foot = FieldEdgePath.Point(s, side, half);
-            tick.positionCount = 2;
-            tick.SetPosition(0, foot);
-            tick.SetPosition(1, foot + Vector3.up * tickHeight);
+            laidCentre = view.FieldCentre;
+            laidHalf = view.FieldHalf;
+            drawing.Layout(laidCentre, laidHalf, 2);
+            labelRoot.localPosition = new Vector3(0f, -laidHalf + labelHeight, -laidHalf - labelOutset);
         }
 
         // Along each arm: spent (dim), the last edit, the in-flight preview, then what remains.
@@ -97,8 +82,7 @@ namespace DigitalLove.Game.SpaceShaping
             SetKey(2, preview, bar.Overflow ? danger.value : accent.value, 1f);
             SetKey(3, 1f, accent.value, 1f);
             Gradient.SetKeys(colorKeys, alphaKeys);
-            leftArm.colorGradient = Gradient;
-            rightArm.colorGradient = Gradient;
+            drawing.SetGradient(Gradient);
             SetLabel(bar.Overflow);
         }
 

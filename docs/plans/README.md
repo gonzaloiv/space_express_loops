@@ -59,14 +59,18 @@ shape is in [chapters](../design/chapters.md); the demo is the store's own optio
 
 Active work.
 
-- [Two-ship test](in-progress/two-ship-test.md) — bake a two-ship level with the sun kept out of ship
-  runs and play it before deciding on a two-ship job 8 for v1.
-- [The field meter](in-progress/field-meter.md) — entropy on the grid's base edge (in); next prompts that
-  teach it, the same square under the map for the chapter's stars, then one panel bank.
+- [Two-ship test](in-progress/two-ship-test.md) — the first two-ship level played well; next a few more
+  (separate, fan-out, converge) to decide on a two-ship job 8 for v1.
+- [Transit routes](in-progress/transit-routes.md) — one colour per route in every job, the outcome on the
+  line's end, and the cube's keep-out shown and covering every ship.
+- [The field meter](in-progress/field-meter.md) — the bar and its prompts are in; next the same square
+  under the map for the chapter's stars.
 
 ## Next
 
-Nothing queued.
+- [The panel bank](backlog/panel-bank.md) — the console windows, smaller, hang from one bank behind the
+  field, built from the grid's lines. U1 (smaller windows) can start now; U2 waits on the field meter's
+  map square.
 
 ## Later
 
@@ -85,8 +89,8 @@ hologram look, TTS companion (deferred), feel polish, playable map field.
 
 Loose ends that still need a home. Close one by linking the plan that finishes it.
 
-- **Gesture prompt icons — headset read.** Scale, Enter, Move and Exit (new 2026-11-09, shown from
-  job 2) now play 12-frame line-art loops rendered from Meta's own hand mesh by
+- **Gesture prompt icons — headset read.** Scale, Enter, Move, Exit, Spend and Stars (the last two new
+  2026-11-10, with the field meter) play 12-frame line-art loops rendered from Meta's own hand mesh by
   `Tools/Our Space/Render Gesture Prompt Art` (`GesturePrompts/Editor`); re-run it after tuning a motion.
   Still open: read them in the headset (size, speed, legibility at arm's length).
 - **Run authoring.** Jobs 1–7 are baked into Chapter 01 (seven jobs); job 8 is the deferred Mixed

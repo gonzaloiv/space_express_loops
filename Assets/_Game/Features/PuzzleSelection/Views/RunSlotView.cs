@@ -1,6 +1,5 @@
 using System.Collections;
 using DigitalLove.Game.SpaceShaping;
-using TMPro;
 using UnityEngine;
 
 namespace DigitalLove.Game.PuzzleSelection
@@ -9,14 +8,21 @@ namespace DigitalLove.Game.PuzzleSelection
     {
         [SerializeField] private Transform visualRoot;
         [SerializeField] private PuzzleDioramaView diorama;
-        [SerializeField] private TMP_Text starsLabel;
+        [SerializeField] private StarStampView stars;
         [SerializeField, Range(0f, 0.1f)] private float idleBreathAmplitude = 0.02f;
         [SerializeField, Min(0f)] private float idleBreathSpeed = 1.2f;
+        [SerializeField, Min(0f)] private float refusalSecs = 0.26f;
+        [SerializeField, Range(0f, 1f)] private float lockedDim = 0.65f;
 
-        public string SunName => diorama.SunName;
         // The sun in the map's space (this slot's parent).
         public Vector3 SunMapPosition =>
             transform.parent.InverseTransformPoint(diorama.SunWorldPosition);
+        public Vector3 FieldCentreMap =>
+            transform.parent.InverseTransformPoint(diorama.transform.position);
+        public float FieldHalfMap =>
+            diorama.PreviewHalf * diorama.transform.lossyScale.x / transform.parent.lossyScale.x;
+        public Quaternion FieldRotationMap =>
+            Quaternion.Inverse(transform.parent.rotation) * diorama.transform.rotation;
         public int MapIndex { get; private set; } = -1;
 
         public void SetMapFade(Vector3 focus, float near, float far)
@@ -36,7 +42,7 @@ namespace DigitalLove.Game.PuzzleSelection
         private void ApplyCulled(bool value)
         {
             culled = value;
-            starsLabel.gameObject.SetActive(hasStars && !culled);
+            stars.gameObject.SetActive(hasStars && !culled);
         }
 
         private Coroutine refusalRoutine;
@@ -48,6 +54,8 @@ namespace DigitalLove.Game.PuzzleSelection
         private float idlePhase;
         private bool culled;
         private bool hasStars;
+        private bool breathe;
+        private int lastStars;
 
         private void Awake()
         {
@@ -59,8 +67,11 @@ namespace DigitalLove.Game.PuzzleSelection
 
         private void Update()
         {
-            if (idleBreathAmplitude <= 0f)
+            if (!breathe || idleBreathAmplitude <= 0f)
+            {
+                diorama.transform.localScale = Vector3.one;
                 return;
+            }
 
             idlePhase += Time.unscaledDeltaTime * idleBreathSpeed;
             float breath = 1f + Mathf.Sin(idlePhase) * idleBreathAmplitude;
@@ -80,15 +91,22 @@ namespace DigitalLove.Game.PuzzleSelection
                 Show(entry.Index, entry.Puzzle);
             }
 
-            diorama.SetCubesVisible(showFrames);
-            ShowMapState(entry, tint);
+            ShowMapState(entry, tint, showFrames);
         }
 
-        private void ShowMapState(JobEntry entry, Color tint)
+        private void ShowMapState(JobEntry entry, Color tint, bool showFrames)
         {
             hasStars = entry.ShowsStars;
-            starsLabel.text = hasStars ? new string('★', entry.Stars) : string.Empty;
+            lastStars = entry.Stars;
+            breathe = entry.State == JobState.Current;
+            if (hasStars)
+                stars.ShowStatic(lastStars);
+            else
+                stars.Hide();
+
             ApplyCulled(culled);
+            diorama.SetCubesVisible(showFrames || entry.State == JobState.Locked);
+            diorama.SetStateDim(entry.State == JobState.Locked ? lockedDim : 0f);
             diorama.SetLabelColor(tint);
         }
 
@@ -120,8 +138,10 @@ namespace DigitalLove.Game.PuzzleSelection
             MapIndex = -1;
             renderedPuzzle = null;
             hasStars = false;
+            lastStars = 0;
+            breathe = false;
             culled = false;
-            starsLabel.gameObject.SetActive(false);
+            stars.Hide();
             ResetVisual();
             gameObject.SetActive(false);
         }
@@ -164,8 +184,8 @@ namespace DigitalLove.Game.PuzzleSelection
         {
             Vector3 startScale = visualRoot.localScale;
             Vector3 startPosition = visualRoot.localPosition;
+            float duration = Mathf.Max(refusalSecs, 0.0001f);
             float elapsed = 0f;
-            const float duration = 0.26f;
             while (elapsed < duration)
             {
                 elapsed += Time.unscaledDeltaTime;
@@ -181,6 +201,5 @@ namespace DigitalLove.Game.PuzzleSelection
             visualRoot.localPosition = startPosition;
             refusalRoutine = null;
         }
-
     }
 }
