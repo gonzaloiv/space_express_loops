@@ -164,7 +164,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             PreparePuzzle();
             run = new PuzzleRun(BuildSetup());
-            view.SetPuzzle(currentPuzzleData);
+            view.StopStamp();
             view.SoftResetShips(run.Session);
             PlayStartCheck();
             view.ShowBaseline(run.Session);

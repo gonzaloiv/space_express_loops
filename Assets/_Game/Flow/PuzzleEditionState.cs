@@ -37,6 +37,7 @@ namespace DigitalLove.Game.Flow
 
         private ScaleOutGesture scaleOut;
         private OneHandRotationGesture rotation;
+        private PuzzleData puzzle;
         private float nextRefusalCueAt;
 
         public override void Enter()
@@ -49,7 +50,8 @@ namespace DigitalLove.Game.Flow
             puzzleController.Failed += OnFailed;
             puzzleController.FlightCrashed += OnFlightCrashed;
             puzzleController.Refused += OnRefused;
-            PuzzleData puzzle = memoryDataClient.Get<PuzzleData>();
+            puzzleController.PinchCommitted += OnPinchCommitted;
+            puzzle = memoryDataClient.Get<PuzzleData>();
             ShowPrompts(puzzle);
             ShowContract(puzzle);
         }
@@ -61,10 +63,12 @@ namespace DigitalLove.Game.Flow
             puzzleController.Failed -= OnFailed;
             puzzleController.FlightCrashed -= OnFlightCrashed;
             puzzleController.Refused -= OnRefused;
+            puzzleController.PinchCommitted -= OnPinchCommitted;
             scaleOut?.Reset();
             rotation?.Reset();
             prompts.HideAll();
             contractCard.Hide();
+            puzzle = null;
         }
 
         private void ShowPrompts(PuzzleData puzzle)
@@ -74,6 +78,8 @@ namespace DigitalLove.Game.Flow
                 prompts.Show(GestureKind.Move);
             if (!puzzle.noIntro)
                 prompts.Show(GestureKind.Exit);
+            if (!puzzle.noGrade)
+                prompts.Show(GestureKind.Stars);
         }
 
         private void ShowContract(PuzzleData puzzle)
@@ -82,9 +88,20 @@ namespace DigitalLove.Game.Flow
                 contractCard.ShowInstant(puzzle);
         }
 
-        private void OnSolved() => EndRun(true);
+        private void OnSolved()
+        {
+            if (!puzzle.noGrade)
+                promptSource.ReportStars();
+            EndRun(true);
+        }
 
         private void OnFailed() => EndRun(false);
+
+        private void OnPinchCommitted()
+        {
+            if (!puzzle.noFail)
+                prompts.RequestSpend();
+        }
 
         private void OnFlightCrashed() => cuePlayer.Play(crashCue);
 
@@ -99,6 +116,8 @@ namespace DigitalLove.Game.Flow
 
         private void EndRun(bool solved)
         {
+            if (!puzzle.noFail)
+                promptSource.ReportSpend();
             memoryDataClient.Put(new PuzzleRunResult(solved, puzzleController.Grade));
             parent.SetCurrentState(completeState.RouteId);
         }

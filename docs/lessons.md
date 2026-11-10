@@ -4,10 +4,19 @@ Short post-mortems, written when a plan closes (rule in [AGENTS.md](../AGENTS.md
 morning). Newest first. Each entry: what worked, what surprised us, the rule for next time. One idea per
 bullet; the code and tests are the record of what was built.
 
-An entry marked *(in progress)* was written while its plan was still open. Finish it when the plan
-closes.
+## 2026-11-10 — Offline
 
-## 2026-11-10 — Soundscape *(in progress)*
+- **Surprised:** the plan first missed `MemoryDataClient`, the in-session copy every caller reads.
+  Only four places saved; routing all reads through the new provider would have been a refactor
+  nobody needed.
+- **Surprised:** analytics assumed Unity Services was up. Once the boot stopped waiting for the
+  services, every early funnel event could throw and break the setup chain.
+- **Worked:** one rule for a cloud copy that arrives late: swap it in at the next return to the map,
+  and stop mirroring until then, so a local save cannot overwrite richer cloud progress.
+- **Next time:** before changing a data path, list its readers and its writers separately; they rarely
+  need the same change.
+
+## 2026-11-10 — Soundscape
 
 - **Worked:** one owner per beat. Job entry used to stack a sweep, a glitch blip, a panel blip and
   prompt blips; giving the moment to `PuzzleStartState` alone made it read as one sound.
@@ -20,7 +29,7 @@ closes.
 - **Next time:** measure the first continuous voice on the Quest 3S before adding the second. Each
   synth voice is per-sample C# plus a Meta XR source.
 
-## 2026-11-10 — The first 30 seconds *(in progress)*
+## 2026-11-10 — The first 30 seconds
 
 - **Worked:** the boot is the loader. Showing each setup step as it runs (`LINK`, `SEAT`, `LEDGER`)
   turns the wait into content, and a slow step is visible instead of a frozen screen.
@@ -34,7 +43,7 @@ closes.
 - **Next time:** treat launch as the first moment of play. The judge's clock starts at the app icon,
   not at job 1.
 
-## 2026-11-10 — Pause *(in progress)*
+## 2026-11-10 — Pause
 
 - **Surprised:** `Time.timeScale = 0` stops much less than it looks. Input, the map's pinch-to-enter,
   the puzzle preview and the TTS chain all run on unscaled time and kept going behind the menu.

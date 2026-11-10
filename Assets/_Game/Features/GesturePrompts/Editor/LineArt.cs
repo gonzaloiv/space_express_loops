@@ -2,24 +2,54 @@ using UnityEngine;
 
 namespace DigitalLove.Game.GesturePrompts.Editor
 {
-    // Turns the hand and cube masks into the prompt's line art: a thick outline around the hands,
-    // a faint fill inside them, the cube's bars dimmer behind. White on transparent, downsampled
-    // once for smooth edges.
+    // Everything the rig can see in one frame. Null masks are simply absent.
+    public readonly struct PromptMasks
+    {
+        public PromptMasks(
+            bool[] hands, bool[] cube, bool[] meter = null, bool[] star = null, float starAlpha = 1f)
+        {
+            Hands = hands;
+            Cube = cube;
+            Meter = meter;
+            Star = star;
+            StarAlpha = starAlpha;
+        }
+
+        public bool[] Hands { get; }
+
+        public bool[] Cube { get; }
+
+        public bool[] Meter { get; }
+
+        public bool[] Star { get; }
+
+        public float StarAlpha { get; }
+    }
+
+    // Turns the hand, cube and meter masks into the prompt's line art: a thick outline around the
+    // hands, a faint fill inside them, the cube's bars dimmer behind, and the meter brighter still.
     public static class LineArt
     {
         private const float Fill = 0.12f;
         private const float CubeAlpha = 0.5f;
+        private const float MeterAlpha = 0.8f;
 
-        public static Color32[] Compose(bool[] hands, bool[] cube, int size, int line, int downsample)
+        public static Color32[] Compose(PromptMasks masks, int size, int line, int downsample)
         {
-            bool[] inner = Erode(hands, size, line);
-            float[] alpha = new float[hands.Length];
+            bool[] inner = Erode(masks.Hands, size, line);
+            float[] alpha = new float[masks.Hands.Length];
             for (int i = 0; i < alpha.Length; i++)
             {
-                if (hands[i])
-                    alpha[i] = inner[i] ? Fill : 1f;
-                else if (cube[i])
-                    alpha[i] = CubeAlpha;
+                float value = 0f;
+                if (masks.Cube != null && masks.Cube[i])
+                    value = CubeAlpha;
+                if (masks.Star != null && masks.Star[i])
+                    value = Mathf.Max(value, masks.StarAlpha);
+                if (masks.Meter != null && masks.Meter[i])
+                    value = Mathf.Max(value, MeterAlpha);
+                if (masks.Hands[i])
+                    value = inner[i] ? Fill : 1f;
+                alpha[i] = value;
             }
 
             return Downsample(alpha, size, downsample);

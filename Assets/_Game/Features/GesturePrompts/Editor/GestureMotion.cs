@@ -52,7 +52,35 @@ namespace DigitalLove.Game.GesturePrompts.Editor
                 HandFrame.OneHand(grip, new Vector2(-0.5f + 0.45f * move, CubeLift.y), 0.55f)),
             new("exit", "GesturePromptExit", (grip, move) =>
                 HandFrame.TwoHands(grip, 0.38f - 0.2f * move, Vector2.zero, 0f)),
+            new("spend", "GesturePromptSpend", (grip, move) =>
+                new HandFrame(
+                    grip, new Vector2(-Spread(move), 0f), new Vector2(Spread(move), 0f), CubeLift, 0.5f)
+                { Meter = new MeterFrame(0.05f + 0.7f * move, 0f) }),
+            new("stars", "GesturePromptStars", (_, move) =>
+            {
+                float spend = 0.05f + 0.65f * move;
+                float star = Mathf.Lerp(1f, 0.28f, Mathf.InverseLerp(1f / 3f, 0.45f, spend));
+                return new HandFrame(0f, null, null, Vector2.zero, 0f)
+                    { Meter = new MeterFrame(spend, star) };
+            }),
         };
+
+        private static float Spread(float move) => 0.25f + 0.15f * move;
+    }
+
+    // The base square under the cube: how much has been spent from the front, and how bright the
+    // star above it reads (0 keeps it out of the art entirely).
+    public readonly struct MeterFrame
+    {
+        public MeterFrame(float spend, float starAlpha)
+        {
+            Spend = Mathf.Clamp01(spend);
+            StarAlpha = Mathf.Clamp01(starAlpha);
+        }
+
+        public float Spend { get; }
+
+        public float StarAlpha { get; }
     }
 
     public readonly struct HandFrame
@@ -75,6 +103,8 @@ namespace DigitalLove.Game.GesturePrompts.Editor
         public Vector2 CubeCentre { get; }
 
         public float CubeSize { get; }
+
+        public MeterFrame? Meter { get; init; }
 
         public static HandFrame TwoHands(float grip, float halfSpread, Vector2 cube, float cubeSize) =>
             new(grip, new Vector2(-halfSpread, 0f), new Vector2(halfSpread, 0f), cube, cubeSize);

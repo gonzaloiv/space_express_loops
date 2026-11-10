@@ -82,6 +82,22 @@ MonoBehaviour:
     m_Localized: '> JUNTA DOS PELLIZCOS PARA SALIR'
     m_Metadata:
       m_Items: []
+  - m_Id: 73233989640048641
+    m_Localized: "> CADA PELLIZCO GASTA ENTROP\xCDA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73233989640048642
+    m_Localized: "> GASTA MENOS, GANA M\xC1S ESTRELLAS"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73233989640048643
+    m_Localized: "ENTROP\xCDA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73233989640048644
+    m_Localized: SOBRE PRESUPUESTO
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

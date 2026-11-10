@@ -88,21 +88,20 @@ namespace DigitalLove.Game.SpaceShaping
 
         public PuzzleReadout Readout { get; private set; }
 
-        public PuzzleData CurrentPuzzle { get; private set; }
-
         public SpaceZone Zone => spawner.Zones.Zone;
 
         public bool IsScaling => spawner.Zones.IsScaling;
 
         public Vector3 CubePosition => spawner.Zones.ActivePosition;
 
+        // The grid's frame from the last render, in the field's local space.
+        public Vector3 FieldCentre { get; private set; }
+
+        public float FieldHalf { get; private set; }
+
         public void ApplyFromSession(SpaceShapingSession session) => spawner.Planets.Apply(session);
 
-        public void SetPuzzle(PuzzleData puzzle)
-        {
-            CurrentPuzzle = puzzle;
-            stamp.Stop();
-        }
+        public void StopStamp() => stamp.Stop();
 
         public void ShowReadout(PuzzleReadout readout)
         {
@@ -138,6 +137,8 @@ namespace DigitalLove.Game.SpaceShaping
         public void Render(SpaceShapingSession session)
         {
             FieldFrame.Measure(session, out Vector3 centre, out float half);
+            FieldCentre = centre;
+            FieldHalf = half;
             LatticeWarp warp = new(session.Zones);
             ContentFade fade = new(session, half * fadeNear, half * fadeFar);
             mesh.Render(warp.Warp, fade.Alpha, session.Zones.StrongestScaleOffset(), centre, half);

@@ -82,6 +82,22 @@ MonoBehaviour:
     m_Localized: '> TWO PINCHES TOGETHER TO EXIT'
     m_Metadata:
       m_Items: []
+  - m_Id: 73233989640048641
+    m_Localized: '> EACH PINCH SPENDS ENTROPY'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73233989640048642
+    m_Localized: '> SPEND LESS, EARN MORE STARS'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73233989640048643
+    m_Localized: ENTROPY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73233989640048644
+    m_Localized: OVER BUDGET
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

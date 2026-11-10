@@ -13,10 +13,13 @@ namespace DigitalLove.Game.GesturePrompts
         [SerializeField] private GesturePromptSource source;
         [SerializeField] private SpriteRenderer art;
         [SerializeField] private TMP_Text caption;
+        [SerializeField] private LineRenderer leaderLine;
+        [SerializeField] private Vector3 lineStart = new(0f, -2.56f, 0f);
         [SerializeField, Min(0f)] private float bootSecs = 0.18f;
         [SerializeField, Min(0f)] private float closeSecs = 0.18f;
 
         private Vector3? fullScale;
+        private Vector3? subject;
         private GesturePromptContent content;
         private float closeAt;
         private float nextFrameAt;
@@ -29,11 +32,18 @@ namespace DigitalLove.Game.GesturePrompts
 
         public GestureKind? Kind => content != null ? content.Kind : null;
 
-        public void Show(GesturePromptContent value, Vector3 position)
+        public void Show(GesturePromptContent value, Vector3 position, Vector3? leaderSubject)
         {
             content = value;
             transform.position = position;
+            Follow(leaderSubject);
             gameObject.SetActive(true);
+        }
+
+        public void Follow(Vector3? leaderSubject)
+        {
+            subject = leaderSubject;
+            LayoutLeader();
         }
 
         public void Hide()
@@ -41,6 +51,8 @@ namespace DigitalLove.Game.GesturePrompts
             StopAllCoroutines();
             closing = false;
             content = null;
+            subject = null;
+            leaderLine.enabled = false;
             transform.localScale = FullScale;
             gameObject.SetActive(false);
         }
@@ -77,6 +89,26 @@ namespace DigitalLove.Game.GesturePrompts
         }
 
         private void OnDisable() => source.Completed -= OnGestureCompleted;
+
+        private void LateUpdate() => LayoutLeader();
+
+        // The line leaves the panel's bottom edge and finds the subject wherever it is this frame.
+        private void LayoutLeader()
+        {
+            if (content == null || !subject.HasValue)
+            {
+                leaderLine.enabled = false;
+                return;
+            }
+
+            leaderLine.enabled = true;
+            leaderLine.positionCount = 2;
+            leaderLine.SetPosition(0, ToLine(transform.TransformPoint(lineStart)));
+            leaderLine.SetPosition(1, ToLine(subject.Value));
+        }
+
+        private Vector3 ToLine(Vector3 worldPoint) =>
+            leaderLine.transform.InverseTransformPoint(worldPoint);
 
         private void Update()
         {

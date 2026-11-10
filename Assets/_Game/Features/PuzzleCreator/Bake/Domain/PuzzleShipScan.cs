@@ -81,7 +81,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             {
                 for (int j = 0; j < count; j++)
                 {
-                    if (i == j)
+                    if (!IsRun(i, j))
                         continue;
 
                     float capture = puzzle.sources[j].scale * 0.5f;
@@ -114,7 +114,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             FieldView edited, PuzzleZone zone, int i, int j, bool timeDilation,
             List<PuzzleShipRescue> rescued)
         {
-            if (i == j || startArrives[i * count + j])
+            if (!IsRun(i, j) || startArrives[i * count + j])
                 return;
 
             Vector3 origin = puzzle.sources[i].home;
@@ -131,6 +131,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (margin >= clearance)
                 rescued.Add(new PuzzleShipRescue(origin, destination, margin));
         }
+
+        // A ship flies between two different planets; the sun (the centre-only source) is never an end.
+        private bool IsRun(int i, int j) =>
+            i != j && !puzzle.sources[i].centreOnly && !puzzle.sources[j].centreOnly;
 
         private TrajectoryResult Run(FieldView view, int i, int j, float capture, bool timeDilation) =>
             Run(view, puzzle.sources[i].home, puzzle.sources[j].home, capture, timeDilation);

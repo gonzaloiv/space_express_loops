@@ -79,6 +79,22 @@ MonoBehaviour:
     m_Key: gesture_prompt_exit
     m_Metadata:
       m_Items: []
+  - m_Id: 73233989640048641
+    m_Key: gesture_prompt_spend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73233989640048642
+    m_Key: gesture_prompt_stars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73233989640048643
+    m_Key: field_meter_entropy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73233989640048644
+    m_Key: field_meter_over_budget
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

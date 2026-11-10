@@ -7,34 +7,61 @@ using UnityEngine;
 namespace DigitalLove.Game.GesturePrompts
 {
     // Decides when a prompt is earned: shows it only while the gesture is unlearned and keeps it
-    // beside its cube. The panel owns the timer and closes itself; the recorder persists the learn.
+    // beside its subject. The panel owns the timer and closes itself; the recorder persists the learn.
     public class GesturePromptPresenter : MonoBehaviour
     {
-        private const int KindCount = 4;
+        private const int KindCount = 6;
 
         [SerializeField] private GesturePromptPool pool;
         [SerializeField] private GesturePromptContent scale;
         [SerializeField] private GesturePromptContent enter;
         [SerializeField] private GesturePromptContent move;
         [SerializeField] private GesturePromptContent exit;
+        [SerializeField] private GesturePromptContent spend;
+        [SerializeField] private GesturePromptContent stars;
         [SerializeField] private SpaceShapingView shapingView;
         [SerializeField] private PuzzleMapView mapView;
         [SerializeField] private Vector3 scaleOffset = new(0.12f, 0.12f, 0f);
         [SerializeField] private Vector3 moveOffset = new(-0.12f, 0.12f, 0f);
         [SerializeField] private Vector3 enterOffset = new(0.12f, 0.12f, 0f);
         [SerializeField] private Vector3 exitOffset = new(0f, 0.22f, 0f);
+        [SerializeField] private Vector3 spendOffset = new(0.18f, 0.04f, 0f);
+        [SerializeField] private Vector3 starsOffset = new(-0.18f, 0.04f, 0f);
 
         [Inject] private MemoryDataClient memoryDataClient;
+
+        private bool spendPending;
+        private bool spendRequested;
+
+        // The meter's front-centre, where Spend and Stars point and sit.
+        private Vector3 MeterFront =>
+            shapingView.transform.TransformPoint(
+                shapingView.FieldCentre + new Vector3(0f, -shapingView.FieldHalf, -shapingView.FieldHalf));
 
         public void Show(GestureKind kind)
         {
             if (IsLearned(kind) || pool.IsShowing(kind))
                 return;
 
-            pool.Show(Content(kind), Position(kind));
+            pool.Show(Content(kind), Position(kind), Subject(kind));
         }
 
-        public void HideAll() => pool.HideAll();
+        // Spend waits for the first committed pinch, then for Scale to leave so the two never stack.
+        public void RequestSpend()
+        {
+            if (spendRequested)
+                return;
+
+            spendRequested = true;
+            spendPending = true;
+        }
+
+        public void HideAll()
+        {
+            spendRequested = false;
+            spendPending = false;
+            pool.HideAll();
+        }
 
         private void LateUpdate()
         {
@@ -42,7 +69,13 @@ namespace DigitalLove.Game.GesturePrompts
             {
                 GestureKind kind = (GestureKind)i;
                 if (pool.IsShowing(kind))
-                    pool.Move(kind, Position(kind));
+                    pool.Move(kind, Position(kind), Subject(kind));
+            }
+
+            if (spendPending && !pool.IsShowing(GestureKind.Scale))
+            {
+                spendPending = false;
+                Show(GestureKind.Spend);
             }
         }
 
@@ -62,8 +95,29 @@ namespace DigitalLove.Game.GesturePrompts
                     return shapingView.CubePosition + moveOffset;
                 case GestureKind.Exit:
                     return shapingView.CubePosition + exitOffset;
+                case GestureKind.Spend:
+                    return MeterFront + spendOffset;
+                case GestureKind.Stars:
+                    return MeterFront + starsOffset;
                 default:
                     return mapView.SelectionCubePosition + enterOffset;
+            }
+        }
+
+        private Vector3? Subject(GestureKind kind)
+        {
+            switch (kind)
+            {
+                case GestureKind.Scale:
+                case GestureKind.Move:
+                    return shapingView.CubePosition;
+                case GestureKind.Enter:
+                    return mapView.SelectionCubePosition;
+                case GestureKind.Spend:
+                case GestureKind.Stars:
+                    return MeterFront;
+                default:
+                    return null;
             }
         }
 
@@ -77,6 +131,10 @@ namespace DigitalLove.Game.GesturePrompts
                     return enter;
                 case GestureKind.Exit:
                     return exit;
+                case GestureKind.Spend:
+                    return spend;
+                case GestureKind.Stars:
+                    return stars;
                 default:
                     return move;
             }

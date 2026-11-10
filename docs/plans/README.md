@@ -18,10 +18,10 @@ need a yes.
    (terminal style), then Jim's receipt — what makes the player want the next job.
 3. **The ending** *(proposed)*. After job 7: the whole map lit, total stars, the "Our Space" title, an
    invitation to replay for 3★.
-4. **Minimum sound** — done (2026-11-09); the [soundscape](in-progress/soundscape.md) builds on it. Pinch grab tick, stretch tone, release,
-   arrive chime, crash, fail sting. No haptics: the game is hands-only.
-5. **The first 30 seconds** — [plan](in-progress/first-30-seconds.md). App open → bubble at a comfortable
-   seated reach without setup → title beat → the Scale prompt.
+4. **Minimum sound** — done (2026-11-09); the soundscape built on it (done 2026-11-10). Pinch grab
+   tick, stretch tone, release, arrive chime, crash, fail sting. No haptics: the game is hands-only.
+5. **The first 30 seconds** — done (2026-11-10). App open → the console boot → the field placed at a
+   comfortable seated reach → the Scale prompt. Pause and offline (the judge tests) also done 2026-11-10.
 6. **Quest 3S hitches at 72 fps** *(proposed)*. Sudden frame drops, not sustained low fps: map
    dioramas, trajectory previews, lattice.
 7. **Voice and content** *(proposed)*. Job 6's lines for the new lesson. Jim's complete and fail lines
@@ -59,17 +59,14 @@ shape is in [chapters](../design/chapters.md); the demo is the store's own optio
 
 Active work.
 
-- [Pause](in-progress/pause.md) — a clean stop behind the system menu: voice, sound and ship freeze,
-  nothing commits, Jim's line replays on resume. The judge tests; do this one before offline.
-- [The first 30 seconds](in-progress/first-30-seconds.md) — the console boot, the field placed from the
-  head and hands once the headset is worn, straight to job 1. Road step 5.
-- [Soundscape](in-progress/soundscape.md) — the mix pass, the field's hum, the ship's flight, and the
-  system's ticks and transitions, so the stretch tone is not the only sound. Road step 4.
+- [Two-ship test](in-progress/two-ship-test.md) — bake a two-ship level with the sun kept out of ship
+  runs and play it before deciding on a two-ship job 8 for v1.
+- [The field meter](in-progress/field-meter.md) — entropy on the grid's base edge (in); next prompts that
+  teach it, the same square under the map for the chapter's stars, then one panel bank.
 
 ## Next
 
-- [Offline](backlog/offline.md) — progress kept locally (PlayerPrefs, mirrored to the cloud), no
-  internet gate on launch. The judge tests.
+Nothing queued.
 
 ## Later
 

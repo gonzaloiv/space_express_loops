@@ -6,6 +6,8 @@ namespace DigitalLove.Game.GesturePrompts
         Scale,
         Enter,
         Move,
-        Exit
+        Exit,
+        Spend,
+        Stars
     }
 }

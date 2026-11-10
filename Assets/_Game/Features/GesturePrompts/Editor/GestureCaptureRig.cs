@@ -20,6 +20,7 @@ namespace DigitalLove.Game.GesturePrompts.Editor
         private readonly HandPoser left;
         private readonly HandPoser right;
         private readonly Transform cube;
+        private readonly MeterRig meter;
         private readonly Renderer[] bars = new Renderer[12];
         private readonly Camera camera;
         private readonly RenderTexture target;
@@ -34,6 +35,7 @@ namespace DigitalLove.Game.GesturePrompts.Editor
             right = SpawnHand("OpenXRRightHand", "OpenXR_HandPinch_Right", rightRotation);
             Unit = left.Length;
             cube = BuildCube();
+            meter = new MeterRig(scene, white, Unit);
             camera = BuildCamera(frameHeight, frameDrop);
             target = new RenderTexture(resolution, resolution, 24, RenderTextureFormat.ARGB32) { antiAliasing = 4 };
             camera.targetTexture = target;
@@ -49,6 +51,7 @@ namespace DigitalLove.Game.GesturePrompts.Editor
             Place(frame);
             ShowHands(frame);
             SetBars(false);
+            meter.HideAll();
             return Capture();
         }
 
@@ -58,6 +61,29 @@ namespace DigitalLove.Game.GesturePrompts.Editor
             left.SetVisible(false);
             right.SetVisible(false);
             SetBars(frame.CubeSize > 0f);
+            meter.HideAll();
+            return Capture();
+        }
+
+        public bool[] RenderMeter(HandFrame frame)
+        {
+            Place(frame);
+            left.SetVisible(false);
+            right.SetVisible(false);
+            SetBars(false);
+            meter.ShowMeter(frame.Meter);
+            meter.ShowStar(false);
+            return Capture();
+        }
+
+        public bool[] RenderStar(HandFrame frame)
+        {
+            Place(frame);
+            left.SetVisible(false);
+            right.SetVisible(false);
+            SetBars(false);
+            meter.ShowMeter(null);
+            meter.ShowStar(frame.Meter.HasValue && frame.Meter.Value.StarAlpha > 0f);
             return Capture();
         }
 
@@ -179,6 +205,7 @@ namespace DigitalLove.Game.GesturePrompts.Editor
             UnityEngine.Object.DestroyImmediate(target);
             UnityEngine.Object.DestroyImmediate(readback);
             UnityEngine.Object.DestroyImmediate(white);
+            meter.Dispose();
             EditorSceneManager.ClosePreviewScene(scene);
         }
     }

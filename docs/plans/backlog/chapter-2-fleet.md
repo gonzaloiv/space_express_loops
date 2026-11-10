@@ -66,6 +66,7 @@ This is more than a morning; each unit is its own sitting.
   Raise `Attempts` on multi-ship rows (the search probes fewer seeds per pass).
 - Replace the builder's hard-coded `Chapters/01` paths: each contract's chapter comes from its id, and
   the builder writes `Chapters/NN/Job_NN_MM_Puzzle.asset` and wires `Chapters/NN.asset`.
+- The sun is kept out of ship runs by the [two-ship test](../in-progress/two-ship-test.md) plan (U1).
 - **Exit:** a two-ship `02_01` row builds through *Build Job Test Set* into chapter 2; chapter 1 still
   rebuilds unchanged.
 

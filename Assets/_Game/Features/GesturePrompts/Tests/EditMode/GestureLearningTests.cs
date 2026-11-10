@@ -15,12 +15,21 @@ namespace DigitalLove.Game.GesturePrompts.Tests
             Assert.IsFalse(GestureLearning.IsLearned(playerData, GestureKind.Enter));
             Assert.IsFalse(GestureLearning.IsLearned(playerData, GestureKind.Move));
             Assert.IsFalse(GestureLearning.IsLearned(playerData, GestureKind.Exit));
+            Assert.IsFalse(GestureLearning.IsLearned(playerData, GestureKind.Spend));
+            Assert.IsFalse(GestureLearning.IsLearned(playerData, GestureKind.Stars));
         }
 
         [Test]
         public void Exit_HasItsOwnKey()
         {
             Assert.AreEqual("gesture_learned_exit", GestureLearning.Key(GestureKind.Exit));
+        }
+
+        [Test]
+        public void SpendAndStars_HaveTheirOwnKeys()
+        {
+            Assert.AreEqual("gesture_learned_spend", GestureLearning.Key(GestureKind.Spend));
+            Assert.AreEqual("gesture_learned_stars", GestureLearning.Key(GestureKind.Stars));
         }
 
         [Test]

@@ -1,7 +1,9 @@
 {
     "name": "DigitalLove.Game.GesturePrompts.Editor",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "DigitalLove.Game.SpaceShaping.Domain"
+    ],
     "includePlatforms": [
         "Editor"
     ],

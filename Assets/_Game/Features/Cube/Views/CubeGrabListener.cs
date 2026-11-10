@@ -117,7 +117,16 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             zone.SetScaling(false);
             classified = false;
             lastCount = 0;
+            SnapGrabVolumeHome();
             ApplyFeedback(0);
+        }
+
+        // The Grabbable's default transformer drags and scales this grab volume with the hands; put it
+        // back on the cube so the next pinch finds it.
+        private void SnapGrabVolumeHome()
+        {
+            transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            transform.localScale = Vector3.one;
         }
 
         private void ApplyFeedback(int count) =>

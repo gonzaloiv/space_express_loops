@@ -50,9 +50,12 @@ namespace DigitalLove.Game.GesturePrompts.Editor
             for (int i = 0; i < FrameCount; i++)
             {
                 HandFrame frame = motion.At(i / (float)FrameCount);
+                var masks = new PromptMasks(
+                    rig.RenderHands(frame), rig.RenderCube(frame),
+                    rig.RenderMeter(frame), rig.RenderStar(frame),
+                    frame.Meter?.StarAlpha ?? 1f);
                 Color32[] pixels = LineArt.Compose(
-                    rig.RenderHands(frame), rig.RenderCube(frame), rig.Resolution,
-                    LineWidth * Supersample / 2, Supersample);
+                    masks, rig.Resolution, LineWidth * Supersample / 2, Supersample);
                 texture.SetPixels32(pixels);
                 File.WriteAllBytes(FramePath(motion, i), texture.EncodeToPNG());
             }

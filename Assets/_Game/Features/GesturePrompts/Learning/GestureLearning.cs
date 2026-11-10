@@ -42,6 +42,10 @@ namespace DigitalLove.Game.GesturePrompts
                     return "enter";
                 case GestureKind.Exit:
                     return "exit";
+                case GestureKind.Spend:
+                    return "spend";
+                case GestureKind.Stars:
+                    return "stars";
                 default:
                     return "move";
             }

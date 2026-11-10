@@ -90,6 +90,32 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
+        public void Rescued_NeverStartsOrEndsAtTheSun()
+        {
+            PuzzleSeed seed = ScriptableObject.CreateInstance<PuzzleSeed>();
+            seed.seed = KnownSeed;
+            seed.hasSun = true;
+            float sunRadius = settings.sunRadius;
+            settings.sunRadius = 0.06f; // the project's value; the test settings default to no sun
+            PuzzleBrief sunBrief = PuzzleBrief.From(seed, settings);
+            PuzzlePlanetListAsset sunPlanets = Planets(seed);
+            settings.sunRadius = sunRadius;
+            PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
+            PuzzleFieldBake.Apply(sunBrief, field, sunPlanets, sim);
+            Vector3? sun = SunOf(field);
+            Assert.IsTrue(sun.HasValue, "the test field has no sun");
+            if (!PuzzleSolutionSearch.TrySelect(field, sim, sunBrief, out PuzzleSolution solution))
+                Assert.Inconclusive("no solution zone on the sun field to scan with");
+
+            PuzzleShipScan scan = new(field, sim, 0f);
+            AssertNoSun(scan.Rescued(solution.Zones[0]), sun.Value);
+            AssertNoSun(scan.RescuedFixed(solution.Zones[0]), sun.Value);
+            Object.DestroyImmediate(field);
+            Object.DestroyImmediate(sunPlanets);
+            Object.DestroyImmediate(seed);
+        }
+
+        [Test]
         public void RescuedFixed_NeverExceedsRuntime()
         {
             PuzzleData field = Field();
@@ -133,6 +159,26 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             }
 
             return false;
+        }
+
+        private static Vector3? SunOf(PuzzleData field)
+        {
+            for (int i = 0; i < field.sources.Length; i++)
+            {
+                if (field.sources[i].centreOnly)
+                    return field.sources[i].home;
+            }
+
+            return null;
+        }
+
+        private static void AssertNoSun(List<PuzzleShipRescue> rescued, Vector3 sun)
+        {
+            for (int i = 0; i < rescued.Count; i++)
+            {
+                Assert.Greater((rescued[i].Origin - sun).sqrMagnitude, 1e-8f, "a ship starts at the sun");
+                Assert.Greater((rescued[i].Destination - sun).sqrMagnitude, 1e-8f, "a ship ends at the sun");
+            }
         }
 
         private PuzzleData Field()
