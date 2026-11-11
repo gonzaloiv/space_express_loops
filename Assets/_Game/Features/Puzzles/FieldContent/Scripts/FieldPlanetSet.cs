@@ -134,17 +134,15 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void PulseEndpoint(Vector3 point, Color danger)
         {
-            if (session == null || session.EndpointSource(point) < 0)
-                return;
-
-            PulseAt(originPlanet, point, danger);
-            PulseAt(destinationPlanet, point, danger);
-            sources.ForEachFrom(0, view => PulseAt(view, point, danger));
+            int source = session != null ? session.EndpointSource(point) : -1;
+            PulseAt(originPlanet, source, danger);
+            PulseAt(destinationPlanet, source, danger);
+            sources.ForEachFrom(0, view => PulseAt(view, source, danger));
         }
 
-        private static void PulseAt(FieldPlanetBehaviour planet, Vector3 point, Color danger)
+        private static void PulseAt(FieldPlanetBehaviour planet, int source, Color danger)
         {
-            if (planet.IsVisible && (planet.transform.localPosition - point).sqrMagnitude < 0.000001f)
+            if (planet.IsVisible && planet.SourceIndex == source)
                 planet.PlayRefusal(danger);
         }
 

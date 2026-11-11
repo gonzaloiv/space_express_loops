@@ -34,24 +34,7 @@ namespace DigitalLove.Game.SpaceShaping
             }
         }
 
-        public CubeMoveRefusal MoveRefusal
-        {
-            get
-            {
-                for (int i = 0; i < pool.Views.Count; i++)
-                {
-                    CubeView cube = pool.Views[i];
-                    if (!cube.gameObject.activeSelf)
-                        continue;
-
-                    CubeMoveRefusal refusal = cube.MoveRefusal;
-                    if (refusal.Blocked)
-                        return refusal;
-                }
-
-                return default;
-            }
-        }
+        public CubeMoveRefusal MoveRefusal => pool.Views.FirstMoveRefusal();
 
         public Color Danger
         {

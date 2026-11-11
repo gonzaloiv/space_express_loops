@@ -48,6 +48,23 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             return false;
         }
 
+        public static CubeMoveRefusal FirstMoveRefusal(this IReadOnlyList<CubeView> zones)
+        {
+            for (int i = 0; i < zones.Count; i++)
+            {
+                CubeView zone = zones[i];
+                if (!zone.gameObject.activeSelf)
+                    continue;
+
+                CubeMoveRefusal refusal = zone.MoveRefusal;
+                if (refusal.Blocked)
+                    return refusal;
+            }
+
+            return default;
+        }
+
+
         public static CubeView Active(this IReadOnlyList<CubeView> zones)
         {
             for (int i = 0; i < zones.Count; i++)

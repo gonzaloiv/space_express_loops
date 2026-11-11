@@ -87,7 +87,7 @@ namespace DigitalLove.Game.SpaceShaping
             lines = new TrajectoryLinePool(trajectoryPrototype, linesParent);
             baselines = new TrajectoryLinePool(trajectoryPrototype, linesParent);
             ships = new ShipFlightPool(shipPrototype, shipsParent, shipStaggerSecs);
-            keepOut = new EndpointKeepOutPool(keepOutPrototype, sourceParent);
+            keepOut = new EndpointKeepOutPool(keepOutPrototype, cubeParent);
         }
     }
 }

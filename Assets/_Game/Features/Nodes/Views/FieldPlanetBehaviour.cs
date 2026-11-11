@@ -24,6 +24,9 @@ namespace DigitalLove.Game.Nodes
         public bool IsVisible => isVisible;
         public float Radius => radius;
 
+        // The source this planet was spawned for; the endpoint pulse matches on it.
+        public int SourceIndex { get; private set; }
+
         // A short swell of the body and its rim: the destination's arrival on a solve.
         public void PlayArrival(float secs)
         {
@@ -163,6 +166,7 @@ namespace DigitalLove.Game.Nodes
         public void Spawn(Vector3 localPosition, float spawnRadius, int seed, string name)
         {
             StopArrival();
+            SourceIndex = seed;
             radius = spawnRadius;
             labelOnly = false;
             transform.localPosition = localPosition;
