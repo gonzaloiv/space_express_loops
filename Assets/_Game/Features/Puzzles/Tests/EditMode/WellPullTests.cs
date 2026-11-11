@@ -53,12 +53,58 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             Assert.AreEqual(Radius + 0.004f, pulled.x, 1e-5f);
         }
 
+        // Job 1's case: a strong sun behind a small planet. Each pull is capped alone; the sum must not
+        // carry a node 1 cm outside the planet through it.
+        [Test]
+        public void ASunBehindAPlanet_CannotDragANodeThroughIt()
+        {
+            SpaceSource sun = new(Vector3.zero, 0.06f, 1f);
+            SpaceSource planet = new(new Vector3(0.3f, 0f, 0f), 0.053f, 0.0002f);
+            WellPull pull = new(new[] { sun, planet }, 0.07f, 0.6f);
+            Vector3 point = new(0.3f + 0.053f + 0.01f, 0f, 0f);
+
+            Vector3 pulled = pull.Pull(point);
+
+            float fromPlanet = Vector3.Distance(pulled, planet.Position);
+            Assert.GreaterOrEqual(fromPlanet, 0.053f + 0.4f * 0.01f - 1e-5f);
+            Assert.Less(pulled.x, point.x);
+        }
+
         [Test]
         public void APointInsideASource_StaysPut()
         {
             Vector3 point = new(Radius * 0.5f, 0f, 0f);
 
             Assert.AreEqual(point, Pull(1f, gain: 10f).Pull(point));
+        }
+
+        [Test]
+        public void APointInsideOneSource_StaysPut_WhileAnotherPulls()
+        {
+            SpaceSource sun = new(Vector3.zero, 0.06f, 1f);
+            SpaceSource planet = new(new Vector3(0.3f, 0f, 0f), 0.053f, 0.0002f);
+            WellPull pull = new(new[] { sun, planet }, 0.07f, 0.6f);
+            Vector3 point = new(0.32f, 0f, 0f);
+
+            Assert.AreEqual(point, pull.Pull(point));
+        }
+
+        [Test]
+        public void AFullCap_StillStopsShortOfTheSurface()
+        {
+            Vector3 point = new(Radius + 0.01f, 0f, 0f);
+
+            Vector3 pulled = Pull(1f, gain: 10f, maxFraction: 1f).Pull(point);
+
+            Assert.Greater(pulled.x, Radius + 1e-4f);
+        }
+
+        [Test]
+        public void WellsOff_GiveNoPull()
+        {
+            LatticeWells wells = new() { enabled = false };
+
+            Assert.IsFalse(wells.For(null).HasValue);
         }
 
         [Test]

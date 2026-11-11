@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
 {
-    // Tuning for the field-wells spike (docs/plans/in-progress/field-wells.md): whether the lattice
+    // Tuning for the field-wells spike (docs/plans/backlog/field-wells.md): whether the lattice
     // shows the planets' wells, and how deep.
     [Serializable]
     public class LatticeWells
@@ -15,7 +15,7 @@ namespace DigitalLove.Game.SpaceShaping
         [Min(0f)] public float gain = 0.07f;
 
         [Tooltip("The most a node moves toward a source, as a fraction of its gap to the source's surface.")]
-        [Range(0f, 1f)] public float maxFraction = 0.6f;
+        [Range(0f, WellPull.MaxFractionCap)] public float maxFraction = 0.6f;
 
         public WellPull? For(SpaceShapingSession session) =>
             enabled ? new WellPull(session.BuildField().Sources, gain, maxFraction) : null;
