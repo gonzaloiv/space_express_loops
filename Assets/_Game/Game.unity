@@ -7306,8 +7306,10 @@ MonoBehaviour:
   contentRoot: {fileID: 1013473266}
   sourcePrototype: {fileID: 1432176000000000001, guid: 6a1a9c1cd3694b11946468f943f46cd8, type: 3}
   sunPrototype: {fileID: 5148713355404427665, guid: 2ddbb2dd4b3a6cf42851cc4fc6177849, type: 3}
-  originPrototype: {fileID: 104580328670047092, guid: 2a724411ab8931244ad8fd7a0920cd0e, type: 3}
-  destinationPrototype: {fileID: 104580328670047092, guid: f262f1ed9da69c449b0fd504f6c5fa98, type: 3}
+  endpointPrototypes:
+    origin: {fileID: 104580328670047092, guid: 2a724411ab8931244ad8fd7a0920cd0e, type: 3}
+    destination: {fileID: 104580328670047092, guid: f262f1ed9da69c449b0fd504f6c5fa98, type: 3}
+    interchange: {fileID: 5779733715417701459, guid: 9593ef752f0dfdd4dbf6e90b45e9799b, type: 3}
   sourceParent: {fileID: 554329528}
   settings: {fileID: 11400000, guid: 1000000000000000000000000000001a, type: 2}
   previewSize: 0.16
