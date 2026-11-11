@@ -106,6 +106,22 @@ and arriving are the same play; the stars are where it shows up as a number.
 **A contract can be a multi-ship run.** Some promises need more than one ship; the company flies
 them together, and the promise is the same — everything arrives.
 
+## Episodes
+
+The story is told in **episodes**, one per chapter (decided 2026-11-11). Each episode says **one thing
+about the world** through Jim's lines and the manual, the way each chapter teaches one idea through the
+puzzles. The clients stay absurd; the episode's point lives in what Jim books and how he sounds about
+it. An episode never explains itself and never resolves the bleak reading.
+
+| Episode | Chapter | What it says |
+|---|---|---|
+| 1 — the Wrap | the seven-job run | The firm bets on a machine nobody trusts, and the new employee makes it work. |
+| 2 — the fleet | the multi-ship jobs | It works, so the firm gets greedy: more ships on the same entropy, sold as green. Greed is eco-friendly, and Jim is not sure that is good news. |
+
+The game is never finished in the fiction: the last episode closes with Jim out of contracts and the
+tech team promising more. The next episode is the
+next chapter; seeds for it live in §Seeds (externalised costs, *tomorrow the time*).
+
 ## The customers
 
 - The other end of every contract is a **client** — a settlement or firm in the same stationary economy.

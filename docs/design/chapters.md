@@ -23,12 +23,12 @@ decide what comes next. Chapters beyond 3 are ideas ([later chapters](../ideas/l
 
 ## Chapter 1 — the Wrap (store release)
 
-The seven-job run in [jobs](jobs.md) (scale → centre → clear → move → multi-zone → assist → capstone),
-closed by **job 8 (Mixed)**: shrink the blocker with one zone, grow a well with the other. Job 8 ships
-only if it bakes; otherwise chapter 1 is seven jobs and job 8 lands before chapter 2 opens (a job
-added behind solved jobs would never become current).
+The seven-job run in [jobs](jobs.md) (scale → centre → clear → move → multi-zone → assist → capstone).
+**Chapter 1 stays seven jobs** (decided 2026-11-11): chapter 2 ships in v1, and a job added behind
+solved jobs would never become current, so there is no job 8. **Mixed** (shrink the blocker with one
+zone, grow a well with the other) becomes a later chapter's job instead.
 
-## Chapter 2 — the fleet (store release)
+## Chapter 2 — the fleet (v1, then the store release)
 
 Several ships share one field and one entropy budget; the job solves only when **every ship arrives**.
 No new verb. The ramp restarts: low scramble, Ring shape.
@@ -42,8 +42,12 @@ No new verb. The ramp restarts: low scramble, Ring shape.
 | 2-5 | **Fleet capstone** | movable · 3 ships · fan-out | 12 · Cluster · high scramble | Placement, shared paths and the field across every ship. |
 
 Multi-ship bakes need ≥ 9 planets, use one movable cube, and cannot request a role, so every fleet job
-is checked by playing it. **Slightly Used Stars Ltd.** returns at 2-2; **The Very Small Opera** takes the
-capstone. Not yet a plan: step 2 of the [road to the store](../plans/README.md#road-to-the-store).
+is checked by playing it. **Slightly Used Stars Ltd.** returns at 2-2.
+
+**2-1 to 2-4 move into v1** (decided 2026-11-11, after the two-ship headset test: the fleet bakes play
+better than the single-ship jobs). They ship as episode 2 of the story ([lore](world/lore.md)
+§Episodes); **The Very Small Opera** takes 2-4 until a 2-5 capstone bakes. Plan:
+[fleet episode](../plans/in-progress/fleet-episode.md).
 
 ## Chapter 3 — the instrument (first update)
 
@@ -85,3 +89,7 @@ board.
 - **Freelance unlock.** After chapter 2 only, or each tier as soon as its lesson is taught?
 - **Chapter break on the map.** A gap or a label, or one continuous galaxy?
 - **Chapter 3's pricing.** A free update (reviews) or a price step?
+- **Cost and the cube's size.** Should an edit cost more when the zone covers more (planets, volume)?
+  Decide before resize enters, since a bigger cube touches more per pinch.
+- **The daily leaderboard's tie-breaker.** Entropy left will tie often on easy contracts; what breaks a
+  tie without becoming a move count?

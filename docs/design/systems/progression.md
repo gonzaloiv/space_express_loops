@@ -1,4 +1,4 @@
-﻿# Progression — how the game advances
+# Progression — how the game advances
 
 **Status:** design · system · progression.
 **Date:** 2026-10-23.
@@ -70,7 +70,7 @@ One new lesson at a time, so the player never faces two unrelated ideas at once:
 6. **Job 6 — the field carries you.** A deep well already sits near the line; edit where a small change
    moves the path most.
 7. **Job 7 — the capstone.** The cube starts over the sun; the solution scales several zones with the star
-   included. The finale combines every verb except both roles; a future job 8 brings Mixed.
+   included. The finale combines every verb except both roles; a later chapter brings Mixed.
 
 So the run order is **scale → centre → clear → move → multi-zone → assist → capstone**. Resize is not
 in the run ([the cube](cube.md) §Open questions).
@@ -78,11 +78,11 @@ in the run ([the cube](cube.md) §Open questions).
 **The obstacle is job 3.** Shrinking a blocker to clear the chord is the opposite role of the curve; it
 lands right after the centre, before placement, so both directions of the pinch are learned on a fixed
 field. The tutorial and the centre keep the curve; the capstone (job 7) is a Curve; a clear+curve Mixed is
-deferred to a future job 8.
+deferred to a later chapter.
 
 ### The several-zones rung
 
-Retired (2026-11-05): several zones arrive with the movable cube at job 5. Why, and the future job 8
+Retired (2026-11-05): several zones arrive with the movable cube at job 5. Why, and the later Mixed job
 that could bring the fixed rung back with Mixed, is in [jobs](../jobs.md) §The run — the mechanics.
 
 ### The puzzle map

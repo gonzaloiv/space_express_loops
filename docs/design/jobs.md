@@ -1,8 +1,8 @@
-﻿# Jobs — the run, one delivery at a time
+# Jobs — the run, one delivery at a time
 
 **Status:** design · content · jobs.
 **Date:** 2026-10-27.
-**Revised:** 2026-11-09.
+**Revised:** 2026-11-11.
 
 **Related:** [progression](systems/progression.md) · [lore](world/lore.md) ·
 [the cube](systems/cube.md) · [glossary](glossary.md)
@@ -11,8 +11,8 @@
 
 The **concrete run**: the jobs the player actually plays, one row each — their brief, field and entropy
 scale (the shape [progression](systems/progression.md) sets), plus their **lore skin**. Progression is
-the general system; this is the specific development of it. All seven jobs are baked.
-This doc is **chapter 1**; the store release's chapters 2–3 are in [chapters](chapters.md).
+the general system; this is the specific development of it. All eleven v1 jobs are baked.
+This doc is **chapters 1–2**; the store release's 2-5 and chapter 3 are in [chapters](chapters.md).
 
 ## The run — the mechanics
 
@@ -24,12 +24,12 @@ This doc is **chapter 1**; the store release's chapters 2–3 are in [chapters](
 | 4 | the cube moves | Curve | **yes** · 1 zone · no · 1 ship | Spiral | 8–10 + sun · multi | medium | spawns at the centre; the solution is off-centre, so the move is required |
 | 5 | multi-zone intro | Curve | yes · 2+ zones · no · 1 ship | Spiral | 10–12 + sun · multi | medium | move + scale two zones — the combination enters |
 | 6 | the field carries you | Curve | yes · 2+ zones · no · 1 ship | Cluster | 10 + sun · multi · deep | high | a deep well already near the line does most of the bend; the cheap answer is to edit where a small change moves the path most |
-| 7 | the capstone | Curve | yes · 2+ zones · no · 1 ship | Cluster | 12 + sun · multi · deep | high | multi-zone + the centre + the star + several routes — both roles deferred to a future job 8 |
+| 7 | the capstone | Curve | yes · 2+ zones · no · 1 ship | Cluster | 12 + sun · multi · deep | high | multi-zone + the centre + the star + several routes — both roles deferred to a later chapter |
 
 **The run is seven jobs (2026-11-05): 1 scale, 2 centre, 3 clear, 4 move, 5 multi-zone, 6 the field
 carries you, 7 capstone `Curve`.** The fixed-cube several-zones rung is retired; "several zones" lands with the move at
-job 5. Job 8 (**Mixed**) is not part of the competition's seven-job run; it closes chapter 1 in the
-store release if it bakes ([chapters](chapters.md)).
+job 5. There is no job 8 (decided 2026-11-11): **Mixed** moves to a later chapter, since chapter 2
+ships after job 7 ([chapters](chapters.md)).
 
 **The ramp by job.** Scramble is how far the start sits from the solved arrangement: it rises within an
 act and drops when a new verb lands, so the new idea arrives readable and is then tested. `Reuses` names
@@ -40,7 +40,7 @@ the prior skill the job combines, so the ramp is cumulative, not additive.
 | 1 | low | — (tutorial) |
 | 2 | low | the scale |
 | 3 | medium | the scale, reversed |
-| 4 | low | the scale + clear |
+| 4 | low | the scale |
 | 5 | medium | the move + several zones |
 | 6 | high | multi-zone + the read (use the field's wells) |
 | 7 | high | everything: centre, move, zones, star; Mixed deferred |
@@ -51,7 +51,7 @@ the prior skill the job combines, so the ramp is cumulative, not additive.
 when it cannot find one; it also rejects a seed when a **cheaper or equal wrong-role route** exists,
 because the taught role must be the best answer. More expensive alternate routes may remain. The seven-job
 spine requests **Curve** except job 3 (**Clear**): the capstone is a `Curve` with the centre and the star.
-**Mixed** is deferred to a future job 8 ([archetypes](#the-run--archetypes)). A `Curve`/`Mixed` seed is rejected when its start path stays under
+**Mixed** is deferred to a later chapter ([archetypes](#the-run--archetypes)). A `Curve`/`Mixed` seed is rejected when its start path stays under
 5% of the chord or 4° off it: the start must show the field. The bake reports the reference solution's
 `kind`; the player never sees the label. Multi-ship role requests are not supported yet.
 
@@ -96,8 +96,8 @@ single-source field. The entropy-scale column above is the absolute cost of the 
 
 **The several-zones rung is retired with the old job 4 (2026-11-05).** A fixed level can place several cubes,
 but the generator could not force a two-zone `Curve`, so the seven-job run folds "several zones" into the
-multi-zone move at jobs 4–6. Job 4 adds the move; job 5 introduces two zones; job 6 teaches the field to
-carry the ship; the capstone adds the centre and the star at job 7. A future job 8 can bring back the fixed several-zones rung
+multi-zone move at job 5. Job 4 adds the move; job 5 introduces two zones; job 6 teaches the field to
+carry the ship; the capstone adds the centre and the star at job 7. A later chapter can bring back the fixed several-zones rung
 with Mixed.
 
 **Job 3 keeps the sun out of the zones.** The blocker is a planet; the star is background, so the lesson
@@ -108,7 +108,7 @@ includes an off-centre zone, so the player must move the cube.
 
 **The capstone is the centre + multi-zone + the star.** Job 7 starts the cube over the sun; the solution
 scales several zones with the star included, so the player must move out to the other zones. It combines
-every verb except both roles; both roles are deferred to a future job 8.
+every verb except both roles; both roles are deferred to a later chapter.
 
 **Resize** is off in every job (`resizable: no`); why is in [the cube](systems/cube.md) §Open questions.
 
@@ -137,13 +137,13 @@ creator bakes to them. Three groups.
 | Field | Means |
 |---|---|
 | **`mechanism`** | The role the bake's reference solution must have: **`Any`** (no request), **`Curve`** (a well grew), **`Clear`** (an obstacle shrank), or **`Mixed`** (both; needs ≥2 zones). The search filters to the requested role; a seed that cannot bake it is rejected, and so is a seed whose cheapest route has the wrong role. More expensive alternate routes may remain. |
-| **`minRoutes`** | Minimum distinct arriving routes the bake must offer. `0` = auto: 2 for a movable single-zone level, otherwise 1. Jobs 3 and 7 set 2 (and a future job 8). |
+| **`minRoutes`** | Minimum distinct arriving routes the bake must offer. `0` = auto: 2 for a movable single-zone level, otherwise 1. Jobs 3 and 7 set 2 (and a later Mixed job). |
 
 **Baked results** — what the creator records, not a player condition:
 
 | Field | Means |
 |---|---|
-| **`routes`** | Distinct zone sets that arrive within budget. The bake enforces `minRoutes`: a movable single-zone level, job 3, and the capstone (job 7, and a future job 8) need at least two; the tutorial and job 2 may have one. |
+| **`routes`** | Distinct zone sets that arrive within budget. The bake enforces `minRoutes`: a movable single-zone level, job 3, and the capstone (job 7, and a later Mixed job) need at least two; the tutorial and job 2 may have one. |
 | **`entropyBudget`** | **3×** the entropy of the bake's solution; the star thresholds are 1/2 and 2/3 of it. |
 | **`sources` / `frames`** | The baked field (planets, sun, positions) and the cube frames the level places. |
 
@@ -178,7 +178,7 @@ add a layout.
 reduces its collision radius, so the path can pass. It is **job 3**: it lands after the centre and before
 placement, so the player learns both directions of the same pinch while the field is still fixed. The
 tutorial and the centre keep the curve. With several cubes, one can sit on the obstacle (shrink) and one
-on a run planet (grow) — a clear and a curve in one multi-zone solution, deferred to a future job 8. The
+on a run planet (grow) — a clear and a curve in one multi-zone solution, deferred to a later chapter. The
 seven-job capstone is a `Curve`. The creator tags the role so a job can request it. Job 3 requests `minRoutes: 2`: two blockers on or near the line, so
 the player chooses which one to shrink.
 
@@ -219,6 +219,18 @@ One line each; never exposition ([lore](world/lore.md)).
 | 5 | The Third Best Bakery | a wedding cake, still warm | "The cake went cold." | "Several zones. Place it, scale them." | "The Wrap is yours to place. Use it more than once." |
 | 6 | Nobody & Co. | a body (a funeral) | "The field won." | "Use what is already there." | "The field is free. The Wrap is not." |
 | 7 | The Inheritance of Mr. Fink | the last of something | "Mr. Fink is still waiting." | "…Good luck." | "This is the one the manual was written for. Welcome, new employee. There has not been a new employee in eleven years. There is still no office." |
+
+### Chapter 2 — the fleet
+
+Episode 2: the Wrap works, so the firm sells more ships on the same entropy. The clients stay absurd;
+the greed is in Jim's lines and the manual ([lore](world/lore.md) §Episodes).
+
+| # | Client | Cargo | Fail | Tech voice | Manual entry |
+|---|---|---|---|---|---|
+| 2-1 | Halfmoon & Halfmoon | two identical parcels | "One of them got lost." | "I sold two runs for the price of one." | "Two ships. One Wrap. One budget." |
+| 2-2 | Slightly Used Stars Ltd. | two refurbished suns | "Slightly Used Stars is unhappy again." | "They are back. They want both orders today." | "One origin. Two promises. Bend near the start and both feel it." |
+| 2-3 | The Last Two Customers | two halves of a gift | "The gift is still in pieces." | "Two ships. One door." | "Many routes may share one end. Fix the approach once." |
+| 2-4 | The Very Small Opera | the orchestra, one live animal | "The opera starts without them." | "Three ships. The budget did not grow." | "Efficiency is a virtue until it is a cost." |
 
 ## The manual's arc
 

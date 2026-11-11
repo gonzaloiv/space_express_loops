@@ -141,7 +141,7 @@ mechanic before writing another plan.
 | Field illegibility | **Partly open.** Lattice warp, planet size/well, the live trajectory and the straight-line baseline are in; the start run's read is not yet validated on device ([plans board](../plans/README.md)). |
 | Sun reads as another planet | **Accepted.** The current `Sun.prefab` look reads as intended; no S4 look pass. |
 | Sun scale is a free win | **Open.** `mass ∝ radius³` makes a grown sun strong fast; the bake must verify scalable-by-default, otherwise lock it per puzzle. The centre (job 2) is the first test; the capstone (job 7) must also hold. |
-| Ship-zone legibility | **Deferred.** Multi-zone jobs are not in this version; the zone tint lands with them in chapter 2 ([plans board](../plans/README.md)). |
+| Ship-zone legibility | **Open.** Jobs 5–7 are multi-zone, and v1 has no cue for which zone the ship is in; only the trail shows the path ([plans board](../plans/README.md) §Open tails). |
 | Prediction trust | **Mitigated in the lab.** The live trajectory previews while shaping, the ship flies on release, and the straight-line baseline shows on the start check and after a miss; the start run's read is the remaining question. |
 | Identity | **Resolved** by the transport-company pivot and the name "Our Space". |
 | Competition scope | **Active.** The run is authored (seven jobs, the map, Jim's panel); what remains is the road to v1 and the deliverables, due 2026-11-13 ([plans board](../plans/README.md)). |

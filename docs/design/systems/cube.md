@@ -113,6 +113,9 @@ count.
   colour; single-ship jobs are one route, and the map diorama uses the same colour. The line ends in
   the outcome — arrive, crash or miss — so the result reads at the end of the route, not across the
   whole line. The pending preview is the route colour dimmed, so the routes still read while shaping.
+- **Endpoints read by shape.** The origin is a filled ring, the destination an open ring, both in the
+  route colour; a shared endpoint is a neutral interchange ring with one pip per route colour. On the
+  map the pips stay neutral, so their count still reads as a station's notches at diorama size.
 
 ## Failure
 
@@ -142,3 +145,6 @@ solve ([core loop](../core-loop.md) §3), and the job-1 tutorial is exempt.
 - **Resize explanation:** the mechanic works, but the player needs a clear "size is scope, not
   precision" lesson before it enters the run. It is chapter 3's first lesson, with rotating the content
   inside the cube after it ([chapters](../chapters.md)).
+- **Simulation or fiction?** "A shrunk zone is a shortcut" (here and in the glossary) and "comes out
+  faster" ([core loop](../core-loop.md) §3) are stated as physics. Check whether the simulation does
+  either, or whether they are only the fiction, and word the docs to match.
