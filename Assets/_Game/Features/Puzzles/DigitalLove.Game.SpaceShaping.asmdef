@@ -7,7 +7,8 @@
         "DigitalLove.Game.SpaceShaping.Cube",
         "DigitalLove.Audio.Runtime",
         "DigitalLove.FlowControl",
-        "DigitalLove.Casual.Levels"
+        "DigitalLove.Casual.Levels",
+        "DigitalLove.Global"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -4,8 +4,8 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
 {
     public class EntropyPostTests
     {
-        private const float ThreeStars = 1f / 3f;
-        private const float TwoStars = 2f / 3f;
+        private const float ThreeStars = PuzzleGrade.ThreeStarUse;
+        private const float TwoStars = PuzzleGrade.TwoStarUse;
 
         [Test]
         public void FreshBudget_IsAFullPost_AndHoldsEveryStar()
@@ -32,7 +32,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         [Test]
         public void APinchThatCrossesALimit_PutsThatStarAtRisk()
         {
-            EntropyPost post = new(0.3f, 0.1f, 0f, false);
+            EntropyPost post = new(ThreeStars - 0.05f, 0.1f, 0f, false);
 
             Assert.AreEqual(StarHold.AtRisk, post.Star(ThreeStars));
             Assert.AreEqual(StarHold.Held, post.Star(TwoStars));
@@ -42,7 +42,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         public void SpendingPastALimit_LosesThatStar_ButExactlyOnItHolds()
         {
             Assert.AreEqual(StarHold.Held, new EntropyPost(ThreeStars, 0f, 0f, false).Star(ThreeStars));
-            Assert.AreEqual(StarHold.Lost, new EntropyPost(0.4f, 0f, 0f, false).Star(ThreeStars));
+            Assert.AreEqual(StarHold.Lost, new EntropyPost(ThreeStars + 0.05f, 0f, 0f, false).Star(ThreeStars));
         }
 
         [Test]
