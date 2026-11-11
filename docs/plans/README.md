@@ -12,12 +12,18 @@ The ordered actions to a first "final" version (decided 2026-11-06). Each step b
 morning) when it starts; a step that is already a plan links to it. Steps marked *(proposed)* still
 need a yes.
 
-1. **Tune the run on device.** Per-job scramble and planet count; bake-check job 6's "the field
-   carries you" route as the cheapest.
+1. **Tune the run on device.** Per-job scramble and planet count, and the 3★ margin from the cold
+   playtest (the margin landed at 1.5×, judge run closed 2026-11-11). Job 6's lesson is read from the
+   docs, not a bake check. The stuck-player skip landed (2026-11-11): one fail opens the next job;
+   the playtest may still revise it.
 2. **The solve moment** — done (2026-11-09). Arrival payoff at the destination (flash + sound), then the stars stamped in
    (terminal style), then Jim's receipt — what makes the player want the next job.
-3. **The ending** *(proposed)*. After job 7: the whole map lit, total stars, the "Our Space" title, an
-   invitation to replay for 3★.
+3. **The ending** — done (2026-11-11). After the run completes (every job solved, whatever the count):
+   the whole map lit, the total stars, the "OUR SPACE" title, Jim closing the episode, more contracts
+   in the making, an invitation to replay for 3★.
+   - **The fleet episode** — [plan](in-progress/fleet-episode.md) — the two- and three-ship jobs join v1
+     as chapter 2, episode 2 of the story (decided 2026-11-11 after the two-ship headset test); lines
+     approved.
 4. **Minimum sound** — done (2026-11-09); the soundscape built on it (done 2026-11-10). Pinch grab
    tick, stretch tone, release, arrive chime, crash, fail sting. No haptics: the game is hands-only.
 5. **The first 30 seconds** — done (2026-11-10). App open → the console boot → the field placed at a
@@ -38,17 +44,17 @@ need a yes.
    - **Judge tests to pass:** fully hands-only end to end; the airplane-seat test (two-foot radius);
      the one-bus-stop test (a complete moment fast, clean pause/resume).
 
-**Out of v1:** job 8 (Mixed), resize, multi-ship jobs (unless the [two-ship test](backlog/two-ship-test.md) promotes a two-ship job 8), reactive in-solve tips, the playable map field,
-more chapters.
+**Out of v1:** Mixed (no job 8), resize, the fleet capstone (2-5), reactive in-solve tips, the playable map
+field, chapters beyond 2.
 
 ## Road to the store
 
 After v1 (decided 2026-11-07): a **~€5 Meta store release** sooner, then chapters as updates. The game
 shape is in [chapters](../design/chapters.md); the demo is the store's own option.
 
-1. **Job 8 (Mixed)** closes chapter 1 — bake it, or ship chapter 1 at seven jobs and land it before
-   chapter 2 opens. The [two-ship test](backlog/two-ship-test.md) may replace it.
-2. **Chapter 2 — the fleet.** [Design](../design/chapters.md#chapter-2--the-fleet-store-release); not yet a plan.
+1. **Chapter 1 stays seven jobs** (decided 2026-11-11): no job 8; Mixed moves to a later chapter.
+2. **Chapter 2 — the fleet.** 2-1 to 2-4 ship in v1 ([fleet episode](in-progress/fleet-episode.md)); the
+   store adds the 2-5 capstone ([design](../design/chapters.md#chapter-2--the-fleet-v1-then-the-store-release)).
 3. **Freelance contracts.** ~150 prebaked jobs, tiers, the quality filter, the exact-entropy score.
 4. **The daily contract.** One pool job per day, Meta platform leaderboard.
 5. **Price check.** Measure minutes per job on the headset; confirm ~€5 and the pool size.
@@ -59,25 +65,22 @@ shape is in [chapters](../design/chapters.md); the demo is the store's own optio
 
 Active work.
 
-- [Run fixes](in-progress/run-fixes.md) — from the 2026-11-11 design review: exit on the Quest menu
-  gesture (the scale-out exit collides with the shrink), restart on fail, a first pass on Jim's lines, and a gesture art module in `_Modules` for other projects.
-- [Transit routes](in-progress/transit-routes.md) — today (2026-11-11): bake parity for every ship's
-  endpoints (U0), the visible keep-out (U1), route colours on the lines and the map (U2); endpoint
-  shapes and interchanges (U3) split out if the day runs short.
-- [Field wells](in-progress/field-wells.md) — spike: the lattice bends toward the planets from the
-  start; the pinch shows as the wells changing. Keep or drop after a headset test.
+- [Fleet episode](in-progress/fleet-episode.md) — started 2026-11-11: four multi-ship jobs join v1 as
+  chapter 2, episode 2; lines approved, job 8 dropped from v1.
+
+Closed 2026-11-11: the ending, endpoint shapes, the stuck-player skip and the field-wells spike
+([lessons](../lessons.md)).
 
 ## Next
 
-- [Two-ship test](backlog/two-ship-test.md) — the first two-ship level played well; queued, not active:
-  a few more levels (separate, fan-out, converge) and the two-ship job 8 decision.
+Nothing queued.
 
 ## Later
 
 Design-only or deferred. Nothing here is scheduled.
 
-- [Chapter 2 — the fleet](../design/chapters.md#chapter-2--the-fleet-store-release) — job 8 (Mixed) closes chapter 1;
-  chapter 2 (five jobs) brings in multi-ship. Post-v1.
+- [Chapter 2's capstone](../design/chapters.md#chapter-2--the-fleet-v1-then-the-store-release) — the
+  2-5 fleet capstone. Post-v1. Mixed (the old job 8) waits for a later chapter.
 - The contract card stays available during the run as a static reference; otherwise
   help reaches the player at the start (Jim's line, the gesture prompts) and the end (the complete/fail
   message) — no reactive in-solve hint surface.
@@ -89,20 +92,36 @@ hologram look, TTS companion (deferred), feel polish, playable map field.
 
 Loose ends that still need a home. Close one by linking the plan that finishes it.
 
+- **TTS clips missing.** Ten clips before the capture: `level_01_02`–`level_01_07` `_fail`,
+  `level_01_06_init_01`, and Jim's three closing lines (`run_ending_jim_01`–`03`). Fails, job 6's intro
+  and the ending's voice are silent until then.
+- **Job 7's manual shortening (from run fixes).** Waits on the lore rethink: does the "eleven years"
+  note move or stay.
+- **Field wells: keep or drop (from the spike).** The change-only mode (flat start, the edit's wells)
+  is in code and off by default; `Puzzle.prefab` has it on, uncommitted, for the headset test. Keep it
+  (turn it on, update [the cube](../design/systems/cube.md) §Feedback and remove the toggle) or drop it
+  (delete `WellPull`, `LatticeWells` and the `LatticeWarp` argument). The lattice also runs 48 points a
+  line for the same test (`LatticeMeshBuilder.SamplesPerLine`, uncommitted); keep or go back to 32.
+- **Endpoint rings (from endpoint shapes).** The origin band is about 3× the destination's width and
+  both grow with the planet: decide the widths (same width and another distinction, or a narrower
+  origin band). Tune the ring scale (×2) and the interchange markers on the headset; the `cube.md`
+  §Feedback paragraph is written but uncommitted.
+- **The ending on the headset.** The exit cue and the lit-map cue start almost together; keep one if
+  they clash.
+- **Route end fallback.** `MapRouteLine.EndIndex` returns `-1` when no job is `Current` or solved
+  (unreachable today); make it safe if that can ever happen.
 - **Gesture prompt icons — headset read.** Scale, Enter, Move, Exit, Spend and Stars (the last two new
   2026-11-10, with the field meter) play 12-frame line-art loops rendered from Meta's own hand mesh by
   `Tools/Our Space/Render Gesture Prompt Art` (`GesturePrompts/Editor`); re-run it after tuning a motion.
   Still open: read them in the headset (size, speed, legibility at arm's length).
-- **Run authoring.** Jobs 1–7 are baked into Chapter 01 (seven jobs); job 8 is the deferred Mixed
-  closer, step 1 of the road to the store. The job card landed (2026-11-07). Job 1 was rebaked (2026-11-06) with
+- **Run authoring.** Jobs 1–7 are baked into Chapter 01 (seven jobs, final). The job card landed (2026-11-07). Job 1 was rebaked (2026-11-06) with
   six planets and a sun the cube does not cover (seed 141) — a sunless four-planet field almost never
   bakes. `PuzzleJobBakeTests` and a headset read of job 1 are still open.
 - **Ship-zone cue.** The ship has a trail; there is no zone indicator. No plan owns it yet.
 - **Resize.** Working, but the explanation (size is scope, not precision) is not ready. Deferred from the
   slice; chapter 3's first lesson ([chapters](../design/chapters.md)).
-- **Capstone routes (job 8).** The capstone is deferred to its own future plan; it still needs at least
-  two routes and a Mixed/InZone field that bakes. Designed in
-  [chapter 2](../design/chapters.md#chapter-2--the-fleet-store-release); not scheduled.
+- **Mixed.** Dropped from chapter 1 (no job 8, [chapters](../design/chapters.md)); a later chapter's
+  job. It still needs at least two routes and a Mixed field that bakes; not scheduled.
 
 ## Conventions
 

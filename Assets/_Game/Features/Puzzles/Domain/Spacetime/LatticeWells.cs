@@ -5,8 +5,8 @@ using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
 {
-    // Tuning for the field-wells spike (docs/plans/backlog/field-wells.md): whether the lattice
-    // shows the planets' wells, and how deep.
+    // Tuning for the field-wells spike (closed 2026-11-11; keep or drop is a board open tail):
+    // whether the lattice shows the planets' wells, and how deep.
     [Serializable]
     public class LatticeWells
     {

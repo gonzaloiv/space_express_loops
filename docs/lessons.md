@@ -4,6 +4,91 @@ Short post-mortems, written when a plan closes (rule in [AGENTS.md](../AGENTS.md
 morning). Newest first. Each entry: what worked, what surprised us, the rule for next time. One idea per
 bullet; the code and tests are the record of what was built.
 
+## 2026-11-11 — The ending
+
+- **Worked:** counting the run from the selector, never a literal, made the ending valid for any number
+  of jobs; storing the job count in the seen flag lets a new chapter earn it again.
+- **Surprised:** a flow state's exit duties (hide the puzzle, the exit cue) moved between states twice
+  across agents; once nobody owned them, the solved puzzle stayed over the map in a build.
+- **Surprised:** reaching the 250-line cap by packing statements and deleting blank lines passed the
+  count but not the rule; the real fix was splitting the interaction gate off.
+- **Next time:** when a state takes over another's duties, move them in one commit with the scene
+  wiring, and check the build path, not only the tests.
+
+## 2026-11-11 — Endpoint shapes
+
+- **Worked:** resolving each endpoint to its session source kept a pushed endpoint's ring on its
+  planet, and one pool per role kept `FieldPlanetSet` under the cap.
+- **Surprised:** re-authoring the endpoint prefabs as rings dropped the planet body, and with it the
+  size cue the player reads to predict the pull; the headset caught it, the tests could not.
+- **Next time:** a role marker decorates the thing; it never replaces it. Add marks next to the body
+  (`NodeBody.marks`) instead of swapping the body.
+- **Next time:** edit prefabs in place (load, change, save) so every referenced component keeps its
+  file ID; rebuilding one breaks every scene and prefab that points into it.
+
+## 2026-11-11 — Stuck-player skip
+
+- **Worked:** one payload on the existing restart value (signpost index, first open) carried the whole
+  feature through the flow without a new seam or a new state.
+- **Surprised:** "one fail opens the next" chains: failing an opened job opens the one after. Kept on
+  purpose: a stuck judge sees every job, and only solving completes the run.
+- **Next time:** test a domain member the views read (`HighestCurrentIndex`) instead of widening an
+  internal view for tests.
+
+## 2026-11-11 — Field wells (spike)
+
+- **Worked:** a toggle and a struct behind the lattice warp made the spike cheap to try and cheap to
+  turn off.
+- **Surprised:** wells from the first frame read as chaos on the headset; the problem was the bent
+  start, not wells. Drawing only the change from the start kept the idea.
+- **Surprised:** per-source caps do not cap a sum: a strong sun behind a planet dragged nodes through
+  it until the summed move was clamped too.
+- **Next time:** a field cue should show what the player changed, not everything that is there.
+
+## 2026-11-11 — Run fixes
+
+- **Worked:** reusing the module's menu invoker and its aim flags gave the exit gesture in an hour;
+  the left-hand-only scope kept the universal menu from dropping a player out of a job.
+- **Worked:** a fail that restarts in place, with a one-shot flag the next state reads and clears, kept
+  the retry fast without a new flow state.
+- **Surprised:** a skinned mesh in a preview scene keeps its first pose unless told to recalculate, so
+  every rendered gesture loop was frozen until a grip check caught it.
+- **Surprised:** a debug override (`puzzleToSet`) was committed twice with unrelated scene changes.
+  Review the scene diff hunk by hunk before a commit; never stage `Game.unity` whole.
+- **Next time:** lines need clips; plan the TTS download with the strings, or the build ships silent.
+
+## 2026-11-11 — Transit routes
+
+- **Worked:** one colour per route reads at a glance; the outcome at the line's end freed the line to
+  carry identity instead of result.
+- **Surprised:** a faint box around every endpoint while moving was too much with two ships; one red
+  cube at the hand on a refused move says the same with less.
+- **Surprised:** hand-typed GUIDs in a prefab collided with scripts and broke asset loading. Let Unity
+  assign GUIDs; repoint by asset, never by guess.
+- **Next time:** split the art-heavy unit (shapes, interchanges) out at the start when the day is a
+  code day.
+
+## 2026-11-11 — Judge run
+
+- **Worked:** one constant (`PuzzleGrade`) behind every star limit meant the margin moved the meter,
+  the prompt art and the passthrough pulse in one change.
+- **Surprised:** tests that hard-code a limit keep passing after it moves; their names lie. Tests read
+  the domain constant, not a copy of its value.
+- **Next time:** a unit that waits on a playtest is its own small plan, not a tail on a done one.
+
+## 2026-11-11 — The two-ship test
+
+- **Worked:** one test level on the headset settled a question the docs had argued for weeks; the
+  fleet bakes played better than the single-ship jobs and went into v1 as their own episode.
+- **Worked:** the test lived outside the run (its own assets, no chapter edits), so a "no" would have
+  cost nothing to undo.
+- **Surprised:** the headset play found the real work, not the bake: route colours, the outcome at the
+  line's end and the keep-out became their own plan (transit routes).
+- **Surprised:** three ships bake much more slowly than two. Budget the bake time when a job needs a
+  third ship.
+- **Next time:** when a test says yes, plan the content (ids, lines, clips) at once; the code to play
+  the level is the small part.
+
 ## 2026-11-10 — The panel bank (rolled back)
 
 - **Rolled back:** the windows on two arms from the grid's corner did not read well in the headset;
