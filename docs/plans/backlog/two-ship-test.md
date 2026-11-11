@@ -3,16 +3,16 @@
 **Status:** next · space shaping · updated 2026-11-10 — the first two-ship level played well (2026-11-10),
 but the rest is queued, not active: U3's extra levels and the job 8 decision wait. U1's
 `PuzzleShipScanTests` run is still open. Route colours and the cube's keep-out moved to
-[transit routes](transit-routes.md).
+[transit routes](../in-progress/transit-routes.md).
 
-**Related:** [chapter 2 — the fleet](chapter-2-fleet.md) (2-1 is the same brief) ·
+**Related:** [chapter 2 — the fleet](../../design/chapters.md#chapter-2--the-fleet-store-release) (2-1 is the same brief) ·
 [puzzle creator](../../../Assets/_Game/Features/PuzzleCreator/README.md) · [plans board](../README.md)
 
 ## Goal
 
 Multi-ship is out of v1 and untested on the headset. A test level decides whether it plays well
 enough to become job 8 (two ships, separate runs) for the competition build. Mixed stays out of v1
-(still the post-v1 closer in [chapter 2](chapter-2-fleet.md) unless this test replaces it).
+(still the post-v1 closer in [chapter 2](../../design/chapters.md#chapter-2--the-fleet-store-release) unless this test replaces it).
 
 ## Contract
 

@@ -148,4 +148,4 @@ mechanic before writing another plan.
 | Room-scale legacy drag | **Resolved.** The room view mode is removed from the code. |
 | Content ceiling | **Valid, narrower.** Authored multi-ship is fine; simultaneous unscripted multi-ship is "near-chaotic". The 7-job spine is single-ship; multi-ship is the store release's chapter 2 ([chapters](chapters.md)). |
 | Entropy legibility | **In, tuning.** The in-field bar and the passthrough strain carry the spend; the budget is derived from the bake's best solution, so the 3★ band still needs a headset read ([progression](systems/progression.md) §Open questions). |
-| Run length | **Measuring.** The target is a 10-minute session; seven jobs × ~1 min are baked and the headset timing pass is scheduled for 2026-11-09 ([progression](systems/progression.md) §Open questions). |
+| Run length | **Measuring.** The target is a 10-minute session; seven jobs × ~1 min are baked; minutes per job on the headset are not yet measured ([progression](systems/progression.md) §Open questions). |

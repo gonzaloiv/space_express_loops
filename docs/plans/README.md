@@ -48,7 +48,7 @@ shape is in [chapters](../design/chapters.md); the demo is the store's own optio
 
 1. **Job 8 (Mixed)** closes chapter 1 — bake it, or ship chapter 1 at seven jobs and land it before
    chapter 2 opens. The [two-ship test](backlog/two-ship-test.md) may replace it.
-2. **Chapter 2 — the fleet.** [Plan](backlog/chapter-2-fleet.md).
+2. **Chapter 2 — the fleet.** [Design](../design/chapters.md#chapter-2--the-fleet-store-release); not yet a plan.
 3. **Freelance contracts.** ~150 prebaked jobs, tiers, the quality filter, the exact-entropy score.
 4. **The daily contract.** One pool job per day, Meta platform leaderboard.
 5. **Price check.** Measure minutes per job on the headset; confirm ~€5 and the pool size.
@@ -59,21 +59,24 @@ shape is in [chapters](../design/chapters.md); the demo is the store's own optio
 
 Active work.
 
-Nothing active. The field meter closed 2026-11-10; the panel bank was rolled back the same day (see
-[lessons](../lessons.md)).
+- [Run fixes](in-progress/run-fixes.md) — from the 2026-11-11 design review: exit on the Quest menu
+  gesture (the scale-out exit collides with the shrink), restart on fail, a first pass on Jim's lines, and a gesture art module in `_Modules` for other projects.
+- [Transit routes](in-progress/transit-routes.md) — today (2026-11-11): bake parity for every ship's
+  endpoints (U0), the visible keep-out (U1), route colours on the lines and the map (U2); endpoint
+  shapes and interchanges (U3) split out if the day runs short.
+- [Field wells](in-progress/field-wells.md) — spike: the lattice bends toward the planets from the
+  start; the pinch shows as the wells changing. Keep or drop after a headset test.
 
 ## Next
 
 - [Two-ship test](backlog/two-ship-test.md) — the first two-ship level played well; queued, not active:
   a few more levels (separate, fan-out, converge) and the two-ship job 8 decision.
-- [Transit routes](backlog/transit-routes.md) — queued, not active: the cube's keep-out for every ship
-  (U1), route colours on the lines (U2), then endpoint shapes and interchanges (U3).
 
 ## Later
 
 Design-only or deferred. Nothing here is scheduled.
 
-- [Chapter 2 — the fleet](backlog/chapter-2-fleet.md) — job 8 (Mixed) closes chapter 1;
+- [Chapter 2 — the fleet](../design/chapters.md#chapter-2--the-fleet-store-release) — job 8 (Mixed) closes chapter 1;
   chapter 2 (five jobs) brings in multi-ship. Post-v1.
 - The contract card stays available during the run as a static reference; otherwise
   help reaches the player at the start (Jim's line, the gesture prompts) and the end (the complete/fail
@@ -98,8 +101,8 @@ Loose ends that still need a home. Close one by linking the plan that finishes i
 - **Resize.** Working, but the explanation (size is scope, not precision) is not ready. Deferred from the
   slice; chapter 3's first lesson ([chapters](../design/chapters.md)).
 - **Capstone routes (job 8).** The capstone is deferred to its own future plan; it still needs at least
-  two routes and a Mixed/InZone field that bakes. Planned in
-  [chapter 2](backlog/chapter-2-fleet.md) U1; not scheduled.
+  two routes and a Mixed/InZone field that bakes. Designed in
+  [chapter 2](../design/chapters.md#chapter-2--the-fleet-store-release); not scheduled.
 
 ## Conventions
 

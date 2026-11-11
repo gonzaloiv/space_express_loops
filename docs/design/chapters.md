@@ -43,7 +43,7 @@ No new verb. The ramp restarts: low scramble, Ring shape.
 
 Multi-ship bakes need ≥ 9 planets, use one movable cube, and cannot request a role, so every fleet job
 is checked by playing it. **Slightly Used Stars Ltd.** returns at 2-2; **The Very Small Opera** takes the
-capstone. Build plan: [chapter 2 — the fleet](../plans/backlog/chapter-2-fleet.md).
+capstone. Not yet a plan: step 2 of the [road to the store](../plans/README.md#road-to-the-store).
 
 ## Chapter 3 — the instrument (first update)
 

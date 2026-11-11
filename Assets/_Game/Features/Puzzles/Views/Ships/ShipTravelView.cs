@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace DigitalLove.Game.SpaceShaping
 {
@@ -13,8 +14,10 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private float travelTimeScale = 4f;
         [SerializeField] private float launchDelaySecs = 0.09f;
         [SerializeField] private float landFadeSecs = 0.18f;
-        [Tooltip("How far short of the arrival cap the ship parks on a landing, in metres.")]
-        [SerializeField] private float parkGap = 0.02f;
+        [Tooltip("How far short of the arrival cap the dock starts, in metres.")]
+        [SerializeField, FormerlySerializedAs("parkGap")] private float dockGap = 0.02f;
+        [Tooltip("An arriving ship slides into the destination and shrinks away over this time.")]
+        [SerializeField] private float dockSecs = 0.35f;
         [SerializeField] private float turnDegPerSec = 720f;
         [SerializeField] private TrailRenderer trail;
         [SerializeField] private ShipEngine engine;
@@ -49,12 +52,12 @@ namespace DigitalLove.Game.SpaceShaping
             FaceHeading(points);
             trail.Clear();
             trail.emitting = false;
-            bool lands = result.Outcome == TrajectoryOutcome.Arrive;
+            bool docks = result.Outcome == TrajectoryOutcome.Arrive;
             float travel = TravelSecs(simSecs);
             if (audible)
                 engine.Begin();
             flight = StartCoroutine(
-                Fly(points, travel, Mathf.Max(launchDelaySecs + delaySecs, 0f), lands));
+                Fly(points, travel, Mathf.Max(launchDelaySecs + delaySecs, 0f), docks));
         }
 
         public void Stop()
@@ -75,24 +78,39 @@ namespace DigitalLove.Game.SpaceShaping
                 Mathf.Max(minFlightSecs, 0.0001f),
                 Mathf.Max(maxFlightSecs, minFlightSecs));
 
-        private IEnumerator Fly(List<Vector3> points, float travel, float delay, bool park)
+        // Every flight ends hidden: an arrival docks into the destination, a miss or crash shrinks
+        // where it stops. The solve payoff (the destination's swell) follows the dock.
+        private IEnumerator Fly(List<Vector3> points, float travel, float delay, bool docks)
         {
             if (delay > 0f)
                 yield return new WaitForSeconds(delay);
 
             trail.emitting = true;
-            float end = park ? ShipRunGeometry.ParkProgress(points, parkGap) : 1f;
+            float end = docks ? ShipRunGeometry.ParkProgress(points, dockGap) : 1f;
             yield return FlyAlong(points, travel, end);
             engine.Stop();
             trail.emitting = false;
-            if (!park)
-            {
-                yield return Land();
-                gameObject.SetActive(false);
-            }
-
+            yield return docks ? Dock(points[points.Count - 1]) : Land();
+            gameObject.SetActive(false);
             flight = null;
             Completed?.Invoke();
+        }
+
+        private IEnumerator Dock(Vector3 target)
+        {
+            Vector3 start = transform.localPosition;
+            float secs = Mathf.Max(dockSecs, 0.0001f);
+            float elapsed = 0f;
+            while (elapsed < secs)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / secs));
+                transform.localPosition = Vector3.Lerp(start, target, t);
+                transform.localScale = baseScale * Mathf.Max(1f - t, 0.001f);
+                yield return null;
+            }
+
+            transform.localScale = baseScale;
         }
 
         private IEnumerator FlyAlong(List<Vector3> points, float travel, float end)

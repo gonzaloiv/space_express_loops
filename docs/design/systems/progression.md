@@ -122,7 +122,7 @@ is to read.
 
 The verb is always the **scale**, so variety comes from the field and the brief:
 
-1. **Planet count** — 4 (tutorial) → 12 sources by act; the field grows into a little galaxy.
+1. **Planet count** — 6 (tutorial) → 12 sources by act; the field grows into a little galaxy.
 2. **Solution cost** — cheap → expensive; the bake triples it into the budget, so this sets the
    absolute bar, not the star thresholds.
 3. **Well depth** — shallow → deep (a deeper well bends the path more).

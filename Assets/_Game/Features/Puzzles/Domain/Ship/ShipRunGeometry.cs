@@ -50,7 +50,7 @@ namespace DigitalLove.Game.SpaceShaping
             Mathf.Max(capGap, radius * capGapFraction);
 
         // The index-space fraction (0-1 over the point list) where a ship parks `gap` metres before
-        // the end of the drawn run. Used only on a landing so the ship stops clear of the planet.
+        // the end of the drawn run. An arriving ship stops there, then docks into the planet.
         public static float ParkProgress(IReadOnlyList<Vector3> points, float gap)
         {
             int last = points.Count - 1;

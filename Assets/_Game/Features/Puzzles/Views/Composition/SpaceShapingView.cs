@@ -32,6 +32,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private float fadeNear = 0.15f;
         [Tooltip("Lattice fade: distance from the nearest planet or the run where the lattice is fully transparent, as a fraction of the field half-extent.")]
         [SerializeField] private float fadeFar = 0.55f;
+        [SerializeField] private LatticeWells wells = new();
 
         private readonly SpaceShapingFirstUse firstUse = new();
         private bool wasScaling;
@@ -139,7 +140,7 @@ namespace DigitalLove.Game.SpaceShaping
             FieldFrame.Measure(session, out Vector3 centre, out float half);
             FieldCentre = centre;
             FieldHalf = half;
-            LatticeWarp warp = new(session.Zones);
+            LatticeWarp warp = new(session.Zones, wells.For(session));
             ContentFade fade = new(session, half * fadeNear, half * fadeFar);
             mesh.Render(warp.Warp, fade.Alpha, session.Zones.StrongestScaleOffset(), centre, half);
             dust.Render(warp.Warp, centre, half);
