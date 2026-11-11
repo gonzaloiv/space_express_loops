@@ -18,12 +18,17 @@ namespace DigitalLove.Game.SpaceShaping.Grid
         [Range(0f, 1f)]
         [SerializeField] private float gridOpacity = 0.35f;
         [SerializeField] private float tintStrength = 2.5f;
+        [Tooltip("Smoothing passes along each line on the warp: softens spikes without more points. 0 is off.")]
+        [SerializeField, Range(0, 8)] private int smoothPasses = 2;
 
         private Mesh mesh;
         private Vector3[] vertices;
         private Color[] colors;
         private Vector3[] nodeFractions;
         private Vector3[] ringOffsets;
+        private Vector3[] nodes;
+        private Vector3[] warpedNodes;
+        private Vector3[] smoothScratch;
         private Bounds bounds;
         private int samplesPerLine;
         private RendererTint tint;
@@ -77,16 +82,22 @@ namespace DigitalLove.Game.SpaceShaping.Grid
             Matrix4x4 parentToLocal = transform.worldToLocalMatrix * transform.parent.localToWorldMatrix;
             bounds = new Bounds(Vector3.zero, Vector3.zero);
 
-            // A tube ring's `sides` vertices are consecutive and share one node: warp and fade it once.
-            for (int v = 0; v < vertices.Length; v += sides)
+            // A tube ring's `sides` vertices are consecutive and share one node: warp it once, smooth
+            // the warp along its line, then fade and write the ring.
+            for (int ring = 0; ring < nodes.Length; ring++)
             {
-                Vector3 fraction = nodeFractions[v];
-                Vector3 node = new(
-                    (fraction.x * 2f - 1f) * half,
-                    (fraction.y * 2f - 1f) * half,
-                    (fraction.z * 2f - 1f) * half);
-                Vector3 warped = warp(localToParent.MultiplyPoint3x4(node));
-                WriteRing(v, parentToLocal.MultiplyPoint3x4(warped), new Color(1f, 1f, 1f, fade(warped)));
+                Vector3 fraction = nodeFractions[ring * sides];
+                Vector3 node = (fraction * 2f - Vector3.one) * half;
+                nodes[ring] = localToParent.MultiplyPoint3x4(node);
+                warpedNodes[ring] = warp(nodes[ring]);
+            }
+
+            LatticeLineSmoothing.Smooth(nodes, warpedNodes, smoothScratch, samplesPerLine, smoothPasses);
+            for (int ring = 0; ring < nodes.Length; ring++)
+            {
+                Vector3 warped = warpedNodes[ring];
+                WriteRing(
+                    ring * sides, parentToLocal.MultiplyPoint3x4(warped), new Color(1f, 1f, 1f, fade(warped)));
             }
         }
 
@@ -154,6 +165,9 @@ namespace DigitalLove.Game.SpaceShaping.Grid
             meshFilter.sharedMesh = mesh;
             vertices = new Vector3[mesh.vertexCount];
             colors = new Color[mesh.vertexCount];
+            nodes = new Vector3[mesh.vertexCount / sides];
+            warpedNodes = new Vector3[nodes.Length];
+            smoothScratch = new Vector3[nodes.Length];
             samplesPerLine = mesh.vertexCount / (3 * gridCount * gridCount * sides);
             BuildStaticData();
         }
