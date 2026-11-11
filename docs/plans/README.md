@@ -102,10 +102,13 @@ Loose ends that still need a home. Close one by linking the plan that finishes i
   (turn it on, update [the cube](../design/systems/cube.md) §Feedback and remove the toggle) or drop it
   (delete `WellPull`, `LatticeWells` and the `LatticeWarp` argument). The lattice also runs 48 points a
   line for the same test (`LatticeMeshBuilder.SamplesPerLine`, uncommitted); keep or go back to 32.
-- **Endpoint rings (from endpoint shapes).** The origin band is about 3× the destination's width and
-  both grow with the planet: decide the widths (same width and another distinction, or a narrower
-  origin band). Tune the ring scale (×2) and the interchange markers on the headset; the `cube.md`
-  §Feedback paragraph is written but uncommitted.
+- **Endpoint rings (from endpoint shapes).** Second try (2026-11-11): a small ring *under* the planet
+  (a `Base` child at -0.7 body radius, planet-sized, not spinning) instead of around it, and the
+  endpoint bodies spin like every planet again (`ConstantRotation`). Third pass: one ring for every
+  endpoint, smaller (the filled band at ×0.7, 0.21–0.35 of the body radius), so origin and destination
+  no longer differ by shape — only the route colour and the line's direction tell them apart, and the
+  interchange keeps its markers. `OpenRing.asset` is now unused. Update
+  [the cube](../design/systems/cube.md) §Feedback ("filled/open ring around the planet") once settled.
 - **The ending on the headset.** The exit cue and the lit-map cue start almost together; keep one if
   they clash.
 - **Route end fallback.** `MapRouteLine.EndIndex` returns `-1` when no job is `Current` or solved
