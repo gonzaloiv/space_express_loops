@@ -100,6 +100,9 @@ Organize first-party code into folders that describe what it does, so the tree r
 - When moving files, move the `.meta` too; keep GUIDs (never re-create assets).
 - Skip `**/Vendor/**`, `**/Samples/**`, and `**/Plugins/**`.
 
-## Commits at plan completion
+## Commits at unit and plan completion
 
-When a plan's implementation is finished, stage only that plan's files and make a local commit as the final step; report the hash and do not push. If the plan spans a submodule, commit the submodule first, then the parent pointer. Leave unrelated worktree changes uncommitted.
+When a plan unit's exit is met and the automated checks pass, stage only that unit's files and make a
+local commit; report the hash and do not push. When the whole plan is finished, make the plan-completion
+commit as the final step. If the work spans a submodule, commit the submodule first, then the parent
+pointer. Leave unrelated worktree changes uncommitted.
