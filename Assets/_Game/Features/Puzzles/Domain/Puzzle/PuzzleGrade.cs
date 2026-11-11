@@ -4,7 +4,7 @@ namespace DigitalLove.Game.SpaceShaping
     {
         public const float BudgetFactor = 3f;
 
-        public const float ThreeStarUse = 1f / 3f;
+        public const float ThreeStarUse = 0.5f;
         public const float TwoStarUse = 2f / 3f;
 
         public static int Stars(float spent, float budget)

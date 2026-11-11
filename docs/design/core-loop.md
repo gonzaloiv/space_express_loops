@@ -74,10 +74,12 @@ Entropy is the Wrap's cost and the only resource the player manages: a **budget*
   is free to undo: return the hands to the committed value before release and it costs nothing. After
   release, moving the zone back costs again. **There is no undo in the slice** — a refund would make
   probing free and the fail unreachable. **Reset/retry is free** and restarts the budget with the field.
-  Only committed modifications cost.
+  Only committed modifications cost. So probing inside a pinch is free: jobs 1–4 (one zone) can be swept
+  until the line arrives. Entropy starts to bite at job 5, where the first zone is committed before the
+  second.
 - **The budget is derived by the bake.** The creator finds a solution, then sets the job's budget to
-  **3× that solution's entropy**. Stars are **1/3 and 2/3 of the budget**: 3★ means spending no more
-  than the bake's solution, 2★ up to twice that, otherwise 1★. The thresholds are the same shape every
+  **3× that solution's entropy**. Stars are at **1/2 and 2/3 of the budget**: 3★ means spending up to
+  **1.5× the bake's solution**, 2★ up to twice it, otherwise 1★. The thresholds are the same shape every
   job; the field sets the absolute cost.
 - **The budget is exhausted when committed spend reaches it:** new edits are refused and an unsolved
   job **fails** (job 1 is exempt). If the same commit both arrives and empties the budget, the solve wins.
@@ -96,7 +98,7 @@ the entropy bar lives **in the field**, as a **post on the grid's front-left ver
 2026-11-10, replacing the base-edge arms) — not in a panel; the lab panel is a diagnostic. The post is
 the **remaining entropy**: spending cuts it from the top, a pinch shows its cost just below the top
 before it commits (danger if it would overrun), and the last committed edit sits dimmed above. Moving
-the cube and launching are visibly free. Notches at the **1/3 and 2/3** use limits carry a **star beside
+the cube and launching are visibly free. Notches at the **1/2 and 2/3** use limits carry a **star beside
 each band**: a star holds while the top stays above its notch, flickers while a pinch would cost it, and
 goes dark once spent past — so the player sees which star an edit is worth before releasing. The grade
 itself is still awarded on a solve.

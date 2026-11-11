@@ -64,8 +64,8 @@ One new lesson at a time, so the player never faces two unrelated ideas at once:
    not just how much. "Where does the cube sit" is its own lesson.
 5. **Job 5 — multi-zone.** The player moves the cube and scales several zones. This is where "several
    zones" now lands; the fixed-cube rung is retired.
-6. **Job 6 — the field carries you.** A deep well already sits near the line; a few small edits that use
-   it beat one big edit that fights the field.
+6. **Job 6 — the field carries you.** A deep well already sits near the line; edit where a small change
+   moves the path most.
 7. **Job 7 — the capstone.** The cube starts over the sun; the solution scales several zones with the star
    included. The finale combines every verb except both roles; a future job 8 brings Mixed.
 

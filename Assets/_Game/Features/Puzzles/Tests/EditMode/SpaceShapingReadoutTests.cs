@@ -42,7 +42,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         public void CheckedSolved_AwardsGradeFromCommittedEntropy()
         {
             SpaceShapingSession session = new(Setup());
-            session.ApplyZone(Zone(1.5f));
+            session.ApplyZone(Zone(1.6f));
 
             PuzzleReadout readout = PuzzleReadout.From(session, Simulate(session), true);
 
@@ -50,7 +50,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             Assert.IsTrue(readout.IsSolved);
             Assert.IsFalse(readout.IsFailed);
             Assert.AreEqual(2, readout.Grade);
-            Assert.AreEqual(0.5f, readout.EntropySpent, 0.0001f);
+            Assert.AreEqual(0.6f, readout.EntropySpent, 0.0001f);
             Assert.AreEqual(0f, readout.EntropyPending, 0.0001f);
             Assert.AreEqual(1, readout.CommandCount);
         }

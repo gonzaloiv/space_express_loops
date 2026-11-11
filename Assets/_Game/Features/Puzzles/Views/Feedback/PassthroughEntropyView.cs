@@ -86,21 +86,11 @@ namespace DigitalLove.Game.SpaceShaping
         private bool CrossedBand(PuzzleReadout readout)
         {
             return readout.EntropySpent > lastSpent
-                && Band(readout.EntropySpent, readout.EntropyBudget) > Band(lastSpent, lastBudget);
+                && Band(readout.EntropySpent, readout.EntropyBudget) < Band(lastSpent, lastBudget);
         }
 
-        private static int Band(float spent, float budget)
-        {
-            if (budget <= 0f)
-                return 0;
-
-            float remaining = 1f - Mathf.Clamp01(spent / budget);
-            if (remaining > 2f / 3f)
-                return 0;
-            if (remaining > 1f / 3f)
-                return 1;
-            return 2;
-        }
+        private static int Band(float spent, float budget) =>
+            budget > 0f ? PuzzleGrade.Stars(spent, budget) : 0;
 
         private float Stress(PuzzleReadout readout) =>
             Mathf.InverseLerp(stressStartRemaining, 0f, EntropyBar.From(readout).Remaining);

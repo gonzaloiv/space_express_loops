@@ -1,3 +1,4 @@
+using DigitalLove.Game.SpaceShaping;
 using DigitalLove.XR.GestureArt;
 using UnityEngine;
 
@@ -58,7 +59,9 @@ namespace DigitalLove.Game.GesturePrompts.Editor
             new("stars", "GesturePromptStars", (_, move) =>
             {
                 float spend = 0.05f + 0.65f * move;
-                float star = Mathf.Lerp(1f, 0.28f, Mathf.InverseLerp(1f / 3f, 0.45f, spend));
+                float fadeEnd = (PuzzleGrade.ThreeStarUse + PuzzleGrade.TwoStarUse) * 0.5f;
+                float star = Mathf.Lerp(
+                    1f, 0.28f, Mathf.InverseLerp(PuzzleGrade.ThreeStarUse, fadeEnd, spend));
                 return new HandFrame(0f, null, null, Vector2.zero, 0f)
                     .WithMeter(new MeterFrame(spend, star));
             }),

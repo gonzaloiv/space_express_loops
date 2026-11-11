@@ -23,7 +23,7 @@ This doc is **chapter 1**; the store release's chapters 2–3 are in [chapters](
 | 3 | the other direction | Clear | fixed · 1 zone · no · 1 ship | Ring | 5–6 + sun · single · medium | medium | a planet blocks the line; shrinking it clears the path — the same pinch, the opposite role |
 | 4 | the cube moves | Curve | **yes** · 1 zone · no · 1 ship | Spiral | 8–10 + sun · multi | medium | spawns at the centre; the solution is off-centre, so the move is required |
 | 5 | multi-zone intro | Curve | yes · 2+ zones · no · 1 ship | Spiral | 10–12 + sun · multi | medium | move + scale two zones — the combination enters |
-| 6 | the field carries you | Curve | yes · 2+ zones · no · 1 ship | Cluster | 10 + sun · multi · deep | high | a deep well already near the line does most of the bend; the cheap answer is a few small edits that use it |
+| 6 | the field carries you | Curve | yes · 2+ zones · no · 1 ship | Cluster | 10 + sun · multi · deep | high | a deep well already near the line does most of the bend; the cheap answer is to edit where a small change moves the path most |
 | 7 | the capstone | Curve | yes · 2+ zones · no · 1 ship | Cluster | 12 + sun · multi · deep | high | multi-zone + the centre + the star + several routes — both roles deferred to a future job 8 |
 
 **The run is seven jobs (2026-11-05): 1 scale, 2 centre, 3 clear, 4 move, 5 multi-zone, 6 the field
@@ -144,7 +144,7 @@ creator bakes to them. Three groups.
 | Field | Means |
 |---|---|
 | **`routes`** | Distinct zone sets that arrive within budget. The bake enforces `minRoutes`: a movable single-zone level, job 3, and the capstone (job 7, and a future job 8) need at least two; the tutorial and job 2 may have one. |
-| **`entropyBudget`** | **3×** the entropy of the bake's solution; the star thresholds are 1/3 and 2/3 of it. |
+| **`entropyBudget`** | **3×** the entropy of the bake's solution; the star thresholds are 1/2 and 2/3 of it. |
 | **`sources` / `frames`** | The baked field (planets, sun, positions) and the cube frames the level places. |
 
 **Invariant:** **`scalable`** is always true — the level always offers the scale. A source can be locked
@@ -170,7 +170,7 @@ add a layout.
 | **Obstacle** | `zones 1`, fixed cube on a body on the line | shrink the blocker so the path clears | 3 |
 | **Move** | `translatable`, `zones 1` | place the cube yourself | 4 |
 | **Multi-zone** | `zones ≥ 2`, `translatable` | place and blend several zones | 5 |
-| **Assist** | `zones ≥ 2`, `translatable`, a deep well near the line | let the field do the bend; a few small edits beat one big one | 6 |
+| **Assist** | `zones ≥ 2`, `translatable`, a deep well near the line | edit where a small change moves the path most | 6 |
 | **Capstone** | `zones ≥ 2`, `translatable`, cube over the sun | combine the centre + several zones + the star | 7 |
 | **Mixed** | `zones ≥ 2`, one on the blocker, one on a run planet | clear with one zone, curve with another | 8 (future) |
 
@@ -267,5 +267,6 @@ company's condition, not a running joke.
 
 - **Routes as a mechanic?** If a late job (7–8) has more than one route, multiple routes stops being an
   authoring guard and becomes a principal mechanic. Decide whether the run teaches it.
-- **Job 6's bake.** Can the creator guarantee the assist route is the cheapest (a deep well near the
-  line), and reject seeds where one big edit is as cheap?
+- **Job 6's bake.** What number would show the well-using route is the cheapest — the cheapest spend
+  against the runner-up route, or the winning zone's delta? Answer it with the store's freelance quality
+  filter, not now.

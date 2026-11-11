@@ -18,7 +18,7 @@ decide what comes next. Chapters beyond 3 are ideas ([later chapters](../ideas/l
   jobs, the rest use it; the in-between jobs are curated from several bakes per contract row.
 - **Numbers restart per chapter** (`01_01`…, `02_01`…). The map joins the chapters into one ordered
   run; a chapter opens when the previous one's last job is solved.
-- **Same budget rule everywhere.** 3× the bake's solution, stars at 1/3 and 2/3 ([core loop](core-loop.md)
+- **Same budget rule everywhere.** 3× the bake's solution, stars at 1/2 and 2/3 ([core loop](core-loop.md)
   §3). Difficulty comes from scramble, planet count and depth, never a tighter budget.
 
 ## Chapter 1 — the Wrap (store release)

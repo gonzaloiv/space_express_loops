@@ -78,10 +78,10 @@ namespace DigitalLove.Game.GesturePrompts.Editor
 
         private void LayTicks()
         {
-            LayTick(0, 1f / 3f, -1f);
-            LayTick(1, 1f / 3f, 1f);
-            LayTick(2, 2f / 3f, -1f);
-            LayTick(3, 2f / 3f, 1f);
+            LayTick(0, PuzzleGrade.ThreeStarUse, -1f);
+            LayTick(1, PuzzleGrade.ThreeStarUse, 1f);
+            LayTick(2, PuzzleGrade.TwoStarUse, -1f);
+            LayTick(3, PuzzleGrade.TwoStarUse, 1f);
         }
 
         private void LayTick(int index, float s, float side)

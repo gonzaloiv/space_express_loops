@@ -112,7 +112,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             SpaceShapingSession session = new(Setup());
             Assert.AreEqual(3, session.Grade());
 
-            session.ApplyZone(Zone(1.5f));
+            session.ApplyZone(Zone(1.6f));
             Assert.AreEqual(2, session.Grade());
 
             session.ApplyZone(Zone(2f));
