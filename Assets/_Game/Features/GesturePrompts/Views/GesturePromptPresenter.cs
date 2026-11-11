@@ -26,10 +26,8 @@ namespace DigitalLove.Game.GesturePrompts
         [SerializeField] private Vector3 moveOffset = new(-0.12f, 0.12f, 0f);
         [SerializeField] private Vector3 enterOffset = new(0.12f, 0.12f, 0f);
         [SerializeField] private Vector3 exitOffset = new(0f, 0.22f, 0f);
-        [SerializeField] private Vector3 spendOffset = new(-0.14f, 0.06f, 0f);
-        [SerializeField] private Vector3 starsOffset = new(-0.14f, -0.06f, 0f);
-        [Tooltip("How far Spend and Stars tip back to face up from the field's base (90 = flat).")]
-        [SerializeField, Range(0f, 90f)] private float meterTiltDegrees = 60f;
+        [SerializeField] private Vector3 spendOffset = new(-0.14f, 0.14f, 0f);
+        [SerializeField] private Vector3 starsOffset = new(-0.14f, 0.02f, 0f);
 
         [Inject] private MemoryDataClient memoryDataClient;
 
@@ -38,10 +36,10 @@ namespace DigitalLove.Game.GesturePrompts
 
         public bool SpendShown { get; private set; }
 
-        // The middle of the entropy post on the grid's front-left edge, where Spend and Stars point and sit.
+        // The middle of the entropy post on the grid's meter edge, where Spend and Stars point and sit.
         private Vector3 MeterPost =>
             shapingView.transform.TransformPoint(
-                shapingView.FieldCentre + new Vector3(-shapingView.FieldHalf, 0f, -shapingView.FieldHalf));
+                shapingView.FieldCentre + FieldFrame.OnMeterEdge(shapingView.FieldHalf, 0f, 0f));
 
         public void Show(GestureKind kind)
         {
@@ -112,13 +110,14 @@ namespace DigitalLove.Game.GesturePrompts
             }
         }
 
-        // Spend and Stars sit on the meter at the field's base, below the eyes, so they tip back to face up.
+        // Spend and Stars stand upright beside the meter post (perpendicular to the floor), turned with
+        // the field so they face the seat however the field is yawed.
         private Quaternion? Facing(GestureKind kind)
         {
             if (kind != GestureKind.Spend && kind != GestureKind.Stars)
                 return null;
 
-            return shapingView.transform.rotation * Quaternion.Euler(meterTiltDegrees, 0f, 0f);
+            return shapingView.transform.rotation;
         }
 
         private Vector3 FieldOffset(Vector3 offset) => shapingView.transform.TransformVector(offset);

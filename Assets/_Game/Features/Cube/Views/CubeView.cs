@@ -28,6 +28,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         public bool IsScaling => scaling;
 
+        public bool IsHeld => listener.IsHeld;
+
         public bool CanMove => conditions.Translatable;
 
         public bool CanResize => conditions.Resizable;

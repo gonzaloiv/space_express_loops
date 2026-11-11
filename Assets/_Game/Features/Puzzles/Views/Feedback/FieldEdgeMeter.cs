@@ -7,7 +7,7 @@ using UnityEngine.Localization.Settings;
 
 namespace DigitalLove.Game.SpaceShaping
 {
-    // The entropy budget as a post on the grid's front-left edge. Spending cuts it from the top; a
+    // The entropy budget as a post on the grid's back-left edge. Spending cuts it from the top; a
     // pinch shows its cost below the top before it commits; a star beside each band holds, flickers
     // when the pinch would cost it, and goes dark once spent past.
     public class FieldEdgeMeter : MonoBehaviour

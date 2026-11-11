@@ -55,6 +55,8 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public Vector3 SelectionCubePosition => mapCube.Position;
 
+        public bool IsCubeHeld => mapCube.IsHeld;
+
         public bool ShowAll => showAll;
 
         private void Awake()

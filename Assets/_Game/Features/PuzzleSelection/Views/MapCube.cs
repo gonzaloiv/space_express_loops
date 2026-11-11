@@ -34,6 +34,8 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public bool IsScaling => zone.IsScaling;
 
+        public bool IsHeld => zone.isActiveAndEnabled && zone.IsHeld;
+
         public float Scale => zone.Scale;
 
         public bool ReachedEnter => zone.Scale >= enterAt;

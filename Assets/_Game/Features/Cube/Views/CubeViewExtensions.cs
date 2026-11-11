@@ -65,6 +65,17 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         }
 
 
+        public static bool AnyHeld(this IReadOnlyList<CubeView> zones)
+        {
+            for (int i = 0; i < zones.Count; i++)
+            {
+                if (zones[i].isActiveAndEnabled && zones[i].IsHeld)
+                    return true;
+            }
+
+            return false;
+        }
+
         public static CubeView Active(this IReadOnlyList<CubeView> zones)
         {
             for (int i = 0; i < zones.Count; i++)

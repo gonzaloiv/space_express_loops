@@ -61,6 +61,9 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         public Color Danger => feedback.Danger;
 
+        // A hand is grabbing the cube (a move or a scale in progress).
+        public bool IsHeld => !locked && grabbable.SelectingPointsCount > 0;
+
         private bool moving;
 
         private void Awake()

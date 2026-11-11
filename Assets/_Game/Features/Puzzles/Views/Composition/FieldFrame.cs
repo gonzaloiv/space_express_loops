@@ -7,6 +7,14 @@ namespace DigitalLove.Game.SpaceShaping
     {
         private const float Padding = 0.02f;
 
+        // The vertical edge the entropy post stands on, as x/z signs of the frame: back-left, inside the
+        // seated player's view of the field. The post and the prompts that point at it share it.
+        public static readonly Vector2 MeterEdge = new(-1f, 1f);
+
+        // A point on the meter edge at a height (y offset from the frame centre), pushed out by an outset.
+        public static Vector3 OnMeterEdge(float half, float y, float outset) =>
+            new(MeterEdge.x * (half + outset), y, MeterEdge.y * (half + outset));
+
         public static void Measure(SpaceShapingSession session, out Vector3 centre, out float half)
         {
             BoundsBuilder builder = new();

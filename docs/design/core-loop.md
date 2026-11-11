@@ -94,8 +94,9 @@ Entropy is the Wrap's cost and the only resource the player manages: a **budget*
 
 **Fuel is not a lever.** The launch is **given** — one global speed, the same for every job — and lives
 in the fiction as the company's cost ([lore](world/lore.md)). The readout shows the result and the stars;
-the entropy bar lives **in the field**, as a **post on the grid's front-left vertical edge** (decided
-2026-11-10, replacing the base-edge arms) — not in a panel; the lab panel is a diagnostic. The post is
+the entropy bar lives **in the field**, as a **post on the grid's back-left vertical edge** (decided
+2026-11-10, replacing the base-edge arms; moved from the front edge 2026-11-11, which sat below the
+seated eye line) — not in a panel; the lab panel is a diagnostic. The post is
 the **remaining entropy**: spending cuts it from the top, a pinch shows its cost just below the top
 before it commits (danger if it would overrun), and the last committed edit sits dimmed above. Moving
 the cube and launching are visibly free. Notches at the **1/2 and 2/3** use limits carry a **star beside

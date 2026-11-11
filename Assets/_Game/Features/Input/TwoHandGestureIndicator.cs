@@ -20,6 +20,10 @@ namespace DigitalLove.Input
 
         private Camera viewCamera;
         private bool wasVisible;
+
+        // Set by the owner each frame: the markers draw only while a gesture that does something is
+        // in progress, never for a stray pinch.
+        public bool Shown { get; set; }
         private bool leftMarkerVisible;
         private bool rightMarkerVisible;
         private bool startMarkerVisible;
@@ -44,10 +48,10 @@ namespace DigitalLove.Input
                 viewCamera = Camera.main;
 
             TwoHandGestureState state = gesture.State;
-            bool both = state.IsActive;
-            bool single = state.IsSingleHandPinching && !both;
-            bool left = state.IsLeftPinching || both;
-            bool right = state.IsRightPinching || both;
+            bool both = Shown && state.IsActive;
+            bool single = Shown && state.IsSingleHandPinching && !both;
+            bool left = Shown && (state.IsLeftPinching || both);
+            bool right = Shown && (state.IsRightPinching || both);
 
             handLine.enabled = single || both;
             ShowMarkers(state, single, left, right);

@@ -3,8 +3,9 @@ using UnityEngine.UI;
 
 namespace DigitalLove.Game.SpaceShaping
 {
-    // Draws the entropy post on the grid's front-left vertical edge: one line from the grid's floor to
-    // its top, a notch at each star limit and a star beside each band. The owner supplies the colours;
+    // Draws the entropy post on the grid's back-left vertical edge, inside the player's view of the
+    // field (decided 2026-11-11; the front edge sat below the seated eye line): one line from the grid's
+    // floor to its top, a notch at each star limit and a star beside each band. The owner supplies the colours;
     // this only lays out and tints authored objects.
     public class FieldEdgeMeterView : MonoBehaviour
     {
@@ -39,7 +40,7 @@ namespace DigitalLove.Game.SpaceShaping
             laidCentre = centre;
             laidHalf = half;
             transform.localPosition = centre;
-            Vector3 foot = new(-half - postOutset, -half, -half - postOutset);
+            Vector3 foot = FieldFrame.OnMeterEdge(half, -half, postOutset);
             LayPost(foot, half * 2f);
             LayNotches(foot, half * 2f, starHeights);
             LayStars(foot, half * 2f, starHeights);
