@@ -97,11 +97,11 @@ Loose ends that still need a home. Close one by linking the plan that finishes i
   and the ending's voice are silent until then.
 - **Job 7's manual shortening (from run fixes).** Waits on the lore rethink: does the "eleven years"
   note move or stay.
-- **Field wells: keep or drop (from the spike).** The change-only mode (flat start, the edit's wells)
-  is in code and off by default; `Puzzle.prefab` has it on, uncommitted, for the headset test. Keep it
-  (turn it on, update [the cube](../design/systems/cube.md) §Feedback and remove the toggle) or drop it
-  (delete `WellPull`, `LatticeWells` and the `LatticeWarp` argument). The lattice also runs 48 points a
-  line for the same test (`LatticeMeshBuilder.SamplesPerLine`, uncommitted); keep or go back to 32.
+- **Field wells: kept (2026-11-11, headset).** The change-only wells are on in `Puzzle.prefab`
+  (committed). Left to do: describe them in [the cube](../design/systems/cube.md) §Feedback (the lattice
+  starts flat; a grown planet's well opens, a shrunk one flattens) and decide whether `LatticeWells`
+  keeps its toggle as a tuning block. The lattice still runs 48 points a line, uncommitted
+  (`LatticeMeshBuilder.SamplesPerLine`); with the line smoothing in, it can go back to 32.
 - **Endpoint rings (from endpoint shapes).** Second try (2026-11-11): a small ring *under* the planet
   (a `Base` child at -0.7 body radius, planet-sized, not spinning) instead of around it, and the
   endpoint bodies spin like every planet again (`ConstantRotation`). Third pass: one ring for every

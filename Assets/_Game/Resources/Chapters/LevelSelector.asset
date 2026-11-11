@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Casual.Levels::DigitalLove.Casual.Levels.LevelSelector
   chapters:
   - {fileID: 11400000, guid: c47c045b7ab89af4b8b89ea17ca8a3fc, type: 2}
+  - {fileID: 11400000, guid: 17350139a2b946349756e88f05ed59f7, type: 2}

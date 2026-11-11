@@ -57,15 +57,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Translatable = true, StartRule = PuzzleStartRule.FieldCentre,
                 NoFail = false, NoGrade = false,
             },
-            new PuzzleJobContract
-            {
-                Id = "01_08", Pending = true,
-                Seed = 2, Attempts = 200, PlanetCount = 12, FieldShape = PuzzleFieldShape.Cluster,
-                HasSun = true, SunOnChord = false, SunRule = PuzzleSunRule.InZone, MinBlockers = 1,
-                Mechanism = PuzzleMechanism.Mixed, Zones = 2, MinRoutes = 2,
-                Translatable = true, StartRule = PuzzleStartRule.FieldCentre,
-                NoFail = false, NoGrade = false,
-            },
         };
 
         public static readonly IReadOnlyList<PuzzleJobContract> Enabled = EnabledJobs();

@@ -869,6 +869,21 @@ MonoBehaviour:
   - level_01_06_fail_03
   - level_01_07_fail_02
   - level_01_07_fail_03
+  - level_02_01_init_01
+  - level_02_01_complete
+  - level_02_01_fail
+  - level_02_02_init_01
+  - level_02_02_complete
+  - level_02_02_fail
+  - level_02_03_init_01
+  - level_02_03_complete
+  - level_02_03_fail
+  - level_02_04_init_01
+  - level_02_04_complete
+  - level_02_04_fail
+  - run_ending_jim_01
+  - run_ending_jim_02
+  - run_ending_jim_03
   containsFilter: 
   doesNotContainFilter:
   - manual

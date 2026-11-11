@@ -3,7 +3,7 @@
 **Status:** now · flow · updated 2026-11-11 — the two-ship test said yes (the new bakes play better
 than the single-ship ones): four multi-ship jobs go into v1 as chapter 2, told as episode 2 of the story.
 The line drafts are approved; job 8 is dropped from v1. U1 and the English strings are in
-(`FleetJobsTests`); clips and the headset pass are open.
+(`FleetJobsTests`); review fixes F1–F3 (§Review), the clips and the headset pass are open.
 
 **Related:** [chapters](../../design/chapters.md) §Chapter 2 · [lore](../../design/world/lore.md)
 §Episodes · [jobs](../../design/jobs.md) §The run — the lore skin ·
@@ -65,9 +65,9 @@ after chapter 1's seven jobs, without changing chapter 1's existing jobs.
   `Enabled` (or extend the contract, builder and validator for multi-ship and per-chapter folders)
   and add a fast check that loads the four `Chapters/02` jobs and asserts every ship endpoint stays
   out of all frames and no sun sits on any ship's path.
-- The multi-ship bake never applies the single-ship sun band: `PuzzleMultiShipBake.Select` takes runs
-  without a sun check, so 02_04's first ship passes 0.068 from a 0.06-radius sun. `FleetJobsTests`
-  asserts the sun body only; watch that graze on the headset.
+- The sun rule is endpoints only: `PuzzleMultiShipBake.Select` takes runs without a sun check, and a
+  sun on the chord is a fair blocker. `FleetJobsTests` asserts no ship starts or ends on the sun; 02_04's
+  first ship passes 0.068 from a 0.06-radius sun, which is legal.
 - **Exit:** after job 7 the map shows four new nodes; each job plays with its ship colours and solves
   only when every ship arrives.
 
@@ -93,7 +93,36 @@ lines and the manual, never in the client.
   keys (client, cargo and manual are on-screen text and filtered out).
   Cut line: if clips miss the 2026-11-13 freeze, chapter 2 ships silent and the lines land after.
 - [jobs](../../design/jobs.md) §The run — the lore skin gets a chapter 2 table.
+- `FleetJobsTests.ChapterTwoLines_ResolveInEnglish` checks all 24 keys resolve in `Levels_en` with a
+  value, so a hand-edited table cannot ship empty.
 - **Exit:** every chapter 2 job has an intro, a complete and a fail line that play; the cards read.
+
+## Review — 2026-11-11
+
+U1 and U2's strings are in and right: the four puzzles moved into `Chapters/02` with their GUIDs (`02_04`
+is the old `ThreeShips_A`), ids `02_01`–`02_04`, `Chapters/02.asset` after `01` in `LevelSelector`,
+`01_08` gone from `PuzzleJobContracts`, 24 keys in `Levels Shared Data` with English values and
+placeholders, the 12 spoken keys in the downloader, and the chapter 2 table in jobs. `FleetJobsTests`
+checks the order, the ship counts, the endpoints and the English values; the fast suite passes. Before
+the commit:
+
+- **F1 — done.** The ending's three Jim clips (`run_ending_jim_01`–`03`) are in the downloader list with
+  chapter 2's spoken keys.
+- **F2 — done.** `FleetJobsTests` asserts no ship starts or ends on the sun; a sun on the chord is
+  allowed, so a legal rebake is not rejected.
+- *Second look (2026-11-11):* F1 and F2 verified; a fourth test checks every chapter 2 line resolves in
+  `Levels_en` (hence the test asmdef's new `Unity.Localization` reference); the fast suite passes
+  (127/127). The commit also takes that asmdef change; `Assets/AddressableAssetsData/link.xml` is a
+  build artifact, not this unit's.
+- **F3 — the commit is all uncommitted and shares files.** `LevelSelector`, the localization tables,
+  `Downloader - OS.unity` and the new chapter folder are this unit's; `Game.unity`, `Puzzle.prefab` and
+  the lattice mesh hold other tests. Stage the fleet files only; the seed assets in
+  `PuzzleCreator/Data` (untracked) go with them so the levels can be rebaked.
+- **Decision still open:** 02_01's budget is 0.3 (a tiny fix); keep it as the gentle first fleet job
+  or swap in `TwoShips_B` after the headset play.
+- **Build check.** The dev APK installs and launches; the logged session shows `HMDUnmounted` and the
+  app pausing, with no Unity exception and no crash record. The black frame is the paused app until a
+  worn pass, so the launch check stays manual.
 
 ## Not in this plan
 
@@ -114,3 +143,4 @@ lines and the manual, never in the client.
    the episode.
 9. At 11 nodes the map still reads: dioramas do not collide, and the cube snaps to the intended node.
 10. Decision: is 02_01 too easy at budget 0.3, or is that right for the episode's first job?
+11. Launch the built APK while wearing the headset: boot splash → job 1, no black frame.

@@ -43,10 +43,11 @@
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.Hands.csproj" />
   <Project Path="Vendor.UnityGif.csproj" />
   <Project Path="DigitalLove.Game.GesturePrompts.Editor.csproj" />
+  <Project Path="DigitalLove.XR.GestureArt.Editor.csproj" />
   <Project Path="DigitalLove.Analytics.csproj" />
   <Project Path="DigitalLove.VFX.Materials.Editor.csproj" />
-  <Project Path="DigitalLove.XR.OVR.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Views.csproj" />
+  <Project Path="DigitalLove.XR.OVR.csproj" />
   <Project Path="DigitalLove.Game.Sectors.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Localization.csproj" />
   <Project Path="DigitalLove.VFX.Fader.csproj" />
@@ -66,7 +67,9 @@
   <Project Path="DigitalLove.Timeline.Integrations.csproj" />
   <Project Path="DigitalLove.XR.MetaPlatform.csproj" />
   <Project Path="DigitalLove.Analytics.GameAnalytics.csproj" />
+  <Project Path="DigitalLove.Game.Persistence.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.VFX.Materials.csproj" />
+  <Project Path="DigitalLove.Game.Persistence.csproj" />
   <Project Path="DigitalLove.Game.Nodes.csproj" />
   <Project Path="DigitalLove.XR.ARFoundation.csproj" />
   <Project Path="DigitalLove.DataAccess.Local.csproj" />
@@ -76,7 +79,6 @@
   <Project Path="Unity.XR.Hands.Samples.VisualizerSample.csproj" />
   <Project Path="DigitalLove.VFX.MegaFiers.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Grid.Editor.csproj" />
-  <Project Path="DigitalLove.Game.PuzzleSelection.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.VFX.ShadowLike.csproj" />
   <Project Path="Simple360Render.Runtime.csproj" />
   <Project Path="ChrisNolet.QuickOutline.csproj" />
@@ -89,19 +91,19 @@
   <Project Path="DigitalLove.VFX.Particles.csproj" />
   <Project Path="Vendor.UniGif.Samples.csproj" />
   <Project Path="Vendor.VHS.csproj" />
+  <Project Path="DigitalLove.Game.PuzzleSelection.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Casual.Flow.Setup.MRUK.csproj" />
   <Project Path="DigitalLove.Reflex.csproj" />
-  <Project Path="DigitalLove.Game.Persistence.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Analytics.Integrations.csproj" />
   <Project Path="DigitalLove.Game.Placement.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.FlowControl.Routes.Editor.csproj" />
   <Project Path="DigitalLove.Game.UI.Console.csproj" />
+  <Project Path="DigitalLove.XR.GestureArt.csproj" />
   <Project Path="DigitalLove.Audio.Samples.csproj" />
   <Project Path="DigitalLove.Game.GesturePrompts.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Interactables.Keypad.csproj" />
   <Project Path="DigitalLove.FlowControl.Tests.EditMode.csproj" />
   <Project Path="TrinarySoftware.MEC.Runtime.csproj" />
-  <Project Path="DigitalLove.Game.Persistence.csproj" />
   <Project Path="DigitalLove.Analytics.Unity.csproj" />
   <Project Path="DigitalLove.DataAccess.Integrations.csproj" />
 </Solution>

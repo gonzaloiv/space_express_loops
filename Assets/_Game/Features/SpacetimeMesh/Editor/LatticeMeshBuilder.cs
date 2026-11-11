@@ -6,7 +6,7 @@ namespace DigitalLove.Game.SpaceShaping.Grid.EditorTools
 {
     public static class LatticeMeshBuilder
     {
-        private const int SamplesPerLine = 32;
+        private const int SamplesPerLine = 48;
         // The view rewrites every vertex from the content frame at render time, so the authored size
         // only matters as the edit-mode placeholder. Keep it at field scale, not the old 12 m box.
         private static readonly Vector3 Min = new(-0.5f, -0.5f, -0.5f);

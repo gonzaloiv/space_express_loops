@@ -275,3 +275,99 @@ MonoBehaviour:
     m_Key: run_ending_console
     m_Metadata:
       m_Items: []
+  - m_Id: 73365399642240001
+    m_Key: level_02_01_init_client
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240002
+    m_Key: level_02_01_init_cargo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240003
+    m_Key: level_02_01_init_manual_entry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240004
+    m_Key: level_02_01_init_01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240005
+    m_Key: level_02_01_complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240006
+    m_Key: level_02_01_fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240007
+    m_Key: level_02_02_init_client
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240008
+    m_Key: level_02_02_init_cargo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240009
+    m_Key: level_02_02_init_manual_entry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240010
+    m_Key: level_02_02_init_01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240011
+    m_Key: level_02_02_complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240012
+    m_Key: level_02_02_fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240013
+    m_Key: level_02_03_init_client
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240014
+    m_Key: level_02_03_init_cargo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240015
+    m_Key: level_02_03_init_manual_entry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240016
+    m_Key: level_02_03_init_01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240017
+    m_Key: level_02_03_complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240018
+    m_Key: level_02_03_fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240019
+    m_Key: level_02_04_init_client
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240020
+    m_Key: level_02_04_init_cargo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240021
+    m_Key: level_02_04_init_manual_entry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240022
+    m_Key: level_02_04_init_01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240023
+    m_Key: level_02_04_complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642240024
+    m_Key: level_02_04_fail
+    m_Metadata:
+      m_Items: []
