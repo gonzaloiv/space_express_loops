@@ -116,6 +116,7 @@ namespace DigitalLove.Game.Flow
 
         private void EnterJob(PuzzleData puzzle)
         {
+            memoryDataClient.Remove<PuzzleRestart>();
             memoryDataClient.Put(puzzle);
             parent.SetCurrentState(nextState.RouteId);
         }

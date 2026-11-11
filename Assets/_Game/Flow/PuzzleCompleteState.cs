@@ -15,6 +15,7 @@ namespace DigitalLove.Game.Flow
     public class PuzzleCompleteState : MonoState
     {
         [SerializeField] private MonoState nextState;
+        [SerializeField] private MonoState retryState;
         [SerializeField] private SpaceShapingController puzzleController;
         [SerializeField] private TtsPresenter ttsPresenter;
         [SerializeField] private SynthCuePlayer cuePlayer;
@@ -76,7 +77,17 @@ namespace DigitalLove.Game.Flow
         private void Speak(PuzzleData puzzle, bool solved)
         {
             string cue = solved ? puzzle.CompleteKey : puzzle.FailKey;
-            ttsPresenter.Play(new[] { cue }, ReturnWhenSaved);
+            if (solved)
+                ttsPresenter.Play(new[] { cue }, ReturnWhenSaved);
+            else
+                ttsPresenter.Play(new[] { cue }, Restart);
+        }
+
+        private void Restart()
+        {
+            memoryDataClient.Put(new PuzzleRestart(true));
+            puzzleController.Exit();
+            parent.SetCurrentState(retryState.RouteId);
         }
 
         private async void ReturnWhenSaved()

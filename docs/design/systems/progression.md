@@ -41,8 +41,9 @@ player's instrument, used to pick a node ([the cube](cube.md) §The map uses the
 - **A level is a node on the map:** entering it brings its field into the play space, and its
   number/seed generates (offline) the puzzle's **own field** — the campaign map is the backdrop, the
   puzzle field is the play space.
-- **Direct pick only (decided 2026-10-27):** the map is the only navigation; the result offers
-  Map/Retry, not Next. Solved and current nodes are pickable; locked nodes refuse visibly.
+- **Direct pick only (decided 2026-10-27):** the map is the only navigation; a fail restarts the
+  job and a solve returns to the map, not Next. Solved and current nodes are pickable; locked nodes
+  refuse visibly.
 - **The first session skips the map (decided 2026-11-06).** On a fresh save the game opens straight
   in job 1; the map is first seen after job 1 (or on leaving it), so the player meets the cube before
   the map, and the map's enter is the same pinch inside the same cube

@@ -210,15 +210,15 @@ are design-only until then.*
 Each job is a **contract**: a client, a cargo, and the manual entry that teaches its lesson.
 One line each; never exposition ([lore](world/lore.md)).
 
-| # | Client | Cargo | Tech voice | Manual entry |
-|---|---|---|---|---|
-| 1 | Blödmeyer & Sons (no sons) | a pallet of valves | — (no intro: the Scale prompt teaches it) | "Welcome. Your Wrap does one thing. Do that one thing. Set the console anywhere; there is no office." |
-| 2 | The Lighthouse Keepers' Union | one bulb | "The star is a source too." | "The star is not a planet. It bends the same way." |
-| 3 | Strait & Narrow Ltd. | a wide load | "Shrink the rock, not the cargo." | "The Wrap takes as well as gives. A smaller world is a wider door." |
-| 4 | Madame Fink's Discount Gravity | a piano | "Now move it. *Where* is a choice. Works everywhere." | "The Wrap is yours to place. Where you work is a decision. Make it." |
-| 5 | The Third Best Bakery | a wedding cake, still warm | "Several zones. Place it, scale them." | "The Wrap is yours to place. Use it more than once." |
-| 6 | Nobody & Co. | a body (a funeral) | "Tight. Really tight. Sorry." | "Every edit costs. The customer only ever sees the arrival." |
-| 7 | The Inheritance of Mr. Fink | the last of something | "…Good luck." | "This is the one the manual was written for." |
+| # | Client | Cargo | Fail | Tech voice | Manual entry |
+|---|---|---|---|---|---|
+| 1 | Blödmeyer & Sons (no sons) | a pallet of valves | — (no fail) | — (no intro: the Scale prompt teaches it) | "Welcome. Your Wrap does one thing. Do that one thing. Set the console anywhere; there is no office." |
+| 2 | The Lighthouse Keepers' Union | one bulb | "The bulb is still out there." | "The star is a source too." | "The star is not a planet. It bends the same way." |
+| 3 | Strait & Narrow Ltd. | a wide load | "Too much rock in the way." | "Shrink the rock, not the cargo." | "The Wrap takes as well as gives. A smaller world is a wider door." |
+| 4 | Madame Fink's Discount Gravity | a piano | "The piano is lost." | "Now move it. *Where* is a choice. Works everywhere." | "The Wrap is yours to place. Where you work is a decision. Make it." |
+| 5 | The Third Best Bakery | a wedding cake, still warm | "The cake went cold." | "Several zones. Place it, scale them." | "The Wrap is yours to place. Use it more than once." |
+| 6 | Nobody & Co. | a body (a funeral) | "The field won." | "Use what is already there." | "The field is free. The Wrap is not." |
+| 7 | The Inheritance of Mr. Fink | the last of something | "Mr. Fink is still waiting." | "…Good luck." | "This is the one the manual was written for." |
 
 ## The manual's arc
 
@@ -247,11 +247,11 @@ and never explains itself:
 - **Job 7 (absent):** the manual's late note ends *"There is still no office."*, and Jim's receipt
   closes *"The console stays where it is. Today the space. Tomorrow the time."*
 
-The exact strings live in `Levels_en` / `Levels_es` under the `init_manual_entry`, `init_01` and
+The exact strings live in `Levels_en` / `Levels_es` under the `init_manual_entry`, `init_01`, `fail` and
 `complete` keys. A spoken line longer than one short sentence is split into numbered entries that
-play in order: `init_01`, `init_02`, … (up to `_09`), and `complete`, `complete_02`, … (the same for
-`fail`). Jobs 2, 3, 5 and 6 stay untouched: the thread is the company's condition, not a
-running joke.
+play in order: `init_01`, `init_02`, … (up to `_09`), and `complete`, `complete_02`, … (the
+same for `fail`, which is one entry per job). Jobs 2, 3, 5 and 6 stay untouched: the thread is the
+company's condition, not a running joke.
 
 ## Seeds (later)
 

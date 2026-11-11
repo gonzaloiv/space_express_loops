@@ -103,11 +103,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889874
-    m_Localized: Every edit costs. The customer only ever sees the arrival.
+    m_Localized: The field is free. The Wrap is not.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889875
-    m_Localized: Tight. Really tight. Sorry.
+    m_Localized: Use what is already there.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889876
@@ -155,27 +155,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889891
-    m_Localized: We didn't arrive.
+    m_Localized: The bulb is still out there.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889892
-    m_Localized: We didn't arrive.
+    m_Localized: Too much rock in the way.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889893
-    m_Localized: We didn't arrive.
+    m_Localized: The piano is lost.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889894
-    m_Localized: We didn't arrive.
+    m_Localized: The cake went cold.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889895
-    m_Localized: We didn't arrive.
+    m_Localized: The field won.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889896
-    m_Localized: We didn't arrive.
+    m_Localized: Mr. Fink is still waiting.
     m_Metadata:
       m_Items: []
   - m_Id: 73365399591899136
@@ -246,54 +246,3 @@ MonoBehaviour:
     m_Localized: Today the space. Tomorrow the time.
     m_Metadata:
       m_Items: []
-  - m_Id: 73365399642230800
-    m_Localized: The Keepers are still waiting.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230801
-    m_Localized: Try it again.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230802
-    m_Localized: The wide load is still here.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230803
-    m_Localized: Try it again.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230804
-    m_Localized: Madame Fink's piano is still here.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230805
-    m_Localized: Try it again.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230806
-    m_Localized: The cake is cold now.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230807
-    m_Localized: Try it again.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230808
-    m_Localized: Nobody is waiting.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230809
-    m_Localized: Try it again.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230810
-    m_Localized: The estate is still waiting.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230811
-    m_Localized: Try it again.
-    m_Metadata:
-      m_Items: []
-  references:
-    version: 2
-    RefIds: []

@@ -103,11 +103,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889874
-    m_Localized: "Cada edici\xF3n cuesta. El cliente solo ve la llegada."
+    m_Localized: The field is free. The Wrap is not.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889875
-    m_Localized: Ajustado. Muy ajustado. Lo siento.
+    m_Localized: Use what is already there.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889876
@@ -155,27 +155,27 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889891
-    m_Localized: No llegamos.
+    m_Localized: The bulb is still out there.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889892
-    m_Localized: No llegamos.
+    m_Localized: Too much rock in the way.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889893
-    m_Localized: No llegamos.
+    m_Localized: The piano is lost.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889894
-    m_Localized: No llegamos.
+    m_Localized: The cake went cold.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889895
-    m_Localized: No llegamos.
+    m_Localized: The field won.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889896
-    m_Localized: No llegamos.
+    m_Localized: Mr. Fink is still waiting.
     m_Metadata:
       m_Items: []
   - m_Id: 73365399591899136
@@ -246,54 +246,3 @@ MonoBehaviour:
     m_Localized: "Hoy el espacio. Ma\xF1ana el tiempo."
     m_Metadata:
       m_Items: []
-  - m_Id: 73365399642230800
-    m_Localized: Los Fareros siguen esperando.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230801
-    m_Localized: "Int\xE9ntalo otra vez."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230802
-    m_Localized: "La carga ancha sigue aqu\xED."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230803
-    m_Localized: "Int\xE9ntalo otra vez."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230804
-    m_Localized: "El piano de Madame Fink sigue aqu\xED."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230805
-    m_Localized: "Int\xE9ntalo otra vez."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230806
-    m_Localized: "El pastel ya est\xE1 fr\xEDo."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230807
-    m_Localized: "Int\xE9ntalo otra vez."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230808
-    m_Localized: "Nadie est\xE1 esperando."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230809
-    m_Localized: "Int\xE9ntalo otra vez."
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230810
-    m_Localized: El patrimonio sigue esperando.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 73365399642230811
-    m_Localized: "Int\xE9ntalo otra vez."
-    m_Metadata:
-      m_Items: []
-  references:
-    version: 2
-    RefIds: []

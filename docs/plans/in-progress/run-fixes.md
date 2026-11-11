@@ -1,8 +1,8 @@
 # Run fixes — exit on the menu gesture, restart on fail, first pass on Jim's lines
 
-**Status:** now · flow · updated 2026-11-11 — U1 and U4 landed with review fixes F1–F4 open (see
-§Review); U2 (restart on fail) and U3 (Jim's lines) are not started. The exit is the non-dominant hand's
-menu pinch, a fail restarts the job in place, and the fail and job 6–7 lines get a first pass.
+**Status:** now · flow · updated 2026-11-11 — U1 and U4 landed; review fixes F1–F4 are fixed; U2
+(restart on fail) and U3 (Jim's lines) are implemented. The new fail and job-6 lines need their TTS
+clips downloaded; job 7's manual shortening waits on the lore rethink.
 
 **Related:** [core loop](../../design/core-loop.md) §2 · [progression](../../design/systems/progression.md) ·
 [jobs](../../design/jobs.md) §The run — the lore skin · [plans board](../README.md)
@@ -14,9 +14,10 @@ go through the map, and fail lines that tell the player something.
 
 ## Contract
 
-- **Exit is the menu gesture** — `MetaAimFlags.MenuPressed` on the **non-dominant** hand (palm up,
-  pinch), not the dominant hand's universal menu. It works only in a job and returns to the map; the
-  controller menu button stays wired as the fallback. The two-hand scale-out exit is removed: it fires on
+- **Exit is the left-hand menu gesture** — `MetaAimFlags.MenuPressed` on the **left** hand (palm up,
+  pinch), the v1 scope decided 2026-11-11. It works only in a job and returns to the map; the controller
+  menu button stays wired as the fallback. Left-dominant players see the wrong hand and cannot use the
+  gesture, a known gap. The two-hand scale-out exit is removed: it fires on
   any two-hand pinch that closes 8 cm, which is exactly job 3's shrink.
 - **A fail restarts the job** (decided 2026-11-11). Glitch, Jim's fail line, then the same job reopens:
   a fresh field, the budget restored, the start check. Jim's intro does not replay on a restart. A solve
@@ -31,12 +32,10 @@ go through the map, and fail lines that tell the player something.
 
 - Reuse `MetaAimFlagsHomeMenuInvoker` in `_Modules/Player/HomeMenu` and its `homeMenuRequested`; do not
   write a new detector, and do not add the Samples `MetaSystemGestureDetector` dependency (`HomeMenuInvoker`
-  and `SystemGesturePokeInteractorGate` already use that Samples copy). Add `aimFlags` bindings for
-  **both** hands — two `MetaAimFlagsHomeMenuInvoker` instances, one per hand, is the safe shape (one
-  action with both bindings shares the invoker's single `aimFlags` field and can miss an edge); only the
-  menu hand raises `MenuPressed`, so the non-dominant hand works for either dominance. Add
-  `DigitalLove.HomeMenu` to the Flow asmdef and wire the invokers in `Game.unity`. `PuzzleEditionState`
-  subscribes in `Enter` and unsubscribes in `Exit` (guard against a double fire if both hands report).
+  and `SystemGesturePokeInteractorGate` already use that Samples copy). Add one `MenuAimLeft` action bound
+  to `<MetaAimHand>{LeftHand}/aimFlags`, keep the controller Menu fallback, add `DigitalLove.HomeMenu` to
+  the Flow asmdef and wire the single left invoker in `Game.unity`. `PuzzleEditionState` subscribes in
+  `Enter` and unsubscribes in `Exit` (guard against a double fire).
 - Remove `ScaleOutGesture`, its tests, the `scaleOut*` fields on `TwoHandGestureInput` and the now-unused
   `gesture` field on `PuzzleEditionState` (the component stays for `TwoHandGestureIndicator`).
 - Remove the disabled rotation gesture (`OneHandRotationGesture`, `rotationEnabled` and its fields on
@@ -47,7 +46,8 @@ go through the map, and fail lines that tell the player something.
   the palm-up pose also needs its own hand orientation). Replace the `exit` motion's sampler or add a
   `menu` motion + content (`GestureMotion.All` has no `menu` entry yet). The loop is **left hand only**
   (decided 2026-11-11): left-handed players, whose menu hand is the right, see a mismatched prompt — a
-  known gap for the competition build. The detector still follows the menu hand, so the exit works.
+  known gap for the competition build. The detector is left-only too, so a left-dominant player uses the
+  controller menu button instead.
 - Gate the handler on `Time.timeScale <= 0f` (the `TwoHandGestureInput` / `PuzzleMapView` pattern): the
   end sequence unsubscribes, but pause does not.
 - Check: the menu gesture while paused or during the end sequence does nothing.
@@ -71,10 +71,10 @@ go through the map, and fail lines that tell the player something.
 
 ### U3 — first pass on the lines
 
-Drafts for a yes (the strings land in `Levels_en`; `Levels_es` currently has translations, so replace it
-with the placeholder or keep the translations). New clips are downloaded after the strings are approved.
-Fail playback matches every key **containing** `FailKey`, so today a fail plays `fail` + `fail_02` +
-`fail_03`; replacing the base string is not enough. Delete the extra entries in `Levels Shared Data`,
+Drafts approved and applied 2026-11-11 (the strings land in `Levels_en`; `Levels_es` uses the English
+placeholder for the changed entries). New clips are downloaded after the strings are approved.
+Fail playback matches every key **containing** `FailKey`, so today a fail played `fail` + `fail_02` +
+`fail_03`; the extra keys are removed. The `_fail_02` / `_fail_03` entries are deleted from `Levels Shared Data`,
 their `Levels_en` / `Levels_es` values and the `StreamingAssets/*_fail_02` / `_fail_03.mp3` clips.
 The fail lines are story only (decided 2026-11-11): the cargo's fate, plus job 3's blocker, which points
 at the read without the answer.
@@ -89,11 +89,13 @@ at the read without the answer.
 | 7 | fail | "Mr. Fink is still waiting." |
 | 6 | manual | "The field is free. The Wrap is not." |
 | 6 | tech voice | "Use what is already there." |
-| 7 | manual | Shorten to "This is the one the manual was written for. There is still no office."; the "eleven years" note moves or stays, decided in the lore rethink. |
+| 7 | manual | Deferred: shortening waits on the lore rethink, which decides whether the "eleven years" note moves or stays. |
 
 - Update [jobs](../../design/jobs.md) §The run — the lore skin: add a fail-line column (or a fail-line
-  table) and the job 6/7 manual and tech-voice edits.
-- **Exit:** every fail plays exactly one new line; job 6's card says what job 6 teaches.
+  table) and the job 6/7 manual and tech-voice edits. Done 2026-11-11: the fail column and job 6 lines
+  are in; job 7's manual is deferred.
+- **Exit:** every fail has exactly one entry in the string table and the extra `_fail_0x` clips are gone;
+  the new clips are downloaded next.
 
 ### U4 — a gesture art module for other projects
 
@@ -123,36 +125,60 @@ with a minimal archive of common Quest hand gestures. If U1–U3 fill the mornin
 
 ## Review — 2026-11-11
 
-U1 and U4 landed in `4c40552` (game) and `_Modules` `722b6c1`; **U2 and U3 are not started**: the fail
-path still returns to the map (`PuzzleCompleteState` unchanged), `Levels_en` still has the six
-"We didn't arrive." lines plus 12 `fail_0x` keys, and the glossary and progression still say
-"Map/Retry". What works: the scale-out and rotation gestures and their tests are gone, the exit is
-gated on pause and fires once (`exiting`), the end sequence and the map are not subscribed, the six
-prompts reference `GestureLoop` assets with Unity-assigned GUIDs, and the module has no `Assets/_Game`
-path.
+U1 and U4 landed in `4c40552` (game) and `_Modules` `97129df`; **U2 and U3 are implemented after
+that** (working tree). What works: the scale-out and rotation gestures and their tests are gone, the
+exit is gated on pause and fires once (`exiting`), the end sequence and the map are not subscribed, the
+six prompts reference `GestureLoop` assets with Unity-assigned GUIDs, the module has no
+`Assets/_Game` path, a fail calls `Exit()` and re-enters the same job with a one-shot restart flag, and
+the old `fail_02` / `fail_03` keys and clips are gone.
 
 Fixes, in order:
 
-- **F1 — the exit listens to both hands (contract break).** `Game.unity` wires two
-  `MetaAimFlagsHomeMenuInvoker`s, `Menu Gesture Left` and `Menu Gesture Right`, into
-  `PuzzleEditionState.menuInvokers`. The right hand's palm pinch is the Quest universal menu for a
-  right-handed player, so opening the system menu can also drop the player out of the job. Keep the
-  left invoker only (left-only is the decided v1 scope) and delete the right one. Both also bind the
-  same `MenuButton` action and each enables/disables it; with one invoker the double bind goes too.
-- **F2 — the archive's hands never close (U4 exit not met).** All 12 `menu` frames are identical, and
-  so are all 12 `pinch` frames; `grab-move` frames 0 and 1 (grip 0 vs 0.5, same position) are
-  pixel-identical, so the grip does nothing anywhere in `GestureArchive`. The game's loops do animate
-  (`move` frames 0/1 differ), so the fault is in the archive path: `GestureArchive.WriteFrames` →
-  `SetRotations` → `RenderHands`. Find why `HandPoser.Pose`'s grip has no effect there, re-render the
-  archive, and confirm the Exit prompt shows the hand closing. Add an editor-side check to the render
-  command that warns when a loop's open and pinched frames come out identical.
-- **F3 — the old exit art is dead.** `GesturePrompts/Art/exit/` (12 PNGs) is no longer referenced: the
-  Exit prompt uses the module's `Menu` loop and `GestureMotion` has no exit motion. Delete the folder.
-- **F4 — module menu names carry the game's name.** `GestureArchive` registers
-  `Tools/Our Space/Render Gesture Art …` inside `_Modules`; rename to `Tools/Gesture Art/…` so another
-  project does not get "Our Space" menus. The game's own command keeps its name.
-- **F5 — then build U2 and U3 as written above.** Nothing in them changed; the U2 notes on
-  `puzzleController.Exit()` and the restart flag still apply.
+- **F1 — fixed 2026-11-11.** The exit listens to the left hand only: one `menuInvoker` field, one
+  `MenuAimLeft` action, one `Menu Gesture Left` object. The right invoker, its action and its
+  `MenuAimRight` reference are deleted, so the universal-menu gesture cannot drop a right-handed
+  player out of the job and the duplicate `MenuButton` bind is gone. Left-dominant players use the
+  controller fallback.
+- **F2 — fixed 2026-11-11.** The preview-scene `SkinnedMeshRenderer` kept its first skin pose, so the
+  bone grip never reached the render. `HandPoser` now sets `updateWhenOffscreen` and
+  `forceMatrixRecalculationPerRender`; the archive's `pinch` and `menu` loops close, and
+  `GestureArchive` warns if a loop's open and pinched frames are still identical.
+- **F3 — fixed 2026-11-11.** `GesturePrompts/Art/exit/` is deleted; Exit uses the module's `Menu` loop.
+- **F4 — fixed 2026-11-11.** The module menus are `Tools/Gesture Art/Render Archive` and
+  `Tools/Gesture Art/Render Menu`; the game's `Tools/Our Space/Render Gesture Prompt Art` keeps its name.
+- **F6 — the game points at an orphan module commit.** The game's `HEAD` records `_Modules` at
+  `97129df`, which is on no branch, local or remote; the module's `our-space` branch has `722b6c1` (the
+  same change, rewritten) and is one commit ahead of `origin`. A fresh clone of the game cannot check
+  out its modules. Commit the module fixes (F1, F2, F4) on `our-space`, push the module, then commit the
+  game with `_Modules` at that commit and push the game. Correct the `97129df` reference above.
+- **F7 — a debug override sits in the scene.** `Game.unity`'s `PuzzleSelectionState.puzzleToSet` is set
+  to `TwoShips_Converge_Puzzle`, which skips the map and opens that level every time. Fine for a test,
+  but clear it before committing the scene; the same diff also carries a few `RectTransform` layout
+  changes worth checking before they ride along.
+- **F5 — done 2026-11-11.** U2: `PuzzleCompleteState` calls `puzzleController.Exit()` and re-enters
+  `PuzzleStartState` via the scene-wired `retryState`; a one-shot `PuzzleRestart` value skips Jim's
+  intro and the second glitch, and `PuzzleSelectionState.EnterJob` clears stale flags. U3: the six fail
+  lines and job 6's manual/tech line are in `Levels_en`; `Levels_es` holds the English placeholder;
+  the 12 `fail_0x` keys, their locale values and the old clips are deleted; `jobs.md` has a fail column.
+  The new clips are still to download, and job 7's manual shortening is deferred to the lore rethink.
+
+### Second review — 2026-11-11
+
+U2 and U3 are right: the restart exits the controller before re-entering, the flag defaults to false
+when absent and is cleared on both entries, and a missing clip ends the line silently, so the restart
+still fires. Still open before the commit:
+
+- **F6 and F7 are unchanged.** The game still records `_Modules` at the orphan `97129df`, and
+  `puzzleToSet` still points at `TwoShips_Converge_Puzzle` in `Game.unity`. Both must be fixed in the
+  commit that carries U2/U3, or the build opens a test level and the clone breaks.
+- **F8 — seven lines are silent until their clips land.** No clip exists for
+  `level_01_02`…`level_01_07_fail` or `level_01_06_init_01` (the old ones are deleted). The game runs,
+  but a fail plays the glitch with no voice, and job 6's intro is mute. Download the seven clips before
+  the capture; until then, manual-check item 7 cannot pass.
+- **F9 — `jobs.md` shows job 7's manual short; the string is still the long one.** The lore-skin table
+  lists "This is the one the manual was written for." while `Levels_en` still carries the four-sentence
+  entry. Since the shortening is deferred, show the current string in the table (or mark it "deferred")
+  so the doc matches the build.
 
 ## Not in this plan
 
@@ -162,14 +188,14 @@ Fixes, in order:
 ## Manual check (headset)
 
 1. Job 3: shrink the blocker hard, hands well apart to close together: the job stays open.
-2. In any job, the menu hand's pinch returns to the map with the exit sound (test both hand preferences);
-   the controller Menu button does the same. The Exit art is left-only, so a left-dominant player sees
-   the wrong hand.
+2. In any job, the left-hand menu pinch returns to the map with the exit sound; the controller Menu
+   button does the same. A left-dominant player uses the controller (the art and detector are left-only).
 3. On the map, while paused and during the end sequence, the menu gesture does nothing.
-4. The Exit prompt shows the menu motion and reads at arm's length.
-5. Job 2: spend the whole budget: glitch, the fail line, the job restarts with a full bar and no intro.
+4. The Exit prompt shows the palm-up menu motion, the hand closes, and it reads at arm's length.
+5. Job 2: spend the whole budget: glitch, the fail line (once its new clip is downloaded), the job
+   restarts with a full bar and no intro.
 6. Solve after a restart: stars and Jim's receipt as usual, then the map.
-7. Each job's fail plays exactly one new line; job 6's card reads the new manual line.
+7. After the new clips download: each job's fail plays exactly one line; job 6's card reads the new
+   manual line.
 8. Pause (headset off) during the restart: it resumes cleanly.
-9. If U4 lands: Scale, Enter, Move, Spend and Stars prompts look unchanged after the move to
-   `GestureLoop`.
+9. Scale, Enter, Move, Spend and Stars prompts look unchanged after the move to `GestureLoop`.

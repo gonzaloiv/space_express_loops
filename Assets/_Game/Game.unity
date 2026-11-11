@@ -2613,9 +2613,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.Flow::DigitalLove.Game.Flow.PuzzleEditionState
   gameStartState: {fileID: 883682824}
   completeState: {fileID: 1603056068}
-  menuInvokers:
-  - {fileID: 987433871}
-  - {fileID: 892900878}
+  menuInvoker: {fileID: 987433871}
   puzzleController: {fileID: 1132899469}
   prompts: {fileID: 257544991}
   promptSource: {fileID: 257544993}
@@ -3344,7 +3342,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 987433870}
-  - {fileID: 892900879}
   m_Father: {fileID: 284223191}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &858347661
@@ -3531,65 +3528,7 @@ MonoBehaviour:
   tickCooldownSecs: 0.06
   selectRandom:
     value: 0
-  puzzleToSet: {fileID: 0}
---- !u!1 &892900877
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 892900879}
-  - component: {fileID: 892900878}
-  m_Layer: 0
-  m_Name: Menu Gesture Right
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &892900878
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 892900877}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9326e9ec2fd40b2b95b7ab912cf0a4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DigitalLove.HomeMenu::DigitalLove.Player.MetaAimFlagsHomeMenuInvoker
-  aimFlagsAction:
-    m_UseReference: 1
-    m_Action:
-      m_Name: 
-      m_Type: 0
-      m_ExpectedControlType: Integer
-      m_Id: 56d6ee63-f98f-443d-b735-bcf6f00e2a87
-      m_Processors: 
-      m_Interactions: 
-      m_SingletonActionBindings: []
-      m_Flags: 0
-      m_Priority: 0
-    m_Reference: {fileID: 11400000, guid: d35f4e7b28e59b141bfd6cf7e2b6bcb8, type: 2}
-  menuButtonReference: {fileID: 11400000, guid: 341bc13b07835b844806eb287453bed6, type: 2}
---- !u!4 &892900879
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 892900877}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 801351474}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  puzzleToSet: {fileID: 11400000, guid: ff6f1633973a9f0428162519a77b0941, type: 2}
 --- !u!1 &904848683
 GameObject:
   m_ObjectHideFlags: 0
@@ -9241,6 +9180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.Flow::DigitalLove.Game.Flow.PuzzleCompleteState
   nextState: {fileID: 883682824}
+  retryState: {fileID: 1324782179}
   puzzleController: {fileID: 1132899469}
   ttsPresenter: {fileID: 1654487134}
   cuePlayer: {fileID: 9100000000000012}

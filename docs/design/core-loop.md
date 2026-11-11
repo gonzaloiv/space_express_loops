@@ -55,7 +55,8 @@ arrive.
    **interrupts** the flight. The launch is only a check; the job ends when a solve lands or the
    **committed spend reaches the entropy budget** (the fail; job 1 is exempt). If the same commit both
    arrives and empties the budget, the solve wins. Once the budget is spent, new edits are refused;
-    reset/retry stays free. Job 1 is exempt from the cap too: it has no budget, nothing clamps, and the
+    reset/retry stays free. A budget fail restarts the same job in place; a solve returns to the map.
+    Job 1 is exempt from the cap too: it has no budget, nothing clamps, and the
     player can keep shaping until the solve.
 4. **Pass:** arriving passes the job, graded on **entropy left** → 1–3 stars. **Job 1 is the tutorial
    exception:** it has no entropy fail and no stars; the bar is informational ([jobs](jobs.md)).

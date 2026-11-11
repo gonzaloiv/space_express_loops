@@ -42,7 +42,7 @@ the UI. Do not introduce a third word for the same idea.
 | **freelance contract** | An optional prebaked job outside the chapters, graded by exact entropy left, with no story. The **daily contract** is one per day, the same for everyone. |
 | **multi-ship** | A job with more than one run; it is solved only when **every ship arrives**. The runs relate as fan-out, converge, or separate. |
 | **the seed** | The authoring recipe for a job — its field, brief conditions and dials; the **level** is the baked result. |
-| **the map (level selector)** | The field of numbered **nodes**, one per job; solving lights them. The cube picks a node. **Direct pick only**; the result offers Map/Retry. |
+| **the map (level selector)** | The field of numbered **nodes**, one per job; solving lights them. The cube picks a node. **Direct pick only**; a fail restarts the job, a solve returns to the map. |
 | **the sun** | The source at the field centre. Scalable by its centre by default; a puzzle can lock it to fixed mass. Job 1 has a sun the cube does not cover; the centre job makes it the lesson. Never a run endpoint. |
 | **the company** | The lore wrapper (identity, contracts); flavour only, no economy. |
 | **the console** | The company-issued Wrap client: a portable dispatch terminal that projects the bubble into the player's room and carries the contract map between jobs. It explains MR anchoring in-fiction; furniture and the map, not a second interactive system. |

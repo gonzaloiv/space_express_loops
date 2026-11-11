@@ -16,7 +16,7 @@ namespace DigitalLove.Game.Flow
     {
         [SerializeField] private MonoState gameStartState;
         [SerializeField] private MonoState completeState;
-        [SerializeField] private HomeMenuInvokerBase[] menuInvokers;
+        [SerializeField] private HomeMenuInvokerBase menuInvoker;
         [SerializeField] private SpaceShapingController puzzleController;
         [SerializeField] private GesturePromptPresenter prompts;
         [SerializeField] private GameGesturePromptSource promptSource;
@@ -64,13 +64,10 @@ namespace DigitalLove.Game.Flow
 
         private void SubscribeMenu(bool subscribe)
         {
-            for (int i = 0; i < menuInvokers.Length; i++)
-            {
-                if (subscribe)
-                    menuInvokers[i].homeMenuRequested += OnMenuRequested;
-                else
-                    menuInvokers[i].homeMenuRequested -= OnMenuRequested;
-            }
+            if (subscribe)
+                menuInvoker.homeMenuRequested += OnMenuRequested;
+            else
+                menuInvoker.homeMenuRequested -= OnMenuRequested;
         }
 
         private void OnMenuRequested()

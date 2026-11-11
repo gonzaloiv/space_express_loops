@@ -28,11 +28,17 @@ namespace DigitalLove.Game.Flow
         public override void Enter()
         {
             systemPlayer.Play(enterCue);
+            bool restart = memoryDataClient.Get<PuzzleRestart>().Value;
+            memoryDataClient.Remove<PuzzleRestart>();
             PuzzleData puzzle = memoryDataClient.Get<PuzzleData>();
             puzzleController.Enter(puzzle);
-            puzzleController.Glitch();
-            if (!puzzle.noIntro)
-                ttsPresenter.Play(new[] { puzzle.IntroLinesKey });
+            if (!restart)
+            {
+                puzzleController.Glitch();
+                if (!puzzle.noIntro)
+                    ttsPresenter.Play(new[] { puzzle.IntroLinesKey });
+            }
+
             parent.SetCurrentState(nextState.RouteId);
         }
 
