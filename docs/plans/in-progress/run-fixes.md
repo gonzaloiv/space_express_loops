@@ -125,12 +125,12 @@ with a minimal archive of common Quest hand gestures. If U1–U3 fill the mornin
 
 ## Review — 2026-11-11
 
-U1 and U4 landed in `4c40552` (game) and `_Modules` `6d77c83` (on `our-space`); **U2 and U3 are
-implemented after that** (working tree). What works: the scale-out and rotation gestures and their tests
-are gone, the exit is gated on pause and fires once (`exiting`), the end sequence and the map are not
-subscribed, the six prompts reference `GestureLoop` assets with Unity-assigned GUIDs, the module has no
-`Assets/_Game` path, a fail calls `Exit()` and re-enters the same job with a one-shot restart flag, and
-the old `fail_02` / `fail_03` keys and clips are gone.
+U1 and U4 landed in `4c40552`; the game now records `_Modules` at `6d77c83` (on `our-space`), which
+carries the review fixes. **U2 and U3 are committed in `e38d109`.** What works: the scale-out and
+rotation gestures and their tests are gone, the exit is gated on pause and fires once (`exiting`), the
+end sequence and the map are not subscribed, the six prompts reference `GestureLoop` assets with
+Unity-assigned GUIDs, the module has no `Assets/_Game` path, a fail calls `Exit()` and re-enters the
+same job with a one-shot restart flag, and the old `fail_02` / `fail_03` keys and clips are gone.
 
 Fixes, in order:
 
@@ -161,13 +161,13 @@ still fires. F6, F7 and F9 are fixed; F8 remains an asset download.
 - **F6 — fixed in `e38d109`.** The game records `_Modules` at `6d77c83`, which is on `our-space`; the
   orphan `97129df` is no longer referenced. The module and game are not pushed; push remains the user's
   step.
-- **F7 — fixed 2026-11-11.** `PuzzleSelectionState.puzzleToSet` is cleared in `Game.unity`; the commit
-  carries no RectTransform layout changes.
+- **F7 — fixed 2026-11-11 in `1587d31`.** `PuzzleSelectionState.puzzleToSet` is cleared in
+  `Game.unity`; the commit carries no RectTransform layout changes.
 - **F8 — open.** Seven clips need downloading before the capture: `level_01_02`–`level_01_07_fail` and
   `level_01_06_init_01`. The game runs, but fails and job 6's intro are silent until then; no generator
   is in the repo.
-- **F9 — fixed 2026-11-11.** `jobs.md` now shows job 7's current long manual string; the shortening
-  stays deferred to the lore rethink.
+- **F9 — fixed 2026-11-11 in `1587d31`.** `jobs.md` now shows job 7's current long manual string; the
+  shortening stays deferred to the lore rethink.
 
 ## Not in this plan
 
