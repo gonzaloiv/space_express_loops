@@ -28,6 +28,13 @@ A review is delivered **in the chat**, not as a file: a one-line verdict, then r
 `file:line` evidence. Do not create a `docs/reviews/` folder or review documents. When a review changes a
 plan or the code, apply it in the same change and say so in the chat.
 
+## Commits at plan completion
+
+When a plan's implementation is finished — every unit and exit implemented and the automated checks
+pass — make the completion commit as the final step. Stage only that plan's files, commit locally, and
+report the hash. Do not push; the user still owns push and PR. If the plan spans a submodule, commit
+the submodule first, then the parent pointer. Leave unrelated worktree changes uncommitted.
+
 ## No internal APIs
 
 In first-party C#:
