@@ -5,6 +5,7 @@ using DigitalLove.Localization;
 using DigitalLove.UI.Behaviours;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace DigitalLove.Game.PuzzleSelection
 {
@@ -24,6 +25,8 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField, Min(0f)] private float bootSecs = 0.18f;
         [SerializeField, Min(0f)] private float closeSecs = 0.18f;
         [SerializeField, Min(0.05f)] private float cursorBlinkSecs = 0.5f;
+        [Tooltip("The card never gets shorter than this (canvas units); a longer contract grows it.")]
+        [SerializeField, Min(0f)] private float minHeight = 300f;
 
         private Vector3? fullScale;
         private string headerTitle;
@@ -69,6 +72,7 @@ namespace DigitalLove.Game.PuzzleSelection
             StopBoot();
             ApplyContent(puzzle, includeManual);
             gameObject.SetActive(true);
+            FitHeight();
             if (typed)
                 Opened?.Invoke();
             if (typed || !wasActive)
@@ -99,6 +103,18 @@ namespace DigitalLove.Game.PuzzleSelection
             manual.text = includeManual
                 ? Line(Label($"MANUAL r{puzzle.ManualRevision}"), puzzle.ManualKey)
                 : string.Empty;
+        }
+
+        // Grows the card to its text: the lines' layout reports its preferred height, and the card adds
+        // the text area's inset around it. Runs once the card is active (an inactive layout measures
+        // nothing); the text is set in full before the typewriter reveals it.
+        private void FitHeight()
+        {
+            RectTransform card = (RectTransform)transform;
+            RectTransform textArea = (RectTransform)header.rectTransform.parent;
+            LayoutRebuilder.ForceRebuildLayoutImmediate(textArea);
+            float needed = LayoutUtility.GetPreferredHeight(textArea) - textArea.sizeDelta.y;
+            card.sizeDelta = new Vector2(card.sizeDelta.x, Mathf.Max(minHeight, needed));
         }
 
         private string HeaderTitle => headerTitle ??= header.text;
