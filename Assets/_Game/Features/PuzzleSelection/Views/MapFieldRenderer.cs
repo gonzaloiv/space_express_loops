@@ -74,12 +74,14 @@ namespace DigitalLove.Game.PuzzleSelection
             selectedSlot.ShowMapField(selected, tint.For(selected.State), showFrames, true);
             readout.Show(selected);
             selectedSlot.SetZoom(1f);
-            if (selected.State == JobState.Current)
+            if (selected.State == JobState.Current
+                && map.SelectedIndex == map.HighestCurrentIndex)
                 CurrentSlot = selectedSlot;
         }
 
         private void RenderNeighbours(PuzzleMap map)
         {
+            int highest = map.HighestCurrentIndex;
             int slot = 0;
             for (int i = 0; i < map.Count; i++)
             {
@@ -90,7 +92,7 @@ namespace DigitalLove.Game.PuzzleSelection
                 RunSlotView field = fields.EnsureSlot(slot++);
                 field.ShowMapField(entry, tint.For(entry.State), showFrames, false);
                 field.PlaceSunAt(map.Position(i));
-                if (entry.State == JobState.Current)
+                if (entry.State == JobState.Current && i == highest)
                     CurrentSlot = field;
             }
 

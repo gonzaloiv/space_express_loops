@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Threading.Tasks;
 using DigitalLove.Audio;
+using DigitalLove.Casual.Levels;
 using DigitalLove.DataAccess;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.Persistence;
@@ -16,6 +17,7 @@ namespace DigitalLove.Game.Flow
     {
         [SerializeField] private MonoState nextState;
         [SerializeField] private MonoState retryState;
+        [SerializeField] private LevelSelector levelSelector;
         [SerializeField] private SpaceShapingController puzzleController;
         [SerializeField] private TtsPresenter ttsPresenter;
         [SerializeField] private SynthCuePlayer cuePlayer;
@@ -32,12 +34,23 @@ namespace DigitalLove.Game.Flow
 
         private Task pendingSave = Task.CompletedTask;
         private Coroutine sequence;
+        private int signpostIndex = -1;
+        private bool showExitPrompt;
+        private bool active;
 
         public override void Enter()
         {
+            active = true;
             PuzzleData puzzle = memoryDataClient.Get<PuzzleData>();
             PuzzleRunResult result = memoryDataClient.Get<PuzzleRunResult>();
-            pendingSave = result.Solved ? SaveSolve(puzzle, result.Grade) : Task.CompletedTask;
+            JobOpenResult open = JobOpenResult.None;
+            if (result.Solved)
+                pendingSave = SaveSolve(puzzle, result.Grade);
+            else
+                open = OpenNext(puzzle);
+
+            signpostIndex = open.SignpostIndex;
+            showExitPrompt = open.ShowExitPrompt;
             cuePlayer.Play(result.Solved ? arriveCue : failCue);
             puzzleController.StarStamped += OnStarStamped;
             sequence = result.Solved
@@ -47,6 +60,7 @@ namespace DigitalLove.Game.Flow
 
         public override void Exit()
         {
+            active = false;
             puzzleController.StarStamped -= OnStarStamped;
             if (sequence != null)
             {
@@ -83,9 +97,23 @@ namespace DigitalLove.Game.Flow
                 ttsPresenter.Play(new[] { cue }, Restart);
         }
 
-        private void Restart()
+        private JobOpenResult OpenNext(PuzzleData puzzle)
         {
-            memoryDataClient.Put(new PuzzleRestart(true));
+            PlayerData playerData = memoryDataClient.Get<PlayerData>();
+            JobOpenResult open = RunProgressCookies.OpenNext(playerData, levelSelector, puzzle);
+            pendingSave = open.Changed
+                ? Put(playerData, "opened job")
+                : Task.CompletedTask;
+            return open;
+        }
+
+        private async void Restart()
+        {
+            await Task.WhenAny(pendingSave, Task.Delay(TimeSpan.FromSeconds(saveTimeoutSecs)));
+            if (!active)
+                return;
+
+            memoryDataClient.Put(new PuzzleRestart(true, signpostIndex, showExitPrompt));
             puzzleController.Exit();
             parent.SetCurrentState(retryState.RouteId);
         }
@@ -93,22 +121,28 @@ namespace DigitalLove.Game.Flow
         private async void ReturnWhenSaved()
         {
             await Task.WhenAny(pendingSave, Task.Delay(TimeSpan.FromSeconds(saveTimeoutSecs)));
+            if (!active)
+                return;
+
             ReturnToSelection();
         }
 
         private async Task SaveSolve(PuzzleData puzzle, int grade)
         {
             PlayerData playerData = memoryDataClient.Get<PlayerData>();
-            if (!RunProgressCookies.RecordSolve(playerData, puzzle.id, grade))
-                return;
+            if (RunProgressCookies.RecordSolve(playerData, puzzle.id, grade))
+                await Put(playerData, $"solve for {puzzle.id}");
+        }
 
+        private async Task Put(PlayerData playerData, string what)
+        {
             try
             {
                 await dataProvider.Put(playerData);
             }
             catch (Exception e)
             {
-                Debug.LogError($"Failed to save the solve for {puzzle.id}: {e}");
+                Debug.LogError($"Failed to save the {what}: {e}");
             }
         }
 

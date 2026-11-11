@@ -84,23 +84,7 @@ namespace DigitalLove.Game.PuzzleSelection
         }
 
         // The route is the open chain up to the job that is next, not a ring around the map.
-        private static int EndIndex(PuzzleMap map)
-        {
-            for (int i = 0; i < map.Count; i++)
-            {
-                if (map[i].State == JobState.Current)
-                    return i;
-            }
-
-            int lastSolved = -1;
-            for (int i = 0; i < map.Count; i++)
-            {
-                if (map[i].State == JobState.Solved)
-                    lastSolved = i;
-            }
-
-            return lastSolved >= 0 ? lastSolved : Mathf.Max(map.SelectedIndex, 0);
-        }
+        private static int EndIndex(PuzzleMap map) => map.HighestCurrentIndex;
 
         private void HideAll()
         {

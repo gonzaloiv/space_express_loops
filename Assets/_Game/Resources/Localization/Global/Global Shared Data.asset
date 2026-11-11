@@ -107,6 +107,10 @@ MonoBehaviour:
     m_Key: field_reset_full
     m_Metadata:
       m_Items: []
+  - m_Id: 73233989640048648
+    m_Key: field_reset_job_open
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

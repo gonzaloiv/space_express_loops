@@ -33,6 +33,34 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
             Assert.AreEqual(3, map[0].Stars);
             Assert.AreEqual(JobState.Locked, map[2].State);
             Assert.AreEqual(layout.At(2), map.Position(2));
+            Assert.AreEqual(1, map.HighestCurrentIndex);
+        }
+
+        [Test]
+        public void HighestCurrentIndex_PrefersTheOpenedJob()
+        {
+            PuzzleMap map = PuzzleMap.FromLevels(
+                Levels(6),
+                RunProgress.FromSolved(
+                    6, 3, new[] { true, true, true, false, false, false },
+                    new[] { 3, 3, 3, 0, 0, 0 }, highestOpened: 4),
+                PuzzleMapLayout.Galaxy(6));
+
+            Assert.AreEqual(JobState.Current, map[3].State);
+            Assert.AreEqual(JobState.Current, map[4].State);
+            Assert.AreEqual(JobState.Locked, map[5].State);
+            Assert.AreEqual(4, map.HighestCurrentIndex);
+        }
+
+        [Test]
+        public void HighestCurrentIndex_FallsBackToTheLastSolved()
+        {
+            PuzzleMap map = PuzzleMap.FromLevels(
+                Levels(3),
+                RunProgress.FromSolved(3, 2, new[] { true, true, true }, new[] { 1, 1, 1 }),
+                PuzzleMapLayout.Galaxy(3));
+
+            Assert.AreEqual(2, map.HighestCurrentIndex);
         }
 
         [Test]

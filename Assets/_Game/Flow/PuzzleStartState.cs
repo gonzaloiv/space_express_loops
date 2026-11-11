@@ -28,13 +28,12 @@ namespace DigitalLove.Game.Flow
         public override void Enter()
         {
             systemPlayer.Play(enterCue);
-            bool restart = memoryDataClient.Get<PuzzleRestart>().Value;
-            memoryDataClient.Remove<PuzzleRestart>();
+            PuzzleRestart restart = memoryDataClient.Get<PuzzleRestart>();
             PuzzleData puzzle = memoryDataClient.Get<PuzzleData>();
             puzzleController.Enter(puzzle);
-            if (restart)
+            if (restart.Value)
             {
-                puzzleController.PlayEntropyReset();
+                puzzleController.PlayEntropyReset(restart.SignpostIndex);
             }
             else
             {

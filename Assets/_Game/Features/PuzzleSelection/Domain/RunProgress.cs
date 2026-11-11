@@ -9,16 +9,23 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public int CurrentIndex { get; }
         public int Count { get; }
+        public int HighestOpenedIndex { get; }
 
-        private RunProgress(int currentIndex, int count, bool[] solved, int[] stars)
+        private RunProgress(
+            int currentIndex, int count, bool[] solved, int[] stars, int highestOpened)
         {
             CurrentIndex = Clamp(currentIndex, count);
             Count = Math.Max(count, 0);
+            HighestOpenedIndex = Math.Min(highestOpened, Count - 1);
             this.solved = CopySolved(solved, Count);
             this.stars = CopyStars(stars, Count);
         }
 
         public bool IsSolved(int index) => IsInRange(index) && solved[index];
+
+        public bool IsOpened(int index) => index >= 0 && index <= HighestOpenedIndex;
+
+        public bool IsOpenedUnsolved(int index) => IsOpened(index) && !IsSolved(index);
 
         public int Stars(int index) => IsInRange(index) ? stars[index] : 0;
 
@@ -54,8 +61,9 @@ namespace DigitalLove.Game.PuzzleSelection
         }
 
         public static RunProgress FromSolved(
-            int count, int currentIndex, bool[] solvedFlags, int[] starValues = null) =>
-            new(currentIndex, count, solvedFlags, starValues);
+            int count, int currentIndex, bool[] solvedFlags, int[] starValues = null,
+            int highestOpened = -1) =>
+            new(currentIndex, count, solvedFlags, starValues, highestOpened);
 
         private bool IsInRange(int index) => index >= 0 && index < solved.Length;
 

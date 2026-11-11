@@ -11,6 +11,7 @@ namespace DigitalLove.Game.Persistence
     public static class RunProgressCookies
     {
         private const string EndingSeenCookieId = "run_ending_seen";
+        private const string ExitPromptCookieId = "exit_prompt_after_fail";
 
         public static RunProgress Build(LevelSelector selector, PlayerData playerData)
         {
@@ -32,7 +33,35 @@ namespace DigitalLove.Game.Persistence
                 stars[i] = cookie.Score;
             }
 
-            return RunProgress.FromSolved(count, CurrentIndex(selector, cookies), solved, stars);
+            return RunProgress.FromSolved(
+                count, CurrentIndex(selector, cookies), solved, stars,
+                HighestOpenedIndex(selector, playerData));
+        }
+
+        public static JobOpenResult OpenNext(
+            PlayerData playerData, LevelSelector selector, PuzzleData puzzle)
+        {
+            int index = selector.GetGlobalIndex(puzzle);
+            int nextIndex = index + 1;
+            if (index < 0 || nextIndex >= selector.TotalLevelsCount)
+                return JobOpenResult.None;
+
+            LevelData next = selector.GetLevelByGlobalIndex<LevelData>(nextIndex);
+            if (next == null || playerData.HasCookie(new LevelCompleteCookie(next.id).id))
+                return JobOpenResult.None;
+
+            RunProgress before = Build(selector, playerData);
+            if (nextIndex <= before.CurrentIndex)
+                return JobOpenResult.None;
+
+            bool firstOpen = playerData.AddCookie(new JobOpenedCookie(next.id));
+            bool showExitPrompt = firstOpen && !playerData.HasCookie(ExitPromptCookieId);
+            if (showExitPrompt)
+                playerData.AddCookie(new Cookie(ExitPromptCookieId));
+
+            RunProgress progress = Build(selector, playerData);
+            int signpostIndex = progress.IsOpenedUnsolved(nextIndex) ? nextIndex : -1;
+            return new JobOpenResult(firstOpen, signpostIndex, showExitPrompt);
         }
 
         public static bool HasSeenEnding(PlayerData playerData, int jobCount)
@@ -88,6 +117,23 @@ namespace DigitalLove.Game.Persistence
         {
             PuzzleData current = selector.GetFollowingLevel<PuzzleData>(cookies);
             return current != null ? selector.GetGlobalIndex(current) : 0;
+        }
+
+        private static int HighestOpenedIndex(LevelSelector selector, PlayerData playerData)
+        {
+            int highest = -1;
+            int count = selector.TotalLevelsCount;
+            for (int i = 0; i < count; i++)
+            {
+                LevelData level = selector.GetLevelByGlobalIndex<LevelData>(i);
+                if (level == null || string.IsNullOrEmpty(level.id))
+                    continue;
+
+                if (playerData.HasCookie(new JobOpenedCookie(level.id).id))
+                    highest = i;
+            }
+
+            return highest;
         }
 
         [Serializable]

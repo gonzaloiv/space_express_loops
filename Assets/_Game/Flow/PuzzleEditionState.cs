@@ -44,9 +44,13 @@ namespace DigitalLove.Game.Flow
             puzzleController.FlightCrashed += OnFlightCrashed;
             puzzleController.Refused += OnRefused;
             puzzleController.PinchCommitted += OnPinchCommitted;
+            PuzzleRestart restart = memoryDataClient.Get<PuzzleRestart>();
+            memoryDataClient.Remove<PuzzleRestart>();
             puzzle = memoryDataClient.Get<PuzzleData>();
-            ShowPrompts(puzzle);
+            ShowPrompts(puzzle, restart.Value);
             ShowContract(puzzle);
+            if (restart.ShowExitPrompt)
+                puzzleController.ResetEnded += OnResetEnded;
         }
 
         public override void Exit()
@@ -57,6 +61,7 @@ namespace DigitalLove.Game.Flow
             puzzleController.FlightCrashed -= OnFlightCrashed;
             puzzleController.Refused -= OnRefused;
             puzzleController.PinchCommitted -= OnPinchCommitted;
+            puzzleController.ResetEnded -= OnResetEnded;
             prompts.HideAll();
             contractCard.Hide();
             puzzle = null;
@@ -79,15 +84,21 @@ namespace DigitalLove.Game.Flow
             ExitToSelection();
         }
 
-        private void ShowPrompts(PuzzleData puzzle)
+        private void ShowPrompts(PuzzleData puzzle, bool restart)
         {
             prompts.Show(GestureKind.Scale);
             if (puzzle.translatable)
                 prompts.Show(GestureKind.Move);
-            if (!puzzle.noIntro)
+            if (!puzzle.noIntro && !restart)
                 prompts.Show(GestureKind.Exit);
             if (!puzzle.noGrade)
                 prompts.Show(GestureKind.Stars);
+        }
+
+        private void OnResetEnded()
+        {
+            puzzleController.ResetEnded -= OnResetEnded;
+            prompts.ShowAlways(GestureKind.Exit);
         }
 
         private void ShowContract(PuzzleData puzzle)

@@ -23,6 +23,24 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public int SelectedIndex => selectedIndex;
 
+        public int HighestCurrentIndex
+        {
+            get
+            {
+                int highest = -1;
+                int lastSolved = -1;
+                for (int i = 0; i < entries.Length; i++)
+                {
+                    if (entries[i].State == JobState.Current)
+                        highest = i;
+                    else if (entries[i].State == JobState.Solved)
+                        lastSolved = i;
+                }
+
+                return highest >= 0 ? highest : lastSolved;
+            }
+        }
+
         public int TotalStars => SumStars();
 
         public int MaxStars => GradedCount() * PuzzleGrade.MaxStars;

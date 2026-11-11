@@ -28,7 +28,9 @@ namespace DigitalLove.Game.PuzzleSelection
             if (progress.IsSolved(index))
                 return JobState.Solved;
 
-            return index == progress.CurrentIndex ? JobState.Current : JobState.Locked;
+            return index == progress.CurrentIndex || progress.IsOpened(index)
+                ? JobState.Current
+                : JobState.Locked;
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using DigitalLove.Audio;
 using DigitalLove.Localization;
@@ -11,6 +12,8 @@ namespace DigitalLove.Game.SpaceShaping
     // a pinch cancels it and the post returns to the real budget.
     public class FieldResetReadout : MonoBehaviour
     {
+        private const string JobOpenKey = "field_reset_job_open";
+
         [SerializeField] private SpaceShapingView view;
         [SerializeField] private FieldEdgeMeter meter;
         [SerializeField] private Transform readoutRoot;
@@ -30,13 +33,17 @@ namespace DigitalLove.Game.SpaceShaping
         };
 
         private bool running;
+        private int signpostIndex = -1;
+
+        public event Action Ended;
 
         private void OnEnable() => view.PinchCommitted += Cancel;
 
         private void OnDisable() => view.PinchCommitted -= Cancel;
 
-        public void Play()
+        public void Play(int signpostIndex = -1)
         {
+            this.signpostIndex = signpostIndex;
             StopAllCoroutines();
             readoutRoot.gameObject.SetActive(true);
             line.text = BuildText();
@@ -56,6 +63,10 @@ namespace DigitalLove.Game.SpaceShaping
                     text += "\n";
                 text += LocalizationUtil.GetValue(lineKeys[i]);
             }
+
+            if (signpostIndex >= 0)
+                text += "\n" + LocalizationUtil.GetValue(
+                    JobOpenKey, (signpostIndex + 1).ToString("D2"));
 
             return text;
         }
@@ -120,6 +131,7 @@ namespace DigitalLove.Game.SpaceShaping
             running = false;
             readoutRoot.gameObject.SetActive(false);
             meter.ClearReset();
+            Ended?.Invoke();
         }
     }
 }

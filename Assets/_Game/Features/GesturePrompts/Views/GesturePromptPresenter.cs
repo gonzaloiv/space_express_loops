@@ -43,7 +43,15 @@ namespace DigitalLove.Game.GesturePrompts
 
         public void Show(GestureKind kind)
         {
-            if (IsLearned(kind) || pool.IsShowing(kind))
+            if (IsLearned(kind))
+                return;
+
+            ShowAlways(kind);
+        }
+
+        public void ShowAlways(GestureKind kind)
+        {
+            if (pool.IsShowing(kind))
                 return;
 
             pool.Show(Content(kind), Position(kind), Facing(kind), Subject(kind));

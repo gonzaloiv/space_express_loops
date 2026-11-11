@@ -4,8 +4,15 @@ namespace DigitalLove.Game.Flow
     // restart skips Jim's intro without leaving a stale flag behind.
     internal readonly struct PuzzleRestart
     {
-        public PuzzleRestart(bool value) => Value = value;
+        public PuzzleRestart(bool value, int signpostIndex, bool showExitPrompt)
+        {
+            Value = value;
+            SignpostIndex = signpostIndex;
+            ShowExitPrompt = showExitPrompt;
+        }
 
         public bool Value { get; }
+        public int SignpostIndex { get; }
+        public bool ShowExitPrompt { get; }
     }
 }
