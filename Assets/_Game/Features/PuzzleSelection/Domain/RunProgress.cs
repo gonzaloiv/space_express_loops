@@ -36,6 +36,23 @@ namespace DigitalLove.Game.PuzzleSelection
             }
         }
 
+        public bool IsComplete
+        {
+            get
+            {
+                if (solved.Length == 0)
+                    return false;
+
+                for (int i = 0; i < solved.Length; i++)
+                {
+                    if (!solved[i])
+                        return false;
+                }
+
+                return true;
+            }
+        }
+
         public static RunProgress FromSolved(
             int count, int currentIndex, bool[] solvedFlags, int[] starValues = null) =>
             new(currentIndex, count, solvedFlags, starValues);

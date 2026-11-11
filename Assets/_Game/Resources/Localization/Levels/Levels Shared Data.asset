@@ -259,3 +259,19 @@ MonoBehaviour:
     m_Key: level_01_07_complete_05
     m_Metadata:
       m_Items: []
+  - m_Id: 73365399642230801
+    m_Key: run_ending_jim_01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230802
+    m_Key: run_ending_jim_02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230803
+    m_Key: run_ending_jim_03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230804
+    m_Key: run_ending_console
+    m_Metadata:
+      m_Items: []

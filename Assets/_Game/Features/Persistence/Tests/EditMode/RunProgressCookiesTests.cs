@@ -105,6 +105,40 @@ namespace DigitalLove.Game.Persistence.Tests
             Assert.AreEqual(0, progress.Stars(0));
         }
 
+        [Test]
+        public void EndingFlag_RoundTripsTheRunCount()
+        {
+            PlayerData playerData = new();
+
+            Assert.IsFalse(RunProgressCookies.HasSeenEnding(playerData, 7));
+            RunProgressCookies.MarkEndingSeen(playerData, 7);
+
+            Assert.IsTrue(RunProgressCookies.HasSeenEnding(playerData, 7));
+            Assert.IsTrue(RunProgressCookies.HasSeenEnding(playerData, 6));
+            Assert.IsFalse(RunProgressCookies.HasSeenEnding(playerData, 11));
+        }
+
+        [Test]
+        public void EndingFlag_DoesNotCountAsACompletedJob()
+        {
+            PlayerData playerData = new();
+
+            RunProgressCookies.MarkEndingSeen(playerData, 7);
+
+            Assert.AreEqual(0, playerData.CompletedJobsCount);
+            Assert.AreEqual(0, playerData.GetLevelCompleteCookies().Count);
+        }
+
+        [Test]
+        public void EndingFlag_MalformedMetadataIsNotSeen()
+        {
+            PlayerData playerData = new();
+            playerData.cookies.Add(
+                new Cookie("run_ending_seen").SetMetadata("{not json"));
+
+            Assert.IsFalse(RunProgressCookies.HasSeenEnding(playerData, 7));
+        }
+
         private LevelSelector Selector(params PuzzleData[] levels)
         {
             ChapterData chapter = ScriptableObject.CreateInstance<ChapterData>();

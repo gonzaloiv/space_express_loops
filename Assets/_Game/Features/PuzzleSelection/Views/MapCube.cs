@@ -69,6 +69,15 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public void Refuse() => zone.Refuse(ZoneRefusal.Locked);
 
+        public void SetInteractive(bool value, bool canEnter)
+        {
+            zone.SetInputLocked(!value);
+            if (value)
+                SetEnterable(canEnter);
+            else
+                zone.SetDormant(false);
+        }
+
         public void Hide()
         {
             zone.SetInputLocked(false);

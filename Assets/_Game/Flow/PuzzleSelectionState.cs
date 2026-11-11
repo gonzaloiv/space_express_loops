@@ -59,6 +59,12 @@ namespace DigitalLove.Game.Flow
                 return;
             }
 
+            if (view.CurrentMap != null)
+            {
+                AdoptMap();
+                return;
+            }
+
             RunProgress progress = RunProgressCookies.Build(levelSelector, playerData);
             if (progress.IsFresh && !autoEntryUsed)
             {
@@ -81,10 +87,15 @@ namespace DigitalLove.Game.Flow
         {
             view.EnterRequested += OnEnterRequested;
 
-            PuzzleData[] levels = ReadLevels();
-            map = PuzzleMap.FromLevels(
-                levels, progress, PuzzleMapLayout.Galaxy(levels.Length));
+            map = RunMap.Build(levelSelector, progress);
             view.Show(map);
+            prompts.Show(GestureKind.Enter);
+        }
+
+        private void AdoptMap()
+        {
+            map = view.CurrentMap;
+            view.EnterRequested += OnEnterRequested;
             prompts.Show(GestureKind.Enter);
         }
 
@@ -128,15 +139,5 @@ namespace DigitalLove.Game.Flow
         private void OnLineTyped() => Tick(typeCue);
 
         private void Tick(SynthPatch patch) => systemPlayer.PlayTick(patch, tickCooldownSecs);
-
-        private PuzzleData[] ReadLevels()
-        {
-            int count = levelSelector.TotalLevelsCount;
-            PuzzleData[] levels = new PuzzleData[count];
-            for (int i = 0; i < count; i++)
-                levels[i] = levelSelector.GetLevelByGlobalIndex<PuzzleData>(i);
-
-            return levels;
-        }
     }
 }

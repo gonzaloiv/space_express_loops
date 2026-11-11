@@ -44,6 +44,9 @@ player's instrument, used to pick a node ([the cube](cube.md) §The map uses the
 - **Direct pick only (decided 2026-10-27):** the map is the only navigation; a fail restarts the
   job and a solve returns to the map, not Next. Solved and current nodes are pickable; locked nodes
   refuse visibly.
+- **The last solve closes the run (decided 2026-11-11).** With every job solved, the map plays the
+  ending — the whole network lit, the total stars, the title and Jim closing the episode — then it is
+  usable again. A persisted flag keeps it to once per save, and once more when a longer run is added.
 - **The first session skips the map (decided 2026-11-06).** On a fresh save the game opens straight
   in job 1; the map is first seen after job 1 (or on leaving it), so the player meets the cube before
   the map, and the map's enter is the same pinch inside the same cube

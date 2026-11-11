@@ -47,6 +47,13 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public void SetLabelColor(Color color) => diorama.SetLabelColor(color);
 
+        public void SetEndingLit(bool lit, Color color)
+        {
+            diorama.SetStateDim(lit ? 0f : lockedDim);
+            diorama.SetLabelColor(color);
+            stars.gameObject.SetActive(hasStars && lit && !culled);
+        }
+
         private void ApplyCulled(bool value)
         {
             culled = value;

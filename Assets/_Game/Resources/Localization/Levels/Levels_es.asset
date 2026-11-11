@@ -246,3 +246,19 @@ MonoBehaviour:
     m_Localized: "Hoy el espacio. Ma\xF1ana el tiempo."
     m_Metadata:
       m_Items: []
+  - m_Id: 73365399642230801
+    m_Localized: That is every contract we have.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230802
+    m_Localized: The tech team says more are coming.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230803
+    m_Localized: Get some sleep.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73365399642230804
+    m_Localized: "> MORE CONTRACTS IN THE MAKING\n> REPLAY A JOB FOR 3 STARS"
+    m_Metadata:
+      m_Items: []

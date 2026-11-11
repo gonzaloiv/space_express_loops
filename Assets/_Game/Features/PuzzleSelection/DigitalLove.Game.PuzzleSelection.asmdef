@@ -12,7 +12,9 @@
         "DigitalLove.UI.Behaviours",
         "DigitalLove.Game.SpaceShaping.Cube",
         "Unity.TextMeshPro",
-        "UnityEngine.UI"
+        "UnityEngine.UI",
+        "DigitalLove.Audio.Runtime",
+        "DigitalLove.TTS"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

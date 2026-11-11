@@ -110,6 +110,39 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
             Assert.AreEqual(2, map[0].Stars);
         }
 
+        [Test]
+        public void IsComplete_RequiresEveryJob()
+        {
+            Assert.IsTrue(RunProgress.FromSolved(
+                7, 0, new[] { true, true, true, true, true, true, true }).IsComplete);
+            Assert.IsFalse(RunProgress.FromSolved(
+                7, 0, new[] { true, true, true, true, true, true, false }).IsComplete);
+            Assert.IsTrue(RunProgress.FromSolved(
+                11, 0,
+                new[]
+                {
+                    true, true, true, true, true, true,
+                    true, true, true, true, true
+                }).IsComplete);
+            Assert.IsFalse(RunProgress.FromSolved(
+                0, 0, System.Array.Empty<bool>()).IsComplete);
+        }
+
+        [Test]
+        public void Totals_CountGradedJobsOnly()
+        {
+            PuzzleData[] levels = Levels(3);
+            levels[0].noGrade = true;
+
+            PuzzleMap map = PuzzleMap.FromLevels(
+                levels,
+                RunProgress.FromSolved(3, 0, new[] { true, true, true }, new[] { 0, 2, 3 }),
+                PuzzleMapLayout.Galaxy(3));
+
+            Assert.AreEqual(5, map.TotalStars);
+            Assert.AreEqual(6, map.MaxStars);
+        }
+
         private PuzzleData[] Levels(int count)
         {
             PuzzleData[] levels = new PuzzleData[count];

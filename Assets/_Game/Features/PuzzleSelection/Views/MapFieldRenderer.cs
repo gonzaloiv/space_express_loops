@@ -1,3 +1,4 @@
+using System;
 using DigitalLove.Game.SpaceShaping;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ namespace DigitalLove.Game.PuzzleSelection
         private readonly MapNodeTint tint;
         private readonly MapSelectionReadout readout;
         private readonly bool showFrames;
+        private MapEnding ending;
 
         public RunSlotView CurrentSlot { get; private set; }
 
@@ -33,9 +35,19 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public void TickPulse(float deltaSecs)
         {
+            ending?.Tick(deltaSecs);
             if (CurrentSlot != null)
                 CurrentSlot.SetLabelColor(tint.CurrentAt(deltaSecs));
         }
+
+        public void PlayEnding(float nodeSecs, float finishSecs, Action onComplete)
+        {
+            ending ??= new MapEnding(
+                selectedSlot, fields, tint, nodeSecs, finishSecs);
+            ending.Play(onComplete);
+        }
+
+        public void StopEnding() => ending?.Stop();
 
         public void PreviewNearest(PuzzleMap map, Transform mapRoot, Vector3 pointer)
         {
@@ -49,6 +61,8 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public void Hide()
         {
+            ending?.Stop();
+            ending = null;
             CurrentSlot = null;
             selectedSlot.Hide();
             fields.ForEachFrom(0, field => field.Hide());

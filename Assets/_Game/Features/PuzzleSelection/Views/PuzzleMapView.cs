@@ -48,17 +48,15 @@ namespace DigitalLove.Game.PuzzleSelection
         private MapFieldRenderer fieldView;
         private MapEnter enter;
         private bool wasScaling;
+        private bool interactive = true;
         private Vector3 lastCubePosition;
-
         public event Action EnterRequested;
         public event Action SelectionChanged;
 
+        public PuzzleMap CurrentMap => map;
         public Vector3 SelectionCubePosition => mapCube.Position;
-
         public bool IsCubeHeld => mapCube.IsHeld;
-
         public bool ShowAll => showAll;
-
         private void Awake()
         {
             fields = new ViewPool<RunSlotView>(selectedSlot, mapRoot, "Map Field", null);
@@ -73,9 +71,7 @@ namespace DigitalLove.Game.PuzzleSelection
         }
 
         private void OnEnable() => mapCube.Moved += OnCubeMoved;
-
         private void OnDisable() => mapCube.Moved -= OnCubeMoved;
-
         private void Update()
         {
             if (map == null || Time.timeScale <= 0f)
@@ -83,7 +79,8 @@ namespace DigitalLove.Game.PuzzleSelection
 
             float deltaSecs = Time.unscaledDeltaTime;
             fieldView.TickPulse(deltaSecs);
-            TrackCube(deltaSecs);
+            if (interactive)
+                TrackCube(deltaSecs);
             if (map == null)
                 return; // entering a job hid the map mid-frame
 
@@ -96,6 +93,7 @@ namespace DigitalLove.Game.PuzzleSelection
         {
             this.map = map;
             gameObject.SetActive(true);
+            interactive = true;
 
             wasScaling = false;
             enter.Reset();
@@ -109,15 +107,13 @@ namespace DigitalLove.Game.PuzzleSelection
             pose.SetReach(1f);
         }
 
-        public void SimulateSwipe(int delta)
+        public void PlayRunEnding(
+            PuzzleMap map, float nodeSecs, float finishSecs, Action onComplete)
         {
-            if (map == null)
-                return;
-
-            if (map.SelectNext(delta))
-                RenderFields();
-            SnapCube();
+            Show(map); SetShowAll(true); SetInteractive(false);
+            fieldView.PlayEnding(nodeSecs, finishSecs, onComplete);
         }
+        public void StopRunEnding() => fieldView.StopEnding();
 
         public void SetShowAll(bool value)
         {
@@ -126,6 +122,11 @@ namespace DigitalLove.Game.PuzzleSelection
             pose.ApplyFade();
         }
 
+        public void SetInteractive(bool value)
+        {
+            interactive = value;
+            mapCube.SetInteractive(value, map != null && map.CanEnter);
+        }
         public void Refuse()
         {
             enter.Reset();
@@ -212,7 +213,7 @@ namespace DigitalLove.Game.PuzzleSelection
 
         private void OnCubeMoved()
         {
-            if (map == null)
+            if (map == null || !interactive)
                 return;
 
             int nearest = MapSnap.Nearest(map, mapRoot, mapCube.Position);

@@ -23,6 +23,10 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public int SelectedIndex => selectedIndex;
 
+        public int TotalStars => SumStars();
+
+        public int MaxStars => GradedCount() * PuzzleGrade.MaxStars;
+
         public JobEntry Selected => IsInRange(selectedIndex) ? entries[selectedIndex] : default;
 
         public PuzzleData SelectedPuzzle => Selected.Puzzle;
@@ -66,5 +70,29 @@ namespace DigitalLove.Game.PuzzleSelection
         }
 
         private bool IsInRange(int index) => index >= 0 && index < entries.Length;
+
+        private int SumStars()
+        {
+            int total = 0;
+            for (int i = 0; i < entries.Length; i++)
+            {
+                if (!entries[i].NoGrade)
+                    total += entries[i].Stars;
+            }
+
+            return total;
+        }
+
+        private int GradedCount()
+        {
+            int count = 0;
+            for (int i = 0; i < entries.Length; i++)
+            {
+                if (!entries[i].NoGrade)
+                    count++;
+            }
+
+            return count;
+        }
     }
 }

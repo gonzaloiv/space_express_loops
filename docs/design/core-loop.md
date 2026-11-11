@@ -113,6 +113,8 @@ optional and needs its own channel. It never shows a move count.
 Solve jobs in order; the map fills; stars accumulate ([progression](systems/progression.md)).
 
 - The map is a field of **numbered nodes**, one per job; solving lights them.
+- **The last solve closes the run:** the whole map lights, the total and title show, Jim closes the
+  episode, then the map is ready to replay.
 - The company (identity, contracts) is a wrapper *between* jobs — never live-ticking under the
   puzzle ([vision](vision.md) §5).
 
