@@ -820,7 +820,6 @@ MonoBehaviour:
   downloader: {fileID: 674238885}
   tableName: Levels
   keys:
-  - level_01_01_init_01
   - level_01_02_init_01
   - level_01_03_init_01
   - level_01_04_init_01
@@ -857,18 +856,9 @@ MonoBehaviour:
   - level_01_07_complete_03
   - level_01_07_complete_04
   - level_01_07_complete_05
-  - level_01_02_fail_02
-  - level_01_02_fail_03
-  - level_01_03_fail_02
-  - level_01_03_fail_03
-  - level_01_04_fail_02
-  - level_01_04_fail_03
-  - level_01_05_fail_02
-  - level_01_05_fail_03
-  - level_01_06_fail_02
-  - level_01_06_fail_03
-  - level_01_07_fail_02
-  - level_01_07_fail_03
+  - run_ending_jim_01
+  - run_ending_jim_02
+  - run_ending_jim_03
   - level_02_01_init_01
   - level_02_01_complete
   - level_02_01_fail
@@ -881,14 +871,12 @@ MonoBehaviour:
   - level_02_04_init_01
   - level_02_04_complete
   - level_02_04_fail
-  - run_ending_jim_01
-  - run_ending_jim_02
-  - run_ending_jim_03
   containsFilter: 
   doesNotContainFilter:
   - manual
   - cargo
   - client
+  - console
   locale: {fileID: 11400000, guid: ef5f93a95eb7b214c98395886e20e196, type: 2}
 --- !u!1 &781987388
 GameObject:
