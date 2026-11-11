@@ -19,6 +19,12 @@ namespace DigitalLove.Game.SpaceShaping
 
         public event Action<ZoneRefusal> Refused;
 
+        public event Action MoveStarted;
+
+        public event Action MoveEnded;
+
+        public event Action<int> OutOfBoundsAt;
+
         public event Action Moved;
 
         public SpaceZone Zone
@@ -27,6 +33,15 @@ namespace DigitalLove.Game.SpaceShaping
             {
                 CubeView cube = pool.Views.Active();
                 return cube != null ? cube.Zone : default;
+            }
+        }
+
+        public Vector3 KeepOutSize
+        {
+            get
+            {
+                CubeView cube = pool.Views.Active();
+                return cube != null ? cube.KeepOutSize : Vector3.zero;
             }
         }
 
@@ -95,10 +110,19 @@ namespace DigitalLove.Game.SpaceShaping
             cube.SetInputLocked(inputLocked);
             cube.Refused += OnRefused;
             cube.Moved += OnMoved;
+            cube.MoveStarted += OnMoveStarted;
+            cube.MoveEnded += OnMoveEnded;
+            cube.OutOfBoundsAt += OnOutOfBoundsAt;
         }
 
         private void OnRefused(ZoneRefusal reason) => Refused?.Invoke(reason);
 
         private void OnMoved() => Moved?.Invoke();
+
+        private void OnMoveStarted() => MoveStarted?.Invoke();
+
+        private void OnMoveEnded() => MoveEnded?.Invoke();
+
+        private void OnOutOfBoundsAt(int endpoint) => OutOfBoundsAt?.Invoke(endpoint);
     }
 }

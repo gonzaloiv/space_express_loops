@@ -26,20 +26,36 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private ColorValue pending;
         [SerializeField, Range(0f, 1f)] private float pendingAlpha = 0.55f;
 
-        private RendererTint markerTint;
+        private TrajectoryEndMarker marker;
         private Coroutine pulse;
         private Vector3 markerBaseScale;
         private bool hasMarkerScale;
         private Material lineMaterial;
 
+        private readonly struct LineStyle
+        {
+            public readonly Color Line;
+            public readonly Color Marker;
+            public readonly bool Pending;
+
+            public LineStyle(Color line, Color marker, bool pending)
+            {
+                Line = line;
+                Marker = marker;
+                Pending = pending;
+            }
+        }
+
         private void Awake()
         {
             CaptureMarkerScale();
             lineMaterial = line.sharedMaterial;
+            marker = new TrajectoryEndMarker(
+                endMarker, endMarkerRenderer, success, danger, neutral);
         }
 
         public void Show(
-            TrajectoryResult result, bool solved, Vector3 fieldCentre, float fieldHalf, bool pending)
+            TrajectoryResult result, Color routeColor, Vector3 fieldCentre, float fieldHalf, bool pending)
         {
             StopPulse();
             int count = result.Points != null ? result.Points.Count : 0;
@@ -50,49 +66,46 @@ namespace DigitalLove.Game.SpaceShaping
             }
 
             line.sharedMaterial = lineMaterial;
-            Color color = pending
-                ? this.pending.value.WithAlpha(pendingAlpha)
-                : solved ? success.value : ColorFor(result.Outcome);
-            ShowResult(result, color, fieldCentre, fieldHalf, pending);
+            Color lineColor = pending ? routeColor.WithAlpha(pendingAlpha) : routeColor;
+            Color markerColor = pending ? lineColor : marker.ColorFor(result.Outcome);
+            ShowResult(result, new LineStyle(lineColor, markerColor, pending), fieldCentre, fieldHalf);
         }
 
         private void ShowResult(
-            TrajectoryResult result, Color color, Vector3 fieldCentre, float fieldHalf, bool pending)
+            TrajectoryResult result, LineStyle style, Vector3 fieldCentre, float fieldHalf)
         {
             FillLine(result.Points);
-            SetColor(color);
+            SetColor(style.Line);
             Vector3 end = result.Points[result.Points.Count - 1];
             Vector3 heading = Heading(result.Points);
-            ShowMarker(end, heading, color);
-            if (!pending && result.Outcome == TrajectoryOutcome.Miss)
-                ShowHeading(end, heading, color, DistanceToBox(end, heading, fieldCentre, fieldHalf));
+            bool miss = !style.Pending && result.Outcome == TrajectoryOutcome.Miss;
+            if (miss)
+            {
+                marker.Hide();
+                ShowHeading(end, heading, style.Line, DistanceToBox(end, heading, fieldCentre, fieldHalf));
+            }
             else
+            {
+                marker.Show(end, heading, style.Marker);
                 HideHeading();
+            }
 
             line.enabled = true;
         }
 
-        public void ShowBaseline(Vector3 start, Vector3 end)
+        public void ShowBaseline(Vector3 start, Vector3 end, Color routeColor)
         {
             StopPulse();
             HideHeading();
-            endMarker.gameObject.SetActive(false);
+            marker.Hide();
             line.positionCount = 2;
             line.SetPosition(0, start);
             line.SetPosition(1, end);
             line.sharedMaterial = baselineMaterial;
             line.widthMultiplier = baselineWidth;
             line.textureScale = new Vector2(16f, 1f);
-            Color color = BaselineColor();
-            line.SetBaseColor(color);
+            line.SetBaseColor(routeColor.WithAlpha(baselineAlpha));
             line.enabled = true;
-        }
-
-        private Color BaselineColor()
-        {
-            Color color = Color.Lerp(this.pending.value, Color.gray, 0.55f);
-            color.a = baselineAlpha;
-            return color;
         }
 
         private void FillLine(IReadOnlyList<Vector3> points)
@@ -110,15 +123,6 @@ namespace DigitalLove.Game.SpaceShaping
             }
 
             line.SetPosition(index, points[count - 1]);
-        }
-
-        private void ShowMarker(Vector3 position, Vector3 heading, Color color)
-        {
-            SetMarkerColor(color);
-            endMarker.localPosition = position;
-            if (heading.sqrMagnitude > HeadingEpsilon)
-                endMarker.localRotation = Quaternion.LookRotation(heading, Vector3.up);
-            endMarker.gameObject.SetActive(true);
         }
 
         private void ShowHeading(Vector3 end, Vector3 heading, Color color, float length)
@@ -171,7 +175,7 @@ namespace DigitalLove.Game.SpaceShaping
             line.positionCount = 0;
             line.enabled = false;
             HideHeading();
-            endMarker.gameObject.SetActive(false);
+            marker.Hide();
         }
 
         private void HideHeading()
@@ -182,7 +186,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void Pulse()
         {
-            if (!endMarker.gameObject.activeSelf)
+            if (!marker.IsActive)
                 return;
 
             StopPulse();
@@ -223,9 +227,6 @@ namespace DigitalLove.Game.SpaceShaping
             hasMarkerScale = true;
         }
 
-        private Color ColorFor(TrajectoryOutcome outcome) =>
-            outcome == TrajectoryOutcome.Crash ? danger.value : neutral.value;
-
         private void SetColor(Color color)
         {
             line.SetBaseColor(color);
@@ -235,7 +236,5 @@ namespace DigitalLove.Game.SpaceShaping
 
         private static Color Dim(Color color) =>
             new Color(color.r * TailDim, color.g * TailDim, color.b * TailDim, color.a);
-
-        private void SetMarkerColor(Color color) => markerTint.Set(endMarkerRenderer, color);
     }
 }

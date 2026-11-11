@@ -28,6 +28,11 @@ is a stronger well, `mass ∝ radius³`; a smaller one is a smaller obstacle). T
 the player what will happen, while the cues let them predict it. The ship stays at map size; the zone is
 what changes.
 
+With more than one ship, **each route is a colour**: its line, baseline and endpoint planets share it,
+and the map diorama uses the same colour. The colour identifies the route, not the physics — it is not a
+fourth cue — and the line's end carries the outcome (arrive, crash or miss), so the result reads at the
+end of the route rather than across the whole line.
+
 Jobs 1–3 use a **fixed** cube: the only move is the grab-inside scale (job 3 adds the shrink-to-clear
 direction). Moving the cube enters at job 4, multi-zone at job 5, and the capstone closes at job 7.
 Resize is deferred from the slice

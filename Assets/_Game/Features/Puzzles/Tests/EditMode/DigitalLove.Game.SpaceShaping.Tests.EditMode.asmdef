@@ -5,6 +5,7 @@
         "DigitalLove.Casual.Levels",
         "DigitalLove.Game.SpaceShaping.Domain",
         "DigitalLove.Game.SpaceShaping.Cube",
+        "DigitalLove.Global",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

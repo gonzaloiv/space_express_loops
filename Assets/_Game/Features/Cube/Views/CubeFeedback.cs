@@ -21,6 +21,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         private ZoneRefusal refusal;
         private float refusedUntil;
         private bool dormant;
+        private int endpoint = -1;
 
         public CubeFeedback(Renderer frameRenderer, Renderer fillRenderer, CubePalette palette)
         {
@@ -30,6 +31,9 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         }
 
         public event Action<ZoneRefusal> Refused;
+
+        // Fires when an out-of-bounds refusal names the endpoint it hit; the frame flash stays.
+        public event Action<int> OutOfBoundsAt;
 
         public float MinScale => minScale;
 
@@ -53,13 +57,20 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         public void ClearPrediction() => hasPrediction = false;
 
-        public void Refuse(ZoneRefusal reason)
+        public void Refuse(ZoneRefusal reason) => Refuse(reason, -1);
+
+        public void Refuse(ZoneRefusal reason, int endpoint)
         {
-            bool repeat = IsRefusing && refusal == reason;
+            bool repeat = IsRefusing && refusal == reason && this.endpoint == endpoint;
             refusal = reason;
+            this.endpoint = endpoint;
             refusedUntil = Time.unscaledTime + palette.RefuseSecs;
-            if (!repeat)
-                Refused?.Invoke(reason);
+            if (repeat)
+                return;
+
+            Refused?.Invoke(reason);
+            if (endpoint >= 0)
+                OutOfBoundsAt?.Invoke(endpoint);
         }
 
         public void Apply(

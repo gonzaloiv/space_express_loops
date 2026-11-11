@@ -1,3 +1,4 @@
+using DigitalLove.Global;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
@@ -63,5 +64,10 @@ namespace DigitalLove.Game.SpaceShaping
 
         [Tooltip("Largest scale the player can reach (1.8 = magnify 1.8x).")]
         public float maxScaleFactor = 1.8f;
+
+        [Header("Routes")]
+        [Tooltip("Route colours, in transit-map order. A job starts at (its id index - 1) and each "
+            + "ship takes the next entry, wrapping; an empty id starts at the first entry.")]
+        public ColorValue[] routePalette;
     }
 }

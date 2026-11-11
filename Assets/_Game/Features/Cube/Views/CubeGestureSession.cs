@@ -108,9 +108,10 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             }
 
             Vector3 centre = zone.ConstrainMove(HandLocal() + grabOffset);
-            if (!zone.CanPlace(centre, zone.Size))
+            ZonePlacement placement = zone.CanPlace(centre, zone.Size);
+            if (placement.Blocked)
             {
-                feedback.Refuse(ZoneRefusal.OutOfBounds);
+                feedback.Refuse(ZoneRefusal.OutOfBounds, placement.Endpoint);
                 return;
             }
 
@@ -145,7 +146,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
             Vector3 size = startSize * CubeGesture.ResizeFactor(
                 ratio, settings.FrameGain, settings.FrameGrowRatio);
-            if (!zone.CanPlace(zone.Centre, size))
+            if (zone.CanPlace(zone.Centre, size).Blocked)
             {
                 feedback.Refuse(ZoneRefusal.OutOfBounds);
                 return;

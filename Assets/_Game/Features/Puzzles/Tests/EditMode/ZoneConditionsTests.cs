@@ -22,6 +22,41 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         }
 
         [Test]
+        public void ToZoneConditions_CarriesEveryShipEndpoint()
+        {
+            PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
+            puzzle.origin = Vector3.zero;
+            puzzle.destination = Vector3.right;
+            puzzle.ships = new[]
+            {
+                new PuzzleShip { origin = Vector3.zero, destination = Vector3.right },
+                new PuzzleShip { origin = Vector3.up, destination = Vector3.down }
+            };
+
+            ZoneConditions conditions = puzzle.ToZoneConditions();
+
+            Assert.AreEqual(4, conditions.Endpoints.Count);
+            Assert.AreEqual(Vector3.up, conditions.Endpoints[2]);
+            Assert.AreEqual(Vector3.down, conditions.Endpoints[3]);
+            Object.DestroyImmediate(puzzle);
+        }
+
+        [Test]
+        public void ToZoneConditions_EmptyShipsFallsBackToThePrimaryPair()
+        {
+            PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
+            puzzle.origin = Vector3.zero;
+            puzzle.destination = Vector3.right;
+
+            ZoneConditions conditions = puzzle.ToZoneConditions();
+
+            Assert.AreEqual(2, conditions.Endpoints.Count);
+            Assert.AreEqual(Vector3.zero, conditions.Endpoints[0]);
+            Assert.AreEqual(Vector3.right, conditions.Endpoints[1]);
+            Object.DestroyImmediate(puzzle);
+        }
+
+        [Test]
         public void ZoneView_ExposesTheLockedGestures()
         {
             GameObject zoneObject = ZoneObject(out CubeView zone);
@@ -37,10 +72,24 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         {
             GameObject zoneObject = ZoneObject(out CubeView zone);
             zone.SetConditions(new ZoneConditions(
-                true, true, Vector3.zero, new Vector3(1f, 0f, 0f)));
+                true, true, new[] { Vector3.zero, new Vector3(1f, 0f, 0f) }));
 
-            Assert.IsFalse(zone.CanPlace(Vector3.zero, Vector3.one * 0.2f));
-            Assert.IsTrue(zone.CanPlace(new Vector3(0f, 0.5f, 0f), Vector3.one * 0.2f));
+            Assert.IsFalse(zone.CanPlace(Vector3.zero, Vector3.one * 0.2f).Allowed);
+            Assert.IsTrue(zone.CanPlace(new Vector3(0f, 0.5f, 0f), Vector3.one * 0.2f).Allowed);
+            Object.DestroyImmediate(zoneObject);
+        }
+
+        [Test]
+        public void ZoneView_NamesTheEndpointItRefuses()
+        {
+            GameObject zoneObject = ZoneObject(out CubeView zone);
+            zone.SetConditions(new ZoneConditions(
+                true, true, new[] { Vector3.zero, new Vector3(1f, 0f, 0f) }));
+
+            ZonePlacement placement = zone.CanPlace(new Vector3(1f, 0f, 0f), Vector3.one * 0.2f);
+
+            Assert.IsTrue(placement.Blocked);
+            Assert.AreEqual(1, placement.Endpoint);
             Object.DestroyImmediate(zoneObject);
         }
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DigitalLove.Game.SpaceShaping.Cube;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Creator
@@ -40,7 +41,26 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (ships == null || !probe.Scan.Rescues(zone, ships))
                 return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.NoSolution };
 
+            if (!StartFrameClear(zone, ships, settings))
+                return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.NoSolution };
+
             return Confirm(field, settings, brief, zone, ships);
+        }
+
+        // The movable start frame is the cube at the ships' bounding-box centre, so it must keep
+        // out of every ship's endpoints just like the solution zone does.
+        private static bool StartFrameClear(
+            PuzzleZone zone, PuzzleShip[] ships, PuzzleSimSettings settings)
+        {
+            SpaceZone frame = new(
+                Centre(ships), Vector3.one * (zone.Width * 0.5f), 1f, settings.ZoneFalloff);
+            for (int i = 0; i < ships.Length; i++)
+            {
+                if (frame.Influences(ships[i].origin) || frame.Influences(ships[i].destination))
+                    return false;
+            }
+
+            return true;
         }
 
         private static PuzzleMultiShipResult Confirm(

@@ -12,19 +12,21 @@ namespace DigitalLove.Game.SpaceShaping
             pool = new ViewPool<TrajectoryLineView>(prototype, parent, "Line", null);
 
         public void Show(
-            IReadOnlyList<TrajectoryResult> results, Vector3 centre, float half, bool pending)
+            IReadOnlyList<TrajectoryResult> results, RoutePlan plan,
+            Vector3 centre, float half, bool pending)
         {
             for (int i = 0; i < results.Count; i++)
-                pool.EnsureSlot(i).Show(results[i], Arrived(results[i]), centre, half, pending);
+                pool.EnsureSlot(i).Show(results[i], plan.ColorAt(i), centre, half, pending);
 
             HideFrom(results.Count);
         }
 
-        public void ShowBaselines(IReadOnlyList<Vector3> starts, IReadOnlyList<Vector3> ends)
+        public void ShowBaselines(
+            IReadOnlyList<Vector3> starts, IReadOnlyList<Vector3> ends, RoutePlan plan)
         {
             int count = Mathf.Min(starts.Count, ends.Count);
             for (int i = 0; i < count; i++)
-                pool.EnsureSlot(i).ShowBaseline(starts[i], ends[i]);
+                pool.EnsureSlot(i).ShowBaseline(starts[i], ends[i], plan.ColorAt(i));
 
             HideFrom(count);
         }
@@ -37,9 +39,6 @@ namespace DigitalLove.Game.SpaceShaping
             for (int i = 0; i < views.Count; i++)
                 views[i].Pulse();
         }
-
-        private static bool Arrived(TrajectoryResult result) =>
-            result.Outcome == TrajectoryOutcome.Arrive;
 
         private void HideFrom(int index) =>
             pool.ForEachFrom(index, view => view.Hide());

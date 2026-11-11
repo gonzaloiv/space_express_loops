@@ -35,16 +35,24 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private LatticeWells wells = new();
 
         private readonly SpaceShapingFirstUse firstUse = new();
+        private EndpointKeepOutController keepOut;
         private bool wasScaling;
+
+        private void Awake() => keepOut = new EndpointKeepOutController(spawner.KeepOut, spawner.Zones);
 
         private void OnEnable()
         {
             firstUse.Reset();
             wasScaling = false;
             spawner.Zones.Moved += OnCubeMoved;
+            keepOut.Enable();
         }
 
-        private void OnDisable() => spawner.Zones.Moved -= OnCubeMoved;
+        private void OnDisable()
+        {
+            spawner.Zones.Moved -= OnCubeMoved;
+            keepOut.Disable();
+        }
 
         private void LateUpdate()
         {
@@ -56,6 +64,7 @@ namespace DigitalLove.Game.SpaceShaping
 
             hum.SetPinching(scaling);
             wasScaling = scaling;
+            keepOut.Tick();
         }
 
         private void OnCubeMoved() => firstUse.Moved();
@@ -114,7 +123,13 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void RequestReset() => ResetRequested?.Invoke();
 
-        public void SetConditions(ZoneConditions value) => spawner.Zones.SetConditions(value);
+        public void SetConditions(ZoneConditions value)
+        {
+            keepOut.SetConditions(value);
+            spawner.Zones.SetConditions(value);
+        }
+
+        public void SetRoutePlan(RoutePlan value) => spawner.SetRoutePlan(value);
 
         public void SetZonesLocked(bool value) => spawner.Zones.SetInputLocked(value);
 
@@ -169,7 +184,7 @@ namespace DigitalLove.Game.SpaceShaping
             SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results, bool pending)
         {
             TrajectoryResult[] visible = VisibleRuns(session, results, out Vector3 centre, out float half);
-            spawner.Lines.Show(visible, centre, half, pending);
+            spawner.Lines.Show(visible, spawner.Plan, centre, half, pending);
         }
 
         private TrajectoryResult[] VisibleRuns(
@@ -187,17 +202,9 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void ShowBaseline(SpaceShapingSession session)
         {
-            int count = session.ShipCount;
-            Vector3[] starts = new Vector3[count];
-            Vector3[] ends = new Vector3[count];
-            for (int i = 0; i < count; i++)
-            {
-                ShipSpec ship = session.Ship(i);
-                starts[i] = ShipRunGeometry.LaunchPoint(session, ship, capGap, capGapFraction);
-                ends[i] = ShipRunGeometry.ArrivalPoint(session, ship, capGap, capGapFraction);
-            }
-
-            spawner.Baselines.ShowBaselines(starts, ends);
+            ShipRunGeometry.Baseline(
+                session, capGap, capGapFraction, out Vector3[] starts, out Vector3[] ends);
+            spawner.Baselines.ShowBaselines(starts, ends, spawner.Plan);
         }
 
         public void HideBaseline() => spawner.Baselines.Hide();

@@ -101,10 +101,17 @@ count.
 - The cube keeps a **committed check lamp** after landing — it shows the last check's outcome until
   the next edit. A locked gesture or an over-budget scale **flashes the frame** instead of failing
   silently.
+- The cube may not cover a ship's origin or destination. In a movable job the **keep-out** around
+  every endpoint is faintly visible while the cube is held for a move; a drop refused there flashes
+  the endpoint it hit, so the refusal has a visible cause.
 - The job opens with the **start check**: the ship flies the initial field and fails (the tutorial's
   start crashes into the blocker). The **trajectory line** previews **live while shaping**, in a
   pending state rather than the checked result, then takes its result on landing. The ship launches on
   each completed pinch after that ([core loop](../core-loop.md) §2).
+- **One colour per route.** A ship's line, its baseline and its endpoint planets share one route
+  colour; single-ship jobs are one route, and the map diorama uses the same colour. The line ends in
+  the outcome — arrive, crash or miss — so the result reads at the end of the route, not across the
+  whole line. The pending preview is the route colour dimmed, so the routes still read while shaping.
 
 ## Failure
 

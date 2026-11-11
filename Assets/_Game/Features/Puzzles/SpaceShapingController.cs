@@ -44,6 +44,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             view.gameObject.SetActive(true);
             currentPuzzleData = puzzleData;
+            view.SetRoutePlan(RoutePlan.Build(puzzleData, settings.routePalette));
             view.ShipsCompleted += OnFlightCompleted;
             view.ResetRequested += ResetPuzzle;
             view.SetScaleEnvelope(settings.minScaleFactor, settings.maxScaleFactor);
@@ -56,6 +57,7 @@ namespace DigitalLove.Game.SpaceShaping
             view.ResetRequested -= ResetPuzzle;
             view.HideBaseline();
             view.SetZonesLocked(false);
+            view.SetRoutePlan(RoutePlan.Empty);
             frozen = false;
             run = null;
         }
@@ -89,7 +91,11 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         [ContextMenu("Preview field")]
-        public void PreviewField() => PuzzleFieldPreview.Show(BuildSetup(), view);
+        public void PreviewField()
+        {
+            view.SetRoutePlan(RoutePlan.Build(currentPuzzleData, settings.routePalette));
+            PuzzleFieldPreview.Show(BuildSetup(), view);
+        }
 
         private void LateUpdate()
         {

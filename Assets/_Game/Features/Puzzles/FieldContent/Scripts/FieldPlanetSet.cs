@@ -1,5 +1,4 @@
 using DigitalLove.Game.Nodes;
-using DigitalLove.Global;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
@@ -8,20 +7,18 @@ namespace DigitalLove.Game.SpaceShaping
     public class FieldPlanetSet
     {
         private readonly Prototypes prototypes;
-        private readonly RouteColors? routeColors;
 
         private Transform parent;
         private ViewPool<FieldPlanetBehaviour> sources;
         private FieldPlanetBehaviour sunPlanet;
         private FieldPlanetBehaviour originPlanet;
         private FieldPlanetBehaviour destinationPlanet;
+        private RoutePlan plan = RoutePlan.Empty;
         private bool labelsVisible = true;
 
-        public FieldPlanetSet(Prototypes prototypes, RouteColors? routeColors)
-        {
-            this.prototypes = prototypes;
-            this.routeColors = routeColors;
-        }
+        public FieldPlanetSet(Prototypes prototypes) => this.prototypes = prototypes;
+
+        public void SetRoutePlan(RoutePlan value) => plan = value;
 
         public void Initialize(Transform parent)
         {
@@ -171,14 +168,11 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void ApplyRouteColors(int origin, int destination)
         {
-            if (!routeColors.HasValue)
-                return;
-
-            RouteColors colors = routeColors.Value;
+            Color color = plan.ColorAt(0);
             if (origin >= 0)
-                originPlanet.SetRouteColor(colors.Origin.value);
+                originPlanet.SetRouteColor(color);
             if (destination >= 0)
-                destinationPlanet.SetRouteColor(colors.Destination.value);
+                destinationPlanet.SetRouteColor(color);
         }
 
         public readonly struct Prototypes
@@ -194,18 +188,6 @@ namespace DigitalLove.Game.SpaceShaping
             {
                 Source = source;
                 Sun = sun;
-                Origin = origin;
-                Destination = destination;
-            }
-        }
-
-        public readonly struct RouteColors
-        {
-            public readonly ColorValue Origin;
-            public readonly ColorValue Destination;
-
-            public RouteColors(ColorValue origin, ColorValue destination)
-            {
                 Origin = origin;
                 Destination = destination;
             }

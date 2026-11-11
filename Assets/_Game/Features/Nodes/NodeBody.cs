@@ -20,6 +20,11 @@ namespace DigitalLove.Game.Nodes
         private MaterialPropertyBlock tintBlock;
         private bool visible = true;
         private float radius = 0.1f;
+        private Color baseColor = Color.white;
+        private Color routeColor = Color.white;
+        private Color tintColor = Color.white;
+        private bool hasRouteColor;
+        private bool hasTint;
 
         public void Init(float radius, int variantSeed)
         {
@@ -78,7 +83,10 @@ namespace DigitalLove.Game.Nodes
                     renderers[i].gameObject.SetActive(i == index);
             }
             activeRenderer = renderers[index];
+            baseColor = BaseColorOf(activeRenderer);
             activeRenderer.enabled = visible;
+            if (hasRouteColor || hasTint)
+                ApplyBaseColor();
         }
 
         private void EnsureReadyForRouteColor()
@@ -99,30 +107,51 @@ namespace DigitalLove.Game.Nodes
         public void SetRouteColor(Color color)
         {
             EnsureReadyForRouteColor();
-            if (activeRenderer == null)
-                return;
-            Material material = activeRenderer.material;
-            material.SetColor(BaseColorId, color);
-            material.color = color;
+            routeColor = color;
+            hasRouteColor = true;
+            ApplyBaseColor();
         }
 
         public void SetTint(Color color)
+        {
+            tintColor = color;
+            hasTint = true;
+            ApplyBaseColor();
+        }
+
+        public void ClearTint()
+        {
+            hasTint = false;
+            ApplyBaseColor();
+        }
+
+        private void ApplyBaseColor()
         {
             if (activeRenderer == null)
                 return;
 
             tintBlock ??= new MaterialPropertyBlock();
             activeRenderer.GetPropertyBlock(tintBlock);
+            Color color = baseColor;
+            if (hasRouteColor)
+                color = routeColor;
+            if (hasTint)
+                color = tintColor;
+
             tintBlock.SetColor(BaseColorId, color);
             tintBlock.SetColor(ColorId, color);
             activeRenderer.SetPropertyBlock(tintBlock);
         }
 
-        public void ClearTint()
+        private static Color BaseColorOf(Renderer renderer)
         {
-            if (activeRenderer != null)
-                activeRenderer.SetPropertyBlock(null);
-        }
+            Material material = renderer.sharedMaterial;
+            if (material == null)
+                return Color.white;
 
+            return material.HasProperty(BaseColorId)
+                ? material.GetColor(BaseColorId)
+                : material.color;
+        }
     }
 }

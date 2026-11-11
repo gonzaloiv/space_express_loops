@@ -34,6 +34,22 @@ namespace DigitalLove.Game.SpaceShaping
             return visible;
         }
 
+        // The baseline's clear start and end per ship, in one pass.
+        public static void Baseline(
+            SpaceShapingSession session, float capGap, float capGapFraction,
+            out Vector3[] starts, out Vector3[] ends)
+        {
+            int count = session.ShipCount;
+            starts = new Vector3[count];
+            ends = new Vector3[count];
+            for (int i = 0; i < count; i++)
+            {
+                ShipSpec ship = session.Ship(i);
+                starts[i] = LaunchPoint(session, ship, capGap, capGapFraction);
+                ends[i] = ArrivalPoint(session, ship, capGap, capGapFraction);
+            }
+        }
+
         public static TrajectoryResult Clip(
             TrajectoryResult result, SpaceShapingSession session, ShipSpec ship,
             float capGap, float capGapFraction)

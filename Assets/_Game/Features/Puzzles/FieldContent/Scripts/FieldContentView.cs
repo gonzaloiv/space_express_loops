@@ -29,7 +29,7 @@ namespace DigitalLove.Game.SpaceShaping
             ClearGeneratedChildren(sourceParent);
             FieldPlanetSet.Prototypes prototypes = new(
                 sourcePrototype, sunPrototype, originPrototype, destinationPrototype);
-            planets = new FieldPlanetSet(prototypes, null);
+            planets = new FieldPlanetSet(prototypes);
             planets.Initialize(sourceParent);
             planets.SetLabelsVisible(labelsVisible);
         }
@@ -56,6 +56,7 @@ namespace DigitalLove.Game.SpaceShaping
             SpaceShapingSession session = new(
                 SpaceShapingSetup.Build(puzzle, PuzzleSimSettings.From(settings)));
             SunName = FindSunName(session);
+            planets.SetRoutePlan(RoutePlan.Build(puzzle, settings.routePalette));
             planets.Apply(session);
             Fit(session);
         }

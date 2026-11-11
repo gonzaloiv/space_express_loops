@@ -1,6 +1,5 @@
 using DigitalLove.Game.Nodes;
 using DigitalLove.Game.SpaceShaping.Cube;
-using DigitalLove.Global;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
@@ -21,16 +20,15 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private Transform linesParent;
         [SerializeField] private CubeView cubePrototype;
         [SerializeField] private Transform cubeParent;
-
-        [Header("Endpoints")]
-        [SerializeField] private ColorValue originColor;
-        [SerializeField] private ColorValue destinationColor;
+        [SerializeField] private EndpointKeepOutView keepOutPrototype;
 
         private FieldPlanetSet planets;
         private ZoneCubePool zones;
         private TrajectoryLinePool lines;
         private TrajectoryLinePool baselines;
         private ShipFlightPool ships;
+        private EndpointKeepOutPool keepOut;
+        private RoutePlan plan = RoutePlan.Empty;
         private bool initialized;
 
         public FieldPlanetSet Planets
@@ -58,6 +56,19 @@ namespace DigitalLove.Game.SpaceShaping
             get { Initialize(); return ships; }
         }
 
+        public EndpointKeepOutPool KeepOut
+        {
+            get { Initialize(); return keepOut; }
+        }
+
+        public RoutePlan Plan => plan;
+
+        public void SetRoutePlan(RoutePlan value)
+        {
+            plan = value;
+            Planets.SetRoutePlan(value);
+        }
+
         private void Awake() => Initialize();
 
         private void Initialize()
@@ -68,14 +79,15 @@ namespace DigitalLove.Game.SpaceShaping
             initialized = true;
             FieldPlanetSet.Prototypes planetPrototypes = new(
                 prototype, sunPrototype, originPrototype, destinationPrototype);
-            FieldPlanetSet.RouteColors routeColors = new(originColor, destinationColor);
-            planets = new FieldPlanetSet(planetPrototypes, routeColors);
+            planets = new FieldPlanetSet(planetPrototypes);
+            planets.SetRoutePlan(plan);
             planets.Initialize(sourceParent);
 
             zones = new ZoneCubePool(cubePrototype, cubeParent);
             lines = new TrajectoryLinePool(trajectoryPrototype, linesParent);
             baselines = new TrajectoryLinePool(trajectoryPrototype, linesParent);
             ships = new ShipFlightPool(shipPrototype, shipsParent, shipStaggerSecs);
+            keepOut = new EndpointKeepOutPool(keepOutPrototype, sourceParent);
         }
     }
 }

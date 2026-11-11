@@ -47,7 +47,20 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             remove => feedback.Refused -= value;
         }
 
+        public event Action<int> OutOfBoundsAt
+        {
+            add => feedback.OutOfBoundsAt += value;
+            remove => feedback.OutOfBoundsAt -= value;
+        }
+
         public event Action MoveCompleted;
+
+        // A one-hand grab on a movable frame: the keep-out ghosts follow it.
+        public event Action MoveStarted;
+
+        public event Action MoveEnded;
+
+        private bool moving;
 
         private void Awake()
         {
@@ -91,13 +104,27 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             }
 
             gesture.Tick(count);
+            SetMoving(count == 1 && zone.CanMove);
             ApplyFeedback(count);
+        }
+
+        private void SetMoving(bool value)
+        {
+            if (moving == value)
+                return;
+
+            moving = value;
+            if (value)
+                MoveStarted?.Invoke();
+            else
+                MoveEnded?.Invoke();
         }
 
         private void EndGesture()
         {
             bool moved = gesture.Moved;
             bool scaled = gesture.Scaled;
+            SetMoving(false);
             if (moved)
                 MoveCompleted?.Invoke();
 

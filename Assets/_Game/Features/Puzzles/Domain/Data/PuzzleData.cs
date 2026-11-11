@@ -55,8 +55,11 @@ namespace DigitalLove.Game.SpaceShaping
 
         public float Distance => Vector3.Distance(origin, destination);
 
+        // Every ship's endpoints, derived; single-ship data falls back to origin/destination.
+        public PuzzleEndpoints Endpoints => new(ships, origin, destination);
+
         public ZoneConditions ToZoneConditions() =>
-            new(translatable, resizable, origin, destination);
+            new(translatable, resizable, Endpoints.ToArray());
 
         public float CaptureRadiusAtDestination() => CaptureRadiusAt(destination);
 
