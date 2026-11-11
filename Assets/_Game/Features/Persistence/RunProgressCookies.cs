@@ -47,7 +47,7 @@ namespace DigitalLove.Game.Persistence
                     JsonConvert.DeserializeObject<EndingSeenMetadata>(cookie.metadata);
                 return metadata != null && metadata.jobCount >= jobCount;
             }
-            catch (Exception)
+            catch (JsonException)
             {
                 return false;
             }
