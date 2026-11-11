@@ -81,8 +81,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
             for (int i = 0; i < rescued.Count; i++)
             {
-                Assert.IsFalse(zone.Influences(rescued[i].Origin));
-                Assert.IsFalse(zone.Influences(rescued[i].Destination));
+                Assert.IsFalse(zone.Contains(rescued[i].Origin));
+                Assert.IsFalse(zone.Contains(rescued[i].Destination));
                 Assert.GreaterOrEqual(rescued[i].Margin, 0f);
             }
 

@@ -76,6 +76,23 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             Assert.AreEqual(-1, session.ShipEndingAt(4));
         }
 
+        [Test]
+        public void EndpointSource_FindsTheEndpointOnShipTwo()
+        {
+            PuzzleData puzzle = EndpointPuzzle();
+            SpaceShapingSession session = new(SpaceShapingSetup.Build(puzzle, new PuzzleSimSettings
+            {
+                NominalSpeed = 1f,
+                StepSecs = 1f / 120f,
+                CaptureRadius = 0.6f
+            }));
+            Object.DestroyImmediate(puzzle);
+
+            Assert.AreEqual(2, session.EndpointSource(new Vector3(-4f, 2f, 0f)));
+            Assert.AreEqual(3, session.EndpointSource(new Vector3(4f, 2f, 0f)));
+            Assert.AreEqual(-1, session.EndpointSource(new Vector3(0f, 5f, 0f)));
+        }
+
         private static PuzzleData EndpointPuzzle()
         {
             PuzzleData puzzle = Puzzle();

@@ -101,9 +101,10 @@ count.
 - The cube keeps a **committed check lamp** after landing — it shows the last check's outcome until
   the next edit. A locked gesture or an over-budget scale **flashes the frame** instead of failing
   silently.
-- The cube may not cover a ship's origin or destination. In a movable job the **keep-out** around
-  every endpoint is faintly visible while the cube is held for a move; a drop refused there flashes
-  the endpoint it hit, so the refusal has a visible cause.
+- The cube may not cover a ship's origin or destination, but the keep-out is only the cube's own box
+  (the zone does nothing on or outside its faces), so the frame can sit closer than the old falloff
+  band allowed. A refused move shows **one red copy of the frame** at the hand while it stays blocked;
+  the protected planet pulses danger once, and the real cube stays at its last valid spot.
 - The job opens with the **start check**: the ship flies the initial field and fails (the tutorial's
   start crashes into the blocker). The **trajectory line** previews **live while shaping**, in a
   pending state rather than the checked result, then takes its result on landing. The ship launches on

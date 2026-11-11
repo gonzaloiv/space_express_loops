@@ -129,6 +129,20 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             Object.DestroyImmediate(fillObject);
         }
 
+        [Test]
+        public void ZoneView_AllowsAFrameInsideTheOldFalloffBand()
+        {
+            GameObject zoneObject = ZoneObject(out CubeView zone);
+            zone.SetFalloff(0.5f);
+            zone.SetConditions(new ZoneConditions(
+                true, true, new[] { new Vector3(0.12f, 0f, 0f) }));
+
+            ZonePlacement placement = zone.CanPlace(Vector3.zero, Vector3.one * 0.2f);
+
+            Assert.IsTrue(placement.Allowed);
+            Object.DestroyImmediate(zoneObject);
+        }
+
         private static Color ReadBaseColor(Renderer renderer)
         {
             MaterialPropertyBlock block = new();

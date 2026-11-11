@@ -38,7 +38,8 @@ namespace DigitalLove.Game.SpaceShaping
         private EndpointKeepOutController keepOut;
         private bool wasScaling;
 
-        private void Awake() => keepOut = new EndpointKeepOutController(spawner.KeepOut, spawner.Zones);
+        private void Awake() =>
+            keepOut = new EndpointKeepOutController(spawner.KeepOut, spawner.Zones, spawner.Planets);
 
         private void OnEnable()
         {
@@ -101,6 +102,8 @@ namespace DigitalLove.Game.SpaceShaping
         public SpaceZone Zone => spawner.Zones.Zone;
 
         public bool IsScaling => spawner.Zones.IsScaling;
+
+        public bool IsCubeHeld => spawner.Zones.IsHeld;
 
         public Vector3 CubePosition => spawner.Zones.ActivePosition;
 

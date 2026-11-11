@@ -19,6 +19,8 @@ namespace DigitalLove.Game.Nodes
         private string currentLabel = string.Empty;
         private Coroutine pulse;
 
+        private const float RefusalSecs = 0.24f;
+
         public bool IsVisible => isVisible;
         public float Radius => radius;
 
@@ -27,6 +29,13 @@ namespace DigitalLove.Game.Nodes
         {
             StopArrival();
             pulse = StartCoroutine(PulseArrival(Mathf.Max(secs, 0.0001f)));
+        }
+
+        // A short danger swell: a refused move touched this endpoint.
+        public void PlayRefusal(Color danger)
+        {
+            StopArrival();
+            pulse = StartCoroutine(PulseRefusal(danger, RefusalSecs));
         }
 
         private void StopArrival()
@@ -38,6 +47,23 @@ namespace DigitalLove.Game.Nodes
             }
 
             nodeBody.SetPulse(0f);
+            ApplyTint();
+        }
+
+        private IEnumerator PulseRefusal(Color danger, float secs)
+        {
+            float elapsed = 0f;
+            while (elapsed < secs)
+            {
+                nodeBody.SetTint(danger);
+                nodeBody.SetPulse(Mathf.Sin(Mathf.PI * Mathf.Clamp01(elapsed / secs)));
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            nodeBody.SetPulse(0f);
+            ApplyTint();
+            pulse = null;
         }
 
         private IEnumerator PulseArrival(float secs)

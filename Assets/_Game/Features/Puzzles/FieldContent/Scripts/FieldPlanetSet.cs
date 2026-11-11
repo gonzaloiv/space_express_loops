@@ -13,6 +13,7 @@ namespace DigitalLove.Game.SpaceShaping
         private FieldPlanetBehaviour sunPlanet;
         private FieldPlanetBehaviour originPlanet;
         private FieldPlanetBehaviour destinationPlanet;
+        private SpaceShapingSession session;
         private RoutePlan plan = RoutePlan.Empty;
         private bool labelsVisible = true;
 
@@ -119,6 +120,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void Apply(SpaceShapingSession session)
         {
+            this.session = session;
             int origin = session.IndexOf(session.Origin);
             int destination = session.IndexOf(session.Destination);
             bool sunSpawned = SpawnSources(session, origin, destination);
@@ -128,6 +130,22 @@ namespace DigitalLove.Game.SpaceShaping
             Spawn(originPlanet, session, origin);
             Spawn(destinationPlanet, session, destination);
             ApplyRouteColors(origin, destination);
+        }
+
+        public void PulseEndpoint(Vector3 point, Color danger)
+        {
+            if (session == null || session.EndpointSource(point) < 0)
+                return;
+
+            PulseAt(originPlanet, point, danger);
+            PulseAt(destinationPlanet, point, danger);
+            sources.ForEachFrom(0, view => PulseAt(view, point, danger));
+        }
+
+        private static void PulseAt(FieldPlanetBehaviour planet, Vector3 point, Color danger)
+        {
+            if (planet.IsVisible && (planet.transform.localPosition - point).sqrMagnitude < 0.000001f)
+                planet.PlayRefusal(danger);
         }
 
         public void Hide()

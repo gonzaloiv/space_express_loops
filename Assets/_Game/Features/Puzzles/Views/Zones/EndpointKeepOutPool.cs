@@ -1,33 +1,21 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
 {
-    // One pooled keep-out ghost per endpoint, shown only while the cube is held for a move.
+    // One pooled red cube for the refused move; it follows the attempted centre while blocked.
     public sealed class EndpointKeepOutPool
     {
         private readonly ViewPool<EndpointKeepOutView> pool;
 
         public EndpointKeepOutPool(EndpointKeepOutView prototype, Transform parent) =>
-            pool = new ViewPool<EndpointKeepOutView>(prototype, parent, "KeepOut", null);
+            pool = new ViewPool<EndpointKeepOutView>(prototype, parent, "Refusal", null);
 
-        public void Show(IReadOnlyList<Vector3> endpoints, Vector3 size)
+        public void Show(Vector3 centre, Vector3 size, Color danger)
         {
-            int count = endpoints != null ? endpoints.Count : 0;
-            for (int i = 0; i < count; i++)
-                pool.EnsureSlot(i).Show(endpoints[i], size);
-
-            HideFrom(count);
+            pool.EnsureSlot(0).Show(centre, size, danger);
+            pool.ForEachFrom(1, view => view.Hide());
         }
 
-        public void Hide() => HideFrom(0);
-
-        public void Flash(int endpoint)
-        {
-            if (endpoint >= 0 && endpoint < pool.Views.Count)
-                pool.Views[endpoint].Flash();
-        }
-
-        private void HideFrom(int index) => pool.ForEachFrom(index, view => view.Hide());
+        public void Hide() => pool.ForEachFrom(0, view => view.Hide());
     }
 }

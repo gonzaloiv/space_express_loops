@@ -111,10 +111,12 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             ZonePlacement placement = zone.CanPlace(centre, zone.Size);
             if (placement.Blocked)
             {
+                feedback.SetMoveRefusal(placement.Endpoint, centre, zone.Size);
                 feedback.Refuse(ZoneRefusal.OutOfBounds, placement.Endpoint);
                 return;
             }
 
+            feedback.ClearMoveRefusal();
             zone.SetFrame(centre, zone.Size);
             Moved = true;
         }

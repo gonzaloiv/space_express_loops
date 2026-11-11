@@ -22,6 +22,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         private float refusedUntil;
         private bool dormant;
         private int endpoint = -1;
+        private CubeMoveRefusal moveRefusal;
 
         public CubeFeedback(Renderer frameRenderer, Renderer fillRenderer, CubePalette palette)
         {
@@ -34,6 +35,15 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         // Fires when an out-of-bounds refusal names the endpoint it hit; the frame flash stays.
         public event Action<int> OutOfBoundsAt;
+
+        public CubeMoveRefusal MoveRefusal => moveRefusal;
+
+        public Color Danger => palette.Danger;
+
+        public void SetMoveRefusal(int endpoint, Vector3 centre, Vector3 size) =>
+            moveRefusal.Set(endpoint, centre, size);
+
+        public void ClearMoveRefusal() => moveRefusal.Clear();
 
         public float MinScale => minScale;
 
@@ -85,7 +95,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 return;
             }
 
-            if (IsRefusing)
+            if (IsRefusing && !EndpointRefusal)
             {
                 frameTint.Set(frameRenderer, palette.Danger);
                 fillTint.Set(fillRenderer, palette.Neutral.WithAlpha(palette.FillIdleAlpha));
@@ -109,6 +119,9 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         }
 
         private bool IsRefusing => Time.unscaledTime < refusedUntil;
+
+        // A move refused on an endpoint gets its own red copy; the real frame stays normal.
+        private bool EndpointRefusal => refusal == ZoneRefusal.OutOfBounds && endpoint >= 0;
 
         private void ApplyIdle(CubeView zone, bool hovering, Vector3 hoverWorld)
         {

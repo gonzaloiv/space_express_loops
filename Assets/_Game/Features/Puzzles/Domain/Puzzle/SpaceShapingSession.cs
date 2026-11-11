@@ -61,6 +61,13 @@ namespace DigitalLove.Game.SpaceShaping
             return -1;
         }
 
+        // The source sitting at a ship endpoint point, or -1 when the point is not an endpoint.
+        public int EndpointSource(Vector3 point)
+        {
+            int source = IndexOf(point);
+            return source >= 0 && ShipEndingAt(source) >= 0 ? source : -1;
+        }
+
         // The planet radius at a point (0 if no planet sits there). A source's scale is its diameter:
         // the sphere is scaled by the full source scale, matching the radius the field integrates with.
         public float RadiusAt(Vector3 point)

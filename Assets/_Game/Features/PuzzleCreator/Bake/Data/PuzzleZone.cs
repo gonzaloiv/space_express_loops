@@ -19,8 +19,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         public float Margin(Vector3 point) => Zone.Margin(point);
 
-        public bool Influences(Vector3 point) => Zone.Influences(point);
-
         public bool Contains(Vector3 point) => Zone.Contains(point);
 
         private SpaceZone Zone => ToSpaceZone();

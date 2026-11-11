@@ -55,10 +55,11 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         public event Action MoveCompleted;
 
-        // A one-hand grab on a movable frame: the keep-out ghosts follow it.
-        public event Action MoveStarted;
-
         public event Action MoveEnded;
+
+        public CubeMoveRefusal MoveRefusal => feedback.MoveRefusal;
+
+        public Color Danger => feedback.Danger;
 
         private bool moving;
 
@@ -78,6 +79,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             if (locked)
                 EndGesture();
         }
+
+        public void ClearMoveRefusal() => feedback.ClearMoveRefusal();
 
         public void SetScaleEnvelope(float min, float max) => feedback.SetScaleEnvelope(min, max);
 
@@ -115,9 +118,10 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
             moving = value;
             if (value)
-                MoveStarted?.Invoke();
-            else
-                MoveEnded?.Invoke();
+                return;
+
+            feedback.ClearMoveRefusal();
+            MoveEnded?.Invoke();
         }
 
         private void EndGesture()

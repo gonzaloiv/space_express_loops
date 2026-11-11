@@ -19,8 +19,6 @@ namespace DigitalLove.Game.SpaceShaping
 
         public event Action<ZoneRefusal> Refused;
 
-        public event Action MoveStarted;
-
         public event Action MoveEnded;
 
         public event Action<int> OutOfBoundsAt;
@@ -36,16 +34,37 @@ namespace DigitalLove.Game.SpaceShaping
             }
         }
 
-        public Vector3 KeepOutSize
+        public CubeMoveRefusal MoveRefusal
+        {
+            get
+            {
+                for (int i = 0; i < pool.Views.Count; i++)
+                {
+                    CubeView cube = pool.Views[i];
+                    if (!cube.gameObject.activeSelf)
+                        continue;
+
+                    CubeMoveRefusal refusal = cube.MoveRefusal;
+                    if (refusal.Blocked)
+                        return refusal;
+                }
+
+                return default;
+            }
+        }
+
+        public Color Danger
         {
             get
             {
                 CubeView cube = pool.Views.Active();
-                return cube != null ? cube.KeepOutSize : Vector3.zero;
+                return cube != null ? cube.Danger : Color.white;
             }
         }
 
         public bool IsScaling => pool.Views.AnyScaling();
+
+        public bool IsHeld => pool.Views.AnyHeld();
 
         public Vector3 ActivePosition
         {
@@ -110,7 +129,6 @@ namespace DigitalLove.Game.SpaceShaping
             cube.SetInputLocked(inputLocked);
             cube.Refused += OnRefused;
             cube.Moved += OnMoved;
-            cube.MoveStarted += OnMoveStarted;
             cube.MoveEnded += OnMoveEnded;
             cube.OutOfBoundsAt += OnOutOfBoundsAt;
         }
@@ -118,8 +136,6 @@ namespace DigitalLove.Game.SpaceShaping
         private void OnRefused(ZoneRefusal reason) => Refused?.Invoke(reason);
 
         private void OnMoved() => Moved?.Invoke();
-
-        private void OnMoveStarted() => MoveStarted?.Invoke();
 
         private void OnMoveEnded() => MoveEnded?.Invoke();
 

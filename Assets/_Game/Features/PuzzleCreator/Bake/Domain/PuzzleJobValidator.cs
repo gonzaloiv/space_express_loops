@@ -18,7 +18,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             CheckBrief(puzzle, kind, contract, failures);
             CheckSources(puzzle, solution, contract, failures);
-            CheckStartFrame(puzzle, solution, contract, failures);
+            CheckStartFrame(puzzle, contract, failures);
             return failures.Count == 0;
         }
 
@@ -72,7 +72,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         }
 
         private static void CheckStartFrame(
-            PuzzleData puzzle, PuzzleZone[] solution, PuzzleJobContract contract, List<string> failures)
+            PuzzleData puzzle, PuzzleJobContract contract, List<string> failures)
         {
             if (!puzzle.translatable)
                 return;
@@ -88,26 +88,22 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 : puzzle.zoneCentre;
             if ((puzzle.frames[0].centre - expected).sqrMagnitude > 0.000001f)
                 failures.Add($"start frame {puzzle.frames[0].centre}, expected {expected}");
-            else if (StartFrameCoversEndpoint(puzzle, solution))
+            else if (StartFrameCoversEndpoint(puzzle))
                 failures.Add("start frame covers an endpoint");
         }
 
-        private static bool StartFrameCoversEndpoint(PuzzleData puzzle, PuzzleZone[] solution)
+        private static bool StartFrameCoversEndpoint(PuzzleData puzzle)
         {
-            if (solution == null || solution.Length == 0)
-                return false;
-
             PuzzleZone frame = new()
             {
                 centre = puzzle.frames[0].centre,
                 halfExtents = puzzle.frames[0].BoxSize * 0.5f,
-                scale = 1f,
-                falloff = solution[0].falloff
+                scale = 1f
             };
             PuzzleEndpoints endpoints = puzzle.Endpoints;
             for (int i = 0; i < endpoints.Count; i++)
             {
-                if (frame.Influences(endpoints[i]))
+                if (frame.Contains(endpoints[i]))
                     return true;
             }
 

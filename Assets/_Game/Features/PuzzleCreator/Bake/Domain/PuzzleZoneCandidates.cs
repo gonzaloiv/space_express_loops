@@ -54,7 +54,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleEndpoints endpoints = puzzle.Endpoints;
             for (int i = 0; i < endpoints.Count; i++)
             {
-                if (zone.Influences(endpoints[i]))
+                if (zone.Contains(endpoints[i]))
                     return true;
             }
 

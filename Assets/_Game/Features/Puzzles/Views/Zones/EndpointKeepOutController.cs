@@ -2,38 +2,34 @@ using DigitalLove.Game.SpaceShaping.Cube;
 
 namespace DigitalLove.Game.SpaceShaping
 {
-    // Drives the keep-out ghosts from the cube's move gesture: visible while moving, sized from
-    // the cube's current box, and flashing the endpoint a refused drop hit.
+    // One red copy of the cube while a move is refused, and one danger pulse on the endpoint planet
+    // when the refusal starts.
     public sealed class EndpointKeepOutController
     {
         private readonly EndpointKeepOutPool pool;
         private readonly ZoneCubePool zones;
+        private readonly FieldPlanetSet planets;
         private ZoneConditions conditions;
         private bool visible;
 
-        public EndpointKeepOutController(EndpointKeepOutPool pool, ZoneCubePool zones)
+        public EndpointKeepOutController(
+            EndpointKeepOutPool pool, ZoneCubePool zones, FieldPlanetSet planets)
         {
             this.pool = pool;
             this.zones = zones;
+            this.planets = planets;
         }
 
-        public void SetConditions(ZoneConditions value)
-        {
-            conditions = value;
-            if (visible)
-                Refresh();
-        }
+        public void SetConditions(ZoneConditions value) => conditions = value;
 
         public void Enable()
         {
-            zones.MoveStarted += OnMoveStarted;
             zones.MoveEnded += OnMoveEnded;
             zones.OutOfBoundsAt += OnOutOfBoundsAt;
         }
 
         public void Disable()
         {
-            zones.MoveStarted -= OnMoveStarted;
             zones.MoveEnded -= OnMoveEnded;
             zones.OutOfBoundsAt -= OnOutOfBoundsAt;
             Hide();
@@ -41,35 +37,32 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void Tick()
         {
-            if (visible)
-                Refresh();
-        }
+            CubeMoveRefusal refusal = zones.MoveRefusal;
+            if (!refusal.Blocked)
+            {
+                if (visible)
+                    Hide();
+                return;
+            }
 
-        private void OnMoveStarted()
-        {
+            pool.Show(refusal.Centre, refusal.Size, zones.Danger);
             visible = true;
-            Refresh();
         }
 
         private void OnMoveEnded() => Hide();
 
-        private void OnOutOfBoundsAt(int endpoint) => pool.Flash(endpoint);
+        private void OnOutOfBoundsAt(int endpoint)
+        {
+            if (conditions.Endpoints == null || endpoint < 0 || endpoint >= conditions.Endpoints.Count)
+                return;
+
+            planets.PulseEndpoint(conditions.Endpoints[endpoint], zones.Danger);
+        }
 
         private void Hide()
         {
             visible = false;
             pool.Hide();
-        }
-
-        private void Refresh()
-        {
-            if (conditions.IgnoresEndpoints || conditions.Endpoints == null)
-            {
-                pool.Hide();
-                return;
-            }
-
-            pool.Show(conditions.Endpoints, zones.KeepOutSize);
         }
     }
 }

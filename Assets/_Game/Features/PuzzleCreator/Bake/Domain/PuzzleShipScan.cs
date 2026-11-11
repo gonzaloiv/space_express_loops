@@ -120,7 +120,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             Vector3 origin = puzzle.sources[i].home;
             Vector3 destination = puzzle.sources[j].home;
             float capture = puzzle.sources[j].scale * 0.5f;
-            if (capture <= 0f || zone.Influences(origin) || zone.Influences(destination))
+            if (capture <= 0f || zone.Contains(origin) || zone.Contains(destination))
                 return;
 
             TrajectoryResult result = Run(edited, i, j, capture, timeDilation);

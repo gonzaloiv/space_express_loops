@@ -24,9 +24,6 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         public Vector3 Size => transform.localScale;
 
-        // The cube's box plus its soft-edge band: the volume it may not put over an endpoint.
-        public Vector3 KeepOutSize => Size * (1f + Mathf.Max(falloff, 0f));
-
         public float Scale => scale;
 
         public bool IsScaling => scaling;
@@ -39,12 +36,6 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         {
             add => listener.MoveCompleted += value;
             remove => listener.MoveCompleted -= value;
-        }
-
-        public event Action MoveStarted
-        {
-            add => listener.MoveStarted += value;
-            remove => listener.MoveStarted -= value;
         }
 
         public event Action MoveEnded
@@ -62,6 +53,10 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         public Vector3 ConstrainMove(Vector3 centre) =>
             conditions.Planar ? new Vector3(centre.x, Centre.y, centre.z) : centre;
 
+        public CubeMoveRefusal MoveRefusal => listener.MoveRefusal;
+
+        public Color Danger => listener.Danger;
+
         // Allowed, or the endpoint index the candidate frame would swallow.
         public ZonePlacement CanPlace(Vector3 centre, Vector3 size)
         {
@@ -71,7 +66,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             SpaceZone candidate = new(centre, size * 0.5f, scale, falloff);
             for (int i = 0; i < conditions.Endpoints.Count; i++)
             {
-                if (candidate.Influences(conditions.Endpoints[i]))
+                if (candidate.Contains(conditions.Endpoints[i]))
                     return ZonePlacement.BlockedBy(i);
             }
 
@@ -117,6 +112,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             ResetScale();
             SetFrame(centre, size);
             SetFalloff(value);
+            listener.ClearMoveRefusal();
         }
 
         public void SetConditions(ZoneConditions value) => conditions = value;
