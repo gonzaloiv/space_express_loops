@@ -113,8 +113,8 @@ namespace DigitalLove.Game.SpaceShaping
 
             float half = view.FieldHalf;
             Vector3 edge = FieldFrame.OnMeterEdge(half, -half + textHeight, textInset);
-            // The readout is a child of the meter, which sits at the field centre.
-            readoutRoot.localPosition = edge - view.FieldCentre;
+            // The readout is a child of the meter view, which already sits at the field centre.
+            readoutRoot.localPosition = edge;
         }
 
         private void Cancel()
