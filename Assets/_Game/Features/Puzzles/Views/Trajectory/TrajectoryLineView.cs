@@ -18,6 +18,9 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private Material baselineMaterial;
         [Tooltip("The unchecked prediction is the route colour at this alpha: not a result until the ship lands.")]
         [SerializeField, Range(0f, 1f)] private float pendingAlpha = 0.55f;
+        [Tooltip("On an arrival the line stops this far short of its end (field metres, along the last " +
+                 "approach), so the arrive ring sits outside the planet instead of half inside it.")]
+        [SerializeField, Min(0f)] private float arriveBackoff = 0.008f;
 
         private Material lineMaterial;
 
@@ -60,8 +63,24 @@ namespace DigitalLove.Game.SpaceShaping
                 return;
             }
 
+            if (result.Outcome == TrajectoryOutcome.Arrive)
+                end = BackOffArrival(result.Points);
+
             marker.ShowOutcome(end, heading, result.Outcome);
             HideHeading();
+        }
+
+        // Pulls the arrival's end back along the last approach and ends the drawn line there.
+        private Vector3 BackOffArrival(IReadOnlyList<Vector3> points)
+        {
+            Vector3 end = points[points.Count - 1];
+            Vector3 approach = end - points[points.Count - 2];
+            if (approach.sqrMagnitude < HeadingEpsilon)
+                return end;
+
+            Vector3 backed = end - approach.normalized * arriveBackoff;
+            line.SetPosition(line.positionCount - 1, backed);
+            return backed;
         }
 
         public void ShowBaseline(Vector3 start, Vector3 end, Color routeColor)
