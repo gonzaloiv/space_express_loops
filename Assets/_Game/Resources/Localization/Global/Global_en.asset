@@ -114,6 +114,10 @@ MonoBehaviour:
     m_Localized: '> JOB {0} OPEN ON THE MAP'
     m_Metadata:
       m_Items: []
+  - m_Id: 74113009852272640
+    m_Localized: JOB {0}
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

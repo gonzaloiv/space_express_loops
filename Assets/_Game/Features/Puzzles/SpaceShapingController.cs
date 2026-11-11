@@ -10,6 +10,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private SpaceShapingSettings settings;
         [SerializeField] private SpaceShapingView view;
         [SerializeField] private FieldResetReadout resetReadout;
+        [SerializeField] private FieldEdgeMeter meter;
         [SerializeField] private SynthCuePlayer cuePlayer;
         [SerializeField] private SynthPatch launchCue;
 
@@ -51,6 +52,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             view.gameObject.SetActive(true);
             currentPuzzleData = puzzleData;
+            meter.ShowJob(puzzleData.id);
             view.SetRoutePlan(RoutePlan.Build(puzzleData, settings.routePalette));
             view.ShipsCompleted += OnFlightCompleted;
             view.ResetRequested += ResetPuzzle;

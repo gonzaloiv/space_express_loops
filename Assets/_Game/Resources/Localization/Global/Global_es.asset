@@ -99,7 +99,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 73233989640048645
-    m_Localized: '> PRESUPUESTO DE ENTROPÍA AGOTADO'
+    m_Localized: "> PRESUPUESTO DE ENTROP\xCDA AGOTADO"
     m_Metadata:
       m_Items: []
   - m_Id: 73233989640048646
@@ -107,11 +107,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 73233989640048647
-    m_Localized: '> ENTROPÍA 100%'
+    m_Localized: "> ENTROP\xCDA 100%"
     m_Metadata:
       m_Items: []
   - m_Id: 73233989640048648
     m_Localized: '> JOB {0} ABIERTO EN EL MAPA'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272640
+    m_Localized: TRABAJO {0}
     m_Metadata:
       m_Items: []
   references:

@@ -22,8 +22,11 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private ColorValue neutral;
         [SerializeField] private ColorValue danger;
         [SerializeField] private TMP_Text label;
+        [Tooltip("The job's id above the post's label, so the field says which contract it is.")]
+        [SerializeField] private TMP_Text jobLabel;
         [SerializeField] private Transform labelRoot;
         [SerializeField] private string entropyKey = "field_meter_entropy";
+        [SerializeField] private string jobKey = "field_meter_job";
         [SerializeField] private string overBudgetKey = "field_meter_over_budget";
         [SerializeField, Range(0f, 1f)] private float spentAlpha = 0.12f;
         [SerializeField, Range(0f, 1f)] private float lastEditAlpha = 0.45f;
@@ -35,6 +38,7 @@ namespace DigitalLove.Game.SpaceShaping
         private readonly float[] starHeights = new float[3];
         private EntropyPost reading = new(0f, 0f, 0f, false);
         private bool? labelOverBudget;
+        private string jobId = string.Empty;
 
         private void Awake()
         {
@@ -55,7 +59,20 @@ namespace DigitalLove.Game.SpaceShaping
             LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
         }
 
-        private void OnLocaleChanged(Locale locale) => RefreshLabel();
+        private void OnLocaleChanged(Locale locale)
+        {
+            RefreshLabel();
+            ShowJob(jobId);
+        }
+
+        // "01_05" reads as "JOB 01-05": the chapter and the job, as the contract numbers them.
+        public void ShowJob(string id)
+        {
+            jobId = id ?? string.Empty;
+            jobLabel.text = jobId.Length > 0
+                ? LocalizationUtil.GetValue(jobKey, jobId.Replace('_', '-'))
+                : string.Empty;
+        }
 
         private void RefreshLabel()
         {
@@ -71,8 +88,9 @@ namespace DigitalLove.Game.SpaceShaping
         {
             float half = view.FieldHalf;
             drawing.Layout(view.FieldCentre, half, starHeights);
-            // The label is a child of the drawing, which already sits at the field's centre.
-            labelRoot.localPosition = new Vector3(-half, -half + labelHeight, -half - labelOutset);
+            // The labels stand just above the post's top, on the same edge. They are a child of the
+            // drawing, which already sits at the field's centre.
+            labelRoot.localPosition = FieldFrame.OnMeterEdge(half, half + labelHeight, labelOutset);
             TintStars();
         }
 
