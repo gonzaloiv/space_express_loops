@@ -100,8 +100,16 @@ namespace DigitalLove.Game.SpaceShaping
             if (approach.sqrMagnitude < HeadingEpsilon)
                 return end;
 
+            // Drop drawn points inside the back-off too: with a long path the line keeps every Nth point,
+            // and one of them can sit past the sphere, so the line would overshoot and come back.
             Vector3 backed = end - approach.normalized * arriveBackoff;
-            line.SetPosition(line.positionCount - 1, backed);
+            int last = line.positionCount - 1;
+            float reach = arriveBackoff * arriveBackoff;
+            while (last > 1 && (line.GetPosition(last - 1) - end).sqrMagnitude < reach)
+                last--;
+
+            line.positionCount = last + 1;
+            line.SetPosition(last, backed);
             return backed;
         }
 
