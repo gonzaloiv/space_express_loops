@@ -98,6 +98,18 @@ MonoBehaviour:
     m_Localized: SOBRE PRESUPUESTO
     m_Metadata:
       m_Items: []
+  - m_Id: 73233989640048645
+    m_Localized: '> PRESUPUESTO DE ENTROPÍA AGOTADO'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73233989640048646
+    m_Localized: '> REINICIANDO CAMPO ... OK'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73233989640048647
+    m_Localized: '> ENTROPÍA 100%'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

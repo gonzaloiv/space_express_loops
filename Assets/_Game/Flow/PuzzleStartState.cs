@@ -32,7 +32,11 @@ namespace DigitalLove.Game.Flow
             memoryDataClient.Remove<PuzzleRestart>();
             PuzzleData puzzle = memoryDataClient.Get<PuzzleData>();
             puzzleController.Enter(puzzle);
-            if (!restart)
+            if (restart)
+            {
+                puzzleController.PlayEntropyReset();
+            }
+            else
             {
                 puzzleController.Glitch();
                 if (!puzzle.noIntro)

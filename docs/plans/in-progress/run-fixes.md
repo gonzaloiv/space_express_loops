@@ -1,8 +1,8 @@
 # Run fixes — exit on the menu gesture, restart on fail, first pass on Jim's lines
 
-**Status:** now · flow · updated 2026-11-11 — U1 and U4 landed; F1–F4 fixed; U2 and U3 implemented;
-the second review's F6, F7 and F9 are fixed. The new fail and job-6 lines still need their TTS clips
-(F8), and job 7's manual shortening waits on the lore rethink.
+**Status:** now · flow · updated 2026-11-11 — U1–U5 are implemented; F1–F4 and the second review's
+F6, F7 and F9 are fixed. The new fail and job-6 lines still need their TTS clips (F8), and job 7's
+manual shortening waits on the lore rethink.
 
 **Related:** [core loop](../../design/core-loop.md) §2 · [progression](../../design/systems/progression.md) ·
 [jobs](../../design/jobs.md) §The run — the lore skin · [plans board](../README.md)
@@ -123,6 +123,38 @@ with a minimal archive of common Quest hand gestures. If U1–U3 fill the mornin
 - **Exit:** a fresh project can render or reuse the five archive loops with only the XR module; this
   game's six prompts look the same as before, and Exit shows the menu motion.
 
+### U5 — the entropy reset readout on a restart
+
+A fail restart reloads the job silently, so the player never sees the budget come back (the core loop
+says a retry is free). On a restart, a short terminal readout in the boot console's style says so in the
+field, and the post refills with it. Implemented 2026-11-11: `FieldResetReadout` reads a `lineKeys`
+list, so a fourth line needs data only; the text object is authored next to the post and the scene
+wires the boot's type sound.
+
+- **The lines** (localized, in the boot lines' table), typed one after another:
+  `> ENTROPY BUDGET SPENT`, `> RESETTING FIELD ... OK`, `> ENTROPY 100%`. About 1.5 s in total;
+  players see it on every retry.
+- **The look:** the boot console's font, colour and type sound, typed with the module's
+  `TerminalTypewriter` (`_Modules/UI/Behaviours/Terminal`). A `ConsoleBootSplashScreen` line is the
+  reference; reuse its material and sound, do not copy its code.
+- **Where:** in the field, beside the entropy post (field-first, not a panel). Author the text object
+  on the field's prefab next to the post and lay it out with `FieldFrame.OnMeterEdge` through the field's
+  transform, so it follows a moved and yawed field. Hidden outside the readout.
+- **The post refills** from empty to full while the last line types, then shows the real budget.
+- **The seam:** `PuzzleStartState` already reads the one-shot `PuzzleRestart` flag; its restart branch
+  asks the controller to play the readout (one verb on `SpaceShapingController`, the work on the
+  meter's view). The fail line has finished by then (`Restart` runs after it), so the two never overlap.
+- **The field is playable at once:** the readout does not block input. A pinch during it ends the
+  readout and the post shows its real state.
+- Never on a fresh entry from the map, and never in job 1 (it cannot fail).
+- **Room for one more line:** [judge run](judge-run.md) U3, if the playtest calls for it, appends
+  `> JOB 05 OPEN ON THE MAP` when a fail has opened the next job. Take the lines as a list so a fourth
+  needs no new view code.
+- **Exit:** spend the budget in job 2: glitch, the fail line, then the three lines type beside the
+  post as it refills, and the next pinch works straight away.
+- **Watch in the playtest:** on the third retry of the same job, does it feel like a wait? If so,
+  shorten repeats to the `OK` line, do not drop it.
+
 ## Review — 2026-11-11
 
 U1 and U4 landed in `4c40552`; the game now records `_Modules` at `6d77c83` (on `our-space`), which
@@ -188,3 +220,5 @@ still fires. F6, F7 and F9 are fixed; F8 remains an asset download.
    manual line.
 8. Pause (headset off) during the restart: it resumes cleanly.
 9. Scale, Enter, Move, Spend and Stars prompts look unchanged after the move to `GestureLoop`.
+10. After a fail restart: the reset lines type beside the post in the boot console's style as the post
+    refills; a pinch straight away works; a fresh entry from the map shows no readout.

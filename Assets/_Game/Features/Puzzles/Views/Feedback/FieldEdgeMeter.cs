@@ -96,6 +96,20 @@ namespace DigitalLove.Game.SpaceShaping
                 drawing.SetStar(i, StarColor(reading.Star(StarLimits[i]), wave));
         }
 
+        // The reset readout drains the post to empty and refills it; the real readout returns on ClearReset.
+        public void ShowReset(float progress)
+        {
+            reading = new EntropyPost(1f - Mathf.Clamp01(progress), 0f, 0f, false);
+            drawing.SetBands(new MeterBands(
+                new MeterBand(reading.PreviewFrom, accent.value, 0f),
+                new MeterBand(reading.RemainingTop, neutral.value, 1f),
+                new MeterBand(reading.LastEditTop, neutral.value, 0f),
+                new MeterBand(1f, neutral.value, spentAlpha)));
+            TintStars();
+        }
+
+        public void ClearReset() => Render(view.Readout);
+
         private Color StarColor(StarHold hold, float wave)
         {
             switch (hold)

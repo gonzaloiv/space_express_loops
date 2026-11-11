@@ -7,6 +7,7 @@
         "Unity.Localization",
         "DigitalLove.Game.Nodes",
         "DigitalLove.Audio.Runtime",
+        "DigitalLove.UI.Behaviours",
         "DigitalLove.Game.SpaceShaping.Domain",
         "DigitalLove.Game.SpaceShaping.FieldContent",
         "DigitalLove.Game.SpaceShaping.Cube",

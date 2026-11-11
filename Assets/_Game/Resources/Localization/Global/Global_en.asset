@@ -98,6 +98,18 @@ MonoBehaviour:
     m_Localized: OVER BUDGET
     m_Metadata:
       m_Items: []
+  - m_Id: 73233989640048645
+    m_Localized: '> ENTROPY BUDGET SPENT'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73233989640048646
+    m_Localized: '> RESETTING FIELD ... OK'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73233989640048647
+    m_Localized: '> ENTROPY 100%'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -9,6 +9,7 @@ namespace DigitalLove.Game.SpaceShaping
     {
         [SerializeField] private SpaceShapingSettings settings;
         [SerializeField] private SpaceShapingView view;
+        [SerializeField] private FieldResetReadout resetReadout;
         [SerializeField] private SynthCuePlayer cuePlayer;
         [SerializeField] private SynthPatch launchCue;
 
@@ -63,6 +64,8 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         public float Glitch() => view.Glitch();
+
+        public void PlayEntropyReset() => resetReadout.Play();
 
         public float PlayArrival() => view.PlayArrival();
 

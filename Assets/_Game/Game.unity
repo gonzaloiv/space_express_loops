@@ -826,19 +826,19 @@ AudioReverbFilter:
   m_Enabled: 1
   m_DryLevel: 0
   m_Room: -1000
-  m_RoomHF: -6000
-  m_DecayTime: 0.5
-  m_DecayHFRatio: 0.1
-  m_ReflectionsLevel: -1376
-  m_ReverbLevel: -1104
-  m_ReverbDelay: 0.004
+  m_RoomHF: -476
+  m_DecayTime: 4.32
+  m_DecayHFRatio: 0.59
+  m_ReflectionsLevel: -789
+  m_ReverbLevel: -289
+  m_ReverbDelay: 0.03
   m_Diffusion: 100
   m_Density: 100
   m_HFReference: 5000
   m_RoomLF: 0
   m_LFReference: 250
   m_ReflectionsDelay: 0
-  m_ReverbPreset: 5
+  m_ReverbPreset: 7
 --- !u!169 &154653250
 AudioLowPassFilter:
   m_ObjectHideFlags: 0
@@ -854,7 +854,7 @@ AudioLowPassFilter:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.2141428
+      value: 0.1814461
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -872,7 +872,7 @@ AudioHighPassFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5011925470933743705}
   m_Enabled: 1
-  m_CutoffFrequency: 183
+  m_CutoffFrequency: 250
   m_HighpassResonanceQ: 1
 --- !u!1 &171702495
 GameObject:
@@ -3544,7 +3544,7 @@ MonoBehaviour:
   tickCooldownSecs: 0.06
   selectRandom:
     value: 0
-  puzzleToSet: {fileID: 0}
+  puzzleToSet: {fileID: 11400000, guid: 80ba042b6ef2e2544a5fc6e8bf73cadd, type: 2}
 --- !u!1 &904848683
 GameObject:
   m_ObjectHideFlags: 0
@@ -13330,6 +13330,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1760187867}
     m_Modifications:
+    - target: {fileID: 683442109414247987, guid: 1878e8ad8a8138442805b693007e4fec, type: 3}
+      propertyPath: typeCue
+      value: 
+      objectReference: {fileID: 11400000, guid: a2000000000000000000000000000005, type: 2}
+    - target: {fileID: 683442109414247987, guid: 1878e8ad8a8138442805b693007e4fec, type: 3}
+      propertyPath: systemPlayer
+      value: 
+      objectReference: {fileID: 496521417}
     - target: {fileID: 6290884214737240252, guid: 1878e8ad8a8138442805b693007e4fec, type: 3}
       propertyPath: cuePlayer
       value: 
@@ -13697,6 +13705,7 @@ GameObject:
   - component: {fileID: 154653250}
   - component: {fileID: 5117775345025900649}
   - component: {fileID: 5117775345025900650}
+  - component: {fileID: 5117775345025900651}
   m_Layer: 0
   m_Name: Speaker
   m_TagString: Untagged
@@ -13757,6 +13766,15 @@ MonoBehaviour:
   gainBoostDb: 0
   enableAcoustics: 1
   reverbSendDb: 0
+--- !u!170 &5117775345025900651
+AudioDistortionFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5011925470933743705}
+  m_Enabled: 1
+  m_DistortionLevel: 0.1
 --- !u!224 &6234682783816512153
 RectTransform:
   m_ObjectHideFlags: 0

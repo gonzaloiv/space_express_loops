@@ -95,6 +95,18 @@ MonoBehaviour:
     m_Key: field_meter_over_budget
     m_Metadata:
       m_Items: []
+  - m_Id: 73233989640048645
+    m_Key: field_reset_spent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73233989640048646
+    m_Key: field_reset_ok
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73233989640048647
+    m_Key: field_reset_full
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
