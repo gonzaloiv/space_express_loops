@@ -125,8 +125,10 @@ namespace DigitalLove.Game.Flow
             EnterJob(map.SelectedPuzzle);
         }
 
+        // Any entry uses up the fresh-save auto-entry, so leaving a job always lands on the map.
         private void EnterJob(PuzzleData puzzle)
         {
+            autoEntryUsed = true;
             memoryDataClient.Remove<PuzzleRestart>();
             memoryDataClient.Put(puzzle);
             parent.SetCurrentState(nextState.RouteId);
