@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e10ccce1eca4a646b8da95494b3aed3, type: 3}
+  m_Name: spend
+  m_EditorClassIdentifier: DigitalLove.XR.GestureArt::DigitalLove.XR.GestureArt.GestureLoop
+  frames:
+  - {fileID: 21300000, guid: 6735ed46b178e364e9c19066dcf0a685, type: 3}
+  - {fileID: 21300000, guid: ba4638bee9963304181c8cd282e5bfa3, type: 3}
+  - {fileID: 21300000, guid: 6b4beee67b7ce0e458e1b93897a17f74, type: 3}
+  - {fileID: 21300000, guid: 70fa0b87ca0ac514d9b0e0bb5aef16ca, type: 3}
+  - {fileID: 21300000, guid: bb3e9ab7e3e31a24eb75c60faaee8aa7, type: 3}
+  - {fileID: 21300000, guid: 920f8fba1ed43554488846269f9b1039, type: 3}
+  - {fileID: 21300000, guid: 843b9f2cb4abbad498c28eb7fad50baf, type: 3}
+  - {fileID: 21300000, guid: 906d9741b9d5cd9488511cf51c5e58cd, type: 3}
+  - {fileID: 21300000, guid: 1fb73bebec350ab439a7590cd837d896, type: 3}
+  - {fileID: 21300000, guid: e541ae3a868ed0c488ebe14b4c88d6d7, type: 3}
+  - {fileID: 21300000, guid: 3eb4f359ac3e697419382ef6bc105478, type: 3}
+  - {fileID: 21300000, guid: 6482b454b939f3642a226b5c463f6151, type: 3}
+  frameSecs: 0.1

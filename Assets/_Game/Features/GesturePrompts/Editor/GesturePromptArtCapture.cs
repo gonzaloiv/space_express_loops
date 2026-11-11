@@ -1,16 +1,19 @@
 using System.IO;
+using DigitalLove.XR.GestureArt;
+using DigitalLove.XR.GestureArt.Editor;
 using UnityEditor;
 using UnityEngine;
 
 namespace DigitalLove.Game.GesturePrompts.Editor
 {
-    // Renders every gesture prompt's frames from Meta's own hand mesh and pinch clip, so the icons
-    // match the hands the player sees, then assigns them to the prompt assets. Re-run after tuning
+    // Renders the game's five prompt loops from Meta's own hand mesh and pinch clip, then assigns each
+    // to a GestureLoop asset. The Exit prompt uses the module's shared menu loop. Re-run after tuning
     // a motion (GestureMotion) or the look (LineArt); the PNGs are overwritten in place.
     public static class GesturePromptArtCapture
     {
         private const string OutputRoot = "Assets/_Game/Features/GesturePrompts/Art";
         private const string ContentRoot = "Assets/_Game/Resources/GesturePrompts/";
+        private const string LoopRoot = "Assets/_Game/Resources/GesturePrompts/Loops";
         private const int OutputSize = 512;
         private const int Supersample = 2;
         private const int LineWidth = 14;
@@ -30,8 +33,10 @@ namespace DigitalLove.Game.GesturePrompts.Editor
         [MenuItem("Tools/Our Space/Render Gesture Prompt Art")]
         public static void RenderAll()
         {
+            GestureArchive.RenderAll();
             int resolution = OutputSize * Supersample;
-            using (var rig = new GestureCaptureRig(resolution, LeftRotation, RightRotation, FrameHeight, FrameDrop))
+            using (var rig = new GestureCaptureRig(
+                resolution, LeftRotation, RightRotation, FrameHeight, FrameDrop))
             {
                 foreach (GestureMotion motion in GestureMotion.All)
                     WriteFrames(rig, motion);
@@ -39,7 +44,8 @@ namespace DigitalLove.Game.GesturePrompts.Editor
 
             AssetDatabase.Refresh();
             foreach (GestureMotion motion in GestureMotion.All)
-                AssignFrames(motion);
+                AssignLoop(motion);
+            AssignExitLoop();
             AssetDatabase.SaveAssets();
         }
 
@@ -63,17 +69,52 @@ namespace DigitalLove.Game.GesturePrompts.Editor
             Object.DestroyImmediate(texture);
         }
 
-        private static void AssignFrames(GestureMotion motion)
+        private static void AssignLoop(GestureMotion motion)
         {
-            var content = AssetDatabase.LoadAssetAtPath<ScriptableObject>(ContentRoot + motion.ContentAsset + ".asset");
-            var so = new SerializedObject(content);
-            SerializedProperty frames = so.FindProperty("frames");
-            frames.arraySize = FrameCount;
+            GestureLoop loop = LoadOrCreateLoop(motion.Name);
+            Sprite[] frames = new Sprite[FrameCount];
             for (int i = 0; i < FrameCount; i++)
-                frames.GetArrayElementAtIndex(i).objectReferenceValue = ImportSprite(FramePath(motion, i));
+                frames[i] = ImportSprite(FramePath(motion, i));
+            loop.Configure(frames, FrameSecs);
+            EditorUtility.SetDirty(loop);
 
-            so.FindProperty("frameSecs").floatValue = FrameSecs;
+            var content = AssetDatabase.LoadAssetAtPath<GesturePromptContent>(
+                ContentRoot + motion.ContentAsset + ".asset");
+            var so = new SerializedObject(content);
+            so.FindProperty("loop").objectReferenceValue = loop;
             so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void AssignExitLoop()
+        {
+            var content = AssetDatabase.LoadAssetAtPath<GesturePromptContent>(
+                ContentRoot + "GesturePromptExit.asset");
+            if (content == null)
+                return;
+
+            GestureLoop menu = AssetDatabase.LoadAssetAtPath<GestureLoop>(GestureArchive.MenuLoopPath);
+            if (menu == null)
+            {
+                Debug.LogWarning("The gesture archive has no Menu loop; run Tools/Our Space/Render Gesture Art Archive.");
+                return;
+            }
+
+            var so = new SerializedObject(content);
+            so.FindProperty("loop").objectReferenceValue = menu;
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static GestureLoop LoadOrCreateLoop(string assetName)
+        {
+            Directory.CreateDirectory(LoopRoot);
+            string path = LoopRoot + "/" + assetName + ".asset";
+            GestureLoop loop = AssetDatabase.LoadAssetAtPath<GestureLoop>(path);
+            if (loop != null)
+                return loop;
+
+            loop = ScriptableObject.CreateInstance<GestureLoop>();
+            AssetDatabase.CreateAsset(loop, path);
+            return loop;
         }
 
         private static Sprite ImportSprite(string path)

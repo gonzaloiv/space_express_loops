@@ -13,19 +13,6 @@ MonoBehaviour:
   m_Name: GesturePromptStars
   m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.GesturePromptContent
   kind: 5
-  frames:
-  - {fileID: 21300000, guid: c365e660544d6884aa5eec15058e9f92, type: 3}
-  - {fileID: 21300000, guid: 60d889f7938fb0d40ada85ab4d93742c, type: 3}
-  - {fileID: 21300000, guid: a54d5b51df0c5ef40a1c402c315fea6f, type: 3}
-  - {fileID: 21300000, guid: 0d5f6696e39f27248ad887dbfbeea0b5, type: 3}
-  - {fileID: 21300000, guid: d365af52b89a64843a68ed6d652e1e67, type: 3}
-  - {fileID: 21300000, guid: 40706f9fa9fbd5a488926599d82c6153, type: 3}
-  - {fileID: 21300000, guid: 4dfe9005dbbac7c40a4e906ef721c6f7, type: 3}
-  - {fileID: 21300000, guid: bc10bb6f18cba4a428b4d9fa4bb84741, type: 3}
-  - {fileID: 21300000, guid: a2ab66e46bc063c4bbf78c8c80347edb, type: 3}
-  - {fileID: 21300000, guid: 471404d27d4240148bf983b5886f8bf2, type: 3}
-  - {fileID: 21300000, guid: b5269bf6ff96b4e45ba96adab27dd423, type: 3}
-  - {fileID: 21300000, guid: 58d6a0ad8466b4c49a69cbef9c5038c5, type: 3}
-  frameSecs: 0.1
+  loop: {fileID: 11400000, guid: 6d90adc41fb51604286141eaeb23c1ec, type: 2}
   showSecs: 6
   captionKey: gesture_prompt_stars

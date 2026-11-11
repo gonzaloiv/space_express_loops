@@ -4,7 +4,7 @@ using DigitalLove.FlowControl;
 using DigitalLove.Game.PuzzleSelection;
 using DigitalLove.Game.SpaceShaping;
 using DigitalLove.Game.SpaceShaping.Cube;
-using DigitalLove.Input;
+using DigitalLove.Player;
 using DigitalLove.TTS;
 using DigitalLove.Game.GesturePrompts;
 using Reflex.Attributes;
@@ -16,7 +16,7 @@ namespace DigitalLove.Game.Flow
     {
         [SerializeField] private MonoState gameStartState;
         [SerializeField] private MonoState completeState;
-        [SerializeField] private TwoHandGestureInput gesture;
+        [SerializeField] private HomeMenuInvokerBase[] menuInvokers;
         [SerializeField] private SpaceShapingController puzzleController;
         [SerializeField] private GesturePromptPresenter prompts;
         [SerializeField] private GameGesturePromptSource promptSource;
@@ -28,24 +28,17 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private SynthPatch refusalCue;
         [SerializeField] private SynthPatch exitCue;
         [SerializeField] private float refusalCueCooldownSecs = 0.7f;
-        [SerializeField] private Transform head;
-        [SerializeField] private bool rotationEnabled;
-        [SerializeField] private float rotationStepDegrees = 15f;
-        [SerializeField] private float rotationStepDistance = 0.08f;
 
         [Inject] private MemoryDataClient memoryDataClient;
 
-        private ScaleOutGesture scaleOut;
-        private OneHandRotationGesture rotation;
         private PuzzleData puzzle;
         private float nextRefusalCueAt;
+        private bool exiting;
 
         public override void Enter()
         {
-            scaleOut = new ScaleOutGesture(
-                gesture.ScaleOutMinDistance, gesture.ScaleOutMaxRatio);
-            rotation = new OneHandRotationGesture(rotationStepDistance);
-            gesture.StateChanged += OnGestureChanged;
+            exiting = false;
+            SubscribeMenu(true);
             puzzleController.Solved += OnSolved;
             puzzleController.Failed += OnFailed;
             puzzleController.FlightCrashed += OnFlightCrashed;
@@ -58,17 +51,35 @@ namespace DigitalLove.Game.Flow
 
         public override void Exit()
         {
-            gesture.StateChanged -= OnGestureChanged;
+            SubscribeMenu(false);
             puzzleController.Solved -= OnSolved;
             puzzleController.Failed -= OnFailed;
             puzzleController.FlightCrashed -= OnFlightCrashed;
             puzzleController.Refused -= OnRefused;
             puzzleController.PinchCommitted -= OnPinchCommitted;
-            scaleOut?.Reset();
-            rotation?.Reset();
             prompts.HideAll();
             contractCard.Hide();
             puzzle = null;
+        }
+
+        private void SubscribeMenu(bool subscribe)
+        {
+            for (int i = 0; i < menuInvokers.Length; i++)
+            {
+                if (subscribe)
+                    menuInvokers[i].homeMenuRequested += OnMenuRequested;
+                else
+                    menuInvokers[i].homeMenuRequested -= OnMenuRequested;
+            }
+        }
+
+        private void OnMenuRequested()
+        {
+            if (exiting || Time.timeScale <= 0f)
+                return;
+
+            exiting = true;
+            ExitToSelection();
         }
 
         private void ShowPrompts(PuzzleData puzzle)
@@ -120,22 +131,6 @@ namespace DigitalLove.Game.Flow
                 promptSource.ReportSpend();
             memoryDataClient.Put(new PuzzleRunResult(solved, puzzleController.Grade));
             parent.SetCurrentState(completeState.RouteId);
-        }
-
-        private void OnGestureChanged(TwoHandGestureState state)
-        {
-            if (scaleOut.Update(state))
-            {
-                ExitToSelection();
-                return;
-            }
-
-            if (!rotationEnabled)
-                return;
-
-            int steps = rotation.Update(state, head.right);
-            if (steps != 0)
-                puzzleController.Rotate(-steps * rotationStepDegrees);
         }
 
         private void ExitToSelection()

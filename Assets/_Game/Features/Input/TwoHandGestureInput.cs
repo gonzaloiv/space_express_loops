@@ -20,10 +20,6 @@ namespace DigitalLove.Input
         [SerializeField, Min(0f)] private float dwellSecs = 0.12f;
         [SerializeField, Min(0f)] private float releaseGraceSecs = 0.4f;
 
-        [Header("Scale out")]
-        [SerializeField, Min(0.01f)] private float scaleOutMinDistance = 0.08f;
-        [SerializeField, Range(0f, 1f)] private float scaleOutMaxRatio = 0.8f;
-
         [Header("Debug")]
         [SerializeField] private bool logGesture;
 
@@ -52,8 +48,6 @@ namespace DigitalLove.Input
         private Vector3 rightPinchStartPoint;
 
         public TwoHandGestureState State { get; private set; }
-        public float ScaleOutMinDistance => scaleOutMinDistance;
-        public float ScaleOutMaxRatio => scaleOutMaxRatio;
         public event Action<TwoHandGestureState> StateChanged;
         public event Action<TwoHandGestureState> GestureStarted;
         public event Action<TwoHandGestureState> GestureEnded;

@@ -13,19 +13,6 @@ MonoBehaviour:
   m_Name: GesturePromptEnter
   m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.GesturePromptContent
   kind: 1
-  frames:
-  - {fileID: 21300000, guid: 3cd3d047d9267d940a9c91440a502180, type: 3}
-  - {fileID: 21300000, guid: f621833f3ba5d1a4b9b2333c9a565ab3, type: 3}
-  - {fileID: 21300000, guid: 5be7db5a6518f604f8bd15606e5284b5, type: 3}
-  - {fileID: 21300000, guid: f97371709ec40fc40833cdcb4702639d, type: 3}
-  - {fileID: 21300000, guid: f84ffb44819ce9247822d34aa6f830c4, type: 3}
-  - {fileID: 21300000, guid: de735ccef2769a8479f82a9bc36a8571, type: 3}
-  - {fileID: 21300000, guid: 37053ad90e642ce48b1d962b029685e1, type: 3}
-  - {fileID: 21300000, guid: 84324f1d2b1501a41a4db63c9b7698a5, type: 3}
-  - {fileID: 21300000, guid: 83b0cd5a3ea32a6498fdab740eba687c, type: 3}
-  - {fileID: 21300000, guid: 5e2e27a0b96ab324d9b367fb2abff5b4, type: 3}
-  - {fileID: 21300000, guid: c921f0fc7adb7704fb33e76dece7628e, type: 3}
-  - {fileID: 21300000, guid: 3223c4463c08dce408c8c24fcb4bd15e, type: 3}
-  frameSecs: 0.1
+  loop: {fileID: 11400000, guid: 6788b2bb41a6bd249ab224e99dae0e27, type: 2}
   showSecs: 6
   captionKey: gesture_prompt_enter

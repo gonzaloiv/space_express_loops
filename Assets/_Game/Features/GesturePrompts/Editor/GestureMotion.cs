@@ -1,3 +1,4 @@
+using DigitalLove.XR.GestureArt;
 using UnityEngine;
 
 namespace DigitalLove.Game.GesturePrompts.Editor
@@ -50,8 +51,6 @@ namespace DigitalLove.Game.GesturePrompts.Editor
                 HandFrame.TwoHands(grip, 0.22f + 0.16f * move, CubeLift, 0.4f + 0.3f * move)),
             new("move", "GesturePromptMove", (grip, move) =>
                 HandFrame.OneHand(grip, new Vector2(-0.5f + 0.45f * move, CubeLift.y), 0.55f)),
-            new("exit", "GesturePromptExit", (grip, move) =>
-                HandFrame.TwoHands(grip, 0.38f - 0.2f * move, Vector2.zero, 0f)),
             new("spend", "GesturePromptSpend", (grip, move) =>
                 new HandFrame(
                     grip, new Vector2(-Spread(move), 0f), new Vector2(Spread(move), 0f), CubeLift, 0.5f)
@@ -118,6 +117,8 @@ namespace DigitalLove.Game.GesturePrompts.Editor
         public MeterFrame? Meter { get; }
 
         public HandFrame WithMeter(MeterFrame meter) => new(this, meter);
+
+        public GesturePose ToPose() => new(Grip, Left, Right);
 
         public static HandFrame TwoHands(float grip, float halfSpread, Vector2 cube, float cubeSize) =>
             new(grip, new Vector2(-halfSpread, 0f), new Vector2(halfSpread, 0f), cube, cubeSize);

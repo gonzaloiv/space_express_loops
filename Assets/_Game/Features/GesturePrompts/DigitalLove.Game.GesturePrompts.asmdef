@@ -13,6 +13,7 @@
         "DigitalLove.Global",
         "DigitalLove.Localization",
         "DigitalLove.UI.Behaviours",
+        "DigitalLove.XR.GestureArt",
         "Reflex",
         "Unity.TextMeshPro"
     ],
