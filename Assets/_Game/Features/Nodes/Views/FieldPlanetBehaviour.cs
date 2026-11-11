@@ -1,4 +1,5 @@
 using System.Collections;
+using DigitalLove.Global;
 using UnityEngine;
 
 namespace DigitalLove.Game.Nodes
@@ -7,6 +8,7 @@ namespace DigitalLove.Game.Nodes
     {
         [SerializeField] private NodeBody nodeBody;
         [SerializeField] private PlanetNameLabel nameLabel;
+        [SerializeField] private ColorValue dimColor;
 
         private bool isVisible = true;
         private bool labelsVisible = true;
@@ -20,7 +22,6 @@ namespace DigitalLove.Game.Nodes
         private Coroutine pulse;
 
         private const float RefusalSecs = 0.24f;
-        private static readonly Color DimColor = new(0.4f, 0.4f, 0.4f, 1f);
 
         public bool IsVisible => isVisible;
         public float Radius => radius;
@@ -155,7 +156,7 @@ namespace DigitalLove.Game.Nodes
         }
 
         // The gray a faded or dimmed planet takes; a subclass with extra markers follows it.
-        private static Color BodyTint(float amount) => Color.Lerp(Color.white, DimColor, amount);
+        private Color BodyTint(float amount) => Color.Lerp(Color.white, dimColor.value, amount);
 
         // A subclass with extra markers follows the body's visibility and fade/dim state.
         protected virtual void OnVisibilityChanged(bool visible)

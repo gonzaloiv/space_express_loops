@@ -525,6 +525,7 @@ MonoBehaviour:
   pulseRim: 1.6
   marks:
   - {fileID: 6980337448160957266}
+  markColor: {fileID: 11400000, guid: c01d0000000000000000000000000007, type: 2}
 --- !u!114 &1073829128237210729
 MonoBehaviour:
   m_ObjectHideFlags: 0

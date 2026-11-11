@@ -22,7 +22,9 @@ namespace DigitalLove.Game.SpaceShaping
         [Tooltip("Mote size in metres (local to the field root).")]
         [SerializeField, Min(0f)] private float size = 0.002f;
         [SerializeField, Range(0f, 1f)] private float sizeJitter = 0.5f;
-        [SerializeField] private Color color = new(0.8f, 0.85f, 1f, 0.35f);
+        [SerializeField] private ColorValue color;
+        [Tooltip("Multiplier on the palette colour's alpha: dust is the neutral colour, faint.")]
+        [SerializeField, Range(0f, 1f)] private float alpha = 0.35f;
         [Tooltip("Drift amplitude as a fraction of the field half-extent.")]
         [SerializeField, Min(0f)] private float drift = 0.02f;
         [Tooltip("Drift cycles per second.")]
@@ -62,11 +64,12 @@ namespace DigitalLove.Game.SpaceShaping
             Vector3 rest = centre
                 + Layout.Rest(index) * (half * spread)
                 + Layout.Drift(index, time, driftFrequency) * (half * drift);
+            Color tint = color.value;
             return new ParticleSystem.Particle
             {
                 position = warp(rest),
                 startSize = size * Mathf.Lerp(1f - sizeJitter, 1f, Layout.Weight(index)),
-                startColor = color.WithAlpha(color.a * Layout.EdgeFade(index, edgeFade)),
+                startColor = tint.WithAlpha(tint.a * alpha * Layout.EdgeFade(index, edgeFade)),
                 startLifetime = Lifetime,
                 remainingLifetime = Lifetime,
             };

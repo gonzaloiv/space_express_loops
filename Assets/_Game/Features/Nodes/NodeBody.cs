@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DigitalLove.Global;
 using UnityEngine;
 
 namespace DigitalLove.Game.Nodes
@@ -18,6 +19,8 @@ namespace DigitalLove.Game.Nodes
         [Tooltip("Marks drawn with the body, such as an endpoint's ring. When set, the route colour " +
                  "paints the marks and the body keeps its own look; tints reach both.")]
         [SerializeField] private List<Renderer> marks = new();
+        [Tooltip("Base colour of the marks when no route colour is applied.")]
+        [SerializeField] private ColorValue markColor;
 
         private Renderer activeRenderer;
         private MaterialPropertyBlock tintBlock;
@@ -90,8 +93,7 @@ namespace DigitalLove.Game.Nodes
             activeRenderer = renderers[index];
             baseColor = BaseColorOf(activeRenderer);
             activeRenderer.enabled = visible;
-            if (hasRouteColor || hasTint)
-                ApplyBaseColor();
+            ApplyBaseColor();
         }
 
         private void EnsureReadyForRouteColor()
@@ -143,7 +145,7 @@ namespace DigitalLove.Game.Nodes
                 Paint(activeRenderer, ColorFor(baseColor, !marked));
 
             for (int i = 0; i < marks.Count; i++)
-                Paint(marks[i], ColorFor(BaseColorOf(marks[i]), true));
+                Paint(marks[i], ColorFor(markColor.value, true));
         }
 
         private Color ColorFor(Color own, bool takesRoute)

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 18149854333174967}
   - component: {fileID: 7580705679710657139}
   - component: {fileID: 4821930869746966722}
+  - component: {fileID: 872126512945403391}
   m_Layer: 0
   m_Name: Manual
   m_TagString: Untagged
@@ -160,6 +161,21 @@ MonoBehaviour:
   m_LayoutPriority: 1
   m_MaxWidth: -1
   m_MaxHeight: -1
+--- !u!114 &872126512945403391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 907668441145840167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7c1e9d4a2f4c3b8e6d0a1f2c3b4d5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.ColorValueGraphic
+  target: {fileID: 7580705679710657139}
+  color: {fileID: 11400000, guid: 2f8671615596c564fad45e1d4ad2ac0b, type: 2}
+  alpha: 1
 --- !u!1 &1127192775196774943
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,6 +263,7 @@ GameObject:
   - component: {fileID: 7764833119594945346}
   - component: {fileID: 7997539343750429224}
   - component: {fileID: 8617918819825259835}
+  - component: {fileID: 4369986016209063070}
   m_Layer: 0
   m_Name: Header
   m_TagString: Untagged
@@ -395,6 +412,21 @@ MonoBehaviour:
   m_LayoutPriority: 1
   m_MaxWidth: -1
   m_MaxHeight: -1
+--- !u!114 &4369986016209063070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1442649308730857734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7c1e9d4a2f4c3b8e6d0a1f2c3b4d5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.ColorValueGraphic
+  target: {fileID: 7997539343750429224}
+  color: {fileID: 11400000, guid: c01d000000000000000000000000000d, type: 2}
+  alpha: 1
 --- !u!1 &4044956532647162990
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,6 +438,7 @@ GameObject:
   - component: {fileID: 8913647101399451100}
   - component: {fileID: 4647912780955410294}
   - component: {fileID: 656168302427848002}
+  - component: {fileID: 9100000000000923}
   m_Layer: 0
   m_Name: Cursor
   m_TagString: Untagged
@@ -470,6 +503,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &9100000000000923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4044956532647162990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7c1e9d4a2f4c3b8e6d0a1f2c3b4d5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.ColorValueGraphic
+  target: {fileID: 656168302427848002}
+  color: {fileID: 11400000, guid: c01d000000000000000000000000000d, type: 2}
+  alpha: 1
 --- !u!1 &5193296437355543042
 GameObject:
   m_ObjectHideFlags: 0
@@ -482,6 +530,7 @@ GameObject:
   - component: {fileID: 8511497230993599881}
   - component: {fileID: 1674825546141324315}
   - component: {fileID: 7769381231474995078}
+  - component: {fileID: 5398668725130898789}
   m_Layer: 0
   m_Name: Cargo
   m_TagString: Untagged
@@ -630,6 +679,21 @@ MonoBehaviour:
   m_LayoutPriority: 1
   m_MaxWidth: -1
   m_MaxHeight: -1
+--- !u!114 &5398668725130898789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5193296437355543042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7c1e9d4a2f4c3b8e6d0a1f2c3b4d5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.ColorValueGraphic
+  target: {fileID: 1674825546141324315}
+  color: {fileID: 11400000, guid: 2f8671615596c564fad45e1d4ad2ac0b, type: 2}
+  alpha: 1
 --- !u!1 &5571167437877330341
 GameObject:
   m_ObjectHideFlags: 0
@@ -693,6 +757,7 @@ MonoBehaviour:
   bootSecs: 0.18
   closeSecs: 0.18
   cursorBlinkSecs: 0.5
+  minHeight: 300
 --- !u!223 &6517470162260842193
 Canvas:
   m_ObjectHideFlags: 0
@@ -729,6 +794,7 @@ GameObject:
   - component: {fileID: 2301792794135685108}
   - component: {fileID: 849936218389375915}
   - component: {fileID: 6437392076499666021}
+  - component: {fileID: 4270063610440541281}
   m_Layer: 0
   m_Name: Client
   m_TagString: Untagged
@@ -877,6 +943,21 @@ MonoBehaviour:
   m_LayoutPriority: 1
   m_MaxWidth: -1
   m_MaxHeight: -1
+--- !u!114 &4270063610440541281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5737150481647924502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7c1e9d4a2f4c3b8e6d0a1f2c3b4d5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.ColorValueGraphic
+  target: {fileID: 849936218389375915}
+  color: {fileID: 11400000, guid: 2f8671615596c564fad45e1d4ad2ac0b, type: 2}
+  alpha: 1
 --- !u!1 &6584176392474376833
 GameObject:
   m_ObjectHideFlags: 0

@@ -249,6 +249,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.Nodes::DigitalLove.Game.Nodes.FieldPlanetBehaviour
   nodeBody: {fileID: 7868429814768801343}
   nameLabel: {fileID: 2100000000000000105}
+  dimColor: {fileID: 11400000, guid: c01d000000000000000000000000000a, type: 2}
 --- !u!1 &6241402354787528962
 GameObject:
   m_ObjectHideFlags: 0

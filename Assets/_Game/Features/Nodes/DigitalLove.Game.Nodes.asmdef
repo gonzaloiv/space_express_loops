@@ -2,6 +2,7 @@
     "name": "DigitalLove.Game.Nodes",
     "rootNamespace": "",
     "references": [
+        "DigitalLove.Global",
         "Unity.TextMeshPro"
     ],
     "includePlatforms": [],

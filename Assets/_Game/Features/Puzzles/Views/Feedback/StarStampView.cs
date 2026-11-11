@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using DigitalLove.Global;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,10 +10,11 @@ namespace DigitalLove.Game.SpaceShaping
     // cue player can tick. The icon count is fixed; the grade decides how many are filled.
     public class StarStampView : MonoBehaviour
     {
+        private const float EmptyStarAlpha = 0.18f;
+
         [SerializeField] private RawImage[] stars;
         [SerializeField] private float starStepSecs = 0.25f;
-        [SerializeField] private Color filled = new(0.62f, 0.96f, 1f, 1f);
-        [SerializeField] private Color empty = new(0.62f, 0.96f, 1f, 0.18f);
+        [SerializeField] private ColorValue starColor;
 
         private Coroutine typing;
         private Camera view;
@@ -20,6 +22,10 @@ namespace DigitalLove.Game.SpaceShaping
         public event Action<int> StarStamped;
 
         private Camera View => view != null ? view : view = Camera.main;
+
+        private Color FilledStar => starColor.value;
+
+        private Color EmptyStar => starColor.value.WithAlpha(EmptyStarAlpha);
 
         public float Play(int grade, Vector3 worldPosition)
         {
@@ -30,7 +36,7 @@ namespace DigitalLove.Game.SpaceShaping
             for (int i = 0; i < stars.Length; i++)
             {
                 stars[i].enabled = false;
-                stars[i].color = i < filledCount ? filled : empty;
+                stars[i].color = i < filledCount ? FilledStar : EmptyStar;
             }
 
             typing = StartCoroutine(Type());
@@ -45,7 +51,7 @@ namespace DigitalLove.Game.SpaceShaping
             for (int i = 0; i < stars.Length; i++)
             {
                 stars[i].enabled = true;
-                stars[i].color = i < filledCount ? filled : empty;
+                stars[i].color = i < filledCount ? FilledStar : EmptyStar;
             }
         }
 

@@ -21,6 +21,8 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private ColorValue accent;
         [SerializeField] private ColorValue neutral;
         [SerializeField] private ColorValue danger;
+        [Tooltip("The stars beside the post, the same colour as every star in the game.")]
+        [SerializeField] private ColorValue star;
         [SerializeField] private TMP_Text label;
         [Tooltip("The job's id above the post's label, so the field says which contract it is.")]
         [SerializeField] private TMP_Text jobLabel;
@@ -34,6 +36,8 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField, Min(0.1f)] private float riskFlickerHz = 4f;
         [SerializeField, Min(0f)] private float labelHeight = 0.004f;
         [SerializeField, Min(0f)] private float labelOutset = 0.02f;
+        [Tooltip("Gap between the post and the labels' left edge (field metres).")]
+        [SerializeField, Min(0f)] private float labelGap = 0.008f;
 
         private readonly float[] starHeights = new float[3];
         private EntropyPost reading = new(0f, 0f, 0f, false);
@@ -88,9 +92,10 @@ namespace DigitalLove.Game.SpaceShaping
         {
             float half = view.FieldHalf;
             drawing.Layout(view.FieldCentre, half, starHeights);
-            // The labels stand just above the post's top, on the same edge. They are a child of the
-            // drawing, which already sits at the field's centre.
-            labelRoot.localPosition = FieldFrame.OnMeterEdge(half, half + labelHeight, labelOutset);
+            // The labels start at the post's foot and read to its right, along the back edge. They are
+            // a child of the drawing, which already sits at the field's centre.
+            labelRoot.localPosition = FieldFrame.OnMeterEdge(half, -half + labelHeight, labelOutset)
+                + Vector3.right * labelGap;
             TintStars();
         }
 
@@ -133,9 +138,9 @@ namespace DigitalLove.Game.SpaceShaping
             switch (hold)
             {
                 case StarHold.Held:
-                    return accent.value;
+                    return star.value;
                 case StarHold.AtRisk:
-                    return Color.Lerp(danger.value, accent.value, wave);
+                    return Color.Lerp(danger.value, star.value, wave);
                 default:
                     return WithAlpha(neutral.value, lostStarAlpha);
             }
