@@ -3528,7 +3528,7 @@ MonoBehaviour:
   tickCooldownSecs: 0.06
   selectRandom:
     value: 0
-  puzzleToSet: {fileID: 11400000, guid: ff6f1633973a9f0428162519a77b0941, type: 2}
+  puzzleToSet: {fileID: 0}
 --- !u!1 &904848683
 GameObject:
   m_ObjectHideFlags: 0

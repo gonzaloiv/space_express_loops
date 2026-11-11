@@ -1,8 +1,8 @@
 # Run fixes — exit on the menu gesture, restart on fail, first pass on Jim's lines
 
-**Status:** now · flow · updated 2026-11-11 — U1 and U4 landed; review fixes F1–F4 are fixed; U2
-(restart on fail) and U3 (Jim's lines) are implemented. The new fail and job-6 lines need their TTS
-clips downloaded; job 7's manual shortening waits on the lore rethink.
+**Status:** now · flow · updated 2026-11-11 — U1 and U4 landed; F1–F4 fixed; U2 and U3 implemented;
+the second review's F6, F7 and F9 are fixed. The new fail and job-6 lines still need their TTS clips
+(F8), and job 7's manual shortening waits on the lore rethink.
 
 **Related:** [core loop](../../design/core-loop.md) §2 · [progression](../../design/systems/progression.md) ·
 [jobs](../../design/jobs.md) §The run — the lore skin · [plans board](../README.md)
@@ -125,10 +125,10 @@ with a minimal archive of common Quest hand gestures. If U1–U3 fill the mornin
 
 ## Review — 2026-11-11
 
-U1 and U4 landed in `4c40552` (game) and `_Modules` `97129df`; **U2 and U3 are implemented after
-that** (working tree). What works: the scale-out and rotation gestures and their tests are gone, the
-exit is gated on pause and fires once (`exiting`), the end sequence and the map are not subscribed, the
-six prompts reference `GestureLoop` assets with Unity-assigned GUIDs, the module has no
+U1 and U4 landed in `4c40552` (game) and `_Modules` `6d77c83` (on `our-space`); **U2 and U3 are
+implemented after that** (working tree). What works: the scale-out and rotation gestures and their tests
+are gone, the exit is gated on pause and fires once (`exiting`), the end sequence and the map are not
+subscribed, the six prompts reference `GestureLoop` assets with Unity-assigned GUIDs, the module has no
 `Assets/_Game` path, a fail calls `Exit()` and re-enters the same job with a one-shot restart flag, and
 the old `fail_02` / `fail_03` keys and clips are gone.
 
@@ -146,39 +146,28 @@ Fixes, in order:
 - **F3 — fixed 2026-11-11.** `GesturePrompts/Art/exit/` is deleted; Exit uses the module's `Menu` loop.
 - **F4 — fixed 2026-11-11.** The module menus are `Tools/Gesture Art/Render Archive` and
   `Tools/Gesture Art/Render Menu`; the game's `Tools/Our Space/Render Gesture Prompt Art` keeps its name.
-- **F6 — the game points at an orphan module commit.** The game's `HEAD` records `_Modules` at
-  `97129df`, which is on no branch, local or remote; the module's `our-space` branch has `722b6c1` (the
-  same change, rewritten) and is one commit ahead of `origin`. A fresh clone of the game cannot check
-  out its modules. Commit the module fixes (F1, F2, F4) on `our-space`, push the module, then commit the
-  game with `_Modules` at that commit and push the game. Correct the `97129df` reference above.
-- **F7 — a debug override sits in the scene.** `Game.unity`'s `PuzzleSelectionState.puzzleToSet` is set
-  to `TwoShips_Converge_Puzzle`, which skips the map and opens that level every time. Fine for a test,
-  but clear it before committing the scene; the same diff also carries a few `RectTransform` layout
-  changes worth checking before they ride along.
 - **F5 — done 2026-11-11.** U2: `PuzzleCompleteState` calls `puzzleController.Exit()` and re-enters
   `PuzzleStartState` via the scene-wired `retryState`; a one-shot `PuzzleRestart` value skips Jim's
   intro and the second glitch, and `PuzzleSelectionState.EnterJob` clears stale flags. U3: the six fail
   lines and job 6's manual/tech line are in `Levels_en`; `Levels_es` holds the English placeholder;
   the 12 `fail_0x` keys, their locale values and the old clips are deleted; `jobs.md` has a fail column.
-  The new clips are still to download, and job 7's manual shortening is deferred to the lore rethink.
 
 ### Second review — 2026-11-11
 
 U2 and U3 are right: the restart exits the controller before re-entering, the flag defaults to false
 when absent and is cleared on both entries, and a missing clip ends the line silently, so the restart
-still fires. Still open before the commit:
+still fires. F6, F7 and F9 are fixed; F8 remains an asset download.
 
-- **F6 and F7 are unchanged.** The game still records `_Modules` at the orphan `97129df`, and
-  `puzzleToSet` still points at `TwoShips_Converge_Puzzle` in `Game.unity`. Both must be fixed in the
-  commit that carries U2/U3, or the build opens a test level and the clone breaks.
-- **F8 — seven lines are silent until their clips land.** No clip exists for
-  `level_01_02`…`level_01_07_fail` or `level_01_06_init_01` (the old ones are deleted). The game runs,
-  but a fail plays the glitch with no voice, and job 6's intro is mute. Download the seven clips before
-  the capture; until then, manual-check item 7 cannot pass.
-- **F9 — `jobs.md` shows job 7's manual short; the string is still the long one.** The lore-skin table
-  lists "This is the one the manual was written for." while `Levels_en` still carries the four-sentence
-  entry. Since the shortening is deferred, show the current string in the table (or mark it "deferred")
-  so the doc matches the build.
+- **F6 — fixed in `e38d109`.** The game records `_Modules` at `6d77c83`, which is on `our-space`; the
+  orphan `97129df` is no longer referenced. The module and game are not pushed; push remains the user's
+  step.
+- **F7 — fixed 2026-11-11.** `PuzzleSelectionState.puzzleToSet` is cleared in `Game.unity`; the commit
+  carries no RectTransform layout changes.
+- **F8 — open.** Seven clips need downloading before the capture: `level_01_02`–`level_01_07_fail` and
+  `level_01_06_init_01`. The game runs, but fails and job 6's intro are silent until then; no generator
+  is in the repo.
+- **F9 — fixed 2026-11-11.** `jobs.md` now shows job 7's current long manual string; the shortening
+  stays deferred to the lore rethink.
 
 ## Not in this plan
 

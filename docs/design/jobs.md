@@ -218,7 +218,7 @@ One line each; never exposition ([lore](world/lore.md)).
 | 4 | Madame Fink's Discount Gravity | a piano | "The piano is lost." | "Now move it. *Where* is a choice. Works everywhere." | "The Wrap is yours to place. Where you work is a decision. Make it." |
 | 5 | The Third Best Bakery | a wedding cake, still warm | "The cake went cold." | "Several zones. Place it, scale them." | "The Wrap is yours to place. Use it more than once." |
 | 6 | Nobody & Co. | a body (a funeral) | "The field won." | "Use what is already there." | "The field is free. The Wrap is not." |
-| 7 | The Inheritance of Mr. Fink | the last of something | "Mr. Fink is still waiting." | "…Good luck." | "This is the one the manual was written for." |
+| 7 | The Inheritance of Mr. Fink | the last of something | "Mr. Fink is still waiting." | "…Good luck." | "This is the one the manual was written for. Welcome, new employee. There has not been a new employee in eleven years. There is still no office." |
 
 ## The manual's arc
 
