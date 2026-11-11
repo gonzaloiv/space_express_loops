@@ -6,7 +6,7 @@ jobs share endpoints, so this is wanted before that episode is captured. U1 (`6d
 (`7e8d4e3`) are committed; the map wiring landed as `2ace96e` and review fix S2 is in this unit.
 S3's doc line and the headset pass remain.
 
-**Related:** [fleet episode](../backlog/fleet-episode.md) · [the cube](../../design/systems/cube.md)
+**Related:** [fleet episode](fleet-episode.md) · [the cube](../../design/systems/cube.md)
 §Feedback · [plans board](../README.md)
 
 ## Goal
@@ -18,7 +18,8 @@ route's.
 ## Contract
 
 - **Origin and destination differ by shape, not colour:** the origin a filled ring, the destination an
-  open ring, both in the route colour. New authored art, not a tint.
+  open ring, both in the route colour, **around the planet** — the endpoint keeps its planet body
+  (headset, 2026-11-11). New authored art, not a tint.
 - **A shared endpoint is an interchange:** a neutral ring with one small pip per route colour, like a
   station on a transit map. An endpoint that is one ship's origin and another's destination is an
   interchange too.
@@ -93,6 +94,22 @@ destination and converge cases. Fix before the headset pass:
   dim tint through `FieldPlanetBehaviour.OnTintApplied`, so no second grey literal remains.
 - **S3 — docs and the board.** The `cube.md` §Feedback paragraph is updated but uncommitted (mixed with
   other doc edits in the same file); commit it with this plan's close.
+
+### Headset — 2026-11-11
+
+- **S4 — the endpoints lost their planet.** `7e8d4e3` re-authored `Origin`, `Destination` and
+  `Interchange` as standalone prefabs: a ring and an empty `Body`. Before, they were variants of the
+  planet prefab (`6a1a9c1c…`) with its seeded body. An endpoint is still a planet the ship leaves or
+  reaches, so it must show the planet **and** the ring: re-author the three as variants of the planet
+  prefab again (GUIDs kept), with the ring (and the interchange's markers) as a child around the body,
+  sized from the body radius so `NodeBody.SetRadius` scales both. The ring then marks the role; the
+  planet stays the thing being flown to.
+  *Fixed 2026-11-11:* the three prefabs were edited in place (every referenced component keeps its
+  file ID): each `Body` now holds the planet prefab's three seeded models as `NodeBody.renderers`, and
+  the ring, scaled ×2 so it sits around the planet (filled band 0.6–1.0, open band 0.87–1.0 of the
+  body radius), is the new `NodeBody.marks` entry. Marks take the route colour while the planet keeps
+  its own look; tints (dim, fade, refusal) and visibility reach both. The interchange's markers moved
+  out with the ring (`markerRadius` 0.935, `markerScale` 0.16). Tune the ring scale on the headset.
 
 ## Not in this plan
 

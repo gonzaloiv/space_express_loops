@@ -15,6 +15,9 @@ namespace DigitalLove.Game.Nodes
         [SerializeField] private float pulseSwell = 0.12f;
         [Tooltip("Rim glow added at the peak of the arrival pulse.")]
         [SerializeField] private float pulseRim = 1.6f;
+        [Tooltip("Marks drawn with the body, such as an endpoint's ring. When set, the route colour " +
+                 "paints the marks and the body keeps its own look; tints reach both.")]
+        [SerializeField] private List<Renderer> marks = new();
 
         private Renderer activeRenderer;
         private MaterialPropertyBlock tintBlock;
@@ -56,6 +59,8 @@ namespace DigitalLove.Game.Nodes
             visible = value;
             if (activeRenderer != null)
                 activeRenderer.enabled = value;
+            for (int i = 0; i < marks.Count; i++)
+                marks[i].enabled = value;
         }
 
         private void SetActiveRendererBySeed(int seed)
@@ -133,20 +138,29 @@ namespace DigitalLove.Game.Nodes
 
         private void ApplyBaseColor()
         {
-            if (activeRenderer == null)
-                return;
+            bool marked = marks.Count > 0;
+            if (activeRenderer != null)
+                Paint(activeRenderer, ColorFor(baseColor, !marked));
 
-            tintBlock ??= new MaterialPropertyBlock();
-            activeRenderer.GetPropertyBlock(tintBlock);
-            Color color = baseColor;
-            if (hasRouteColor)
-                color = routeColor;
+            for (int i = 0; i < marks.Count; i++)
+                Paint(marks[i], ColorFor(BaseColorOf(marks[i]), true));
+        }
+
+        private Color ColorFor(Color own, bool takesRoute)
+        {
             if (hasTint)
-                color = tintColor;
+                return tintColor;
 
+            return hasRouteColor && takesRoute ? routeColor : own;
+        }
+
+        private void Paint(Renderer target, Color color)
+        {
+            tintBlock ??= new MaterialPropertyBlock();
+            target.GetPropertyBlock(tintBlock);
             tintBlock.SetColor(BaseColorId, color);
             tintBlock.SetColor(ColorId, color);
-            activeRenderer.SetPropertyBlock(tintBlock);
+            target.SetPropertyBlock(tintBlock);
         }
 
         private static Color BaseColorOf(Renderer renderer)
