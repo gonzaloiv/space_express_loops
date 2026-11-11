@@ -20,6 +20,7 @@ namespace DigitalLove.Game.Nodes
         private Coroutine pulse;
 
         private const float RefusalSecs = 0.24f;
+        private static readonly Color DimColor = new(0.4f, 0.4f, 0.4f, 1f);
 
         public bool IsVisible => isVisible;
         public float Radius => radius;
@@ -136,7 +137,7 @@ namespace DigitalLove.Game.Nodes
             float amount = Mathf.Max(fade, stateDim);
             nameLabel.SetFade(amount);
             ApplyBodyTint(amount, labelOnly);
-            OnTintApplied(amount);
+            OnTintApplied(amount, BodyTint(amount));
         }
 
         private void ApplyBodyTint(float amount, bool labelOnly)
@@ -150,16 +151,18 @@ namespace DigitalLove.Game.Nodes
                 return;
             }
 
-            Color gray = Color.Lerp(Color.white, new Color(0.4f, 0.4f, 0.4f, 1f), amount);
-            nodeBody.SetTint(gray);
+            nodeBody.SetTint(BodyTint(amount));
         }
+
+        // The gray a faded or dimmed planet takes; a subclass with extra markers follows it.
+        private static Color BodyTint(float amount) => Color.Lerp(Color.white, DimColor, amount);
 
         // A subclass with extra markers follows the body's visibility and fade/dim state.
         protected virtual void OnVisibilityChanged(bool visible)
         {
         }
 
-        protected virtual void OnTintApplied(float amount)
+        protected virtual void OnTintApplied(float amount, Color tint)
         {
         }
 

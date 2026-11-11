@@ -432,7 +432,7 @@ MonoBehaviour:
   markerPrototype: {fileID: 1605280151547335241}
   markerRadius: 0.4675
   markerScale: 0.12
-  neutralColor: {r: 0.82, g: 0.86, b: 0.95, a: 1}
+  neutralColor: {fileID: 11400000, guid: c01d0000000000000000000000000007, type: 2}
 --- !u!1 &4139648602776084464
 GameObject:
   m_ObjectHideFlags: 0

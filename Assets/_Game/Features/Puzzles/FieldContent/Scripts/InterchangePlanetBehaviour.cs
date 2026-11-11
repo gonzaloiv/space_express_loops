@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DigitalLove.Game.Nodes;
+using DigitalLove.Global;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
@@ -11,14 +12,13 @@ namespace DigitalLove.Game.SpaceShaping
     {
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");
-        private static readonly Color DimColor = new(0.4f, 0.4f, 0.4f, 1f);
 
         [SerializeField] private MeshRenderer markerPrototype;
+        [SerializeField] private ColorValue neutralColor;
         [Tooltip("Marker centre distance from the ring's centre, in local units of the body radius.")]
         [SerializeField] private float markerRadius = 0.4675f;
         [Tooltip("Marker diameter in local units of the body radius.")]
         [SerializeField] private float markerScale = 0.12f;
-        [SerializeField] private Color neutralColor = new(0.82f, 0.86f, 0.95f, 1f);
 
         // Markers sit just above the ring's plane so the two do not z-fight.
         private const float MarkerLift = 0.015f;
@@ -26,9 +26,10 @@ namespace DigitalLove.Game.SpaceShaping
         private readonly List<MeshRenderer> markers = new();
         private readonly Color[] markerColors = new Color[RouteEndpoints.MaxPips];
         private MaterialPropertyBlock tintBlock;
+        private Color tint;
+        private float tintAmount;
         private int markerCount;
         private bool coloured;
-        private float tint;
 
         public void SetPips(int count, Color[] colors)
         {
@@ -52,9 +53,10 @@ namespace DigitalLove.Game.SpaceShaping
                 markers[i].gameObject.SetActive(visible && i < markerCount);
         }
 
-        protected override void OnTintApplied(float amount)
+        protected override void OnTintApplied(float amount, Color tint)
         {
-            tint = Mathf.Clamp01(amount);
+            tintAmount = Mathf.Clamp01(amount);
+            this.tint = tint;
             for (int i = 0; i < markers.Count; i++)
             {
                 if (i < markerCount)
@@ -64,6 +66,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void RefreshMarkers()
         {
+            SetRouteColor(neutralColor.value);
             EnsureMarkers(markerCount);
             for (int i = 0; i < markers.Count; i++)
             {
@@ -99,8 +102,10 @@ namespace DigitalLove.Game.SpaceShaping
 
         private Color MarkerColor(int index)
         {
-            Color color = coloured ? markerColors[index] : neutralColor;
-            return Color.Lerp(color, DimColor, tint);
+            if (tintAmount > 0.001f)
+                return tint;
+
+            return coloured ? markerColors[index] : neutralColor.value;
         }
 
         private void TintMarker(MeshRenderer marker, Color color)

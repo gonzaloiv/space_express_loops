@@ -2,8 +2,9 @@
 
 **Status:** now · presentation · updated 2026-11-11 — split from transit routes (closed 2026-11-11),
 whose route colours, line-end outcomes and keep-out landed. The fleet episode's fan-out and converge
-jobs share endpoints, so this is wanted before that episode is captured. Review applied 2026-11-11:
-positions come from the session, one pool per role, pips only in play.
+jobs share endpoints, so this is wanted before that episode is captured. U1 (`6d9bace`) and U2
+(`7e8d4e3`) are committed; the map wiring landed as `2ace96e` and review fix S2 is in this unit.
+S3's doc line and the headset pass remain.
 
 **Related:** [fleet episode](../backlog/fleet-episode.md) · [the cube](../../design/systems/cube.md)
 §Feedback · [plans board](../README.md)
@@ -72,6 +73,26 @@ route's.
   the interchange.
 - **Exit:** a fan-out or converge job reads as an interchange; the solve payoff still lands on the
   primary destination; a pushed endpoint keeps its ring.
+
+## Review — 2026-11-11
+
+The shape is right: `RouteEndpoints` resolves each endpoint to its session source, so a pushed endpoint
+keeps its ring; one pool per role sits behind `EndpointPools`; `FieldPlanetSet` shrank to 188 lines;
+the pulse finds an endpoint by source; the primary destination resolves to the interchange on a
+converge job; and the tests cover the single-ship, separate, fan-out, three-route, origin-meets-
+destination and converge cases. Fix before the headset pass:
+
+- **S1 — the map's wiring is not committed.** *Fixed in `2ace96e`: only the
+  `PuzzleDioramaView.endpointPrototypes` hunk was staged from the shared scene.* `7e8d4e3` renamed
+  `FieldContentView`'s `originPrototype` / `destinationPrototype` to `endpointPrototypes` and wired
+  `Puzzle.prefab`, but the map diorama's `PuzzleDioramaView` lives in `Game.unity`, and its new
+  `endpointPrototypes` block was only in the working tree. At `7e8d4e3` the map built its pools from
+  null prototypes.
+- **S2 — the pips' colours are literals.** *Fixed here:* `InterchangePlanetBehaviour` serializes the
+  `Neutral` `ColorValue` (used for the ring and the map notches) and the markers take the body's own
+  dim tint through `FieldPlanetBehaviour.OnTintApplied`, so no second grey literal remains.
+- **S3 — docs and the board.** The `cube.md` §Feedback paragraph is updated but uncommitted (mixed with
+  other doc edits in the same file); commit it with this plan's close.
 
 ## Not in this plan
 
