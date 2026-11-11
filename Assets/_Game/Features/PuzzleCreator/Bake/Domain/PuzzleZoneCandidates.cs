@@ -48,8 +48,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return covered;
         }
 
-        public static bool ContainsEndpoint(PuzzleZone zone, PuzzleData puzzle) =>
-            zone.Influences(puzzle.origin) || zone.Influences(puzzle.destination);
+        // Every ship's endpoints, the same rule the cube enforces at runtime.
+        public static bool ContainsEndpoint(PuzzleZone zone, PuzzleData puzzle)
+        {
+            PuzzleEndpoints endpoints = puzzle.Endpoints;
+            for (int i = 0; i < endpoints.Count; i++)
+            {
+                if (zone.Influences(endpoints[i]))
+                    return true;
+            }
+
+            return false;
+        }
 
         public static float[] Sizes(PuzzleData puzzle)
         {

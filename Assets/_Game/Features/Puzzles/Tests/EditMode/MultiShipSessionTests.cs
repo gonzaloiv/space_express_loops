@@ -58,6 +58,40 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             Assert.AreEqual(9600, setup.MaxSteps);
         }
 
+        [Test]
+        public void ShipEndingAt_NamesTheShipOnThatSource()
+        {
+            PuzzleData puzzle = EndpointPuzzle();
+            SpaceShapingSession session = new(SpaceShapingSetup.Build(puzzle, new PuzzleSimSettings
+            {
+                NominalSpeed = 1f,
+                StepSecs = 1f / 120f,
+                CaptureRadius = 0.6f
+            }));
+            Object.DestroyImmediate(puzzle);
+
+            Assert.AreEqual(0, session.ShipEndingAt(1));
+            Assert.AreEqual(1, session.ShipEndingAt(2));
+            Assert.AreEqual(1, session.ShipEndingAt(3));
+            Assert.AreEqual(-1, session.ShipEndingAt(4));
+        }
+
+        private static PuzzleData EndpointPuzzle()
+        {
+            PuzzleData puzzle = Puzzle();
+            puzzle.ships[1].origin = new Vector3(-4f, 2f, 0f);
+            puzzle.ships[1].destination = new Vector3(4f, 2f, 0f);
+            puzzle.sources = new[]
+            {
+                new PuzzleSource { home = new Vector3(-4f, 0f, 0f), scale = 0.5f },
+                new PuzzleSource { home = new Vector3(4f, 0f, 0f), scale = 0.5f },
+                new PuzzleSource { home = new Vector3(-4f, 2f, 0f), scale = 0.5f },
+                new PuzzleSource { home = new Vector3(4f, 2f, 0f), scale = 0.5f },
+                new PuzzleSource { home = new Vector3(0f, 5f, 0f), scale = 0.5f }
+            };
+            return puzzle;
+        }
+
         private static SpaceShapingSetup TwoShips(Vector3 secondDestination)
         {
             SpaceShapingSetup setup = TestSetups.Session(1200);

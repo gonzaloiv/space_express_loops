@@ -29,6 +29,20 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Assert.That(failures, Does.Contain("start frame covers an endpoint"));
         }
 
+        [Test]
+        public void ContainsEndpoint_ZoneOverShipTwoOrigin_Counts()
+        {
+            PuzzleZone zone = new()
+            {
+                centre = new Vector3(0.5f, 0.2f, 0f),
+                halfExtents = new Vector3(0.05f, 0.05f, 0.05f),
+                scale = 1f,
+                falloff = 0.25f,
+            };
+
+            Assert.IsTrue(PuzzleZoneCandidates.ContainsEndpoint(zone, TwoShipPuzzle()));
+        }
+
         private PuzzleData TwoShipPuzzle()
         {
             PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();

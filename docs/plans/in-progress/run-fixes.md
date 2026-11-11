@@ -1,8 +1,8 @@
 # Run fixes — exit on the menu gesture, restart on fail, first pass on Jim's lines
 
-**Status:** now · flow · updated 2026-11-11 — from the 2026-11-11 design review: the exit moves to the
-non-dominant hand's menu pinch (the scale-out exit collides with the shrink pinch), a fail restarts the
-job in place, and the fail and job 6–7 lines get a first pass before the wider lore rethink.
+**Status:** now · flow · updated 2026-11-11 — U1 and U4 landed with review fixes F1–F4 open (see
+§Review); U2 (restart on fail) and U3 (Jim's lines) are not started. The exit is the non-dominant hand's
+menu pinch, a fail restarts the job in place, and the fail and job 6–7 lines get a first pass.
 
 **Related:** [core loop](../../design/core-loop.md) §2 · [progression](../../design/systems/progression.md) ·
 [jobs](../../design/jobs.md) §The run — the lore skin · [plans board](../README.md)
@@ -120,6 +120,39 @@ with a minimal archive of common Quest hand gestures. If U1–U3 fill the mornin
 - No hard-coded `Assets/_Game` path in the module: output folders come from the caller.
 - **Exit:** a fresh project can render or reuse the five archive loops with only the XR module; this
   game's six prompts look the same as before, and Exit shows the menu motion.
+
+## Review — 2026-11-11
+
+U1 and U4 landed in `4c40552` (game) and `_Modules` `722b6c1`; **U2 and U3 are not started**: the fail
+path still returns to the map (`PuzzleCompleteState` unchanged), `Levels_en` still has the six
+"We didn't arrive." lines plus 12 `fail_0x` keys, and the glossary and progression still say
+"Map/Retry". What works: the scale-out and rotation gestures and their tests are gone, the exit is
+gated on pause and fires once (`exiting`), the end sequence and the map are not subscribed, the six
+prompts reference `GestureLoop` assets with Unity-assigned GUIDs, and the module has no `Assets/_Game`
+path.
+
+Fixes, in order:
+
+- **F1 — the exit listens to both hands (contract break).** `Game.unity` wires two
+  `MetaAimFlagsHomeMenuInvoker`s, `Menu Gesture Left` and `Menu Gesture Right`, into
+  `PuzzleEditionState.menuInvokers`. The right hand's palm pinch is the Quest universal menu for a
+  right-handed player, so opening the system menu can also drop the player out of the job. Keep the
+  left invoker only (left-only is the decided v1 scope) and delete the right one. Both also bind the
+  same `MenuButton` action and each enables/disables it; with one invoker the double bind goes too.
+- **F2 — the archive's hands never close (U4 exit not met).** All 12 `menu` frames are identical, and
+  so are all 12 `pinch` frames; `grab-move` frames 0 and 1 (grip 0 vs 0.5, same position) are
+  pixel-identical, so the grip does nothing anywhere in `GestureArchive`. The game's loops do animate
+  (`move` frames 0/1 differ), so the fault is in the archive path: `GestureArchive.WriteFrames` →
+  `SetRotations` → `RenderHands`. Find why `HandPoser.Pose`'s grip has no effect there, re-render the
+  archive, and confirm the Exit prompt shows the hand closing. Add an editor-side check to the render
+  command that warns when a loop's open and pinched frames come out identical.
+- **F3 — the old exit art is dead.** `GesturePrompts/Art/exit/` (12 PNGs) is no longer referenced: the
+  Exit prompt uses the module's `Menu` loop and `GestureMotion` has no exit motion. Delete the folder.
+- **F4 — module menu names carry the game's name.** `GestureArchive` registers
+  `Tools/Our Space/Render Gesture Art …` inside `_Modules`; rename to `Tools/Gesture Art/…` so another
+  project does not get "Our Space" menus. The game's own command keeps its name.
+- **F5 — then build U2 and U3 as written above.** Nothing in them changed; the U2 notes on
+  `puzzleController.Exit()` and the restart flag still apply.
 
 ## Not in this plan
 

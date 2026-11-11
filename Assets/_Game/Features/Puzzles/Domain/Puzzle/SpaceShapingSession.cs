@@ -49,6 +49,18 @@ namespace DigitalLove.Game.SpaceShaping
             return -1;
         }
 
+        // The first ship that starts or ends at a source, or -1 when it is no ship's endpoint.
+        public int ShipEndingAt(int sourceIndex)
+        {
+            for (int i = 0; i < ships.Length; i++)
+            {
+                if (IndexOf(ships[i].Origin) == sourceIndex || IndexOf(ships[i].Destination) == sourceIndex)
+                    return i;
+            }
+
+            return -1;
+        }
+
         // The planet radius at a point (0 if no planet sits there). A source's scale is its diameter:
         // the sphere is scaled by the full source scale, matching the radius the field integrates with.
         public float RadiusAt(Vector3 point)

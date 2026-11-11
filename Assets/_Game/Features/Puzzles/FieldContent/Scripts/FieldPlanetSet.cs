@@ -155,12 +155,23 @@ namespace DigitalLove.Game.SpaceShaping
                     continue;
                 }
 
-                Source(slot++).Spawn(
-                    session.GetPosition(i), session.GetScale(i), i, session.Name(i));
+                FieldPlanetBehaviour planet = Source(slot++);
+                planet.Spawn(session.GetPosition(i), session.GetScale(i), i, session.Name(i));
+                PaintRoute(planet, session.ShipEndingAt(i));
             }
 
             HideUnusedSources(slot);
             return sunSpawned;
+        }
+
+        // Ship 2+ endpoints are pooled sources: they carry their ship's colour, and a reused planet
+        // that ends no route loses it. Shared endpoints take the first ship's colour until U3.
+        private void PaintRoute(FieldPlanetBehaviour planet, int ship)
+        {
+            if (ship < 0)
+                planet.ClearRouteColor();
+            else
+                planet.SetRouteColor(plan.ColorAt(ship));
         }
 
         private void HideUnusedSources(int count) =>

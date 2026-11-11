@@ -115,6 +115,12 @@ reason, which reads as a glitch, and it does not protect ship 2's endpoints at a
 If U0–U2 fill the day, U3 moves to its own plan and takes manual-check items 1–2 (shapes,
 interchange) with it.
 
+**Landed early (2026-11-11 review fix):** each ship's endpoint planets carry that ship's colour
+(`SpaceShapingSession.ShipEndingAt`); a shared endpoint takes the first ship's colour until the
+interchange lands. The line's end is authored on `Trajectory.prefab` (`TrajectoryEndMarker`): a dot
+while pending, a success ring on an arrival, a danger cross on a crash. Still open in U3: the endpoint
+pool, the origin/destination ring shapes and the interchange pips.
+
 - A plain `RouteEndpoints` type derives the distinct endpoint positions, each one's role (origin,
   destination, interchange) and its route pips from the `RoutePlan`; it is tested in the fast suite.
 - `FieldPlanetSet` (238 lines) gets an endpoint pool collaborator instead of more code: one pooled

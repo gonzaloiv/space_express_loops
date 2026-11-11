@@ -42,7 +42,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.NoSolution };
 
             if (!StartFrameClear(zone, ships, settings))
-                return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.NoSolution };
+                return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.StartCoversEndpoint };
 
             return Confirm(field, settings, brief, zone, ships);
         }

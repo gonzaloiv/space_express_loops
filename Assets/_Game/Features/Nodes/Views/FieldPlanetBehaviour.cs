@@ -166,6 +166,8 @@ namespace DigitalLove.Game.Nodes
 
         public void SetRouteColor(Color color) => nodeBody.SetRouteColor(color);
 
+        public void ClearRouteColor() => nodeBody.ClearRouteColor();
+
         private void SetVisible(bool visible)
         {
             if (isVisible == visible)

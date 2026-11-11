@@ -112,6 +112,12 @@ namespace DigitalLove.Game.Nodes
             ApplyBaseColor();
         }
 
+        public void ClearRouteColor()
+        {
+            hasRouteColor = false;
+            ApplyBaseColor();
+        }
+
         public void SetTint(Color color)
         {
             tintColor = color;

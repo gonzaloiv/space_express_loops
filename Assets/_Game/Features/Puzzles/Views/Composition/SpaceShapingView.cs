@@ -140,15 +140,7 @@ namespace DigitalLove.Game.SpaceShaping
             spawner.Zones.SetScaleEnvelope(min, max);
 
         public void SetPrediction(bool solved, TrajectoryOutcome outcome) =>
-            spawner.Zones.ApplyPrediction(Verdict(solved, outcome));
-
-        private static ZoneVerdict Verdict(bool solved, TrajectoryOutcome outcome)
-        {
-            if (solved)
-                return ZoneVerdict.Solved;
-
-            return outcome == TrajectoryOutcome.Crash ? ZoneVerdict.Crash : ZoneVerdict.Miss;
-        }
+            spawner.Zones.ApplyPrediction(outcome.ToVerdict(solved));
 
         public void Render(SpaceShapingSession session)
         {
