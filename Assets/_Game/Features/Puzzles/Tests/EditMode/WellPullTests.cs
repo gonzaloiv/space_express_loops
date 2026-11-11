@@ -100,6 +100,28 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         }
 
         [Test]
+        public void AnUnchangedField_DrawsNoChange()
+        {
+            SpaceSource[] field = { new(Vector3.zero, Radius, 0.0004f) };
+            WellPull pull = new(field, 0.07f, 0.6f, field);
+            Vector3 point = new(0.2f, 0f, 0f);
+
+            Assert.AreEqual(point, pull.Pull(point));
+        }
+
+        [Test]
+        public void AGrownSource_DrawsANewWell_AndAShrunkOneFlattens()
+        {
+            SpaceSource[] start = { new(Vector3.zero, Radius, 0.0004f) };
+            SpaceSource[] grown = { new(Vector3.zero, Radius, 0.004f) };
+            SpaceSource[] shrunk = { new(Vector3.zero, Radius, 0.0001f) };
+            Vector3 point = new(0.2f, 0f, 0f);
+
+            Assert.Less(new WellPull(grown, 0.07f, 0.6f, start).Pull(point).x, point.x);
+            Assert.Greater(new WellPull(shrunk, 0.07f, 0.6f, start).Pull(point).x, point.x);
+        }
+
+        [Test]
         public void WellsOff_GiveNoPull()
         {
             LatticeWells wells = new() { enabled = false };

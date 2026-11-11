@@ -6,19 +6,25 @@ namespace DigitalLove.Game.SpaceShaping
     // Draws the field's wells on the lattice: every point is pulled toward each source, the way the
     // ship is. The direction is the physics'; the depth is compressed (√strength over a distance
     // softened by the source's radius) so the sun does not swamp the planets. A pull never reaches a
-    // source's surface, and a point already inside any source stays put.
+    // source's surface, and a point already inside any source stays put. With a baseline (the field
+    // at the job's start) only the change is drawn: the start is flat, and a grown planet's well
+    // appears while a shrunk one's flattens.
     public readonly struct WellPull
     {
         // A cap of 1 would let a node land on the surface; the cap stays just short of it.
         public const float MaxFractionCap = 0.95f;
 
         private readonly IReadOnlyList<SpaceSource> sources;
+        private readonly IReadOnlyList<SpaceSource> baseline;
         private readonly float gain;
         private readonly float maxFraction;
 
-        public WellPull(IReadOnlyList<SpaceSource> sources, float gain, float maxFraction)
+        public WellPull(
+            IReadOnlyList<SpaceSource> sources, float gain, float maxFraction,
+            IReadOnlyList<SpaceSource> baseline = null)
         {
             this.sources = sources;
+            this.baseline = baseline;
             this.gain = Mathf.Max(gain, 0f);
             this.maxFraction = Mathf.Clamp(maxFraction, 0f, MaxFractionCap);
         }
@@ -28,11 +34,20 @@ namespace DigitalLove.Game.SpaceShaping
             if (sources == null || InsideAny(point))
                 return point;
 
-            Vector3 shift = Vector3.zero;
-            for (int i = 0; i < sources.Count; i++)
-                shift += Toward(sources[i], point);
+            Vector3 shift = Shift(sources, point);
+            if (baseline != null)
+                shift -= Shift(baseline, point);
 
             return point + shift * Reach(point, shift);
+        }
+
+        private Vector3 Shift(IReadOnlyList<SpaceSource> field, Vector3 point)
+        {
+            Vector3 shift = Vector3.zero;
+            for (int i = 0; i < field.Count; i++)
+                shift += Toward(field[i], point);
+
+            return shift;
         }
 
         private bool InsideAny(Vector3 point)
