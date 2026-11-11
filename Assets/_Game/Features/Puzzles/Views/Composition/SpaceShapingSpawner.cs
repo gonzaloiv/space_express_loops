@@ -10,8 +10,7 @@ namespace DigitalLove.Game.SpaceShaping
     {
         [SerializeField] private FieldPlanetBehaviour prototype;
         [SerializeField] private FieldPlanetBehaviour sunPrototype;
-        [SerializeField] private FieldPlanetBehaviour originPrototype;
-        [SerializeField] private FieldPlanetBehaviour destinationPrototype;
+        [SerializeField] private FieldPlanetSet.EndpointPrototypes endpointPrototypes;
         [SerializeField] private Transform sourceParent;
         [SerializeField] private TrajectoryLineView trajectoryPrototype;
         [SerializeField] private ShipTravelView shipPrototype;
@@ -78,7 +77,7 @@ namespace DigitalLove.Game.SpaceShaping
 
             initialized = true;
             FieldPlanetSet.Prototypes planetPrototypes = new(
-                prototype, sunPrototype, originPrototype, destinationPrototype);
+                prototype, sunPrototype, endpointPrototypes);
             planets = new FieldPlanetSet(planetPrototypes);
             planets.SetRoutePlan(plan);
             planets.Initialize(sourceParent);

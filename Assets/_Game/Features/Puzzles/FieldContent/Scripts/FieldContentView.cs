@@ -8,8 +8,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private Transform contentRoot;
         [SerializeField] private FieldPlanetBehaviour sourcePrototype;
         [SerializeField] private FieldPlanetBehaviour sunPrototype;
-        [SerializeField] private FieldPlanetBehaviour originPrototype;
-        [SerializeField] private FieldPlanetBehaviour destinationPrototype;
+        [SerializeField] private FieldPlanetSet.EndpointPrototypes endpointPrototypes;
         [SerializeField] private Transform sourceParent;
         [SerializeField] private SpaceShapingSettings settings;
         [SerializeField] private float previewSize = 0.16f;
@@ -28,9 +27,10 @@ namespace DigitalLove.Game.SpaceShaping
         {
             ClearGeneratedChildren(sourceParent);
             FieldPlanetSet.Prototypes prototypes = new(
-                sourcePrototype, sunPrototype, originPrototype, destinationPrototype);
+                sourcePrototype, sunPrototype, endpointPrototypes);
             planets = new FieldPlanetSet(prototypes);
             planets.Initialize(sourceParent);
+            planets.SetPipsColoured(false);
             planets.SetLabelsVisible(labelsVisible);
         }
 

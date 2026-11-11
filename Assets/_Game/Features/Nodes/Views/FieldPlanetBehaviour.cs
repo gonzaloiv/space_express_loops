@@ -135,6 +135,12 @@ namespace DigitalLove.Game.Nodes
         {
             float amount = Mathf.Max(fade, stateDim);
             nameLabel.SetFade(amount);
+            ApplyBodyTint(amount, labelOnly);
+            OnTintApplied(amount);
+        }
+
+        private void ApplyBodyTint(float amount, bool labelOnly)
+        {
             if (labelOnly)
                 return;
 
@@ -146,6 +152,15 @@ namespace DigitalLove.Game.Nodes
 
             Color gray = Color.Lerp(Color.white, new Color(0.4f, 0.4f, 0.4f, 1f), amount);
             nodeBody.SetTint(gray);
+        }
+
+        // A subclass with extra markers follows the body's visibility and fade/dim state.
+        protected virtual void OnVisibilityChanged(bool visible)
+        {
+        }
+
+        protected virtual void OnTintApplied(float amount)
+        {
         }
 
         public void Initialize()
@@ -205,6 +220,7 @@ namespace DigitalLove.Game.Nodes
 
             isVisible = visible;
             nodeBody.SetVisible(visible);
+            OnVisibilityChanged(visible);
         }
 
         private void SpawnWithVariant(float spawnRadius, int seed)

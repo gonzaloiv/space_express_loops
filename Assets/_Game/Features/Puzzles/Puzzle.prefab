@@ -6674,8 +6674,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.SpaceShapingViewSpawner
   prototype: {fileID: 1432176000000000001, guid: 6a1a9c1cd3694b11946468f943f46cd8, type: 3}
   sunPrototype: {fileID: 5148713355404427665, guid: 2ddbb2dd4b3a6cf42851cc4fc6177849, type: 3}
-  originPrototype: {fileID: 104580328670047092, guid: 2a724411ab8931244ad8fd7a0920cd0e, type: 3}
-  destinationPrototype: {fileID: 104580328670047092, guid: f262f1ed9da69c449b0fd504f6c5fa98, type: 3}
+  endpointPrototypes:
+    origin: {fileID: 104580328670047092, guid: 2a724411ab8931244ad8fd7a0920cd0e, type: 3}
+    destination: {fileID: 104580328670047092, guid: f262f1ed9da69c449b0fd504f6c5fa98, type: 3}
+    interchange: {fileID: 5779733715417701459, guid: 9593ef752f0dfdd4dbf6e90b45e9799b, type: 3}
   sourceParent: {fileID: 1343259810134510423}
   trajectoryPrototype: {fileID: 7421319929626500612, guid: 1f053f762efe6e54bbf1c80c5d39c4fe, type: 3}
   shipPrototype: {fileID: 5197302854918167167, guid: 8920a6c04cb8505438dda15dad061f26, type: 3}

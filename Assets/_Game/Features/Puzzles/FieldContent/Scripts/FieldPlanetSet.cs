@@ -1,3 +1,4 @@
+using System;
 using DigitalLove.Game.Nodes;
 using UnityEngine;
 
@@ -11,24 +12,30 @@ namespace DigitalLove.Game.SpaceShaping
         private Transform parent;
         private ViewPool<FieldPlanetBehaviour> sources;
         private FieldPlanetBehaviour sunPlanet;
-        private FieldPlanetBehaviour originPlanet;
-        private FieldPlanetBehaviour destinationPlanet;
+        private EndpointPools endpoints;
         private SpaceShapingSession session;
         private RoutePlan plan = RoutePlan.Empty;
         private bool labelsVisible = true;
 
         public FieldPlanetSet(Prototypes prototypes) => this.prototypes = prototypes;
 
-        public void SetRoutePlan(RoutePlan value) => plan = value;
+        public void SetRoutePlan(RoutePlan value)
+        {
+            plan = value;
+            if (endpoints != null)
+                endpoints.SetPlan(value);
+        }
+
+        public void SetPipsColoured(bool value) => endpoints.SetPipsColoured(value);
 
         public void Initialize(Transform parent)
         {
             this.parent = parent;
             sources = new ViewPool<FieldPlanetBehaviour>(
                 prototypes.Source, parent, "Planet", created => created.Initialize());
+            endpoints = new EndpointPools(prototypes.Endpoints, parent);
+            endpoints.SetPlan(plan);
             sunPlanet = Create(prototypes.Sun);
-            originPlanet = Create(prototypes.Origin);
-            destinationPlanet = Create(prototypes.Destination);
         }
 
         public void SetLabelsVisible(bool visible)
@@ -36,14 +43,13 @@ namespace DigitalLove.Game.SpaceShaping
             labelsVisible = visible;
             sources.ForEachFrom(0, view => view.SetLabelsVisible(visible));
             sunPlanet.SetLabelsVisible(visible);
-            originPlanet.SetLabelsVisible(visible);
-            destinationPlanet.SetLabelsVisible(visible);
+            endpoints.SetLabelsVisible(visible);
         }
 
         public Vector3 SunWorldPosition =>
             sunPlanet != null ? sunPlanet.transform.position : parent.position;
 
-        public FieldPlanetBehaviour Destination => destinationPlanet;
+        public FieldPlanetBehaviour Destination => endpoints.PrimaryDestination;
 
         public void ShowSunLabel(string text) => ShowOnlySunLabel(text, false);
 
@@ -55,15 +61,13 @@ namespace DigitalLove.Game.SpaceShaping
         {
             sources.ForEachFrom(0, view => view.SetStateDim(amount));
             sunPlanet.SetStateDim(amount);
-            originPlanet.SetStateDim(amount);
-            destinationPlanet.SetStateDim(amount);
+            endpoints.SetStateDim(amount);
         }
 
         private void ShowOnlySunLabel(string text, bool labelOnly)
         {
             sources.ForEachFrom(0, view => view.SetLabelsVisible(false));
-            originPlanet.SetLabelsVisible(false);
-            destinationPlanet.SetLabelsVisible(false);
+            endpoints.SetLabelsVisible(false);
             if (labelOnly)
             {
                 sunPlanet.transform.localPosition = Vector3.zero;
@@ -77,164 +81,101 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void SetMapFade(Vector3 focus, float near, float far)
         {
-            sources.ForEachFrom(0, view => ApplyFade(view, focus, near, far));
-            ApplyFade(sunPlanet, focus, near, far);
-            ApplyFade(originPlanet, focus, near, far);
-            ApplyFade(destinationPlanet, focus, near, far);
+            sources.ForEachFrom(0, view => FieldPlanetFade.Apply(view, focus, near, far));
+            FieldPlanetFade.Apply(sunPlanet, focus, near, far);
+            endpoints.SetMapFade(focus, near, far);
         }
 
         public void ClearMapFade()
         {
-            sources.ForEachFrom(0, view => ClearFade(view));
-            ClearFade(sunPlanet);
-            ClearFade(originPlanet);
-            ClearFade(destinationPlanet);
-        }
-
-        private static void ClearFade(FieldPlanetBehaviour planet)
-        {
-            if (planet == null || !planet.gameObject.activeSelf)
-                return;
-
-            planet.SetCulled(false);
-            planet.SetFade(0f);
-        }
-
-        private static void ApplyFade(
-            FieldPlanetBehaviour planet, Vector3 focus, float near, float far)
-        {
-            if (planet == null || !planet.gameObject.activeSelf)
-                return;
-
-            float distance = Vector3.Distance(planet.transform.position, focus);
-            if (distance >= far)
-            {
-                planet.SetCulled(true);
-                planet.SetFade(1f);
-                return;
-            }
-
-            planet.SetCulled(false);
-            planet.SetFade(Mathf.InverseLerp(near, far, distance));
+            sources.ForEachFrom(0, view => FieldPlanetFade.Clear(view));
+            FieldPlanetFade.Clear(sunPlanet);
+            endpoints.ClearMapFade();
         }
 
         public void Apply(SpaceShapingSession session)
         {
             this.session = session;
-            int origin = session.IndexOf(session.Origin);
-            int destination = session.IndexOf(session.Destination);
-            bool sunSpawned = SpawnSources(session, origin, destination);
+            endpoints.Apply(session);
+            bool sunSpawned = SpawnSources(session);
             if (!sunSpawned)
                 sunPlanet.Hide();
-
-            Spawn(originPlanet, session, origin);
-            Spawn(destinationPlanet, session, destination);
-            ApplyRouteColors(origin, destination);
         }
 
         public void PulseEndpoint(Vector3 point, Color danger)
         {
             int source = session != null ? session.EndpointSource(point) : -1;
-            PulseAt(originPlanet, source, danger);
-            PulseAt(destinationPlanet, source, danger);
-            sources.ForEachFrom(0, view => PulseAt(view, source, danger));
-        }
-
-        private static void PulseAt(FieldPlanetBehaviour planet, int source, Color danger)
-        {
-            if (planet.IsVisible && planet.SourceIndex == source)
-                planet.PlayRefusal(danger);
+            if (source >= 0)
+                endpoints.Pulse(source, danger);
         }
 
         public void Hide()
         {
             sources.ForEachFrom(0, view => view.Hide());
             sunPlanet.Hide();
-            originPlanet.Hide();
-            destinationPlanet.Hide();
+            endpoints.Hide();
         }
 
-        private bool SpawnSources(
-            SpaceShapingSession session, int origin, int destination)
+        private bool SpawnSources(SpaceShapingSession session)
         {
             int slot = 0;
             bool sunSpawned = false;
             for (int i = 0; i < session.SourceCount; i++)
             {
-                if (i == origin || i == destination)
+                if (endpoints.Endpoints.IsEndpointSource(i))
                     continue;
 
                 if (session.IsSun(i))
                 {
-                    sunPlanet.Spawn(session.GetPosition(i), session.GetScale(i), i, session.Name(i));
+                    sunPlanet.Spawn(
+                        session.GetPosition(i), session.GetScale(i), i, session.Name(i));
                     sunSpawned = true;
                     continue;
                 }
 
                 FieldPlanetBehaviour planet = Source(slot++);
-                planet.Spawn(session.GetPosition(i), session.GetScale(i), i, session.Name(i));
-                PaintRoute(planet, session.ShipEndingAt(i));
+                planet.Spawn(
+                    session.GetPosition(i), session.GetScale(i), i, session.Name(i));
+                planet.ClearRouteColor();
             }
 
             HideUnusedSources(slot);
             return sunSpawned;
         }
 
-        // Ship 2+ endpoints are pooled sources: they carry their ship's colour, and a reused planet
-        // that ends no route loses it. Shared endpoints take the first ship's colour until U3.
-        private void PaintRoute(FieldPlanetBehaviour planet, int ship)
-        {
-            if (ship < 0)
-                planet.ClearRouteColor();
-            else
-                planet.SetRouteColor(plan.ColorAt(ship));
-        }
-
         private void HideUnusedSources(int count) =>
             sources.ForEachFrom(count, view => view.Hide());
 
-        private void ApplyRouteColors(int origin, int destination)
+        [Serializable]
+        public struct EndpointPrototypes
         {
-            Color color = plan.ColorAt(0);
-            if (origin >= 0)
-                originPlanet.SetRouteColor(color);
-            if (destination >= 0)
-                destinationPlanet.SetRouteColor(color);
+            public FieldPlanetBehaviour origin;
+            public FieldPlanetBehaviour destination;
+            public InterchangePlanetBehaviour interchange;
         }
 
         public readonly struct Prototypes
         {
             public readonly FieldPlanetBehaviour Source;
             public readonly FieldPlanetBehaviour Sun;
-            public readonly FieldPlanetBehaviour Origin;
-            public readonly FieldPlanetBehaviour Destination;
+            public readonly EndpointPrototypes Endpoints;
 
             public Prototypes(
                 FieldPlanetBehaviour source, FieldPlanetBehaviour sun,
-                FieldPlanetBehaviour origin, FieldPlanetBehaviour destination)
+                EndpointPrototypes endpoints)
             {
                 Source = source;
                 Sun = sun;
-                Origin = origin;
-                Destination = destination;
+                Endpoints = endpoints;
             }
         }
 
         private FieldPlanetBehaviour Create(FieldPlanetBehaviour prototype)
         {
-            FieldPlanetBehaviour planet = Object.Instantiate(prototype, parent);
+            FieldPlanetBehaviour planet = UnityEngine.Object.Instantiate(prototype, parent);
             planet.Initialize();
             planet.SetLabelsVisible(labelsVisible);
             return planet;
-        }
-
-        private static void Spawn(
-            FieldPlanetBehaviour planet, SpaceShapingSession session, int index)
-        {
-            if (index >= 0)
-                planet.Spawn(session.GetPosition(index), session.GetScale(index), index, session.Name(index));
-            else
-                planet.Hide();
         }
 
         private FieldPlanetBehaviour Source(int index)
