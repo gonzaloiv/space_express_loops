@@ -19,8 +19,13 @@ namespace DigitalLove.Game.SpaceShaping
         [Tooltip("The unchecked prediction is the route colour at this alpha: not a result until the ship lands.")]
         [SerializeField, Range(0f, 1f)] private float pendingAlpha = 0.55f;
         [Tooltip("On an arrival the line stops this far short of its end (field metres, along the last " +
-                 "approach), so the arrive ring sits outside the planet instead of half inside it.")]
+                 "approach), so the arrive sphere sits outside the planet instead of half inside it.")]
         [SerializeField, Min(0f)] private float arriveBackoff = 0.008f;
+        [Tooltip("A miss's heading line follows the ship's final direction. It is skipped while the ship " +
+                 "is still turning: its direction this many steps before the end differs by more than " +
+                 "the angle below (circling a planet, not leaving).")]
+        [SerializeField, Min(1)] private int exitTurnSteps = 30;
+        [SerializeField, Range(0f, 90f)] private float exitTurnDegrees = 15f;
 
         private Material lineMaterial;
 
@@ -59,7 +64,8 @@ namespace DigitalLove.Game.SpaceShaping
             if (result.Outcome == TrajectoryOutcome.Miss)
             {
                 marker.Hide();
-                ShowHeading(end, heading, color, DistanceToBox(end, heading, fieldCentre, fieldHalf));
+                Vector3 exit = ExitDirection(result.Points);
+                ShowHeading(end, exit, color, DistanceToBox(end, exit, fieldCentre, fieldHalf));
                 return;
             }
 
@@ -68,6 +74,22 @@ namespace DigitalLove.Game.SpaceShaping
 
             marker.ShowOutcome(end, heading, result.Outcome);
             HideHeading();
+        }
+
+        // The ship's final direction, where a miss keeps flying; zero while it is still turning, since a
+        // straight line to the edge would then show a path it never takes.
+        private Vector3 ExitDirection(IReadOnlyList<Vector3> points)
+        {
+            int last = points.Count - 1;
+            Vector3 final = points[last] - points[last - 1];
+            if (final.sqrMagnitude < HeadingEpsilon)
+                return Heading(points);
+
+            int back = Mathf.Max(0, last - 1 - exitTurnSteps);
+            Vector3 earlier = points[back + 1] - points[back];
+            bool turning = earlier.sqrMagnitude >= HeadingEpsilon
+                && Vector3.Angle(earlier, final) > exitTurnDegrees;
+            return turning ? Vector3.zero : final.normalized;
         }
 
         // Pulls the arrival's end back along the last approach and ends the drawn line there.

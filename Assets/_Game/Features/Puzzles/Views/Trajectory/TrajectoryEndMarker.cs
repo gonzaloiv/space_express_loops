@@ -5,7 +5,8 @@ using UnityEngine;
 namespace DigitalLove.Game.SpaceShaping
 {
     // The line's end, authored on the trajectory prefab: a dot while the path is a prediction, a
-    // success ring on an arrival, a danger cross on a crash. A miss shows none (its heading line does).
+    // success sphere on an arrival (seen from every side), a danger cross on a crash. A miss shows none
+    // (its heading line does).
     public class TrajectoryEndMarker : MonoBehaviour
     {
         private const float PulseSecs = 0.5f;
@@ -13,7 +14,7 @@ namespace DigitalLove.Game.SpaceShaping
         private const float HeadingEpsilon = 1e-10f;
 
         [SerializeField] private Renderer dot;
-        [SerializeField] private Renderer arriveRing;
+        [SerializeField] private Renderer arriveSphere;
         [SerializeField] private Renderer crashCross;
         [SerializeField] private ColorValue success;
         [SerializeField] private ColorValue danger;
@@ -31,7 +32,7 @@ namespace DigitalLove.Game.SpaceShaping
         public void ShowOutcome(Vector3 position, Vector3 heading, TrajectoryOutcome outcome)
         {
             if (outcome == TrajectoryOutcome.Arrive)
-                Show(position, heading, arriveRing, success.value);
+                Show(position, heading, arriveSphere, success.value);
             else if (outcome == TrajectoryOutcome.Crash)
                 Show(position, heading, crashCross, danger.value);
             else
@@ -57,7 +58,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             StopPulse();
             dot.gameObject.SetActive(shape == dot);
-            arriveRing.gameObject.SetActive(shape == arriveRing);
+            arriveSphere.gameObject.SetActive(shape == arriveSphere);
             crashCross.gameObject.SetActive(shape == crashCross);
             tint.Set(shape, color);
             transform.localPosition = position;
