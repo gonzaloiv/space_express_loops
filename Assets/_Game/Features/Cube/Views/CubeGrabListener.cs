@@ -23,6 +23,12 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         [SerializeField] private float frameGain = 1.5f;
         [SerializeField] private float frameGrowRatio = 2f;
 
+        [Header("Frame - corner brackets (share of an edge; 0.5 lights it all)")]
+        [SerializeField, Range(0f, 0.6f)] private float bracketIdle = 0.16f;
+        [SerializeField, Range(0f, 0.6f)] private float bracketHover = 0.3f;
+        [SerializeField, Range(0f, 0.6f)] private float bracketActive = 0.6f;
+        [SerializeField, Min(0f)] private float bracketSecs = 0.15f;
+
         [Header("Fill - the scaled space")]
         [SerializeField] private float fillIdleAlpha = 0.1f;
         [SerializeField] private float fillActiveAlpha = 0.45f;
@@ -164,7 +170,11 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 Danger = danger.value,
                 FillIdleAlpha = fillIdleAlpha,
                 FillActiveAlpha = fillActiveAlpha,
-                RefuseSecs = refuseSecs
+                RefuseSecs = refuseSecs,
+                BracketIdle = bracketIdle,
+                BracketHover = bracketHover,
+                BracketActive = bracketActive,
+                BracketSecs = bracketSecs
             };
 
         private CubeGestureSettings BuildGestureSettings() =>

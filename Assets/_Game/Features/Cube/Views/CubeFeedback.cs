@@ -11,6 +11,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         private readonly Renderer frameRenderer;
         private readonly Renderer fillRenderer;
         private readonly CubePalette palette;
+        private readonly CubeFrameBrackets brackets;
 
         private RendererTint frameTint;
         private RendererTint fillTint;
@@ -30,6 +31,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             this.frameRenderer = frameRenderer;
             this.fillRenderer = fillRenderer;
             this.palette = palette;
+            brackets = new CubeFrameBrackets(frameRenderer);
         }
 
         public event Action<ZoneRefusal> Refused;
@@ -87,12 +89,12 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         public void Apply(
             CubeView zone, int selectingPoints, bool frameGrab, bool hovering, Vector3 hoverWorld)
         {
+            brackets.Ease(BracketFor(selectingPoints, hovering), palette.BracketSecs);
             if (dormant)
             {
-                // Danger is the map's locked colour; a dormant cube keeps it at idle alpha.
-                Color dim = palette.Danger.WithAlpha(palette.FillIdleAlpha);
-                frameTint.Set(frameRenderer, dim);
-                fillTint.Set(fillRenderer, dim);
+                // Danger is the map's locked colour; a dormant cube keeps it, its fill at idle alpha.
+                frameTint.Set(frameRenderer, palette.Danger.WithAlpha(palette.DormantFrameAlpha));
+                fillTint.Set(fillRenderer, palette.Danger.WithAlpha(palette.FillIdleAlpha));
                 return;
             }
 
@@ -120,6 +122,17 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         }
 
         private bool IsRefusing => Time.unscaledTime < refusedUntil;
+
+        // Short brackets at rest, longer under a hand, the whole frame while held or refusing.
+        private float BracketFor(int selectingPoints, bool hovering)
+        {
+            if (dormant)
+                return palette.BracketIdle;
+            if (selectingPoints > 0 || IsRefusing)
+                return palette.BracketActive;
+
+            return hovering ? palette.BracketHover : palette.BracketIdle;
+        }
 
         // A move refused on an endpoint gets its own red copy; the real frame stays normal.
         private bool EndpointRefusal => refusal == ZoneRefusal.OutOfBounds && endpoint >= 0;
