@@ -4,6 +4,17 @@ Short post-mortems, written when a plan closes (rule in [AGENTS.md](../AGENTS.md
 morning). Newest first. Each entry: what worked, what surprised us, the rule for next time. One idea per
 bullet; the code and tests are the record of what was built.
 
+## 2026-11-12 — First minute and meter
+
+- **Worked:** the meter hides the stars and their notches from `PuzzleReadout.NoGrade`, so the
+  tutorial jobs show the entropy post without a score they cannot award.
+- **Worked:** a nullable miss gap made "warmth only while nothing is at stake" explicit at the
+  caller (`TrajectoryLinePool`); `null` is neutral, not a sentinel value.
+- **Surprised:** the splash tagline lived only as a scene override of the prefab's empty client
+  line, so removing the override was the whole fix.
+- **Next time:** when a hint is tutorial-only, gate it where the job kind is known, not in the view
+  that draws it.
+
 ## 2026-11-11 — The ending
 
 - **Worked:** counting the run from the selector, never a literal, made the ending valid for any number

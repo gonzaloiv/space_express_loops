@@ -109,6 +109,9 @@ count.
   start crashes into the blocker). The **trajectory line** previews **live while shaping**, in a
   pending state rather than the checked result, then takes its result on landing. The ship launches on
   each completed pinch after that ([core loop](../core-loop.md) §2).
+- The prediction's **end dot warms and grows only on `noGrade` jobs** (1–2), where it teaches "closer
+  is warmer"; on graded jobs it stays neutral, so the route end says where the run ends, not how close
+  it is.
 - **One colour per route.** A ship's line, its baseline and its endpoint planets share one route
   colour; single-ship jobs are one route, and the map diorama uses the same colour. The line ends in
   the outcome — arrive, crash or miss — so the result reads at the end of the route, not across the

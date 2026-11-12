@@ -61,6 +61,10 @@ arrive.
 4. **Pass:** arriving passes the job, graded on **entropy left** → 1–3 stars. **Job 1 is the tutorial
    exception:** it has no entropy fail and no stars; the bar is informational ([jobs](jobs.md)).
 
+The prediction's end dot **warms only on `noGrade` jobs** (1–2): it teaches "closer is warmer" while
+nothing is at stake, and stays neutral once stars are on the line. The live line still previews the
+path on every job.
+
 **Entropy is charged per modification, not per launch** — it persists across launches, so failing
 drains the bar.
 
