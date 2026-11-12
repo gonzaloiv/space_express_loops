@@ -31,8 +31,10 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void Awake() => lineMaterial = line.sharedMaterial;
 
+        // missGap: how far the run passes from its destination's catch, for the prediction's warmth.
         public void Show(
-            TrajectoryResult result, Color routeColor, Vector3 fieldCentre, float fieldHalf, bool pending)
+            TrajectoryResult result, Color routeColor, float missGap,
+            Vector3 fieldCentre, float fieldHalf, bool pending)
         {
             int count = result.Points != null ? result.Points.Count : 0;
             if (count < 2)
@@ -45,18 +47,19 @@ namespace DigitalLove.Game.SpaceShaping
             Color color = pending ? routeColor.WithAlpha(pendingAlpha) : routeColor;
             FillLine(result.Points);
             SetColor(color);
-            ShowEnd(result, color, pending, fieldCentre, fieldHalf);
+            ShowEnd(result, color, missGap, pending, fieldCentre, fieldHalf);
             line.enabled = true;
         }
 
         private void ShowEnd(
-            TrajectoryResult result, Color color, bool pending, Vector3 fieldCentre, float fieldHalf)
+            TrajectoryResult result, Color color, float missGap, bool pending,
+            Vector3 fieldCentre, float fieldHalf)
         {
             Vector3 end = result.Points[result.Points.Count - 1];
             Vector3 heading = Heading(result.Points);
             if (pending)
             {
-                marker.ShowPending(end, heading, color);
+                marker.ShowPending(end, heading, color, missGap);
                 HideHeading();
                 return;
             }

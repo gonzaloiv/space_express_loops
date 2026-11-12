@@ -179,7 +179,7 @@ namespace DigitalLove.Game.SpaceShaping
             SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results, bool pending)
         {
             TrajectoryResult[] visible = VisibleRuns(session, results, out Vector3 centre, out float half);
-            spawner.Lines.Show(visible, spawner.Plan, centre, half, pending);
+            spawner.Lines.Show(visible, session, spawner.Plan, centre, half, pending);
         }
 
         private TrajectoryResult[] VisibleRuns(

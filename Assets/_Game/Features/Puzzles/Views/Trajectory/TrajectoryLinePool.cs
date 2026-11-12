@@ -12,11 +12,14 @@ namespace DigitalLove.Game.SpaceShaping
             pool = new ViewPool<TrajectoryLineView>(prototype, parent, "Line", null);
 
         public void Show(
-            IReadOnlyList<TrajectoryResult> results, RoutePlan plan,
+            IReadOnlyList<TrajectoryResult> results, SpaceShapingSession session, RoutePlan plan,
             Vector3 centre, float half, bool pending)
         {
             for (int i = 0; i < results.Count; i++)
-                pool.EnsureSlot(i).Show(results[i], plan.ColorAt(i), centre, half, pending);
+            {
+                float gap = session.MissGap(i, results[i]);
+                pool.EnsureSlot(i).Show(results[i], plan.ColorAt(i), gap, centre, half, pending);
+            }
 
             HideFrom(results.Count);
         }
