@@ -20,6 +20,7 @@ namespace DigitalLove.Game.SpaceShaping.Grid
         [SerializeField] private float tintStrength = 2.5f;
         [Tooltip("Smoothing passes along each line on the warp: softens spikes without more points. 0 is off.")]
         [SerializeField, Range(0, 8)] private int smoothPasses = 2;
+        [SerializeField] private LatticeStrainStyle strain = new();
 
         private Mesh mesh;
         private Vector3[] vertices;
@@ -29,6 +30,7 @@ namespace DigitalLove.Game.SpaceShaping.Grid
         private Vector3[] nodes;
         private Vector3[] warpedNodes;
         private Vector3[] smoothScratch;
+        private float[] strains;
         private Bounds bounds;
         private int samplesPerLine;
         private RendererTint tint;
@@ -63,6 +65,7 @@ namespace DigitalLove.Game.SpaceShaping.Grid
             Color color = Color.Lerp(neutral.value, accent.value, amount);
             color.a *= gridOpacity;
             tint.Set(meshRenderer, color);
+            strain.ApplyGlow(meshRenderer, accent.value);
         }
 
         private void Remember(
@@ -93,19 +96,21 @@ namespace DigitalLove.Game.SpaceShaping.Grid
             }
 
             LatticeLineSmoothing.Smooth(nodes, warpedNodes, smoothScratch, samplesPerLine, smoothPasses);
+            strain.Measure(nodes, warpedNodes, strains, samplesPerLine);
             for (int ring = 0; ring < nodes.Length; ring++)
             {
                 Vector3 warped = warpedNodes[ring];
                 WriteRing(
-                    ring * sides, parentToLocal.MultiplyPoint3x4(warped), new Color(1f, 1f, 1f, fade(warped)));
+                    ring * sides, parentToLocal.MultiplyPoint3x4(warped),
+                    strain.VertexColor(fade(warped), strains[ring]), strain.Radius(radius, strains[ring]));
             }
         }
 
-        private void WriteRing(int first, Vector3 centre, Color color)
+        private void WriteRing(int first, Vector3 centre, Color color, float ringRadius)
         {
             for (int v = first; v < first + sides; v++)
             {
-                Vector3 local = centre + ringOffsets[v] * radius;
+                Vector3 local = centre + ringOffsets[v] * ringRadius;
                 vertices[v] = local;
                 colors[v] = color;
                 bounds.Encapsulate(local);
@@ -168,6 +173,7 @@ namespace DigitalLove.Game.SpaceShaping.Grid
             nodes = new Vector3[mesh.vertexCount / sides];
             warpedNodes = new Vector3[nodes.Length];
             smoothScratch = new Vector3[nodes.Length];
+            strains = new float[nodes.Length];
             samplesPerLine = mesh.vertexCount / (3 * gridCount * gridCount * sides);
             BuildStaticData();
         }
@@ -222,24 +228,6 @@ namespace DigitalLove.Game.SpaceShaping.Grid
 
         public void OnAfterDeserialize()
         {
-        }
-
-        private readonly struct LatticeSample
-        {
-            public readonly int Axis;
-            public readonly int I;
-            public readonly int J;
-            public readonly int Side;
-            public readonly float NodeIndex;
-
-            public LatticeSample(int axis, int i, int j, int side, float nodeIndex)
-            {
-                Axis = axis;
-                I = i;
-                J = j;
-                Side = side;
-                NodeIndex = nodeIndex;
-            }
         }
     }
 }

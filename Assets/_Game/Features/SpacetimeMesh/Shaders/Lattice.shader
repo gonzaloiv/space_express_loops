@@ -3,6 +3,7 @@ Shader "DigitalLove/Spacetime/Lattice"
     Properties
     {
         [MainColor] _BaseColor ("Base Color", Color) = (1, 1, 1, 1)
+        _StrainColor ("Strain Color", Color) = (1, 1, 1, 1)
     }
     SubShader
     {
@@ -33,6 +34,7 @@ Shader "DigitalLove/Spacetime/Lattice"
 
             CBUFFER_START(UnityPerMaterial)
                 half4 _BaseColor;
+                half4 _StrainColor;
             CBUFFER_END
 
             struct Attributes
@@ -50,6 +52,8 @@ Shader "DigitalLove/Spacetime/Lattice"
                 float4 positionHCS : SV_POSITION;
                 half alpha : TEXCOORD0;
                 float band : TEXCOORD1;
+                // How squeezed this part of the lattice is (vertex red): 0 = base colour, 1 = strain colour.
+                half strain : TEXCOORD2;
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
@@ -72,6 +76,7 @@ Shader "DigitalLove/Spacetime/Lattice"
 
                 OUT.positionHCS = TransformWorldToHClip(positionWS);
                 OUT.alpha = IN.color.a;
+                OUT.strain = IN.color.r;
                 OUT.band = positionWS.y;
                 return OUT;
             }
@@ -82,8 +87,9 @@ Shader "DigitalLove/Spacetime/Lattice"
                 float tick = floor(_Time.y * 30.0);
                 float band = floor(IN.band * 40.0);
                 half drop = step(0.45, GlitchHash(float2(band, tick))) * _WrapGlitch;
-                half3 rgb = _BaseColor.rgb * (1.0 + _WrapGlitch * 1.2);
-                return half4(rgb, _BaseColor.a * IN.alpha * (1.0 - drop));
+                half4 color = lerp(_BaseColor, _StrainColor, IN.strain);
+                half3 rgb = color.rgb * (1.0 + _WrapGlitch * 1.2);
+                return half4(rgb, color.a * IN.alpha * (1.0 - drop));
             }
             ENDHLSL
         }
