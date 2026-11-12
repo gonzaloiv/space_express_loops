@@ -9,23 +9,23 @@ namespace DigitalLove.Game.Placement
 
     public readonly struct HandTrackingStatus
     {
-        public HandTrackingStatus(HandTrackingState state, bool panelDue)
+        public HandTrackingStatus(HandTrackingState state, bool hintDue)
         {
             State = state;
-            PanelDue = panelDue;
+            HintDue = hintDue;
         }
 
         public HandTrackingState State { get; }
-        public bool PanelDue { get; }
+        public bool HintDue { get; }
     }
 
     // A boot gate: ready once both hands have tracked together for a steady window. Hand tracking
-    // off, or either hand missing, restarts the window and keeps the gate waiting. The panel is due
-    // only after a longer missing period, so the first frames and a short flicker never flash it.
+    // off, or either hand missing, restarts the window and keeps the gate waiting. The console hint is due
+    // only after a longer missing period, so the first frames and a short flicker never type it.
     public sealed class HandTrackingGate
     {
         public const float SteadySecs = 0.3f;
-        public const float PanelDelaySecs = 0.5f;
+        public const float HintDelaySecs = 0.5f;
 
         private float steadySecs;
         private float missingSecs;
@@ -59,7 +59,7 @@ namespace DigitalLove.Game.Placement
 
             return new HandTrackingStatus(
                 HandTrackingState.Missing,
-                missingSecs >= PanelDelaySecs);
+                missingSecs >= HintDelaySecs);
         }
     }
 }

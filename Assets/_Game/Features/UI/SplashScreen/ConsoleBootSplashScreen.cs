@@ -30,6 +30,11 @@ namespace DigitalLove.Game.UI.SplashScreen
         [SerializeField] private ConsoleScreen screen;
         [SerializeField] private TMP_Text header;
         [SerializeField] private BootChecklist checklist;
+        [Tooltip("Lines a waiting setup step asks for (hand tracking, for example), typed in a loop " +
+                 "between the checklist rows while it is due.")]
+        [SerializeField] private ConsoleHint hint;
+        [Tooltip("How long a hint line stays before the next one, unless the step moves on first.")]
+        [SerializeField, Min(0f)] private float hintHoldSecs = 1.2f;
         [SerializeField] private BootLine[] lines;
         [SerializeField] private LevelSelector levelSelector;
         [SerializeField, Min(0f)] private float holdSecs = 0.6f;
@@ -42,6 +47,7 @@ namespace DigitalLove.Game.UI.SplashScreen
         public event Action StepConfirmed;
 
         private bool playRequested;
+        private int hintIndex;
         private Action onComplete;
 
         public override void Open()
@@ -112,7 +118,7 @@ namespace DigitalLove.Game.UI.SplashScreen
             {
                 if (checklist.IsIdle)
                 {
-                    yield return null;
+                    yield return WaitOrHint();
                     continue;
                 }
 
@@ -121,6 +127,26 @@ namespace DigitalLove.Game.UI.SplashScreen
                 if (line.maxVisibleCharacters >= line.textInfo.characterCount)
                     StepConfirmed?.Invoke();
             }
+        }
+
+        // Nothing to report: type the next hint line if a step is waiting on the player, else wait a
+        // frame. A new hint starts from its first line.
+        private IEnumerator WaitOrHint()
+        {
+            if (!hint.Due)
+            {
+                hintIndex = 0;
+                yield return null;
+                yield break;
+            }
+
+            TMP_Text line = hint.Line(hintIndex);
+            hintIndex = (hintIndex + 1) % hint.Count;
+            yield return screen.Type(line, int.MaxValue);
+
+            float until = Time.unscaledTime + hintHoldSecs;
+            while (hint.Due && checklist.IsIdle && Time.unscaledTime < until)
+                yield return null;
         }
 
         private IEnumerator TypeTitle(bool fresh)
@@ -142,6 +168,7 @@ namespace DigitalLove.Game.UI.SplashScreen
         {
             header.gameObject.SetActive(false);
             checklist.Hide();
+            hint.Hide();
             foreach (BootLine line in lines)
                 line.Text.gameObject.SetActive(false);
         }

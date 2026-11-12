@@ -13,11 +13,11 @@ namespace DigitalLove.Game.Placement.Tests.EditMode
 
             HandTrackingStatus status = gate.Tick(true, true, true, HandTrackingGate.SteadySecs - Step);
             Assert.AreEqual(HandTrackingState.Settling, status.State);
-            Assert.IsFalse(status.PanelDue);
+            Assert.IsFalse(status.HintDue);
 
             status = gate.Tick(true, true, true, Step * 2f);
             Assert.AreEqual(HandTrackingState.Ready, status.State);
-            Assert.IsFalse(status.PanelDue);
+            Assert.IsFalse(status.HintDue);
         }
 
         [Test]
@@ -63,47 +63,47 @@ namespace DigitalLove.Game.Placement.Tests.EditMode
         }
 
         [Test]
-        public void BothHandsFromTheStart_NeverShowThePanel()
+        public void BothHandsFromTheStart_NeverMakeTheHintDue()
         {
             HandTrackingGate gate = new();
 
             for (int i = 0; i < 50; i++)
-                Assert.IsFalse(gate.Tick(true, true, true, 0.1f).PanelDue);
+                Assert.IsFalse(gate.Tick(true, true, true, 0.1f).HintDue);
 
             Assert.AreEqual(HandTrackingState.Ready, gate.Tick(true, true, true, 0.1f).State);
         }
 
         [Test]
-        public void ShortFlicker_DoesNotShowThePanel()
+        public void ShortFlicker_DoesNotMakeTheHintDue()
         {
             HandTrackingGate gate = new();
 
             gate.Tick(true, true, true, 0.1f);
-            Assert.IsFalse(gate.Tick(true, true, false, 0.2f).PanelDue);
-            Assert.IsFalse(gate.Tick(true, true, true, HandTrackingGate.SteadySecs).PanelDue);
+            Assert.IsFalse(gate.Tick(true, true, false, 0.2f).HintDue);
+            Assert.IsFalse(gate.Tick(true, true, true, HandTrackingGate.SteadySecs).HintDue);
         }
 
         [Test]
-        public void MissingPastTheDelay_ShowsThePanel()
+        public void MissingPastTheDelay_MakesTheHintDue()
         {
             HandTrackingGate gate = new();
 
-            HandTrackingStatus status = gate.Tick(false, true, true, HandTrackingGate.PanelDelaySecs + Step);
+            HandTrackingStatus status = gate.Tick(false, true, true, HandTrackingGate.HintDelaySecs + Step);
 
             Assert.AreEqual(HandTrackingState.Missing, status.State);
-            Assert.IsTrue(status.PanelDue);
+            Assert.IsTrue(status.HintDue);
         }
 
         [Test]
-        public void PanelHidesWhenHandsReturn()
+        public void HintClearsWhenHandsReturn()
         {
             HandTrackingGate gate = new();
 
-            gate.Tick(false, true, true, HandTrackingGate.PanelDelaySecs + Step);
+            gate.Tick(false, true, true, HandTrackingGate.HintDelaySecs + Step);
             HandTrackingStatus status = gate.Tick(true, true, true, Step);
 
             Assert.AreEqual(HandTrackingState.Settling, status.State);
-            Assert.IsFalse(status.PanelDue);
+            Assert.IsFalse(status.HintDue);
         }
     }
 }

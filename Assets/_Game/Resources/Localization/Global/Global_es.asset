@@ -118,14 +118,6 @@ MonoBehaviour:
     m_Localized: TRABAJO {0}
     m_Metadata:
       m_Items: []
-  - m_Id: 74113009852272641
-    m_Localized: SEGUIMIENTO DE MANOS NECESARIO
-    m_Metadata:
-      m_Items: []
-  - m_Id: 74113009852272642
-    m_Localized: 'Suelta los mandos. Activa el seguimiento de manos en Ajustes > Seguimiento del movimiento y mantén las dos manos delante de ti.'
-    m_Metadata:
-      m_Items: []
   references:
     version: 2
     RefIds: []

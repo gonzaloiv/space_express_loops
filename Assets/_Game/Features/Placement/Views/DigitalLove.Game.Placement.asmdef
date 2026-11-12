@@ -5,9 +5,6 @@
         "DigitalLove.Game.Placement.Domain",
         "DigitalLove.Game.States.Setup",
         "DigitalLove.Game.UI.Console",
-        "DigitalLove.Localization",
-        "DigitalLove.UI.Behaviours",
-        "DigitalLove.UI.DesignSystem",
         "DigitalLove.XR.OVR",
         "Oculus.VR",
         "Oculus.Interaction"

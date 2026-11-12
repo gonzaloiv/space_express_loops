@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using DigitalLove.Casual.Flow.Setup;
+using DigitalLove.Game.UI.Console;
 using Oculus.Interaction.Input;
 using UnityEngine;
 
@@ -13,12 +14,12 @@ namespace DigitalLove.Game.Placement
     {
         [SerializeField] private Hand leftHand;
         [SerializeField] private Hand rightHand;
-        [SerializeField] private HandTrackingRequiredPanel panel;
+        [Tooltip("The boot console's hand-tracking lines; this gate only says when they are due.")]
+        [SerializeField] private ConsoleHint hint;
 
         private readonly HandTrackingGate gate = new();
         private Action pendingDone;
         private Coroutine waiting;
-        private bool panelShown;
 
         public override void Setup(Action onComplete)
         {
@@ -58,7 +59,7 @@ namespace DigitalLove.Game.Placement
         private void ResetWhileOffHead()
         {
             gate.Reset();
-            SetPanel(false);
+            hint.Due = false;
         }
 
         private bool TryComplete()
@@ -68,7 +69,7 @@ namespace DigitalLove.Game.Placement
                 IsTracked(leftHand),
                 IsTracked(rightHand),
                 Time.unscaledDeltaTime);
-            SetPanel(status.PanelDue);
+            hint.Due = status.HintDue;
 
             if (status.State != HandTrackingState.Ready)
                 return false;
@@ -79,22 +80,10 @@ namespace DigitalLove.Game.Placement
 
         private void Complete()
         {
-            SetPanel(false);
+            hint.Due = false;
             Action done = pendingDone;
             pendingDone = null;
             done?.Invoke();
-        }
-
-        private void SetPanel(bool shown)
-        {
-            if (shown == panelShown)
-                return;
-
-            panelShown = shown;
-            if (shown)
-                panel.Show();
-            else
-                panel.Hide();
         }
 
         private static bool IsTracked(Hand hand) => hand.IsConnected && hand.IsTrackedDataValid;
