@@ -42,9 +42,6 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public void PlayEnding(float nodeSecs, float finishSecs, Action onComplete)
         {
-            // The run's ending walks every job, so every number comes back.
-            selectedSlot.SetNumberShown(true);
-            fields.ForEachFrom(0, field => field.SetNumberShown(true));
             ending ??= new MapEnding(
                 selectedSlot, fields, tint, nodeSecs, finishSecs);
             ending.Play(onComplete);
@@ -75,7 +72,6 @@ namespace DigitalLove.Game.PuzzleSelection
         {
             JobEntry selected = map.Selected;
             selectedSlot.ShowMapField(selected, tint.For(selected.State), showFrames, true);
-            selectedSlot.SetNumberShown(true);
             readout.Show(selected);
             selectedSlot.SetZoom(1f);
             if (selected.State == JobState.Current
@@ -95,7 +91,6 @@ namespace DigitalLove.Game.PuzzleSelection
                 JobEntry entry = map[i];
                 RunSlotView field = fields.EnsureSlot(slot++);
                 field.ShowMapField(entry, tint.For(entry.State), showFrames, false);
-                field.SetNumberShown(IsRouteNeighbour(map, i));
                 field.PlaceSunAt(map.Position(i));
                 if (entry.State == JobState.Current && i == highest)
                     CurrentSlot = field;
@@ -103,9 +98,5 @@ namespace DigitalLove.Game.PuzzleSelection
 
             fields.ForEachFrom(slot, field => field.Hide());
         }
-
-        // Only the jobs either side of the selected one along the route keep their number.
-        private static bool IsRouteNeighbour(PuzzleMap map, int index) =>
-            Mathf.Abs(index - map.SelectedIndex) == 1;
     }
 }

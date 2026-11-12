@@ -303,6 +303,10 @@ MonoBehaviour:
   - {fileID: 9059999379901930314}
   - {fileID: 2767772292179199943}
   - {fileID: 7882999753055646175}
+  pulseSwell: 0.12
+  pulseRim: 1.6
+  marks: []
+  markColor: {fileID: 0}
 --- !u!114 &1039710075085549719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -321,6 +325,7 @@ MonoBehaviour:
   isEnabled: 1
   useLocalSpace: 1
   randomInitialRotation: 1
+  resetOnEnable: 0
 --- !u!1001 &3578267810903628611
 PrefabInstance:
   m_ObjectHideFlags: 0

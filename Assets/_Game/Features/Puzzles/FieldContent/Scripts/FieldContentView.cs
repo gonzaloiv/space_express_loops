@@ -16,8 +16,6 @@ namespace DigitalLove.Game.SpaceShaping
         protected Transform ContentRoot => contentRoot;
         protected float PreviewSize => previewSize;
 
-        public string SunName { get; private set; } = string.Empty;
-
         public Vector3 SunWorldPosition => planets.SunWorldPosition;
 
         private FieldPlanetSet planets;
@@ -29,7 +27,7 @@ namespace DigitalLove.Game.SpaceShaping
                 sourcePrototype, sunPrototype, endpointPrototypes);
             planets = new FieldPlanetSet(prototypes);
             planets.Initialize(sourceParent);
-            planets.SetPipsColoured(false);
+            planets.SetRouteColoured(false);
             planets.SetLabelsVisible(labelsVisible);
         }
 
@@ -45,7 +43,6 @@ namespace DigitalLove.Game.SpaceShaping
 
         public virtual void Render(PuzzleData puzzle)
         {
-            SunName = string.Empty;
             if (puzzle == null)
             {
                 planets.Hide();
@@ -54,21 +51,9 @@ namespace DigitalLove.Game.SpaceShaping
 
             SpaceShapingSession session = new(
                 SpaceShapingSetup.Build(puzzle, PuzzleSimSettings.From(settings)));
-            SunName = FindSunName(session);
             planets.SetRoutePlan(RoutePlan.Build(puzzle, settings.routePalette));
             planets.Apply(session);
             Fit(session);
-        }
-
-        private static string FindSunName(SpaceShapingSession session)
-        {
-            for (int i = 0; i < session.SourceCount; i++)
-            {
-                if (session.IsSun(i))
-                    return session.Name(i);
-            }
-
-            return string.Empty;
         }
 
         public virtual void Hide() => planets.Hide();
@@ -78,17 +63,10 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void ClearMapFade() => planets.ClearMapFade();
 
-        protected void SetSunLabel(string text) => planets.ShowSunLabel(text);
-
-        protected void SetCentreLabel(string text) => planets.ShowCentreLabel(text);
-
-
-        protected void HideSunLabel() => planets.HideSunLabel();
-
         protected void SetEndpointMarksShown(bool shown) => planets.SetEndpointMarksShown(shown);
-        protected void SetSunLabelColor(Color color) => planets.SetSunLabelColor(color);
 
-        protected void SetPlanetStateDim(float amount) => planets.SetStateDim(amount);
+        protected void SetPlanetStateDim(float planetsDim, float sunDim) =>
+            planets.SetStateDim(planetsDim, sunDim);
 
         protected virtual void Fit(SpaceShapingSession session)
         {

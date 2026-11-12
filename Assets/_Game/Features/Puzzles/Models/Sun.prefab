@@ -234,3 +234,4 @@ MonoBehaviour:
   maxCoronaDiameter: 0.26
   baseIntensity: 2
   intensityBoost: 1.5
+  dimLoss: 0.8

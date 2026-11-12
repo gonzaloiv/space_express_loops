@@ -1,6 +1,7 @@
 using System.Collections;
 using DigitalLove.Game.SpaceShaping;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace DigitalLove.Game.PuzzleSelection
 {
@@ -8,13 +9,16 @@ namespace DigitalLove.Game.PuzzleSelection
     {
         [SerializeField] private Transform visualRoot;
         [SerializeField] private PuzzleDioramaView diorama;
-        [SerializeField] private StarStampView stars;
+        [SerializeField] private MapJobTag jobTag;
         [SerializeField, Range(0f, 0.1f)] private float idleBreathAmplitude = 0.02f;
         [SerializeField, Min(0f)] private float idleBreathSpeed = 1.2f;
         [SerializeField, Min(0f)] private float refusalSecs = 0.26f;
         [SerializeField, Range(0f, 1f)] private float lockedDim = 0.65f;
-        [Tooltip("Height of the stars over the sun, in this slot's space.")]
-        [SerializeField, Min(0f)] private float starsAboveSun = 0.03f;
+        [Tooltip("How far a job that is not selected greys its planets; its sun stays lit.")]
+        [SerializeField, Range(0f, 1f)] private float backgroundDim = 0.6f;
+        [Tooltip("Height of the job's tag (number and stars) over the sun, in this slot's space.")]
+        [FormerlySerializedAs("starsAboveSun")]
+        [SerializeField, Min(0f)] private float tagAboveSun = 0.03f;
 
         private Coroutine refusalRoutine;
         private PuzzleData renderedPuzzle;
@@ -24,40 +28,43 @@ namespace DigitalLove.Game.PuzzleSelection
         private Vector3 homeVisualScale;
         private float idlePhase;
         private bool culled;
-        private bool hasStars;
+        private bool tagged;
         private bool breathe;
-        private int lastStars;
 
         // The sun in the map's space (this slot's parent).
         public Vector3 SunMapPosition =>
             transform.parent.InverseTransformPoint(diorama.SunWorldPosition);
         public int MapIndex { get; private set; } = -1;
 
+        // The tag fades with the planets: full near the cube, gone where they are culled.
         public void SetMapFade(Vector3 focus, float near, float far)
         {
             diorama.SetMapFade(focus, near, far);
-            ApplyCulled(Vector3.Distance(transform.position, focus) >= far);
+            float distance = Vector3.Distance(transform.position, focus);
+            jobTag.SetAlpha(1f - Mathf.InverseLerp(near, far, distance));
+            ApplyCulled(distance >= far);
         }
 
         public void ClearMapFade()
         {
             diorama.ClearMapFade();
+            jobTag.SetAlpha(1f);
             ApplyCulled(false);
         }
 
-        public void SetLabelColor(Color color) => diorama.SetLabelColor(color);
+        public void SetLabelColor(Color color) => jobTag.SetNumberColor(color);
 
         public void SetEndingLit(bool lit, Color color)
         {
             diorama.SetStateDim(lit ? 0f : lockedDim);
-            diorama.SetLabelColor(color);
-            stars.gameObject.SetActive(hasStars && lit && !culled);
+            jobTag.SetNumberColor(color);
+            jobTag.SetVisible(tagged && lit && !culled);
         }
 
         private void ApplyCulled(bool value)
         {
             culled = value;
-            stars.gameObject.SetActive(hasStars && !culled);
+            jobTag.SetVisible(tagged && !culled);
         }
 
         private void Awake()
@@ -81,17 +88,18 @@ namespace DigitalLove.Game.PuzzleSelection
             diorama.transform.localScale = Vector3.one * breath;
         }
 
-        // The stars ride over the sun through the breath and the enter pinch.
+        // The tag rides over the sun through the breath and the enter pinch.
         private void LateUpdate()
         {
-            if (!hasStars || culled)
+            if (!tagged || culled)
                 return;
 
-            stars.transform.position =
-                diorama.SunWorldPosition + transform.TransformVector(Vector3.up * starsAboveSun);
+            jobTag.transform.position =
+                diorama.SunWorldPosition + transform.TransformVector(Vector3.up * tagAboveSun);
         }
 
-        // Only the selected job shows its stars (over its sun, once solved) and its route ends' rings.
+        // Every job carries its tag (faded by distance from the cube); only the selected job shows
+        // its route ends' rings.
         public void ShowMapField(JobEntry entry, Color tint, bool showFrames, bool selected)
         {
             bool unchanged = MapIndex == entry.Index && renderedPuzzle == entry.Puzzle;
@@ -108,23 +116,16 @@ namespace DigitalLove.Game.PuzzleSelection
             ShowMapState(entry, tint, showFrames, selected);
         }
 
-        public void SetNumberShown(bool shown) => diorama.SetNumberShown(shown);
-
         private void ShowMapState(JobEntry entry, Color tint, bool showFrames, bool selected)
         {
-            hasStars = selected && entry.ShowsStars;
+            tagged = true;
             diorama.SetEndpointsMarked(selected);
-            lastStars = entry.Stars;
             breathe = entry.State == JobState.Current;
-            if (hasStars)
-                stars.ShowStatic(lastStars);
-            else
-                stars.Hide();
-
+            jobTag.Show(entry.Index + 1, entry.ShowsStars, entry.Stars, tint);
             ApplyCulled(culled);
             diorama.SetCubesVisible(showFrames);
-            diorama.SetStateDim(entry.State == JobState.Locked ? lockedDim : 0f);
-            diorama.SetLabelColor(tint);
+            float stateDim = entry.State == JobState.Locked ? lockedDim : 0f;
+            diorama.SetStateDim(selected ? stateDim : Mathf.Max(stateDim, backgroundDim), stateDim);
         }
 
         // Every sun sits at its node's height, so the map cube slides on one level over all jobs.
@@ -154,11 +155,10 @@ namespace DigitalLove.Game.PuzzleSelection
         {
             MapIndex = -1;
             renderedPuzzle = null;
-            hasStars = false;
-            lastStars = 0;
+            tagged = false;
             breathe = false;
             culled = false;
-            stars.Hide();
+            jobTag.SetVisible(false);
             ResetVisual();
             gameObject.SetActive(false);
         }
@@ -168,7 +168,7 @@ namespace DigitalLove.Game.PuzzleSelection
             gameObject.SetActive(true);
             ResetVisual();
             idlePhase = index * 0.7f;
-            diorama.Render(index, puzzle);
+            diorama.Render(puzzle);
             renderedPuzzle = puzzle;
         }
 

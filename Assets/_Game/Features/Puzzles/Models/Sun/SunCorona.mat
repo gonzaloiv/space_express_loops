@@ -25,6 +25,11 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
+    - _BreathDepth: 0.25
+    - _BreathSpeed: 0.8
+    - _FlareDepth: 0.55
+    - _FlareScale: 4
+    - _FlareSpeed: 0.35
     - _Intensity: 2
     - _RimBias: 0.05
     - _RimPower: 2.5

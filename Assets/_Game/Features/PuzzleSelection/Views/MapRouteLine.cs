@@ -7,6 +7,9 @@ namespace DigitalLove.Game.PuzzleSelection
 {
     internal class MapRouteLine
     {
+        // How much further than the planets' fade the route stays visible.
+        private const float SpineReach = 2f;
+
         private readonly LineRenderer[] segments;
         private readonly Vector3[] points;
         private readonly Color color;
@@ -71,14 +74,16 @@ namespace DigitalLove.Game.PuzzleSelection
             Vector3 start = points[index];
             Vector3 endPoint = points[index + 1];
             float distance = Vector3.Distance((start + endPoint) * 0.5f, fade.Focus);
-            segment.enabled = distance < fade.Far;
+            float far = fade.Far * SpineReach;
+            segment.enabled = distance < far;
             if (!segment.enabled)
                 return;
 
+            // The route is the map's spine: it reaches further than the planets fade, and is tinted
+            // through the material's base colour (the line shader ignores vertex colours).
             Color tint = color;
-            tint.a = alpha * (1f - Mathf.InverseLerp(fade.Near, fade.Far, distance));
-            segment.startColor = tint;
-            segment.endColor = tint;
+            tint.a = alpha * (1f - Mathf.InverseLerp(fade.Near * SpineReach, far, distance));
+            segment.SetBaseColor(tint);
             segment.SetPosition(0, start);
             segment.SetPosition(1, endPoint);
         }

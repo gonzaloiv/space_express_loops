@@ -25,7 +25,7 @@ namespace DigitalLove.Game.SpaceShaping
                 endpoints.SetPlan(value);
         }
 
-        public void SetPipsColoured(bool value) => endpoints.SetPipsColoured(value);
+        public void SetRouteColoured(bool value) => endpoints.SetRouteColoured(value);
 
         public void Initialize(Transform parent)
         {
@@ -50,36 +50,15 @@ namespace DigitalLove.Game.SpaceShaping
 
         public FieldPlanetBehaviour Destination => endpoints.PrimaryDestination;
 
-        public void ShowSunLabel(string text) => ShowOnlySunLabel(text, false);
-
-        public void ShowCentreLabel(string text) => ShowOnlySunLabel(text, true);
-
-        public void SetSunLabelColor(Color color) => sunPlanet.SetLabelColor(color);
-        public void HideSunLabel() => sunPlanet.SetLabelsVisible(false);
-
         public void SetEndpointMarksShown(bool shown) => endpoints.SetMarksShown(shown);
 
-
-        public void SetStateDim(float amount)
+        // The planets and the sun dim apart: a background job on the map greys its planets but
+        // keeps its sun lit, so the suns stay the map's landmarks.
+        public void SetStateDim(float planets, float sun)
         {
-            sources.ForEachFrom(0, view => view.SetStateDim(amount));
-            sunPlanet.SetStateDim(amount);
-            endpoints.SetStateDim(amount);
-        }
-
-        private void ShowOnlySunLabel(string text, bool labelOnly)
-        {
-            sources.ForEachFrom(0, view => view.SetLabelsVisible(false));
-            endpoints.SetLabelsVisible(false);
-            if (labelOnly)
-            {
-                sunPlanet.transform.localPosition = Vector3.zero;
-                sunPlanet.ShowLabelOnly(text);
-                return;
-            }
-
-            sunPlanet.SetLabelsVisible(true);
-            sunPlanet.SetLabel(text);
+            sources.ForEachFrom(0, view => view.SetStateDim(planets));
+            sunPlanet.SetStateDim(sun);
+            endpoints.SetStateDim(planets);
         }
 
         public void SetMapFade(Vector3 focus, float near, float far)
@@ -101,8 +80,12 @@ namespace DigitalLove.Game.SpaceShaping
             this.session = session;
             endpoints.Apply(session);
             bool sunSpawned = SpawnSources(session);
-            if (!sunSpawned)
-                sunPlanet.Hide();
+            if (sunSpawned)
+                return;
+
+            // A job with no sun keeps its anchor at the field's centre: the map places it there.
+            sunPlanet.transform.localPosition = Vector3.zero;
+            sunPlanet.Hide();
         }
 
         public void PulseEndpoint(Vector3 point, Color danger)

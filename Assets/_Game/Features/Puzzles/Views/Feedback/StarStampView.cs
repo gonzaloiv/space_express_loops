@@ -15,6 +15,8 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private RawImage[] stars;
         [SerializeField] private float starStepSecs = 0.25f;
         [SerializeField] private ColorValue starColor;
+        [Tooltip("Turn to face the player every frame. Off keeps the parent's orientation (the map).")]
+        [SerializeField] private bool faceCamera = true;
 
         private Coroutine typing;
         private Camera view;
@@ -77,6 +79,9 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void LateUpdate()
         {
+            if (!faceCamera)
+                return;
+
             Camera camera = View;
             if (camera == null)
                 return;

@@ -30,12 +30,6 @@ namespace DigitalLove.Game.SpaceShaping
             tint = label.color;
         }
 
-        public void SetColor(Color color)
-        {
-            tint = color;
-            label.color = color;
-        }
-
         public void Place(string text)
         {
             label.text = text;

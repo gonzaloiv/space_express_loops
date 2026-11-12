@@ -15,6 +15,8 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private float maxCoronaDiameter = 0.26f;
         [SerializeField] private float baseIntensity = 2f;
         [SerializeField] private float intensityBoost = 1.5f;
+        [Tooltip("Share of the glow a fully dimmed sun loses (a locked job, or far from the map cube).")]
+        [SerializeField, Range(0f, 1f)] private float dimLoss = 0.8f;
 
         private MaterialPropertyBlock block;
 
@@ -38,7 +40,8 @@ namespace DigitalLove.Game.SpaceShaping
 
             float hidden = diameter > 0f ? 1f - diameter / (radius * coronaRadiusFactor) : 0f;
             coronaRenderer.GetPropertyBlock(block);
-            block.SetFloat(IntensityId, baseIntensity * (1f + hidden * intensityBoost));
+            float lit = 1f - planet.Dim * dimLoss;
+            block.SetFloat(IntensityId, baseIntensity * (1f + hidden * intensityBoost) * lit);
             coronaRenderer.SetPropertyBlock(block);
         }
     }

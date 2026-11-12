@@ -126,6 +126,21 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
         }
 
         [Test]
+        public void JobStillToComplete_ShowsEmptyStars_LockedShowsNone()
+        {
+            PuzzleData[] levels = Levels(2);
+            PuzzleMap map = PuzzleMap.FromLevels(
+                levels, RunProgress.FromSolved(2, 0, new[] { false, false }, new[] { 0, 0 }),
+                PuzzleMapLayout.Galaxy(2));
+
+            Assert.AreEqual(JobState.Current, map[0].State);
+            Assert.IsTrue(map[0].ShowsStars);
+            Assert.AreEqual(0, map[0].Stars);
+            Assert.AreEqual(JobState.Locked, map[1].State);
+            Assert.IsFalse(map[1].ShowsStars);
+        }
+
+        [Test]
         public void SolvedGradedJob_ShowsItsStars()
         {
             PuzzleData[] levels = Levels(1);

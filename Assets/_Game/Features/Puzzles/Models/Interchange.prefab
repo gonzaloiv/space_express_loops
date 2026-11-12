@@ -538,12 +538,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0bbbf4ce76ae41c0827ebf46fd109cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.VFX.Animation::DigitalLove.VFX.ConstantRotation
-  body: {fileID: 0}
+  body: {fileID: 5965267404466638231}
   initialRotation: {x: 0, y: 0, z: 0}
   eulersPerFrame: {x: 0, y: 0.1, z: 0}
   isEnabled: 1
   useLocalSpace: 1
   randomInitialRotation: 1
+  resetOnEnable: 0
 --- !u!1 &4914051662747695679
 GameObject:
   m_ObjectHideFlags: 0

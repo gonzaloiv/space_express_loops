@@ -12,7 +12,6 @@ namespace DigitalLove.Game.SpaceShaping
 
         private bool isVisible = true;
         private bool labelsVisible = true;
-        private bool labelOnly;
         private bool hasVariant;
         private float radius = 0.1f;
         private float fade;
@@ -94,27 +93,9 @@ namespace DigitalLove.Game.SpaceShaping
                 nameLabel.Hide();
         }
 
-        public void SetLabel(string text)
-        {
-            currentLabel = text;
-            nameLabel.Place(text);
-        }
-
-        public void SetLabelColor(Color color) => nameLabel.SetColor(color);
-
-        public void ShowLabelOnly(string text)
-        {
-            gameObject.SetActive(true);
-            labelOnly = true;
-            SetVisible(false);
-            labelsVisible = true;
-            currentLabel = text;
-            nameLabel.Place(text);
-        }
-
         public void SetCulled(bool culled)
         {
-            SetVisible(!culled && !labelOnly);
+            SetVisible(!culled);
             if (culled)
                 nameLabel.Hide();
             else if (labelsVisible)
@@ -140,15 +121,12 @@ namespace DigitalLove.Game.SpaceShaping
         {
             float amount = Mathf.Max(fade, stateDim);
             nameLabel.SetFade(amount);
-            ApplyBodyTint(amount, labelOnly);
+            ApplyBodyTint(amount);
             OnTintApplied(amount, BodyTint(amount));
         }
 
-        private void ApplyBodyTint(float amount, bool labelOnly)
+        private void ApplyBodyTint(float amount)
         {
-            if (labelOnly)
-                return;
-
             if (amount <= 0.001f)
             {
                 nodeBody.ClearTint();
@@ -175,7 +153,6 @@ namespace DigitalLove.Game.SpaceShaping
             StopArrival();
             radius = 0.1f;
             hasVariant = false;
-            labelOnly = false;
             fade = 0f;
             stateDim = 0f;
             currentLabel = string.Empty;
@@ -190,7 +167,6 @@ namespace DigitalLove.Game.SpaceShaping
             StopArrival();
             SourceIndex = seed;
             radius = spawnRadius;
-            labelOnly = false;
             transform.localPosition = localPosition;
 
             if (hasVariant && variantSeed == seed)
@@ -210,7 +186,6 @@ namespace DigitalLove.Game.SpaceShaping
         public void Hide()
         {
             StopArrival();
-            labelOnly = false;
             SetVisible(false);
             nameLabel.Hide();
             gameObject.SetActive(false);

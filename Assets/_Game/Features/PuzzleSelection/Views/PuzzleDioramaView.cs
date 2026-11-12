@@ -8,8 +8,6 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField] private Transform cubePrototype;
         [SerializeField] private Transform cubeParent;
         private bool cubesVisible;
-        private int index;
-        private bool hasPuzzle;
 
         private ViewPool<Transform> cubes;
         private PuzzleFrame[] frames;
@@ -34,39 +32,15 @@ namespace DigitalLove.Game.PuzzleSelection
             HideUnusedCubes(count);
         }
 
-        public void Render(int index, PuzzleData puzzle)
-        {
-            this.index = index;
-            hasPuzzle = puzzle != null;
-            Render(puzzle);
-        }
-
-        // The job's number over its sun (or alone, when it has none); the card carries the name.
-        public void SetNumberShown(bool shown)
-        {
-            if (!shown || !hasPuzzle)
-            {
-                HideSunLabel();
-                return;
-            }
-
-            string number = (index + 1).ToString();
-            if (string.IsNullOrEmpty(SunName))
-                SetCentreLabel(number);
-            else
-                SetSunLabel(number);
-        }
-
         public void SetEndpointsMarked(bool marked) => SetEndpointMarksShown(marked);
 
-        public void SetLabelColor(Color color) => SetSunLabelColor(color);
+        public void SetStateDim(float amount) => SetPlanetStateDim(amount, amount);
 
-        public void SetStateDim(float amount) => SetPlanetStateDim(amount);
+        public void SetStateDim(float planets, float sun) => SetPlanetStateDim(planets, sun);
 
         public override void Hide()
         {
             base.Hide();
-            hasPuzzle = false;
             HideUnusedCubes(0);
         }
 

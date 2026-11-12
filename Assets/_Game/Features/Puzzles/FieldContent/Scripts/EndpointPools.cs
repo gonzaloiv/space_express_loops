@@ -13,9 +13,9 @@ namespace DigitalLove.Game.SpaceShaping
         private readonly ViewPool<InterchangePlanetBehaviour> interchanges;
         private readonly Color[] pipColors = new Color[RouteEndpoints.MaxPips];
 
-        private bool pipsColoured = true;
-        private bool marksShown = true;
+        private bool routeColoured = true;
         private bool labelsVisible = true;
+        private bool marksShown = true;
 
         public EndpointPools(FieldPlanetSet.EndpointPrototypes prototypes, Transform parent)
         {
@@ -33,7 +33,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void SetPlan(RoutePlan value) => endpoints.Build(value);
 
-        public void SetPipsColoured(bool value) => pipsColoured = value;
+        public void SetRouteColoured(bool value) => routeColoured = value;
 
         public void SetLabelsVisible(bool visible)
         {
@@ -59,13 +59,13 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         public void SetStateDim(float amount) => ForEach(view => view.SetStateDim(amount));
+
         // The endpoints' rings: off on a map preview, so only the selected job shows its route ends.
         public void SetMarksShown(bool shown)
         {
             marksShown = shown;
             ForEach(view => view.SetMarksShown(shown));
         }
-
 
         public void SetMapFade(Vector3 focus, float near, float far) =>
             ForEach(view => FieldPlanetFade.Apply(view, focus, near, far));
@@ -99,7 +99,7 @@ namespace DigitalLove.Game.SpaceShaping
                 ? origins.EnsureSlot(origin++)
                 : destinations.EnsureSlot(destination++);
             if (Spawn(planet, session, entry))
-                planet.SetRouteColor(endpoints.ColorAt(entry, 0));
+                PaintEndpoint(planet, entry);
             TrackPrimary(entry, planet);
         }
 
@@ -112,18 +112,27 @@ namespace DigitalLove.Game.SpaceShaping
                 return false;
             }
 
-            view.SetMarksShown(marksShown);
             view.SetLabelsVisible(labelsVisible);
+            view.SetMarksShown(marksShown);
             view.Spawn(
                 session.GetPosition(source), session.GetScale(source),
                 source, session.Name(source));
             return true;
         }
 
+        // The ring takes its route's colour in a puzzle; on a map preview it stays neutral.
+        private void PaintEndpoint(FieldPlanetBehaviour planet, int entry)
+        {
+            if (routeColoured)
+                planet.SetRouteColor(endpoints.ColorAt(entry, 0));
+            else
+                planet.ClearRouteColor();
+        }
+
         private void PaintInterchange(InterchangePlanetBehaviour view, int entry)
         {
             int pips = endpoints.PipCount(entry);
-            if (!pipsColoured)
+            if (!routeColoured)
             {
                 view.SetNotches(pips);
                 return;
