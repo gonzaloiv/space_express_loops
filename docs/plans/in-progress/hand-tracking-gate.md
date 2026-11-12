@@ -1,8 +1,8 @@
 # Hand-tracking gate
 
-**Status:** now · flow · updated 2026-11-12 — U1/U2 are in (`HandTrackingGate` + tests, `SetupCheck`,
-the `HANDS` row, the panel and the scene config); the review's panel fixes (U2b) and the headset
-proof (U3) are open.
+**Status:** now · flow · updated 2026-11-12 — U1/U2/U2b are in (`HandTrackingGate` + tests,
+`SetupCheck`, the `HANDS` row, the panel, the scene config and the review's panel fixes); the
+headset proof (U3) is open.
 
 **Related:** [pitch](../../design/pitch.md) · [plans board](../README.md)
 

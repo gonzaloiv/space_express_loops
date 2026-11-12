@@ -68,7 +68,7 @@ Active work.
 - [Fleet episode](in-progress/fleet-episode.md) — started 2026-11-11: four multi-ship jobs join v1 as
   chapter 2, episode 2; lines approved, job 8 dropped from v1.
 - [Hand-tracking gate](in-progress/hand-tracking-gate.md) — started 2026-11-12: the boot holds while
-hand tracking is off and waits for both hands; U1/U2 landed, the headset proof (U3) is open.
+hand tracking is off and waits for both hands; U1/U2/U2b landed, the headset proof (U3) is open.
 
 Closed 2026-11-11: the ending, endpoint shapes, the stuck-player skip and the field-wells spike
 ([lessons](../lessons.md)).

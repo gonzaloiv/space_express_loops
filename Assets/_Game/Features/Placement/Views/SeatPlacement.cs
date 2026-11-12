@@ -65,7 +65,7 @@ namespace DigitalLove.Game.Placement
 
         private IEnumerator WaitAndPlace()
         {
-            while (!IsWorn())
+            while (!HeadsetPresence.IsWorn())
                 yield return null;
 
             yield return Settle();
@@ -102,9 +102,6 @@ namespace DigitalLove.Game.Placement
             origin.Setup(pose.Position, pose.Forward);
             console.ArrangeAround(origin.transform.InverseTransformPoint(head.position));
         }
-
-        private static bool IsWorn() =>
-            Application.isEditor || OVRManager.instance == null || OVRManager.instance.isUserPresent;
 
         private static Vector3? PalmOf(Hand hand)
         {

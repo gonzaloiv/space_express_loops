@@ -41,7 +41,7 @@ namespace DigitalLove.Game.Placement
         {
             while (true)
             {
-                if (!IsWorn())
+                if (!HeadsetPresence.IsWorn())
                 {
                     ResetWhileOffHead();
                     yield return null;
@@ -58,19 +58,19 @@ namespace DigitalLove.Game.Placement
         private void ResetWhileOffHead()
         {
             gate.Reset();
-            SetPanel(true);
+            SetPanel(false);
         }
 
         private bool TryComplete()
         {
-            bool ready = gate.Tick(
+            HandTrackingStatus status = gate.Tick(
                 OVRPlugin.GetHandTrackingEnabled(),
                 IsTracked(leftHand),
                 IsTracked(rightHand),
                 Time.unscaledDeltaTime);
-            SetPanel(!ready);
+            SetPanel(status.PanelDue);
 
-            if (!ready)
+            if (status.State != HandTrackingState.Ready)
                 return false;
 
             Complete();
@@ -98,8 +98,5 @@ namespace DigitalLove.Game.Placement
         }
 
         private static bool IsTracked(Hand hand) => hand.IsConnected && hand.IsTrackedDataValid;
-
-        private static bool IsWorn() =>
-            OVRManager.instance == null || OVRManager.instance.isUserPresent;
     }
 }
