@@ -118,6 +118,14 @@ MonoBehaviour:
     m_Localized: JOB {0}
     m_Metadata:
       m_Items: []
+  - m_Id: 74113009852272641
+    m_Localized: HAND TRACKING NEEDED
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272642
+    m_Localized: 'Put the controllers down. Turn on hand tracking in Settings > Movement Tracking, then hold both hands in front of you.'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
