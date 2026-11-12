@@ -45,21 +45,28 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void Apply()
         {
-            transform.localPosition = OverPlanetOffset();
-
             Camera camera = View;
             if (camera == null || !label.enabled)
                 return;
 
+            PlaceOverPlanet(camera);
             FaceCamera(camera);
             ApplyScaleAndFade(camera);
         }
 
-        private Vector3 OverPlanetOffset()
+        // Above the planet as the head sees it: the field's up, flattened across the line of sight. A
+        // plain vertical offset shortens when the field is seen from above and lands on the planet.
+        private void PlaceOverPlanet(Camera camera)
         {
-            float parentScale = transform.parent != null ? transform.parent.lossyScale.y : 1f;
-            float clearance = planet.bounds.extents.y + surfaceGap + worldHeight * 0.5f;
-            return Vector3.up * (clearance / Mathf.Max(parentScale, 0.00001f));
+            Bounds body = planet.bounds;
+            Vector3 sight = body.center - camera.transform.position;
+            Vector3 fieldUp = transform.parent != null ? transform.parent.up : Vector3.up;
+            Vector3 screenUp = Vector3.ProjectOnPlane(fieldUp, sight);
+            if (screenUp.sqrMagnitude < 0.000001f)
+                screenUp = camera.transform.up;
+
+            float clearance = body.extents.y + surfaceGap + worldHeight * 0.5f;
+            transform.position = body.center + screenUp.normalized * clearance;
         }
 
         private void FaceCamera(Camera camera)

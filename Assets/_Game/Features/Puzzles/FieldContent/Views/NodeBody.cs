@@ -184,9 +184,11 @@ namespace DigitalLove.Game.SpaceShaping
             if (material == null)
                 return Color.white;
 
-            return material.HasProperty(BaseColorId)
-                ? material.GetColor(BaseColorId)
-                : material.color;
+            if (material.HasProperty(BaseColorId))
+                return material.GetColor(BaseColorId);
+
+            // Custom shaders (the sun's corona) may carry neither colour property.
+            return material.HasProperty(ColorId) ? material.GetColor(ColorId) : Color.white;
         }
     }
 }
