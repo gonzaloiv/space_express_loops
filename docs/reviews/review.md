@@ -49,10 +49,12 @@ visibility first; protect the "read the field" lesson in the store build.
 cube only grows there (`growOnly`, `PuzzleData.MinScaleFactor`), so the one decision is "how much",
 and the pending end dot warms as the run nears the destination (finding 5).
 
-**Fix:** play the job-1 manual as the opening console beat (or `noIntro=false` while keeping
-`noFail`/`noGrade`), and keep the exit prompt on the first job. This is the cheapest judge-facing
-win. Hold the explicit goal line (`> MAKE THE SHIP REACH THE RING`) in reserve: add it only if a
-fresh player does not reach the destination within ~30 s, or cannot say why it worked.
+**Fix:** play the job-1 manual as the opening console beat **before the job starts** (or
+`noIntro=false` while keeping `noFail`/`noGrade`), and keep the exit prompt on the first job. The job
+starts after the beat. The scale is the main gesture, so no goal line, extra prompt or panel overlays
+the in-run scaling surface. This is the cheapest judge-facing win. Hold the explicit goal line
+(`> MAKE THE SHIP REACH THE RING`) in reserve: add it only if a fresh player does not reach the
+destination within ~30 s, or cannot say why it worked.
 
 ### 2. The stars you earn vanish when you return to the map — **Freeze**
 
@@ -170,13 +172,13 @@ capstone.
 
 **Fix:** set controller-driven poses to None, turn scene permission off, launch simultaneous
 hands/controllers, add a hand-tracking availability panel/gate, and test with controllers on the desk
-([plan](../plans/in-progress/hand-tracking-gate.md)). The gate holds hard only while hand tracking is
-off; waiting for both hands is soft (a steady window or a timeout), so a judge with one hand raised or
-flaky tracking is never stranded at the boot.
+([plan](../plans/in-progress/hand-tracking-gate.md)). The gate holds while hand tracking is off and
+requires both hands for the core's two-hand pinch; the panel stays up through flaky tracking, so a
+one-hand judge does not reach an unpinchable job. The panel stays up until both hands track; it does
+not pass the step.
 
-**Trade-off to settle:** the soft wait can carry a one-hand judge into job 1, where the first pinch
-still needs both hands. Keep the panel hint or add a first-job two-hand prompt so the timeout does not
-create an inputless job; cover this in the headset pass.
+**Decision (2026-11-12):** both hands are the gate. A one-hand judge keeps the panel until the second
+hand tracks; a controller fallback stays out of scope for the freeze.
 
 ### 11. The 2ft/airplane-seat reach is not measured — **Freeze**
 
@@ -255,7 +257,7 @@ is thin.
 3. One clear meaning for the `noGrade`/`noFail` meter, and stars on at job 2.
 4. Jim over the music: the planned duck is not implemented; verify the mix. The chapter 2 and ending
    clips are present in `StreamingAssets`; the old missing-clips tail is closed.
-5. A hand-tracking gate plus the scene/controller-pose config (finding 10;
+5. A hand-tracking gate (both hands) plus the scene/controller-pose config (finding 10;
    [plan](../plans/in-progress/hand-tracking-gate.md)).
 6. The 2ft/desk/lap placement test and tuning (finding 11).
 7. The chapter 2 line reframe (finding 6): "one Wrap can carry several ships"; no new bake before the
@@ -298,7 +300,7 @@ are ten-minute changes.
 The findings ranked for the freeze; the [Before the 13th](#before-the-13th) list is the smallest-ship
 subset. Freeze items are ranked by judge impact; the Store items follow.
 
-1. **Finding 10 — the hand-tracking gate.** A hard stop when hands are off; the new
+1. **Finding 10 — the hand-tracking gate.** A hard stop when hands are off and a two-hand wait; the new
    [plan](../plans/in-progress/hand-tracking-gate.md).
 2. **Finding 1 — the first minute.** The only always-on judge-facing gap; the cheapest win.
 3. **Finding 2 — stars on the map.** The earned reward disappears; the progression read.

@@ -6279,6 +6279,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distanceToCamera: 0.5
   yDistanceFromCenter: 0.1
+  levelWithHorizon: 1
   content: {fileID: 1590268707}
   tween:
     secs: 0
@@ -12575,6 +12576,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distanceToCamera: 0.5
   yDistanceFromCenter: 0.15
+  levelWithHorizon: 0
   content: {fileID: 1161459793934978001}
   tween:
     secs: 0

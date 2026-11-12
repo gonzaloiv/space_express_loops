@@ -37,6 +37,10 @@ namespace DigitalLove.Game.UI.Console
 
         public bool IsOpen { get; private set; }
 
+        // Re-place the screen in front of the head at each new line. The boot uses it until the
+        // seat is placed: it opens before the headset is worn, so its first spot can be anywhere.
+        public bool PlaceEachLine { get; set; }
+
         // Clears the screen and places it where the player is looking; Boot powers it on.
         public void Open()
         {
@@ -88,6 +92,7 @@ namespace DigitalLove.Game.UI.Console
                 content.localScale = fullScale;
             current = null;
             IsOpen = false;
+            PlaceEachLine = false;
         }
 
         // Powers on, types each line in turn on the message line, holds, and cuts off.
@@ -129,6 +134,8 @@ namespace DigitalLove.Game.UI.Console
                 current.gameObject.SetActive(false);
             }
 
+            if (PlaceEachLine)
+                view.ShowInCameraView();
             line.maxVisibleCharacters = 0;
             line.gameObject.SetActive(true);
             current = line;

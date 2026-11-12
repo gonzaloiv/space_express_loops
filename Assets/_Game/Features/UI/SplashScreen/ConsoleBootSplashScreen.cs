@@ -52,6 +52,7 @@ namespace DigitalLove.Game.UI.SplashScreen
             playRequested = false;
             HideLines();
             screen.Open();
+            screen.PlaceEachLine = true;
             StartCoroutine(Run());
         }
 
@@ -60,9 +61,13 @@ namespace DigitalLove.Game.UI.SplashScreen
         public override void EndStep(SetupStep step)
         {
             checklist.End(step);
-            // The boot opens before the headset is worn; once the seat is placed the head is settled,
-            // so the line moves to where the player is actually looking.
-            if (step == SetupStep.Space && screen.IsOpen)
+            // The boot opens before the headset is worn, so each new line re-places the screen until
+            // the seat is placed; then the head is settled, the screen moves there once and stays.
+            if (step != SetupStep.Space)
+                return;
+
+            screen.PlaceEachLine = false;
+            if (screen.IsOpen)
                 screen.ShowInCameraView();
         }
 
