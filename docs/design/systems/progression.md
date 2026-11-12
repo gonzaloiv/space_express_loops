@@ -49,7 +49,7 @@ player's instrument, used to pick a node ([the cube](cube.md) §The map uses the
   usable again. A persisted flag keeps it to once per save, and once more when a longer run is added.
 - **The first session skips the map (decided 2026-11-06).** On a fresh save the game opens straight
   in job 1; the map is first seen after job 1 (or on leaving it), so the player meets the cube before
-  the map, and the map's enter is the same pinch inside the same cube
+  the map, and the map's enter is the same two-hand pinch inside the same cube
   ([the cube](cube.md) §The map uses the same cube).
 
 ### The learning path — the cube grows
@@ -93,8 +93,8 @@ The **concrete run** — one row per job, with its brief fields, archetypes, fie
 **Multi-ship.** A job may carry more than one run; it is solved only when **every ship arrives**. The
 runs are baked with a relation — **fan-out** (one origin), **converge** (one destination), or
 **separate** (no shared planet) — so the shared field stays legible. Multi-ship is a variation axis,
-not a mode: the same cube, entropy and arrival rules apply. The seven-job spine is single-ship;
-multi-ship is the store release's chapter 2 ([chapters](../chapters.md)).
+not a mode: the same cube, entropy and arrival rules apply. Chapter 1's seven-job spine is
+single-ship; chapter 2's four jobs are the fleet, in v1 ([chapters](../chapters.md)).
 
 ### The company is lore only
 
@@ -115,14 +115,14 @@ None — progression never blocks a run on a score (see Open).
 
 ## Tuning — the shape
 
-**The full run is seven cubes**, ~1 minute each. The curve rises by **planet count**, **field depth**,
+**The full run is eleven jobs** (chapter 1's seven + chapter 2's four), ~1 minute each. The curve rises by **planet count**, **field depth**,
 and **solution cost**.
 
 **Entropy is derived, not hand-set** — the budget and star rule is in [core loop](../core-loop.md) §3,
 and which jobs fail or grade is in [jobs](../jobs.md). The field sets the absolute cost and how hard it
 is to read.
 
-### Variation axes (enough for ~7 distinct jobs)
+### Variation axes (enough for ~11 distinct jobs)
 
 The verb is always the **scale**, so variety comes from the field and the brief:
 
@@ -155,5 +155,5 @@ mid-flight (the seed is authoring-only).
   order is the working shape, not final.
 - **Entropy legibility.** The budget is derived from the bake's best solution; the player never sees
   that reference. Can they track spent vs remaining well enough from the readout?
-- **Run length.** What set fills a **10-minute session** and stays fun — 5, 7, or 8 jobs? Seven × ~1 min
-  are baked; measure minutes per job on the headset.
+- **Run length.** What set fills a **10-minute session** and stays fun — 7, 11, or more jobs? Chapter 1's
+  seven × ~1 min are baked; the fleet adds four; measure minutes per job on the headset.

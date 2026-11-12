@@ -13,11 +13,11 @@ One instrument, one view. The cube is the **instrument**: a tangible MR tool you
 the bubble; the space **inside** it scales reality/the field — it transforms the zone it covers.
 There is no Map/Sculpt mode split, and the whole map stays visible in the background — overview and
 detail at once, no transition. **The cube's size is the aperture:** it sets the *scope* of an edit
-(how many planets and lattice cells one pinch touches), not its precision; the pinch sets the
-magnitude. The level sets the cube's size; resizing is deferred (it works, but the explanation is not
+(how many planets and lattice cells one two-hand pinch touches), not its precision; the two-hand
+pinch sets the magnitude. The level sets the cube's size; resizing is deferred (it works, but the explanation is not
 ready).
 
-**One gesture, two roles.** A pinch inside the cube changes the space and the bodies at once:
+**One gesture, two roles.** A two-hand pinch inside the cube changes the space and the bodies at once:
 
 - it stretches the **metric** — a shrunk zone is a **shortcut**;
 - it **spreads and scales** the covered planets: a grown planet is heavier (`mass ∝ radius³`) and bends
@@ -47,7 +47,7 @@ into one field — the core of the verb, not a later unlock. One zone can clear 
 grows a well: the same gesture with two roles. The region's size must stay **separate from the scale** —
 coupling them is the bug.
 
-**The map uses the same cube (decided 2026-11-07).** The selection map's cube is this cube. A pinch
+**The map uses the same cube (decided 2026-11-07).** The selection map's cube is this cube. A two-hand pinch
 inside it grows the selected job's diorama, and past a threshold the job is entered; shrinking does
 nothing there. A one-hand grab on its frame slides it over the map (X-Z only) and snaps it to the
 nearest job on release; the map stays still and the fields fade in around the cube as it travels.
@@ -55,7 +55,7 @@ A locked job lets the pinch start but stops it early and refuses. The map never 
 the next job is preselected, so moving is optional until job 4 teaches it.
 
 **The brief selects the gestures.** A fixed level locks the move, a locked frame locks the resize, and
-the scale inside the cube is always available. In the seven-job run, several zones arrive with the
+the scale inside the cube is always available. In chapter 1's seven-job run, several zones arrive with the
 movable cube ([progression](progression.md) §The several-zones rung). The game never shows a move
 count.
 

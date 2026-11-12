@@ -115,7 +115,7 @@ it. An episode never explains itself and never resolves the bleak reading.
 
 | Episode | Chapter | What it says |
 |---|---|---|
-| 1 — the Wrap | the seven-job run | The firm bets on a machine nobody trusts, and the new employee makes it work. |
+| 1 — the Wrap | the seven-job first episode | The firm bets on a machine nobody trusts, and the new employee makes it work. |
 | 2 — the fleet | the multi-ship jobs | It works, so the firm gets greedy: more ships on the same entropy, sold as green. Greed is eco-friendly, and Jim is not sure that is good news. |
 
 The game is never finished in the fiction: the last episode closes with Jim out of contracts and the

@@ -15,7 +15,7 @@ Read the field → (move the cube) → scale a zone → the ship flies the resul
 
 - **Read:** the **start run** and the bodies it hits, the lattice warp, and the planets' size — a grown
   planet is a stronger well, a shrunken one is a smaller obstacle.
-- **Act:** grab inside the cube and pinch to scale the covered zone ([the cube](systems/cube.md)).
+- **Act:** grab inside the cube with both hands and pinch to scale the covered zone ([the cube](systems/cube.md)).
 - **See:** the live trajectory line while shaping — it updates on every edit, before release — then the
   flight: the ship launches on each modification and flies that same trajectory. There is **no separate
   commit action** — finishing the edit *is* the commit.
@@ -23,7 +23,7 @@ Read the field → (move the cube) → scale a zone → the ship flies the resul
 **What the player reads.** Three cues, in order: the **straight line** from origin to destination (the
 flat-field baseline) and the **bodies on it** (a body on the line is an obstacle), the **lattice warp**
 (the zone the player shaped — the planets' own wells are not drawn), and **planet size** (a bigger planet
-is a stronger well, `mass ∝ radius³`; a smaller one is a smaller obstacle). The same pinch has two roles:
+is a stronger well, `mass ∝ radius³`; a smaller one is a smaller obstacle). The same two-hand pinch has two roles:
 **grow to bend, shrink to clear**. The live trajectory is the *result* of the read, not a cue: it tells
 the player what will happen, while the cues let them predict it. The ship stays at map size; the zone is
 what changes.

@@ -32,8 +32,8 @@ need a yes.
    dioramas, trajectory previews, lattice.
 7. **Voice and content** *(proposed)*. Job 6's lines for the new lesson. Jim's complete and fail lines
    are split into one-sentence TTS entries and his clips are downloaded (done 2026-11-09). The music duck under Jim (deferred from the soundscape) is tuned with his clips. English only: Spanish is kept just to prove the localization system works.
-8. **Competition deliverables — due Friday 2026-11-13; work starts Wednesday 2026-11-11.** The entry
-   is frozen at the deadline. The angle, hero moment and video outline are in [pitch](../design/pitch.md);
+8. **Competition deliverables — internal freeze Friday 2026-11-13; official deadline 2026-11-18,
+   12:00 PM PT; work starts Wednesday 2026-11-11.** The entry is frozen at the internal freeze. The angle, hero moment and video outline are in [pitch](../design/pitch.md);
    until Wednesday the time goes to the game.
    - **Build:** APK on a new release channel named "Competition" in the developer dashboard, plus an
      Invite URL for judges; it must stay launchable through judging.
@@ -67,6 +67,8 @@ Active work.
 
 - [Fleet episode](in-progress/fleet-episode.md) — started 2026-11-11: four multi-ship jobs join v1 as
   chapter 2, episode 2; lines approved, job 8 dropped from v1.
+- [Hand-tracking gate](in-progress/hand-tracking-gate.md) — started 2026-11-12: the boot holds while
+hand tracking is off and waits briefly for both hands; the scene config and headset proof are open.
 
 Closed 2026-11-11: the ending, endpoint shapes, the stuck-player skip and the field-wells spike
 ([lessons](../lessons.md)).
@@ -92,9 +94,8 @@ hologram look, TTS companion (deferred), feel polish, playable map field.
 
 Loose ends that still need a home. Close one by linking the plan that finishes it.
 
-- **TTS clips missing.** Ten clips before the capture: `level_01_02`–`level_01_07` `_fail`,
-  `level_01_06_init_01`, and Jim's three closing lines (`run_ending_jim_01`–`03`). Fails, job 6's intro
-  and the ending's voice are silent until then.
+- **TTS clips — resolved 2026-11-12.** The fail, job 6 intro and ending clips are in
+  `Assets/StreamingAssets` (chapter 2 too); the remaining audio tail is the music duck under Jim.
 - **Job 7's manual shortening (from run fixes).** Waits on the lore rethink: does the "eleven years"
   note move or stay.
 - **Field wells: kept (2026-11-11, headset).** The change-only wells are on in `Puzzle.prefab`

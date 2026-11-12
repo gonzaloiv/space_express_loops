@@ -16,14 +16,14 @@ hand-tracking first-class.
 **Our Space** is a seated mixed-reality game where a miniature universe floats in
 your real room. You run an interstellar transport company: each job is a delivery
 from one star to another, with an **eco rating**. Your one tool is
-**the cube** — a tangible instrument you move over the bubble. **Grab inside it and scale**:
+**the cube** — a tangible instrument you move over the bubble. **Grab inside it with both hands and scale**:
 the space stretches (a shrunk zone is a shortcut) and the planets spread and grow. So you
 deform the spacetime the ship flies through until the delivery **arrives** — and cheaply.
 Relativity is the language, and the cube is how you speak it.
 
 **Current shape.** The seated slice is playable in the MR bubble: the map (the same cube picks the
-job), the seven baked jobs of chapter 1, the job card, Jim's panel, the gesture prompts and the solve
-window. The room-scale game is removed. Build status lives on the [plans board](../plans/README.md);
+job), the seven baked jobs of chapter 1, the four fleet jobs of chapter 2, the job card, Jim's panel,
+the gesture prompts and the solve window. The room-scale game is removed. Build status lives on the [plans board](../plans/README.md);
 this doc does not track it.
 
 ## 2. Design pillars
@@ -41,8 +41,8 @@ this doc does not track it.
    **fails**. Entropy left is the **eco rating**; **arriving** is the goal — the launch is only a check.
    The field itself shows the spend — calm at full, strained as it drains, about to blow near empty —
    and the bar lives in it, not on a panel. The launch itself is given, not a lever.
-5. **Discrete jobs.** ~1 minute each; a **10-minute experience**, **seven jobs** in the run, all
-   baked.
+5. **Discrete jobs.** ~1 minute each; a **10-minute first chapter** (seven jobs) and a **four-job
+   fleet episode**, **eleven jobs** in the run, all baked.
    Nothing live-ticking.
 6. **Relativity is the language.** The theme and the feel, not a simulation — the cube speaks it.
 
@@ -59,8 +59,8 @@ this doc does not track it.
 - **One view, one instrument: the cube.** There is no Map/Sculpt mode split. The cube
   is a tangible MR tool you **move** over the bubble; the space **inside** it scales reality/the
   field — it transforms the zone it covers ([the cube](systems/cube.md)). **The cube's size is the
-  aperture:** it sets the *scope* of an edit, not its precision; the pinch sets the magnitude and the
-  level sets the size. The whole map stays visible in the background, so you get overview and detail
+  aperture:** it sets the *scope* of an edit, not its precision; the two-hand pinch sets the magnitude
+  and the level sets the size. The whole map stays visible in the background, so you get overview and detail
   at once, with no transition.
 
 So: the *room* is the backdrop and the anchor; the *bubble* is the playfield; the
@@ -93,10 +93,10 @@ routes; keep the economy *between* jobs. Then the management layer is a wrapper
 
 ## 6. Scope: the competition slice
 
-- **In:** the **full run** — the bubble, the cube, the **map** (level selector), the **seven-job run**,
-  the grade and player progression ([core loop](core-loop.md),
-  [progression](systems/progression.md), [jobs](jobs.md)). **Multi-ship** is out of the slice: it is
-  the store release's chapter 2 ([chapters](chapters.md)).
+- **In:** the **full run** — the bubble, the cube, the **map** (level selector), the **eleven-job
+  run** (chapter 1's seven + chapter 2's four), the grade and player progression
+  ([core loop](core-loop.md), [progression](systems/progression.md), [jobs](jobs.md)). The four fleet
+  jobs are chapter 2 in v1; the 2-5 capstone stays in the store release ([chapters](chapters.md)).
 - **Out of the first run:** resize (working, but the explanation is not ready), a separate tutorial flow
   (the per-job manual card is in — [jobs](jobs.md)), and the whole feel pass. **Out until proven:**
   sectors as gameplay (the ambient sector field stays the map backdrop) and runtime/procedural level
@@ -144,8 +144,8 @@ mechanic before writing another plan.
 | Ship-zone legibility | **Open.** Jobs 5–7 are multi-zone, and v1 has no cue for which zone the ship is in; only the trail shows the path ([plans board](../plans/README.md) §Open tails). |
 | Prediction trust | **Mitigated in the lab.** The live trajectory previews while shaping, the ship flies on release, and the straight-line baseline shows on the start check and after a miss; the start run's read is the remaining question. |
 | Identity | **Resolved** by the transport-company pivot and the name "Our Space". |
-| Competition scope | **Active.** The run is authored (seven jobs, the map, Jim's panel); what remains is the road to v1 and the deliverables, due 2026-11-13 ([plans board](../plans/README.md)). |
+| Competition scope | **Active.** The run is authored (eleven jobs, the map, Jim's panel); what remains is the road to v1 and the deliverables. Internal freeze 2026-11-13; official deadline 2026-11-18 ([plans board](../plans/README.md)). |
 | Room-scale legacy drag | **Resolved.** The room view mode is removed from the code. |
-| Content ceiling | **Valid, narrower.** Authored multi-ship is fine; simultaneous unscripted multi-ship is "near-chaotic". The 7-job spine is single-ship; multi-ship is the store release's chapter 2 ([chapters](chapters.md)). |
+| Content ceiling | **Valid, narrower.** Authored multi-ship is fine; simultaneous unscripted multi-ship is "near-chaotic". Chapter 1's seven-job spine is single-ship; the four fleet jobs are chapter 2 in v1 ([chapters](chapters.md)). |
 | Entropy legibility | **In, tuning.** The in-field bar and the passthrough strain carry the spend; the budget is derived from the bake's best solution, so the 3★ band still needs a headset read ([progression](systems/progression.md) §Open questions). |
-| Run length | **Measuring.** The target is a 10-minute session; seven jobs × ~1 min are baked; minutes per job on the headset are not yet measured ([progression](systems/progression.md) §Open questions). |
+| Run length | **Measuring.** The target is a 10-minute first chapter (seven jobs); eleven jobs × ~1 min are baked; minutes per job on the headset are not yet measured ([progression](systems/progression.md) §Open questions). |

@@ -26,8 +26,9 @@ This doc is **chapters 1–2**; the store release's 2-5 and chapter 3 are in [ch
 | 6 | the field carries you | Curve | yes · 2+ zones · no · 1 ship | Cluster | 10 + sun · multi · deep | high | a deep well already near the line does most of the bend; the cheap answer is to edit where a small change moves the path most |
 | 7 | the capstone | Curve | yes · 2+ zones · no · 1 ship | Cluster | 12 + sun · multi · deep | high | multi-zone + the centre + the star + several routes — both roles deferred to a later chapter |
 
-**The run is seven jobs (2026-11-05): 1 scale, 2 centre, 3 clear, 4 move, 5 multi-zone, 6 the field
-carries you, 7 capstone `Curve`.** The fixed-cube several-zones rung is retired; "several zones" lands with the move at
+**Chapter 1 is seven jobs (2026-11-05); the run is eleven (2026-11-11): 1 scale, 2 centre, 3 clear,
+4 move, 5 multi-zone, 6 the field carries you, 7 capstone `Curve`, then chapter 2's four fleet jobs.**
+The fixed-cube several-zones rung is retired; "several zones" lands with the move at
 job 5. There is no job 8 (decided 2026-11-11): **Mixed** moves to a later chapter, since chapter 2
 ships after job 7 ([chapters](chapters.md)).
 
@@ -49,8 +50,8 @@ the prior skill the job combines, so the ramp is cumulative, not additive.
 **Clear** (an obstacle shrank), **Mixed** (both, at least two zones), or **Any** (no request). It is a
 **bake request**, not a player condition. The creator searches for a matching solve and rejects the seed
 when it cannot find one; it also rejects a seed when a **cheaper or equal wrong-role route** exists,
-because the taught role must be the best answer. More expensive alternate routes may remain. The seven-job
-spine requests **Curve** except job 3 (**Clear**): the capstone is a `Curve` with the centre and the star.
+because the taught role must be the best answer. More expensive alternate routes may remain. Chapter 1's
+seven-job spine requests **Curve** except job 3 (**Clear**): the capstone is a `Curve` with the centre and the star.
 **Mixed** is deferred to a later chapter ([archetypes](#the-run--archetypes)). A `Curve`/`Mixed` seed is rejected when its start path stays under
 5% of the chord or 4° off it: the start must show the field. The bake reports the reference solution's
 `kind`; the player never sees the label. Multi-ship role requests are not supported yet.
@@ -95,7 +96,7 @@ solution, so the budget rule holds ([core loop](core-loop.md) §3). The lesson i
 single-source field. The entropy-scale column above is the absolute cost of the bake's solution.
 
 **The several-zones rung is retired with the old job 4 (2026-11-05).** A fixed level can place several cubes,
-but the generator could not force a two-zone `Curve`, so the seven-job run folds "several zones" into the
+but the generator could not force a two-zone `Curve`, so chapter 1's seven-job run folds "several zones" into the
 multi-zone move at job 5. Job 4 adds the move; job 5 introduces two zones; job 6 teaches the field to
 carry the ship; the capstone adds the centre and the star at job 7. A later chapter can bring back the fixed several-zones rung
 with Mixed.
@@ -112,9 +113,9 @@ every verb except both roles; both roles are deferred to a later chapter.
 
 **Resize** is off in every job (`resizable: no`); why is in [the cube](systems/cube.md) §Open questions.
 
-**The slice.** Jobs 1–7 are the full seven-job run, ~1 minute each.
+**The slice.** Jobs 1–7 are chapter 1's seven-job run; chapter 2 adds four fleet jobs; ~1 minute each.
 
-**Multi-ship.** The seven-job spine is single-ship; the rule is in
+**Multi-ship.** Chapter 1's seven-job spine is single-ship; the rule is in
 [progression](systems/progression.md) §The puzzle map; multi-ship is chapter 2
 ([chapters](chapters.md)).
 

@@ -21,7 +21,7 @@ the UI. Do not introduce a third word for the same idea.
 | **moves** | The player moving the cube; the `translatable` permission, not a count. The brief field for the zone count is **zones**. |
 | **the scale** | The verb: a two-hand pinch *inside* the cube, scaling the space and the content. |
 | **the region** | The cube's frame (edges/corners) — moving / resizing the cube; set separately from the scale. A translatable level starts it at the field centre. |
-| **the aperture** | The cube's size — how much of the field one edit covers. Scope, not precision; the pinch sets magnitude. The level sets it; resize is deferred. |
+| **the aperture** | The cube's size — how much of the field one edit covers. Scope, not precision; the two-hand pinch sets magnitude. The level sets it; resize is deferred. |
 | **space face** | The scale read as **space** — the metric stretch that is a **shortcut** and bends the path. |
 | **the Wrap** | The in-fiction system that wraps spacetime (the tech team's product). |
 | **shaping** | The in-game verb for using the Wrap; the design verb is **the scale**. |

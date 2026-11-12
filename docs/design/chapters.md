@@ -23,7 +23,7 @@ decide what comes next. Chapters beyond 3 are ideas ([later chapters](../ideas/l
 
 ## Chapter 1 — the Wrap (store release)
 
-The seven-job run in [jobs](jobs.md) (scale → centre → clear → move → multi-zone → assist → capstone).
+The seven-job first chapter in [jobs](jobs.md) (scale → centre → clear → move → multi-zone → assist → capstone).
 **Chapter 1 stays seven jobs** (decided 2026-11-11): chapter 2 ships in v1, and a job added behind
 solved jobs would never become current, so there is no job 8. **Mixed** (shrink the blocker with one
 zone, grow a well with the other) becomes a later chapter's job instead.
