@@ -83,6 +83,10 @@ namespace DigitalLove.Game.SpaceShaping
 
         protected void SetCentreLabel(string text) => planets.ShowCentreLabel(text);
 
+
+        protected void HideSunLabel() => planets.HideSunLabel();
+
+        protected void SetEndpointMarksShown(bool shown) => planets.SetEndpointMarksShown(shown);
         protected void SetSunLabelColor(Color color) => planets.SetSunLabelColor(color);
 
         protected void SetPlanetStateDim(float amount) => planets.SetStateDim(amount);

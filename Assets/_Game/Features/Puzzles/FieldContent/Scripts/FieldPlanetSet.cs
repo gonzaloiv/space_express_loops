@@ -56,6 +56,10 @@ namespace DigitalLove.Game.SpaceShaping
         public void ShowCentreLabel(string text) => ShowOnlySunLabel(text, true);
 
         public void SetSunLabelColor(Color color) => sunPlanet.SetLabelColor(color);
+        public void HideSunLabel() => sunPlanet.SetLabelsVisible(false);
+
+        public void SetEndpointMarksShown(bool shown) => endpoints.SetMarksShown(shown);
+
 
         public void SetStateDim(float amount)
         {

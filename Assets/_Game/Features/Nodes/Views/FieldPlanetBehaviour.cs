@@ -217,6 +217,8 @@ namespace DigitalLove.Game.Nodes
 
         public void ClearRouteColor() => nodeBody.ClearRouteColor();
 
+        public void SetMarksShown(bool shown) => nodeBody.SetMarksShown(shown);
+
         private void SetVisible(bool visible)
         {
             if (isVisible == visible)

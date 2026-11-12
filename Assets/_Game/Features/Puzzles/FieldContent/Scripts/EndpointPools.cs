@@ -15,6 +15,7 @@ namespace DigitalLove.Game.SpaceShaping
         private readonly Color[] pipColors = new Color[RouteEndpoints.MaxPips];
 
         private bool pipsColoured = true;
+        private bool marksShown = true;
         private bool labelsVisible = true;
 
         public EndpointPools(FieldPlanetSet.EndpointPrototypes prototypes, Transform parent)
@@ -59,6 +60,13 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         public void SetStateDim(float amount) => ForEach(view => view.SetStateDim(amount));
+        // The endpoints' rings: off on a map preview, so only the selected job shows its route ends.
+        public void SetMarksShown(bool shown)
+        {
+            marksShown = shown;
+            ForEach(view => view.SetMarksShown(shown));
+        }
+
 
         public void SetMapFade(Vector3 focus, float near, float far) =>
             ForEach(view => FieldPlanetFade.Apply(view, focus, near, far));
@@ -105,6 +113,7 @@ namespace DigitalLove.Game.SpaceShaping
                 return false;
             }
 
+            view.SetMarksShown(marksShown);
             view.SetLabelsVisible(labelsVisible);
             view.Spawn(
                 session.GetPosition(source), session.GetScale(source),

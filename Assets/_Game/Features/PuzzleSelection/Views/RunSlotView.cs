@@ -91,8 +91,8 @@ namespace DigitalLove.Game.PuzzleSelection
                 diorama.SunWorldPosition + transform.TransformVector(Vector3.up * starsAboveSun);
         }
 
-        // Only the selected job shows its stars, over its sun, once it is solved.
-        public void ShowMapField(JobEntry entry, Color tint, bool showFrames, bool showStars)
+        // Only the selected job shows its stars (over its sun, once solved) and its route ends' rings.
+        public void ShowMapField(JobEntry entry, Color tint, bool showFrames, bool selected)
         {
             bool unchanged = MapIndex == entry.Index && renderedPuzzle == entry.Puzzle;
             MapIndex = entry.Index;
@@ -105,12 +105,15 @@ namespace DigitalLove.Game.PuzzleSelection
                 Show(entry.Index, entry.Puzzle);
             }
 
-            ShowMapState(entry, tint, showFrames, showStars);
+            ShowMapState(entry, tint, showFrames, selected);
         }
 
-        private void ShowMapState(JobEntry entry, Color tint, bool showFrames, bool showStars)
+        public void SetNumberShown(bool shown) => diorama.SetNumberShown(shown);
+
+        private void ShowMapState(JobEntry entry, Color tint, bool showFrames, bool selected)
         {
-            hasStars = showStars && entry.ShowsStars;
+            hasStars = selected && entry.ShowsStars;
+            diorama.SetEndpointsMarked(selected);
             lastStars = entry.Stars;
             breathe = entry.State == JobState.Current;
             if (hasStars)

@@ -25,6 +25,7 @@ namespace DigitalLove.Game.Nodes
         private Renderer activeRenderer;
         private MaterialPropertyBlock tintBlock;
         private bool visible = true;
+        private bool marksShown = true;
         private float radius = 0.1f;
         private Color baseColor = Color.white;
         private Color routeColor = Color.white;
@@ -62,8 +63,20 @@ namespace DigitalLove.Game.Nodes
             visible = value;
             if (activeRenderer != null)
                 activeRenderer.enabled = value;
+            ApplyMarksEnabled();
+        }
+
+        // Hides the marks (an endpoint's ring) while the body stays, as on a map preview.
+        public void SetMarksShown(bool shown)
+        {
+            marksShown = shown;
+            ApplyMarksEnabled();
+        }
+
+        private void ApplyMarksEnabled()
+        {
             for (int i = 0; i < marks.Count; i++)
-                marks[i].enabled = value;
+                marks[i].enabled = visible && marksShown;
         }
 
         private void SetActiveRendererBySeed(int seed)
