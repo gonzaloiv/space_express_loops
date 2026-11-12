@@ -6894,9 +6894,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping::DigitalLove.Game.SpaceShaping.PassthroughEntropyView
   view: {fileID: 1214712785813484872}
   passthrough: {fileID: 0}
-  stressStartRemaining: 0.33333334
-  maxSaturationDrop: 0.3
-  maxOpacityDrop: 0.15
+  stressStartRemaining: 0.5
+  maxSaturationDrop: 0.6
+  maxOpacityDrop: 0.25
   easeSecs: 0.35
   flashSecs: 0.3
   flashStrength: 0.25

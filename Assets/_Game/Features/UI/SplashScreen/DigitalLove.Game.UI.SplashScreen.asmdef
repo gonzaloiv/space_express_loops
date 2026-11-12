@@ -3,6 +3,7 @@
     "rootNamespace": "",
     "references": [
         "DigitalLove.Game.States.Setup",
+        "DigitalLove.Game.UI.Console",
         "DigitalLove.UI.Behaviours",
         "DigitalLove.Global",
         "DigitalLove.Audio.Runtime",

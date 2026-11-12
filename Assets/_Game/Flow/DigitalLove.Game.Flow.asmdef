@@ -12,6 +12,8 @@
         "GUID:acb6b1ebdd4e55347b7c3d5e5127d357",
         "DigitalLove.Game.PuzzleSelection.Domain",
         "DigitalLove.Game.PuzzleSelection.Views",
+        "DigitalLove.Game.UI.Console",
+        "DigitalLove.Localization",
         "GUID:447181e61705f4d6f954add1124817a5",
         "GUID:3acc9a1f9a04cf745bc41f5b0590363a",
         "GUID:4823059b47a7c4abb836b44cc751cbf6",

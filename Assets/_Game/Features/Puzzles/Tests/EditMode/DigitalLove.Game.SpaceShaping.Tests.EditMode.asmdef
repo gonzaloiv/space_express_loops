@@ -7,7 +7,6 @@
         "DigitalLove.Game.SpaceShaping.Model",
         "DigitalLove.Game.SpaceShaping.Simulation",
         "DigitalLove.Game.SpaceShaping.Cube",
-        "DigitalLove.Game.SpaceShaping.Views",
         "DigitalLove.Global",
         "Unity.Localization",
         "UnityEngine.TestRunner",

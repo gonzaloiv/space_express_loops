@@ -6,7 +6,6 @@ namespace DigitalLove.Game.Sectors
     public static class SectorShape
     {
         private const int ClusterAttempts = 32;
-        private const int SeparationPasses = 32;
 
         public static SectorLayout Generate(SectorShapeData data, SeededRandom random)
         {
@@ -19,7 +18,8 @@ namespace DigitalLove.Game.Sectors
                 : Quaternion.identity;
             SectorPlanet[] planets = new SectorPlanet[request.PlanetCount];
             Fill(request, random, planets);
-            ResolveOverlaps(request, planets);
+            SectorSeparation.Resolve(
+                planets, request.MinSeparation, InnerRadius(request), SafeRadius(request));
             for (int i = 0; i < planets.Length; i++)
                 planets[i] = new SectorPlanet(rotation * planets[i].Position, planets[i].Radius);
             return new SectorLayout(request.SectorRadius, request.AnchorRadius, rotation, planets);
@@ -170,52 +170,6 @@ namespace DigitalLove.Game.Sectors
             }
 
             return true;
-        }
-
-        private static void ResolveOverlaps(SectorShapeRequest request, SectorPlanet[] planets)
-        {
-            for (int pass = 0; pass < SeparationPasses; pass++)
-            {
-                bool moved = false;
-                for (int i = 0; i < planets.Length; i++)
-                {
-                    for (int j = i + 1; j < planets.Length; j++)
-                        moved |= PushApart(planets, i, j, request.MinSeparation);
-                }
-
-                if (!moved)
-                    return;
-
-                for (int i = 0; i < planets.Length; i++)
-                    planets[i] = Constrain(request, planets[i]);
-            }
-        }
-
-        private static bool PushApart(SectorPlanet[] planets, int i, int j, float minSeparation)
-        {
-            Vector3 delta = planets[j].Position - planets[i].Position;
-            float required = minSeparation * (planets[i].Radius + planets[j].Radius);
-            float distance = delta.magnitude;
-            if (distance >= required)
-                return false;
-
-            Vector3 direction = distance > 0.0001f ? delta / distance : Vector3.right;
-            float push = (required - distance) * 0.5f;
-            planets[i] = new SectorPlanet(planets[i].Position - direction * push, planets[i].Radius);
-            planets[j] = new SectorPlanet(planets[j].Position + direction * push, planets[j].Radius);
-            return true;
-        }
-
-        private static SectorPlanet Constrain(SectorShapeRequest request, SectorPlanet planet)
-        {
-            float inner = InnerRadius(request);
-            float outer = Mathf.Max(inner, SafeRadius(request));
-            float length = planet.Position.magnitude;
-            if (length <= 0.0001f)
-                return new SectorPlanet(new Vector3(inner, 0f, 0f), planet.Radius);
-
-            float clamped = Mathf.Clamp(length, inner, outer);
-            return new SectorPlanet(planet.Position * (clamped / length), planet.Radius);
         }
 
         private static SectorPlanet Place(

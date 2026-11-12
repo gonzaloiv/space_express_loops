@@ -5,7 +5,7 @@
   <Project Path="DigitalLove.TTS.csproj" />
   <Project Path="DigitalLove.Interactables.Core.csproj" />
   <Project Path="DigitalLove.Interactables.OculusInteraction.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.Creator.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Creator.Data.csproj" />
   <Project Path="DigitalLove.Game.PuzzleSelection.Views.csproj" />
   <Project Path="MegaFiers.Editor.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode.csproj" />
@@ -19,6 +19,7 @@
   <Project Path="DigitalLove.Game.Flow.csproj" />
   <Project Path="DigitalLove.Audio.PxSynth.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Domain.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Creator.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.csproj" />
   <Project Path="DigitalLove.Game.States.Setup.csproj" />
   <Project Path="Vendor.GameAnalytics.csproj" />
@@ -30,6 +31,7 @@
   <Project Path="DigitalLove.Game.GesturePrompts.csproj" />
   <Project Path="DigitalLove.VFX.Animation.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Model.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Views.Tests.EditMode.csproj" />
   <Project Path="MegaFiers.MegaShape.Editor.csproj" />
   <Project Path="DigitalLove.Input.csproj" />
   <Project Path="Klak.Motion.csproj" />
@@ -97,10 +99,10 @@
   <Project Path="DigitalLove.Game.PuzzleSelection.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.Casual.Flow.Setup.MRUK.csproj" />
   <Project Path="DigitalLove.Reflex.csproj" />
+  <Project Path="DigitalLove.Game.UI.Console.csproj" />
   <Project Path="DigitalLove.Analytics.Integrations.csproj" />
   <Project Path="DigitalLove.Game.Placement.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.FlowControl.Routes.Editor.csproj" />
-  <Project Path="DigitalLove.Game.UI.Console.csproj" />
   <Project Path="DigitalLove.XR.GestureArt.csproj" />
   <Project Path="DigitalLove.Audio.Samples.csproj" />
   <Project Path="DigitalLove.Game.GesturePrompts.Tests.EditMode.csproj" />

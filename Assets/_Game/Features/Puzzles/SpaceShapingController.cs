@@ -9,7 +9,6 @@ namespace DigitalLove.Game.SpaceShaping
     {
         [SerializeField] private SpaceShapingSettings settings;
         [SerializeField] private SpaceShapingView view;
-        [SerializeField] private FieldResetReadout resetReadout;
         [SerializeField] private FieldEdgeMeter meter;
         [SerializeField] private SynthCuePlayer cuePlayer;
         [SerializeField] private SynthPatch launchCue;
@@ -42,12 +41,6 @@ namespace DigitalLove.Game.SpaceShaping
             remove => view.Refused -= value;
         }
 
-        public event Action ResetEnded
-        {
-            add => resetReadout.Ended += value;
-            remove => resetReadout.Ended -= value;
-        }
-
         public void Enter(PuzzleData puzzleData)
         {
             view.gameObject.SetActive(true);
@@ -72,8 +65,6 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         public float Glitch() => view.Glitch();
-
-        public void PlayEntropyReset(int signpostIndex) => resetReadout.Play(signpostIndex);
 
         public float PlayArrival() => view.PlayArrival();
 

@@ -1,0 +1,20 @@
+{
+    "name": "DigitalLove.Game.SpaceShaping.Creator.Data",
+    "rootNamespace": "DigitalLove.Game.SpaceShaping.Creator",
+    "references": [
+        "DigitalLove.Game.SpaceShaping.Cube",
+        "DigitalLove.Game.SpaceShaping.Model",
+        "DigitalLove.Game.Sectors"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

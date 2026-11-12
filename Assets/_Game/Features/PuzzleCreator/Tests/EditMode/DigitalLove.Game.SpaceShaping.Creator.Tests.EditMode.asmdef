@@ -3,6 +3,7 @@
     "rootNamespace": "",
     "references": [
         "DigitalLove.Game.SpaceShaping.Creator",
+        "DigitalLove.Game.SpaceShaping.Creator.Data",
         "DigitalLove.Game.SpaceShaping.Domain",
         "DigitalLove.Game.SpaceShaping.Model",
         "DigitalLove.Game.SpaceShaping.Simulation",

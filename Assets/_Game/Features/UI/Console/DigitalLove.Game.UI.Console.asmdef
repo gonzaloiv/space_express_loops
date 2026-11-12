@@ -1,7 +1,10 @@
 {
     "name": "DigitalLove.Game.UI.Console",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "DigitalLove.UI.Behaviours",
+        "Unity.TextMeshPro"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

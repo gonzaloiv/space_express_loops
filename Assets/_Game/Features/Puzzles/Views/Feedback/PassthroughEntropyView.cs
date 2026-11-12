@@ -10,10 +10,10 @@ namespace DigitalLove.Game.SpaceShaping
 
         [SerializeField] private FieldFeedbackSource view;
         [SerializeField] private OVRPassthroughLayer passthrough;
-        [Tooltip("Remaining fraction where the room starts to strain. Default: the last third.")]
-        [SerializeField] private float stressStartRemaining = 1f / 3f;
-        [SerializeField] private float maxSaturationDrop = 0.3f;
-        [SerializeField] private float maxOpacityDrop = 0.15f;
+        [Tooltip("Remaining fraction where the room starts to strain. Default: the last half.")]
+        [SerializeField] private float stressStartRemaining = 0.5f;
+        [SerializeField] private float maxSaturationDrop = 0.6f;
+        [SerializeField] private float maxOpacityDrop = 0.25f;
         [SerializeField] private float easeSecs = 0.35f;
         [SerializeField] private float flashSecs = 0.3f;
         [SerializeField] private float flashStrength = 0.25f;

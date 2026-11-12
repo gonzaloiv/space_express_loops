@@ -1,12 +1,15 @@
 using DigitalLove.Audio;
+using DigitalLove.Game.UI.Console;
 using UnityEngine;
 
 namespace DigitalLove.Game.UI.SplashScreen
 {
-    // The console boot's sound: the CRT powering on, typing ticks, a confirm as each setup row gets its
-    // OK, and a short glitch as the screen cuts off. Played through the console's system voices.
+    // The console screen's sound: the CRT powering on, typing ticks, a confirm as each boot setup row
+    // gets its OK, and a short glitch as the screen cuts off. Played through the console's system voices,
+    // for the boot and for every other message the screen plays.
     public class ConsoleBootSound : MonoBehaviour
     {
+        [SerializeField] private ConsoleScreen screen;
         [SerializeField] private ConsoleBootSplashScreen boot;
         [SerializeField] private SynthCuePlayer systemPlayer;
         [SerializeField] private SynthPatch powerOnCue;
@@ -17,18 +20,18 @@ namespace DigitalLove.Game.UI.SplashScreen
 
         private void OnEnable()
         {
-            boot.Booted += OnBooted;
-            boot.Typed += OnTyped;
+            screen.Booted += OnBooted;
+            screen.Typed += OnTyped;
             boot.StepConfirmed += OnStepConfirmed;
-            boot.CuttingOff += OnCuttingOff;
+            screen.CuttingOff += OnCuttingOff;
         }
 
         private void OnDisable()
         {
-            boot.Booted -= OnBooted;
-            boot.Typed -= OnTyped;
+            screen.Booted -= OnBooted;
+            screen.Typed -= OnTyped;
             boot.StepConfirmed -= OnStepConfirmed;
-            boot.CuttingOff -= OnCuttingOff;
+            screen.CuttingOff -= OnCuttingOff;
         }
 
         private void OnBooted() => systemPlayer.Play(powerOnCue);

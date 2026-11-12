@@ -48,6 +48,7 @@ namespace DigitalLove.Game.PuzzleSelection
         private MapNodeTint tint;
         private MapSelectionReadout readout;
         private MapFieldRenderer fieldView;
+        private MapCubeSelection selection;
         private MapEnter enter;
         private MapInteractionGate interaction;
         private bool wasScaling;
@@ -75,6 +76,7 @@ namespace DigitalLove.Game.PuzzleSelection
                 selectionCubeColors, lockedBrightness, pulseSecs, pulseDepth);
             readout = new MapSelectionReadout(contractCard);
             fieldView = new MapFieldRenderer(selectedSlot, fields, tint, readout, showFrames);
+            selection = new MapCubeSelection(mapCube, pose, fieldView, readout);
             enter = new MapEnter(selectedSlot, enterSecs, enterScale);
         }
 
@@ -228,34 +230,16 @@ namespace DigitalLove.Game.PuzzleSelection
             if (map == null || !interaction.IsEnabled)
                 return;
 
-            int nearest = MapSnap.Nearest(map, mapRoot, mapCube.Position);
-            if (nearest >= 0 && nearest != map.SelectedIndex && map.Select(nearest))
-            {
-                RenderFields();
+            bool changed = selection.CubeMoved(map, mapRoot);
+            if (changed)
                 SelectionChanged?.Invoke();
-            }
-            else
-                readout.Show(map.Selected);
 
-            SnapCube();
-        }
-
-        private void SnapCube()
-        {
-            mapCube.SnapTo(SunFocus);
+            selection.Snap(SunFocus);
             lastCubePosition = mapCube.Position;
-            pose.ApplyFade();
         }
 
         private Vector3 Focus => map.Position(map.SelectedIndex);
 
         private Vector3 SunFocus => selectedSlot.SunMapPosition;
-
-        private void RenderFields()
-        {
-            fieldView.Render(map);
-            pose.PlaceSelected(Focus);
-            mapCube.SetEnterable(map.CanEnter);
-        }
     }
 }

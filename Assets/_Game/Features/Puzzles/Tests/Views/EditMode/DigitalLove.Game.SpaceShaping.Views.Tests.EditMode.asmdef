@@ -1,0 +1,28 @@
+{
+    "name": "DigitalLove.Game.SpaceShaping.Views.Tests.EditMode",
+    "rootNamespace": "",
+    "references": [
+        "DigitalLove.Game.SpaceShaping.Views",
+        "DigitalLove.Game.SpaceShaping.Cube",
+        "DigitalLove.Game.SpaceShaping.Domain",
+        "DigitalLove.Game.SpaceShaping.Model",
+        "DigitalLove.Game.SpaceShaping.Simulation",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

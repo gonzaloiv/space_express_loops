@@ -5,8 +5,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleRouteCount
     {
-        public const int MinRoutes = 2;
-
         private const int Samples = 8;
         private const float MergeDistance = 0.0001f;
 

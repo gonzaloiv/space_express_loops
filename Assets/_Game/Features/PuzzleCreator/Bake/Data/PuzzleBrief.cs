@@ -4,6 +4,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public struct PuzzleBrief
     {
+        private const int DefaultMinRoutes = 2;
+
         public float EndpointClearance;
         public float SunRadius;
         public bool SunScalable;
@@ -53,7 +55,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return seed.minRoutes;
 
             return seed.translatable && Mathf.Max(1, seed.zones) == 1
-                ? PuzzleRouteCount.MinRoutes
+                ? DefaultMinRoutes
                 : 1;
         }
     }
