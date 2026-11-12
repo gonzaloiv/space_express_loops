@@ -30,9 +30,9 @@ namespace DigitalLove.Game.Placement
         public static SeatSettings Default => new()
         {
             distance = 0.45f,
-            defaultDrop = 0.15f,
-            aboveHands = 0.25f,
-            minDrop = 0.05f,
+            defaultDrop = 0.27f,
+            aboveHands = 0.13f,
+            minDrop = 0.17f,
             maxDrop = 0.4f,
             restReach = new Vector2(0.1f, 0.7f),
             restSide = 0.5f,
