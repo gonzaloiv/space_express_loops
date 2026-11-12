@@ -2,6 +2,7 @@ using DigitalLove.Game.SpaceShaping.Cube;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
+using DigitalLove.Game.Spatial;
 
 namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
 {

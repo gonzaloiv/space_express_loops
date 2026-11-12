@@ -1,5 +1,4 @@
-using DigitalLove.Game.Sectors;
-using DigitalLove.Game.SpaceShaping.Cube;
+using DigitalLove.Game.Spatial;
 using NUnit.Framework;
 using UnityEngine;
 

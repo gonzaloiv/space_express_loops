@@ -1,4 +1,3 @@
-using DigitalLove.Game.Sectors;
 using DigitalLove.Global;
 
 namespace DigitalLove.Game.SpaceShaping.Creator

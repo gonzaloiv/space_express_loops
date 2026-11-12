@@ -1,6 +1,6 @@
 using System.Globalization;
 using System.Text;
-using DigitalLove.Game.SpaceShaping.Cube;
+using DigitalLove.Game.Spatial;
 using TMPro;
 using UnityEngine;
 

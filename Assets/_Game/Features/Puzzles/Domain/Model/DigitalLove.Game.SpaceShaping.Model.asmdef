@@ -3,7 +3,7 @@
     "rootNamespace": "",
     "references": [
         "DigitalLove.Casual.Levels",
-        "DigitalLove.Game.SpaceShaping.Cube",
+        "DigitalLove.Game.Spatial",
         "DigitalLove.Global"
     ],
     "includePlatforms": [],

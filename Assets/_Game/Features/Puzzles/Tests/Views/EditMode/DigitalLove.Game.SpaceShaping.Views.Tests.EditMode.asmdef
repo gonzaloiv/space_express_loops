@@ -4,9 +4,11 @@
     "references": [
         "DigitalLove.Game.SpaceShaping.Views",
         "DigitalLove.Game.SpaceShaping.Cube",
+        "DigitalLove.Game.Spatial",
         "DigitalLove.Game.SpaceShaping.Domain",
         "DigitalLove.Game.SpaceShaping.Model",
         "DigitalLove.Game.SpaceShaping.Simulation",
+        "DigitalLove.Casual.Levels",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

@@ -1,6 +1,7 @@
 using System;
 using DigitalLove.Game.SpaceShaping.Cube;
 using UnityEngine;
+using DigitalLove.Game.Spatial;
 
 namespace DigitalLove.Game.PuzzleSelection
 {

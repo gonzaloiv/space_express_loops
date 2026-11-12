@@ -1,4 +1,4 @@
-using DigitalLove.Game.SpaceShaping.Cube;
+using DigitalLove.Game.Spatial;
 
 namespace DigitalLove.Game.SpaceShaping
 {

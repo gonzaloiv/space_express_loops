@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DigitalLove.Game.SpaceShaping.Cube;
+using DigitalLove.Game.Spatial;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Creator

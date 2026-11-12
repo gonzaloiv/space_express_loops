@@ -209,7 +209,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 124bf310eae84d889082cc3464b0afdd, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Nodes::DigitalLove.Game.Nodes.FieldPlanetBehaviour
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.FieldContent::DigitalLove.Game.SpaceShaping.FieldPlanetBehaviour
 --- !u!1 &9144574616386608726 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3061310674406793158, guid: 6a1a9c1cd3694b11946468f943f46cd8, type: 3}

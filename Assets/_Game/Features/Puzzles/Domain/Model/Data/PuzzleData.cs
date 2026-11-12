@@ -1,5 +1,5 @@
 using DigitalLove.Casual.Levels;
-using DigitalLove.Game.SpaceShaping.Cube;
+using DigitalLove.Game.Spatial;
 using UnityEngine;
 using UnityEngine.Serialization;
 

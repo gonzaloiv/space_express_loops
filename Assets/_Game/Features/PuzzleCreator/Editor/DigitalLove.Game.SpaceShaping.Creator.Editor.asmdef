@@ -9,7 +9,6 @@
         "DigitalLove.Game.SpaceShaping.Model",
         "DigitalLove.Game.SpaceShaping.Simulation",
         "DigitalLove.Game.SpaceShaping.Views",
-        "DigitalLove.Game.Sectors",
         "DigitalLove.Casual.Levels",
         "DigitalLove.FlowControl",
         "Oculus.Interaction",

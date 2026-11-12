@@ -1,6 +1,7 @@
 using System;
 using DigitalLove.Global;
 using UnityEngine;
+using DigitalLove.Game.Spatial;
 
 namespace DigitalLove.Game.SpaceShaping.Cube
 {

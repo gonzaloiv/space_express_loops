@@ -2,6 +2,7 @@ using System;
 using DigitalLove.Global;
 using Oculus.Interaction;
 using UnityEngine;
+using DigitalLove.Game.Spatial;
 
 namespace DigitalLove.Game.SpaceShaping.Cube
 {

@@ -1,4 +1,3 @@
-using DigitalLove.Game.Sectors;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Creator

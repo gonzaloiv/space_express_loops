@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DigitalLove.Game.Nodes;
-using DigitalLove.Game.SpaceShaping.Cube;
+using DigitalLove.Game.Spatial;
 using DigitalLove.Game.SpaceShaping.Grid;
 using UnityEngine;
 using UnityEngine.Serialization;

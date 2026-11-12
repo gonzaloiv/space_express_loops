@@ -193,7 +193,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7a1b2c3d4e5f60718293a4b5c6d7e8f9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Nodes::DigitalLove.Game.Nodes.PlanetNameLabel
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.FieldContent::DigitalLove.Game.SpaceShaping.PlanetNameLabel
   label: {fileID: 2100000000000000104}
   planet: {fileID: 9059999379901930314}
   worldHeight: 0.008
@@ -246,7 +246,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 124bf310eae84d889082cc3464b0afdd, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Nodes::DigitalLove.Game.Nodes.FieldPlanetBehaviour
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.FieldContent::DigitalLove.Game.SpaceShaping.FieldPlanetBehaviour
   nodeBody: {fileID: 7868429814768801343}
   nameLabel: {fileID: 2100000000000000105}
   dimColor: {fileID: 11400000, guid: c01d000000000000000000000000000a, type: 2}
@@ -297,7 +297,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c856c0391f0c3e840a156c6258c59e03, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: DigitalLove.Game.Nodes::NodeBody
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.FieldContent::DigitalLove.Game.SpaceShaping.NodeBody
   body: {fileID: 1673654939693186368}
   renderers:
   - {fileID: 9059999379901930314}

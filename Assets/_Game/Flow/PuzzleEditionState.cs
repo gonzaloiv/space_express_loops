@@ -3,7 +3,7 @@ using DigitalLove.Audio;
 using DigitalLove.FlowControl;
 using DigitalLove.Game.PuzzleSelection;
 using DigitalLove.Game.SpaceShaping;
-using DigitalLove.Game.SpaceShaping.Cube;
+using DigitalLove.Game.Spatial;
 using DigitalLove.Player;
 using DigitalLove.TTS;
 using DigitalLove.Game.GesturePrompts;

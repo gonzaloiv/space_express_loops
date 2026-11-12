@@ -4,6 +4,7 @@
     "references": [
         "DigitalLove.Global",
         "DigitalLove.Audio.Runtime",
+        "DigitalLove.Game.Spatial",
         "Oculus.Interaction"
     ],
     "includePlatforms": [],

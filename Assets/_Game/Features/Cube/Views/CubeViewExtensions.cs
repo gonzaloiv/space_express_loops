@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DigitalLove.Game.Spatial;
 
 namespace DigitalLove.Game.SpaceShaping.Cube
 {

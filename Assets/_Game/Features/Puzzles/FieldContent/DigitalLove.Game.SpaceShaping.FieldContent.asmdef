@@ -3,10 +3,10 @@
     "rootNamespace": "",
     "references": [
         "DigitalLove.Global",
-        "DigitalLove.Game.Nodes",
         "DigitalLove.Game.SpaceShaping.Domain",
         "DigitalLove.Game.SpaceShaping.Model",
-        "DigitalLove.Casual.Levels"
+        "DigitalLove.Casual.Levels",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
