@@ -17,7 +17,8 @@ namespace DigitalLove.Game.SpaceShaping
         {
             for (int i = 0; i < results.Count; i++)
             {
-                float gap = session.MissGap(i, results[i]);
+                // The dot's warmth is onboarding only: a graded job's preview stays neutral.
+                float? gap = pending && session.NoGrade ? session.MissGap(i, results[i]) : null;
                 pool.EnsureSlot(i).Show(results[i], plan.ColorAt(i), gap, centre, half, pending);
             }
 

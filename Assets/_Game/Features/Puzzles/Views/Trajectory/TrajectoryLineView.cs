@@ -31,9 +31,10 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void Awake() => lineMaterial = line.sharedMaterial;
 
-        // missGap: how far the run passes from its destination's catch, for the prediction's warmth.
+        // missGap: how far the run passes from its destination's catch, for the prediction's warmth;
+        // null keeps the pending dot neutral (graded jobs).
         public void Show(
-            TrajectoryResult result, Color routeColor, float missGap,
+            TrajectoryResult result, Color routeColor, float? missGap,
             Vector3 fieldCentre, float fieldHalf, bool pending)
         {
             int count = result.Points != null ? result.Points.Count : 0;
@@ -52,7 +53,7 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         private void ShowEnd(
-            TrajectoryResult result, Color color, float missGap, bool pending,
+            TrajectoryResult result, Color color, float? missGap, bool pending,
             Vector3 fieldCentre, float fieldHalf)
         {
             Vector3 end = result.Points[result.Points.Count - 1];

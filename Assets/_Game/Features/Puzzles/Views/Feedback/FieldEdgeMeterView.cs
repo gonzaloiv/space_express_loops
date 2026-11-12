@@ -57,6 +57,14 @@ namespace DigitalLove.Game.SpaceShaping
             post.colorGradient = Gradient;
         }
 
+        // A noGrade job cannot award stars, so the stars and the notches that mark their limits go.
+        public void SetStarsVisible(bool visible)
+        {
+            starsRoot.gameObject.SetActive(visible);
+            for (int i = 0; i < notches.Length; i++)
+                notches[i].gameObject.SetActive(visible);
+        }
+
         public void SetStar(int index, Color color) => stars[index].color = color;
 
         private void SetKey(int index, MeterBand band)

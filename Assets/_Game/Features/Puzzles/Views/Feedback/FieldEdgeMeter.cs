@@ -40,6 +40,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField, Min(0f)] private float labelGap = 0.008f;
 
         private readonly float[] starHeights = new float[3];
+        private bool starsVisible = true;
         private EntropyPost reading = new(0f, 0f, 0f, false);
         private bool? labelOverBudget;
         private string jobId = string.Empty;
@@ -96,7 +97,8 @@ namespace DigitalLove.Game.SpaceShaping
             // a child of the drawing, which already sits at the field's centre.
             labelRoot.localPosition = FieldFrame.OnMeterEdge(half, -half + labelHeight, labelOutset)
                 + Vector3.right * labelGap;
-            TintStars();
+            if (starsVisible)
+                TintStars();
         }
 
         // Up the post: what remains, the pinch's cost, the last edit, then what is spent.
@@ -110,6 +112,16 @@ namespace DigitalLove.Game.SpaceShaping
                 new MeterBand(reading.LastEditTop, neutral.value, lastEditAlpha),
                 new MeterBand(1f, neutral.value, spentAlpha)));
             SetLabel(bar.Overflow);
+            SetStarsVisible(!readout.NoGrade);
+        }
+
+        private void SetStarsVisible(bool visible)
+        {
+            if (starsVisible == visible)
+                return;
+
+            starsVisible = visible;
+            drawing.SetStarsVisible(visible);
         }
 
         private void TintStars()

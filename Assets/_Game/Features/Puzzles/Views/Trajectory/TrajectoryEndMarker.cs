@@ -19,7 +19,8 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private ColorValue danger;
         [Header("Warmer, colder")]
         [Tooltip("While a pinch predicts, the dot warms as the run closes in on its destination: cold " +
-                 "at this miss gap or more (field metres), fully warm when the destination catches it.")]
+                 "at this miss gap or more (field metres), fully warm when the destination catches it. " +
+                 "A null gap keeps the dot neutral, as on graded jobs.")]
         [SerializeField, Min(0.001f)] private float warmReach = 0.1f;
         [Tooltip("Extra dot size when fully warm: 1.5 makes it 2.5× as big.")]
         [SerializeField, Min(0f)] private float warmGrow = 1.5f;
@@ -32,10 +33,12 @@ namespace DigitalLove.Game.SpaceShaping
         public bool IsActive => gameObject.activeSelf;
 
         // The prediction's dot: the route colour when the run passes far from its destination,
-        // growing and turning to success as the pinch brings it in.
-        public void ShowPending(Vector3 position, Vector3 heading, Color color, float missGap)
+        // growing and turning to success as the pinch brings it in. A null gap keeps it neutral.
+        public void ShowPending(Vector3 position, Vector3 heading, Color color, float? missGap)
         {
-            float warmth = 1f - Mathf.Clamp01(missGap / warmReach);
+            float warmth = missGap.HasValue
+                ? 1f - Mathf.Clamp01(missGap.Value / warmReach)
+                : 0f;
             Show(position, heading, dot, Color.Lerp(color, success.value, warmth));
             transform.localScale = baseScale * (1f + warmGrow * warmth);
         }
