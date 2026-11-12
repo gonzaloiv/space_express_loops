@@ -8,7 +8,7 @@
         "DigitalLove.Audio.Runtime",
         "DigitalLove.Casual.Levels",
         "DigitalLove.Game.Persistence",
-        "DigitalLove.Game.PuzzleSelection",
+        "DigitalLove.Game.PuzzleSelection.Domain",
         "DigitalLove.DataAccess.Local",
         "DigitalLove.DataAccess.Remote",
         "Reflex",

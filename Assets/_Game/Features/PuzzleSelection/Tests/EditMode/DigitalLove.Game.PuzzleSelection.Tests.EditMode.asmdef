@@ -2,8 +2,9 @@
     "name": "DigitalLove.Game.PuzzleSelection.Tests.EditMode",
     "rootNamespace": "",
     "references": [
-        "DigitalLove.Game.PuzzleSelection",
+        "DigitalLove.Game.PuzzleSelection.Domain",
         "DigitalLove.Game.SpaceShaping.Domain",
+        "DigitalLove.Game.SpaceShaping.Model",
         "DigitalLove.Casual.Levels",
         "DigitalLove.Input",
         "UnityEngine.TestRunner",

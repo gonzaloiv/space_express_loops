@@ -4,6 +4,7 @@
     "references": [
         "DigitalLove.Game.GesturePrompts",
         "DigitalLove.Game.SpaceShaping.Domain",
+        "DigitalLove.Game.SpaceShaping.Simulation",
         "DigitalLove.XR.GestureArt",
         "DigitalLove.XR.GestureArt.Editor"
     ],

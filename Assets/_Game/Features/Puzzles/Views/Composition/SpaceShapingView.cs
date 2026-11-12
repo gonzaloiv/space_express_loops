@@ -10,7 +10,7 @@ namespace DigitalLove.Game.SpaceShaping
 {
     // Pure view: drives the collaborators owned by SpaceShapingSpawner and renders the lattice. It
     // does not instantiate anything itself.
-    public class SpaceShapingView : MonoBehaviour
+    public class SpaceShapingView : FieldFeedbackSource
     {
         [SerializeField] private SpaceShapingSpawner spawner;
         [SerializeField] private SpacetimeMeshView mesh;
@@ -88,29 +88,29 @@ namespace DigitalLove.Game.SpaceShaping
             remove => firstUse.CubeMoved -= value;
         }
 
-        public event Action PinchCommitted
+        public override event Action PinchCommitted
         {
             add => firstUse.PinchCommitted += value;
             remove => firstUse.PinchCommitted -= value;
         }
 
-        public event Action<PuzzleReadout> ReadoutChanged;
+        public override event Action<PuzzleReadout> ReadoutChanged;
         public event Action ResetRequested;
 
-        public PuzzleReadout Readout { get; private set; }
+        public override PuzzleReadout Readout { get; protected set; }
 
         public SpaceZone Zone => spawner.Zones.Zone;
 
-        public bool IsScaling => spawner.Zones.IsScaling;
+        public override bool IsScaling => spawner.Zones.IsScaling;
 
         public bool IsCubeHeld => spawner.Zones.IsHeld;
 
         public Vector3 CubePosition => spawner.Zones.ActivePosition;
 
         // The grid's frame from the last render, in the field's local space.
-        public Vector3 FieldCentre { get; private set; }
+        public override Vector3 FieldCentre { get; protected set; }
 
-        public float FieldHalf { get; private set; }
+        public override float FieldHalf { get; protected set; }
 
         public void ApplyFromSession(SpaceShapingSession session) => spawner.Planets.Apply(session);
 

@@ -2,9 +2,9 @@
     "name": "DigitalLove.Game.SpaceShaping.Domain",
     "rootNamespace": "",
     "references": [
-        "DigitalLove.Casual.Levels",
         "DigitalLove.Game.SpaceShaping.Cube",
-        "DigitalLove.Global"
+        "DigitalLove.Game.SpaceShaping.Model",
+        "DigitalLove.Game.SpaceShaping.Simulation"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

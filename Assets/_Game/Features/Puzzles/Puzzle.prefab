@@ -5709,7 +5709,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -6338,7 +6338,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7738396494060345894}
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.0004, y: 0.00040000002, z: 0.00040000002}
   m_ConstrainProportionsScale: 0
@@ -6350,7 +6350,7 @@ RectTransform:
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 700, y: 200}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0}
 --- !u!223 &333832106753270096
 Canvas:
   m_ObjectHideFlags: 0
@@ -6939,8 +6939,8 @@ MonoBehaviour:
   charsPerSec: 45
   typeGapSecs: 0.06
   holdSecs: 0.35
-  textHeight: 0.02
-  textInset: 0.03
+  textHeight: 0.034
+  textInset: 0.006
   lineKeys:
   - field_reset_spent
   - field_reset_ok

@@ -2,7 +2,7 @@
     "name": "DigitalLove.Game.PuzzleSelection.Editor",
     "rootNamespace": "DigitalLove.Game.PuzzleSelection.EditorTools",
     "references": [
-        "DigitalLove.Game.PuzzleSelection"
+        "DigitalLove.Game.PuzzleSelection.Views"
     ],
     "includePlatforms": [
         "Editor"

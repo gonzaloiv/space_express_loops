@@ -4,8 +4,9 @@
     "references": [
         "GUID:acb6b1ebdd4e55347b7c3d5e5127d357",
         "GUID:4823059b47a7c4abb836b44cc751cbf6",
-        "GUID:3d867bd6e43989e4a9703f63c4f9462c",
+        "DigitalLove.Game.PuzzleSelection.Domain",
         "GUID:10000000000000000000000000000001",
+        "DigitalLove.Game.SpaceShaping.Model",
         "GUID:3acc9a1f9a04cf745bc41f5b0590363a",
         "GUID:447181e61705f4d6f954add1124817a5"
     ],

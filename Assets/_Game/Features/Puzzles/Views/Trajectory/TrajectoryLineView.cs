@@ -18,8 +18,8 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private Material baselineMaterial;
         [Tooltip("The unchecked prediction is the route colour at this alpha: not a result until the ship lands.")]
         [SerializeField, Range(0f, 1f)] private float pendingAlpha = 0.55f;
-        [Tooltip("On an arrival the line stops this far short of its end (field metres, along the last " +
-                 "approach), so the arrive sphere sits outside the planet instead of half inside it.")]
+        [Tooltip("On an arrival or a crash the line stops this far short of its end (field metres, along " +
+                 "the last approach), so the end sphere sits outside the planet instead of half inside it.")]
         [SerializeField, Min(0f)] private float arriveBackoff = 0.008f;
         [Tooltip("A miss's heading line follows the ship's final direction. It is skipped while the ship " +
                  "is still turning: its direction this many steps before the end differs by more than " +
@@ -69,8 +69,8 @@ namespace DigitalLove.Game.SpaceShaping
                 return;
             }
 
-            if (result.Outcome == TrajectoryOutcome.Arrive)
-                end = BackOffArrival(result.Points);
+            if (result.Outcome == TrajectoryOutcome.Arrive || result.Outcome == TrajectoryOutcome.Crash)
+                end = BackOffSurface(result.Points);
 
             marker.ShowOutcome(end, heading, result.Outcome);
             HideHeading();
@@ -92,8 +92,8 @@ namespace DigitalLove.Game.SpaceShaping
             return turning ? Vector3.zero : final.normalized;
         }
 
-        // Pulls the arrival's end back along the last approach and ends the drawn line there.
-        private Vector3 BackOffArrival(IReadOnlyList<Vector3> points)
+        // Pulls an end on a planet back along the last approach and ends the drawn line there.
+        private Vector3 BackOffSurface(IReadOnlyList<Vector3> points)
         {
             Vector3 end = points[points.Count - 1];
             Vector3 approach = end - points[points.Count - 2];

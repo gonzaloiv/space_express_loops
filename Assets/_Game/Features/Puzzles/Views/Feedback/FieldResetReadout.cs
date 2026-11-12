@@ -8,13 +8,13 @@ using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
 {
-    // The short terminal readout a fail restart types beside the entropy post. It never blocks input:
+    // The short terminal readout a fail restart types beside the entropy post, upright above its labels. It never blocks input:
     // a pinch cancels it and the post returns to the real budget.
     public class FieldResetReadout : MonoBehaviour
     {
         private const string JobOpenKey = "field_reset_job_open";
 
-        [SerializeField] private SpaceShapingView view;
+        [SerializeField] private FieldFeedbackSource view;
         [SerializeField] private FieldEdgeMeter meter;
         [SerializeField] private Transform readoutRoot;
         [SerializeField] private TMP_Text line;
@@ -24,7 +24,9 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField, Min(0f)] private float typeGapSecs = 0.06f;
         [SerializeField, Min(0f)] private float holdSecs = 0.35f;
         [SerializeField, Min(0f)] private float textHeight = 0.02f;
-        [SerializeField, Min(0f)] private float textInset = 0.03f;
+        [SerializeField, Min(0f)] private float textInset = 0.006f;
+        [Tooltip("Gap between the post and the text, along the back edge.")]
+        [SerializeField, Min(0f)] private float textGap = 0.008f;
         [SerializeField] private string[] lineKeys =
         {
             "field_reset_spent",
@@ -112,9 +114,10 @@ namespace DigitalLove.Game.SpaceShaping
                 return;
 
             float half = view.FieldHalf;
-            Vector3 edge = FieldFrame.OnMeterEdge(half, -half + textHeight, textInset);
-            // The readout is a child of the meter view, which already sits at the field centre.
-            readoutRoot.localPosition = edge;
+            // Upright above the meter labels, reading right from the post along the back edge. The
+            // readout is a child of the meter view, which already sits at the field centre.
+            readoutRoot.localPosition = FieldFrame.OnMeterEdge(half, -half + textHeight, textInset)
+                + Vector3.right * textGap;
         }
 
         private void Cancel()

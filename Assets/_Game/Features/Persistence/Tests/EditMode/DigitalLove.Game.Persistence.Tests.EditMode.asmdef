@@ -3,12 +3,13 @@
     "rootNamespace": "",
     "references": [
         "DigitalLove.Game.Persistence",
-        "DigitalLove.Game.PuzzleSelection",
+        "DigitalLove.Game.PuzzleSelection.Domain",
         "DigitalLove.Casual.Levels",
         "DigitalLove.DataAccess.Remote",
         "DigitalLove.DataAccess.Local",
         "DigitalLove.Global",
         "DigitalLove.Game.SpaceShaping.Domain",
+        "DigitalLove.Game.SpaceShaping.Model",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

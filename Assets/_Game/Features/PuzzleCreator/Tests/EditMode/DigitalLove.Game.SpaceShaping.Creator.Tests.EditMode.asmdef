@@ -4,6 +4,8 @@
     "references": [
         "DigitalLove.Game.SpaceShaping.Creator",
         "DigitalLove.Game.SpaceShaping.Domain",
+        "DigitalLove.Game.SpaceShaping.Model",
+        "DigitalLove.Game.SpaceShaping.Simulation",
         "DigitalLove.Game.Sectors",
         "DigitalLove.Global",
         "DigitalLove.Casual.Levels",

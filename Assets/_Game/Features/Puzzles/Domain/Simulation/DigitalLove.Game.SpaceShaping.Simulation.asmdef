@@ -1,0 +1,17 @@
+{
+    "name": "DigitalLove.Game.SpaceShaping.Simulation",
+    "rootNamespace": "",
+    "references": [
+        "DigitalLove.Game.SpaceShaping.Cube",
+        "DigitalLove.Game.SpaceShaping.Model"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

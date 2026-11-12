@@ -1,0 +1,18 @@
+{
+    "name": "DigitalLove.Game.PuzzleSelection.Domain",
+    "rootNamespace": "",
+    "references": [
+        "DigitalLove.Casual.Levels",
+        "DigitalLove.Game.SpaceShaping.Domain",
+        "DigitalLove.Game.SpaceShaping.Model"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

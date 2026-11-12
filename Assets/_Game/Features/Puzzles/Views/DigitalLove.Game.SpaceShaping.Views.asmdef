@@ -9,6 +9,8 @@
         "DigitalLove.Audio.Runtime",
         "DigitalLove.UI.Behaviours",
         "DigitalLove.Game.SpaceShaping.Domain",
+        "DigitalLove.Game.SpaceShaping.Model",
+        "DigitalLove.Game.SpaceShaping.Simulation",
         "DigitalLove.Game.SpaceShaping.FieldContent",
         "DigitalLove.Game.SpaceShaping.Cube",
         "DigitalLove.Game.SpaceShaping.Grid",

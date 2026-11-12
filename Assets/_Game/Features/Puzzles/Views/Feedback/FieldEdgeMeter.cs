@@ -16,7 +16,7 @@ namespace DigitalLove.Game.SpaceShaping
         private static readonly float[] StarLimits =
             { PuzzleGrade.ThreeStarUse, PuzzleGrade.TwoStarUse, 1f };
 
-        [SerializeField] private SpaceShapingView view;
+        [SerializeField] private FieldFeedbackSource view;
         [SerializeField] private FieldEdgeMeterView drawing;
         [SerializeField] private ColorValue accent;
         [SerializeField] private ColorValue neutral;

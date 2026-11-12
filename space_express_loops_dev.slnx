@@ -6,18 +6,19 @@
   <Project Path="DigitalLove.Interactables.Core.csproj" />
   <Project Path="DigitalLove.Interactables.OculusInteraction.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Creator.csproj" />
-  <Project Path="DigitalLove.Game.PuzzleSelection.csproj" />
+  <Project Path="DigitalLove.Game.PuzzleSelection.Views.csproj" />
   <Project Path="MegaFiers.Editor.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode.csproj" />
   <Project Path="DigitalLove.UI.DesignSystem.Localization.csproj" />
   <Project Path="DigitalLove.XR.Core.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Tests.EditMode.csproj" />
-  <Project Path="DigitalLove.Game.SpaceShaping.Domain.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Simulation.csproj" />
   <Project Path="Vendor.GameAnalytics.Editor.csproj" />
   <Project Path="DigitalLove.Global.csproj" />
   <Project Path="DigitalLove.DataAccess.Remote.csproj" />
   <Project Path="DigitalLove.Game.Flow.csproj" />
   <Project Path="DigitalLove.Audio.PxSynth.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Domain.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Samples.StarterAssets.csproj" />
   <Project Path="DigitalLove.Game.States.Setup.csproj" />
   <Project Path="Vendor.GameAnalytics.csproj" />
@@ -28,6 +29,7 @@
   <Project Path="DigitalLove.UI.DesignSystem.csproj" />
   <Project Path="DigitalLove.Game.GesturePrompts.csproj" />
   <Project Path="DigitalLove.VFX.Animation.csproj" />
+  <Project Path="DigitalLove.Game.SpaceShaping.Model.csproj" />
   <Project Path="MegaFiers.MegaShape.Editor.csproj" />
   <Project Path="DigitalLove.Input.csproj" />
   <Project Path="Klak.Motion.csproj" />
@@ -76,6 +78,7 @@
   <Project Path="DigitalLove.Game.Placement.Domain.csproj" />
   <Project Path="DigitalLove.Audio.TheRadio.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.csproj" />
+  <Project Path="DigitalLove.Game.PuzzleSelection.Domain.csproj" />
   <Project Path="Unity.XR.Hands.Samples.VisualizerSample.csproj" />
   <Project Path="DigitalLove.VFX.MegaFiers.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Grid.Editor.csproj" />

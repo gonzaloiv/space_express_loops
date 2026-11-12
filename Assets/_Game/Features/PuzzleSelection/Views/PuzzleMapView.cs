@@ -19,6 +19,8 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField, Min(0.01f)] private float cubeSize = 0.119f;
         [SerializeField] private JobCardPanel contractCard;
         [SerializeField] private float viewRadius = 0.5f;
+        [Tooltip("How far below the field the map sits as a menu, in metres. It rises to the field on enter.")]
+        [SerializeField, Min(0f)] private float menuDrop = 0.12f;
         [Tooltip("Cube scale at which a pinch commits to entering the job.")]
         [SerializeField, Min(1.1f)] private float enterAt = 1.8f;
         [Tooltip("Share of the map that fades out by the time the pinch reaches enterAt; the enter animation fades the rest.")]
@@ -67,7 +69,7 @@ namespace DigitalLove.Game.PuzzleSelection
             fields = new ViewPool<RunSlotView>(selectedSlot, mapRoot, "Map Field", null);
             mapCube = new MapCube(cube, cubeSize, enterAt, lockedZoomLimit);
             interaction = new MapInteractionGate(mapCube);
-            pose = new MapPose(mapRoot, selectedSlot, cube.transform, fields, viewRadius);
+            pose = new MapPose(transform, menuDrop, mapRoot, selectedSlot, cube.transform, fields, viewRadius);
             pose.ShowAll = showAll;
             tint = new MapNodeTint(
                 selectionCubeColors, lockedBrightness, pulseSecs, pulseDepth);
@@ -163,6 +165,7 @@ namespace DigitalLove.Game.PuzzleSelection
             {
                 bool entered = enter.Tick(deltaSecs);
                 pose.SetReach(Mathf.Lerp(1f - pinchFade, 0f, enter.Progress));
+                pose.SetRise(enter.Progress);
                 if (entered)
                     EnterRequested?.Invoke();
                 return;

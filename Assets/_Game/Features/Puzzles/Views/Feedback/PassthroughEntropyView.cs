@@ -8,7 +8,7 @@ namespace DigitalLove.Game.SpaceShaping
     {
         private const float Epsilon = 0.0001f;
 
-        [SerializeField] private SpaceShapingView view;
+        [SerializeField] private FieldFeedbackSource view;
         [SerializeField] private OVRPassthroughLayer passthrough;
         [Tooltip("Remaining fraction where the room starts to strain. Default: the last third.")]
         [SerializeField] private float stressStartRemaining = 1f / 3f;

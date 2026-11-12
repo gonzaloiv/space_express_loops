@@ -5,9 +5,12 @@ using UnityEngine;
 namespace DigitalLove.Game.PuzzleSelection
 {
     // The map holds still while the cube travels over it: the map is placed once per visit with the
-    // selected node in front of the player, and the fields fade around wherever the cube is.
+    // selected node in front of the player, and the fields fade around wherever the cube is. The menu
+    // sits a little below the field and rises back to it as a job is entered.
     internal class MapPose
     {
+        private readonly Transform menu;
+        private readonly float menuDrop;
         private readonly Transform mapRoot;
         private readonly RunSlotView selectedSlot;
         private readonly Transform cube;
@@ -24,12 +27,16 @@ namespace DigitalLove.Game.PuzzleSelection
         public float FadeNear => FadeFar * 0.55f;
 
         public MapPose(
+            Transform menu,
+            float menuDrop,
             Transform mapRoot,
             RunSlotView selectedSlot,
             Transform cube,
             ViewPool<RunSlotView> fields,
             float viewRadius)
         {
+            this.menu = menu;
+            this.menuDrop = menuDrop;
             this.mapRoot = mapRoot;
             this.selectedSlot = selectedSlot;
             this.cube = cube;
@@ -41,6 +48,7 @@ namespace DigitalLove.Game.PuzzleSelection
         // Places the selected job on its node, then centres the map on that job's sun.
         public void SetPose(Vector3 node)
         {
+            SetRise(0f);
             PlaceSelected(node);
             mapRoot.localPosition = -Vector3.Scale(mapRoot.localScale, selectedSlot.SunMapPosition);
         }
@@ -49,6 +57,14 @@ namespace DigitalLove.Game.PuzzleSelection
         {
             selectedSlot.PlaceSunAt(node);
             ApplyFade();
+        }
+
+        // 0 holds the menu at its drop below the field, 1 lifts it onto the field. Parent-space, so
+        // it follows the seat.
+        public void SetRise(float value)
+        {
+            float t = Mathf.SmoothStep(0f, 1f, value);
+            menu.localPosition = Vector3.down * (menuDrop * (1f - t));
         }
 
         // How much of the map stays lit around the cube: 1 is the full view, 0 hides everything but

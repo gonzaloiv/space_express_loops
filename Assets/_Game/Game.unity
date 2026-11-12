@@ -2097,8 +2097,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Diff TEXT
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 3493030a55420d84fa5b372e04afd05c, type: 2}
-  m_sharedMaterial: {fileID: 4583863751478713665, guid: 3493030a55420d84fa5b372e04afd05c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 705318eb996d609459ccb0d2660d322d, type: 2}
+  m_sharedMaterial: {fileID: -2903844431776657048, guid: 705318eb996d609459ccb0d2660d322d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4536,8 +4536,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Imagine you put your letter on the other side of you capsule.
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 12b59d49163cfe844a4bd32a2abef749, type: 2}
-  m_sharedMaterial: {fileID: 2566842800333301091, guid: 12b59d49163cfe844a4bd32a2abef749, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 705318eb996d609459ccb0d2660d322d, type: 2}
+  m_sharedMaterial: {fileID: -2903844431776657048, guid: 705318eb996d609459ccb0d2660d322d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -9801,8 +9801,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Exit SPACE EXPRESS LOOPS
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 3493030a55420d84fa5b372e04afd05c, type: 2}
-  m_sharedMaterial: {fileID: 4583863751478713665, guid: 3493030a55420d84fa5b372e04afd05c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 705318eb996d609459ccb0d2660d322d, type: 2}
+  m_sharedMaterial: {fileID: -2903844431776657048, guid: 705318eb996d609459ccb0d2660d322d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -12538,8 +12538,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Please ensure an AR scene is configured on your device to play.
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1b45be27f737978488540cfcfab5b41c, type: 2}
-  m_sharedMaterial: {fileID: -1204047876136427302, guid: 1b45be27f737978488540cfcfab5b41c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 705318eb996d609459ccb0d2660d322d, type: 2}
+  m_sharedMaterial: {fileID: -2903844431776657048, guid: 705318eb996d609459ccb0d2660d322d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

@@ -1,0 +1,30 @@
+{
+    "name": "DigitalLove.Game.PuzzleSelection.Views",
+    "rootNamespace": "",
+    "references": [
+        "DigitalLove.Game.PuzzleSelection.Domain",
+        "DigitalLove.Game.SpaceShaping.Domain",
+        "DigitalLove.Game.SpaceShaping.Model",
+        "DigitalLove.Game.SpaceShaping.Views",
+        "DigitalLove.Game.SpaceShaping.FieldContent",
+        "DigitalLove.Casual.Levels",
+        "DigitalLove.Global",
+        "DigitalLove.Localization",
+        "DigitalLove.Game.Nodes",
+        "DigitalLove.UI.Behaviours",
+        "DigitalLove.Game.SpaceShaping.Cube",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI",
+        "DigitalLove.Audio.Runtime",
+        "DigitalLove.TTS"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
