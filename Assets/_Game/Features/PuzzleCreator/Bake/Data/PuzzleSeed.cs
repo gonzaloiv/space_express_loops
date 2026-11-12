@@ -66,6 +66,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         [Tooltip("The job plays no intro cue on start.")]
         public bool noIntro;
 
+        [Tooltip("The cube only grows: the bake searches scales from 1x up, and the job cannot shrink "
+            + "(job 1; shrinking is taught later).")]
+        public bool growOnly;
+
         public float EffectiveSunRadius(SpaceShapingSettings settings) =>
             hasSun ? settings.sunRadius : 0f;
     }

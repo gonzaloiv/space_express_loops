@@ -136,6 +136,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             seed.noFail = job.NoFail;
             seed.noGrade = job.NoGrade;
             seed.noIntro = job.NoIntro;
+            seed.growOnly = job.GrowOnly;
             seed.fieldShape = job.FieldShape;
             seed.resizable = false;
             return seed;

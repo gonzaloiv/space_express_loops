@@ -27,6 +27,9 @@ namespace DigitalLove.Game.SpaceShaping
         [Tooltip("Baked route clusters: distinct zone sets that arrive within budget.")]
         public int routes = 1;
         public bool resizable;
+        [Tooltip("The cube only grows: a pinch cannot shrink it below its start (job 1; shrinking is "
+            + "taught later).")]
+        public bool growOnly;
         public float entropyBudget = 1f;
         [Tooltip("The tutorial cannot fail on entropy; the bar still shows the spend.")]
         public bool noFail;
@@ -57,6 +60,9 @@ namespace DigitalLove.Game.SpaceShaping
 
         // Every ship's endpoints, derived; single-ship data falls back to origin/destination.
         public PuzzleEndpoints Endpoints => new(ships, origin, destination);
+
+        // The smallest scale a pinch may reach: the game's reach, or the start for a grow-only job.
+        public float MinScaleFactor(float reachable) => growOnly ? 1f : reachable;
 
         public ZoneConditions ToZoneConditions() =>
             new(translatable, resizable, Endpoints.ToArray());

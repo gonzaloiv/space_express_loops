@@ -22,6 +22,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public bool NoFail;
         public bool NoGrade;
         public bool NoIntro;
+        public bool GrowOnly;
 
         public bool SupportsZones =>
             Zones <= 3;
@@ -46,8 +47,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             Relation = seed.relation,
             NoFail = seed.noFail,
             NoGrade = seed.noGrade,
-            NoIntro = seed.noIntro
+            NoIntro = seed.noIntro,
+            GrowOnly = seed.growOnly
         };
+
+        // The scales the search may use: a grow-only job never shrinks below 1x.
+        public PuzzleSimSettings Reach(PuzzleSimSettings settings)
+        {
+            if (GrowOnly)
+                settings.MinScaleFactor = Mathf.Max(settings.MinScaleFactor, 1f);
+            return settings;
+        }
 
         private static int ResolveMinRoutes(PuzzleSeed seed)
         {

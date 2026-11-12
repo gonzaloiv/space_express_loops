@@ -6,7 +6,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     {
         public static PuzzleBakeResult Bake(
             PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief) =>
-            Run(planets, settings, brief);
+            Run(planets, brief.Reach(settings), brief);
 
         public static bool Apply(
             PuzzleBrief brief, PuzzleData puzzle, PuzzlePlanetListAsset planets, PuzzleSimSettings settings) =>
@@ -25,6 +25,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.noFail = brief.NoFail;
             puzzle.noGrade = brief.NoGrade;
             puzzle.noIntro = brief.NoIntro;
+            puzzle.growOnly = brief.GrowOnly;
             PuzzleRunRequest run = BuildRunRequest(brief, planets, settings);
             if (!PuzzleRunChoice.TryPick(
                     run, out Vector3 origin, out Vector3 destination, out runReport))

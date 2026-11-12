@@ -20,5 +20,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public bool NoFail;
         public bool NoGrade;
         public bool NoIntro;
+        public bool GrowOnly;
     }
 }

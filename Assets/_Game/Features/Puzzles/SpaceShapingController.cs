@@ -49,7 +49,8 @@ namespace DigitalLove.Game.SpaceShaping
             view.SetRoutePlan(RoutePlan.Build(puzzleData, settings.routePalette));
             view.ShipsCompleted += OnFlightCompleted;
             view.ResetRequested += ResetPuzzle;
-            view.SetScaleEnvelope(settings.minScaleFactor, settings.maxScaleFactor);
+            view.SetScaleEnvelope(
+                puzzleData.MinScaleFactor(settings.minScaleFactor), settings.maxScaleFactor);
             StartPuzzle();
         }
 

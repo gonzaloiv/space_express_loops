@@ -11,7 +11,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Id = "01_01", Seed = 141, Attempts = 1, PlanetCount = 6, FieldShape = PuzzleFieldShape.Ring,
                 HasSun = true, SunOnChord = false, SunRule = PuzzleSunRule.OutOfZone, MinBlockers = 1,
                 Mechanism = PuzzleMechanism.Curve, Zones = 1, MinRoutes = 1,
-                Translatable = false, NoFail = true, NoGrade = true, NoIntro = true,
+                Translatable = false, NoFail = true, NoGrade = true, NoIntro = true, GrowOnly = true,
             },
             new PuzzleJobContract
             {

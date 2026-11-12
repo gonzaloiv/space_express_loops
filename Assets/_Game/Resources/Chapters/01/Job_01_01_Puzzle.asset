@@ -27,6 +27,7 @@ MonoBehaviour:
   zones: 1
   routes: 2
   resizable: 0
+  growOnly: 1
   entropyBudget: 1.5870967
   noFail: 1
   noGrade: 1

@@ -35,6 +35,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 failures.Add($"noGrade {puzzle.noGrade}, expected {contract.NoGrade}");
             if (puzzle.noIntro != contract.NoIntro)
                 failures.Add($"noIntro {puzzle.noIntro}, expected {contract.NoIntro}");
+            if (puzzle.growOnly != contract.GrowOnly)
+                failures.Add($"growOnly {puzzle.growOnly}, expected {contract.GrowOnly}");
             if (!PuzzleSolutionClassifier.Matches(contract.Mechanism, kind))
                 failures.Add($"role {kind}, expected {contract.Mechanism}");
             if (puzzle.routes < contract.MinRoutes)
