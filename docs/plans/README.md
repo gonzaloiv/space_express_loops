@@ -21,9 +21,9 @@ need a yes.
 3. **The ending** — done (2026-11-11). After the run completes (every job solved, whatever the count):
    the whole map lit, the total stars, the "OUR SPACE" title, Jim closing the episode, more contracts
    in the making, an invitation to replay for 3★.
-   - **The fleet episode** — [plan](in-progress/fleet-episode.md) — the two- and three-ship jobs join v1
-     as chapter 2, episode 2 of the story (decided 2026-11-11 after the two-ship headset test); lines
-     approved.
+   - **The fleet episode** — done (2026-11-13). The two- and three-ship jobs join v1 as chapter 2,
+     episode 2 of the story, with Jim's chapter opener; the headset pass is in
+     [freeze day](backlog/freeze-day.md).
 4. **Minimum sound** — done (2026-11-09); the soundscape built on it (done 2026-11-10). Pinch grab
    tick, stretch tone, release, arrive chime, crash, fail sting. No haptics: the game is hands-only.
 5. **The first 30 seconds** — done (2026-11-10). App open → the console boot → the field placed at a
@@ -53,7 +53,7 @@ After v1 (decided 2026-11-07): a **~€5 Meta store release** sooner, then chapt
 shape is in [chapters](../design/chapters.md); the demo is the store's own option.
 
 1. **Chapter 1 stays seven jobs** (decided 2026-11-11): no job 8; Mixed moves to a later chapter.
-2. **Chapter 2 — the fleet.** 2-1 to 2-4 ship in v1 ([fleet episode](in-progress/fleet-episode.md)); the
+2. **Chapter 2 — the fleet.** 2-1 to 2-4 ship in v1 (done 2026-11-13); the
    store adds the 2-5 capstone ([design](../design/chapters.md#chapter-2--the-fleet-v1-then-the-store-release)).
 3. **Freelance contracts.** ~150 prebaked jobs, tiers, the quality filter, the exact-entropy score.
 4. **The daily contract.** One pool job per day, Meta platform leaderboard.
@@ -65,10 +65,10 @@ shape is in [chapters](../design/chapters.md); the demo is the store's own optio
 
 Active work.
 
-- [Fleet episode](in-progress/fleet-episode.md) — started 2026-11-11: four multi-ship jobs join v1 as
-  chapter 2, episode 2; lines approved, job 8 dropped from v1.
-- [Hand-tracking gate](in-progress/hand-tracking-gate.md) — started 2026-11-12: the boot holds while
-hand tracking is off and waits for both hands; U1/U2/U2b landed, the headset proof (U3) is open.
+Nothing in progress.
+
+Closed 2026-11-13: the fleet episode and the hand-tracking gate; their headset checks moved to
+[freeze day](backlog/freeze-day.md) ([lessons](../lessons.md)).
 
 Closed 2026-11-11: the ending, endpoint shapes, the stuck-player skip and the field-wells spike
 ([lessons](../lessons.md)).

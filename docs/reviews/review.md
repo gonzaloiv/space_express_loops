@@ -51,7 +51,7 @@ Findings are in priority order; the [Before the 13th](#before-the-13th) list is 
 
 **Fix:** set controller-driven poses to None, turn scene permission off, launch simultaneous
 hands/controllers, add a hand-tracking availability panel/gate, and test with controllers on the desk
-([plan](../plans/in-progress/hand-tracking-gate.md)). The gate holds while hand tracking is off and
+([lessons](../lessons.md)). The gate holds while hand tracking is off and
 requires both hands for the core's two-hand pinch; the panel stays up through flaky tracking, so a
 one-hand judge does not reach an unpinchable job. The panel stays up until both hands track; it does
 not pass the step.
@@ -268,7 +268,7 @@ is thin.
 ## Before the 13th
 
 1. A hand-tracking gate (both hands) plus the scene/controller-pose config (finding 1;
-   [plan](../plans/in-progress/hand-tracking-gate.md)).
+   [lessons](../lessons.md)).
 2. Job 1's pre-job beat (manual + exit), then the clean scale-only job; the goal line only if a fresh
    player flails (finding 2).
 3. Earned stars and a running total on the map, plus `BEST` on the card (finding 3).

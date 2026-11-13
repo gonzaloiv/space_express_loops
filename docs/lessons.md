@@ -4,6 +4,25 @@ Short post-mortems, written when a plan closes (rule in [AGENTS.md](../AGENTS.md
 morning). Newest first. Each entry: what worked, what surprised us, the rule for next time. One idea per
 bullet; the code and tests are the record of what was built.
 
+## 2026-11-13 — Fleet episode
+
+- **Worked:** the bakes moved into their own chapter folder with their GUIDs and one `ChapterData`,
+  so a whole episode joined the run with no map or flow rework.
+- **Surprised:** new jobs did not make an episode; the world only came through once the chapter had
+  its own opener, separate from the job intro (episode beat vs lesson).
+- **Surprised:** the line keys gained Jim's expression suffix in a table sync; the game matched them by
+  fragment, but an exact-key test broke and every prebuilt clip went silent.
+- **Next time:** a renamed line key means new clips; plan the download with the rename.
+
+## 2026-11-13 — Hand-tracking gate
+
+- **Worked:** a pure gate fed per frame (enabled, two hands, delta) made the steady window, flicker and
+  "off never passes" plain EditMode tests.
+- **Surprised:** a card panel for the hint fought the boot console; typing it as console lines read as
+  one system and needed no new UI.
+- **Next time:** a new optional step in a `_Modules` flow stays invisible when unassigned, so other
+  projects never see it.
+
 ## 2026-11-12 — First minute and meter
 
 - **Worked:** the meter hides the stars and their notches from `PuzzleReadout.NoGrade`, so the

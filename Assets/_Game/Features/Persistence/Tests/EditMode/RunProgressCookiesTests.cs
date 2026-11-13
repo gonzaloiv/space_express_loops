@@ -60,6 +60,16 @@ namespace DigitalLove.Game.Persistence.Tests
         }
 
         [Test]
+        public void OpenChapter_IsTrueOnlyTheFirstTime()
+        {
+            PlayerData playerData = new();
+
+            Assert.IsTrue(RunProgressCookies.OpenChapter(playerData, "02"));
+            Assert.IsFalse(RunProgressCookies.OpenChapter(playerData, "02"));
+            Assert.IsTrue(RunProgressCookies.OpenChapter(playerData, "03"));
+        }
+
+        [Test]
         public void RecordSolve_AddsCookieWithGrade()
         {
             PlayerData playerData = new();

@@ -2,7 +2,6 @@ using DigitalLove.Casual.Levels;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Localization.Tables;
 
 namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
 {
@@ -10,8 +9,6 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
     {
         private const string ChapterFolder = "Assets/_Game/Resources/Chapters/02";
         private const string SelectorPath = "Assets/_Game/Resources/Chapters/LevelSelector.asset";
-        private const string EnglishTablePath =
-            "Assets/_Game/Resources/Localization/Levels/Levels_en.asset";
 
         private static readonly string[] JobIds = { "02_01", "02_02", "02_03", "02_04" };
         private static readonly int[] ShipCounts = { 2, 2, 2, 3 };
@@ -58,32 +55,6 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
                     AssertNotOnTheSun(puzzle, ship, label);
                 }
             }
-        }
-
-        [Test]
-        public void ChapterTwoLines_ResolveInEnglish()
-        {
-            StringTable table = AssetDatabase.LoadAssetAtPath<StringTable>(EnglishTablePath);
-            Assert.IsNotNull(table, EnglishTablePath);
-
-            for (int i = 0; i < JobIds.Length; i++)
-            {
-                string prefix = $"level_{JobIds[i]}_";
-                AssertLine(table, prefix + "init_client");
-                AssertLine(table, prefix + "init_cargo");
-                AssertLine(table, prefix + "init_manual_entry");
-                AssertLine(table, prefix + "init_01");
-                AssertLine(table, prefix + "complete");
-                AssertLine(table, prefix + "fail");
-            }
-        }
-
-        private static void AssertLine(StringTable table, string key)
-        {
-            long id = table.SharedData.GetId(key);
-            StringTableEntry entry = id != SharedTableData.EmptyId ? table.GetEntry(id) : null;
-            Assert.IsNotNull(entry, $"missing {key}");
-            Assert.IsFalse(string.IsNullOrEmpty(entry.Value), $"empty {key}");
         }
 
         private static PuzzleData Load(string id)

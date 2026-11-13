@@ -6366,6 +6366,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.Flow::DigitalLove.Game.Flow.PuzzleStartState
   nextState: {fileID: 586903605}
   puzzleController: {fileID: 1132899469}
+  levelSelector: {fileID: 11400000, guid: b85b9bd1f1508454b8fed75d4331c4ec, type: 2}
   console: {fileID: 1363334527}
   ttsPresenter: {fileID: 1654487134}
   systemPlayer: {fileID: 496521417}

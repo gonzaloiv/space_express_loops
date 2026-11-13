@@ -118,6 +118,11 @@ it. An episode never explains itself and never resolves the bleak reading.
 | 1 — the Wrap | the seven-job first episode | The firm bets on a machine nobody trusts, and the new employee makes it work. |
 | 2 — the fleet | the multi-ship jobs | It works, so the firm gets greedy: more ships on the same entropy, sold as green. Greed is eco-friendly, and Jim is not sure that is good news. |
 
+**The chapter opener carries the episode; the job intro carries the lesson.** Jim opens a chapter
+once, before its first job and with no field in the room: the world beat (what the firm is doing now,
+and why). Then the job starts as usual with its own intro line, which stays the teaching line. A replay
+never repeats the opener. Chapter 1 has none: job 1's receipt is Jim's introduction.
+
 The game is never finished in the fiction: the last episode closes with Jim out of contracts and the
 tech team promising more. The next episode is the
 next chapter; seeds for it live in §Seeds (externalised costs, *tomorrow the time*).

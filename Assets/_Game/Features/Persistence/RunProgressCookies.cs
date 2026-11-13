@@ -12,6 +12,7 @@ namespace DigitalLove.Game.Persistence
     {
         private const string EndingSeenCookieId = "run_ending_seen";
         private const string ExitPromptCookieId = "exit_prompt_after_fail";
+        private const string ChapterOpenedCookiePrefix = "chapter_opened_";
 
         public static RunProgress Build(LevelSelector selector, PlayerData playerData)
         {
@@ -63,6 +64,10 @@ namespace DigitalLove.Game.Persistence
             int signpostIndex = progress.IsOpenedUnsolved(nextIndex) ? nextIndex : -1;
             return new JobOpenResult(firstOpen, signpostIndex, showExitPrompt);
         }
+
+        // True only the first time: a chapter's opener plays once, never on a replay.
+        public static bool OpenChapter(PlayerData playerData, string chapterId) =>
+            playerData.AddCookie(new Cookie(ChapterOpenedCookiePrefix + chapterId));
 
         public static bool HasSeenEnding(PlayerData playerData, int jobCount)
         {

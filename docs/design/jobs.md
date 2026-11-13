@@ -228,7 +228,7 @@ One line each; never exposition ([lore](world/lore.md)).
 | 2 | The Lighthouse Keepers' Union | one bulb | "The bulb is still out there." | "The star is a source too." | "The star is not a planet. It bends the same way." |
 | 3 | Strait & Narrow Ltd. | a wide load | "Too much rock in the way." | "Shrink the rock, not the cargo." | "The Wrap takes as well as gives. A smaller world is a wider door." |
 | 4 | Madame Fink's Discount Gravity | a piano | "The piano is lost." | "Now move it. *Where* is a choice. Works everywhere." | "The Wrap is yours to place. Where you work is a decision. Make it." |
-| 5 | The Third Best Bakery | a wedding cake, still warm | "The cake went cold." | "Several zones. Place it, scale them." | "The Wrap is yours to place. Use it more than once." |
+| 5 | The Third Best Bakery | a wedding cake, still warm | "The cake went cold." | "Several zones. Place it, scale them." | "The Wrap is yours to place. Use it more than once. Wrap only what you need; the universe is not insured." |
 | 6 | Nobody & Co. | a body (a funeral) | "The field won." | "Use what is already there." | "The field is free. The Wrap is not." |
 | 7 | The Inheritance of Mr. Fink | the last of something | "Mr. Fink is still waiting." | "…Good luck." | "This is the one the manual was written for. Welcome, new employee. There has not been a new employee in eleven years. There is still no office." |
 
@@ -239,6 +239,7 @@ the greed is in Jim's lines and the manual ([lore](world/lore.md) §Episodes).
 
 | # | Client | Cargo | Fail | Tech voice | Manual entry |
 |---|---|---|---|---|---|
+| opener | Jim, before 2-1 | — | — | "The Wrap works. So I sold more of it. Same entropy. More ships. The brochure says green. It is just cheaper. Fuel is still capped. Nobody else can do this." | — |
 | 2-1 | Halfmoon & Halfmoon | two identical parcels | "One of them got lost." | "I sold two runs for the price of one." | "Two ships. One Wrap. One budget." |
 | 2-2 | Slightly Used Stars Ltd. | two refurbished suns | "Slightly Used Stars is unhappy again." | "They are back. They want both orders today." | "One origin. Two promises. Bend near the start and both feel it." |
 | 2-3 | The Last Two Customers | two halves of a gift | "The gift is still in pieces." | "Two ships. One door." | "Many routes may share one end. Fix the approach once." |
@@ -274,7 +275,10 @@ and never explains itself:
 The exact strings live in `Levels_en` / `Levels_es` under the `init_manual_entry`, `init_01`, `fail` and
 `complete` keys. A spoken line longer than one short sentence is split into numbered entries that
 play in order: `init_01`, `init_02`, … (up to `_09`), and `complete`, `complete_02`, … (the
-same for `fail`, which is one entry per job). Jobs 2, 3, 5 and 6 stay untouched: the thread is the
+same for `fail`, which is one entry per job). A key may end in Jim's expression
+(`level_01_02_init_01_surprised`; `win`, `laughing`, `angry`, `confused`, `annoyed`, `surprised`, none =
+idle). A chapter's opener is `chapter_NN_init_01…`, the same pattern; it plays once, before the
+chapter's first job ([lore](world/lore.md) §Episodes). Jobs 2, 3, 5 and 6 stay untouched: the thread is the
 company's condition, not a running joke.
 
 ## Seeds (later)

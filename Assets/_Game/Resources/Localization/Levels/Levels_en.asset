@@ -71,7 +71,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889870
-    m_Localized: The Wrap is yours to place. Use it more than once.
+    m_Localized: The Wrap is yours to place. Use it more than once. Wrap only what you need; the universe is not insured.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889871
@@ -245,7 +245,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969943
-    m_Localized: The ledger is happy.
+    m_Localized: The field did the work. That is our margin.
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969942
@@ -261,7 +261,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969939
-    m_Localized: The ledger is happy.
+    m_Localized: Nobody orders more cake. They just want it cheaper.
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969938
@@ -293,7 +293,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969931
-    m_Localized: The ledger is happy.
+    m_Localized: Cheaper than fuel. Much cheaper.
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969930
@@ -313,7 +313,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969926
-    m_Localized: The ledger is happy.
+    m_Localized: No fuel burned. The ledger is happy.
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969925
@@ -346,6 +346,30 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 7610346164257
     m_Localized: Get some sleep.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889879
+    m_Localized: The Wrap works. So I sold more of it.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889880
+    m_Localized: Same entropy. More ships.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889881
+    m_Localized: The brochure says green. It is just cheaper.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889882
+    m_Localized: Fuel is still capped. Nobody else can do this.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889883
+    m_Localized: They are back because nobody else is left.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889884
+    m_Localized: The last two customers. We keep them happy.
     m_Metadata:
       m_Items: []
   references:

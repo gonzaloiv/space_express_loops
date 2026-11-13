@@ -2,6 +2,8 @@ using DigitalLove.FlowControl;
 using UnityEngine;
 using Reflex.Attributes;
 using DigitalLove.Audio;
+using DigitalLove.Casual.Levels;
+using DigitalLove.Game.Persistence;
 using DigitalLove.Game.SpaceShaping;
 using DigitalLove.Game.UI.Console;
 using DigitalLove.DataAccess;
@@ -14,6 +16,7 @@ namespace DigitalLove.Game.Flow
     {
         [SerializeField] private MonoState nextState;
         [SerializeField] private SpaceShapingController puzzleController;
+        [SerializeField] private LevelSelector levelSelector;
         [SerializeField] private ConsoleScreen console;
         [SerializeField] private TtsPresenter ttsPresenter;
         [SerializeField] private SynthCuePlayer systemPlayer;
@@ -44,6 +47,32 @@ namespace DigitalLove.Game.Flow
             }
 
             PuzzleData puzzle = memoryDataClient.Get<PuzzleData>();
+            if (!TryOpenChapter(puzzle))
+                BeginJob(puzzle);
+        }
+
+        public override void Exit() => active = false;
+
+        // The chapter opener is the episode's world beat, its own moment before the job: Jim speaks
+        // with no field in the room, once per chapter, then the job starts with its own lesson.
+        private bool TryOpenChapter(PuzzleData puzzle)
+        {
+            ChapterData chapter = levelSelector.GetChapter(puzzle);
+            if (!ttsPresenter.HasLines(chapter.IntroKey))
+                return false;
+            if (!RunProgressCookies.OpenChapter(memoryDataClient.Get<PlayerData>(), chapter.id))
+                return false;
+
+            puzzleController.HideAll();
+            ttsPresenter.Play(new[] { chapter.IntroKey }, () => BeginJob(puzzle));
+            return true;
+        }
+
+        private void BeginJob(PuzzleData puzzle)
+        {
+            if (!active)
+                return;
+
             if (puzzle.HasGoalLine)
             {
                 // The tutorial says its goal before the field appears, so nothing covers the scaling.
@@ -57,8 +86,6 @@ namespace DigitalLove.Game.Flow
                 ttsPresenter.Play(new[] { puzzle.IntroLinesKey });
             StartPuzzle();
         }
-
-        public override void Exit() => active = false;
 
         private void StartPuzzle()
         {
