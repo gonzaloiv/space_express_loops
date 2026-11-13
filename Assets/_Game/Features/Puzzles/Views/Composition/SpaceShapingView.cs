@@ -203,6 +203,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void HideBaseline() => spawner.Baselines.Hide();
 
+        public Vector3 DestinationPosition => spawner.Planets.Destination.transform.position;
+
         public float PlayArrival()
         {
             FieldPlanetBehaviour destination = spawner.Planets.Destination;

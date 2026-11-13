@@ -5,6 +5,7 @@ using DigitalLove.Audio;
 using DigitalLove.Game.SpaceShaping;
 using DigitalLove.Game.UI.Console;
 using DigitalLove.DataAccess;
+using DigitalLove.Localization;
 using DigitalLove.TTS;
 
 namespace DigitalLove.Game.Flow
@@ -43,6 +44,15 @@ namespace DigitalLove.Game.Flow
             }
 
             PuzzleData puzzle = memoryDataClient.Get<PuzzleData>();
+            if (puzzle.HasGoalLine)
+            {
+                // The tutorial says its goal before the field appears, so nothing covers the scaling.
+                puzzleController.HideAll();
+                console.PlayMessage(
+                    new[] { LocalizationUtil.GetValue(puzzle.goalLineKey) }, StartPuzzle);
+                return;
+            }
+
             if (!puzzle.noIntro)
                 ttsPresenter.Play(new[] { puzzle.IntroLinesKey });
             StartPuzzle();

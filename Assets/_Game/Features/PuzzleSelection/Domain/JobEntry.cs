@@ -20,8 +20,8 @@ namespace DigitalLove.Game.PuzzleSelection
             NoGrade = noGrade;
         }
 
-        // A graded job shows its stars once it can be played: filled for what a solve earned, empty
-        // while it is still to complete. Locked jobs and the ungraded tutorial show none.
-        public bool ShowsStars => !NoGrade && State != JobState.Locked;
+        // Every graded job shows its stars: lit for what a solve earned, unlit while it is still to
+        // complete or not reached yet. Only the ungraded tutorial shows none.
+        public bool ShowsStars => !NoGrade;
     }
 }

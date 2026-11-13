@@ -38,6 +38,9 @@ namespace DigitalLove.Game.SpaceShaping
         [Tooltip("The job plays no intro cue on start and shows no Edition card (job 1); the map "
             + "card still shows its contract.")]
         public bool noIntro;
+        [Tooltip("Console line (Global table key) typed before the field appears: the tutorial's goal. "
+            + "Empty plays none.")]
+        public string goalLineKey;
         public PuzzleSource[] sources;
         [Tooltip("Extra ships. Empty is the single-ship puzzle (origin/destination); two or more makes "
             + "it a multi-ship level, solved when every ship arrives.")]
@@ -63,6 +66,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         // The smallest scale a pinch may reach: the game's reach, or the start for a grow-only job.
         public float MinScaleFactor(float reachable) => growOnly ? 1f : reachable;
+
+        public bool HasGoalLine => !string.IsNullOrEmpty(goalLineKey);
 
         public ZoneConditions ToZoneConditions() =>
             new(translatable, resizable, Endpoints.ToArray());

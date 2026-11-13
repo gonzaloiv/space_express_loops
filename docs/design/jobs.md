@@ -2,7 +2,7 @@
 
 **Status:** design · content · jobs.
 **Date:** 2026-10-27.
-**Revised:** 2026-11-11.
+**Revised:** 2026-11-13.
 
 **Related:** [progression](systems/progression.md) · [lore](world/lore.md) ·
 [the cube](systems/cube.md) · [glossary](glossary.md)
@@ -16,15 +16,21 @@ This doc is **chapters 1–2**; the store release's 2-5 and chapter 3 are in [ch
 
 ## The run — the mechanics
 
-| # | Teaches | Role | Brief (translatable · zones · resizable · ships) | Shape | Field (planets + sun · wells · depth) | Entropy scale (derived) | Why |
+| # | Teaches | Role | Brief (translatable · zones · ships) | Shape | Field (planets + sun · wells · depth) | Entropy scale (derived) | Why |
 |---|---|---|---|---|---|---|---|
-| 1 | the scale | Curve | fixed · 1 zone · no · 1 ship | Ring | 6 + sun · single · tutorial | low | first contact: a viable six-planet field, the sun in the background, one pinch |
-| 2 | the centre | Curve | fixed · 1 zone · no · 1 ship | Ring | 4–6 + sun · single · medium | medium | the fixed cube over the sun — the star is a source too |
-| 3 | the other direction | Clear | fixed · 1 zone · no · 1 ship | Ring | 5–6 + sun · single · medium | medium | a planet blocks the line; shrinking it clears the path — the same pinch, the opposite role |
-| 4 | the cube moves | Curve | **yes** · 1 zone · no · 1 ship | Spiral | 8–10 + sun · multi | medium | spawns at the centre; the solution is off-centre, so the move is required |
-| 5 | multi-zone intro | Curve | yes · 2+ zones · no · 1 ship | Spiral | 10–12 + sun · multi | medium | move + scale two zones — the combination enters |
-| 6 | the field carries you | Curve | yes · 2+ zones · no · 1 ship | Cluster | 10 + sun · multi · deep | high | a deep well already near the line does most of the bend; the cheap answer is to edit where a small change moves the path most |
-| 7 | the capstone | Curve | yes · 2+ zones · no · 1 ship | Cluster | 12 + sun · multi · deep | high | multi-zone + the centre + the star + several routes — both roles deferred to a later chapter |
+| 1 | the scale | Curve | fixed · 1 zone · 1 ship | Ring | 6 + sun · single · tutorial | low | first contact: a viable six-planet field, the sun in the background, one pinch |
+| 2 | the centre | Curve | fixed · 1 zone · 1 ship | Ring | 4–6 + sun · single · medium | medium | the fixed cube over the sun — the star is a source too |
+| 3 | the other direction | Clear | fixed · 1 zone · 1 ship | Ring | 5–6 + sun · single · medium | medium | a planet blocks the line; shrinking it clears the path — the same pinch, the opposite role |
+| 4 | the cube moves | Curve | **yes** · 1 zone · 1 ship | Spiral | 8–10 + sun · multi | medium | spawns at the centre; the solution is off-centre, so the move is required |
+| 5 | multi-zone intro | Curve | yes · 2+ zones · 1 ship | Spiral | 10–12 + sun · multi | medium | move + scale two zones — the combination enters |
+| 6 | the field carries you | Curve | yes · 2+ zones · 1 ship | Cluster | 10 + sun · multi · deep | high | a deep well already near the line does most of the bend; the cheap answer is to edit where a small change moves the path most |
+| 7 | the capstone | Curve | yes · 2+ zones · 1 ship | Cluster | 12 + sun · multi · deep | high | multi-zone + the centre + the star + several routes — both roles deferred to a later chapter |
+| 2-1 | two ships | Any | yes · 1 zone · 2 ships, separate | Ring | 12 + sun · multi | low (budget 0.30) | one field, two runs; each ship has its own fix |
+| 2-2 | fan-out | Any | yes · 1 zone · 2 ships, one origin | Spiral | 12 + sun · multi | medium (budget 1.20) | an edit near the shared origin bends both paths |
+| 2-3 | converge | Any | yes · 1 zone · 2 ships, one destination | Spiral | 12 + sun · multi | medium (budget 1.50) | the planet by the shared destination fixes both approaches |
+| 2-4 | three ships | Any | yes · 1 zone · 3 ships, separate | Cluster | 14 + sun · multi | medium (budget 1.50) | three fixes on one budget; the field carries more than one ship |
+
+Fleet jobs request **Any**: multi-ship bakes cannot request a role, so each is checked by playing it.
 
 **Chapter 1 is seven jobs (2026-11-05); the run is eleven (2026-11-11): 1 scale, 2 centre, 3 clear,
 4 move, 5 multi-zone, 6 the field carries you, 7 capstone `Curve`, then chapter 2's four fleet jobs.**
@@ -45,6 +51,10 @@ the prior skill the job combines, so the ramp is cumulative, not additive.
 | 5 | medium | the move + several zones |
 | 6 | high | multi-zone + the read (use the field's wells) |
 | 7 | high | everything: centre, move, zones, star; Mixed deferred |
+| 2-1 | low | the move, now for two runs |
+| 2-2 | medium | the move + a shared origin |
+| 2-3 | medium | the move + a shared destination |
+| 2-4 | medium | the move + the read (the field carries more than one ship) |
 
 **The role.** Each job states the role its reference solution must teach: **Curve** (a well grew),
 **Clear** (an obstacle shrank), **Mixed** (both, at least two zones), or **Any** (no request). It is a
@@ -90,6 +100,7 @@ job 1 carries a sun that the cube does not cover.)
 | 1 | no (`noFail`, unlimited spend) | no (`noGrade`) | no (`noIntro`) |
 | 2 | yes | no (`noGrade`) | yes |
 | 3–7 | yes | yes | yes |
+| 2-1 – 2-4 | yes | yes | yes |
 
 Job 1 bakes from a normal seed — six planets and a sun the cube does not cover, one fixed zone — and still records a reference
 solution, so the budget rule holds ([core loop](core-loop.md) §3). The lesson is the cube's scale, not a
@@ -111,8 +122,6 @@ includes an off-centre zone, so the player must move the cube.
 scales several zones with the star included, so the player must move out to the other zones. It combines
 every verb except both roles; both roles are deferred to a later chapter.
 
-**Resize** is off in every job (`resizable: no`); why is in [the cube](systems/cube.md) §Open questions.
-
 **The slice.** Jobs 1–7 are chapter 1's seven-job run; chapter 2 adds four fleet jobs; ~1 minute each.
 
 **Multi-ship.** Chapter 1's seven-job spine is single-ship; the rule is in
@@ -130,7 +139,6 @@ creator bakes to them. Three groups.
 |---|---|
 | **`translatable`** | The cube may be **moved** (its centre changes) or is **fixed** at home. How many times the player moves it is their choice; it is not a baked count. |
 | **`zones`** | How many **zones** the solution scales (1–3). **`zones ≥ 2` holds with `translatable` either way** — a **fixed** level places that many cubes, a **translatable** one has the player move one cube between zones. |
-| **`resizable`** | The frame may be **resized** (`[1×, 2×]`) or is locked. Deferred from the slice until the explanation is ready. |
 | **`ships` / `relation`** | How many runs the job has (1 = single-ship) and how they relate: **fan-out** (one origin), **converge** (one destination), or **separate**. |
 
 **Bake request** — what the creator must produce:
@@ -174,6 +182,9 @@ add a layout.
 | **Assist** | `zones ≥ 2`, `translatable`, a deep well near the line | edit where a small change moves the path most | 6 |
 | **Capstone** | `zones ≥ 2`, `translatable`, cube over the sun | combine the centre + several zones + the star | 7 |
 | **Mixed** | `zones ≥ 2`, one on the blocker, one on a run planet | clear with one zone, curve with another | 8 (future) |
+| **Fleet** | `ships ≥ 2`, `translatable`, `zones 1` | one cube, one budget, several runs | 2-1, 2-4 |
+| **Fan-out** | `ships 2`, one origin | edit near the shared origin to bend both | 2-2 |
+| **Converge** | `ships 2`, one destination | fix the shared approach once | 2-3 |
 
 **The obstacle is the second role.** A body on the straight line is an obstacle; reducing its scale
 reduces its collision radius, so the path can pass. It is **job 3**: it lands after the centre and before

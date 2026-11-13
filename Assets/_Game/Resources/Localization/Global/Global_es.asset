@@ -114,6 +114,14 @@ MonoBehaviour:
     m_Localized: '> JOB {0} ABIERTO EN EL MAPA'
     m_Metadata:
       m_Items: []
+  - m_Id: 73233989640048700
+    m_Localized: '> HAZ QUE LA NAVE LLEGUE AL ANILLO'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73233989640048701
+    m_Localized: '> TRAE LA NAVE AQUI'
+    m_Metadata:
+      m_Items: []
   - m_Id: 74113009852272640
     m_Localized: TRABAJO {0}
     m_Metadata:

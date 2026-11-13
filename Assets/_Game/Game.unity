@@ -1440,6 +1440,7 @@ MonoBehaviour:
   exit: {fileID: 11400000, guid: e4c70d5f9251ba641920309187e90b21, type: 2}
   spend: {fileID: 11400000, guid: d1e2f3a4b5c6478899aabbccddeeff01, type: 2}
   stars: {fileID: 11400000, guid: d1e2f3a4b5c6478899aabbccddeeff02, type: 2}
+  goal: {fileID: 11400000, guid: b4a36423a42c5b645a97e8f87ea17653, type: 2}
   shapingView: {fileID: 1866590769}
   mapView: {fileID: 967966616}
   scaleOffset: {x: 0.12, y: 0.12, z: 0}
@@ -1448,6 +1449,7 @@ MonoBehaviour:
   exitOffset: {x: 0, y: 0.22, z: 0}
   spendOffset: {x: -0.14, y: 0.14, z: 0}
   starsOffset: {x: -0.14, y: 0.02, z: 0}
+  goalOffset: {x: 0, y: 0.14, z: 0}
 --- !u!114 &257544992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1558,7 +1560,7 @@ MonoBehaviour:
   playerControllerInstaller: {fileID: 194917959}
   setupFunnelHelper: {fileID: 1210227667}
   noSave:
-    value: 0
+    value: 1
   noSavePlayerData:
     userId: 
     sessionCount: 0
@@ -11326,6 +11328,11 @@ MonoBehaviour:
   caption: {fileID: 2124687464}
   leaderLine: {fileID: 9100000000000503}
   lineStart: {x: 0, y: -2.56, z: 0}
+  terminalFrame: {fileID: 1903445441}
+  billboard: {fileID: 1903445438}
+  captionOnlyFramePosition: {x: 0, y: -3, z: 0}
+  captionOnlyFrameScale: {x: 27.5, y: 7.5, z: 1}
+  captionOnlyLineStart: {x: 0, y: -4.5, z: 0}
   bootSecs: 0.18
   closeSecs: 0.18
 --- !u!4 &1903445436
@@ -11417,7 +11424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83db5f5589fe34047946e9738dc5e482, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.LookAtCameraOnY
-  offset: 0
+  offset: 180
   lookAtSpeed: 5
 --- !u!1 &1903445440
 GameObject:
@@ -13831,7 +13838,7 @@ AudioDistortionFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5011925470933743705}
   m_Enabled: 1
-  m_DistortionLevel: 0.1
+  m_DistortionLevel: 0.3
 --- !u!224 &6234682783816512153
 RectTransform:
   m_ObjectHideFlags: 0

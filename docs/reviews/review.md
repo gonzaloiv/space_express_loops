@@ -81,13 +81,15 @@ and the pending end dot warms as the run nears the destination (finding 9).
 the first map card, **not** over the scaling surface. The job starts after the beat. The scale is the
 main gesture, so once the job starts the Scale prompt is the only overlay: no goal line, exit prompt,
 card, Spend or Stars prompt covers the in-run scaling surface. This is the cheapest judge-facing win.
-Hold the explicit goal line (`> MAKE THE SHIP REACH THE RING`) in reserve: add it only if a fresh
-player does not reach the destination within ~30 s, or cannot say why it worked.
+**Done 2026-11-12:** job 1 is a pure tutorial, so the console types `> MAKE THE SHIP REACH THE RING`
+(`PuzzleData.goalLineKey`) before its field appears; a restart skips it. In the job, a `Goal` prompt
+panel (`> GET THE SHIP HERE`) stands over the destination with its leader on the planet until the
+job ends — clear of the cube, so the scaling surface stays free.
 
 ### 3. The stars you earn vanish when you return to the map — **Freeze**
 
 - Only the selected node shows stars (`RunSlotView.ShowMapState` gates them on `selected`).
-  `JobEntry.ShowsStars` now also shows empty stars on a graded job still to complete, and the map
+  `JobEntry.ShowsStars` now shows unlit stars on every graded job not yet solved, locked ones too, and the map
   stars are ~1.2 cm and flat with the map — but still only on the selected node.
 - The map selects the job after the last solve (`RunProgressCookies.cs:115-120` →
   `LevelSelector.GetFollowingLevel`), so the just-solved node is a neighbour with no stars.

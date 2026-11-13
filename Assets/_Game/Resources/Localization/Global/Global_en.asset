@@ -114,6 +114,14 @@ MonoBehaviour:
     m_Localized: '> JOB {0} OPEN ON THE MAP'
     m_Metadata:
       m_Items: []
+  - m_Id: 73233989640048700
+    m_Localized: '> MAKE THE SHIP REACH THE RING'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73233989640048701
+    m_Localized: '> GET THE SHIP HERE'
+    m_Metadata:
+      m_Items: []
   - m_Id: 74113009852272640
     m_Localized: JOB {0}
     m_Metadata:

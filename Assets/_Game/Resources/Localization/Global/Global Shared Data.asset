@@ -111,6 +111,14 @@ MonoBehaviour:
     m_Key: field_reset_job_open
     m_Metadata:
       m_Items: []
+  - m_Id: 73233989640048700
+    m_Key: field_goal_reach_ring
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73233989640048701
+    m_Key: gesture_prompt_goal
+    m_Metadata:
+      m_Items: []
   - m_Id: 74113009852272640
     m_Key: field_meter_job
     m_Metadata:

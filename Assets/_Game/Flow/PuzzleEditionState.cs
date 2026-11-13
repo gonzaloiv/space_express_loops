@@ -86,6 +86,8 @@ namespace DigitalLove.Game.Flow
         private void ShowPrompts(PuzzleData puzzle, bool restart)
         {
             prompts.Show(GestureKind.Scale);
+            if (puzzle.HasGoalLine)
+                prompts.ShowAlways(GestureKind.Goal);
             if (puzzle.translatable)
                 prompts.Show(GestureKind.Move);
             if (!puzzle.noIntro && !restart)

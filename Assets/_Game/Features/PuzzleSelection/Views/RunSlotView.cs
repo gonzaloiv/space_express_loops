@@ -98,7 +98,8 @@ namespace DigitalLove.Game.PuzzleSelection
                 diorama.SunWorldPosition + transform.TransformVector(Vector3.up * tagAboveSun);
         }
 
-        // Every job carries its tag (faded by distance from the cube); only the selected job shows
+        // Every job carries its tag (faded by distance from the cube), stars unlit until earned; only
+        // the selected job shows
         // its route ends' rings.
         public void ShowMapField(JobEntry entry, Color tint, bool showFrames, bool selected)
         {

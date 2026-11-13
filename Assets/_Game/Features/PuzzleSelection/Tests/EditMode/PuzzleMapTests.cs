@@ -126,7 +126,7 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
         }
 
         [Test]
-        public void JobStillToComplete_ShowsEmptyStars_LockedShowsNone()
+        public void JobsNotSolved_ShowUnlitStars()
         {
             PuzzleData[] levels = Levels(2);
             PuzzleMap map = PuzzleMap.FromLevels(
@@ -137,7 +137,8 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
             Assert.IsTrue(map[0].ShowsStars);
             Assert.AreEqual(0, map[0].Stars);
             Assert.AreEqual(JobState.Locked, map[1].State);
-            Assert.IsFalse(map[1].ShowsStars);
+            Assert.IsTrue(map[1].ShowsStars);
+            Assert.AreEqual(0, map[1].Stars);
         }
 
         [Test]

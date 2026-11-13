@@ -20,6 +20,7 @@ namespace DigitalLove.Game.GesturePrompts
         [SerializeField] private GesturePromptContent exit;
         [SerializeField] private GesturePromptContent spend;
         [SerializeField] private GesturePromptContent stars;
+        [SerializeField] private GesturePromptContent goal;
         [SerializeField] private SpaceShapingView shapingView;
         [SerializeField] private PuzzleMapView mapView;
         [SerializeField] private Vector3 scaleOffset = new(0.12f, 0.12f, 0f);
@@ -28,6 +29,7 @@ namespace DigitalLove.Game.GesturePrompts
         [SerializeField] private Vector3 exitOffset = new(0f, 0.22f, 0f);
         [SerializeField] private Vector3 spendOffset = new(-0.14f, 0.14f, 0f);
         [SerializeField] private Vector3 starsOffset = new(-0.14f, 0.02f, 0f);
+        [SerializeField] private Vector3 goalOffset = new(0f, 0.14f, 0f);
 
         [Inject] private MemoryDataClient memoryDataClient;
 
@@ -113,6 +115,8 @@ namespace DigitalLove.Game.GesturePrompts
                     return MeterPost + FieldOffset(spendOffset);
                 case GestureKind.Stars:
                     return MeterPost + FieldOffset(starsOffset);
+                case GestureKind.Goal:
+                    return shapingView.DestinationPosition + FieldOffset(goalOffset);
                 default:
                     return mapView.SelectionCubePosition + MapOffset(enterOffset);
             }
@@ -144,6 +148,8 @@ namespace DigitalLove.Game.GesturePrompts
                 case GestureKind.Spend:
                 case GestureKind.Stars:
                     return MeterPost;
+                case GestureKind.Goal:
+                    return shapingView.DestinationPosition;
                 default:
                     return null;
             }
@@ -163,6 +169,8 @@ namespace DigitalLove.Game.GesturePrompts
                     return spend;
                 case GestureKind.Stars:
                     return stars;
+                case GestureKind.Goal:
+                    return goal;
                 default:
                     return move;
             }

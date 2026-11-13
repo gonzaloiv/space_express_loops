@@ -32,6 +32,7 @@ MonoBehaviour:
   noFail: 1
   noGrade: 1
   noIntro: 1
+  goalLineKey: field_goal_reach_ring
   sources:
   - home: {x: 0, y: 0, z: 0}
     scale: 0.12

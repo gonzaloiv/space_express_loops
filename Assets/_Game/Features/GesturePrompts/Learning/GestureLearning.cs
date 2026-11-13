@@ -47,6 +47,8 @@ namespace DigitalLove.Game.GesturePrompts
                     return "spend";
                 case GestureKind.Stars:
                     return "stars";
+                case GestureKind.Goal:
+                    return "goal";
                 default:
                     return "move";
             }

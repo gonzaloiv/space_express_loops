@@ -8,6 +8,8 @@ namespace DigitalLove.Game.GesturePrompts
         Move,
         Exit,
         Spend,
-        Stars
+        Stars,
+        // Not a gesture: the tutorial's goal, pointing at the destination.
+        Goal
     }
 }

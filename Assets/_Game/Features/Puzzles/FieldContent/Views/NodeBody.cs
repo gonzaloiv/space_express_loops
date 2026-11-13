@@ -16,8 +16,8 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private float pulseSwell = 0.12f;
         [Tooltip("Rim glow added at the peak of the arrival pulse.")]
         [SerializeField] private float pulseRim = 1.6f;
-        [Tooltip("Marks drawn with the body, such as an endpoint's ring. When set, the route colour " +
-                 "paints the marks and the body keeps its own look; tints reach both.")]
+        [Tooltip("Marks drawn with the body, such as an endpoint's ring. The route colour (in a job) " +
+                 "and tints paint both the body and the marks.")]
         [SerializeField] private List<Renderer> marks = new();
         [Tooltip("Base colour of the marks when no route colour is applied.")]
         [SerializeField] private ColorValue markColor;
@@ -153,20 +153,19 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void ApplyBaseColor()
         {
-            bool marked = marks.Count > 0;
             if (activeRenderer != null)
-                Paint(activeRenderer, ColorFor(baseColor, !marked));
+                Paint(activeRenderer, ColorFor(baseColor));
 
             for (int i = 0; i < marks.Count; i++)
-                Paint(marks[i], ColorFor(markColor.value, true));
+                Paint(marks[i], ColorFor(markColor.value));
         }
 
-        private Color ColorFor(Color own, bool takesRoute)
+        private Color ColorFor(Color own)
         {
             if (hasTint)
                 return tintColor;
 
-            return hasRouteColor && takesRoute ? routeColor : own;
+            return hasRouteColor ? routeColor : own;
         }
 
         private void Paint(Renderer target, Color color)

@@ -113,7 +113,8 @@ count.
   is warmer"; on graded jobs it stays neutral, so the route end says where the run ends, not how close
   it is.
 - **One colour per route.** A ship's line, its baseline and its endpoint planets share one route
-  colour; single-ship jobs are one route, and the map diorama uses the same colour. The line ends in
+  colour, the planet body and its ring both; single-ship jobs are one route. On the map the endpoints
+  stay neutral. The line ends in
   the outcome — arrive, crash or miss — so the result reads at the end of the route, not across the
   whole line. The pending preview is the route colour dimmed, so the routes still read while shaping.
 - **Endpoints read by shape.** The origin is a filled ring, the destination an open ring, both in the
