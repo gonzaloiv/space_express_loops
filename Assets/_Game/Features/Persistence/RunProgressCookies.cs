@@ -14,6 +14,7 @@ namespace DigitalLove.Game.Persistence
         private const string ExitPromptCookieId = "exit_prompt_after_fail";
         private const string ChapterOpenedCookiePrefix = "chapter_opened_";
         private const string CoverageSeenCookieId = "sector_coverage_seen";
+        private const string BulletinSeenCookiePrefix = "chapter_bulletin_seen_";
 
         public static RunProgress Build(LevelSelector selector, PlayerData playerData)
         {
@@ -79,6 +80,32 @@ namespace DigitalLove.Game.Persistence
             cookie.SetMetadata(solved.ToString());
             return isNew && solved > 0;
         }
+
+        // The chapter whose bulletin is due: its first job is solved and the bulletin has not played.
+        // The episode's frame arrives once the player has done its first job. Null when none is due.
+        public static string DueBulletinChapter(LevelSelector selector, PlayerData playerData)
+        {
+            List<LevelCompleteCookie> cookies = playerData.GetLevelCompleteCookies();
+            string previous = null;
+            for (int i = 0; i < selector.TotalLevelsCount; i++)
+            {
+                LevelData level = selector.GetLevelByGlobalIndex<LevelData>(i);
+                if (level == null || string.IsNullOrEmpty(level.id))
+                    continue;
+
+                string chapter = LevelData.GetChapterId(level.id);
+                bool opensChapter = chapter != previous;
+                previous = chapter;
+                if (opensChapter && cookies.GetByLevelId(level.id) != null
+                    && !playerData.HasCookie(BulletinSeenCookiePrefix + chapter))
+                    return chapter;
+            }
+
+            return null;
+        }
+
+        public static void MarkBulletinSeen(PlayerData playerData, string chapterId) =>
+            playerData.AddCookie(new Cookie(BulletinSeenCookiePrefix + chapterId));
 
         public static bool HasSeenEnding(PlayerData playerData, int jobCount)
         {

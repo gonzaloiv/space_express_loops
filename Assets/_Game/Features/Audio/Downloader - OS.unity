@@ -901,6 +901,9 @@ MonoBehaviour:
   - console
   - title
   - release
+  - bulletin
+  - title
+  - release
   locale: {fileID: 11400000, guid: ef5f93a95eb7b214c98395886e20e196, type: 2}
 --- !u!1 &781987388
 GameObject:

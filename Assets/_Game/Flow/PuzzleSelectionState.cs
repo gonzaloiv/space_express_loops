@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DigitalLove.Audio;
 using DigitalLove.Casual.Levels;
 using DigitalLove.DataAccess;
@@ -6,7 +7,9 @@ using DigitalLove.Game.GesturePrompts;
 using DigitalLove.Game.Persistence;
 using DigitalLove.Game.PuzzleSelection;
 using DigitalLove.Game.SpaceShaping;
+using DigitalLove.Game.UI.Console;
 using DigitalLove.Global;
+using DigitalLove.Localization;
 using DigitalLove.TTS;
 using Reflex.Attributes;
 using UnityEngine;
@@ -27,6 +30,8 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private JobCardPanel card;
         [SerializeField] private SectorReadout sector;
         [SerializeField] private MapChapterTitles chapterTitles;
+        [Tooltip("Types the episode bulletin before the map, once per chapter.")]
+        [SerializeField] private ConsoleScreen console;
         [SerializeField, Min(0f)] private float tickCooldownSecs = 0.06f;
 
         [Header("Debug")]
@@ -36,11 +41,15 @@ namespace DigitalLove.Game.Flow
         [Inject] private MemoryDataClient memoryDataClient;
         [Inject] private PlayerDataProvider playerDataProvider;
 
+        private const string LevelsTable = "Levels";
+
         private PuzzleMap map;
         private bool autoEntryUsed;
+        private bool active;
 
         public override void Enter()
         {
+            active = true;
             ttsPresenter.Stop();
             view.SelectionChanged += OnSelectionChanged;
             card.Opened += OnCardOpened;
@@ -75,7 +84,30 @@ namespace DigitalLove.Game.Flow
                 return;
             }
 
-            ShowMap(progress);
+            if (!TryPlayBulletin(playerData, progress))
+                ShowMap(progress);
+        }
+
+        // Once a chapter's first job is solved, the console types the episode's bulletin (the world the
+        // player now works in) before the map comes back. Once per chapter; none authored, none played.
+        private bool TryPlayBulletin(PlayerData playerData, RunProgress progress)
+        {
+            string chapter = RunProgressCookies.DueBulletinChapter(levelSelector, playerData);
+            if (chapter == null)
+                return false;
+
+            List<string> lines =
+                LocalizationUtil.GetValuesInKeyOrder(LevelsTable, ChapterData.BulletinKeyFor(chapter));
+            if (lines.Count == 0)
+                return false;
+
+            RunProgressCookies.MarkBulletinSeen(playerData, chapter);
+            console.PlayMessage(lines, () =>
+            {
+                if (active)
+                    ShowMap(progress);
+            });
+            return true;
         }
 
         private void ApplyPendingCloud()
@@ -118,6 +150,7 @@ namespace DigitalLove.Game.Flow
             view.SelectionChanged -= OnSelectionChanged;
             card.Opened -= OnCardOpened;
             card.LineTyped -= OnLineTyped;
+            active = false;
             prompts.HideAll();
             sector.Hide();
             chapterTitles.Hide();

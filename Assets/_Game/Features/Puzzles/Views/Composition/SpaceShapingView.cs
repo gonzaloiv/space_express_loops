@@ -237,6 +237,8 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void ClearPrediction() => spawner.Zones.ClearPredictions();
 
+        public void PoseZone(int index, float scale) => spawner.Zones.Pose(index, scale);
+
         public void Refuse(ZoneRefusal reason) => spawner.Zones.Refuse(reason);
     }
 }

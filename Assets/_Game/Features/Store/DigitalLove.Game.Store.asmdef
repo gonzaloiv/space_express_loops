@@ -1,0 +1,18 @@
+{
+    "name": "DigitalLove.Game.Store",
+    "rootNamespace": "",
+    "references": [
+        "DigitalLove.Game.SpaceShaping",
+        "DigitalLove.Game.SpaceShaping.Model",
+        "DigitalLove.Game.SpaceShaping.Views"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

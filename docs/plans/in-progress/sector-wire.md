@@ -49,6 +49,16 @@ the firm's greed arrive as news, and the lit map reads as the firm's reach.
 - Author the title prototype under the map root (console style, `LookAtCameraOnY`) and wire it.
 - Exit: the two chapters read as two places with their titles; if not, revert to one galaxy.
 
+### U4 — the episode bulletin
+
+- Once a chapter's first job is solved, the first return to the map types the episode's bulletin on
+  the console (`chapter_NN_bulletin_01…`, Levels table) before the map appears; once per chapter
+  (`chapter_bulletin_seen_NN` cookie). Chapter 1 frames the world after job 1 (never in the first 30
+  seconds); chapter 2 opens with Jim and gets its bulletin after 2-1.
+- `RunProgressCookies.DueBulletinChapter` / `MarkBulletinSeen`, `LocalizationUtil.GetValuesInKeyOrder`,
+  `PuzzleSelectionState` sequences it through `ConsoleScreen.PlayMessage`.
+- Exit: the fast suite passes; after job 1 the bulletin types, then the map with coverage and wire.
+
 ## Manual check (headset)
 
 1. Fresh save: the boot types `> WIRE: FUEL CAP HOLDS FOR THE 12TH YEAR` before the title.
@@ -65,3 +75,6 @@ the firm's greed arrive as news, and the lit map reads as the firm's reach.
 12. Sliding the cube across the gap snaps to the other cluster's nodes; the fade follows the cube.
 13. The ending's lit map still fits the view with both clusters.
 14. Decision: keep the systems, tune the gap and title placement, or go back to one galaxy.
+15. After job 1's receipt, the console types `> 2048. NOBODY IS BORN. NOTHING GROWS.` and two more
+    lines before the map; it never plays again, not even after a replay of job 1.
+16. Chapter 2: Jim's opener before 2-1, then the fleet bulletin on the return after 2-1.

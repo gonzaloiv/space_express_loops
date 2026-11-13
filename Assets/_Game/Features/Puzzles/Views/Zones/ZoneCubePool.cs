@@ -88,6 +88,14 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void SetStrain(float value) => pool.Views.ApplyStrain(value);
 
+        // Holds one cube mid-stretch at a scale, as a pinch would show it (store art, no hands).
+        public void Pose(int index, float scale)
+        {
+            CubeView cube = pool.EnsureSlot(index);
+            cube.SetScaling(true);
+            cube.SetScale(scale);
+        }
+
         public void Refuse(ZoneRefusal reason)
         {
             CubeView cube = pool.Views.Active();

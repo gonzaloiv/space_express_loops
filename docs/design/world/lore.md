@@ -118,6 +118,11 @@ it. An episode never explains itself and never resolves the bleak reading.
 | 1 — the Wrap | the seven-job first episode | The firm bets on a machine nobody trusts, and the new employee makes it work. |
 | 2 — the fleet | the multi-ship jobs | It works, so the firm gets greedy: more ships on the same entropy, sold as green. Greed is eco-friendly, and Jim is not sure that is good news. |
 
+**The bulletin frames the episode once you are inside it.** After a chapter's first job is solved,
+the console types a short dispatch (three lines, facts, no explanation: *"2048. Nobody is born.
+Nothing grows."*) before the map returns. It never plays before the player has done anything, so
+chapter 1's frame arrives after job 1, not in the first seconds.
+
 **The chapter opener carries the episode; the job intro carries the lesson.** Jim opens a chapter
 once, before its first job and with no field in the room: the world beat (what the firm is doing now,
 and why). Then the job starts as usual with its own intro line, which stays the teaching line. A replay

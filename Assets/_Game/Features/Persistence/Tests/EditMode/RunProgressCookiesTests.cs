@@ -70,6 +70,26 @@ namespace DigitalLove.Game.Persistence.Tests
         }
 
         [Test]
+        public void DueBulletin_FollowsEachChapterFirstSolveOnce()
+        {
+            LevelSelector selector = fixtures.Selector(
+                fixtures.Puzzle("01_01"), fixtures.Puzzle("01_02"), fixtures.Puzzle("02_01"));
+            PlayerData playerData = new();
+
+            Assert.IsNull(RunProgressCookies.DueBulletinChapter(selector, playerData));
+
+            fixtures.AddComplete(playerData, "01_01", 1);
+            Assert.AreEqual("01", RunProgressCookies.DueBulletinChapter(selector, playerData));
+
+            RunProgressCookies.MarkBulletinSeen(playerData, "01");
+            fixtures.AddComplete(playerData, "01_02", 1);
+            Assert.IsNull(RunProgressCookies.DueBulletinChapter(selector, playerData));
+
+            fixtures.AddComplete(playerData, "02_01", 1);
+            Assert.AreEqual("02", RunProgressCookies.DueBulletinChapter(selector, playerData));
+        }
+
+        [Test]
         public void SeeCoverage_IsNewOnlyWhenTheCountGrows()
         {
             PlayerData playerData = new();
