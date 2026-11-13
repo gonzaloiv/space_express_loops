@@ -60,6 +60,23 @@ namespace DigitalLove.Game.SpaceShaping
                 Fly(points, travel, Mathf.Max(launchDelaySecs + delaySecs, 0f), docks));
         }
 
+        // Frozen at a fraction of the run, nose along the path, optionally enlarged: a still of the ship
+        // in flight (store art). Stop restores the authored scale.
+        public void Hold(List<Vector3> points, float progress, float scale)
+        {
+            Stop();
+            if (points.Count < 2)
+                return;
+
+            gameObject.SetActive(true);
+            transform.localScale = baseScale * Mathf.Max(scale, 0.001f);
+            float index = Mathf.Clamp01(progress) * (points.Count - 1);
+            transform.localPosition = Sample(points, index);
+            Vector3 heading = Heading(points, index);
+            if (heading.sqrMagnitude > 0.000001f)
+                transform.localRotation = Quaternion.LookRotation(heading, ParentUp());
+        }
+
         public void Stop()
         {
             if (flight != null)

@@ -47,6 +47,16 @@ namespace DigitalLove.Game.SpaceShaping
                 Completed?.Invoke();
         }
 
+        public void Hold(IReadOnlyList<TrajectoryResult> results, float progress, float scale)
+        {
+            Stop();
+            for (int i = 0; i < results.Count; i++)
+            {
+                if (CanFly(results[i]))
+                    pool.EnsureSlot(i).Hold(results[i].Points, progress, scale);
+            }
+        }
+
         public void Stop()
         {
             flying = 0;

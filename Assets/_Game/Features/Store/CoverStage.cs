@@ -16,13 +16,20 @@ namespace DigitalLove.Game.Store
         [SerializeField, Min(0)] private int frame;
         [Tooltip("The zone's scale mid-stretch: above 1 grows a well (curve), below 1 shrinks a blocker (clear).")]
         [SerializeField, Range(0.3f, 3f)] private float scale = 1.8f;
+        [Tooltip("How far along its predicted run the ship is held (0 = no ship, 1 = at the destination).")]
+        [SerializeField, Range(0f, 1f)] private float shipProgress = 0.65f;
+        [Tooltip("The held ship's size against its authored size; the real ship is a few pixels at cover distance.")]
+        [SerializeField, Range(1f, 6f)] private float shipScale = 3f;
 
         private void Start() => Pose();
 
         [ContextMenu("Pose stretch")]
-        public void Pose() => PuzzleStretchPose.Show(puzzle, settings, view, frame, scale);
+        public void Pose() => Show(scale);
 
         [ContextMenu("Pose rest")]
-        public void PoseRest() => PuzzleStretchPose.Show(puzzle, settings, view, frame, 1f);
+        public void PoseRest() => Show(1f);
+
+        private void Show(float zoneScale) =>
+            PuzzleStretchPose.Show(puzzle, settings, view, frame, zoneScale, shipProgress, shipScale);
     }
 }

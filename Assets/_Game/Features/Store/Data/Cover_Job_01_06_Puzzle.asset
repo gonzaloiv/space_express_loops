@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10000000000000000000000000000016, type: 3}
+  m_Name: Cover_Job_01_06_Puzzle
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Domain::DigitalLove.Game.SpaceShaping.PuzzleData
+  id: 01_06
+  prefab: {fileID: 0}
+  origin: {x: -0.25624827, y: 0.190998, z: -0.030343616}
+  destination: {x: 0.3306325, y: 0.115231045, z: 0.028568711}
+  zoneCentre: {x: 0.03719212, y: 0.15311453, z: -0.0008874526}
+  cubeSizeMin: 0.02933734
+  cubeSizeMax: 0.1293641
+  frames:
+  - centre: {x: 0.03719212, y: 0.15311453, z: -0.0008874526}
+    size: 0.1293641
+  captureRadius: 0.05150771
+  translatable: 1
+  zones: 2
+  routes: 2
+  resizable: 0
+  entropyBudget: 1.0285714
+  noFail: 0
+  noGrade: 0
+  noIntro: 0
+  sources:
+  - home: {x: 0, y: 0, z: 0}
+    scale: 0.12
+    name:
+    fixedMass: 0
+    centreOnly: 1
+  - home: {x: 0.043354705, y: 0.15311453, z: -0.062278703}
+    scale: 0.082266375
+    name:
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: 0.08189162, y: 0.25625667, z: -0.046331763}
+    scale: 0.0993895
+    name:
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: -0.33681843, y: -0.04043286, z: -0.16617358}
+    scale: 0.117603734
+    name:
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: -0.25624827, y: 0.190998, z: -0.030343616}
+    scale: 0.026670307
+    name:
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: 0.3306325, y: 0.115231045, z: 0.028568711}
+    scale: 0.10301542
+    name:
+    fixedMass: 0
+    centreOnly: 0
+  ships: []

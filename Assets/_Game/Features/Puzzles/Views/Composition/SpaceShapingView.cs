@@ -174,6 +174,12 @@ namespace DigitalLove.Game.SpaceShaping
                 session.StepSecs,
                 audible);
 
+        public void HoldShips(
+            SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results, float progress,
+            float scale) =>
+            spawner.Ships.Hold(
+                ShipRunGeometry.Visible(session, results, capGap, capGapFraction), progress, scale);
+
         public void ShowTrajectories(
             SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results, bool pending)
         {

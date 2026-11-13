@@ -280,8 +280,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 294652733}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2039829, y: -0.31289616, z: 0.068996415, w: 0.92505485}
-  m_LocalPosition: {x: 0.63335556, y: 0.5236533, z: -0.82912004}
+  m_LocalRotation: {x: 0.2039829, y: -0.31289616, z: 0.06899642, w: 0.92505485}
+  m_LocalPosition: {x: 0.65335566, y: 0.6036534, z: -0.82912}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -584,9 +584,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.Store::DigitalLove.Game.Store.CoverStage
   view: {fileID: 1907965894}
   settings: {fileID: 11400000, guid: 1000000000000000000000000000001a, type: 2}
-  puzzle: {fileID: 11400000, guid: 7becb7a263813184191031baffafeeef, type: 2}
+  puzzle: {fileID: 11400000, guid: 6027fabe2b531114c9b28d79a19a5939, type: 2}
   frame: 0
-  scale: 1.8
+  scale: 0.5
+  shipProgress: 0.6
+  shipScale: 3
 --- !u!4 &1003728092
 Transform:
   m_ObjectHideFlags: 0
@@ -1102,6 +1104,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1117798212696241134, guid: 1878e8ad8a8138442805b693007e4fec, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1214712785813484872, guid: 1878e8ad8a8138442805b693007e4fec, type: 3}
+      propertyPath: fadeFar
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1214712785813484872, guid: 1878e8ad8a8138442805b693007e4fec, type: 3}
+      propertyPath: fadeNear
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 6528027483687676806, guid: 1878e8ad8a8138442805b693007e4fec, type: 3}
       propertyPath: m_Enabled
       value: 0
