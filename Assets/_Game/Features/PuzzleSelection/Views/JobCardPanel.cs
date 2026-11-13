@@ -100,9 +100,22 @@ namespace DigitalLove.Game.PuzzleSelection
             header.text = $"{HeaderTitle}   {DateTime.Now:HH:mm}";
             client.text = Line(Label("CLIENT"), puzzle.ClientKey);
             cargo.text = Line(Label("CARGO"), puzzle.CargoKey);
-            manual.text = includeManual
-                ? Line(Label($"MANUAL r{puzzle.ManualRevision}"), puzzle.ManualKey)
-                : string.Empty;
+            manual.text = includeManual ? ManualLine(puzzle) : string.Empty;
+        }
+
+        // The manual is a release the tech team keeps patching: "MANUAL v1.0.3 (INITIAL DEPLOYMENT)",
+        // then the entry on its own line.
+        private static string ManualLine(PuzzleData puzzle)
+        {
+            string entry = LocalizationUtil.GetValue(tableName: TableName, key: puzzle.ManualKey);
+            if (string.IsNullOrEmpty(entry))
+                return string.Empty;
+
+            string release = LocalizationUtil.GetValue(tableName: TableName, key: puzzle.ManualReleaseKey);
+            string version = $"MANUAL v{puzzle.ManualVersion}";
+            return string.IsNullOrEmpty(release)
+                ? $"{version}\n{entry}"
+                : $"{version} ({release})\n{entry}";
         }
 
         // Grows the card to its text: the lines' layout reports its preferred height, and the card adds

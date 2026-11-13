@@ -13,6 +13,7 @@ namespace DigitalLove.Game.Persistence
         private const string EndingSeenCookieId = "run_ending_seen";
         private const string ExitPromptCookieId = "exit_prompt_after_fail";
         private const string ChapterOpenedCookiePrefix = "chapter_opened_";
+        private const string CoverageSeenCookieId = "sector_coverage_seen";
 
         public static RunProgress Build(LevelSelector selector, PlayerData playerData)
         {
@@ -68,6 +69,16 @@ namespace DigitalLove.Game.Persistence
         // True only the first time: a chapter's opener plays once, never on a replay.
         public static bool OpenChapter(PlayerData playerData, string chapterId) =>
             playerData.AddCookie(new Cookie(ChapterOpenedCookiePrefix + chapterId));
+
+        // True when the map has not shown this solved count yet; records it as shown. The first return
+        // after a new solve types the coverage and the wire, every other return shows them at once.
+        public static bool SeeCoverage(PlayerData playerData, int solved)
+        {
+            Cookie cookie = playerData.GetOrCreateCookie(CoverageSeenCookieId);
+            bool isNew = !int.TryParse(cookie.metadata, out int seen) || solved > seen;
+            cookie.SetMetadata(solved.ToString());
+            return isNew && solved > 0;
+        }
 
         public static bool HasSeenEnding(PlayerData playerData, int jobCount)
         {

@@ -8,18 +8,35 @@ namespace DigitalLove.Game.PuzzleSelection
     {
         private readonly JobEntry[] entries;
         private readonly Vector3[] positions;
+        private readonly MapChapter[] chapters;
         private int selectedIndex;
 
-        private PuzzleMap(JobEntry[] entries, Vector3[] positions, int selectedIndex)
+        private PuzzleMap(
+            JobEntry[] entries, Vector3[] positions, MapChapter[] chapters, int selectedIndex)
         {
             this.entries = entries;
             this.positions = positions;
+            this.chapters = chapters ?? System.Array.Empty<MapChapter>();
             this.selectedIndex = entries.Length > 0
                 ? Mathf.Clamp(selectedIndex, 0, entries.Length - 1)
                 : -1;
         }
 
         public int Count => entries.Length;
+
+        public IReadOnlyList<MapChapter> Chapters => chapters;
+
+        // The route's hop between two systems: the job that opens a new chapter.
+        public bool StartsChapter(int index)
+        {
+            for (int i = 0; i < chapters.Length; i++)
+            {
+                if (chapters[i].StartsAt(index))
+                    return true;
+            }
+
+            return false;
+        }
 
         public int SelectedIndex => selectedIndex;
 
@@ -77,14 +94,15 @@ namespace DigitalLove.Game.PuzzleSelection
         }
 
         public static PuzzleMap FromLevels(
-            IReadOnlyList<PuzzleData> levels, RunProgress progress, PuzzleMapLayout layout)
+            IReadOnlyList<PuzzleData> levels, RunProgress progress, PuzzleMapLayout layout,
+            MapChapter[] chapters = null)
         {
             JobEntry[] entries = RunJobs.FromLevels(levels, progress);
             Vector3[] positions = new Vector3[entries.Length];
             for (int i = 0; i < entries.Length; i++)
                 positions[i] = layout.At(i);
 
-            return new PuzzleMap(entries, positions, progress.CurrentIndex);
+            return new PuzzleMap(entries, positions, chapters, progress.CurrentIndex);
         }
 
         private bool IsInRange(int index) => index >= 0 && index < entries.Length;

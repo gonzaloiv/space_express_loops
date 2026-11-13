@@ -65,7 +65,8 @@ shape is in [chapters](../design/chapters.md); the demo is the store's own optio
 
 Active work.
 
-Nothing in progress.
+- [Sector wire](in-progress/sector-wire.md) — started 2026-11-13: the world's news on the console as
+  an ordered wire line per solve, and the sector coverage count on the map.
 
 Closed 2026-11-13: the fleet episode and the hand-tracking gate; their headset checks moved to
 [freeze day](backlog/freeze-day.md) ([lessons](../lessons.md)).

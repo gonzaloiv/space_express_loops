@@ -9,6 +9,8 @@ namespace DigitalLove.Game.PuzzleSelection
     {
         // How much further than the planets' fade the route stays visible.
         private const float SpineReach = 2f;
+        // The hop between two chapters' systems reads as a jump, fainter than the route inside one.
+        private const float HopAlpha = 0.4f;
 
         private readonly LineRenderer[] segments;
         private readonly Vector3[] points;
@@ -45,7 +47,7 @@ namespace DigitalLove.Game.PuzzleSelection
             UpdatePoints(map, selected, fields);
             int end = EndIndex(map);
             for (int i = 0; i < segments.Length; i++)
-                DrawSegment(i, end, fade);
+                DrawSegment(i, end, fade, map.StartsChapter(i + 1) ? HopAlpha : 1f);
         }
 
         private void UpdatePoints(
@@ -62,7 +64,7 @@ namespace DigitalLove.Game.PuzzleSelection
                 points[field.MapIndex] = field.SunMapPosition;
         }
 
-        private void DrawSegment(int index, int end, MapFade fade)
+        private void DrawSegment(int index, int end, MapFade fade, float weight)
         {
             LineRenderer segment = segments[index];
             if (index >= end || index + 1 >= points.Length)
@@ -82,7 +84,7 @@ namespace DigitalLove.Game.PuzzleSelection
             // The route is the map's spine: it reaches further than the planets fade, and is tinted
             // through the material's base colour (the line shader ignores vertex colours).
             Color tint = color;
-            tint.a = alpha * (1f - Mathf.InverseLerp(fade.Near * SpineReach, far, distance));
+            tint.a = alpha * weight * (1f - Mathf.InverseLerp(fade.Near * SpineReach, far, distance));
             segment.SetBaseColor(tint);
             segment.SetPosition(0, start);
             segment.SetPosition(1, endPoint);

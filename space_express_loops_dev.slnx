@@ -1,5 +1,6 @@
 ﻿<Solution>
   <Project Path="DigitalLove.Casual.UI.csproj" />
+  <Project Path="DigitalLove.Game.PuzzleSelection.Views.csproj" />
   <Project Path="DigitalLove.Player.csproj" />
   <Project Path="VoiceSDK.Dictation.Runtime.csproj" />
   <Project Path="AssistantCoreSDKEditor.csproj" />
@@ -12,7 +13,6 @@
   <Project Path="DigitalLove.Game.SpaceShaping.Creator.Data.csproj" />
   <Project Path="VoiceSDK.Dictation.Editor.csproj" />
   <Project Path="Meta.Voice.NLayer.csproj" />
-  <Project Path="DigitalLove.Game.PuzzleSelection.Views.csproj" />
   <Project Path="Meta.WitAi.Lib.csproj" />
   <Project Path="Meta.VoiceSDK.Mic.Common.csproj" />
   <Project Path="MegaFiers.Editor.csproj" />
@@ -63,6 +63,7 @@
   <Project Path="Meta.WitAI.Lib.Editor.csproj" />
   <Project Path="VoiceSDK.Editor.Composer.csproj" />
   <Project Path="Vendor.UnityGif.csproj" />
+  <Project Path="DigitalLove.Game.PuzzleSelection.Domain.csproj" />
   <Project Path="DigitalLove.Game.GesturePrompts.Editor.csproj" />
   <Project Path="DigitalLove.XR.GestureArt.Editor.csproj" />
   <Project Path="Meta.Wit.Dictation.csproj" />
@@ -107,7 +108,6 @@
   <Project Path="DigitalLove.Audio.TheRadio.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.csproj" />
   <Project Path="Meta.Voice.Opus.csproj" />
-  <Project Path="DigitalLove.Game.PuzzleSelection.Domain.csproj" />
   <Project Path="Unity.XR.Hands.Samples.VisualizerSample.csproj" />
   <Project Path="DigitalLove.VFX.MegaFiers.csproj" />
   <Project Path="DigitalLove.Game.SpaceShaping.Grid.Editor.csproj" />

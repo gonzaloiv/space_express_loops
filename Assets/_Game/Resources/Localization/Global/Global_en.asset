@@ -126,6 +126,58 @@ MonoBehaviour:
     m_Localized: JOB {0}
     m_Metadata:
       m_Items: []
+  - m_Id: 74113009852272641
+    m_Localized: 'SECTOR COVERAGE {0}/{1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272642
+    m_Localized: '> WIRE: FUEL CAP HOLDS FOR THE 12TH YEAR'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272643
+    m_Localized: '> WIRE: OUR SPACE CORP HIRES. FIRST HIRE IN 11 YEARS'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272644
+    m_Localized: '> WIRE: PRICES FLAT FOR THE 30TH YEAR'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272645
+    m_Localized: '> WIRE: SECTOR POPULATION DOWN 0.4% THIS QUARTER'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272646
+    m_Localized: '> WIRE: SCHOOL 7 CLOSED. NOW STORAGE'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272647
+    m_Localized: '> WIRE: OFFICES IN THE SECTOR: 0'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272648
+    m_Localized: '> WIRE: TRANSPORT FIRMS LEFT: 3'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272649
+    m_Localized: '> WIRE: OUR SPACE CORP SELLS MULTI-SHIP RUNS AS GREEN'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272650
+    m_Localized: '> WIRE: GREEN INDEX UP. NOBODY KNOWS WHY'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272651
+    m_Localized: '> WIRE: LAST NEW CUSTOMER SIGNED IN 2041'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272652
+    m_Localized: '> WIRE: TRANSPORT FIRMS LEFT: 2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272653
+    m_Localized: '> WIRE: TIME WRAP PROTOTYPE "ON SCHEDULE"'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -27,10 +27,6 @@ MonoBehaviour:
     m_Key: level_01_01_complete_03
     m_Metadata:
       m_Items: []
-  - m_Id: 7610341969923
-    m_Key: level_01_01_complete_04_win
-    m_Metadata:
-      m_Items: []
   - m_Id: 7610341969924
     m_Key: level_01_02_complete_01_win
     m_Metadata:
@@ -47,10 +43,6 @@ MonoBehaviour:
     m_Key: level_01_02_fail_annoyed
     m_Metadata:
       m_Items: []
-  - m_Id: 7610341969928
-    m_Key: level_01_02_init_01_surprised
-    m_Metadata:
-      m_Items: []
   - m_Id: 72150890864889857
     m_Key: level_01_02_init_cargo
     m_Metadata:
@@ -63,16 +55,8 @@ MonoBehaviour:
     m_Key: level_01_02_init_manual_entry
     m_Metadata:
       m_Items: []
-  - m_Id: 7610341969929
-    m_Key: level_01_03_complete_01
-    m_Metadata:
-      m_Items: []
   - m_Id: 7610341969930
     m_Key: level_01_03_complete_02
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610341969931
-    m_Key: level_01_03_complete_03_win
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969932
@@ -103,16 +87,8 @@ MonoBehaviour:
     m_Key: level_01_04_complete_02
     m_Metadata:
       m_Items: []
-  - m_Id: 7610341969935
-    m_Key: level_01_04_complete_03_win
-    m_Metadata:
-      m_Items: []
   - m_Id: 7610341969936
     m_Key: level_01_04_fail_annoyed
-    m_Metadata:
-      m_Items: []
-  - m_Id: 72150890864889867
-    m_Key: level_01_04_init_01
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889865
@@ -215,10 +191,6 @@ MonoBehaviour:
     m_Key: level_01_07_fail_annoyed
     m_Metadata:
       m_Items: []
-  - m_Id: 7610346164229
-    m_Key: level_01_07_init_01_laughing
-    m_Metadata:
-      m_Items: []
   - m_Id: 72150890864889877
     m_Key: level_01_07_init_cargo
     m_Metadata:
@@ -229,14 +201,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 72150890864889878
     m_Key: level_01_07_init_manual_entry
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610346164230
-    m_Key: level_02_01_complete_01
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610346164231
-    m_Key: level_02_01_fail
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164232
@@ -263,10 +227,6 @@ MonoBehaviour:
     m_Key: level_02_02_fail_annoyed
     m_Metadata:
       m_Items: []
-  - m_Id: 7610346164238
-    m_Key: level_02_02_init_01_surprised
-    m_Metadata:
-      m_Items: []
   - m_Id: 7610346164239
     m_Key: level_02_02_init_cargo
     m_Metadata:
@@ -287,10 +247,6 @@ MonoBehaviour:
     m_Key: level_02_03_fail_annoyed
     m_Metadata:
       m_Items: []
-  - m_Id: 7610346164244
-    m_Key: level_02_03_init_01_laughing
-    m_Metadata:
-      m_Items: []
   - m_Id: 7610346164245
     m_Key: level_02_03_init_cargo
     m_Metadata:
@@ -301,10 +257,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 7610346164247
     m_Key: level_02_03_init_manual_entry
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610346164248
-    m_Key: level_02_04_complete_01_confused
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164249
@@ -343,20 +295,8 @@ MonoBehaviour:
     m_Key: run_ending_jim_03_win
     m_Metadata:
       m_Items: []
-  - m_Id: 72150890864889879
-    m_Key: chapter_02_init_01
-    m_Metadata:
-      m_Items: []
-  - m_Id: 72150890864889880
-    m_Key: chapter_02_init_02_laughing
-    m_Metadata:
-      m_Items: []
   - m_Id: 72150890864889881
     m_Key: chapter_02_init_03_confused
-    m_Metadata:
-      m_Items: []
-  - m_Id: 72150890864889882
-    m_Key: chapter_02_init_04
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889883
@@ -365,6 +305,158 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 72150890864889884
     m_Key: level_02_03_complete_02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889885
+    m_Key: chapter_01_title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889886
+    m_Key: chapter_02_title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889887
+    m_Key: chapter_01_manual_release
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889888
+    m_Key: chapter_02_manual_release
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889889
+    m_Key: level_01_01_init_client
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889890
+    m_Key: level_01_01_init_cargo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889891
+    m_Key: level_01_01_init_manual_entry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889892
+    m_Key: level_01_01_complete_04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889893
+    m_Key: level_01_01_complete_05_win
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889894
+    m_Key: level_01_02_init_01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889895
+    m_Key: level_01_02_init_02_annoyed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889896
+    m_Key: level_01_03_init_02_confused
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889897
+    m_Key: level_01_03_complete_01_win
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889898
+    m_Key: level_01_03_complete_03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889899
+    m_Key: level_01_04_init_01_annoyed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889900
+    m_Key: level_01_04_init_02_confused
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889901
+    m_Key: level_01_04_init_03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889902
+    m_Key: level_01_04_complete_03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889903
+    m_Key: level_01_05_init_02_surprised
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889904
+    m_Key: level_01_06_init_02_confused
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889905
+    m_Key: level_01_07_init_01_confused
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889906
+    m_Key: level_01_07_init_02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889907
+    m_Key: level_01_07_init_03_laughing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889908
+    m_Key: chapter_02_init_01_laughing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889909
+    m_Key: chapter_02_init_02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889910
+    m_Key: chapter_02_init_04_annoyed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889911
+    m_Key: level_02_01_init_02_confused
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889912
+    m_Key: level_02_01_complete_01_win
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889913
+    m_Key: level_02_01_complete_02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889914
+    m_Key: level_02_01_fail_annoyed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889915
+    m_Key: level_02_02_init_01_annoyed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889916
+    m_Key: level_02_02_init_02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889917
+    m_Key: level_02_03_init_01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889918
+    m_Key: level_02_03_init_02_confused
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889919
+    m_Key: level_02_04_init_02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889920
+    m_Key: level_02_04_init_03_annoyed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889921
+    m_Key: level_02_04_complete_01_win
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889922
+    m_Key: level_02_04_complete_02_confused
     m_Metadata:
       m_Items: []
   m_Metadata:

@@ -25,6 +25,8 @@ namespace DigitalLove.Game.Flow
         [SerializeField] private SynthPatch openCue;
         [SerializeField] private SynthPatch typeCue;
         [SerializeField] private JobCardPanel card;
+        [SerializeField] private SectorReadout sector;
+        [SerializeField] private MapChapterTitles chapterTitles;
         [SerializeField, Min(0f)] private float tickCooldownSecs = 0.06f;
 
         [Header("Debug")]
@@ -89,6 +91,8 @@ namespace DigitalLove.Game.Flow
 
             map = RunMap.Build(levelSelector, progress);
             view.Show(map);
+            chapterTitles.Show(map);
+            ShowSector(progress);
             prompts.Show(GestureKind.Enter);
         }
 
@@ -96,7 +100,16 @@ namespace DigitalLove.Game.Flow
         {
             map = view.CurrentMap;
             view.EnterRequested += OnEnterRequested;
+            chapterTitles.Show(map);
+            ShowSector(RunProgressCookies.Build(levelSelector, memoryDataClient.Get<PlayerData>()));
             prompts.Show(GestureKind.Enter);
+        }
+
+        private void ShowSector(RunProgress progress)
+        {
+            PlayerData playerData = memoryDataClient.Get<PlayerData>();
+            bool typed = RunProgressCookies.SeeCoverage(playerData, progress.SolvedCount);
+            sector.Show(progress.SolvedCount, progress.Count, typed);
         }
 
         public override void Exit()
@@ -106,6 +119,8 @@ namespace DigitalLove.Game.Flow
             card.Opened -= OnCardOpened;
             card.LineTyped -= OnLineTyped;
             prompts.HideAll();
+            sector.Hide();
+            chapterTitles.Hide();
 
             if (map == null)
                 return;

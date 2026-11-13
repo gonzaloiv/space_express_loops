@@ -6,6 +6,7 @@
         "DigitalLove.Game.UI.Console",
         "DigitalLove.UI.Behaviours",
         "DigitalLove.Global",
+        "DigitalLove.Localization",
         "DigitalLove.Audio.Runtime",
         "DigitalLove.Casual.Levels",
         "DigitalLove.Game.Persistence",

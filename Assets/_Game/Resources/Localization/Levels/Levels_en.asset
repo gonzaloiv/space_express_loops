@@ -19,91 +19,87 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 72150890864889856
-    m_Localized: The Lighthouse Keepers' Union
+    m_Localized: "The Lighthouse Keepers' Union"
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889857
-    m_Localized: one bulb
+    m_Localized: "one bulb"
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889858
-    m_Localized: The star is not a planet. It bends the same way.
+    m_Localized: "The star is not a planet. It bends the same way. Stellar mass is included in your Wrap licence at no extra cost."
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889860
-    m_Localized: Strait & Narrow Ltd.
+    m_Localized: "Strait & Narrow Ltd."
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889861
-    m_Localized: a wide load
+    m_Localized: "a decommissioned school bus (unoccupied)"
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889862
-    m_Localized: The Wrap takes as well as gives. A smaller world is a wider door.
+    m_Localized: "The Wrap takes as well as gives. A smaller world is a wider door. Shrinking inhabited bodies is permitted. Residents are not notified."
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889863
-    m_Localized: Shrink the rock, not the cargo.
+    m_Localized: "Strait & Narrow are moving a school bus."
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889864
-    m_Localized: Madame Fink's Discount Gravity
+    m_Localized: "Madame Fink's Discount Gravity"
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889865
-    m_Localized: a piano
+    m_Localized: "a piano"
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889866
-    m_Localized: The Wrap is yours to place. Where you work is a decision. Make it.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 72150890864889867
-    m_Localized: Now move it. Where is a choice. Works everywhere.
+    m_Localized: "The Wrap is yours to place. Where you work is a decision. Make it. Our Space Corp does not reimburse home office expenses."
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889868
-    m_Localized: The Third Best Bakery
+    m_Localized: "The Third Best Bakery"
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889869
-    m_Localized: a wedding cake, still warm
+    m_Localized: "a wedding cake, still warm"
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889870
-    m_Localized: The Wrap is yours to place. Use it more than once. Wrap only what you need; the universe is not insured.
+    m_Localized: "Multi-zone wrapping enabled. Spacetime elasticity is finite. Wrap only the minimum required volume. Our Space Corp accepts no liability for localized causality tears."
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889871
-    m_Localized: Several zones. Place it, scale them.
+    m_Localized: "The Third Best Bakery paid extra for still warm."
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889872
-    m_Localized: Nobody & Co.
+    m_Localized: "Nobody & Co."
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889873
-    m_Localized: a body (a funeral)
+    m_Localized: "a pre-paid 2038 funeral urn"
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889874
-    m_Localized: The field is free. The Wrap is not.
+    m_Localized: "The field is free. The Wrap is not. Existing gravity is public infrastructure. Use it before someone privatizes it."
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889875
-    m_Localized: Use what is already there.
+    m_Localized: "Nobody & Co. prepaid this funeral in 2038."
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889876
-    m_Localized: The Inheritance of Mr. Fink
+    m_Localized: "The Inheritance of Mr. Fink"
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889877
-    m_Localized: the last of something
+    m_Localized: "the sector's final paper birth registry"
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889878
-    m_Localized: This is the one the manual was written for. Welcome, new employee. There has not been a new employee in eleven years. There is still no office.
+    m_Localized: "This is the one the manual was written for. Welcome, new employee. There has not been a new employee in eleven years. There is still no office."
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164255
@@ -117,227 +113,183 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164253
-    m_Localized: Efficiency is a virtue until it is a cost.
+    m_Localized: "Three ships. The budget did not grow. Efficiency is a virtue until it is a cost. Live cargo travels at the client's own existential risk."
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164252
-    m_Localized: The Very Small Opera
+    m_Localized: "The Very Small Opera"
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164251
-    m_Localized: the orchestra, one live animal
+    m_Localized: "the orchestra, one live animal"
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164250
-    m_Localized: Three ships. The budget did not grow.
+    m_Localized: "Three ships. The budget did not grow."
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164249
-    m_Localized: The opera starts without them.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610346164248
-    m_Localized: Three for the price of one. I am not sure that is good news.
+    m_Localized: "The opera starts without them."
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164247
-    m_Localized: Many routes may share one end. Fix the approach once.
+    m_Localized: "Many routes may share one end. Fix the approach once. Our Space Corp values every customer. Both of them."
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164246
-    m_Localized: The Last Two Customers
+    m_Localized: "The Last Two Customers"
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164245
-    m_Localized: two halves of a gift
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610346164244
-    m_Localized: Two ships. One door.
+    m_Localized: "two halves of a gift"
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164243
-    m_Localized: The gift is still in pieces.
+    m_Localized: "The gift is still in pieces."
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164242
-    m_Localized: One door. Two deliveries. The ledger smiles.
+    m_Localized: "One door. Two deliveries."
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164241
-    m_Localized: One origin. Two promises. Bend near the start and both feel it.
+    m_Localized: "One origin. Two promises. Bend near the start and both feel it. Shared departures are billed once. Shared failures are billed twice."
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164240
-    m_Localized: Slightly Used Stars Ltd.
+    m_Localized: "Slightly Used Stars Ltd."
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164239
-    m_Localized: two refurbished suns
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610346164238
-    m_Localized: They are back. They want both orders today.
+    m_Localized: "two secondhand fusion cores (slightly dimmed)"
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164237
-    m_Localized: Slightly Used Stars is unhappy again.
+    m_Localized: "Slightly Used Stars is unhappy again."
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164236
-    m_Localized: They paid. They did not say thank you.
+    m_Localized: "They paid. They did not say thank you."
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164235
-    m_Localized: Two ships. One Wrap. One budget.
+    m_Localized: "Two ships. One Wrap. One budget. Additional ships do not increase your entropy allowance. This is a feature."
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164234
-    m_Localized: Halfmoon & Halfmoon
+    m_Localized: "Halfmoon & Halfmoon"
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164233
-    m_Localized: two identical parcels
+    m_Localized: "two identical parcels"
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164232
-    m_Localized: I sold two runs for the price of one.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610346164231
-    m_Localized: One of them got lost.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610346164230
-    m_Localized: Both arrived. Same cost. Nobody asked how.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610346164229
-    m_Localized: "\u2026Good luck."
+    m_Localized: "I sold two runs for the price of one."
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164228
-    m_Localized: Mr. Fink is still waiting.
+    m_Localized: "Mr. Fink is still waiting."
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164227
-    m_Localized: Today the space. Tomorrow the time.
+    m_Localized: "Today the space. Tomorrow the time."
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164226
-    m_Localized: The console stays where it is.
+    m_Localized: "The console stays where it is."
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164225
-    m_Localized: The ledger is happy. For now.
+    m_Localized: "The ledger is happy. For now."
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164224
-    m_Localized: Mr. Fink's estate says there's nothing else.
+    m_Localized: "Mr. Fink's estate says there is nothing else."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969945
-    m_Localized: The inheritance is delivered.
+    m_Localized: "The registry is delivered."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969944
-    m_Localized: The field won.
+    m_Localized: "The well won. The urn is part of the core now."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969943
-    m_Localized: The field did the work. That is our margin.
+    m_Localized: "The field did the work. That is our margin."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969942
-    m_Localized: Nobody & Co. says the funeral can start on time.
+    m_Localized: "Nobody & Co. says the funeral can start on time."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969941
-    m_Localized: The body is delivered.
+    m_Localized: "The urn is delivered."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969940
-    m_Localized: The cake went cold.
+    m_Localized: "The cake went cold. Then stale."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969939
-    m_Localized: Nobody orders more cake. They just want it cheaper.
+    m_Localized: "Nobody orders more cake. They just want it cheaper."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969938
-    m_Localized: The Third Best Bakery says it's the best they've done.
+    m_Localized: "The bakery says it is the best they have done."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969937
-    m_Localized: The cake arrived still warm.
+    m_Localized: "The cake arrived still warm."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969936
-    m_Localized: The piano is lost.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610341969935
-    m_Localized: The ledger is happy.
+    m_Localized: "Somewhere, Madame Fink just heard a very loud chord."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969934
-    m_Localized: Madame Fink says it plays.
+    m_Localized: "Madame Fink sent a thank you note. It is mostly complaints."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969933
-    m_Localized: The piano is delivered.
+    m_Localized: "The piano is delivered."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969932
-    m_Localized: Too much rock in the way.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610341969931
-    m_Localized: Cheaper than fuel. Much cheaper.
+    m_Localized: "The bus is part of the asteroid ring now."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969930
-    m_Localized: Strait & Narrow measured it twice.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610341969929
-    m_Localized: The wide load is through.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610341969928
-    m_Localized: The star is a source too.
+    m_Localized: "Strait & Narrow measured it twice."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969927
-    m_Localized: The bulb is still out there.
+    m_Localized: "The bulb is in a solar orbit now. Mark it delivered to the general vicinity."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969926
-    m_Localized: No fuel burned. The ledger is happy.
+    m_Localized: "No fuel burned. The ledger is happy."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969925
-    m_Localized: The Keepers say it's the right colour.
+    m_Localized: "The Keepers say it is the right colour."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969924
-    m_Localized: The bulb is delivered.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610341969923
-    m_Localized: Launch your next job from the map.
+    m_Localized: "The bulb is delivered."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969922
-    m_Localized: You bend space. Ships get through.
+    m_Localized: "You bend space. Ships get through."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969921
-    m_Localized: I'm Jim. This is Our Space Corp.
+    m_Localized: "I'm Jim. This is Our Space Corp."
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969920
-    m_Localized: Nice. The ship made it.
+    m_Localized: "Nice. The ship made it."
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164256
@@ -348,28 +300,168 @@ MonoBehaviour:
     m_Localized: Get some sleep.
     m_Metadata:
       m_Items: []
-  - m_Id: 72150890864889879
-    m_Localized: The Wrap works. So I sold more of it.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 72150890864889880
-    m_Localized: Same entropy. More ships.
-    m_Metadata:
-      m_Items: []
   - m_Id: 72150890864889881
-    m_Localized: The brochure says green. It is just cheaper.
-    m_Metadata:
-      m_Items: []
-  - m_Id: 72150890864889882
-    m_Localized: Fuel is still capped. Nobody else can do this.
+    m_Localized: "Fuel is still capped. Nobody else can do this."
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889883
-    m_Localized: They are back because nobody else is left.
+    m_Localized: "They are back because nobody else is left."
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889884
-    m_Localized: The last two customers. We keep them happy.
+    m_Localized: "The last two customers. We keep them happy."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889885
+    m_Localized: "EPISODE 1 \u00B7 THE WRAP"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889886
+    m_Localized: "EPISODE 2 \u00B7 THE FLEET"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889887
+    m_Localized: "INITIAL DEPLOYMENT"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889888
+    m_Localized: "FLEET EXPANSION"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889889
+    m_Localized: "Bl\u00F6dmeyer & Sons (no sons)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889890
+    m_Localized: "a pallet of refurbished 2019 copper valves"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889891
+    m_Localized: "Welcome, new employee. Your console projects the Wrap into the room it stands in. Place it anywhere in your residential unit. Headquarters is undergoing an indefinite administrative restructuring."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889892
+    m_Localized: "No fuel burned. That is the whole business plan."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889893
+    m_Localized: "Launch your next job from the map."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889894
+    m_Localized: "The brochure calls this synergistic solar harvesting."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889895
+    m_Localized: "It means we skim the sun because fuel costs eight hundred credits a litre."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889896
+    m_Localized: "The school closed last year. The bus is all that is left."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889897
+    m_Localized: "The bus is through."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889898
+    m_Localized: "Cheaper than fuel. Much cheaper."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889899
+    m_Localized: "Madame Fink wants this piano in an orbital lounge."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889900
+    m_Localized: "The lounge closed yesterday. She paid anyway."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889901
+    m_Localized: "Move the Wrap. It works everywhere."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889902
+    m_Localized: "The ledger is happy."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889903
+    m_Localized: "Nobody pays extra anymore. Do not waste it."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889904
+    m_Localized: "The family stopped answering. The contract did not."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889905
+    m_Localized: "Mr. Fink left the sector one thing. The last birth registry."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889906
+    m_Localized: "It is mostly empty pages."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889907
+    m_Localized: "\u2026Good luck."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889908
+    m_Localized: "Good news. Clients love our green initiative."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889909
+    m_Localized: "Bad news. Our green initiative is just me selling two delivery slots on the same entropy budget."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889910
+    m_Localized: "Try not to tear anything."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889911
+    m_Localized: "I am not sure who paid for the second."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889912
+    m_Localized: "Both arrived. Same cost."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889913
+    m_Localized: "Nobody asked how."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889914
+    m_Localized: "One of them got lost."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889915
+    m_Localized: "Slightly Used Stars is back."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889916
+    m_Localized: "They want both cores today. They also want a discount."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889917
+    m_Localized: "Two halves of a gift. One address."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889918
+    m_Localized: "They are our last two customers. Let us keep it that way."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889919
+    m_Localized: "The orchestra is in two ships. The animal is in the third."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889920
+    m_Localized: "Do not ask me which animal."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889921
+    m_Localized: "All three arrived. The opera can begin."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72150890864889922
+    m_Localized: "Three for the price of one. I am not sure that is good news."
     m_Metadata:
       m_Items: []
   references:

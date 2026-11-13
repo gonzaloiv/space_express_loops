@@ -52,8 +52,11 @@ namespace DigitalLove.Game.SpaceShaping
 
         public string ManualKey => IntroKey + "_manual_entry";
 
-        // The tech team rewrites the manual after each delivery; job N reads revision N.
-        public int ManualRevision => AsIndex(id);
+        // The tech team ships the manual in releases: one per chapter, one patch per job, so job
+        // 02_03 reads v2.0.3 of the chapter's release ("FLEET EXPANSION").
+        public string ManualVersion => $"{int.Parse(GetChapterId(id))}.0.{AsIndex(id)}";
+
+        public string ManualReleaseKey => $"chapter_{GetChapterId(id)}_manual_release";
 
         public Vector3 Origin => origin;
 

@@ -820,57 +820,41 @@ MonoBehaviour:
   downloader: {fileID: 674238885}
   tableName: Levels
   keys:
-  - level_01_02_init_01
-  - level_01_03_init_01
-  - level_01_04_init_01
-  - level_01_05_init_01
-  - level_01_06_init_01
-  - level_01_07_init_01
+  - level_01_01_init_0
   - level_01_01_complete
+  - level_01_01_fail
+  - level_01_02_init_0
   - level_01_02_complete
-  - level_01_03_complete
-  - level_01_04_complete
-  - level_01_05_complete
-  - level_01_06_complete
-  - level_01_07_complete
   - level_01_02_fail
+  - level_01_03_init_0
+  - level_01_03_complete
   - level_01_03_fail
+  - level_01_04_init_0
+  - level_01_04_complete
   - level_01_04_fail
+  - level_01_05_init_0
+  - level_01_05_complete
   - level_01_05_fail
+  - level_01_06_init_0
+  - level_01_06_complete
   - level_01_06_fail
+  - level_01_07_init_0
+  - level_01_07_complete
   - level_01_07_fail
-  - level_01_01_complete_02
-  - level_01_01_complete_03
-  - level_01_01_complete_04
-  - level_01_02_complete_02
-  - level_01_02_complete_03
-  - level_01_03_complete_02
-  - level_01_03_complete_03
-  - level_01_04_complete_02
-  - level_01_04_complete_03
-  - level_01_05_complete_02
-  - level_01_05_complete_03
-  - level_01_06_complete_02
-  - level_01_06_complete_03
-  - level_01_07_complete_02
-  - level_01_07_complete_03
-  - level_01_07_complete_04
-  - level_01_07_complete_05
-  - run_ending_jim_01
-  - run_ending_jim_02
-  - run_ending_jim_03
-  - level_02_01_init_01
+  - level_02_01_init_0
   - level_02_01_complete
   - level_02_01_fail
-  - level_02_02_init_01
+  - level_02_02_init_0
   - level_02_02_complete
   - level_02_02_fail
-  - level_02_03_init_01
+  - level_02_03_init_0
   - level_02_03_complete
   - level_02_03_fail
-  - level_02_04_init_01
+  - level_02_04_init_0
   - level_02_04_complete
   - level_02_04_fail
+  - chapter_02_init
+  - run_ending_jim
   containsFilter: 
   doesNotContainFilter:
   - manual

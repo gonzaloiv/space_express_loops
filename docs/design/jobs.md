@@ -219,67 +219,76 @@ are design-only until then.*
 
 ## The run — the lore skin
 
-Each job is a **contract**: a client, a cargo, and the manual entry that teaches its lesson.
-One line each; never exposition ([lore](world/lore.md)).
+Each job is a **contract**: a client, a cargo, and the manual entry that teaches its lesson. The lines
+reach the player through three channels, each with one job ([lore](world/lore.md)):
 
-| # | Client | Cargo | Fail | Tech voice | Manual entry |
-|---|---|---|---|---|---|
-| 1 | Blödmeyer & Sons (no sons) | a pallet of valves | — (no fail) | — (no intro: the Scale prompt teaches it) | "Welcome. Your Wrap does one thing. Do that one thing. Set the console anywhere; there is no office." |
-| 2 | The Lighthouse Keepers' Union | one bulb | "The bulb is still out there." | "The star is a source too." | "The star is not a planet. It bends the same way." |
-| 3 | Strait & Narrow Ltd. | a wide load | "Too much rock in the way." | "Shrink the rock, not the cargo." | "The Wrap takes as well as gives. A smaller world is a wider door." |
-| 4 | Madame Fink's Discount Gravity | a piano | "The piano is lost." | "Now move it. *Where* is a choice. Works everywhere." | "The Wrap is yours to place. Where you work is a decision. Make it." |
-| 5 | The Third Best Bakery | a wedding cake, still warm | "The cake went cold." | "Several zones. Place it, scale them." | "The Wrap is yours to place. Use it more than once. Wrap only what you need; the universe is not insured." |
-| 6 | Nobody & Co. | a body (a funeral) | "The field won." | "Use what is already there." | "The field is free. The Wrap is not." |
-| 7 | The Inheritance of Mr. Fink | the last of something | "Mr. Fink is still waiting." | "…Good luck." | "This is the one the manual was written for. Welcome, new employee. There has not been a new employee in eleven years. There is still no office." |
+- **The manual** (tech team, on the card, never spoken): one sentence that teaches, then a corporate
+  disclaimer. It carries the danger and the company's indifference ("accepts no liability for localized
+  causality tears"). Its label is a release: `MANUAL v1.0.3 (INITIAL DEPLOYMENT)`, chapter.0.job plus
+  the chapter's release name (`chapter_NN_manual_release`).
+- **The intro** (Jim, spoken, two or three short lines): the client and his mood, never the mechanic.
+- **The receipt** (Jim, spoken, after a solve): the delivery, then a line about the world or the money.
+  The main lore channel: the player is relaxed and listening.
+- **The fail** (Jim, spoken): one short joke; the player wants the retry.
+
+The exact strings live in `Levels_en` (synced from the line spreadsheet); this table keeps the
+contract, not the dialogue.
+
+| # | Client | Cargo | Manual entry |
+|---|---|---|---|
+| 1 | Blödmeyer & Sons (no sons) | a pallet of refurbished 2019 copper valves | "Welcome, new employee. Your console projects the Wrap into the room it stands in. Place it anywhere in your residential unit. Headquarters is undergoing an indefinite administrative restructuring." |
+| 2 | The Lighthouse Keepers' Union | one bulb | "The star is not a planet. It bends the same way. Stellar mass is included in your Wrap licence at no extra cost." |
+| 3 | Strait & Narrow Ltd. | a decommissioned school bus (unoccupied) | "The Wrap takes as well as gives. A smaller world is a wider door. Shrinking inhabited bodies is permitted. Residents are not notified." |
+| 4 | Madame Fink's Discount Gravity | a piano | "The Wrap is yours to place. Where you work is a decision. Make it. Our Space Corp does not reimburse home office expenses." |
+| 5 | The Third Best Bakery | a wedding cake, still warm | "Multi-zone wrapping enabled. Spacetime elasticity is finite. Wrap only the minimum required volume. Our Space Corp accepts no liability for localized causality tears." |
+| 6 | Nobody & Co. | a pre-paid 2038 funeral urn | "The field is free. The Wrap is not. Existing gravity is public infrastructure. Use it before someone privatizes it." |
+| 7 | The Inheritance of Mr. Fink | the sector's final paper birth registry | "This is the one the manual was written for. Welcome, new employee. There has not been a new employee in eleven years. There is still no office." |
 
 ### Chapter 2 — the fleet
 
-Episode 2: the Wrap works, so the firm sells more ships on the same entropy. The clients stay absurd;
-the greed is in Jim's lines and the manual ([lore](world/lore.md) §Episodes).
+Episode 2: the Wrap works, so the firm sells more ships on the same entropy, sold as green. The clients
+stay absurd; the greed is in Jim's opener and receipts, and the manual's fine print
+([lore](world/lore.md) §Episodes). Jim's opener ("Good news. Clients love our green initiative." /
+"Bad news. …") plays once before 2-1.
 
-| # | Client | Cargo | Fail | Tech voice | Manual entry |
-|---|---|---|---|---|---|
-| opener | Jim, before 2-1 | — | — | "The Wrap works. So I sold more of it. Same entropy. More ships. The brochure says green. It is just cheaper. Fuel is still capped. Nobody else can do this." | — |
-| 2-1 | Halfmoon & Halfmoon | two identical parcels | "One of them got lost." | "I sold two runs for the price of one." | "Two ships. One Wrap. One budget." |
-| 2-2 | Slightly Used Stars Ltd. | two refurbished suns | "Slightly Used Stars is unhappy again." | "They are back. They want both orders today." | "One origin. Two promises. Bend near the start and both feel it." |
-| 2-3 | The Last Two Customers | two halves of a gift | "The gift is still in pieces." | "Two ships. One door." | "Many routes may share one end. Fix the approach once." |
-| 2-4 | The Very Small Opera | the orchestra, one live animal | "The opera starts without them." | "Three ships. The budget did not grow." | "Efficiency is a virtue until it is a cost." |
+| # | Client | Cargo | Manual entry |
+|---|---|---|---|
+| 2-1 | Halfmoon & Halfmoon | two identical parcels | "Two ships. One Wrap. One budget. Additional ships do not increase your entropy allowance. This is a feature." |
+| 2-2 | Slightly Used Stars Ltd. | two secondhand fusion cores (slightly dimmed) | "One origin. Two promises. Bend near the start and both feel it. Shared departures are billed once. Shared failures are billed twice." |
+| 2-3 | The Last Two Customers | two halves of a gift | "Many routes may share one end. Fix the approach once. Our Space Corp values every customer. Both of them." |
+| 2-4 | The Very Small Opera | the orchestra, one live animal | "Three ships. The budget did not grow. Efficiency is a virtue until it is a cost. Live cargo travels at the client's own existential risk." |
 
 ## The manual's arc
 
 The job card is the company's **onboarding manual for new employees** ([lore](world/lore.md) §The tech
-team): short, dry, corporate, slightly out of date. The manual entry is read on the card: the selection
-map shows the contract before entry, and a smaller copy stays during the run. The TTS card plays only
-Jim's tech-voice line. Each entry introduces **one idea**, so it carries the teaching *and* the
-fiction. It opens warm and ends corporate-bleak; the "new employee" it keeps addressing is the player,
-who arrived in a kitchen instead of an office.
-Two beats to keep:
+team): dry, corporate, shipped in releases and patched after every delivery. The manual entry is read
+on the card: the selection map shows the contract before entry, and a smaller copy stays during the
+run. It is never spoken. Each entry teaches **one idea** and adds the fine print, so it carries the
+teaching *and* the fiction. It opens warm and ends corporate-bleak; the "new employee" it keeps
+addressing is the player, who arrived in a kitchen instead of an office. Two beats to keep:
 
 - The opening line: *"Welcome, new employee."*
-- A late note: *you are the first new employee in eleven years.*
+- A late note: *you are the first new employee in eleven years.* No other line uses that number.
 
-**Two arcs:** the **tech voice** goes pride → doubt; the **manual** goes cheerful → bleak. The **client
-names stay absurd** — the tonal relief.
+**Two arcs:** Jim goes pride → doubt; the **manual** goes cheerful → bleak. The **client names stay
+absurd** — the tonal relief.
 
-**The console thread.** Remote work lives in the manual and Jim's receipts, never the client or cargo —
-the contract is the customer's, the office is Jim's, and the two never meet. It escalates once per act
-and never explains itself:
+**The console thread.** Remote work lives in the manual and Jim's lines, never the client or cargo. It
+escalates once per act and never explains itself:
 
-- **Job 1 (establish):** the manual sets the console down — *"Set the console anywhere; there is no
-  office."*
-- **Job 4 (choose):** the manual already says *where you work is a decision*; the tech voice adds the
-  flat pitch, *"Works everywhere."*
+- **Job 1 (establish):** the manual: *"Place it anywhere in your residential unit. Headquarters is
+  undergoing an indefinite administrative restructuring."*
+- **Job 4 (choose):** the manual: *"Where you work is a decision… does not reimburse home office
+  expenses."*; Jim adds the flat pitch, *"It works everywhere."*
 - **Job 7 (absent):** the manual's late note ends *"There is still no office."*, and Jim's receipt
   closes *"The console stays where it is. Today the space. Tomorrow the time."*
 
-The exact strings live in `Levels_en` / `Levels_es` under the `init_manual_entry`, `init_01`, `fail` and
-`complete` keys. A spoken line longer than one short sentence is split into numbered entries that
-play in order: `init_01`, `init_02`, … (up to `_09`), and `complete`, `complete_02`, … (the
-same for `fail`, which is one entry per job). A key may end in Jim's expression
-(`level_01_02_init_01_surprised`; `win`, `laughing`, `angry`, `confused`, `annoyed`, `surprised`, none =
-idle). A chapter's opener is `chapter_NN_init_01…`, the same pattern; it plays once, before the
-chapter's first job ([lore](world/lore.md) §Episodes). Jobs 2, 3, 5 and 6 stay untouched: the thread is the
-company's condition, not a running joke.
+**Keys.** `level_{job}_init_client` / `_init_cargo` / `_init_manual_entry` (on screen);
+`level_{job}_init_NN`, `_complete_NN` and `_fail` (spoken, played in key order). A spoken key may end in
+Jim's expression (`level_01_02_init_02_annoyed`; `win`, `laughing`, `angry`, `confused`, `annoyed`,
+`surprised`; none = idle). A chapter's opener is `chapter_NN_init_NN…`, the same pattern; it plays
+once, before the chapter's first job ([lore](world/lore.md) §Episodes). Chapter keys also carry the
+map title (`chapter_NN_title`) and the manual release (`chapter_NN_manual_release`).
 
 ## Seeds (later)
 

@@ -70,6 +70,25 @@ namespace DigitalLove.Game.Persistence.Tests
         }
 
         [Test]
+        public void SeeCoverage_IsNewOnlyWhenTheCountGrows()
+        {
+            PlayerData playerData = new();
+
+            Assert.IsFalse(RunProgressCookies.SeeCoverage(playerData, 0));
+            Assert.IsTrue(RunProgressCookies.SeeCoverage(playerData, 1));
+            Assert.IsFalse(RunProgressCookies.SeeCoverage(playerData, 1));
+            Assert.IsTrue(RunProgressCookies.SeeCoverage(playerData, 2));
+        }
+
+        [Test]
+        public void SeeCoverage_FirstVisitWithProgressTypesIn()
+        {
+            PlayerData playerData = new();
+
+            Assert.IsTrue(RunProgressCookies.SeeCoverage(playerData, 5));
+        }
+
+        [Test]
         public void RecordSolve_AddsCookieWithGrade()
         {
             PlayerData playerData = new();

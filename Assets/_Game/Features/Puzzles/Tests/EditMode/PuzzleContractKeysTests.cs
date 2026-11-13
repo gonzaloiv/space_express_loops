@@ -34,12 +34,13 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         }
 
         [Test]
-        public void ManualRevision_IsTheJobNumber()
+        public void ManualVersion_IsTheChapterAndTheJob()
         {
             PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
-            puzzle.id = "01_04";
+            puzzle.id = "02_04";
 
-            Assert.AreEqual(4, puzzle.ManualRevision);
+            Assert.AreEqual("2.0.4", puzzle.ManualVersion);
+            Assert.AreEqual("chapter_02_manual_release", puzzle.ManualReleaseKey);
 
             Object.DestroyImmediate(puzzle);
         }

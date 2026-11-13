@@ -123,6 +123,58 @@ MonoBehaviour:
     m_Key: field_meter_job
     m_Metadata:
       m_Items: []
+  - m_Id: 74113009852272641
+    m_Key: map_coverage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272642
+    m_Key: sector_wire_00
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272643
+    m_Key: sector_wire_01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272644
+    m_Key: sector_wire_02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272645
+    m_Key: sector_wire_03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272646
+    m_Key: sector_wire_04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272647
+    m_Key: sector_wire_05
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272648
+    m_Key: sector_wire_06
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272649
+    m_Key: sector_wire_07
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272650
+    m_Key: sector_wire_08
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272651
+    m_Key: sector_wire_09
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272652
+    m_Key: sector_wire_10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272653
+    m_Key: sector_wire_11
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
