@@ -87,3 +87,6 @@ Assets/Resources/PerformanceTestRunSettings.json
 Assets/Resources/PerformanceTestRunSettings.json.meta
 Assets/Screenshots.meta
 Assets/Screenshots
+
+# Google Sheets localization service: holds OAuth credentials, keep local
+Assets/_Game/Resources/Localization/Google Sheets Service.asset
