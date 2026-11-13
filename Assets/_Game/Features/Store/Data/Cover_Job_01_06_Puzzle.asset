@@ -47,11 +47,6 @@ MonoBehaviour:
     name:
     fixedMass: 0
     centreOnly: 0
-  - home: {x: -0.33681843, y: -0.04043286, z: -0.16617358}
-    scale: 0.117603734
-    name:
-    fixedMass: 0
-    centreOnly: 0
   - home: {x: -0.25624827, y: 0.190998, z: -0.030343616}
     scale: 0.026670307
     name:

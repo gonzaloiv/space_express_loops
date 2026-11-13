@@ -281,7 +281,7 @@ Transform:
   m_GameObject: {fileID: 294652733}
   serializedVersion: 2
   m_LocalRotation: {x: 0.2039829, y: -0.31289616, z: 0.06899642, w: 0.92505485}
-  m_LocalPosition: {x: 0.65335566, y: 0.6036534, z: -0.82912}
+  m_LocalPosition: {x: 0.6394854, y: 0.7331301, z: -1.0415899}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -587,8 +587,8 @@ MonoBehaviour:
   puzzle: {fileID: 11400000, guid: 6027fabe2b531114c9b28d79a19a5939, type: 2}
   frame: 0
   scale: 0.5
-  shipProgress: 0.6
-  shipScale: 3
+  shipProgress: 0.78
+  shipScale: 4
 --- !u!4 &1003728092
 Transform:
   m_ObjectHideFlags: 0
