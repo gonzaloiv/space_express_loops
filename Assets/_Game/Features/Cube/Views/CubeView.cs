@@ -91,6 +91,9 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         public bool ScaleContains(Vector3 world) =>
             Contains(world, ContentSize * 0.5f * (1f + Mathf.Max(scaleMarginFraction, 0f)));
 
+        // The frame itself, no margin: where a one-hand pinch can pick the cube up.
+        public bool FrameContains(Vector3 world) => Contains(world, Size * 0.5f);
+
         private bool Contains(Vector3 world, Vector3 half) =>
             SpaceZone.BoxContains(ToLocal(world), Centre, half);
 

@@ -1692,14 +1692,6 @@ MonoBehaviour:
       metadata: 
     - id: level_complete_01_03
       metadata: 
-    - id: level_complete_01_04
-      metadata: 
-    - id: level_complete_01_05
-      metadata: 
-    - id: level_complete_01_06
-      metadata: 
-    - id: level_complete_01_07
-      metadata: 
 --- !u!114 &284223193
 MonoBehaviour:
   m_ObjectHideFlags: 0

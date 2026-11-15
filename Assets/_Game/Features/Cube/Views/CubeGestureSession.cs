@@ -15,6 +15,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         private bool classified;
         private bool frameGrab;
+        private bool moveGrab;
         private int lastCount;
         private float startHandDistance;
         private float startScale;
@@ -36,6 +37,10 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         public bool Scaled { get; private set; }
 
         public bool FrameGrab => frameGrab;
+
+        // One hand holds the cube from inside its frame. The grab volume's margin is for two-hand
+        // scaling only; a single pinch outside the frame neither moves nor refuses.
+        public bool MoveGrab => moveGrab;
 
         public void Tick(int count)
         {
@@ -78,6 +83,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
             if (count == 1 && lastCount != 1)
             {
+                moveGrab = CubeGesture.HandInsideFrame(zone, grabbable);
                 grabOffset = zone.Centre - HandLocal();
                 grabOrigin = HandLocal();
             }
@@ -100,6 +106,9 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         private void Move()
         {
+            if (!moveGrab)
+                return;
+
             if (!zone.CanMove)
             {
                 if ((HandLocal() - grabOrigin).sqrMagnitude

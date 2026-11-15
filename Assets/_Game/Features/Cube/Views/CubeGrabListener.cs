@@ -117,8 +117,9 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             }
 
             gesture.Tick(count);
-            SetMoving(count == 1 && zone.CanMove);
-            ApplyFeedback(count);
+            bool stray = count == 1 && !gesture.MoveGrab;
+            SetMoving(count == 1 && zone.CanMove && !stray);
+            ApplyFeedback(stray ? 0 : count);
         }
 
         private void SetMoving(bool value)

@@ -8,6 +8,9 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         public static bool HandInsideScale(CubeView zone, Grabbable grabbable) =>
             zone.ScaleContains(HandWorld(zone, grabbable));
 
+        public static bool HandInsideFrame(CubeView zone, Grabbable grabbable) =>
+            zone.FrameContains(HandWorld(zone, grabbable));
+
         // Two hands straddle a small cube, so the test is the point between the pinches, not each hand.
         public static bool PinchCentreInsideScale(CubeView zone, Grabbable grabbable) =>
             zone.ScaleContains(PinchCentre(zone, grabbable));
