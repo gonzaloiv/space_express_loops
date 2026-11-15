@@ -204,8 +204,8 @@ an object, not a line. Where each one lives:
 | You are on your own, at your hours | The job card header carries the console's clock, your real local time | live |
 | The manual is written to you, and keeps being rewritten | The manual line reads *MANUAL v1.0.3 (INITIAL DEPLOYMENT)*: a release per chapter, a patch per delivery, with corporate fine print | live |
 | Jim is remote too | His call panel: his kitchen behind him (night window, mug), a faint call timestamp | planned (art) |
-| The lit map is the firm's reach | A coverage count in the map's field (*SECTOR COVERAGE 07/11*), typed in after a new solve | building ([sector wire](../../plans/in-progress/sector-wire.md)) |
-| The fixed pie, the fuel cap, the greed | The sector wire: one news line per solved job (`sector_wire_NN`), in story order, on the boot and the map; no speaker | building ([sector wire](../../plans/in-progress/sector-wire.md)) |
+| The lit map is the firm's reach | A coverage count in the map's field (*SECTOR COVERAGE 07/11*), typed in after a new solve | live |
+| The fixed pie, the fuel cap, the greed | The sector wire: one news line per solved job (`sector_wire_NN`), in story order, on the boot and the map; no speaker | live |
 | "Revenue is relative" | Nothing yet: background for writing the world. Add it only where a game line earns it (after the player has seen spending less pay more); never at boot, never spoken | background |
 
 ## Guardrails

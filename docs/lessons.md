@@ -4,6 +4,27 @@ Short post-mortems, written when a plan closes (rule in [AGENTS.md](../AGENTS.md
 morning). Newest first. Each entry: what worked, what surprised us, the rule for next time. One idea per
 bullet; the code and tests are the record of what was built.
 
+## 2026-11-15 — No sun answer
+
+- **Worked:** checking the rule against every answer, not just the chosen one; `OutOfZone` had let
+  the sun win 1-4 through a second answer.
+- **Surprised:** a one-ship check named 2-4 the sun job; requiring every ship to arrive showed the
+  opposite (2-1 to 2-3 are sun wins, 2-4 is not).
+- **Surprised:** in the two-ship layouts the sun is the only cube that rescues both ships, so no seed
+  scan can fix chapter 2. A locked sun read as a bug.
+- **Next time:** a field rule the generator does not plan for is a generator change, not a seed scan.
+- **Next time:** long bakes run as cancellable background jobs, never through the editor bridge.
+
+## 2026-11-15 — Sector wire
+
+- **Worked:** one ordered wire keyed by the solved count told the story with no speaker, no TTS and no
+  new UI; the count comes from the run, so chapter 2 grew the total for free.
+- **Worked:** one "last seen count" cookie decides typed-once vs instant on every map return.
+- **Surprised:** two chapters on one map needed a layout per chapter and its own centring, not a
+  bigger spiral.
+- **Next time:** a layout experiment lands with its revert path and its headset decision written down,
+  so the plan can close before the read.
+
 ## 2026-11-13 — Fleet episode
 
 - **Worked:** the bakes moved into their own chapter folder with their GUIDs and one `ChapterData`,

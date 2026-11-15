@@ -1,6 +1,6 @@
 # Freeze day
 
-**Status:** next · flow · updated 2026-11-12 — no new features: the headset pass, value-only tuning
+**Status:** next · flow · updated 2026-11-15 — no new features: the headset pass, value-only tuning
 and the frozen build on the "Competition" channel.
 
 **Related:** [Review](../../reviews/review.md) findings 4, 5 and 9 · [plans board](../README.md)
@@ -15,7 +15,8 @@ and launches from the invite URL.
 ### U1 — the headset pass
 
 - Run the manual list below: the meter and dots, the hand-tracking gate and chapter 2 (the closed
-  hand-tracking gate and fleet episode plans left only these headset checks).
+  hand-tracking gate, fleet episode, sector wire and no sun answer plans left only these headset
+  checks).
 - Decide 02_01's budget (0.3, a tiny fix): keep it as the gentle first fleet job or swap in
   `TwoShips_B`.
 - Placement at a desk and on the lap with a 2 ft tape: field height, reach to the far endpoint, the
@@ -60,3 +61,15 @@ and launches from the invite URL.
     fail restarts in place.
 20. Every chapter 2 line, the opener and the renamed chapter 1 lines play with a clip and Jim's face
     matches the expression.
+21. Fresh save: the boot types `> WIRE: FUEL CAP HOLDS FOR THE 12TH YEAR` before the title.
+22. Solve job 1: the console types `> 2048. NOBODY IS BORN. NOTHING GROWS.` and two more lines, then
+    the map types `SECTOR COVERAGE 01/11` and the next wire line; the bulletin never replays.
+23. Re-enter the map without a new solve: coverage and wire show at once, nothing retypes; a fail
+    moves neither.
+24. Coverage and wire read at arm's length, in the field, clear of the selected diorama and the card.
+25. The map shows two systems (7 and 4 jobs) with their episode titles facing you; the hop from 01_07
+    to 02_01 is fainter; the cube slides across the gap; the ending's lit map fits the view.
+26. Decision: keep the two systems and tune the gap and titles, or go back to one galaxy.
+27. After 2-1 the fleet bulletin types on the return; the ending shows `11/11` and the last wire line.
+28. Job 1-4: the cube starts on the sun and scaling it there does not solve; carrying it to thennilia
+    and growing it a little does; the card's lines fit the new planets.

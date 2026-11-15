@@ -65,8 +65,10 @@ shape is in [chapters](../design/chapters.md); the demo is the store's own optio
 
 Active work.
 
-- [Sector wire](in-progress/sector-wire.md) — started 2026-11-13: the world's news on the console as
-  an ordered wire line per solve, and the sector coverage count on the map.
+Nothing in progress.
+
+Closed 2026-11-15: the sector wire and no sun answer; their headset checks moved to
+[freeze day](backlog/freeze-day.md) ([lessons](../lessons.md)).
 
 Closed 2026-11-13: the fleet episode and the hand-tracking gate; their headset checks moved to
 [freeze day](backlog/freeze-day.md) ([lessons](../lessons.md)).
@@ -83,10 +85,10 @@ Closed 2026-11-11: the ending, endpoint shapes, the stuck-player skip and the fi
 
 Design-only or deferred. Nothing here is scheduled.
 
-- [No sun answer](backlog/no-sun-answer.md) — the rule and 1-4's rebake landed 2026-11-15; a
-  non-sun fleet job needs the multi-ship generator to plan around the sun.
-
-
+- **Fleet jobs without a sun answer.** 1-4 is sun-free (2026-11-15); 2-1 to 2-3 are still won by
+  shrinking the sun, and in their layouts the sun is the only cube that rescues both ships. A fix
+  needs the multi-ship generator to plan around the sun (sun off the ships' corridor, or a sun-free
+  brief), searched as a cancellable background job; fix `Bake_ProducesAVerifiedTwoShipPuzzle` first.
 - [Chapter 2's capstone](../design/chapters.md#chapter-2--the-fleet-v1-then-the-store-release) — the
   2-5 fleet capstone. Post-v1. Mixed (the old job 8) waits for a later chapter.
 - The contract card stays available during the run as a static reference; otherwise
@@ -124,6 +126,8 @@ Loose ends that still need a home. Close one by linking the plan that finishes i
   2026-11-10, with the field meter) play 12-frame line-art loops rendered from Meta's own hand mesh by
   `Tools/Our Space/Render Gesture Prompt Art` (`GesturePrompts/Editor`); re-run it after tuning a motion.
   Still open: read them in the headset (size, speed, legibility at arm's length).
+- **Seeds against current settings (from no sun answer).** Retune 01_03, 01_05 and 01_07's seeds or
+  pin the shipped jobs in their contracts; fix 01_01's `growOnly` so `JobSet_MeetsTheContract` is green.
 - **Run authoring.** Jobs 1–7 are baked into Chapter 01 (seven jobs, final). The job card landed (2026-11-07). Job 1 was rebaked (2026-11-06) with
   six planets and a sun the cube does not cover (seed 141) — a sunless four-planet field almost never
   bakes. `PuzzleJobBakeTests` and a headset read of job 1 are still open.
