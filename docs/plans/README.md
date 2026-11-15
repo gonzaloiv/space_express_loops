@@ -78,8 +78,8 @@ Closed 2026-11-11: the ending, endpoint shapes, the stuck-player skip and the fi
 
 ## Next
 
-- [Freeze day](backlog/freeze-day.md) — 2026-11-13: the headset pass, value-only tuning and the
-  frozen build; no new features.
+- [Freeze day](backlog/freeze-day.md) — the headset pass is done (2026-11-15); left: the frozen
+  build on the "Competition" channel.
 
 ## Later
 

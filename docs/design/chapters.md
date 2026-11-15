@@ -89,8 +89,7 @@ board.
 - **Freelance unlock.** After chapter 2 only, or each tier as soon as its lesson is taught?
 - **Chapter break on the map.** Built (2026-11-13): each chapter is its own system (a small
   spiral) side by side, with an episode title and a fainter route hop between them
-  (`PuzzleMapLayout.Systems`). Keep it if it reads on the headset
-  ([freeze day](../plans/backlog/freeze-day.md)).
+  (`PuzzleMapLayout.Systems`). Kept after the headset pass (2026-11-15).
 - **Chapter 3's pricing.** A free update (reviews) or a price step?
 - **Cost and the cube's size.** Should an edit cost more when the zone covers more (planets, volume)?
   Decide before resize enters, since a bigger cube touches more per pinch.
