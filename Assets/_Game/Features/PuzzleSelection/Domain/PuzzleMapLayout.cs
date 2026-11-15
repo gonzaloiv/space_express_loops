@@ -48,7 +48,7 @@ namespace DigitalLove.Game.PuzzleSelection
         // spiral keeps the galaxy's density (its area grows with its job count), so the dioramas sit
         // as far apart as they always did; one chapter is the plain galaxy.
         public static PuzzleMapLayout Systems(
-            IReadOnlyList<int> sizes, float radius = 0.24f, float gap = 0.1f)
+            IReadOnlyList<int> sizes, float radius = 0.24f, float gap = 0.03f)
         {
             int total = Total(sizes);
             if (sizes == null || sizes.Count <= 1 || total <= 0)

@@ -165,6 +165,7 @@ namespace DigitalLove.Game.PuzzleSelection
             {
                 bool entered = enter.Tick(deltaSecs);
                 pose.SetReach(Mathf.Lerp(1f - pinchFade, 0f, enter.Progress));
+                pose.SlideToSelected(enter.Progress);
                 if (entered)
                     EnterRequested?.Invoke();
                 return;

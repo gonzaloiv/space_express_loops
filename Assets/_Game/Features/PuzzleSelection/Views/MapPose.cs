@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace DigitalLove.Game.PuzzleSelection
 {
-    // The map holds still while the cube travels over it: the map is placed once per visit with the
-    // selected node in front of the player, and the fields fade around wherever the cube is.
+    // The map holds still while the cube travels over it: the map is placed once per visit, centred
+    // in front of the player, and the fields fade around wherever the cube is.
     internal class MapPose
     {
         private readonly Transform mapRoot;
@@ -38,11 +38,20 @@ namespace DigitalLove.Game.PuzzleSelection
             applyFieldFade = ApplyFieldFade;
         }
 
-        // Places the selected job on its node, then centres the map on that job's sun.
+        // Places the selected job on its node and the whole map centred in front of the player; the
+        // layout is centred on the map's origin.
         public void SetPose(Vector3 node)
         {
             PlaceSelected(node);
-            mapRoot.localPosition = -Vector3.Scale(mapRoot.localScale, selectedSlot.SunMapPosition);
+            mapRoot.localPosition = Vector3.zero;
+        }
+
+        // Entering slides the map until the selected sun sits where the job's field opens, so the
+        // growing diorama lands on the puzzle instead of jumping to it. t is 0 at rest, 1 entered.
+        public void SlideToSelected(float t)
+        {
+            Vector3 selected = -Vector3.Scale(mapRoot.localScale, selectedSlot.SunMapPosition);
+            mapRoot.localPosition = Vector3.Lerp(Vector3.zero, selected, Mathf.SmoothStep(0f, 1f, t));
         }
 
         public void PlaceSelected(Vector3 node)

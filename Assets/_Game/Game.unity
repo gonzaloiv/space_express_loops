@@ -3770,7 +3770,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83db5f5589fe34047946e9738dc5e482, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.LookAtCameraOnY
-  offset: 0
+  offset: 180
   lookAtSpeed: 5
 --- !u!223 &756417657
 Canvas:
@@ -12555,7 +12555,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83db5f5589fe34047946e9738dc5e482, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.LookAtCameraOnY
-  offset: 0
+  offset: 180
   lookAtSpeed: 5
 --- !u!223 &2042907159
 Canvas:

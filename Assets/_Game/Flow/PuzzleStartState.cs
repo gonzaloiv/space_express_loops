@@ -73,17 +73,21 @@ namespace DigitalLove.Game.Flow
             if (!active)
                 return;
 
+            // Jim's panel leaves once he has spoken, so the job plays without it.
             if (puzzle.HasGoalLine)
             {
                 // The tutorial says its goal before the field appears, so nothing covers the scaling.
+                ttsPresenter.HidePanel();
                 puzzleController.HideAll();
                 console.PlayMessage(
                     new[] { LocalizationUtil.GetValue(puzzle.goalLineKey) }, StartPuzzle);
                 return;
             }
 
-            if (!puzzle.noIntro)
-                ttsPresenter.Play(new[] { puzzle.IntroLinesKey });
+            if (puzzle.noIntro)
+                ttsPresenter.HidePanel();
+            else
+                ttsPresenter.Play(new[] { puzzle.IntroLinesKey }, ttsPresenter.HidePanel);
             StartPuzzle();
         }
 
