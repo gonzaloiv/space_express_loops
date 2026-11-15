@@ -19,10 +19,12 @@ namespace DigitalLove.Game.UI.Console
 
         [Header("Timing")]
         [SerializeField, Min(0f)] private float charsPerSec = 60f;
-        [Tooltip("How long a finished line stays before the next one replaces it.")]
+        [Tooltip("Shortest time a finished line stays before the next one replaces it.")]
         [SerializeField, Min(0f)] private float lineHoldSecs = 0.4f;
-        [Tooltip("How long a message's last line stays before the screen cuts off.")]
+        [Tooltip("Shortest time a message's last line stays before the screen cuts off.")]
         [SerializeField, Min(0f)] private float messageHoldSecs = 0.6f;
+        [Tooltip("Reading speed a finished line is held for; longer lines stay longer.")]
+        [SerializeField, Min(0.1f)] private float wordsPerSec = 3f;
         [SerializeField, Min(0f)] private float bootSecs = 0.18f;
         [SerializeField, Min(0f)] private float cutOffSecs = 0.12f;
 
@@ -109,7 +111,7 @@ namespace DigitalLove.Game.UI.Console
             for (int i = 0; i < lines.Count; i++)
                 yield return TypeMessageLine(lines[i], i > 0);
 
-            yield return new WaitForSecondsRealtime(messageHoldSecs);
+            yield return HoldCurrent(messageHoldSecs);
             yield return CutOff();
             onComplete?.Invoke();
         }
@@ -117,7 +119,7 @@ namespace DigitalLove.Game.UI.Console
         private IEnumerator TypeMessageLine(string text, bool holdFirst)
         {
             if (holdFirst)
-                yield return new WaitForSecondsRealtime(lineHoldSecs);
+                yield return HoldCurrent(lineHoldSecs);
 
             message.text = text;
             message.maxVisibleCharacters = 0;
@@ -130,7 +132,7 @@ namespace DigitalLove.Game.UI.Console
         {
             if (current != null)
             {
-                yield return new WaitForSecondsRealtime(lineHoldSecs);
+                yield return HoldCurrent(lineHoldSecs);
                 current.gameObject.SetActive(false);
             }
 
@@ -139,6 +141,34 @@ namespace DigitalLove.Game.UI.Console
             line.maxVisibleCharacters = 0;
             line.gameObject.SetActive(true);
             current = line;
+        }
+
+        // Holds the line on screen long enough to read it: its word count at the reading speed, less
+        // the time it took to type (the player reads along), never under minSecs.
+        private WaitForSecondsRealtime HoldCurrent(float minSecs)
+        {
+            if (current == null)
+                return new WaitForSecondsRealtime(minSecs);
+
+            string text = current.GetParsedText();
+            float readSecs = WordCount(text) / wordsPerSec;
+            float typedSecs = charsPerSec > 0f ? text.Length / charsPerSec : 0f;
+            return new WaitForSecondsRealtime(Mathf.Max(minSecs, readSecs - typedSecs));
+        }
+
+        private static int WordCount(string text)
+        {
+            int words = 0;
+            bool inWord = false;
+            for (int i = 0; i < text.Length; i++)
+            {
+                bool letter = !char.IsWhiteSpace(text[i]);
+                if (letter && !inWord)
+                    words++;
+                inWord = letter;
+            }
+
+            return words;
         }
 
         private void OnTyped() => Typed?.Invoke();

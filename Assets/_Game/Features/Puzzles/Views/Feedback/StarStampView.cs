@@ -10,11 +10,11 @@ namespace DigitalLove.Game.SpaceShaping
     // cue player can tick. The icon count is fixed; the grade decides how many are filled.
     public class StarStampView : MonoBehaviour
     {
-        private const float EmptyStarAlpha = 0.18f;
-
         [SerializeField] private RawImage[] stars;
         [SerializeField] private float starStepSecs = 0.25f;
         [SerializeField] private ColorValue starColor;
+        [Tooltip("Opacity of a star not yet earned.")]
+        [SerializeField, Range(0f, 1f)] private float emptyStarAlpha = 0.18f;
         [Tooltip("Turn to face the player every frame. Off keeps the parent's orientation (the map).")]
         [SerializeField] private bool faceCamera = true;
 
@@ -27,7 +27,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private Color FilledStar => starColor.value;
 
-        private Color EmptyStar => starColor.value.WithAlpha(EmptyStarAlpha);
+        private Color EmptyStar => starColor.value.WithAlpha(emptyStarAlpha);
 
         public float Play(int grade, Vector3 worldPosition)
         {

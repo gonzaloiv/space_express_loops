@@ -203,6 +203,7 @@ namespace DigitalLove.Game.SpaceShaping
             {
                 Destination = ship.Destination,
                 CaptureRadius = ship.CaptureRadius > 0f ? ship.CaptureRadius : setup.Sim.CaptureRadius,
+                ShipClearance = setup.Sim.ShipClearance,
                 StepSecs = setup.Sim.StepSecs,
                 MaxSteps = StepBudget(),
                 Zones = log.Zones

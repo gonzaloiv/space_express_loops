@@ -35,7 +35,7 @@ namespace DigitalLove.Game.Flow
                 lines[i] = LocalizationUtil.GetValue(ResetKeys[i]);
 
             if (opensJob)
-                lines[ResetKeys.Length] = LocalizationUtil.GetValue(
+                lines[ResetKeys.Length] = LocalizationUtil.Format(
                     JobOpenKey, (SignpostIndex + 1).ToString("D2"));
 
             return lines;

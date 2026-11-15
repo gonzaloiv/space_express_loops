@@ -12,6 +12,8 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField] private TMP_Text number;
         [SerializeField] private StarStampView stars;
         [SerializeField] private CanvasGroup group;
+        [Tooltip("The number's x beside its stars; with no stars it sits at the tag's centre.")]
+        [SerializeField] private float numberBesideStarsX = -75f;
 
         public void Show(int jobNumber, bool showStars, int earned, Color color)
         {
@@ -22,6 +24,9 @@ namespace DigitalLove.Game.PuzzleSelection
                 stars.ShowStatic(earned);
             else
                 stars.Hide();
+
+            RectTransform rect = number.rectTransform;
+            rect.anchoredPosition = new Vector2(showStars ? numberBesideStarsX : 0f, rect.anchoredPosition.y);
         }
 
         public void SetNumberColor(Color color) => number.color = color;

@@ -141,7 +141,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleSolutionKind kind)
         {
             field.entropyBudget = found.EntropySpent * PuzzleGrade.BudgetFactor;
-            PuzzleData variant = Variant(field, found, brief);
+            PuzzleData variant = Variant(field, found, brief, settings);
             PuzzleVerification check = PuzzleVerifier.Verify(variant, found.Zones, settings);
             kind = check.Kind;
             if (!check.Solved)
@@ -154,6 +154,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             {
                 Object.DestroyImmediate(variant);
                 return Fail(PuzzleBakeStatus.SunRuleFailed, kind);
+            }
+
+            if (brief.SunRule == PuzzleSunRule.NoSunAnswer
+                && PuzzleSunRuleCheck.SunAnswers(variant, settings))
+            {
+                Object.DestroyImmediate(variant);
+                return Fail(PuzzleBakeStatus.SunAnswers, kind);
             }
 
             if (!HasRoutes(variant, settings, brief, found.Zones))
@@ -184,30 +191,30 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static PuzzleBakeResult Fail(PuzzleBakeStatus status, PuzzleRunReport runReport) =>
             new() { Status = status, RunReport = runReport };
 
-        private static PuzzleData Variant(PuzzleData field, PuzzleSolution solution, PuzzleBrief brief)
+        private static PuzzleData Variant(
+            PuzzleData field, PuzzleSolution solution, PuzzleBrief brief, PuzzleSimSettings settings)
         {
             PuzzleData puzzle = Object.Instantiate(field);
-            puzzle.frames = BuildFrames(field, solution, brief);
+            puzzle.frames = BuildFrames(field, solution, brief, settings);
             puzzle.zones = solution.Zones.Length;
             return puzzle;
         }
 
         // A fixed level ships the solved zone geometry and the player finds the scales; a movable
-        // level ships one start frame at the brief's start rule and the player moves and scales it.
+        // level ships one start frame near the brief's start rule and the player moves and scales it.
         public static PuzzleFrame[] BuildFrames(
-            PuzzleData field, PuzzleSolution solution, PuzzleBrief brief)
+            PuzzleData field, PuzzleSolution solution, PuzzleBrief brief, PuzzleSimSettings settings)
         {
             if (!brief.Translatable)
                 return SolvedFrames(solution.Zones);
 
-            Vector3 centre = brief.StartRule == PuzzleStartRule.FieldCentre
-                ? Vector3.zero
-                : field.zoneCentre;
-            return new[]
-            {
-                new PuzzleFrame { centre = centre, size = solution.Zones[0].Width }
-            };
+            float size = solution.Zones[0].Width;
+            Vector3 centre = PuzzleStartFrame.Place(field, settings, StartSpot(field, brief.StartRule), size);
+            return new[] { new PuzzleFrame { centre = centre, size = size } };
         }
+
+        public static Vector3 StartSpot(PuzzleData field, PuzzleStartRule rule) =>
+            rule == PuzzleStartRule.FieldCentre ? Vector3.zero : field.zoneCentre;
 
         private static PuzzleFrame[] SolvedFrames(PuzzleZone[] zones)
         {

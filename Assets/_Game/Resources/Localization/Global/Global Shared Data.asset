@@ -175,6 +175,10 @@ MonoBehaviour:
     m_Key: sector_wire_11
     m_Metadata:
       m_Items: []
+  - m_Id: 74113009852272654
+    m_Key: map_chapter_tally
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

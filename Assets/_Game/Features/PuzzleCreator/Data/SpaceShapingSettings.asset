@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: SpaceShapingSettings
   m_EditorClassIdentifier: 
   runDistance: 0.7
+  runReach: 2
   sunRadius: 0.06
   launchSpeedFactor: 1
   stepSecs: 0.0008333333
   nominalSpeed: 1
   planetRadiusMin: 0.006
   planetRadiusMax: 0.06
+  shipClearance: 0.002
   endpointClearance: 0.033
   sourceStrengthScale: 120
   separationScale: 1.2

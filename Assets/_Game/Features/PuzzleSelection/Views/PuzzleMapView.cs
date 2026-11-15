@@ -63,6 +63,9 @@ namespace DigitalLove.Game.PuzzleSelection
 
         public bool ShowAll => showAll;
 
+        // The planets' fade around the cube, in world units: fully lit inside x, gone beyond y.
+        public Vector2 FadeRange => new(pose.FadeNear, pose.FadeFar);
+
         private void Awake()
         {
             fields = new ViewPool<RunSlotView>(selectedSlot, mapRoot, "Map Field", null);

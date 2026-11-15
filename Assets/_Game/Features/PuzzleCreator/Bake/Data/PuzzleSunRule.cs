@@ -5,6 +5,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         Any,
         InZone,
         CentredGrown,
-        OutOfZone
+        OutOfZone,
+        // OutOfZone, and no cube on the sun solves the job either: the sun is never an answer.
+        NoSunAnswer
     }
 }

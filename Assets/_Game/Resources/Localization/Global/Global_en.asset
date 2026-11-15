@@ -111,7 +111,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 73233989640048648
-    m_Localized: '> JOB {0} OPEN ON THE MAP'
+    m_Localized: '> STUCK? JOB {0} IS OPEN ON THE MAP'
     m_Metadata:
       m_Items: []
   - m_Id: 73233989640048700
@@ -176,6 +176,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 74113009852272653
     m_Localized: '> WIRE: TIME WRAP PROTOTYPE "ON SCHEDULE"'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272654
+    m_Localized: 'JOBS {0}/{1} · STARS {2}/{3}'
     m_Metadata:
       m_Items: []
   references:

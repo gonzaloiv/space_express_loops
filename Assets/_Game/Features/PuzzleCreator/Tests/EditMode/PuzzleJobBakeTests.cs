@@ -75,7 +75,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             for (int i = 0; i < PuzzleJobContracts.Enabled.Count; i++)
             {
                 PuzzleJobContract contract = PuzzleJobContracts.Enabled[i];
-                PuzzleSeedScanResult result = Bake(contract, out PuzzleSeed seed, out _);
+                PuzzleSeedScanResult result = Bake(
+                    contract, out PuzzleSeed seed, out SpaceShapingSettings settings);
                 if (!result.Found)
                 {
                     failures.Add(
@@ -83,7 +84,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
                         $"attempts {result.Attempts} [{result.RunReport}]");
                 }
                 else if (!PuzzleJobValidator.Validate(
-                        result.Puzzle, result.Kind, result.Solution, contract, out List<string> problems))
+                        result.Puzzle, result.Kind, result.Solution, contract, out List<string> problems,
+                        PuzzleSimSettings.From(settings)))
                 {
                     failures.Add($"{contract.Id}: {string.Join("; ", problems)}");
                 }

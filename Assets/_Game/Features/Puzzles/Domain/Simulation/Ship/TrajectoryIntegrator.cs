@@ -63,7 +63,7 @@ namespace DigitalLove.Game.SpaceShaping
             SpacetimeField field, Vector3 from, Vector3 to, Vector3 start, TrajectorySettings settings,
             out int crashSource)
         {
-            crashSource = NearestCrashSource(field, from, to, start, settings.Destination);
+            crashSource = NearestCrashSource(field, from, to, start, settings);
             if (crashSource >= 0)
                 return TrajectoryOutcome.Crash;
 
@@ -74,18 +74,20 @@ namespace DigitalLove.Game.SpaceShaping
         }
 
         private static int NearestCrashSource(
-            SpacetimeField field, Vector3 from, Vector3 to, Vector3 start, Vector3 destination)
+            SpacetimeField field, Vector3 from, Vector3 to, Vector3 start, TrajectorySettings settings)
         {
             IReadOnlyList<SpaceSource> sources = field.Sources;
+            float clearance = Mathf.Max(settings.ShipClearance, 0f);
             int crashSource = -1;
             float nearest = float.MaxValue;
             for (int i = 0; i < sources.Count; i++)
             {
                 SpaceSource source = sources[i];
-                if (IsAt(source.Position, start) || IsAt(source.Position, destination))
+                if (IsAt(source.Position, start) || IsAt(source.Position, settings.Destination))
                     continue;
 
-                if (!SegmentHit(from, to, source.Position, source.Radius, out float t) || t >= nearest)
+                float radius = source.Radius + clearance;
+                if (!SegmentHit(from, to, source.Position, radius, out float t) || t >= nearest)
                     continue;
 
                 nearest = t;

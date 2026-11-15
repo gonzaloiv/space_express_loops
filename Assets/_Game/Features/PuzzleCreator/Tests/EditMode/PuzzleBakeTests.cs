@@ -148,7 +148,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
                 }
             };
 
-            PuzzleFrame[] frames = PuzzleFieldBake.BuildFrames(field, solution, fixedBrief);
+            PuzzleFrame[] frames = PuzzleFieldBake.BuildFrames(field, solution, fixedBrief, sim);
 
             Assert.AreEqual(2, frames.Length);
             Assert.Less(Vector3.Distance(frames[0].centre, solution.Zones[0].centre), 1e-4f);
@@ -169,7 +169,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
                 Zones = new[] { PuzzleZoneCandidates.Zone(new Vector3(9f, 9f, 9f), 0.2f, 1.4f, 0.5f) }
             };
 
-            PuzzleFrame[] frames = PuzzleFieldBake.BuildFrames(field, solution, movable);
+            PuzzleFrame[] frames = PuzzleFieldBake.BuildFrames(field, solution, movable, sim);
 
             Assert.AreEqual(1, frames.Length);
             Assert.Less(Vector3.Distance(frames[0].centre, field.zoneCentre), 1e-4f);

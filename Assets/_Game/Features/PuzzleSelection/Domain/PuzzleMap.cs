@@ -58,9 +58,26 @@ namespace DigitalLove.Game.PuzzleSelection
             }
         }
 
-        public int TotalStars => SumStars();
+        public int TotalStars => SumStars(0, entries.Length);
 
-        public int MaxStars => GradedCount() * PuzzleGrade.MaxStars;
+        public int MaxStars => GradedCount(0, entries.Length) * PuzzleGrade.MaxStars;
+
+        public int SolvedIn(MapChapter chapter)
+        {
+            int solved = 0;
+            for (int i = First(chapter); i < End(chapter); i++)
+            {
+                if (entries[i].State == JobState.Solved)
+                    solved++;
+            }
+
+            return solved;
+        }
+
+        public int StarsIn(MapChapter chapter) => SumStars(First(chapter), End(chapter));
+
+        public int MaxStarsIn(MapChapter chapter) =>
+            GradedCount(First(chapter), End(chapter)) * PuzzleGrade.MaxStars;
 
         public JobEntry Selected => IsInRange(selectedIndex) ? entries[selectedIndex] : default;
 
@@ -107,10 +124,15 @@ namespace DigitalLove.Game.PuzzleSelection
 
         private bool IsInRange(int index) => index >= 0 && index < entries.Length;
 
-        private int SumStars()
+        private int First(MapChapter chapter) => Mathf.Clamp(chapter.Start, 0, entries.Length);
+
+        private int End(MapChapter chapter) =>
+            Mathf.Clamp(chapter.Start + chapter.Count, First(chapter), entries.Length);
+
+        private int SumStars(int from, int to)
         {
             int total = 0;
-            for (int i = 0; i < entries.Length; i++)
+            for (int i = from; i < to; i++)
             {
                 if (!entries[i].NoGrade)
                     total += entries[i].Stars;
@@ -119,10 +141,10 @@ namespace DigitalLove.Game.PuzzleSelection
             return total;
         }
 
-        private int GradedCount()
+        private int GradedCount(int from, int to)
         {
             int count = 0;
-            for (int i = 0; i < entries.Length; i++)
+            for (int i = from; i < to; i++)
             {
                 if (!entries[i].NoGrade)
                     count++;

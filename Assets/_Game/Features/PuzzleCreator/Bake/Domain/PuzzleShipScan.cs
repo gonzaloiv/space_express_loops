@@ -146,6 +146,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             {
                 Destination = destination,
                 CaptureRadius = capture,
+                ShipClearance = settings.ShipClearance,
                 StepSecs = settings.StepSecs,
                 MaxSteps = Budget(view.Zones, timeDilation),
                 Zones = view.Zones

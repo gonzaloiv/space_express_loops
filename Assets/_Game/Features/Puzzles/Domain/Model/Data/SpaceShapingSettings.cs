@@ -10,6 +10,9 @@ namespace DigitalLove.Game.SpaceShaping
         [Tooltip("The run: origin to destination, in metres. It also sizes the field, so keep planetRadiusMax well under runDistance / 2.")]
         public float runDistance = 0.7f;
 
+        [Tooltip("How far a trajectory is followed, as a multiple of the straight run. Curved routes are longer than the run, so 1 cuts good bends short.")]
+        [Min(1f)] public float runReach = 1f;
+
         [Header("Sun")]
         [Tooltip("Radius of the sun at the field's centre, in metres. 0 disables the sun; a seed's "
             + "Has Sun flag decides whether it is baked.")]
@@ -31,6 +34,9 @@ namespace DigitalLove.Game.SpaceShaping
 
         [Tooltip("Largest planet radius, in metres. Also sizes the field and sets the arrival sphere to the destination planet's radius.")]
         public float planetRadiusMax = 0.063f;
+
+        [Tooltip("The ship's half-size, in metres: a run crashes once the hull meets a planet, not only its centre line. 0 treats the ship as a point.")]
+        [Min(0f)] public float shipClearance;
 
         [Tooltip("Minimum clearance between the run's endpoint planets and every other planet, in metres. Wider keeps the launch and arrival points clear of their neighbours.")]
         public float endpointClearance = 0.035f;

@@ -78,10 +78,13 @@ Closed 2026-11-11: the ending, endpoint shapes, the stuck-player skip and the fi
 
 - [Freeze day](backlog/freeze-day.md) — 2026-11-13: the headset pass, value-only tuning and the
   frozen build; no new features.
+- [No sun answer](backlog/no-sun-answer.md) — the `NoSunAnswer` rule and 1-4's rebake landed
+  2026-11-15; left: chapter 2's 2-1 to 2-3 are all won by shrinking the sun.
 
 ## Later
 
 Design-only or deferred. Nothing here is scheduled.
+
 
 - [Chapter 2's capstone](../design/chapters.md#chapter-2--the-fleet-v1-then-the-store-release) — the
   2-5 fleet capstone. Post-v1. Mixed (the old job 8) waits for a later chapter.

@@ -46,9 +46,10 @@ namespace DigitalLove.Game.PuzzleSelection
 
         // One small spiral per chapter, side by side with a gap between them, centred on the map. Each
         // spiral keeps the galaxy's density (its area grows with its job count), so the dioramas sit
-        // as far apart as they always did; one chapter is the plain galaxy.
+        // as far apart as they always did; one chapter is the plain galaxy. A spiral's rim is mostly
+        // empty, so a negative gap overlaps the circles while their jobs stay apart.
         public static PuzzleMapLayout Systems(
-            IReadOnlyList<int> sizes, float radius = 0.24f, float gap = 0.03f)
+            IReadOnlyList<int> sizes, float radius = 0.24f, float gap = -0.05f)
         {
             int total = Total(sizes);
             if (sizes == null || sizes.Count <= 1 || total <= 0)
@@ -56,7 +57,7 @@ namespace DigitalLove.Game.PuzzleSelection
 
             Vector3[] centres = new Vector3[sizes.Count];
             float[] radii = new float[sizes.Count];
-            PlaceCentres(sizes, total, Mathf.Max(radius, 0.01f), Mathf.Max(gap, 0f), centres, radii);
+            PlaceCentres(sizes, total, Mathf.Max(radius, 0.01f), gap, centres, radii);
 
             Vector3[] result = new Vector3[total];
             int start = 0;
@@ -77,7 +78,7 @@ namespace DigitalLove.Game.PuzzleSelection
             {
                 radii[i] = radius * Mathf.Sqrt(Mathf.Max(sizes[i], 1) / (float)total);
                 if (i > 0)
-                    x += radii[i - 1] + gap + radii[i];
+                    x += Mathf.Max(radii[i - 1] + gap + radii[i], 0f);
                 centres[i] = new Vector3(x, 0f, 0f);
             }
 

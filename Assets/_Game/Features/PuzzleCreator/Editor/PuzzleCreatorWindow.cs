@@ -314,6 +314,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                     : "Rejected: no zone bends the bare run onto the destination. The field may be too "
                         + "dense. Use Find working seed.";
 
+            if (status == PuzzleBakeStatus.SunAnswers)
+                return "Rejected: a cube on the sun already solves it, and the sun rule is "
+                    + "NoSunAnswer. Try another seed.";
+
             if (status == PuzzleBakeStatus.StartCoversEndpoint)
                 return "Rejected: the movable cube starts over a ship's endpoint (the ships' centre is "
                     + "too close to one). Try another seed.";

@@ -4,8 +4,9 @@ using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
 {
-    // The integrator's step budget: long enough for the run at the nominal speed, widened by the
-    // strongest active zone. Shared by the runtime session and the bake so they cannot drift.
+    // The integrator's step budget: the run at the nominal speed times the reach (a bent route is
+    // longer than the straight run), widened by the strongest active zone. Shared by the runtime
+    // session and the bake so they cannot drift.
     public static class PuzzleStepBudget
     {
         public static int Steps(float run, PuzzleSimSettings settings, float zoneFactor)
@@ -13,8 +14,9 @@ namespace DigitalLove.Game.SpaceShaping
             if (settings.NominalSpeed <= 0f || settings.StepSecs <= 0f)
                 return 1;
 
+            float reach = Mathf.Max(settings.RunReach, 1f);
             return Mathf.Max(
-                1, Mathf.CeilToInt(run / settings.NominalSpeed / settings.StepSecs * zoneFactor));
+                1, Mathf.CeilToInt(run * reach / settings.NominalSpeed / settings.StepSecs * zoneFactor));
         }
 
         public static int Scaled(int steps, float zoneFactor) =>

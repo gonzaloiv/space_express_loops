@@ -15,12 +15,14 @@ namespace DigitalLove.Game.GesturePrompts
         [SerializeField] private TMP_Text caption;
         [SerializeField] private LineRenderer leaderLine;
         [SerializeField] private Vector3 lineStart = new(0f, -2.56f, 0f);
-        [SerializeField] private Transform terminalFrame;
+        [Tooltip("Drawn tiled, so resizing it keeps the border and scanlines crisp.")]
+        [SerializeField] private SpriteRenderer terminalFrame;
         [SerializeField] private LookAtCameraOnY billboard;
         [Header("Caption only (a prompt with no art)")]
         [Tooltip("The frame shrinks to the caption and centres on it.")]
         [SerializeField] private Vector3 captionOnlyFramePosition = new(0f, -3f, 0f);
-        [SerializeField] private Vector3 captionOnlyFrameScale = new(27.5f, 7.5f, 1f);
+        [Tooltip("The frame's size around the caption, in the frame's own units.")]
+        [SerializeField] private Vector2 captionOnlyFrameSize = new(0.4f, 0.109f);
         [Tooltip("The leader leaves the shrunk frame's bottom edge.")]
         [SerializeField] private Vector3 captionOnlyLineStart = new(0f, -4.5f, 0f);
         [SerializeField, Min(0f)] private float bootSecs = 0.18f;
@@ -28,7 +30,7 @@ namespace DigitalLove.Game.GesturePrompts
 
         private Vector3? fullScale;
         private Vector3? frameHomePosition;
-        private Vector3? frameHomeScale;
+        private Vector2? frameHomeSize;
         private Vector3? subject;
         private GesturePromptContent content;
         private float closeAt;
@@ -89,9 +91,9 @@ namespace DigitalLove.Game.GesturePrompts
         // Captured before the first boot flattens it, so every reuse restores the authored size.
         private Vector3 FullScale => fullScale ??= transform.localScale;
 
-        private Vector3 FrameHomePosition => frameHomePosition ??= terminalFrame.localPosition;
+        private Vector3 FrameHomePosition => frameHomePosition ??= terminalFrame.transform.localPosition;
 
-        private Vector3 FrameHomeScale => frameHomeScale ??= terminalFrame.localScale;
+        private Vector2 FrameHomeSize => frameHomeSize ??= terminalFrame.size;
 
         private bool HasArt => content != null && content.FrameCount > 0;
 
@@ -172,8 +174,8 @@ namespace DigitalLove.Game.GesturePrompts
         private void FitFrame()
         {
             bool hasArt = HasArt;
-            terminalFrame.localPosition = hasArt ? FrameHomePosition : captionOnlyFramePosition;
-            terminalFrame.localScale = hasArt ? FrameHomeScale : captionOnlyFrameScale;
+            terminalFrame.transform.localPosition = hasArt ? FrameHomePosition : captionOnlyFramePosition;
+            terminalFrame.size = hasArt ? FrameHomeSize : captionOnlyFrameSize;
         }
 
         private void AdvanceFrame()

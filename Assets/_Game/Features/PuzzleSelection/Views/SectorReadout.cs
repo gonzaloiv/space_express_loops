@@ -20,7 +20,7 @@ namespace DigitalLove.Game.PuzzleSelection
         public void Show(int solved, int total, bool typed)
         {
             StopReveal();
-            coverage.text = LocalizationUtil.GetValue(
+            coverage.text = LocalizationUtil.Format(
                 SectorWire.CoverageKey, solved.ToString("D2"), total.ToString("D2"));
             wire.text = LocalizationUtil.GetValue(SectorWire.Key(solved));
             gameObject.SetActive(true);

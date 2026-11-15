@@ -75,7 +75,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             jobId = id ?? string.Empty;
             jobLabel.text = jobId.Length > 0
-                ? LocalizationUtil.GetValue(jobKey, jobId.Replace('_', '-'))
+                ? LocalizationUtil.Format(jobKey, jobId.Replace('_', '-'))
                 : string.Empty;
         }
 

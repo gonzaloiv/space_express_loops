@@ -7,7 +7,6 @@ using DigitalLove.Game.Persistence;
 using DigitalLove.Game.UI.Console;
 using DigitalLove.Game.PuzzleSelection;
 using DigitalLove.Global;
-using DigitalLove.Localization;
 using Reflex.Attributes;
 using TMPro;
 using UnityEngine;
@@ -37,8 +36,6 @@ namespace DigitalLove.Game.UI.SplashScreen
         [SerializeField] private ConsoleHint hint;
         [Tooltip("How long a hint line stays before the next one, unless the step moves on first.")]
         [SerializeField, Min(0f)] private float hintHoldSecs = 1.2f;
-        [Tooltip("The sector wire: the world's news for the current solved count, typed before the title.")]
-        [SerializeField] private TMP_Text wire;
         [SerializeField] private BootLine[] lines;
         [SerializeField] private LevelSelector levelSelector;
         [SerializeField, Min(0f)] private float holdSecs = 0.6f;
@@ -110,9 +107,7 @@ namespace DigitalLove.Game.UI.SplashScreen
             yield return screen.Boot();
             yield return screen.Type(header, int.MaxValue);
             yield return TypeChecklist();
-            RunProgress progress = Progress();
-            yield return TypeWire(progress.SolvedCount);
-            yield return TypeTitle(progress.IsFresh);
+            yield return TypeTitle(Progress().IsFresh);
             yield return new WaitForSecondsRealtime(holdSecs);
             yield return screen.CutOff();
             Complete();
@@ -164,12 +159,6 @@ namespace DigitalLove.Game.UI.SplashScreen
             }
         }
 
-        private IEnumerator TypeWire(int solved)
-        {
-            wire.text = LocalizationUtil.GetValue(SectorWire.Key(solved));
-            yield return screen.Type(wire, int.MaxValue);
-        }
-
         private RunProgress Progress()
         {
             PlayerData playerData = memoryDataClient.Get<PlayerData>();
@@ -179,7 +168,6 @@ namespace DigitalLove.Game.UI.SplashScreen
         private void HideLines()
         {
             header.gameObject.SetActive(false);
-            wire.gameObject.SetActive(false);
             checklist.Hide();
             hint.Hide();
             foreach (BootLine line in lines)

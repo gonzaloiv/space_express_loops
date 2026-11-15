@@ -25,15 +25,32 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 if (rule == PuzzleSunRule.InZone)
                     return true;
 
-                if (rule == PuzzleSunRule.OutOfZone)
+                if (KeepsSunOut(rule))
                     return false;
 
                 if (CentresAndEnclosesGrown(solution[i], sunSource))
                     return true;
             }
 
-            return rule == PuzzleSunRule.OutOfZone;
+            return KeepsSunOut(rule);
         }
+
+        // NoSunAnswer: whether a cube centred on the sun, at the job's cube size and any scale the
+        // player can reach, lands the ship within budget — the shortcut the rule rejects.
+        public static bool SunAnswers(PuzzleData puzzle, PuzzleSimSettings settings)
+        {
+            int sun = SunIndex(puzzle.sources);
+            if (sun < 0)
+                return false;
+
+            float size = puzzle.frames != null && puzzle.frames.Length > 0
+                ? puzzle.frames[0].size
+                : puzzle.cubeSizeMax;
+            return PuzzleStartFrame.SolvesInPlace(puzzle, settings, puzzle.sources[sun].home, size);
+        }
+
+        private static bool KeepsSunOut(PuzzleSunRule rule) =>
+            rule == PuzzleSunRule.OutOfZone || rule == PuzzleSunRule.NoSunAnswer;
 
         // The cube must be centred on the star and wide enough to cover its whole surface, not only
         // its centre point, so the player sees the star inside the cube they scale.

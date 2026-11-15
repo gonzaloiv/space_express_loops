@@ -7,7 +7,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     {
         public static bool Validate(
             PuzzleData puzzle, PuzzleSolutionKind kind, PuzzleZone[] solution,
-            PuzzleJobContract contract, out List<string> failures)
+            PuzzleJobContract contract, out List<string> failures, PuzzleSimSettings? settings = null)
         {
             failures = new List<string>();
             if (puzzle == null)
@@ -18,8 +18,20 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             CheckBrief(puzzle, kind, contract, failures);
             CheckSources(puzzle, solution, contract, failures);
-            CheckStartFrame(puzzle, contract, failures);
+            CheckStartFrame(puzzle, contract, failures, settings);
+            CheckSunAnswer(puzzle, contract, failures, settings);
             return failures.Count == 0;
+        }
+
+        // Needs the sim settings: only a run can tell whether a cube on the sun solves the job.
+        private static void CheckSunAnswer(
+            PuzzleData puzzle, PuzzleJobContract contract, List<string> failures,
+            PuzzleSimSettings? settings)
+        {
+            if (settings.HasValue
+                && contract.SunRule == PuzzleSunRule.NoSunAnswer
+                && PuzzleSunRuleCheck.SunAnswers(puzzle, settings.Value))
+                failures.Add("a cube on the sun solves it");
         }
 
         private static void CheckBrief(
@@ -73,8 +85,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 failures.Add($"blockers {blockers}, expected at least {contract.MinBlockers}");
         }
 
+        // With the sim settings, the start frame may sit off the rule's spot when scaling there alone
+        // would solve the job (PuzzleStartFrame); without them only the rule's spot is accepted.
         private static void CheckStartFrame(
-            PuzzleData puzzle, PuzzleJobContract contract, List<string> failures)
+            PuzzleData puzzle, PuzzleJobContract contract, List<string> failures,
+            PuzzleSimSettings? settings)
         {
             if (!puzzle.translatable)
                 return;
@@ -85,9 +100,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return;
             }
 
-            Vector3 expected = contract.StartRule == PuzzleStartRule.FieldCentre
-                ? Vector3.zero
-                : puzzle.zoneCentre;
+            Vector3 spot = PuzzleFieldBake.StartSpot(puzzle, contract.StartRule);
+            Vector3 expected = settings.HasValue
+                ? PuzzleStartFrame.Place(puzzle, settings.Value, spot, puzzle.frames[0].size)
+                : spot;
             if ((puzzle.frames[0].centre - expected).sqrMagnitude > 0.000001f)
                 failures.Add($"start frame {puzzle.frames[0].centre}, expected {expected}");
             else if (StartFrameCoversEndpoint(puzzle))

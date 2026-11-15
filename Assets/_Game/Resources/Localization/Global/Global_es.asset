@@ -111,7 +111,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 73233989640048648
-    m_Localized: '> JOB {0} ABIERTO EN EL MAPA'
+    m_Localized: '> ¿ATASCADO? EL TRABAJO {0} YA ESTÁ ABIERTO EN EL MAPA'
     m_Metadata:
       m_Items: []
   - m_Id: 73233989640048700
@@ -124,6 +124,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 74113009852272640
     m_Localized: TRABAJO {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272654
+    m_Localized: 'TRABAJOS {0}/{1} · ESTRELLAS {2}/{3}'
     m_Metadata:
       m_Items: []
   references:

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Globalization;
 using DigitalLove.Game.SpaceShaping;
 using DigitalLove.Localization;
 using DigitalLove.UI.Behaviours;
@@ -12,13 +13,19 @@ namespace DigitalLove.Game.PuzzleSelection
     public class JobCardPanel : MonoBehaviour
     {
         private const string TableName = "Levels";
-        private const int LabelWidth = 11;
+        // The value column, in characters: the longest label ("CLIENT") plus a space.
+        private const int LabelWidth = 7;
+        // Labels and the manual's release line sit back so the contract's values read first.
+        private const string Dim = "<alpha=#80>";
+        private const string Full = "<alpha=#FF>";
 
         [SerializeField] private Transform cardRoot;
         [SerializeField] private TMP_Text header;
         [SerializeField] private TMP_Text client;
         [SerializeField] private TMP_Text cargo;
         [SerializeField] private TMP_Text manual;
+        [Tooltip("Rule between the contract and the manual; shown only when the card has a manual.")]
+        [SerializeField] private GameObject manualRule;
         [SerializeField] private GameObject cursor;
         [SerializeField, Min(0f)] private float typeCharsPerSec = 40f;
         [SerializeField, Min(0f)] private float lineGapSecs = 0.12f;
@@ -34,6 +41,7 @@ namespace DigitalLove.Game.PuzzleSelection
         private Coroutine revealRoutine;
         private Coroutine closeRoutine;
         private float cursorElapsed;
+        private float valueColumn;
 
         public event Action Opened;
         public event Action LineTyped;
@@ -98,9 +106,10 @@ namespace DigitalLove.Game.PuzzleSelection
         private void ApplyContent(PuzzleData puzzle, bool includeManual)
         {
             header.text = $"{HeaderTitle}   {DateTime.Now:HH:mm}";
-            client.text = Line(Label("CLIENT"), puzzle.ClientKey);
-            cargo.text = Line(Label("CARGO"), puzzle.CargoKey);
+            client.text = $"{Row("JOB", puzzle.id.Replace('_', '-'))}\n{Line("CLIENT", puzzle.ClientKey)}";
+            cargo.text = Line("CARGO", puzzle.CargoKey);
             manual.text = includeManual ? ManualLine(puzzle) : string.Empty;
+            manualRule.SetActive(manual.text.Length > 0);
         }
 
         // The manual is a release the tech team keeps patching: "MANUAL v1.0.3 (INITIAL DEPLOYMENT)",
@@ -113,9 +122,8 @@ namespace DigitalLove.Game.PuzzleSelection
 
             string release = LocalizationUtil.GetValue(tableName: TableName, key: puzzle.ManualReleaseKey);
             string version = $"MANUAL v{puzzle.ManualVersion}";
-            return string.IsNullOrEmpty(release)
-                ? $"{version}\n{entry}"
-                : $"{version} ({release})\n{entry}";
+            string heading = string.IsNullOrEmpty(release) ? version : $"{version} ({release})";
+            return $"{Dim}{heading}{Full}\n{entry}";
         }
 
         // Grows the card to its text: the lines' layout reports its preferred height, and the card adds
@@ -132,12 +140,27 @@ namespace DigitalLove.Game.PuzzleSelection
 
         private string HeaderTitle => headerTitle ??= header.text;
 
-        private static string Label(string name) => name.PadRight(LabelWidth);
+        // A label then its value at a fixed column; the indent is a hanging one, so a value that wraps
+        // stays in its column instead of running back under the label. It closes before the row ends:
+        // TMP fixes a line's start at the break, so the next row's label starts at the margin.
+        private string Row(string name, string value) =>
+            $"{Dim}{name}{Full}<indent={ValueColumn.ToString("0.#", CultureInfo.InvariantCulture)}px>{value}</indent>";
 
-        private static string Line(string label, string key)
+        // LabelWidth characters wide in the card's font, measured once the font reports a width.
+        private float ValueColumn
+        {
+            get
+            {
+                if (valueColumn <= 0f)
+                    valueColumn = client.GetPreferredValues(new string('M', LabelWidth)).x;
+                return valueColumn;
+            }
+        }
+
+        private string Line(string name, string key)
         {
             string value = LocalizationUtil.GetValue(tableName: TableName, key: key);
-            return string.IsNullOrEmpty(value) ? string.Empty : label + value;
+            return string.IsNullOrEmpty(value) ? string.Empty : Row(name, value);
         }
 
         private void StartReveal()
