@@ -4,6 +4,16 @@ Short post-mortems, written when a plan closes (rule in [AGENTS.md](../AGENTS.md
 morning). Newest first. Each entry: what worked, what surprised us, the rule for next time. One idea per
 bullet; the code and tests are the record of what was built.
 
+## 2026-11-15 — Freeze day
+
+- **Worked:** closing plans moved their headset checks into one list, so the pass was a single
+  sitting instead of a check per feature.
+- **Worked:** "no new features" held; the day's fixes were the pass's findings (map centering) and
+  the store cover, nothing new.
+- **Surprised:** the freeze slipped two days past its 2026-11-13 date; the 2026-11-18 deadline
+  absorbed it.
+- **Next time:** set the internal freeze with a buffer day for the headset pass itself.
+
 ## 2026-11-15 — No sun answer
 
 - **Worked:** checking the rule against every answer, not just the chosen one; `OutOfZone` had let

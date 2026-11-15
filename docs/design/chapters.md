@@ -46,8 +46,7 @@ is checked by playing it. **Slightly Used Stars Ltd.** returns at 2-2.
 
 **2-1 to 2-4 move into v1** (decided 2026-11-11, after the two-ship headset test: the fleet bakes play
 better than the single-ship jobs). They ship as episode 2 of the story ([lore](world/lore.md)
-§Episodes); **The Very Small Opera** takes 2-4 until a 2-5 capstone bakes. Headset pass:
-[freeze day](../plans/backlog/freeze-day.md).
+§Episodes); **The Very Small Opera** takes 2-4 until a 2-5 capstone bakes. Headset pass done 2026-11-15.
 
 ## Chapter 3 — the instrument (first update)
 

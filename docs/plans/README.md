@@ -22,8 +22,7 @@ need a yes.
    the whole map lit, the total stars, the "OUR SPACE" title, Jim closing the episode, more contracts
    in the making, an invitation to replay for 3★.
    - **The fleet episode** — done (2026-11-13). The two- and three-ship jobs join v1 as chapter 2,
-     episode 2 of the story, with Jim's chapter opener; the headset pass is in
-     [freeze day](backlog/freeze-day.md).
+     episode 2 of the story, with Jim's chapter opener; headset pass done 2026-11-15.
 4. **Minimum sound** — done (2026-11-09); the soundscape built on it (done 2026-11-10). Pinch grab
    tick, stretch tone, release, arrive chime, crash, fail sting. No haptics: the game is hands-only.
 5. **The first 30 seconds** — done (2026-11-10). App open → the console boot → the field placed at a
@@ -35,7 +34,7 @@ need a yes.
 8. **Competition deliverables — internal freeze Friday 2026-11-13; official deadline 2026-11-18,
    12:00 PM PT; work starts Wednesday 2026-11-11.** The entry is frozen at the internal freeze. The angle, hero moment and video outline are in [pitch](../design/pitch.md);
    until Wednesday the time goes to the game.
-   - **Build:** APK on a new release channel named "Competition" in the developer dashboard, plus an
+   - **Build:** frozen 2026-11-15 after the headset pass. APK on a new release channel named "Competition" in the developer dashboard, plus an
      Invite URL for judges; it must stay launchable through judging.
    - **Video:** under 3 minutes, on-device footage, public on YouTube or Vimeo; the best material in
      the first seconds (judges may stop early).
@@ -67,19 +66,17 @@ Active work.
 
 Nothing in progress.
 
-Closed 2026-11-15: the sector wire and no sun answer; their headset checks moved to
-[freeze day](backlog/freeze-day.md) ([lessons](../lessons.md)).
+Closed 2026-11-15: the sector wire, no sun answer and freeze day (the headset pass and the
+"Competition" build) ([lessons](../lessons.md)).
 
-Closed 2026-11-13: the fleet episode and the hand-tracking gate; their headset checks moved to
-[freeze day](backlog/freeze-day.md) ([lessons](../lessons.md)).
+Closed 2026-11-13: the fleet episode and the hand-tracking gate ([lessons](../lessons.md)).
 
 Closed 2026-11-11: the ending, endpoint shapes, the stuck-player skip and the field-wells spike
 ([lessons](../lessons.md)).
 
 ## Next
 
-- [Freeze day](backlog/freeze-day.md) — the headset pass is done (2026-11-15); left: the frozen
-  build on the "Competition" channel.
+Nothing scheduled. The competition video and form (Road to v1, step 8) are next.
 
 ## Later
 
