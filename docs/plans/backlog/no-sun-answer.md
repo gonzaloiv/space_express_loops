@@ -1,7 +1,8 @@
 # No sun answer
 
-**Status:** next · space shaping · updated 2026-11-15 — U1 and U2 landed (the `NoSunAnswer` rule;
-1-4 rebaked at seed 79). Left: chapter 2's first three jobs are all won by shrinking the sun.
+**Status:** later · space shaping · updated 2026-11-15 — U1 and U2 landed (the `NoSunAnswer` rule;
+1-4 rebaked at seed 79). Left for after the competition: chapter 2 needs generator design, not
+seeds.
 
 **Related:** [plans board](../README.md) · [chapters](../../design/chapters.md)
 
@@ -61,13 +62,20 @@ One job: **1-4**, through the single-ship bake (`PuzzleFieldBake`), which is the
 - Exit: the new 1-4 validates (`PuzzleJobValidator` with sim settings), its start cube does not solve
   in place, and no cube on the sun solves it.
 
-### U3 — chapter 2 (open, decide first)
+### U3 — chapter 2 (after the competition; needs generator design)
 
-- 2-1, 2-2 and 2-3 are all won by shrinking the sun. Choose which keep it (2-1 as the fleet's
-  gentle opener is a candidate) and rebake the others with `NoSunAnswer` through
-  `PuzzleMultiShipBake`. Chapter 2 jobs have no `PuzzleJobContracts` entry yet.
+- Tried 2026-11-15 for 2-3 (converge, `PuzzleSeed_TwoShips_Converge`). Without a filter, every
+  converge seed that baked (405, 406, 416) was won by the sun. With `PuzzleSunShortcut` (the probe
+  drops runs a sun cube rescues and skips cubes over the sun), seeds 404–440 all returned
+  `NoSolution`: in these layouts the sun is the only cube that rescues both ships. The same probe on
+  2-1's shipped field (separate ships) found no non-sun cube either (62 s).
+- Decision: chapter 2 ships as is. The fleet is the new idea and the sun is the familiar lever;
+  reordering broke the progression (2-4 is the only three-ship job).
+- A non-sun fleet job needs the multi-ship generator to plan around the sun (fields where the sun
+  sits off the ships' corridor, or a sun-free brief), not more seeds. Each two-ship seed costs
+  60–90 s on the main thread: search it as a cancellable background job, never through the editor
+  bridge (a 50-minute run froze the editor).
 - Fix `Bake_ProducesAVerifiedTwoShipPuzzle` first; it already fails at seed 2.
-- Exit: the rebaked jobs validate, still teach their fleet lesson, and play on the headset.
 
 ## After the competition
 

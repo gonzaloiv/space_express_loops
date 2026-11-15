@@ -67,14 +67,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             PuzzleData variant = Variant(field, zone, ships, brief);
             PuzzleVerification check = PuzzleVerifier.Verify(variant, new[] { zone }, settings);
-            if (!check.Solved)
+            PuzzleBakeStatus rejected = Reject(variant, settings, brief, check);
+            if (rejected != PuzzleBakeStatus.Baked)
             {
                 Object.DestroyImmediate(variant);
-                return new PuzzleMultiShipResult
-                {
-                    Status = PuzzleBakeStatus.Unverified,
-                    Kind = check.Kind
-                };
+                return new PuzzleMultiShipResult { Status = rejected, Kind = check.Kind };
             }
 
             return new PuzzleMultiShipResult
@@ -84,6 +81,19 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Status = PuzzleBakeStatus.Baked,
                 Kind = check.Kind
             };
+        }
+
+        private static PuzzleBakeStatus Reject(
+            PuzzleData variant, PuzzleSimSettings settings, PuzzleBrief brief, PuzzleVerification check)
+        {
+            if (!check.Solved)
+                return PuzzleBakeStatus.Unverified;
+
+            if (brief.SunRule == PuzzleSunRule.NoSunAnswer
+                && PuzzleSunRuleCheck.SunAnswers(variant, settings))
+                return PuzzleBakeStatus.SunAnswers;
+
+            return PuzzleBakeStatus.Baked;
         }
 
         // Take the first runs the brief's relation allows between every pair of ships.

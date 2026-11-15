@@ -13,6 +13,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private readonly float[] scales;
         private readonly int required;
         private readonly PuzzleShipRelation relation;
+        private readonly PuzzleSunShortcut sunShortcut;
 
         public PuzzleMultiShipProbe(PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief)
         {
@@ -22,6 +23,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             relation = brief.Relation;
             scan = new PuzzleShipScan(field, settings, 0f);
             scales = Linear(settings, ScaleSamples);
+            if (brief.SunRule == PuzzleSunRule.NoSunAnswer)
+                sunShortcut = new PuzzleSunShortcut(field, settings, scan, scales);
         }
 
         public PuzzleShipScan Scan => scan;
@@ -52,8 +55,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             List<PuzzleShipRescue>[] row = new List<PuzzleShipRescue>[zones.Count];
             for (int k = 0; k < zones.Count; k++)
             {
-                if (PuzzleZoneCandidates.CoversSource(zones[k], field))
-                    row[k] = scan.RescuedFixed(zones[k]);
+                if (!PuzzleZoneCandidates.CoversSource(zones[k], field))
+                    continue;
+
+                if (sunShortcut != null && sunShortcut.Covers(zones[k]))
+                    continue;
+
+                row[k] = scan.RescuedFixed(zones[k]);
+                sunShortcut?.RemoveFrom(row[k], size);
             }
 
             for (int k = 0; k < row.Length; k++)
