@@ -84,7 +84,7 @@ namespace DigitalLove.Game.PuzzleSelection
             zone.SetInputLocked(false);
             zone.ResetScale();
             zone.SetDormant(false);
-            zone.gameObject.SetActive(false);
+            zone.Hide();
         }
     }
 }

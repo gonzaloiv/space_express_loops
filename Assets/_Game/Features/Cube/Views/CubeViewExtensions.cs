@@ -38,6 +38,12 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 zones[i].SetStrain(strain);
         }
 
+        public static void ReleaseHands(this IReadOnlyList<CubeView> zones)
+        {
+            for (int i = 0; i < zones.Count; i++)
+                zones[i].ReleaseHands();
+        }
+
         public static bool AnyScaling(this IReadOnlyList<CubeView> zones)
         {
             for (int i = 0; i < zones.Count; i++)

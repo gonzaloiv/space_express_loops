@@ -135,6 +135,13 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void SetZonesLocked(bool value) => spawner.Zones.SetInputLocked(value);
 
+        // Lets every cube go of its hands, then hides the field.
+        public void Hide()
+        {
+            spawner.Zones.ReleaseHands();
+            gameObject.SetActive(false);
+        }
+
         public void PlaceFrames(PuzzleFrame[] frames, float falloff) =>
             spawner.Zones.ShowFrames(frames, falloff);
 
@@ -183,21 +190,13 @@ namespace DigitalLove.Game.SpaceShaping
         public void ShowTrajectories(
             SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results, bool pending)
         {
-            TrajectoryResult[] visible = VisibleRuns(session, results, out Vector3 centre, out float half);
-            spawner.Lines.Show(visible, session, spawner.Plan, centre, half, pending);
-        }
-
-        private TrajectoryResult[] VisibleRuns(
-            SpaceShapingSession session, IReadOnlyList<TrajectoryResult> results,
-            out Vector3 centre, out float half)
-        {
             TrajectoryResult[] visible = ShipRunGeometry.Visible(
                 session, results, capGap, capGapFraction);
-            FieldFrame.Measure(session, out centre, out half);
+            FieldFrame.Measure(session, out Vector3 centre, out float half);
             for (int i = 0; i < visible.Length; i++)
                 visible[i] = TrajectoryCaps.ClipToBox(visible[i], centre, half);
 
-            return visible;
+            spawner.Lines.Show(visible, session, spawner.Plan, centre, half, pending);
         }
 
         public void ShowBaseline(SpaceShapingSession session)

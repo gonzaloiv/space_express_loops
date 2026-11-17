@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DigitalLove.Global;
 using Oculus.Interaction;
 using Oculus.Interaction.HandGrab;
@@ -39,6 +40,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         [SerializeField] private float scaleGain = 0.9f;
         [SerializeField] private float scaleSmoothSecs = 0.2f;
         [SerializeField] private float moveRefuseDistance = 0.02f;
+        [Tooltip("How far a one-hand pinch travels before the cube starts to follow it.")]
+        [SerializeField, Min(0f)] private float moveDeadZone = 0.015f;
         [SerializeField] private float resizeRefuseRatio = 0.03f;
 
         [Header("Refuse")]
@@ -49,6 +52,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         private bool locked;
 
         private readonly CubeHoverTracker hover = new();
+        private readonly List<HandGrabInteractor> releasing = new();
 
         public event Action<ZoneRefusal> Refused
         {
@@ -95,13 +99,17 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             ReleaseHands();
         }
 
-        // A locked cube is usually hidden next (the map closes on enter). Hiding it while hands still
-        // hold it cancels the grab mid-select, and the hand interactors never hover it again; letting
-        // go here unselects them cleanly while the cube is still active.
-        private void ReleaseHands()
+        // Hiding a cube while a hand holds it cancels the grab mid-select, and the hands never hover
+        // that cube again. Every hide and every lock lets go first, so the hands unselect cleanly
+        // while the cube is still active.
+        public void ReleaseHands()
         {
+            releasing.Clear();
             foreach (HandGrabInteractor hand in interactable.SelectingInteractors)
-                hand.ForceRelease();
+                releasing.Add(hand);
+            for (int i = 0; i < releasing.Count; i++)
+                releasing[i].Unselect();
+            releasing.Clear();
         }
 
         public void ClearMoveRefusal() => feedback.ClearMoveRefusal();
@@ -121,7 +129,12 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         private void Update()
         {
             if (locked)
+            {
+                // A pinch held through the lock can select again; a locked cube stays unheld.
+                if (grabbable.SelectingPointsCount > 0)
+                    ReleaseHands();
                 return;
+            }
 
             int count = grabbable.SelectingPointsCount;
             if (count == 0)
@@ -198,6 +211,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 ScaleGain = scaleGain,
                 ScaleSmoothSecs = scaleSmoothSecs,
                 MoveRefuseDistance = moveRefuseDistance,
+                MoveDeadZone = moveDeadZone,
                 ResizeRefuseRatio = resizeRefuseRatio,
                 FrameGain = frameGain,
                 FrameGrowRatio = frameGrowRatio

@@ -77,7 +77,7 @@ namespace DigitalLove.Game.SpaceShaping
             remove => view.StarStamped -= value;
         }
 
-        public void HideAll() => view.gameObject.SetActive(false);
+        public void HideAll() => view.Hide();
 
         public int Grade => run.Session.Grade();
 

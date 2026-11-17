@@ -65,6 +65,9 @@ One new lesson at a time, so the player never faces two unrelated ideas at once:
    **shrinks** it to clear the path. Same pinch as job 1, opposite role — learned before placement.
 4. **Job 4 — the cube moves.** The cube becomes **translatable**: the player chooses *where* to work,
    not just how much. "Where does the cube sit" is its own lesson.
+   **To improve (2026-11-17, headset):** too hard for the move lesson. The solve asks for too fine a
+   touch (placement and scale both have to be nearly exact), so the lesson reads as precision, not as
+   "choose where". Widen its margin or simplify its field when the run is next tuned.
 5. **Job 5 — multi-zone.** The player moves the cube and scales several zones. This is where "several
    zones" now lands; the fixed-cube rung is retired.
 6. **Job 6 — the field carries you.** A deep well already sits near the line; edit where a small change

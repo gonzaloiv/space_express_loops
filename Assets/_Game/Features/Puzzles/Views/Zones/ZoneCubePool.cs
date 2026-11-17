@@ -79,8 +79,10 @@ namespace DigitalLove.Game.SpaceShaping
             for (int i = 0; i < count; i++)
                 Place(pool.EnsureSlot(i), frames[i]);
 
-            pool.ForEachFrom(count, view => view.gameObject.SetActive(false));
+            pool.ForEachFrom(count, view => view.Hide());
         }
+
+        public void ReleaseHands() => pool.Views.ReleaseHands();
 
         public void ApplyPrediction(ZoneVerdict verdict) => pool.Views.ApplyPrediction(verdict);
 

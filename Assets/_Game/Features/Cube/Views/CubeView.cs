@@ -150,6 +150,15 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         public void SetInputLocked(bool value) => listener.SetLocked(value);
 
+        public void ReleaseHands() => listener.ReleaseHands();
+
+        // Lets go of any hand before hiding: a cube hidden mid-grab never takes a hand again.
+        public void Hide()
+        {
+            listener.ReleaseHands();
+            gameObject.SetActive(false);
+        }
+
         public void SetDormant(bool value) => listener.SetDormant(value);
 
         public void SetScaling(bool value)

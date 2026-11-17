@@ -17,6 +17,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         private bool frameGrab;
         private bool moveGrab;
         private bool scaleGrab;
+        private bool hadTwoHands;
+        private bool moveStarted;
         private int lastCount;
         private float startHandDistance;
         private float startScale;
@@ -40,7 +42,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         public bool FrameGrab => frameGrab;
 
         // One hand holds the cube from inside its frame. The grab volume's margin is for two-hand
-        // scaling only; a single pinch outside the frame neither moves nor refuses.
+        // scaling only; a single pinch outside the frame neither moves nor refuses, and neither does
+        // the hand left pinching after a two-hand scale.
         public bool MoveGrab => moveGrab;
 
         // Two hands drive the cube: resizing its frame, or scaling while the pinch centre stays inside.
@@ -62,6 +65,9 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             Scaled = false;
             zone.SetScaling(false);
             scaleGrab = false;
+            moveGrab = false;
+            hadTwoHands = false;
+            moveStarted = false;
             classified = false;
             lastCount = 0;
         }
@@ -86,12 +92,13 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 bool inside = CubeGesture.PinchCentreInsideScale(zone, grabbable);
                 frameGrab = zone.CanResize && !inside;
                 scaleGrab = inside;
+                hadTwoHands = true;
             }
 
             if (count == 1 && lastCount != 1)
             {
-                moveGrab = CubeGesture.HandInsideFrame(zone, grabbable);
-                grabOffset = zone.Centre - HandLocal();
+                moveGrab = !hadTwoHands && CubeGesture.HandInsideFrame(zone, grabbable);
+                moveStarted = false;
                 grabOrigin = HandLocal();
             }
         }
@@ -135,6 +142,9 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 return;
             }
 
+            if (!TryStartMove())
+                return;
+
             Vector3 centre = zone.ConstrainMove(HandLocal() + grabOffset);
             ZonePlacement placement = zone.CanPlace(centre, zone.Size);
             if (placement.Blocked)
@@ -147,6 +157,22 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             feedback.ClearMoveRefusal();
             zone.SetFrame(centre, zone.Size);
             Moved = true;
+        }
+
+        // A move starts once the hand has travelled past the dead zone, so a pinch that wobbles in place
+        // does not nudge the cube; the offset is taken then, so the cube does not jump.
+        private bool TryStartMove()
+        {
+            if (moveStarted)
+                return true;
+
+            float deadZone = settings.MoveDeadZone;
+            if ((HandLocal() - grabOrigin).sqrMagnitude < deadZone * deadZone)
+                return false;
+
+            moveStarted = true;
+            grabOffset = zone.Centre - HandLocal();
+            return true;
         }
 
         private void ScaleUniverse()
@@ -193,6 +219,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         public float ScaleGain;
         public float ScaleSmoothSecs;
         public float MoveRefuseDistance;
+        public float MoveDeadZone;
         public float ResizeRefuseRatio;
         public float FrameGain;
         public float FrameGrowRatio;
