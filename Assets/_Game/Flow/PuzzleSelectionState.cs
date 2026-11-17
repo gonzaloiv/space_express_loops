@@ -122,6 +122,8 @@ namespace DigitalLove.Game.Flow
             view.EnterRequested += OnEnterRequested;
 
             map = RunMap.Build(levelSelector, progress);
+            map.SelectPuzzle(memoryDataClient.Get<MapReturn>().Puzzle);
+            memoryDataClient.Remove<MapReturn>();
             view.Show(map);
             chapterTitles.Show(map);
             ShowSector(progress);

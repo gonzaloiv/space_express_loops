@@ -37,6 +37,20 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
         }
 
         [Test]
+        public void SelectPuzzle_SelectsTheJobLeft()
+        {
+            PuzzleData[] levels = Levels(4);
+            PuzzleMap map = PuzzleMap.FromLevels(
+                levels, RunProgress.FromSolved(4, 2, new[] { true, true, false, false }, new[] { 3, 3, 0, 0 }),
+                PuzzleMapLayout.Galaxy(4));
+
+            Assert.IsTrue(map.SelectPuzzle(levels[0]));
+            Assert.AreEqual(0, map.SelectedIndex);
+            Assert.IsFalse(map.SelectPuzzle(null));
+            Assert.AreEqual(0, map.SelectedIndex);
+        }
+
+        [Test]
         public void HighestCurrentIndex_PrefersTheOpenedJob()
         {
             PuzzleMap map = PuzzleMap.FromLevels(

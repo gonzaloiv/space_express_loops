@@ -101,6 +101,18 @@ namespace DigitalLove.Game.PuzzleSelection
             return true;
         }
 
+        // Selects the job carrying this puzzle; false when the map has no such job.
+        public bool SelectPuzzle(PuzzleData puzzle)
+        {
+            for (int i = 0; i < entries.Length; i++)
+            {
+                if (puzzle != null && entries[i].Puzzle == puzzle)
+                    return Select(i);
+            }
+
+            return false;
+        }
+
         public bool SelectNext(int delta)
         {
             if (delta == 0 || entries.Length == 0)

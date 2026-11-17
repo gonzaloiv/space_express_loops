@@ -139,6 +139,7 @@ namespace DigitalLove.Game.Flow
         private void ExitToSelection()
         {
             promptSource.ReportExit();
+            memoryDataClient.Put(new MapReturn(puzzle));
             ttsPresenter.Stop();
             puzzleController.Exit();
             puzzleController.HideAll();
