@@ -464,7 +464,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -18, y: 16}
   m_SizeDelta: {x: 8, y: 16}
-  m_Pivot: {x: 1, y: 0}
+  m_Pivot: {x: 0, y: 0}
 --- !u!222 &4647912780955410294
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -705,6 +705,7 @@ GameObject:
   - component: {fileID: 5659079990071783093}
   - component: {fileID: 6394642415744273470}
   - component: {fileID: 6517470162260842193}
+  - component: {fileID: 3019770576554433400}
   m_Layer: 0
   m_Name: JobCard
   m_TagString: Untagged
@@ -752,12 +753,10 @@ MonoBehaviour:
   cargo: {fileID: 1674825546141324315}
   manual: {fileID: 7580705679710657139}
   manualRule: {fileID: 7895143132473514686}
-  cursor: {fileID: 4044956532647162990}
   typeCharsPerSec: 40
   lineGapSecs: 0.12
   bootSecs: 0.18
   closeSecs: 0.18
-  cursorBlinkSecs: 0.5
   minHeight: 300
 --- !u!223 &6517470162260842193
 Canvas:
@@ -783,6 +782,26 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 20
   m_TargetDisplay: 0
+--- !u!114 &3019770576554433400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5571167437877330341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3e5d7dd1a2bb4e458393165347294d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DigitalLove.UI.Behaviours::DigitalLove.UI.Behaviours.TerminalCursor
+  lines:
+  - {fileID: 7997539343750429224}
+  - {fileID: 849936218389375915}
+  - {fileID: 1674825546141324315}
+  - {fileID: 7580705679710657139}
+  cursor: {fileID: 8913647101399451100}
+  blinkSecs: 0.5
+  gap: 0.25
 --- !u!1 &5737150481647924502
 GameObject:
   m_ObjectHideFlags: 0

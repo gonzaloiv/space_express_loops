@@ -26,12 +26,10 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField] private TMP_Text manual;
         [Tooltip("Rule between the contract and the manual; shown only when the card has a manual.")]
         [SerializeField] private GameObject manualRule;
-        [SerializeField] private GameObject cursor;
         [SerializeField, Min(0f)] private float typeCharsPerSec = 40f;
         [SerializeField, Min(0f)] private float lineGapSecs = 0.12f;
         [SerializeField, Min(0f)] private float bootSecs = 0.18f;
         [SerializeField, Min(0f)] private float closeSecs = 0.18f;
-        [SerializeField, Min(0.05f)] private float cursorBlinkSecs = 0.5f;
         [Tooltip("The card never gets shorter than this (canvas units); a longer contract grows it.")]
         [SerializeField, Min(0f)] private float minHeight = 300f;
 
@@ -40,7 +38,6 @@ namespace DigitalLove.Game.PuzzleSelection
         private Coroutine bootRoutine;
         private Coroutine revealRoutine;
         private Coroutine closeRoutine;
-        private float cursorElapsed;
         private float valueColumn;
 
         public event Action Opened;
@@ -64,13 +61,6 @@ namespace DigitalLove.Game.PuzzleSelection
                 return;
 
             closeRoutine = StartCoroutine(ShrinkOut());
-        }
-
-        private void Update()
-        {
-            cursorElapsed += Time.unscaledDeltaTime;
-            bool lit = cursorElapsed % (cursorBlinkSecs * 2f) < cursorBlinkSecs;
-            cursor.SetActive(lit && gameObject.activeSelf);
         }
 
         private void Open(PuzzleData puzzle, bool includeManual, bool typed)
@@ -224,7 +214,6 @@ namespace DigitalLove.Game.PuzzleSelection
             closeRoutine = null;
             if (fullScale.HasValue)
                 cardRoot.localScale = fullScale.Value;
-            cursor.SetActive(false);
         }
     }
 }
