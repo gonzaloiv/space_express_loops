@@ -86,7 +86,7 @@ namespace DigitalLove.Game.SpaceShaping
             if (frozen)
                 return;
 
-            PreparePuzzle();
+            PreparePuzzle(FieldConditions(run.Session));
             run.Reset();
             view.SoftResetShips(run.Session);
             PlayStartCheck();
@@ -152,28 +152,35 @@ namespace DigitalLove.Game.SpaceShaping
             cuePlayer.Play(launchCue);
         }
 
-        private void ResetView()
+        private void ResetView(ZoneConditions conditions)
         {
             view.ClearPrediction();
-            view.SetConditions(currentPuzzleData.ToZoneConditions());
+            view.SetConditions(conditions);
             view.PlaceFrames(currentPuzzleData.frames, settings.zoneFalloff);
         }
 
         private void StartPuzzle()
         {
-            PreparePuzzle();
             run = new PuzzleRun(BuildSetup());
+            PreparePuzzle(FieldConditions(run.Session));
             view.StopStamp();
             view.SoftResetShips(run.Session);
             PlayStartCheck();
             view.ShowBaseline(run.Session);
         }
 
-        private void PreparePuzzle()
+        private void PreparePuzzle(ZoneConditions conditions)
         {
             wasScaling = false;
             preview.Reset();
-            ResetView();
+            ResetView(conditions);
+        }
+
+        // The puzzle's rules, with moves kept inside the field the grid frames.
+        private ZoneConditions FieldConditions(SpaceShapingSession session)
+        {
+            FieldFrame.Measure(session, out Vector3 centre, out float half);
+            return currentPuzzleData.ToZoneConditions().WithMoveArea(centre, half);
         }
 
         private void PlayStartCheck()

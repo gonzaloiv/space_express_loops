@@ -54,7 +54,8 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         }
 
         public Vector3 ConstrainMove(Vector3 centre) =>
-            conditions.Planar ? new Vector3(centre.x, Centre.y, centre.z) : centre;
+            conditions.ClampToMoveArea(
+                conditions.Planar ? new Vector3(centre.x, Centre.y, centre.z) : centre);
 
         public CubeMoveRefusal MoveRefusal => listener.MoveRefusal;
 

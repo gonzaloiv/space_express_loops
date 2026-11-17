@@ -58,6 +58,17 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         }
 
         [Test]
+        public void MoveArea_KeepsTheCentreInsideTheField()
+        {
+            ZoneConditions free = new(true, false);
+            ZoneConditions field = free.WithMoveArea(Vector3.zero, 0.5f);
+
+            Assert.AreEqual(new Vector3(2f, 0f, 0f), free.ClampToMoveArea(new Vector3(2f, 0f, 0f)));
+            Assert.AreEqual(new Vector3(0.5f, -0.5f, 0.2f), field.ClampToMoveArea(new Vector3(2f, -1f, 0.2f)));
+            Assert.IsTrue(field.Translatable);
+        }
+
+        [Test]
         public void ZoneView_ExposesTheLockedGestures()
         {
             GameObject zoneObject = ZoneObject(out CubeView zone);
