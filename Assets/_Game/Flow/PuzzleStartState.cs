@@ -53,8 +53,9 @@ namespace DigitalLove.Game.Flow
 
         public override void Exit() => active = false;
 
-        // The chapter opener is the episode's world beat, its own moment before the job: Jim speaks
-        // with no field in the room, once per chapter, then the job starts with its own lesson.
+        // The chapter opener is the episode's world beat, once per chapter: Jim presents the chapter
+        // over its first job's field, then that job's own intro follows. A tutorial job keeps its goal
+        // line before the field, so its opener still plays with no field in the room.
         private bool TryOpenChapter(PuzzleData puzzle)
         {
             ChapterData chapter = levelSelector.GetChapter(puzzle);
@@ -63,8 +64,18 @@ namespace DigitalLove.Game.Flow
             if (!RunProgressCookies.OpenChapter(memoryDataClient.Get<PlayerData>(), chapter.id))
                 return false;
 
-            puzzleController.HideAll();
-            ttsPresenter.Play(new[] { chapter.IntroKey }, () => BeginJob(puzzle));
+            if (puzzle.HasGoalLine)
+            {
+                puzzleController.HideAll();
+                ttsPresenter.Play(new[] { chapter.IntroKey }, () => BeginJob(puzzle));
+                return true;
+            }
+
+            string[] lines = puzzle.noIntro
+                ? new[] { chapter.IntroKey }
+                : new[] { chapter.IntroKey, puzzle.IntroLinesKey };
+            ttsPresenter.Play(lines, ttsPresenter.HidePanel);
+            StartPuzzle();
             return true;
         }
 
