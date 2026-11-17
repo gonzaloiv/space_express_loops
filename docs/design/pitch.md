@@ -33,12 +33,28 @@ goes to the game itself.
 
 ## The video (under 3 minutes, best material first)
 
-1. **0:00–0:10** — the stretch, then the title.
-2. **0:10–0:30** — the universe on your desk; Jim hands over the first job.
-3. **0:30–1:30** — three jobs that show the lessons building up: scale, clear, move the cube.
-4. **1:30–2:00** — the entropy budget: a fail, a retry, the stars.
-5. **2:00–2:30** — the map fills; the same cube picks the next job.
-6. **2:30–2:50** — what comes next: chapter 3 and the store release ([chapters](chapters.md)).
+Target ~2:30. Judges may stop early, so the first 20 seconds have to sell the game alone. Burn in
+captions: many judges watch muted.
+
+| Time | Shot | On-screen line |
+|---|---|---|
+| 0:00–0:08 | **Cold open, the stretch.** Two hands pinch inside the cube in passthrough, the lattice and planets stretch, the predicted path swings, release, the ship flies, arrival flash and chime. | *Bend spacetime with your bare hands.* |
+| 0:08–0:14 | **Title.** "OUR SPACE" over the field on the real desk. | Tagline |
+| 0:14–0:30 | **Setup.** Console boot, the field lands at seated reach, Jim hands over job 1 (contract card). | *A pocket universe on your desk. Hands only. Seated.* |
+| 0:30–1:15 | **The lessons build** (~15 s each, attempt → arrival → stars stamped): **scale** a planet's space, **clear** an obstacle, **move** the cube. | One verb per job: *Scale. Clear. Move.* |
+| 1:15–1:35 | **The stakes.** The entropy meter drains, a crash and the fail sting, retry, the 3★ stamp. | *Every change costs entropy.* |
+| 1:35–1:55 | **Chapter 2, the fleet.** Two or three ships; one cube shape has to save them all. | *Then the fleet.* |
+| 1:55–2:15 | **The ending.** The whole map lights up, total stars, Jim closes the episode. | — |
+| 2:15–2:30 | **What's next + end card.** Chapter 3 (resize, rotate), freelance contracts, the daily contract, a Meta store release. | Name · Meta Quest · hand tracking |
+
+**Capture notes.** Record each beat separately with several takes on the frozen build, using Meta's
+on-device capture (enable the 16:9 crop if offered). Keep the head still, move the hands slowly and
+keep the cube centred in frame. Light the room well (passthrough gets noisy in the dark) and clear
+the desk. Turn off notifications. Keep the game's own audio (music, Jim, cube sounds) and add music
+only where it ducks under Jim.
+
+**Screenshots** (reuse the frames from the video): the stretch, a ship arriving, the fleet, the lit
+map, plus the store cover shot.
 
 ## The judges' tests
 

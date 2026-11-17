@@ -57,7 +57,10 @@ MonoBehaviour:
   SendExampleGameDataToMyGame: 0
   InternetConnectivity: 0
   CustomDimensions01: []
-  CustomDimensions02: []
+  CustomDimensions02:
+  - small
+  - medium
+  - large
   CustomDimensions03: []
   ResourceItemTypes: []
   ResourceCurrencies: []
