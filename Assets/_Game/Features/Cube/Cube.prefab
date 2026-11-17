@@ -160,6 +160,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Cube::DigitalLove.Game.SpaceShaping.Cube.CubeGrabListener
   grabbable: {fileID: 1907182571821500481}
+  interactable: {fileID: 6805927291378450022}
   zone: {fileID: 5572121854155305578}
   frameRenderer: {fileID: 27529119412877910}
   fillRenderer: {fileID: 7219471136746057563}
@@ -169,6 +170,10 @@ MonoBehaviour:
   danger: {fileID: 11400000, guid: c01d0000000000000000000000000003, type: 2}
   frameGain: 1.5
   frameGrowRatio: 2
+  bracketIdle: 0.16
+  bracketHover: 0.3
+  bracketActive: 0.6
+  bracketSecs: 0.15
   fillIdleAlpha: 0.1
   fillActiveAlpha: 0.45
   scaleGain: 0.9
@@ -403,7 +408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DigitalLove.Audio.PxSynth::pxStrax
   sampleRate: 48000
-  volume: 0.10
+  volume: 0.1
   cutoff: 0.2
   resonance: 0.3
   envelope: 0.01
@@ -453,6 +458,10 @@ MonoBehaviour:
   grabTickSecs: 0.09
   grabTickSemitones: 5
   releaseDropSemitones: 3
+  strainLfoAmp: 0.08
+  strainLfoRate: 3.5
+  restingLfoRate: 1.2
+  strainWobbleCents: 8
 --- !u!114 &4213745259660598342
 MonoBehaviour:
   m_ObjectHideFlags: 0

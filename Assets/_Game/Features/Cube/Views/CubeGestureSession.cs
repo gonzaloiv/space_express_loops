@@ -16,6 +16,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         private bool classified;
         private bool frameGrab;
         private bool moveGrab;
+        private bool scaleGrab;
         private int lastCount;
         private float startHandDistance;
         private float startScale;
@@ -42,6 +43,9 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         // scaling only; a single pinch outside the frame neither moves nor refuses.
         public bool MoveGrab => moveGrab;
 
+        // Two hands drive the cube: resizing its frame, or scaling while the pinch centre stays inside.
+        public bool TwoHandGrab => frameGrab || scaleGrab;
+
         public void Tick(int count)
         {
             if (!classified)
@@ -57,6 +61,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             Moved = false;
             Scaled = false;
             zone.SetScaling(false);
+            scaleGrab = false;
             classified = false;
             lastCount = 0;
         }
@@ -78,7 +83,9 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 startHandDistance = CubeGesture.HandDistance(grabbable);
                 startScale = zone.Scale;
                 startSize = zone.Size;
-                frameGrab = zone.CanResize && !CubeGesture.PinchCentreInsideScale(zone, grabbable);
+                bool inside = CubeGesture.PinchCentreInsideScale(zone, grabbable);
+                frameGrab = zone.CanResize && !inside;
+                scaleGrab = inside;
             }
 
             if (count == 1 && lastCount != 1)
@@ -95,13 +102,24 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 Move();
             else if (frameGrab)
                 ResizeFrame();
-            else
+            else if (scaleGrab)
+                TryScaleUniverse();
+
+            zone.SetScaling(count >= 2 && scaleGrab);
+        }
+
+        // A two-hand pinch only scales while its centre is in the cube: hands that drift away (down to
+        // the lap, still pinched) end the scale for this grab instead of dragging the universe along.
+        private void TryScaleUniverse()
+        {
+            if (!CubeGesture.PinchCentreInsideScale(zone, grabbable))
             {
-                Scaled = true;
-                ScaleUniverse();
+                scaleGrab = false;
+                return;
             }
 
-            zone.SetScaling(count >= 2 && !frameGrab);
+            Scaled = true;
+            ScaleUniverse();
         }
 
         private void Move()

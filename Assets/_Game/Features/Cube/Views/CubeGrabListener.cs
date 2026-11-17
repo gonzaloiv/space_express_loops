@@ -1,6 +1,7 @@
 using System;
 using DigitalLove.Global;
 using Oculus.Interaction;
+using Oculus.Interaction.HandGrab;
 using UnityEngine;
 using DigitalLove.Game.Spatial;
 
@@ -9,6 +10,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
     public class CubeGrabListener : MonoBehaviour
     {
         [SerializeField] private Grabbable grabbable;
+        [SerializeField] private HandGrabInteractable interactable;
         [SerializeField] private CubeView zone;
         [SerializeField] private Renderer frameRenderer;
         [SerializeField] private Renderer fillRenderer;
@@ -86,8 +88,20 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         public void SetLocked(bool value)
         {
             locked = value;
-            if (locked)
-                EndGesture();
+            if (!locked)
+                return;
+
+            EndGesture();
+            ReleaseHands();
+        }
+
+        // A locked cube is usually hidden next (the map closes on enter). Hiding it while hands still
+        // hold it cancels the grab mid-select, and the hand interactors never hover it again; letting
+        // go here unselects them cleanly while the cube is still active.
+        private void ReleaseHands()
+        {
+            foreach (HandGrabInteractor hand in interactable.SelectingInteractors)
+                hand.ForceRelease();
         }
 
         public void ClearMoveRefusal() => feedback.ClearMoveRefusal();
@@ -117,7 +131,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             }
 
             gesture.Tick(count);
-            bool stray = count == 1 && !gesture.MoveGrab;
+            bool stray = count == 1 ? !gesture.MoveGrab : !gesture.TwoHandGrab;
             SetMoving(count == 1 && zone.CanMove && !stray);
             ApplyFeedback(stray ? 0 : count);
         }
