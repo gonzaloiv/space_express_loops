@@ -1681,7 +1681,7 @@ MonoBehaviour:
   playerControllerInstaller: {fileID: 194917959}
   setupFunnelHelper: {fileID: 1210227667}
   noSave:
-    value: 1
+    value: 0
   noSavePlayerData:
     userId: 
     sessionCount: 0

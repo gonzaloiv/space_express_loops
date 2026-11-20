@@ -38,6 +38,9 @@ The store release ([release](../design/release.md)), in schedule order:
 
 Design-only or deferred. Nothing here is scheduled.
 
+- [Boot on one line](backlog/boot-one-line.md) — the console boot types through one localized line
+  instead of 13 per-line GameObjects (after the store update).
+
 - The contract card stays available during the run as a static reference; otherwise
   help reaches the player at the start (Jim's line, the gesture prompts) and the end (the complete/fail
   message) — no reactive in-solve hint surface.
