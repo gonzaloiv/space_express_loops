@@ -4,14 +4,17 @@ using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 {
-    // Bakes a job's contract from Seed to Seed + count - 1 and measures each baked seed's solve window,
-    // so the most forgiving seed can be pinned in the contract. Nothing is saved.
+    // Bakes a job's contract from Seed to Seed + count - 1, checks each baked seed against the whole
+    // contract (the same validator JobSet_MeetsTheContract runs), and measures its solve window, so a
+    // seed that will pass can be pinned in the contract. Nothing is saved.
     public static class PuzzleJobSeedScan
     {
         public struct Entry
         {
             public int Seed;
             public bool Baked;
+            public bool MeetsContract;
+            public string Problem;
             public float Window;
             public PuzzleSolutionKind Kind;
             public PuzzleBakeStatus Status;
@@ -36,7 +39,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                         break;
 
                     seed.seed = job.Seed + i;
-                    entries.Add(Probe(seed, settings, sim));
+                    entries.Add(Probe(seed, job, settings, sim));
                 }
             }
             finally
@@ -45,11 +48,21 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 Object.DestroyImmediate(seed);
             }
 
-            entries.Sort((a, b) => b.Window.CompareTo(a.Window));
+            entries.Sort(ByUsefulness);
             return entries;
         }
 
-        private static Entry Probe(PuzzleSeed seed, SpaceShapingSettings settings, PuzzleSimSettings sim)
+        // Seeds that pass the contract first, then the widest solve window.
+        private static int ByUsefulness(Entry a, Entry b)
+        {
+            if (a.MeetsContract != b.MeetsContract)
+                return a.MeetsContract ? -1 : 1;
+
+            return b.Window.CompareTo(a.Window);
+        }
+
+        private static Entry Probe(
+            PuzzleSeed seed, PuzzleJobContract job, SpaceShapingSettings settings, PuzzleSimSettings sim)
         {
             PuzzleSeedScanResult result = PuzzleSeedScanner.Find(seed, settings, 1);
             Entry entry = new()
@@ -62,12 +75,21 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             };
 
             if (result.Found)
-                entry.Window = PuzzleSolveWindow.Measure(result.Puzzle, result.Solution, sim);
+                Measure(ref entry, result, job, sim);
 
             if (result.Puzzle != null)
                 Object.DestroyImmediate(result.Puzzle);
 
             return entry;
+        }
+
+        private static void Measure(
+            ref Entry entry, PuzzleSeedScanResult result, PuzzleJobContract job, PuzzleSimSettings sim)
+        {
+            entry.MeetsContract = PuzzleJobValidator.Validate(
+                result.Puzzle, result.Kind, result.Solution, job, out List<string> problems, sim);
+            entry.Problem = problems.Count > 0 ? problems[0] : string.Empty;
+            entry.Window = PuzzleSolveWindow.Measure(result.Puzzle, result.Solution, sim);
         }
     }
 }

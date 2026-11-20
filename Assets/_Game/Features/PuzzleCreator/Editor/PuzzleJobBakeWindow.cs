@@ -84,7 +84,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         }
 
         // The window is the run of arriving scales around the solution, as a share of the scale range:
-        // the higher, the more forgiving. Pin the chosen seed as the contract's Seed, then Bake.
+        // the higher, the more forgiving. Only ✓ seeds pass the contract test; pin one as the contract's
+        // Seed, then Bake. ✗ seeds bake but break a contract rule, named after the dash.
         private void DrawScan()
         {
             if (scan == null)
@@ -92,22 +93,41 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField(
-                $"Scan {scannedId} — widest solve window first", EditorStyles.boldLabel);
+                $"Scan {scannedId} — contract passes first, then widest solve window", EditorStyles.boldLabel);
             int shown = 0;
             for (int i = 0; i < scan.Count && shown < MaxShown; i++)
             {
-                PuzzleJobSeedScan.Entry entry = scan[i];
-                if (!entry.Baked)
+                if (!scan[i].Baked)
                     continue;
 
-                string mark = entry.Seed == contractSeed ? "  ← contract" : string.Empty;
-                EditorGUILayout.LabelField(
-                    $"seed {entry.Seed} · window {entry.Window:P0} · {entry.Kind}{mark}");
+                EditorGUILayout.LabelField(ScanLine(scan[i]));
                 shown++;
             }
 
-            EditorGUILayout.LabelField($"{shown} shown · {FailureSummary()}");
+            EditorGUILayout.LabelField($"{shown} shown · {PassSummary()} · {FailureSummary()}");
             EditorGUILayout.LabelField($"NoRun pairs: {NoRunReport()}");
+        }
+
+        private string ScanLine(PuzzleJobSeedScan.Entry entry)
+        {
+            string mark = entry.Seed == contractSeed ? "  ← contract" : string.Empty;
+            string line = $"seed {entry.Seed} · window {entry.Window:P0} · {entry.Kind}{mark}";
+            return entry.MeetsContract ? $"✓ {line}" : $"✗ {line} — {entry.Problem}";
+        }
+
+        private string PassSummary()
+        {
+            int passing = 0;
+            int broke = 0;
+            for (int i = 0; i < scan.Count; i++)
+            {
+                if (scan[i].MeetsContract)
+                    passing++;
+                else if (scan[i].Baked)
+                    broke++;
+            }
+
+            return $"{passing} meet the contract · {broke} bake but break it";
         }
 
         // Why the run picker rejected the pairs on NoRun seeds, summed over the scan.
