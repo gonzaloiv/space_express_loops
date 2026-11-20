@@ -11,6 +11,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         private const string SettingsPath =
             "Assets/_Game/Features/PuzzleCreator/Data/SpaceShapingSettings.asset";
 
+        private const string JobFolder = "Assets/_Game/Resources/Chapters/01";
+
         [Test]
         [Explicit]
         public void Tutorial_FourPlanetRing_BakesCurve()
@@ -96,6 +98,55 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Assert.AreEqual(0, failures.Count, string.Join("\n", failures));
         }
 
+        // The shipped assets are the content: each one must validate against its own contract. Nothing
+        // stores a job's answer or kind, so the test re-solves the asset before validating it.
+        [Test]
+        public void ShippedJobs_MeetTheContract()
+        {
+            SpaceShapingSettings settings =
+                AssetDatabase.LoadAssetAtPath<SpaceShapingSettings>(SettingsPath);
+            Assert.IsNotNull(settings, SettingsPath);
+            PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
+            List<string> failures = new List<string>();
+            for (int i = 0; i < PuzzleJobContracts.Enabled.Count; i++)
+            {
+                PuzzleJobContract contract = PuzzleJobContracts.Enabled[i];
+                PuzzleData puzzle = LoadShipped(contract, failures);
+                if (puzzle == null)
+                    continue;
+
+                if (!PuzzleSolutionSearch.TrySelect(
+                        puzzle, sim, Brief(contract, settings), out PuzzleSolution solution))
+                {
+                    failures.Add($"{contract.Id}: no solution found");
+                    continue;
+                }
+
+                if (!PuzzleJobValidator.Validate(
+                        puzzle, solution.Kind, solution.Zones, contract, out List<string> problems, sim))
+                    failures.Add($"{contract.Id}: {string.Join("; ", problems)}");
+            }
+
+            Assert.AreEqual(0, failures.Count, string.Join("\n", failures));
+        }
+
+        private static PuzzleData LoadShipped(PuzzleJobContract contract, List<string> failures)
+        {
+            string path = $"{JobFolder}/Job_{contract.Id}_Puzzle.asset";
+            PuzzleData puzzle = AssetDatabase.LoadAssetAtPath<PuzzleData>(path);
+            if (puzzle == null)
+                failures.Add($"{contract.Id}: missing {path}");
+            return puzzle;
+        }
+
+        private static PuzzleBrief Brief(PuzzleJobContract contract, SpaceShapingSettings settings)
+        {
+            PuzzleSeed seed = Seed(contract);
+            PuzzleBrief brief = PuzzleBrief.From(seed, settings);
+            Object.DestroyImmediate(seed);
+            return brief;
+        }
+
         private static PuzzleSeedScanResult Bake(
             PuzzleJobContract contract, out PuzzleSeed seed, out SpaceShapingSettings settings)
         {
@@ -122,6 +173,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             seed.noFail = contract.NoFail;
             seed.noGrade = contract.NoGrade;
             seed.noIntro = contract.NoIntro;
+            seed.growOnly = contract.GrowOnly;
             return seed;
         }
 

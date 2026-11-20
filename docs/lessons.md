@@ -4,6 +4,21 @@ Short post-mortems, written when a plan closes (rule in [AGENTS.md](../AGENTS.md
 morning). Newest first. Each entry: what worked, what surprised us, the rule for next time. One idea per
 bullet; the code and tests are the record of what was built.
 
+## 2026-11-20 — Seeds retune
+
+- **Worked:** running the failing job set before touching a seed turned a suspected retune into a
+  one-line test fix: `PuzzleJobBakeTests.Seed` dropped `GrowOnly`, so 01_01 was the test's bug.
+- **Surprised:** shipped jobs store neither their answer nor their kind, so an asset check has to
+  re-solve; `PuzzleSolutionSearch` with a brief built from the contract was enough, and all seven
+  shipped assets passed untouched.
+- **Surprised:** once the settings changed, no seed reproduces the shipped planets. The retune pins a
+  seed whose bake has the same shape (mechanism, zones, routes, sun and start rules), not the same
+  field — the asset stays the content, the contract is a proxy.
+- **Next time:** keep asset checks in the Creator suite; the validator and the contracts are
+  Editor-only, so "runs in the fast suite" only relocates the cost.
+- **Next time:** never pass `-quit` with `-runTests` in the Unity CLI; it quits after import and
+  reports zero tests. A batch window runs the suite reliably.
+
 ## 2026-11-20 — Lattice on Burst
 
 - **Worked:** profiler markers first, then reading the headset capture straight from the editor:

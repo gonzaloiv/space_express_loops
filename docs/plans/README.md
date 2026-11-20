@@ -17,8 +17,8 @@ freelance tiers and scores, resize and rotate (chapter 4, the first update).
 
 Active work.
 
-- [Seeds retune](in-progress/seeds-retune.md) — space shaping: `JobSet_MeetsTheContract` green
-  against the shipped settings; contracts follow the shipped jobs.
+- [Fleet sun answer](in-progress/fleet-sun-answer.md) — space shaping: fleet fields bake with the sun
+  off the ships' corridor or no sun; 2-1 keeps its sun.
 
 Past post-mortems are in [lessons](../lessons.md).
 
@@ -26,9 +26,9 @@ Past post-mortems are in [lessons](../lessons.md).
 
 The store release ([release](../design/release.md)), in schedule order:
 
-- **18–22 Nov:** [fleet sun answer](backlog/fleet-sun-answer.md) ·
-  [story arc](backlog/story-arc.md) · [entitlement check](backlog/entitlement-check.md) ·
-  [store page](backlog/store-page.md) (find Meta's review time first)
+- **18–22 Nov:** [fleet rebake](backlog/fleet-rebake.md) · [story arc](backlog/story-arc.md) ·
+  [entitlement check](backlog/entitlement-check.md) · [store page](backlog/store-page.md) (find Meta's
+  review time first)
 - **23–29 Nov:** [chapter 2 to eight jobs](backlog/chapter-2-to-eight.md) ·
   [multi-zone fleet bake](backlog/multi-zone-fleet-bake.md) · [chapter 3](backlog/chapter-3.md)
 - **30 Nov–4 Dec:** [freelance](backlog/freelance.md) · [release build](backlog/release-build.md)
@@ -73,7 +73,7 @@ Loose ends that still need a home. Close one by linking the plan that finishes i
 - **Gesture prompt icons — read well on the headset (2026-11-18).** Rendered by
   `Tools/Our Space/Render Gesture Prompt Art` (`GesturePrompts/Editor`); re-run it after tuning a motion.
 - **Job 1 on the headset.** Rebaked 2026-11-06 (six planets, a sun the cube does not cover, seed 141);
-  it still needs a headset read. The bake tests are owned by [seeds retune](in-progress/seeds-retune.md).
+  it still needs a headset read. The job set's bake and shipped-asset tests are green (2026-11-20).
 - **Ship-zone cue.** The ship has a trail; there is no zone indicator. No plan owns it yet; multi-zone
   fleets in [chapter 3](backlog/chapter-3.md) may need it.
 - **Resize.** Working, but the explanation (size is scope, not precision) is not ready. Chapter 4's

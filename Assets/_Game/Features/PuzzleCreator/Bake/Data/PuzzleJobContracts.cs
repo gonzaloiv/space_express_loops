@@ -22,7 +22,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             },
             new PuzzleJobContract
             {
-                Id = "01_03", Seed = 146, Attempts = 1, PlanetCount = 6, FieldShape = PuzzleFieldShape.Ring,
+                Id = "01_03", Seed = 200, Attempts = 1, PlanetCount = 6, FieldShape = PuzzleFieldShape.Ring,
                 HasSun = true, SunOnChord = false, SunRule = PuzzleSunRule.OutOfZone, MinBlockers = 1,
                 Mechanism = PuzzleMechanism.Clear, Zones = 1, MinRoutes = 2,
                 Translatable = false, NoFail = false, NoGrade = false,
@@ -37,7 +37,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             },
             new PuzzleJobContract
             {
-                Id = "01_05", Seed = 124, Attempts = 1, PlanetCount = 10, FieldShape = PuzzleFieldShape.Spiral,
+                Id = "01_05", Seed = 140, Attempts = 1, PlanetCount = 10, FieldShape = PuzzleFieldShape.Spiral,
                 HasSun = true, SunOnChord = false, SunRule = PuzzleSunRule.OutOfZone, MinBlockers = 1,
                 Mechanism = PuzzleMechanism.Curve, Zones = 2, MinRoutes = 1,
                 Translatable = true, NoFail = false, NoGrade = false,
@@ -51,7 +51,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             },
             new PuzzleJobContract
             {
-                Id = "01_07", Seed = 26, Attempts = 1, PlanetCount = 12, FieldShape = PuzzleFieldShape.Cluster,
+                Id = "01_07", Seed = 65, Attempts = 1, PlanetCount = 12, FieldShape = PuzzleFieldShape.Cluster,
                 HasSun = true, SunOnChord = false, SunRule = PuzzleSunRule.InZone, MinBlockers = 1,
                 Mechanism = PuzzleMechanism.Curve, Zones = 2, MinRoutes = 2,
                 Translatable = true, StartRule = PuzzleStartRule.FieldCentre,
