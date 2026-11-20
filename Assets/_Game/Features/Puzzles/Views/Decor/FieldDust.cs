@@ -1,5 +1,5 @@
-using System;
 using DigitalLove.Global;
+using Unity.Profiling;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
@@ -11,6 +11,7 @@ namespace DigitalLove.Game.SpaceShaping
     public class FieldDust : MonoBehaviour
     {
         private const float Lifetime = 1000f;
+        private static readonly ProfilerMarker DustMarker = new("Shaping.Dust");
 
         [SerializeField] private ParticleSystem particles;
         [SerializeField, Min(1)] private int count = 400;
@@ -32,7 +33,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private DustLayout layout;
         private ParticleSystem.Particle[] buffer;
-        private Func<Vector3, Vector3> warp;
+        private LatticeField field;
         private Vector3 centre;
         private float half;
 
@@ -40,26 +41,28 @@ namespace DigitalLove.Game.SpaceShaping
 
         private ParticleSystem.Particle[] Buffer => buffer ??= new ParticleSystem.Particle[count];
 
-        public void Render(Func<Vector3, Vector3> fieldWarp, Vector3 fieldCentre, float fieldHalf)
+        public void Render(LatticeField lattice, Vector3 fieldCentre, float fieldHalf)
         {
-            warp = fieldWarp;
+            field = lattice;
             centre = fieldCentre;
             half = fieldHalf;
         }
 
         private void LateUpdate()
         {
-            if (warp == null)
+            if (field == null || !field.IsReady)
                 return;
 
+            using ProfilerMarker.AutoScope scope = DustMarker.Auto();
             float time = Time.unscaledTime;
+            LatticeWarp warp = field.Warp;
             for (int i = 0; i < Layout.Count; i++)
-                Buffer[i] = Place(i, time);
+                Buffer[i] = Place(warp, i, time);
 
             particles.SetParticles(Buffer, Layout.Count);
         }
 
-        private ParticleSystem.Particle Place(int index, float time)
+        private ParticleSystem.Particle Place(LatticeWarp warp, int index, float time)
         {
             Vector3 rest = centre
                 + Layout.Rest(index) * (half * spread)
@@ -67,7 +70,7 @@ namespace DigitalLove.Game.SpaceShaping
             Color tint = color.value;
             return new ParticleSystem.Particle
             {
-                position = warp(rest),
+                position = warp.Warp(rest),
                 startSize = size * Mathf.Lerp(1f - sizeJitter, 1f, Layout.Weight(index)),
                 startColor = tint.WithAlpha(tint.a * alpha * Layout.EdgeFade(index, edgeFade)),
                 startLifetime = Lifetime,

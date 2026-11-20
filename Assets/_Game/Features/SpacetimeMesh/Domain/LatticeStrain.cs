@@ -1,3 +1,4 @@
+using Unity.Collections;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Grid
@@ -9,23 +10,21 @@ namespace DigitalLove.Game.SpaceShaping.Grid
     {
         private const float MinSpacing = 1e-6f;
 
-        public static void Measure(
-            Vector3[] rest, Vector3[] warped, float[] strain, int samplesPerLine,
-            float squeezeAt, float stretchAt)
+        public static void MeasureLine(
+            NativeArray<Vector3> rest, NativeArray<Vector3> warped, NativeArray<float> strain,
+            int start, int count, float squeezeAt, float stretchAt)
         {
-            if (samplesPerLine < 2)
+            if (count < 2)
                 return;
 
-            for (int start = 0; start + samplesPerLine <= warped.Length; start += samplesPerLine)
-            {
-                int end = start + samplesPerLine - 1;
-                for (int i = start; i <= end; i++)
-                    strain[i] = At(Spacing(rest, warped, Mathf.Max(start, i - 1), Mathf.Min(end, i + 1)),
-                        squeezeAt, stretchAt);
-            }
+            int end = start + count - 1;
+            for (int i = start; i <= end; i++)
+                strain[i] = At(Spacing(rest, warped, Mathf.Max(start, i - 1), Mathf.Min(end, i + 1)),
+                    squeezeAt, stretchAt);
         }
 
-        private static float Spacing(Vector3[] rest, Vector3[] warped, int previous, int next)
+        private static float Spacing(
+            NativeArray<Vector3> rest, NativeArray<Vector3> warped, int previous, int next)
         {
             float atRest = Vector3.Distance(rest[previous], rest[next]);
             return atRest > MinSpacing ? Vector3.Distance(warped[previous], warped[next]) / atRest : 1f;

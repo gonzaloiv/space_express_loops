@@ -1,11 +1,15 @@
-using System;
 using DigitalLove.Global;
+using Unity.Profiling;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Grid
 {
+    // Draws the lattice: the baked tube mesh, bent by the field on Burst jobs every render.
     public class SpacetimeMeshView : MonoBehaviour, ISerializationCallbackReceiver
     {
+        private static readonly ProfilerMarker WarpMarker = new("Shaping.Lattice.Warp");
+        private static readonly ProfilerMarker UploadMarker = new("Shaping.Lattice.Upload");
+
         [SerializeField] private MeshFilter meshFilter;
         [SerializeField] private MeshRenderer meshRenderer;
         [SerializeField] private Mesh sourceMesh;
@@ -23,19 +27,9 @@ namespace DigitalLove.Game.SpaceShaping.Grid
         [SerializeField] private LatticeStrainStyle strain = new();
 
         private Mesh mesh;
-        private Vector3[] vertices;
-        private Color[] colors;
-        private Vector3[] nodeFractions;
-        private Vector3[] ringOffsets;
-        private Vector3[] nodes;
-        private Vector3[] warpedNodes;
-        private Vector3[] smoothScratch;
-        private float[] strains;
-        private Bounds bounds;
-        private int samplesPerLine;
+        private LatticeMeshBuffers buffers;
         private RendererTint tint;
-        private Func<Vector3, Vector3> lastWarp;
-        private Func<Vector3, float> lastFade;
+        private ILatticeField lastField;
         private float lastStrength;
         private Vector3 lastCentre;
         private float lastHalf;
@@ -46,18 +40,29 @@ namespace DigitalLove.Game.SpaceShaping.Grid
 
         public float Radius => radius;
 
-        public void Render(
-            Func<Vector3, Vector3> warp, Func<Vector3, float> fade,
-            float warpStrength, Vector3 centre, float half)
+        public void Render(ILatticeField field, float warpStrength, Vector3 centre, float half)
         {
-            Remember(warp, fade, warpStrength, centre, half);
+            Remember(field, warpStrength, centre, half);
             EnsureMesh();
             transform.localPosition = centre;
             transform.localRotation = Quaternion.identity;
-            WarpVertices(warp, fade, half);
-            CommitMesh();
+            using (WarpMarker.Auto())
+                buffers.Run(field, Pass(half));
+            using (UploadMarker.Auto())
+                CommitMesh();
             ApplyTint(warpStrength);
         }
+
+        private LatticePass Pass(float half) =>
+            new()
+            {
+                LocalToParent = transform.parent.worldToLocalMatrix * transform.localToWorldMatrix,
+                ParentToLocal = transform.worldToLocalMatrix * transform.parent.localToWorldMatrix,
+                Half = half,
+                Radius = radius,
+                SmoothPasses = smoothPasses,
+                Look = strain.Look,
+            };
 
         private void ApplyTint(float strength)
         {
@@ -68,88 +73,17 @@ namespace DigitalLove.Game.SpaceShaping.Grid
             strain.ApplyGlow(meshRenderer, accent.value);
         }
 
-        private void Remember(
-            Func<Vector3, Vector3> warp, Func<Vector3, float> fade,
-            float warpStrength, Vector3 centre, float half)
+        private void Remember(ILatticeField field, float warpStrength, Vector3 centre, float half)
         {
-            lastWarp = warp;
-            lastFade = fade;
+            lastField = field;
             lastStrength = warpStrength;
             lastCentre = centre;
             lastHalf = half;
         }
 
-        private void WarpVertices(Func<Vector3, Vector3> warp, Func<Vector3, float> fade, float half)
-        {
-            Matrix4x4 localToParent = transform.parent.worldToLocalMatrix * transform.localToWorldMatrix;
-            Matrix4x4 parentToLocal = transform.worldToLocalMatrix * transform.parent.localToWorldMatrix;
-            bounds = new Bounds(Vector3.zero, Vector3.zero);
-
-            // A tube ring's `sides` vertices are consecutive and share one node: warp it once, smooth
-            // the warp along its line, then fade and write the ring.
-            for (int ring = 0; ring < nodes.Length; ring++)
-            {
-                Vector3 fraction = nodeFractions[ring * sides];
-                Vector3 node = (fraction * 2f - Vector3.one) * half;
-                nodes[ring] = localToParent.MultiplyPoint3x4(node);
-                warpedNodes[ring] = warp(nodes[ring]);
-            }
-
-            LatticeLineSmoothing.Smooth(nodes, warpedNodes, smoothScratch, samplesPerLine, smoothPasses);
-            strain.Measure(nodes, warpedNodes, strains, samplesPerLine);
-            for (int ring = 0; ring < nodes.Length; ring++)
-            {
-                Vector3 warped = warpedNodes[ring];
-                WriteRing(
-                    ring * sides, parentToLocal.MultiplyPoint3x4(warped),
-                    strain.VertexColor(fade(warped), strains[ring]), strain.Radius(radius, strains[ring]));
-            }
-        }
-
-        private void WriteRing(int first, Vector3 centre, Color color, float ringRadius)
-        {
-            for (int v = first; v < first + sides; v++)
-            {
-                Vector3 local = centre + ringOffsets[v] * ringRadius;
-                vertices[v] = local;
-                colors[v] = color;
-                bounds.Encapsulate(local);
-            }
-        }
-
-        private void BuildStaticData()
-        {
-            int perLine = samplesPerLine * sides;
-            int perAxisVertices = gridCount * gridCount * perLine;
-            nodeFractions = new Vector3[vertices.Length];
-            ringOffsets = new Vector3[vertices.Length];
-
-            for (int v = 0; v < vertices.Length; v++)
-            {
-                LatticeSample sample = Decode(v, perLine, perAxisVertices);
-                nodeFractions[v] = LatticeGrid.Node(
-                    sample.Axis, sample.NodeIndex, sample.I, sample.J, gridCount,
-                    Vector3.zero, Vector3.one);
-                ringOffsets[v] = LatticeGrid.RingOffset(sample.Axis, sample.Side, sides);
-            }
-        }
-
-        private LatticeSample Decode(int vertex, int perLine, int perAxisVertices)
-        {
-            int axis = vertex / perAxisVertices;
-            int rem = vertex % perAxisVertices;
-            int line = rem / perLine;
-            int rem2 = rem % perLine;
-            float nodeIndex = (float)(rem2 / sides) / (samplesPerLine - 1) * (gridCount - 1);
-            return new LatticeSample(
-                axis, line / gridCount, line % gridCount, rem2 % sides, nodeIndex);
-        }
-
         private void CommitMesh()
         {
-            mesh.SetVertices(vertices);
-            mesh.SetColors(colors);
-            mesh.bounds = bounds;
+            buffers.WriteTo(mesh);
             meshRenderer.enabled = Application.isPlaying;
         }
 
@@ -168,17 +102,11 @@ namespace DigitalLove.Game.SpaceShaping.Grid
                 mesh.hideFlags = HideFlags.HideAndDontSave;
 
             meshFilter.sharedMesh = mesh;
-            vertices = new Vector3[mesh.vertexCount];
-            colors = new Color[mesh.vertexCount];
-            nodes = new Vector3[mesh.vertexCount / sides];
-            warpedNodes = new Vector3[nodes.Length];
-            smoothScratch = new Vector3[nodes.Length];
-            strains = new float[nodes.Length];
-            samplesPerLine = mesh.vertexCount / (3 * gridCount * gridCount * sides);
-            BuildStaticData();
+            buffers = new LatticeMeshBuffers(mesh.vertexCount, gridCount, sides);
         }
 
-        private bool IsMeshCurrent() => mesh != null && mesh.vertexCount == sourceMesh.vertexCount;
+        private bool IsMeshCurrent() =>
+            mesh != null && buffers != null && mesh.vertexCount == sourceMesh.vertexCount;
 
         private void AttachMesh()
         {
@@ -188,23 +116,7 @@ namespace DigitalLove.Game.SpaceShaping.Grid
 
         private void ReleaseMesh()
         {
-            if (mesh == null)
-                return;
-
-            if (Application.isPlaying)
-                Destroy(mesh);
-            else
-                DestroyImmediate(mesh);
-        }
-
-        private void OnValidate()
-        {
-            if (mesh != null && lastWarp != null && lastFade != null && lastHalf > 0f)
-                Render(lastWarp, lastFade, lastStrength, lastCentre, lastHalf);
-        }
-
-        private void OnDestroy()
-        {
+            ReleaseBuffers();
             if (mesh == null)
                 return;
 
@@ -215,7 +127,26 @@ namespace DigitalLove.Game.SpaceShaping.Grid
                 Destroy(mesh);
             else
                 DestroyImmediate(mesh);
+
+            mesh = null;
         }
+
+        private void ReleaseBuffers()
+        {
+            buffers?.Dispose();
+            buffers = null;
+        }
+
+        private void OnValidate()
+        {
+            if (isActiveAndEnabled && mesh != null && lastField != null && lastField.IsReady && lastHalf > 0f)
+                Render(lastField, lastStrength, lastCentre, lastHalf);
+        }
+
+        // The buffers are native: let them go with the component, and rebuild on the next render.
+        private void OnDisable() => ReleaseBuffers();
+
+        private void OnDestroy() => ReleaseMesh();
 
         public void OnBeforeSerialize()
         {

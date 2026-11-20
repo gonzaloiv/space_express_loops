@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
@@ -8,20 +8,22 @@ namespace DigitalLove.Game.SpaceShaping
     // softened by the source's radius) so the sun does not swamp the planets. A pull never reaches a
     // source's surface, and a point already inside any source stays put. With a baseline (the field
     // at the job's start) only the change is drawn: the start is flat, and a grown planet's well
-    // appears while a shrunk one's flattens.
+    // appears while a shrunk one's flattens. The sources are native so the Burst lattice job runs this
+    // same code: no sources draw no wells, and an empty baseline draws every well. Both views must be
+    // created (a job refuses an unassigned container), so "none" is an empty array, not a default.
     public readonly struct WellPull
     {
         // A cap of 1 would let a node land on the surface; the cap stays just short of it.
         public const float MaxFractionCap = 0.95f;
 
-        private readonly IReadOnlyList<SpaceSource> sources;
-        private readonly IReadOnlyList<SpaceSource> baseline;
+        private readonly NativeArray<SpaceSource>.ReadOnly sources;
+        private readonly NativeArray<SpaceSource>.ReadOnly baseline;
         private readonly float gain;
         private readonly float maxFraction;
 
         public WellPull(
-            IReadOnlyList<SpaceSource> sources, float gain, float maxFraction,
-            IReadOnlyList<SpaceSource> baseline = null)
+            NativeArray<SpaceSource>.ReadOnly sources, NativeArray<SpaceSource>.ReadOnly baseline,
+            float gain, float maxFraction)
         {
             this.sources = sources;
             this.baseline = baseline;
@@ -31,20 +33,18 @@ namespace DigitalLove.Game.SpaceShaping
 
         public Vector3 Pull(Vector3 point)
         {
-            if (sources == null || InsideAny(point))
+            if (sources.Length == 0 || InsideAny(point))
                 return point;
 
-            Vector3 shift = Shift(sources, point);
-            if (baseline != null)
-                shift -= Shift(baseline, point);
+            Vector3 shift = Shift(sources, point) - Shift(baseline, point);
 
             return point + shift * Reach(point, shift);
         }
 
-        private Vector3 Shift(IReadOnlyList<SpaceSource> field, Vector3 point)
+        private Vector3 Shift(NativeArray<SpaceSource>.ReadOnly field, Vector3 point)
         {
             Vector3 shift = Vector3.zero;
-            for (int i = 0; i < field.Count; i++)
+            for (int i = 0; i < field.Length; i++)
                 shift += Toward(field[i], point);
 
             return shift;
@@ -52,7 +52,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         private bool InsideAny(Vector3 point)
         {
-            for (int i = 0; i < sources.Count; i++)
+            for (int i = 0; i < sources.Length; i++)
             {
                 if ((point - sources[i].Position).sqrMagnitude <= sources[i].Radius * sources[i].Radius)
                     return true;
@@ -71,7 +71,7 @@ namespace DigitalLove.Game.SpaceShaping
                 return 1f;
 
             float reach = 1f;
-            for (int i = 0; i < sources.Count; i++)
+            for (int i = 0; i < sources.Length; i++)
                 reach = Mathf.Min(reach, ReachPast(sources[i], point, shift, a));
 
             return reach;

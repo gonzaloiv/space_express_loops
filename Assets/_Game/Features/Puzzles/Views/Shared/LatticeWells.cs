@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DigitalLove.Game.Spatial;
+using Unity.Collections;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
@@ -30,37 +31,37 @@ namespace DigitalLove.Game.SpaceShaping
                  "wells only (nodes still stay out of the sun).")]
         [Range(0f, 1f)] public float sunWeight = 1f;
 
-        [NonSerialized] private SpaceSource[] start;
-
-        public WellPull? For(SpaceShapingSession session)
+        // Fills the drawn sources (the sun weighted) and, at rest or on a fresh baseline, the baseline.
+        public void Fill(
+            SpaceShapingSession session, NativeArray<SpaceSource> sources,
+            NativeArray<SpaceSource> baseline, bool freshBaseline)
         {
             if (!enabled)
-                return null;
+                return;
 
-            SpaceSource[] sources = Sources(session);
-            if (!changeOnly)
-                return new WellPull(sources, gain, maxFraction);
+            IReadOnlyList<SpaceSource> field = session.BuildField().Sources;
+            for (int i = 0; i < sources.Length; i++)
+            {
+                SpaceSource source = field[i];
+                if (session.IsSun(i))
+                    source.Strength *= sunWeight;
+                sources[i] = source;
+            }
 
-            if (start == null || start.Length != sources.Length || AtRest(session))
-                start = sources;
-            return new WellPull(sources, gain, maxFraction, start);
+            if (freshBaseline || AtRest(session))
+                sources.CopyTo(baseline);
+        }
+
+        // The wells to draw: none when off, every well, or only the change from the baseline.
+        public WellPull Pull(NativeArray<SpaceSource> sources, NativeArray<SpaceSource> baseline)
+        {
+            NativeArray<SpaceSource> none = sources.GetSubArray(0, 0);
+            NativeArray<SpaceSource> drawn = enabled ? sources : none;
+            NativeArray<SpaceSource> start = enabled && changeOnly ? baseline : none;
+            return new WellPull(drawn.AsReadOnly(), start.AsReadOnly(), gain, maxFraction);
         }
 
         private static bool AtRest(SpaceShapingSession session) =>
             Mathf.Abs(session.Zones.StrongestScaleOffset()) < RestOffset;
-
-        private SpaceSource[] Sources(SpaceShapingSession session)
-        {
-            IReadOnlyList<SpaceSource> field = session.BuildField().Sources;
-            SpaceSource[] weighted = new SpaceSource[field.Count];
-            for (int i = 0; i < weighted.Length; i++)
-            {
-                weighted[i] = field[i];
-                if (session.IsSun(i))
-                    weighted[i].Strength *= sunWeight;
-            }
-
-            return weighted;
-        }
     }
 }

@@ -2,7 +2,8 @@
     "name": "DigitalLove.Game.SpaceShaping.Grid",
     "rootNamespace": "",
     "references": [
-        "DigitalLove.Global"
+        "DigitalLove.Global",
+        "Unity.Burst"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

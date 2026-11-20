@@ -31,15 +31,7 @@ namespace DigitalLove.Game.SpaceShaping.Grid
 
         [NonSerialized] private MaterialPropertyBlock block;
 
-        public void Measure(Vector3[] rest, Vector3[] warped, float[] strain, int samplesPerLine) =>
-            LatticeStrain.Measure(rest, warped, strain, samplesPerLine, squeezeAt, stretchAt);
-
-        public float Radius(float radius, float strain) =>
-            strain >= 0f ? radius * (1f + thicken * strain) : radius * (1f + thin * strain);
-
-        // Red carries the squeeze to the shader (0 = base colour, 1 = strain colour); alpha the fade.
-        public Color VertexColor(float fade, float strain) =>
-            new(Mathf.Max(strain, 0f), 0f, 0f, fade * (1f + stretchFade * Mathf.Min(strain, 0f)));
+        public LatticeStrainLook Look => new(squeezeAt, stretchAt, thicken, thin, stretchFade);
 
         public void ApplyGlow(Renderer target, Color glow)
         {

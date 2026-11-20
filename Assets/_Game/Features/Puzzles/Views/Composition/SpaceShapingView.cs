@@ -34,6 +34,7 @@ namespace DigitalLove.Game.SpaceShaping
         [SerializeField] private LatticeWells wells = new();
 
         private readonly SpaceShapingFirstUse firstUse = new();
+        private readonly LatticeField lattice = new();
         private EndpointKeepOutController keepOut;
         private bool wasScaling;
 
@@ -52,6 +53,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             spawner.Zones.Moved -= OnCubeMoved;
             keepOut.Disable();
+            lattice.Dispose();
         }
 
         private void LateUpdate()
@@ -156,10 +158,9 @@ namespace DigitalLove.Game.SpaceShaping
             FieldFrame.Measure(session, out Vector3 centre, out float half);
             FieldCentre = centre;
             FieldHalf = half;
-            LatticeWarp warp = new(session.Zones, wells.For(session));
-            ContentFade fade = new(session, half * fadeNear, half * fadeFar);
-            mesh.Render(warp.Warp, fade.Alpha, session.Zones.StrongestScaleOffset(), centre, half);
-            dust.Render(warp.Warp, centre, half);
+            lattice.Prepare(session, wells, half * fadeNear, half * fadeFar);
+            mesh.Render(lattice, session.Zones.StrongestScaleOffset(), centre, half);
+            dust.Render(lattice, centre, half);
         }
 
         public void SoftResetShips(SpaceShapingSession session)

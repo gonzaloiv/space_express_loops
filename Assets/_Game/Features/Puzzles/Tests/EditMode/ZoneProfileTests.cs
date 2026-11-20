@@ -1,5 +1,6 @@
 using DigitalLove.Game.Spatial;
 using NUnit.Framework;
+using Unity.Collections;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
@@ -61,7 +62,9 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         public void TheLattice_DrawsExactlyWhatThePhysicsApplies()
         {
             SpaceZone zone = Zone(1.6f);
-            LatticeWarp warp = new(new[] { zone });
+            using NativeArray<SpaceZone> zones = new(new[] { zone }, Allocator.Temp);
+            using NativeArray<SpaceSource> none = new(0, Allocator.Temp);
+            LatticeWarp warp = new(zones.AsReadOnly(), new WellPull(none.AsReadOnly(), none.AsReadOnly(), 0f, 0f));
             Vector3[] positions = { new(0.3f, 0.1f, -0.2f) };
             float[] scales = { 1f };
             SourceSpec[] specs = { default };

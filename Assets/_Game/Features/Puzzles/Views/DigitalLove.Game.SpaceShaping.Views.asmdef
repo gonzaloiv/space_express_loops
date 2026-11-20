@@ -18,7 +18,8 @@
         "UnityEngine.UI",
         "Oculus.Interaction",
         "Oculus.VR",
-        "DigitalLove.Casual.Levels"
+        "DigitalLove.Casual.Levels",
+        "Unity.Burst"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
