@@ -12,7 +12,8 @@
         "DigitalLove.Casual.Levels",
         "DigitalLove.FlowControl",
         "Oculus.Interaction",
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "UnityEditor.TestRunner"
     ],
     "includePlatforms": [
         "Editor"

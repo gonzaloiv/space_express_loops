@@ -14,6 +14,20 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         private int contractSeed;
         private List<PuzzleJobSeedScan.Entry> scan;
         private Vector2 scroll;
+        private PuzzleJobChecks checks;
+
+        private PuzzleJobChecks Checks
+        {
+            get
+            {
+                if (checks != null)
+                    return checks;
+
+                checks = new PuzzleJobChecks();
+                checks.Changed += Repaint;
+                return checks;
+            }
+        }
 
         [MenuItem("DigitalLove/Space Shaping/Job Baker")]
         private static void Open() => GetWindow<PuzzleJobBakeWindow>("Job Baker");
@@ -31,6 +45,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             if (GUILayout.Button("Bake all"))
                 PuzzleTestSetBuilder.Build();
 
+            DrawChecks();
             DrawScan();
             EditorGUILayout.EndScrollView();
         }
@@ -46,6 +61,19 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 if (GUILayout.Button("Bake", GUILayout.Width(60f)))
                     PuzzleTestSetBuilder.BuildOne(job);
             }
+        }
+
+        // After a bake: the sun-answer tests and the job set against its contracts (the slow one).
+        private void DrawChecks()
+        {
+            using (new EditorGUI.DisabledScope(Checks.Running))
+            {
+                if (GUILayout.Button("Run job checks (sun answer + job set)"))
+                    Checks.Run();
+            }
+
+            if (Checks.Summary.Length > 0)
+                EditorGUILayout.HelpBox(Checks.Summary, MessageType.None);
         }
 
         private void RunScan(PuzzleJobContract job)
