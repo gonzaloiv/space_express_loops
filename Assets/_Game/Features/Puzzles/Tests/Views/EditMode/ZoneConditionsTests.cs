@@ -124,7 +124,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             CubeFeedback feedback = new(frame, fill, palette);
 
             feedback.SetDormant(true);
-            feedback.Apply(zone, 2, false, false, Vector3.zero);
+            feedback.Apply(zone, 2, false, CubeHover.None);
             Color dormant = ReadBaseColor(fill);
             Assert.IsTrue(feedback.IsDormant);
             Assert.AreEqual(1f, dormant.r, 1e-4f);
@@ -133,7 +133,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             Assert.AreEqual(0.1f, dormant.a, 1e-4f);
 
             feedback.SetDormant(false);
-            feedback.Apply(zone, 2, false, false, Vector3.zero);
+            feedback.Apply(zone, 2, false, CubeHover.None);
             Assert.AreNotEqual(dormant, ReadBaseColor(fill));
 
             Object.DestroyImmediate(zoneObject);

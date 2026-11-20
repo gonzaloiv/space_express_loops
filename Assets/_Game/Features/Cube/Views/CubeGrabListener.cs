@@ -29,11 +29,15 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         [Header("Frame - corner brackets (share of an edge; 0.5 lights it all)")]
         [SerializeField, Range(0f, 0.6f)] private float bracketIdle = 0.16f;
         [SerializeField, Range(0f, 0.6f)] private float bracketHover = 0.3f;
+        [Tooltip("Where a one-hand pinch would pick the cube up (inside a movable cube's frame).")]
+        [SerializeField, Range(0f, 0.6f)] private float bracketMove = 0.45f;
         [SerializeField, Range(0f, 0.6f)] private float bracketActive = 0.6f;
         [SerializeField, Min(0f)] private float bracketSecs = 0.15f;
 
         [Header("Fill - the scaled space")]
         [SerializeField] private float fillIdleAlpha = 0.1f;
+        [Tooltip("Fill alpha while a hand hovers where a pinch would move the cube.")]
+        [SerializeField] private float fillMoveAlpha = 0.22f;
         [SerializeField] private float fillActiveAlpha = 0.45f;
 
         [Header("Scale")]
@@ -187,7 +191,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         }
 
         private void ApplyFeedback(int count) =>
-            feedback.Apply(zone, count, gesture.FrameGrab, hover.Hovering, hover.World);
+            feedback.Apply(zone, count, gesture.FrameGrab, hover.Kind(zone));
 
         private CubePalette BuildPalette() =>
             new()
@@ -197,10 +201,12 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 Success = success.value,
                 Danger = danger.value,
                 FillIdleAlpha = fillIdleAlpha,
+                FillMoveAlpha = fillMoveAlpha,
                 FillActiveAlpha = fillActiveAlpha,
                 RefuseSecs = refuseSecs,
                 BracketIdle = bracketIdle,
                 BracketHover = bracketHover,
+                BracketMove = bracketMove,
                 BracketActive = bracketActive,
                 BracketSecs = bracketSecs
             };

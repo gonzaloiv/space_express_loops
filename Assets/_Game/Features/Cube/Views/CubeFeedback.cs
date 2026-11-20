@@ -86,10 +86,9 @@ namespace DigitalLove.Game.SpaceShaping.Cube
                 OutOfBoundsAt?.Invoke(endpoint);
         }
 
-        public void Apply(
-            CubeView zone, int selectingPoints, bool frameGrab, bool hovering, Vector3 hoverWorld)
+        public void Apply(CubeView zone, int selectingPoints, bool frameGrab, CubeHover hover)
         {
-            brackets.Ease(BracketFor(selectingPoints, hovering), palette.BracketSecs);
+            brackets.Ease(BracketFor(selectingPoints, hover), palette.BracketSecs);
             if (dormant)
             {
                 // Danger is the map's locked colour; a dormant cube keeps it, its fill at idle alpha.
@@ -107,7 +106,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
             if (selectingPoints == 0)
             {
-                ApplyIdle(zone, hovering, hoverWorld);
+                ApplyIdle(hover);
                 return;
             }
 
@@ -123,28 +122,40 @@ namespace DigitalLove.Game.SpaceShaping.Cube
 
         private bool IsRefusing => Time.unscaledTime < refusedUntil;
 
-        // Short brackets at rest, longer under a hand, the whole frame while held or refusing.
-        private float BracketFor(int selectingPoints, bool hovering)
+        // Short brackets at rest, longer under a hand, longer still where a pinch would pick the cube
+        // up, the whole frame while held or refusing.
+        private float BracketFor(int selectingPoints, CubeHover hover)
         {
             if (dormant)
                 return palette.BracketIdle;
             if (selectingPoints > 0 || IsRefusing)
                 return palette.BracketActive;
+            if (hover == CubeHover.Move)
+                return palette.BracketMove;
 
-            return hovering ? palette.BracketHover : palette.BracketIdle;
+            return hover == CubeHover.None ? palette.BracketIdle : palette.BracketHover;
         }
 
         // A move refused on an endpoint gets its own red copy; the real frame stays normal.
         private bool EndpointRefusal => refusal == ZoneRefusal.OutOfBounds && endpoint >= 0;
 
-        private void ApplyIdle(CubeView zone, bool hovering, Vector3 hoverWorld)
+        // The frame turns accent under any hand; the fill says what a pinch there does: brighter where
+        // one hand would move the cube, faintly lit where two hands would scale it.
+        private void ApplyIdle(CubeHover hover)
         {
-            bool hoverInside = hovering && zone.ScaleContains(hoverWorld);
-            Color fallback = hovering ? palette.Accent : palette.Neutral;
+            Color fallback = hover == CubeHover.None ? palette.Neutral : palette.Accent;
             frameTint.Set(frameRenderer, PredictionColor(fallback));
-            fillTint.Set(fillRenderer, hovering && hoverInside
+            fillTint.Set(fillRenderer, IdleFill(hover));
+        }
+
+        private Color IdleFill(CubeHover hover)
+        {
+            if (hover == CubeHover.Move)
+                return palette.Accent.WithAlpha(palette.FillMoveAlpha);
+
+            return hover == CubeHover.Scale
                 ? palette.Accent.WithAlpha(palette.FillIdleAlpha)
-                : palette.Neutral.WithAlpha(palette.FillIdleAlpha));
+                : palette.Neutral.WithAlpha(palette.FillIdleAlpha);
         }
 
         private Color FrameActive(CubeView zone, int selectingPoints)
