@@ -6,88 +6,38 @@ plan changes state; each plan carries a matching `**Status:**` line.
 **Direction:** [vision](../design/vision.md) — the **lens** (the cube): scale the space, scale the content;
 the ship flies the deformed spacetime.
 
-## Road to v1
-
-The ordered actions to a first "final" version (decided 2026-11-06). Each step becomes a plan (a
-morning) when it starts; a step that is already a plan links to it. Steps marked *(proposed)* still
-need a yes.
-
-1. **Tune the run on device.** Per-job scramble and planet count, and the 3★ margin from the cold
-   playtest (the margin landed at 1.5×, judge run closed 2026-11-11). Job 6's lesson is read from the
-   docs, not a bake check. The stuck-player skip landed (2026-11-11): one fail opens the next job;
-   the playtest may still revise it.
-2. **The solve moment** — done (2026-11-09). Arrival payoff at the destination (flash + sound), then the stars stamped in
-   (terminal style), then Jim's receipt — what makes the player want the next job.
-3. **The ending** — done (2026-11-11). After the run completes (every job solved, whatever the count):
-   the whole map lit, the total stars, the "OUR SPACE" title, Jim closing the episode, more contracts
-   in the making, an invitation to replay for 3★.
-   - **The fleet episode** — done (2026-11-13). The two- and three-ship jobs join v1 as chapter 2,
-     episode 2 of the story, with Jim's chapter opener; headset pass done 2026-11-15.
-4. **Minimum sound** — done (2026-11-09); the soundscape built on it (done 2026-11-10). Pinch grab
-   tick, stretch tone, release, arrive chime, crash, fail sting. No haptics: the game is hands-only.
-5. **The first 30 seconds** — done (2026-11-10). App open → the console boot → the field placed at a
-   comfortable seated reach → the Scale prompt. Pause and offline (the judge tests) also done 2026-11-10.
-6. **Quest 3S hitches at 72 fps** *(proposed)*. Sudden frame drops, not sustained low fps: map
-   dioramas, trajectory previews, lattice.
-7. **Voice and content** *(proposed)*. Job 6's lines for the new lesson. Jim's complete and fail lines
-   are split into one-sentence TTS entries and his clips are downloaded (done 2026-11-09). The music duck under Jim (deferred from the soundscape) is tuned with his clips. English only: Spanish is kept just to prove the localization system works.
-8. **Competition deliverables — internal freeze Friday 2026-11-13; official deadline 2026-11-18,
-   12:00 PM PT; work starts Wednesday 2026-11-11.** The entry is frozen at the internal freeze. The angle, hero moment and video outline are in [pitch](../design/pitch.md);
-   until Wednesday the time goes to the game.
-   - **Build:** frozen 2026-11-15 after the headset pass. APK on a new release channel named "Competition" in the developer dashboard, plus an
-     Invite URL for judges; it must stay launchable through judging.
-   - **Video:** under 3 minutes, on-device footage, public on YouTube or Vimeo; the best material in
-     the first seconds (judges may stop early).
-   - **Form:** name, tagline (≤140 characters), track (**Gaming**), division (**New Experience**), a ≤500-word description (inspiration, how it was built, future plans), how hand
-     interactions are used, target launch date, team names, emails and roles.
-   - **Judge tests to pass:** fully hands-only end to end; the airplane-seat test (two-foot radius);
-     the one-bus-stop test (a complete moment fast, clean pause/resume).
-
-**Out of v1:** Mixed (no job 8), resize, the fleet capstone (2-5), reactive in-solve tips, the playable map
-field, chapters beyond 2.
-
 ## Road to the store
 
-After v1 (decided 2026-11-07): a **~€5 Meta store release** sooner, then chapters as updates. The game
-shape is in [chapters](../design/chapters.md); the demo is the store's own option.
-
-1. **Chapter 1 stays seven jobs** (decided 2026-11-11): no job 8; Mixed moves to a later chapter.
-2. **Chapter 2 — the fleet.** 2-1 to 2-4 ship in v1 (done 2026-11-13); the
-   store adds the 2-5 capstone ([design](../design/chapters.md#chapter-2--the-fleet-v1-then-the-store-release)).
-3. **Freelance contracts.** ~150 prebaked jobs, tiers, the quality filter, the exact-entropy score.
-4. **The daily contract.** One pool job per day, Meta platform leaderboard.
-5. **Price check.** Measure minutes per job on the headset; confirm ~€5 and the pool size.
-6. **Store release.** Store page, capture, the Meta demo option.
-7. **Chapter 3 — the instrument** (first update): resize, then rotate.
+**Target 2026-12-06, €4, 40–45 minutes** (set 2026-11-18): ~21 story jobs across chapters 1–3, then
+20 freelance contracts. Scope, content and schedule live in [release](../design/release.md); the game
+shape in [chapters](../design/chapters.md). Out of this release: the daily contract and leaderboards,
+freelance tiers and scores, resize and rotate (chapter 4, the first update).
 
 ## Now
 
 Active work.
 
-Nothing in progress.
+- [Seeds retune](in-progress/seeds-retune.md) — space shaping: `JobSet_MeetsTheContract` green
+  against the shipped settings; contracts follow the shipped jobs.
 
-Closed 2026-11-15: the sector wire, no sun answer and freeze day (the headset pass and the
-"Competition" build) ([lessons](../lessons.md)).
-
-Closed 2026-11-13: the fleet episode and the hand-tracking gate ([lessons](../lessons.md)).
-
-Closed 2026-11-11: the ending, endpoint shapes, the stuck-player skip and the field-wells spike
-([lessons](../lessons.md)).
+Past post-mortems are in [lessons](../lessons.md).
 
 ## Next
 
-Nothing scheduled. The competition video and form (Road to v1, step 8) are next.
+The store release ([release](../design/release.md)), in schedule order:
+
+- **18–22 Nov:** [fleet sun answer](backlog/fleet-sun-answer.md) ·
+  [story arc](backlog/story-arc.md) · [entitlement check](backlog/entitlement-check.md) ·
+  [store page](backlog/store-page.md) (find Meta's review time first)
+- **23–29 Nov:** [chapter 2 to eight jobs](backlog/chapter-2-to-eight.md) ·
+  [multi-zone fleet bake](backlog/multi-zone-fleet-bake.md) · [chapter 3](backlog/chapter-3.md)
+- **30 Nov–4 Dec:** [freelance](backlog/freelance.md) · [release build](backlog/release-build.md)
+  (timing pass, build, submit)
 
 ## Later
 
 Design-only or deferred. Nothing here is scheduled.
 
-- **Fleet jobs without a sun answer.** 1-4 is sun-free (2026-11-15); 2-1 to 2-3 are still won by
-  shrinking the sun, and in their layouts the sun is the only cube that rescues both ships. A fix
-  needs the multi-ship generator to plan around the sun (sun off the ships' corridor, or a sun-free
-  brief), searched as a cancellable background job; fix `Bake_ProducesAVerifiedTwoShipPuzzle` first.
-- [Chapter 2's capstone](../design/chapters.md#chapter-2--the-fleet-v1-then-the-store-release) — the
-  2-5 fleet capstone. Post-v1. Mixed (the old job 8) waits for a later chapter.
 - The contract card stays available during the run as a static reference; otherwise
   help reaches the player at the start (Jim's line, the gesture prompts) and the end (the complete/fail
   message) — no reactive in-solve hint surface.
@@ -99,10 +49,8 @@ hologram look, TTS companion (deferred), feel polish, playable map field.
 
 Loose ends that still need a home. Close one by linking the plan that finishes it.
 
-- **TTS clips — resolved 2026-11-12.** The fail, job 6 intro and ending clips are in
-  `Assets/StreamingAssets` (chapter 2 too); the remaining audio tail is the music duck under Jim.
 - **Job 7's manual shortening (from run fixes).** Waits on the lore rethink: does the "eleven years"
-  note move or stay.
+  note move or stay. Likely settled by [story arc](backlog/story-arc.md).
 - **Field wells: kept (2026-11-11, headset).** The change-only wells are on in `Puzzle.prefab`
   (committed). Left to do: describe them in [the cube](../design/systems/cube.md) §Feedback (the lattice
   starts flat; a grown planet's well opens, a shrunk one flattens) and decide whether `LatticeWells`
@@ -116,23 +64,19 @@ Loose ends that still need a home. Close one by linking the plan that finishes i
   interchange keeps its markers. `OpenRing.asset` is now unused. Update
   [the cube](../design/systems/cube.md) §Feedback ("filled/open ring around the planet") once settled.
 - **The ending on the headset.** The exit cue and the lit-map cue start almost together; keep one if
-  they clash.
+  they clash. The ending moves to chapter 3 ([story arc](backlog/story-arc.md)).
 - **Route end fallback.** `MapRouteLine.EndIndex` returns `-1` when no job is `Current` or solved
   (unreachable today); make it safe if that can ever happen.
-- **Gesture prompt icons — headset read.** Scale, Enter, Move, Exit, Spend and Stars (the last two new
-  2026-11-10, with the field meter) play 12-frame line-art loops rendered from Meta's own hand mesh by
+- **Gesture prompt icons — read well on the headset (2026-11-18).** Rendered by
   `Tools/Our Space/Render Gesture Prompt Art` (`GesturePrompts/Editor`); re-run it after tuning a motion.
-  Still open: read them in the headset (size, speed, legibility at arm's length).
-- **Seeds against current settings (from no sun answer).** Retune 01_03, 01_05 and 01_07's seeds or
-  pin the shipped jobs in their contracts; fix 01_01's `growOnly` so `JobSet_MeetsTheContract` is green.
-- **Run authoring.** Jobs 1–7 are baked into Chapter 01 (seven jobs, final). The job card landed (2026-11-07). Job 1 was rebaked (2026-11-06) with
-  six planets and a sun the cube does not cover (seed 141) — a sunless four-planet field almost never
-  bakes. `PuzzleJobBakeTests` and a headset read of job 1 are still open.
-- **Ship-zone cue.** The ship has a trail; there is no zone indicator. No plan owns it yet.
-- **Resize.** Working, but the explanation (size is scope, not precision) is not ready. Deferred from the
-  slice; chapter 3's first lesson ([chapters](../design/chapters.md)).
-- **Mixed.** Dropped from chapter 1 (no job 8, [chapters](../design/chapters.md)); a later chapter's
-  job. It still needs at least two routes and a Mixed field that bakes; not scheduled.
+- **Job 1 on the headset.** Rebaked 2026-11-06 (six planets, a sun the cube does not cover, seed 141);
+  it still needs a headset read. The bake tests are owned by [seeds retune](in-progress/seeds-retune.md).
+- **Ship-zone cue.** The ship has a trail; there is no zone indicator. No plan owns it yet; multi-zone
+  fleets in [chapter 3](backlog/chapter-3.md) may need it.
+- **Resize.** Working, but the explanation (size is scope, not precision) is not ready. Chapter 4's
+  first lesson, the first update ([chapters](../design/chapters.md)).
+- **Mixed.** Owned by [chapter 3](backlog/chapter-3.md) U3; it falls to the first update if it does
+  not bake in time.
 
 ## Conventions
 

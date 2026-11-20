@@ -117,6 +117,22 @@ it. An episode never explains itself and never resolves the bleak reading.
 |---|---|---|
 | 1 — the Wrap | the seven-job first episode | The firm bets on a machine nobody trusts, and the new employee makes it work. |
 | 2 — the fleet | the multi-ship jobs | It works, so the firm gets greedy: more ships on the same entropy, sold as green. Greed is eco-friendly, and Jim is not sure that is good news. |
+| 3 — *to name* | the store release's last chapter | Something breaks, and no choice left is a good one. Jim's frame is denial: *look, it's all broken, but don't worry — just do your job and carry on; it probably has nothing to do with our machine.* The player fixes the damage the Wrap likely caused and draws the conclusion alone. |
+
+**The arc (decided 2026-11-18).** The episodes build to one realisation: if something breaks the
+universe, there may be no good option left. The Wrap spends entropy that does not come back, and
+it can, in principle, destroy the universe (§The tech). The fine print plants it from the start
+(job 5: *"Spacetime elasticity is finite… localized causality tears"*; job 6: *"The field is free. The
+Wrap is not."*). Episode 1 shows the machine working and hints at its cost; episode 2 spends more of
+it, for greed; episode 3 is where the cost shows. Still open: what breaks (something visible in the
+field that Jim cannot explain away) and whether the player's own Wraps contributed to it. The
+realisation stays unspoken, like the bleak reading (§The bleak reading).
+
+**The long arc.** The player goes from doing the job to using the Wrap to fix the universe. The same
+tool that bent space for deliveries is the only thing that can mend what it broke. Episode 3 starts
+it in the store release: its fields are presented as torn spacetime, and the player's Wraps put them
+back (the scramble, told as damage). Fields with truly broken physics are an idea for later
+([later chapters](../../ideas/later-chapters.md) §Broken physics).
 
 **The bulletin frames the episode once you are inside it.** After a chapter's first job is solved,
 the console types a short dispatch (three lines, facts, no explanation: *"2048. Nobody is born.

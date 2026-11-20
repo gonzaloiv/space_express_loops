@@ -13,6 +13,7 @@ these docs describe the intended game, not what is shipped.
 | [Progression](systems/progression.md) | How the game advances: the cube map, stars, the learning path. |
 | [Jobs](jobs.md) | The concrete run: brief fields, archetypes, one row per job, and lore skin. |
 | [Chapters](chapters.md) | The store release: chapters 1–3, the freelance contracts, the daily contract. |
+| [Release](release.md) | The first paid store version (2026-12-06): scope, content, schedule. |
 | [Pitch](pitch.md) | The competition entry: the angle, the hero moment, taglines, the video. |
 | [Lore](world/lore.md) | The fiction frame. |
 | [Glossary](glossary.md) | The fixed terms. |
