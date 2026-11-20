@@ -16,8 +16,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleBrief brief, PuzzleData puzzle, PuzzlePlanetListAsset planets,
             PuzzleSimSettings settings, out PuzzleRunReport runReport)
         {
-            puzzle.sources = PuzzleSunSources.WithSun(
-                PuzzleSourceBridge.ToSources(planets.planets), brief.SunRadius, brief.SunScalable);
+            PuzzleSource[] planetSources = PuzzleSourceBridge.ToSources(planets.planets);
             ApplyCubeRange(puzzle, planets, brief);
             puzzle.translatable = brief.Translatable;
             puzzle.zones = brief.Zones;
@@ -27,14 +26,49 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.noIntro = brief.NoIntro;
             puzzle.growOnly = brief.GrowOnly;
             PuzzleRunRequest run = BuildRunRequest(brief, planets, settings);
+            if (brief.SunPlacement == PuzzleSunPlacement.OffCorridor)
+            {
+                run.SunRadius = 0f;
+                run.AllowSunOnChord = true;
+            }
+
             if (!PuzzleRunChoice.TryPick(
                     run, out Vector3 origin, out Vector3 destination, out runReport))
+                return false;
+
+            if (!AddSun(brief, puzzle, planetSources, planets.planets))
                 return false;
 
             puzzle.origin = origin;
             puzzle.destination = destination;
             puzzle.captureRadius = puzzle.CaptureRadiusAtDestination();
             puzzle.zoneCentre = (origin + destination) * 0.5f;
+            return true;
+        }
+
+        private static bool AddSun(
+            PuzzleBrief brief, PuzzleData puzzle, PuzzleSource[] planetSources,
+            PuzzleFieldPlanet[] planets)
+        {
+            if (brief.SunRadius <= 0f)
+            {
+                puzzle.sources = planetSources;
+                return true;
+            }
+
+            if (brief.SunPlacement != PuzzleSunPlacement.OffCorridor)
+            {
+                puzzle.sources = PuzzleSunSources.WithSun(
+                    planetSources, brief.SunRadius, brief.SunScalable);
+                return true;
+            }
+
+            if (!PuzzleSunPlacementChoice.TryHome(
+                    planets, brief.SunRadius, brief.EndpointClearance, out Vector3 sunHome))
+                return false;
+
+            puzzle.sources = PuzzleSunSources.WithSun(
+                planetSources, brief.SunRadius, brief.SunScalable, sunHome);
             return true;
         }
 

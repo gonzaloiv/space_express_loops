@@ -8,7 +8,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         // the cube range so a planet-sized cube still reads as the player's tool, while the run choice
         // keeps the star's band clear.
         public static PuzzleSource[] WithSun(
-            PuzzleSource[] sources, float sunRadius, bool sunScalable)
+            PuzzleSource[] sources, float sunRadius, bool sunScalable) =>
+            WithSun(sources, sunRadius, sunScalable, Vector3.zero);
+
+        public static PuzzleSource[] WithSun(
+            PuzzleSource[] sources, float sunRadius, bool sunScalable, Vector3 home)
         {
             if (sunRadius <= 0f)
                 return sources;
@@ -16,7 +20,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleSource[] withSun = new PuzzleSource[sources.Length + 1];
             withSun[0] = new PuzzleSource
             {
-                home = Vector3.zero,
+                home = home,
                 scale = sunRadius * 2f,
                 name = SunName(sources.Length),
                 fixedMass = !sunScalable,

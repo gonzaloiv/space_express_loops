@@ -9,6 +9,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public float EndpointClearance;
         public float SunRadius;
         public bool SunScalable;
+        public PuzzleSunPlacement SunPlacement;
         public PuzzleSunRule SunRule;
         public bool SunOnChord;
         public bool Translatable;
@@ -35,6 +36,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             EndpointClearance = settings.endpointClearance,
             SunRadius = seed.EffectiveSunRadius(settings),
             SunScalable = true,
+            SunPlacement = seed.sunPlacement,
             SunRule = seed.sunRule,
             SunOnChord = seed.sunOnChord,
             Translatable = seed.translatable,

@@ -6,6 +6,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public float TargetRun;
         public float EndpointClearance;
         public float SunRadius;
+        public UnityEngine.Vector3 SunHome;
         public bool RequirePlanetBlocker;
         public bool AllowSunOnChord;
         public bool HasCandidate;

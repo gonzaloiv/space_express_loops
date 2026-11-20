@@ -33,14 +33,11 @@ touch. 2-1 keeps a sun on the field; 2-2 and 2-3 drop it.
 
 ### U2 — sun placement for fleet fields
 
-- Add a `PuzzleSunPlacement` choice (`Centre`/`OffCorridor`) to `PuzzleSeed`/`PuzzleBrief`;
-  `hasSun = false` stays the sun-free brief, so presence keeps one owner.
-- Thread the sun's home through the source and run helpers instead of assuming `Vector3.zero`
-  (`PuzzleSunSources.WithSun`, `PuzzleRunRequest`, `PuzzleRunChoice`'s chord and band checks,
-  `PuzzleBlockerPlacement`). `OffCorridor` places the sun clear of the selected runs.
-- Keep chapter 1 on `Centre`; 2-1 bakes `OffCorridor`; 2-2 and 2-3 bake sun-free.
-- Exit: a Creator test where a two-ship field bakes with `NoSunAnswer`, its ships rescued by a zone
-  away from the sun, and 2-1's field still carries one.
+- Done: `PuzzleSunPlacement.Centre/OffCorridor`; `OffCorridor` picks a home clear of every planet-pair
+  chord (`PuzzleSunPlacementChoice`), and `PuzzleRunChoice` now uses the sun's home instead of the
+  origin. Chapter 1 stays on `Centre`.
+- Exit: `OffCorridorSun_BakesWithoutASunAnswer` is green with seed 17 and a 0.12 sun; the Creator suite
+  is 145/145. 2-1 can bake `OffCorridor`; 2-2 and 2-3 bake sun-free in [fleet rebake](../backlog/fleet-rebake.md).
 
 ## Manual check (headset)
 

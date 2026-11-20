@@ -154,8 +154,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             Vector3 from = request.Planets[a].position;
             Vector3 to = request.Planets[b].position;
             if (request.SunRadius > 0f
-                && (Vector3.Distance(Vector3.zero, from) < request.EndpointClearance + request.SunRadius
-                    || Vector3.Distance(Vector3.zero, to) < request.EndpointClearance + request.SunRadius))
+                && (Vector3.Distance(request.SunHome, from) < request.EndpointClearance + request.SunRadius
+                    || Vector3.Distance(request.SunHome, to) < request.EndpointClearance + request.SunRadius))
                 return false;
 
             for (int k = 0; k < request.Planets.Length; k++)
@@ -175,7 +175,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static bool SunBlocked(
             PuzzleRunRequest request, Vector3 from, Vector3 to) =>
             request.SunRadius > 0f
-            && PuzzleRunGeometry.DistanceToSegment(Vector3.zero, from, to)
+            && PuzzleRunGeometry.DistanceToSegment(request.SunHome, from, to)
                 < request.SunRadius * SunBlockBandFactor;
 
         private static bool PlanetBlocked(

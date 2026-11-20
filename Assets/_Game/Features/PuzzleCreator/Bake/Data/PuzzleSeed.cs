@@ -16,6 +16,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         [Tooltip("Bake a sun at the field's centre, sized by the settings' sunRadius.")]
         public bool hasSun;
 
+        [Tooltip("Where the sun sits: Centre, or OffCorridor clear of the fleet's runs.")]
+        public PuzzleSunPlacement sunPlacement = PuzzleSunPlacement.Centre;
+
         [Tooltip("What the solution must do with the sun: Any, InZone, CentredGrown, or OutOfZone.")]
         public PuzzleSunRule sunRule = PuzzleSunRule.Any;
 

@@ -6,6 +6,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
     public class PuzzleMultiShipBakeTests
     {
         private const int Seed = 13;
+        private const int SunSeed = 17;
 
         private SpaceShapingSettings settings;
         private PuzzleSimSettings sim;
@@ -51,6 +52,55 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
                 new PuzzleShipScan(result.Puzzle, sim, 0f).Rescues(result.Solution, result.Puzzle.ships),
                 "the baked ships are not all rescued by the solution zone");
             Object.DestroyImmediate(result.Puzzle);
+        }
+
+        [Test]
+        [Explicit]
+        public void OffCorridorSun_BakesWithoutASunAnswer()
+        {
+            SpaceShapingSettings sunSettings = Object.Instantiate(settings);
+            sunSettings.sunRadius = 0.12f;
+            PuzzleSimSettings sunSim = PuzzleSimSettings.From(sunSettings);
+            PuzzleSeed seed = ScriptableObject.CreateInstance<PuzzleSeed>();
+            seed.seed = SunSeed;
+            seed.translatable = true;
+            seed.ships = 2;
+            seed.hasSun = true;
+            seed.sunPlacement = PuzzleSunPlacement.OffCorridor;
+            seed.sunRule = PuzzleSunRule.NoSunAnswer;
+            PuzzleBrief sunBrief = PuzzleBrief.From(seed, sunSettings);
+            PuzzleShapeAsset shape = PuzzleArtifactFactory.Shape(seed, sunSettings);
+            PuzzlePlanetListAsset sunPlanets = PuzzleArtifactFactory.Planets(shape);
+            PuzzleMultiShipResult result = PuzzleMultiShipBake.Bake(sunPlanets, sunSim, sunBrief);
+
+            Assert.AreEqual(PuzzleBakeStatus.Baked, result.Status);
+            Assert.IsFalse(PuzzleSunRuleCheck.SunAnswers(result.Puzzle, sunSim));
+            int sun = SunIndex(result.Puzzle.sources);
+            Assert.GreaterOrEqual(sun, 0);
+            PuzzleSource source = result.Puzzle.sources[sun];
+            for (int i = 0; i < result.Puzzle.ships.Length; i++)
+            {
+                PuzzleShip ship = result.Puzzle.ships[i];
+                Assert.Greater(
+                    PuzzleRunGeometry.DistanceToSegment(source.home, ship.origin, ship.destination),
+                    source.scale,
+                    $"ship {i} runs through the sun");
+            }
+
+            Object.DestroyImmediate(result.Puzzle);
+            Object.DestroyImmediate(sunPlanets);
+            Object.DestroyImmediate(shape);
+            Object.DestroyImmediate(seed);
+            Object.DestroyImmediate(sunSettings);
+        }
+
+        private static int SunIndex(PuzzleSource[] sources)
+        {
+            for (int i = 0; i < sources.Length; i++)
+                if (sources[i].centreOnly)
+                    return i;
+
+            return -1;
         }
 
         [Test]
