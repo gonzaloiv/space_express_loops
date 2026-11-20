@@ -5,7 +5,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 {
     public class PuzzleMultiShipBakeTests
     {
-        private const int Seed = 2;
+        private const int Seed = 13;
 
         private SpaceShapingSettings settings;
         private PuzzleSimSettings sim;

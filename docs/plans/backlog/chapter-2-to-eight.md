@@ -14,7 +14,7 @@ teach clearing an obstacle that blocks more than one ship.
 
 ## Depends on
 
-[Fleet sun answer](fleet-sun-answer.md): new fleet jobs must not be won by the sun.
+[Fleet sun answer](../in-progress/fleet-sun-answer.md): new fleet jobs must not be won by the sun.
 
 ## Units
 
