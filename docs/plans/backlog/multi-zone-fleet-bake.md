@@ -13,7 +13,7 @@ cube rescues them all. Chapter 3's first jobs are built on it.
 
 ## Depends on
 
-[Fleet sun answer](../in-progress/fleet-sun-answer.md): the background search and the sun rule for fleets.
+[Fleet rebake](fleet-rebake.md): the background search and the sun rule for fleets.
 
 ## Units
 

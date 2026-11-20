@@ -1,11 +1,10 @@
 # Fleet rebake
 
 **Status:** next · space shaping · updated 2026-11-20 — search fleet seeds in cancellable slices, then
-rebake 2-1 to 2-3 with no sun answer. Blocked on [fleet sun answer](../in-progress/fleet-sun-answer.md)
-U2 (`PuzzleSunPlacement` / `OffCorridor` do not exist yet); nothing here has started.
+rebake 2-1 to 2-3 with no sun answer. `PuzzleSunPlacement` / `OffCorridor` shipped (2026-11-20);
+nothing here has started.
 
-**Related:** [plans board](../README.md) · [fleet sun answer](../in-progress/fleet-sun-answer.md) ·
-[release](../../design/release.md) ·
+**Related:** [plans board](../README.md) · [release](../../design/release.md) ·
 [chapters](../../design/chapters.md#chapter-2--the-fleet-v1-then-the-store-release)
 
 ## Goal

@@ -4,6 +4,17 @@ Short post-mortems, written when a plan closes (rule in [AGENTS.md](../AGENTS.md
 morning). Newest first. Each entry: what worked, what surprised us, the rule for next time. One idea per
 bullet; the code and tests are the record of what was built.
 
+## 2026-11-20 — Fleet sun answer
+
+- **Worked:** diagnosing the red smoke test first turned the mystery into a seed problem: seed 2's field
+  has no two-run rescue plateau, so the test bakes seed 13 and the bake is untouched.
+- **Surprised:** at the centre the sun sits on every candidate corridor, so `NoSunAnswer` cannot be met
+  by filtering runs; the field has to move the sun clear of the planet-pair chords.
+- **Surprised:** the first off-corridor field that bakes is seed 17, not the no-sun seed 13 — a sun at
+  the rim still perturbs the runs enough to change the answer.
+- **Next time:** run `[Explicit]` Creator tests by name in a batchmode Unity run, and check the connected
+  Unity project before trusting a zero-test bridge run.
+
 ## 2026-11-20 — Seeds retune
 
 - **Worked:** running the failing job set before touching a seed turned a suspected retune into a

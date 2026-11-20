@@ -17,8 +17,7 @@ freelance tiers and scores, resize and rotate (chapter 4, the first update).
 
 Active work.
 
-- [Fleet sun answer](in-progress/fleet-sun-answer.md) — space shaping: fleet fields bake with the sun
-  off the ships' corridor or no sun; 2-1 keeps its sun.
+Nothing active; [fleet rebake](backlog/fleet-rebake.md) is next.
 
 Past post-mortems are in [lessons](../lessons.md).
 
