@@ -19,8 +19,6 @@ Active work.
 
 - [Seeds retune](in-progress/seeds-retune.md) — space shaping: `JobSet_MeetsTheContract` green
   against the shipped settings; contracts follow the shipped jobs.
-- [Lattice on Burst](in-progress/lattice-burst.md) — performance: the cube pinch holds 72 Hz
-  (Meta VRC.Quest.Performance.1).
 
 Past post-mortems are in [lessons](../lessons.md).
 

@@ -4,6 +4,19 @@ Short post-mortems, written when a plan closes (rule in [AGENTS.md](../AGENTS.md
 morning). Newest first. Each entry: what worked, what surprised us, the rule for next time. One idea per
 bullet; the code and tests are the record of what was built.
 
+## 2026-11-20 — Lattice on Burst
+
+- **Worked:** profiler markers first, then reading the headset capture straight from the editor:
+  one marker (`Shaping.Lattice.Warp`, ~19 ms) settled the cause and ruled out the re-sim and upload.
+- **Worked:** porting the warp math to native read-only views kept one copy shared by Burst, the
+  dust and the tests; warp 19 ms → ~2 ms across four workers, pinch holds 72/72 FPS.
+- **Surprised:** with the profiler attached, frames still read 18–24 ms (mostly `XRUpdate` wait);
+  the headset's own VrApi line showed a steady 72 FPS. Profiler frame time is not the delivered rate.
+- **Surprised:** Burst jobs refuse unassigned containers, so "no wells" / "no baseline" are empty
+  arrays, not default fields.
+- **Next time:** judge Quest frame rate from `adb logcat -s VrApi` (FPS, Stale, GPU%, CPU%), and use
+  the profiler only to find what costs the time.
+
 ## 2026-11-15 — Freeze day
 
 - **Worked:** closing plans moved their headset checks into one list, so the pass was a single
