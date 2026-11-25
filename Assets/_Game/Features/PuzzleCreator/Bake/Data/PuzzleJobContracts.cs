@@ -97,6 +97,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 3,
                 Relation = PuzzleShipRelation.FanOut,
                 Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
+                MinScaleDelta = 0.35f, MinStartDistance = 0.15f,
             },
             // Chapter 2 intro: two fixed-cube jobs, baked 2026-11-25. MaxScaleDelta is the widest
             // baked answer's |scale - 1|; tune it by playing.
@@ -113,7 +114,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             },
             new PuzzleJobContract
             {
-                Id = "02_10", Seed = 5, Attempts = 1, PlanetCount = 9,
+                Id = "02_10", Seed = 6, Attempts = 1, PlanetCount = 9,
                 FieldShape = PuzzleFieldShape.Ring,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
