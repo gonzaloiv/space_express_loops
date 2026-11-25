@@ -2,11 +2,15 @@ param(
     [Parameter(Mandatory = $true)][string]$Job,
     [int]$Seeds = 1,
     [ValidateSet("scan", "bake")][string]$Mode = "scan",
-    [string]$ProjectPath = (Join-Path $PSScriptRoot "..\..\..\our_space_bake"),
+    [string]$ProjectPath,
     [string]$Unity = "C:\Program Files\Unity\Hub\Editor\6000.6.10f1\Editor\Unity.exe"
 )
 
 $ErrorActionPreference = "Stop"
+if (-not $ProjectPath) {
+    $ProjectPath = Join-Path $PSScriptRoot "..\..\..\our_space_bake"
+}
+
 $project = (Resolve-Path $ProjectPath).Path
 $logs = Join-Path $project "Logs"
 New-Item -ItemType Directory -Force -Path $logs | Out-Null
