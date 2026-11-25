@@ -16,48 +16,79 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             if (puzzle.ships == null || puzzle.ships.Length < 2)
                 return false;
 
-            PuzzleShipScan scan = new(puzzle, settings, 0f);
+            Search search = new(puzzle, settings, mechanism);
             List<Vector3> centres = Centres(puzzle);
             float[] sizes = Sizes(puzzle);
-            float[] scales = PuzzleZoneCandidates.Scales(settings, ScaleSamples);
-            for (int c = 0; c < centres.Count; c++)
-            {
-                List<PuzzleZone> zones = PuzzleZoneCandidates.Build(
-                    centres[c], sizes, scales, settings.ZoneFalloff);
-                for (int i = 0; i < zones.Count; i++)
-                {
-                    if (TryZone(puzzle, settings, scan, mechanism, zones[i], out zone))
-                        return true;
-                }
-            }
 
-            return false;
+            // The bake's own grid first: a freshly baked answer is checked at the scale it was baked
+            // with. The wider grid is a fallback, so a miss pays one extra pass, not every field.
+            if (search.TryScales(
+                    centres, sizes,
+                    PuzzleZoneCandidates.LinearScales(settings, PuzzleMultiShipProbe.ScaleSamples),
+                    out zone))
+                return true;
+
+            return search.TryScales(
+                centres, sizes, PuzzleZoneCandidates.Scales(settings, ScaleSamples), out zone);
         }
 
-        private static bool TryZone(
-            PuzzleData puzzle, PuzzleSimSettings settings, PuzzleShipScan scan,
-            PuzzleMechanism mechanism, PuzzleZone candidate, out PuzzleZone zone)
+        private sealed class Search
         {
-            zone = default;
-            if (!PuzzleZoneCandidates.CoversSource(candidate, puzzle)
-                || PuzzleZoneCandidates.ContainsEndpoint(candidate, puzzle))
-                return false;
+            private readonly PuzzleData puzzle;
+            private readonly PuzzleSimSettings settings;
+            private readonly PuzzleMechanism mechanism;
+            private readonly PuzzleShipScan scan;
 
-            if (!scan.Rescues(candidate, puzzle.ships))
-                return false;
+            public Search(PuzzleData puzzle, PuzzleSimSettings settings, PuzzleMechanism mechanism)
+            {
+                this.puzzle = puzzle;
+                this.settings = settings;
+                this.mechanism = mechanism;
+                scan = new PuzzleShipScan(puzzle, settings, 0f);
+            }
 
-            PuzzleVerification check = PuzzleVerifier.Verify(puzzle, new[] { candidate }, settings);
-            if (!check.Solved)
-                return false;
+            public bool TryScales(
+                List<Vector3> centres, float[] sizes, float[] scales, out PuzzleZone zone)
+            {
+                zone = default;
+                for (int c = 0; c < centres.Count; c++)
+                {
+                    List<PuzzleZone> zones = PuzzleZoneCandidates.Build(
+                        centres[c], sizes, scales, settings.ZoneFalloff);
+                    for (int i = 0; i < zones.Count; i++)
+                    {
+                        if (TryZone(zones[i], out zone))
+                            return true;
+                    }
+                }
 
-            // First matching zone, not the cheapest: keeping the early exit stops the shipped check
-            // from verifying every candidate. Any keeps the old first-solved behaviour.
-            if (mechanism != PuzzleMechanism.Any
-                && !PuzzleSolutionClassifier.Matches(mechanism, check.Kind))
                 return false;
+            }
 
-            zone = candidate;
-            return true;
+            private bool TryZone(PuzzleZone candidate, out PuzzleZone zone)
+            {
+                zone = default;
+                if (!PuzzleZoneCandidates.CoversSource(candidate, puzzle)
+                    || PuzzleZoneCandidates.ContainsEndpoint(candidate, puzzle))
+                    return false;
+
+                if (!scan.Rescues(candidate, puzzle.ships))
+                    return false;
+
+                PuzzleVerification check =
+                    PuzzleVerifier.Verify(puzzle, new[] { candidate }, settings);
+                if (!check.Solved)
+                    return false;
+
+                // First matching zone, not the cheapest: keeping the early exit stops the shipped
+                // check from verifying every candidate. Any keeps the first-solved behaviour.
+                if (mechanism != PuzzleMechanism.Any
+                    && !PuzzleSolutionClassifier.Matches(mechanism, check.Kind))
+                    return false;
+
+                zone = candidate;
+                return true;
+            }
         }
 
         private static List<Vector3> Centres(PuzzleData puzzle)
