@@ -82,8 +82,8 @@ the fleet's budget instead of repeating Jim).
   first-card flag) and number the manual by play order, or the version runs backwards.
 - `JobCardPanel` only receives `PuzzleData`; put the ordinal/first-card flag on that data at bake or
   pass it from the selection flow. Do not have the view read `Chapters` itself. **Done:** `JobCardStamp`
-  carries `LevelSelector.GetLevelOrdinal` from `PuzzleSelectionState` into the run; the map passes
-  `PuzzleMap.ManualOrdinal`.
+  carries `LevelSelector.GetLevelOrdinal` from `PuzzleSelectionState` into the run; the map views call
+  the same `GetLevelOrdinal` with the selected puzzle.
 - `JobCardTypewriter`: reveal the clock header, JOB, CLIENT and CARGO at once, then type only the
   manual. **Done:** the old loop typed all four lines sequentially.
 - `JobCard.prefab`: `typeCharsPerSec` 40 → ~60 (tune on the headset).
@@ -91,7 +91,7 @@ the fleet's budget instead of repeating Jim).
   02_04 reads v2.0.4 today.
 - Exit: every card settles in under 3 seconds in the editor; the first card of each chapter shows the
   release name and versions do not go backwards in play order; the fast suite is green.
-  **Done 2026-11-25:** `PuzzleSelection` 19/19 and `SpaceShaping` 99/99 in EditMode; headset timing is
+  **Done 2026-11-25:** `PuzzleSelection` 18/18 and `SpaceShaping` 99/99 in EditMode; headset timing is
   the manual check.
 
 ### U4 — Jim's repeats (optional)

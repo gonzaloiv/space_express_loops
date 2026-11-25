@@ -201,25 +201,6 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
             Assert.AreEqual(6, map.MaxStars);
         }
 
-        [Test]
-        public void ManualOrdinal_CountsWithinTheChapter()
-        {
-            MapChapter[] chapters =
-            {
-                new("01", 0, 2, Vector3.zero, 1f),
-                new("02", 2, 3, Vector3.zero, 1f)
-            };
-            PuzzleMap map = PuzzleMap.FromLevels(
-                Levels(5),
-                RunProgress.FromSolved(5, 0, new[] { false, false, false, false, false }),
-                PuzzleMapLayout.Galaxy(5), chapters);
-
-            Assert.AreEqual(1, map.ManualOrdinal(0));
-            Assert.AreEqual(2, map.ManualOrdinal(1));
-            Assert.AreEqual(1, map.ManualOrdinal(2));
-            Assert.AreEqual(3, map.ManualOrdinal(4));
-        }
-
         private PuzzleData[] Levels(int count)
         {
             PuzzleData[] levels = new PuzzleData[count];
