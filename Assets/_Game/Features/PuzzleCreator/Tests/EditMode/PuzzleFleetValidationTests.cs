@@ -11,14 +11,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         private const string SettingsPath =
             "Assets/_Game/Features/PuzzleCreator/Data/SpaceShapingSettings.asset";
 
-        // 02_01 is a two-ship separate fleet that still solves under today's settings. 02_04 no longer
-        // solves (no candidate zone rescues all three ships), so it cannot be the accepting fixture.
+        // 02_05 is the capstone fleet and the first shipped edge-sun fleet, so it is the accepting
+        // fixture. 02_01 stays the two-ship negative fixture; 02_04 no longer solves (no candidate
+        // zone rescues all three ships).
         private const string FleetPath = "Assets/_Game/Resources/Chapters/02/Job_02_01_Puzzle.asset";
+        private const string EdgeFleetPath =
+            "Assets/_Game/Resources/Chapters/02/Job_02_05_Puzzle.asset";
 
         [Test]
-        public void Validate_TwoShipFleet_Passes()
+        public void Validate_Fleet_Passes()
         {
-            PuzzleData puzzle = Load();
+            PuzzleData puzzle = LoadEdge();
             PuzzleSimSettings sim = Sim();
             PuzzleJobContract contract = Contract(puzzle);
             Assert.IsTrue(
@@ -88,12 +91,34 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             return puzzle;
         }
 
+        private static PuzzleData LoadEdge()
+        {
+            PuzzleData puzzle = AssetDatabase.LoadAssetAtPath<PuzzleData>(EdgeFleetPath);
+            Assert.IsNotNull(puzzle, EdgeFleetPath);
+            return puzzle;
+        }
+
         private static PuzzleSimSettings Sim()
         {
             SpaceShapingSettings settings =
                 AssetDatabase.LoadAssetAtPath<SpaceShapingSettings>(SettingsPath);
             Assert.IsNotNull(settings, SettingsPath);
             return PuzzleSimSettings.From(settings);
+        }
+
+        private static PuzzleSunPlacement PlacementOf(PuzzleData puzzle)
+        {
+            for (int i = 0; i < puzzle.sources.Length; i++)
+            {
+                if (!puzzle.sources[i].centreOnly)
+                    continue;
+
+                return puzzle.sources[i].home.sqrMagnitude > 0.000001f
+                    ? PuzzleSunPlacement.OffCorridor
+                    : PuzzleSunPlacement.Centre;
+            }
+
+            return PuzzleSunPlacement.Centre;
         }
 
         private static PuzzleJobContract Contract(PuzzleData puzzle)
@@ -105,12 +130,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             if (hasSun)
                 planets--;
 
+            PuzzleJobContract job = PuzzleJobContracts.ById(puzzle.id);
+
             return new PuzzleJobContract
             {
                 Id = puzzle.id,
                 Ships = puzzle.ships.Length,
-                Relation = PuzzleShipRelation.Separate,
+                Relation = job.Relation,
                 HasSun = hasSun,
+                SunPlacement = PlacementOf(puzzle),
                 SunOnChord = PuzzleJobValidator.SunOnChord(puzzle),
                 SunRule = PuzzleSunRule.Any,
                 Mechanism = PuzzleMechanism.Any,
