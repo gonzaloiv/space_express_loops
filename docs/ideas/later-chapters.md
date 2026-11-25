@@ -1,6 +1,6 @@
 # Later chapters — after the instrument
 
-**Status:** idea · cross-area · updated 2026-11-07 — chapters 4–6 and other ways to grow the game after
+**Status:** idea · cross-area · updated 2026-11-26 — chapters 4–6 and other ways to grow the game after
 the store release; [chapters](../design/chapters.md) owns chapters 1–3 and the freelance contracts.
 
 ## Chapters 4–6 — delivery rules
@@ -11,9 +11,13 @@ designed chapters: ~2 teaching jobs + 6–8 jobs that use it.
 
 | Ch | Theme | New rule | Field cue | Lore hook |
 |---|---|---|---|---|
-| 4 | **Time** | arrival window (too fast or too slow fails); planets on orbits | window marker at the destination | Jim's job-7 receipt: "Today the space. Tomorrow the time." |
+| 4 | **Time** | arrival window (too fast or too slow fails) | window marker at the destination | the release ending's slogan: "Today the space. Tomorrow the time." |
 | 5 | **Fragile cargo** | a limit on how sharply the path bends or how fast it goes | stress glow on the ship | the cake, the live animal, the piano — the cargo finally matters |
 | 6 | **Stops** | pass near a waypoint planet; avoid no-fly zones | ring on the waypoint, tinted no-fly volume | deliveries with pickups; client callbacks |
+
+Planets on orbits would fit Time, but a moving well breaks the static field the flight is integrated
+over ([field elements](element-pack.md) §Rules): that is new physics, not a delivery rule, so it is
+its own decision.
 
 Six chapters of 8–10 jobs (~45–55 designed jobs) is the size for a ~€10–15 game.
 

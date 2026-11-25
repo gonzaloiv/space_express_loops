@@ -28,9 +28,9 @@ This doc is **chapters 1–2**; the store release's 2-5 and chapter 3 are in [ch
 | 2-1 | two ships | Any | yes · 1 zone · 2 ships, separate | Ring | 12 + sun · multi | low (budget 0.30) | one field, two runs; each ship has its own fix |
 | 2-2 | fan-out | Any | yes · 1 zone · 2 ships, one origin | Spiral | 12 + sun · multi | medium (budget 1.20) | an edit near the shared origin bends both paths |
 | 2-3 | converge | Any | yes · 1 zone · 2 ships, one destination | Spiral | 12 + sun · multi | medium (budget 1.50) | the planet by the shared destination fixes both approaches |
-| 2-4 | three ships | Any | yes · 1 zone · 3 ships, separate | Cluster | 14 + sun · multi | medium (budget 1.50) | three fixes on one budget; the field carries more than one ship |
+| 2-4 | three ships | Any | yes · 1 zone · 3 ships, separate | Cluster | 14 + sun · multi | medium (budget 1.50) | one Wrap carries three ships; the field carries more than one ship |
 
-Fleet jobs request **Any**: multi-ship bakes cannot request a role, so each is checked by playing it.
+Fleet jobs request **Any**, except the Clear fleets (2-6 to 2-8), which ask for **Clear**; the rest are checked by playing them.
 
 **Chapter 1 is seven jobs (2026-11-05); the run is eleven (2026-11-11): 1 scale, 2 centre, 3 clear,
 4 move, 5 multi-zone, 6 the field carries you, 7 capstone `Curve`, then chapter 2's four fleet jobs.**
@@ -68,7 +68,7 @@ seven-job spine requests **Curve** except job 3 (**Clear**): the capstone is a `
 
 **The field is a galaxy, not a handful of balls.** The planet column is the **source** count — the bodies
 that bend the path. The field also carries **decor** (dust, moons, distant planets) from
-[the element pack](../ideas/element-pack.md) once that lands, so the playfield reads as a populated system
+[field elements](../ideas/element-pack.md) (dust is in; moons are still an idea), so the playfield reads as a populated system
 without every body becoming a well. The tutorial stays sparse at six planets plus the sun; the count
 rises by act, so the galaxy grows with the run.
 
@@ -100,7 +100,7 @@ job 1 carries a sun that the cube does not cover.)
 | 1 | no (`noFail`, unlimited spend) | no (`noGrade`) | no (`noIntro`) |
 | 2 | yes | no (`noGrade`) | yes |
 | 3–7 | yes | yes | yes |
-| 2-1 – 2-4 | yes | yes | yes |
+| intro 1–2, 2-1 – 2-4 | yes | yes | yes |
 
 Job 1 bakes from a normal seed — six planets and a sun the cube does not cover, one fixed zone — and still records a reference
 solution, so the budget rule holds ([core loop](core-loop.md) §3). The lesson is the cube's scale, not a
@@ -236,7 +236,7 @@ contract, not the dialogue.
 
 | # | Client | Cargo | Manual entry |
 |---|---|---|---|
-| 1 | Blödmeyer & Sons (no sons) | a pallet of refurbished 2019 copper valves | "Welcome, new employee. Wrap from any room. Headquarters is restructuring indefinitely." |
+| 1 | Blödmeyer & Sons (no sons) | a pallet of refurbished 2019 copper valves | "Welcome, new employee. One push at launch, then the field steers. Wrap from any room." |
 | 2 | The Lighthouse Keepers' Union | one bulb | "The star bends space like any planet. Stellar mass is included in your licence." |
 | 3 | Strait & Narrow Ltd. | a decommissioned school bus (unoccupied) | "Shrink a world to widen the door. Residents are not notified." |
 | 4 | Madame Fink's Discount Gravity | a piano | "Where you work is a decision. Our Space Corp does not reimburse home office expenses." |
@@ -253,6 +253,8 @@ stay absurd; the greed is in Jim's opener and receipts, and the manual's fine pr
 
 | # | Client | Cargo | Manual entry |
 |---|---|---|---|
+| intro 1 | Twin Moons Catering | two dinners, one kitchen | "Two ships, one origin. Bend near the start; both paths turn. Meals may swap." |
+| intro 2 | Two Rival Bakeries | two cakes, one feud | "One cube between two runs. Both ships share the bend; the feud is not our problem." |
 | 2-1 | Halfmoon & Halfmoon | two identical parcels | "Two ships, one budget. Extra ships do not raise your allowance. This is a feature." |
 | 2-2 | Slightly Used Stars Ltd. | two secondhand fusion cores (slightly dimmed) | "One origin, two promises: bend near the start. Shared failures are billed twice." |
 | 2-3 | The Last Two Customers | two halves of a gift | "Fix the shared approach once. Our Space Corp values every customer. Both of them." |
@@ -285,8 +287,8 @@ names stay absurd** — the tonal relief.
 **The console thread.** Remote work lives in the manual and Jim's lines, never the client or cargo. It
 escalates once per act and never explains itself:
 
-- **Job 1 (establish):** the manual: *"Wrap from any room. Headquarters is restructuring
-  indefinitely."*
+- **Job 1 (establish):** the manual: *"Wrap from any room."* (the same entry teaches the launch: one
+  push, then the field steers; that is why the Wrap saves fuel)
 - **Job 4 (choose):** the manual: *"Where you work is a decision… does not reimburse home office
   expenses."*; Jim adds the flat pitch, *"It works everywhere."*
 - **Job 7 (absent):** the manual's entry ends *"There is still no office."* (the "eleven years" note

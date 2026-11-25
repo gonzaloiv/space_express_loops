@@ -1,8 +1,8 @@
 # Chapter 2 intro
 
-**Status:** now · space shaping · updated 2026-11-25 — U1's fixed-frame fix, scramble bounds and
-contract fields are in with green Creator tests; U3's six-job chapter test is in; U2's 02_09/02_10
-contracts are in, but their scan and bake still need the off-editor checkout.
+**Status:** now · space shaping · updated 2026-11-25 — U1–U3 are in and 02_09/02_10 are baked
+(`0b66c195`, `e890d40b`); the fast fleet tests are green. Left: the headset pass and the
+`MaxScaleDelta = 0.5` scramble decision.
 
 **Bakes:** off the editor — U2 (scan and bake 02_09, 02_10) ([AGENTS](../../../AGENTS.md#bakes-run-off-the-editor), `docs/tools/bake.ps1`).
 
@@ -34,12 +34,14 @@ cosmetic.
 ## Units
 
 **Progress (2026-11-25):** U1 and U3 are in (scramble bounds in `0b66c195`; `FixedFleetFrameTests`
-green). U2's contracts are in with `MaxScaleDelta = 0.25f` as a placeholder. Left: merge `0b66c195`
-into `bake` (the checkout compiles without it but cannot check the bounds), scan and bake 02_09/02_10
-there, pin `Seed`/`Attempts`, move them before 02_01. Until then the three `FleetJobsTests` fail in the
-fast suite (96/99): they expect the six-job chapter. 02_09/02_10 are not `Pending` (02_06–02_08 are),
-so `ShippedJobs_MeetTheContract` looks for assets that do not exist: mark them `Pending` until they
-bake.
+green). U2 is baked in the second checkout (`our_space_bake2`, branch `bake2`, merged as `e890d40b`):
+02_09 seed 7 (window 0.317) and 02_10 seed 5 (window 0.161), both `MaxScaleDelta = 0.5f`. That bound
+admits the widest baked answer, so it screens nothing today; tighten it to ~0.3 and rescan if the
+intro plays hard. The chapter lists 02_09, 02_10 before 02_01, and `FleetJobsTests` is 3/3 green.
+`ShippedJobs_MeetTheContract` passes in `bake2`. Cards and Jim's lines are written in `Levels_en` and
+the key table (Twin Moons Catering, Two Rival Bakeries); the spoken lines stay silent until their clips
+are generated. Remaining: clips, the headset pass, and the 0.5 scramble decision. The first checkout
+(`bake`) is untouched.
 
 ### U1 — a fixed fleet can bake
 
@@ -84,7 +86,7 @@ bake.
 - Contracts in `PuzzleJobContracts.All`: `Translatable = false`, `Ships = 2`, `Relation = FanOut`
   (02_09) then `Separate` (02_10), `FieldShape = Ring`, `PlanetCount = 9` (the multi-ship minimum;
   the intro is about readability, the headset decides if it wants 10), `HasSun = true`,
-  `SunPlacement = OffCorridor`, `SunRule = NoSunAnswer` (every system keeps a star, as in
+  `SunPlacement = Centre`, `SunRule = NoSunAnswer` (every system keeps a star, as in
   [fleet rebake](../in-progress/fleet-rebake.md); a fixed cube on the sun must not be the answer),
   `Mechanism = Any`,
   `Zones = 1`, `MinRoutes = 1` (a fleet never counts routes; `PuzzleData.routes` stays 1),
@@ -115,3 +117,5 @@ bake.
 3. The start fails on both (no job solves without an edit).
 4. 2-1 to 2-4 follow in order, unchanged.
 5. Time both; they should be short (~1–1.5 min).
+6. The two new cards show a client, cargo and manual (Twin Moons Catering, Two Rival Bakeries); the
+   spoken lines stay silent until their clips are generated.

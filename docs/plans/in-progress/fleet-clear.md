@@ -15,6 +15,8 @@ Shrinking the blocker frees every ship.
 
 ## Depends on
 
+- **[Fleet rebake](fleet-rebake.md) U4 before any scan:** chapter 2 suns go back to the centre (`SunPlacement = Centre`);
+  scanning first bakes an off-corridor sun above the field.
 - [Chapter 2 intro](chapter-2-intro.md): the scramble bounds, the opened fleet tests.
 - [Fleet rebake](fleet-rebake.md) U2: the chapter-aware slot wiring that places a job
   after 2-4.
@@ -33,19 +35,20 @@ Shrinking the blocker frees every ship.
 ## Units
 
 **Progress (2026-11-25):** U1 and U2 are built and their Creator tests pass. The chapter-2 intro's
-scramble bounds and opened fleet tests landed; its 02_09–02_10 bakes are still pending. U3's contracts
-for 02_06–02_08 are in `PuzzleJobContracts.All` as `Pending` (placeholders for shape and counts); none
-has baked yet, so the `Seed`/`Attempts`, the scramble bounds and the chapter order wait on the
-off-editor Clear scan. Remaining U3 steps: scan each job (`docs/tools/bake.ps1 -Job 02_06 -Mode scan
--Seeds 200`), pin the seed and scramble bounds, clear `Pending`, bake, move them after 02_04 in
+scramble bounds and opened fleet tests landed; its 02_09–02_10 bakes are still pending. U3: 02_06 is
+baked in `our_space_bake` from seed 19 (Clear, shared blocker, contract met, window 0.216) and wired
+there; the dev contract is pinned to seed 19 but stays `Pending` until the asset is merged. Seeds
+4/7/13/15 were Clear but had no shared blocker. 02_07–02_08 still need their scans; the scramble bounds
+are still off. Remaining U3 steps: scan each job (`docs/tools/bake.ps1 -Job 02_07 -Mode scan -Seeds
+200`), pin the seed and scramble bounds, clear `Pending`, bake, move them after 02_04 in
 `Chapters/02.asset`, and extend `FleetJobsTests` to the nine shipped jobs.
 
-**Before the scans (review 2026-11-25):** U1–U2 are uncommitted, so the `bake` checkout runs without
-them: commit them and merge into `bake` first, or the Clear contracts are rejected and every bake uses
-the old frame. The 02_01–02_03 rebake now running there uses the pre-U2 frame, so after the merge run
-`ShippedJobs_MeetTheContract` in the bake checkout: the movable frame check (`AtPlacedSpot`, "the start
-solves in place") is new for every movable job, chapter 1 included, and has not run on a shipped asset.
-Rebake any job it rejects.
+**Before the scans (review 2026-11-25, checked 11:25):** the `bake` checkout now carries U1–U2 —
+`PuzzleStartFrameCheck`, `PuzzleRunBlockers` and the `WrongRole` role check are there (files from
+11:20), so the Clear scan can run from it. The 02_02/02_03 scans at 11:10/11:19 predate that copy and
+their assets were baked before U2, so run `ShippedJobs_MeetTheContract` from the checkout after those
+rebakes. Only the "start solves in place" clause is new; the `Place`-spot comparison already ran on
+shipped movable jobs in `CheckStartFrame`. Rebake any job the shipped check rejects.
 
 ### U1 — a fleet can ask for Clear
 

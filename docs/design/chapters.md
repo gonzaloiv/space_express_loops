@@ -41,12 +41,12 @@ No new verb. The ramp restarts: low scramble, Ring shape.
 | 2-1 | **Two ships** | movable · 2 ships · separate | 10 + sun · Ring · low scramble | One field, two runs; each ship has its own fix. |
 | 2-2 | **Fan-out** | movable · 2 ships · one origin | 12 + sun · Spiral | An edit near the shared origin bends both paths. |
 | 2-3 | **Converge** | movable · 2 ships · one destination | 12 + sun · Spiral | The planet by the shared destination fixes both approaches. |
-| 2-4 | **Three ships** | movable · 3 ships · separate | 12 + sun · Cluster | Three fixes on one budget; the field carries more than one ship. |
+| 2-4 | **Three ships** | movable · 3 ships · separate | 12 + sun · Cluster | One Wrap carries three ships; the field carries more than one ship. |
 | 2-5 | **Fleet capstone** | movable · 3 ships · fan-out | 12 + sun · Cluster · high scramble | Placement, shared paths and the field across every ship. |
 | 2-6 to 2-8 | **Clear with a fleet** | movable · 2 ships | + sun · Clear answer | One obstacle in more than one ship's path: one blocker → among decoys → two blockers. |
 
-**Every system keeps a star** (decided 2026-11-26): every chapter 2 job has a sun, placed off the
-ships' corridor and never the answer (`OffCorridor`, `NoSunAnswer`). The map anchors each job on its
+**Every system keeps a star** (decided 2026-11-26): every chapter 2 job has a sun at the centre
+of its system, never the answer (`Centre`, `NoSunAnswer`; an off-corridor sun floated above the field). The map anchors each job on its
 sun, and a starless system would read as a gap; dark systems on purpose are an idea
 ([later chapters](../ideas/later-chapters.md) §Other options).
 

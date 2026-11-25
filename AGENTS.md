@@ -124,6 +124,15 @@ the Unity MCP.
   `.asset`/`.meta` files by hand.
 - One Unity per checkout. To run two bakes at once, add a second worktree; meanwhile keep working in
   the main editor.
+- **A second bake checkout** (at most two: a third slows the main editor, and merging becomes the
+  bottleneck). Each batch bake uses about one core and 3–4 GB.
+  1. `git worktree add ../our_space_bake2 -b bake2 bake` (from a branch that has the bake code).
+  2. Before its first open, copy `Library/` from `../our_space_bake`, so it skips most of the full
+     import.
+  3. Run with `docs/tools/bake.ps1 -ProjectPath ..\our_space_bake2 -Job <id> ...`.
+  4. Split by job, never one job across two checkouts: each bake rewrites `Chapters/<nn>.asset`, so
+     commit only that job's assets and its contract pin, and set the chapter order by hand once,
+     after both branches merge.
 - The bake-heavy test suite and the shipped-asset checks for fleets run in the bake checkout too
   (`-runTests -testFilter <name>`).
 - A plan that bakes says so under its title: `**Bakes:** off the editor — <which units>`.

@@ -1,10 +1,17 @@
 # Fleet rebake
 
-**Status:** now · space shaping · updated 2026-11-26 — make the job contract, validator and bake
-tooling express a fleet and chapter 2, then rebake 2-1 to 2-3 with no sun answer.
-`PuzzleSunPlacement` / `OffCorridor` shipped (2026-11-20).
+**Status:** now · space shaping · updated 2026-11-26 — U1–U3 done: 2-2 (seed 4) and 2-3 (seed 8)
+rebaked with an off-corridor sun, 2-1 (seed 7) and 2-4 unchanged; `ShippedJobs_MeetTheContract` green
+in the bake checkout. Left: U4 (the sun goes back to the centre; rescan the six baked jobs), then the headset pass.
 
-**Bakes:** off the editor — U3 (scan and rebake 02_01–02_03) ([AGENTS](../../../AGENTS.md#bakes-run-off-the-editor), `docs/tools/bake.ps1`).
+**Re-run after fleet Clear merges (review 2026-11-26):** done. `bake2` was branched from `our-space`
+at `5f982c5d`, which includes [fleet Clear](fleet-clear.md) U2's movable start-frame check
+(`AtPlacedSpot`, "the start solves in place"), and `ShippedJobs_MeetTheContract` passed there at
+`e890d40b`; 2-1 to 2-3 need no rebake. Optional, 10 minutes: for an `Any` fleet, count blockers on any
+stored ship's run (`PuzzleRunBlockers`, beside `SharedCount`) and put 2-2/2-3 back to
+`MinBlockers = 1`; that restores the guarantee without a rebake if the shipped fields pass.
+
+**Bakes:** off the editor — U3 (scan and rebake 02_01–02_03), U4 (rebake 02_01–02_03, 02_05, 02_09, 02_10) ([AGENTS](../../../AGENTS.md#bakes-run-off-the-editor), `docs/tools/bake.ps1`).
 
 **Related:** [plans board](../README.md) ·
 [fleet search](../../../Assets/_Modules/Docs~/solutions/architecture-patterns/editor-bakes-on-a-plain-snapshot.md)
@@ -110,12 +117,42 @@ its sun, unchanged.
 - Exit: the Creator suite re-solves each saved 02_01–02_03 for every ship and asserts no sun answer;
   all three have a sun off the corridor; 2-4 unchanged; the fast suite is green.
 
+### U4 — the sun back at the centre (headset, 2026-11-26)
+
+**Fallback, only if the centre cannot bake (decided 2026-11-26).** The centre is the goal. If a job
+finds no centred seed without a sun answer in its budget, the fallback is a sun **at the edge, level with
+the planets** (02_05 shows it: better than above the field, not ideal): keep `OffCorridor` for that job,
+limit `TryHome` to the planets' height band and drop the pole directions. Using it in chapter 2 means
+teaching it first: one chapter 1 job rebaked as an edge-sun variant (a late single-ship job, so no new job
+and no wire shift) and a line that introduces it (the manual entry, or Jim with its clip). Not done
+voluntarily: only if a chapter 2 job needs it. 02_05 (baked with an edge sun) is rescanned at the centre
+like the others.
+
+- **What the headset shows.** `OffCorridor` puts 02_01's sun above the field, apart from the planets
+  (`PuzzleSunPlacementChoice.TryHome` places it outside the rim, near a pole). That changes the game's
+  picture of a system: the star at its centre, the planets around it. **Decision (2026-11-26): no
+  off-corridor suns.** Every chapter 2 sun sits at the centre, as in chapter 1 and 02_04.
+- **The sun answer is the scan's job, not the placement's.** The old 2-1 to 2-3 were won by shrinking
+  a centred sun because nothing rejected it. Now `SunRule = NoSunAnswer` does
+  (`PuzzleSunRuleCheck.SunAnswers`, in the bake and the validator), and 02_04 shows a centred sun can
+  pass: with every ship required, shrinking the sun alone does not land them all.
+- **Contracts.** 02_01–02_03, 02_09, 02_10 and the unbaked 02_05–02_08: `SunPlacement = Centre`; keep
+  `HasSun = true` and `NoSunAnswer`; repin `SunOnChord` from the scan (a centred sun may sit on a run).
+- **Code.** Once every chapter 2 job bakes at the centre and no `OffCorridor` contract is left, delete `PuzzleSunPlacementChoice`, the `OffCorridor`
+  branch in `PuzzleFieldBake` and the enum value, and turn `OffCorridorSun_BakesWithoutASunAnswer` into a
+  centred-sun case (no dead code). If the fallback is needed, keep them and add the height-band limit.
+- **Rescan and rebake** 02_01–02_03, 02_05, 02_09 and 02_10 in `bake2` (the first checkout keeps the Clear
+  scans), **before** the 02_05 and 02_06–02_08 scans. If a job finds no centred seed without a sun answer
+  in its budget, record it here and use the fallback above.
+- Exit: every chapter 2 sun is at the field centre; `ShippedJobs_MeetTheContract` (no sun answer) and
+  `FleetJobsTests` green; in the editor and on the map each system reads as a star with planets around it.
+
 If U3's fields do not bake after a day of seeds, split the layout retune into its own plan rather than
 expanding this one.
 
 ## Manual check (headset)
 
-1. 2-1 to 2-3: each has a sun off the ships' path; a cube on the sun does not solve.
+1. 2-1 to 2-3, 2-9 and 2-10: each sun sits at the centre of its system; a cube on the sun does not solve.
 2. Each is solvable within budget by working the planets.
 3. On the map, every chapter 2 node sits on its star; no node floats over empty space.
 4. Jim's lines and the cards still match the new fields.

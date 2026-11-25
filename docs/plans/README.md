@@ -6,9 +6,9 @@ Store release: €4, 6 Dec, ~23 story jobs + 20 freelance; scope and schedule in
 
 ## Now
 
-- **25–26 Nov:** [fleet rebake](in-progress/fleet-rebake.md) (02_01–02_03 rebaking off the editor)
-- **25–30 Nov:** chapter 2 to ten jobs: [intro](in-progress/chapter-2-intro.md) (code in, 02_09/02_10
-  bake left) → [fleet Clear](in-progress/fleet-clear.md) (U1–U2 in, 02_06–02_08 scan left) ·
+- **25–26 Nov:** [fleet rebake](in-progress/fleet-rebake.md) (U4: suns back to the centre; rescan five jobs)
+- **25–30 Nov:** chapter 2 to ten jobs: [intro](in-progress/chapter-2-intro.md) (baked; headset pass
+  left) → [fleet Clear](in-progress/fleet-clear.md) (U1–U2 in, 02_06–02_08 scan left) ·
   [capstone](in-progress/fleet-capstone.md) (02_05 contract in; scan and bake left)
 
 ## Next
@@ -39,9 +39,9 @@ One line each: what is left and where it lands.
 - **Story arc and job card on the headset** (closed 2026-11-26,
   [note](../solutions/narrative/story-arc.md)): new cards settle under 3 s, versions follow play order,
   the three new clips play; then push the edited `Levels_en` lines and the 12 wire lines to the sheet.
-- **One source for the card number:** the map views call `PuzzleMap.ManualOrdinal`, the run uses
-  `LevelSelector.GetLevelOrdinal`; switch the map to `GetLevelOrdinal` and delete
-  `PuzzleMap.ManualOrdinal` before chapter 2's reorder.
+- **Fuel clips** (2026-11-26): `level_01_01_complete_04_win` and `level_01_02_complete_03` now say
+  the launch is the only fuel; regenerate both mp3s (the old audio still says "No fuel burned") and push
+  the two lines and job 1's manual entry to the sheet.
 - **Jim's repeats (optional):** cut intro lines that say what the card shows; each cut deletes a
   clip and its downloader key. Keep 2-4's `init_02` (which ship carries what).
 

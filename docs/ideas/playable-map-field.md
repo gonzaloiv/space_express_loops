@@ -1,12 +1,12 @@
 # Playable map field — idea
 
-**Status:** idea · flow · updated 2026-11-06 — the selected map node becomes the play field in place.
+**Status:** idea · flow · updated 2026-11-26 — the selected map node becomes the play field in place.
 
 **Why:** no second object, no pose jump; the map's "scale the space" moment; the vision's one view with
 no transition ([vision](../design/vision.md) §3).
 
-**Why not now:** the map read must land and Validation 1 is the gate
-([vision](../design/vision.md) §6–7). The work is a project, not a morning: the play-only group on the
+**Why not now:** the store release (6 Dec) ships the separate play field; this is a project for an
+update, not a morning: the play-only group on the
 node, the transition rig, the return soft-reset, and the neighbours.
 
 **When promoted, decide:**
