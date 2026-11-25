@@ -22,13 +22,18 @@ Six chapters of 8–10 jobs (~45–55 designed jobs) is the size for a ~€10–
 The story's long arc ([lore](../design/world/lore.md) §Episodes): after something breaks, the job
 turns from delivering cargo to repairing spacetime with the Wrap.
 
-- **The reframe is in the store release.** Chapter 3 presents the scramble as damage
-  ([release](../design/release.md)); this idea is what comes after it.
-- **Broken laws.** Fields whose laws are wrong: a planet that pushes ships away, a well that
-  bends the wrong way, a tear the ship cannot cross. It needs new physics, a field cue for each fault,
-  and bake support for repairs. It costs about as much as rotate.
-- **Where it fits.** It could come before or instead of resize and rotate. Its story follows from the
-  break: you fixed the shape, and now the laws themselves are wrong.
+- **The first broken bodies are in the store release** (2026-11-25). Chapter 3 presents the scramble
+  as damage and teaches anchored planets and repulsors ([chapters](../design/chapters.md) §Chapter 3).
+  What follows builds on the same idea: every body has its own response to the Wrap.
+- **Debris.** A broken planet: a tight cluster of small fragments, closer together than the cube's
+  smallest size, so the player cannot edit them one at a time. Each fragment is its own kind (normal,
+  anchored, repulsor), so one pinch reshapes the cluster unevenly and the player reads which fragments
+  matter. Costs: bake time (more sources; treat the cluster as one zone candidate), a cue that reads at
+  fragment size, and lattice/frame cost on the Quest.
+- **Inverted bodies.** A body that does the opposite of the pinch: it grows when you shrink. Hard to
+  read at a glance; add it only if a playtest of the broken bodies asks for more.
+- **Other broken laws.** A well that bends the wrong way, a tear the ship cannot cross. Each needs new
+  physics, a field cue and bake support.
 
 ## Other options
 

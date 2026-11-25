@@ -11,37 +11,44 @@
 A **€4 Meta store release on 2026-12-06**, about **40–45 minutes** of story. The harder new jobs
 carry most of that time. A small set of 20 freelance contracts comes after it as a bonus.
 **Decided 2026-11-18:** ~21 story jobs plus 20 freelance contracts is the content for €4. The daily contract is left out. Today the 11
-jobs play in 15–20 minutes.
+jobs play in 15–20 minutes. **Updated 2026-11-25:** ~23 story jobs (chapter 2 to ten, chapter 3 on
+anchored bodies and repulsors).
 
 ## Where we are
 
 | Item | State |
 |---|---|
 | Chapter 1 (7 jobs) + chapter 2 (2-1 to 2-4) | Shipped in the competition build |
-| Seeds retune (01_03, 01_05, 01_07; `growOnly` on 01_01) | **To do** |
+| Seeds retune (01_03, 01_05, 01_07; `growOnly` on 01_01) | Done (2026-11-20) |
 | Fleet jobs won by shrinking the sun (2-1 to 2-3) | **To do**: needed before new fleet jobs |
 | Meta Platform | Init only (`MetaPlatformClient`); **no entitlement check yet** |
+| Store validation | **Passed** (2026-11-25): the current version is ready to publish; the release is a new build upload |
 
 ## Content: the story first, then 20 freelance contracts
 
-**The story is the game: about +10 jobs, for ~21 in total.** The mechanics are enough; no new
-gesture is needed. These combinations are not taught yet:
+**The story is the game: about +12 jobs, for ~23 in total.** These are not taught yet:
 
-| Combination | What it asks | Cost |
+| New job | What it asks | Cost |
 |---|---|---|
-| Clear with a fleet | Shrink an obstacle that blocks more than one ship | Low: existing bakes, `Clear` role |
+| Fixed-cube fleet (chapter 2 intro) | One pinch on a fixed cube moves two ships | Low: the multi-ship bake already ships a fixed frame |
 | Fleet capstone (2-5) | 3 ships, fan-out, high scramble | Low once the sun answer is fixed |
-| Multi-zone fleets (`zones = ships`) | Each ship needs its own zone | Medium: a per-ship zone search in the bake |
-| Mixed | Grow one zone, shrink another | Medium: needs ≥ 2 routes and a field that bakes |
-| Resize | Grab the cube's corners | High for now: works, but the explanation is not ready |
+| Clear with a fleet | Shrink an obstacle that blocks more than one ship | Low–medium: multi-ship bakes cannot request `Clear` yet |
+| Anchored bodies (chapter 3) | A planet the Wrap cannot change; bend the line with its neighbours | Low: `fixedMass` exists in the sim and the bake; needs a look and a bake rule |
+| Repulsors (chapter 3) | A body that pushes; shrink it to open a gap, grow it to shove a ship | Medium: a negative strength, a raised lattice bump, a look, bake support |
 
-- **Chapter 2 grows to 8 jobs.** 2-5 is the fleet capstone; 2-6 to 2-8 bring Clear into the fleet.
-- **A new chapter 3 has ~6 jobs built from combinations** (multi-zone fleets, then Mixed), with its
-  own episode and client rows. **Its fields are presented as damage** (decided 2026-11-18): the
-  scramble is spacetime torn, and the player's Wraps put it back. Jim plays it down: it's all
-  broken, but just do your job; it probably has nothing to do with our machine. Only Jim's lines and
-  the manual change; no new physics, bake or visual work ([lore](world/lore.md) §Episodes). The instrument chapter (resize, rotate) moves to chapter 4, the first
-  update.
+- **Chapter 2 grows to 10 jobs.** Two fixed-cube fleet jobs open it, then 2-1 to 2-4, the 2-5
+  capstone, and three jobs that bring Clear into the fleet.
+- **A new chapter 3 has ~6 jobs on broken bodies** (decided 2026-11-25): anchored planets, then
+  repulsors, then both, with its own episode and client rows. **Its fields are presented as damage**
+  (decided 2026-11-18): the scramble is spacetime torn, and the player's Wraps put it back; some
+  bodies no longer behave. Jim plays it down: it's all broken, but just do your job; it probably has
+  nothing to do with our machine ([lore](world/lore.md) §Episodes). If repulsors are not working in
+  the editor by 1 Dec, chapter 3 ships with anchored jobs and repulsors come in an update.
+- **Dropped (2026-11-25):** multi-zone fleets (`zones = ships`) and Mixed as lessons. With a movable
+  cube, one zone per ship is what the player already does in 2-1; the rule only lives in the
+  validator. Mixed (grow one, shrink another) is something players already try on jobs with more
+  than one route, so it does not read as a new idea. Resize too: with a movable cube, two small
+  pinches do what one big one does, so the bigger cube is a shortcut, not a lesson.
 
 **Freelance: 20 contracts, opened after the story ends.** This is a light version of the
 [chapters](chapters.md) §Freelance design, using what the story already has:
@@ -53,12 +60,13 @@ gesture is needed. These combinations are not taught yet:
 - Shown as one extra system on the map after the ending; no tiers and no job board.
 
 **Time estimate.** Today's ~1.5 min per job is the average of mostly teaching jobs. The new jobs are
-harder (capstones, multi-zone fleets, Mixed), so they should take longer: estimate ~3 min each.
+harder (capstones, Clear with a fleet, broken bodies), so they should take longer: estimate ~3 min each
+(the two fixed-fleet intro jobs are shorter).
 
 | Part | Jobs | Estimate |
 |---|---|---|
 | Current story | 11 | 15–20 min |
-| New story jobs | ~10 | ~30 min |
+| New story jobs | ~12 | ~30 min |
 | Freelance (for players who play it) | 20 | ~30 min (no intro or Jim lines: ~1.5 min each, solving only) |
 
 The story alone could reach 40–45 min, so freelance is a bonus rather than needed to hit the target.
@@ -76,11 +84,13 @@ is a line that pulls the player from one chapter into the next. The arc now live
 universe, there may be no good option left. For this release:
 
 - **Settle what breaks** and the player's part in it, before chapter 3's lines are written.
-- **Revise episodes 1–2's lines** (Jim's openers, manual entries, the bulletins) so they lead there.
+- **Revise episodes 1–2's lines** (the job 1 receipt and job 7 close, chapter 2's opener and 2-4's
+  close, the manual entries, the bulletins, and the sector wire) so they lead there.
 - **Each episode's turn.** What changes for Jim and the firm in each chapter, so episode 2 follows
   from episode 1 and sets up episode 3.
 - **The ending.** Chapter 3's close is the release's ending; the current ending moves there or is
-  rewritten. Freelance plays as the epilogue: Jim's job board after the story.
+  rewritten once chapter 3's jobs exist. Freelance plays as the epilogue: Jim's job board after the
+  story.
 - **What stays.** Jim's pride → doubt and the manual's cheerful → bleak still run across all three
   episodes, not just episode 1.
 
@@ -93,23 +103,23 @@ universe, there may be no good option left. For this release:
 - Store page and the Meta demo option
 - Release build
 
-**Out:** the daily contract and leaderboards, freelance tiers and scores, resize and rotate, and
-chapters beyond 3.
+**Out:** the daily contract and leaderboards, freelance tiers and scores, resize and rotate, debris
+and inverted bodies ([later chapters](../ideas/later-chapters.md)), and chapters beyond 3.
 
 ## Schedule
 
-| Week | Lands |
-|---|---|
-| 18–22 Nov | The story arc; seeds retune; fix the fleet sun answer; entitlement check; start the store page (art, text, age rating, privacy policy) |
-| 23–29 Nov | Chapter 2 to 8 jobs; the multi-zone fleet bake; chapter 3 |
-| 30 Nov–4 Dec | Freelance: bake, play and keep 20, and the map system; Jim's lines; headset timing pass; release build; submit |
-| 6 Dec | Release |
+Rescheduled 2026-11-25. Store validation has passed, so the release is a build upload with no review
+wait; anything that is late (freelance first) ships as an update.
 
-**Risk: Meta's review time.** A submission on 4 Dec gives 2 days. Check how long review takes
-now. If it takes a week or more, submit the story by ~28 Nov and ship freelance as an update.
+| Days | Lands |
+|---|---|
+| 25–26 Nov | The current state: fix the fleet sun answer (fleet rebake); the story arc and episodes 1–2's lines |
+| 27–30 Nov | Chapter 2 to ten jobs |
+| 1–3 Dec | Chapter 3: anchored bodies, repulsors and the ending |
+| 3–5 Dec | Freelance: bake, play and keep 20, and the map system; entitlement check (if still missing); headset timing pass; release build; upload |
+| 6 Dec | Release |
 
 ## Open questions
 
-- **Meta review time** for a new paid app. This decides the submission date.
 - **Chapter 3's episode.** Its title, what it says, and its clients; follows from §Story arc.
 - **Freelance on the map.** One system after the ending, or a separate board in Jim's panel?

@@ -147,9 +147,9 @@ solve ([core loop](../core-loop.md) §3), and the job-1 tutorial is exempt.
   verified puzzles — **not the slice**.
 - Multi-zone solutions: the search and bake are a separate plan; the region/scale decoupling is
   settled — they stay separate.
-- **Resize explanation:** the mechanic works, but the player needs a clear "size is scope, not
-  precision" lesson before it enters the run. It is chapter 3's first lesson, with rotating the content
-  inside the cube after it ([chapters](../chapters.md)).
+- **Resize explanation:** the mechanic works, but it needs a reason before it enters the run — a cost
+  rule, or a field where the pieces must change together. It is not a lesson yet (2026-11-25); rotate
+  follows it ([chapters](../chapters.md)).
 - **Simulation or fiction?** "A shrunk zone is a shortcut" (here and in the glossary) and "comes out
   faster" ([core loop](../core-loop.md) §3) are stated as physics. Check whether the simulation does
   either, or whether they are only the fiction, and word the docs to match.

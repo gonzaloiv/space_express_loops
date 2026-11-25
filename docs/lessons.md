@@ -266,3 +266,14 @@ bullet; the code and tests are the record of what was built.
   gate it, or let it run as cosmetic.
 - **Next time:** a system that owns a timeline (TTS) handles its own pause and replay; a global pause
   flag cannot rewind a line.
+
+## 2026-11-25 — Dropped lessons: multi-zone fleets and Mixed
+
+- **Surprised:** two planned chapter-3 lessons were not lessons. With a movable cube, "one zone per
+  ship" is what the player already does in 2-1, and Mixed is what players already try when a job has
+  more than one route. Both lived only in the validator.
+- **Next time:** before planning a bake for a new lesson, ask what the player does differently. If
+  the answer is "nothing, but the validator checks more", it is a harder version of an old job, not a
+  chapter's idea.
+- **Next time:** look for a lesson in what the cube can already do but has not been taught (a fixed
+  cube with a fleet, resize) before inventing a combination.

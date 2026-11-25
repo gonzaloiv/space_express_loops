@@ -8,16 +8,18 @@ the ship flies the deformed spacetime.
 
 ## Road to the store
 
-**Target 2026-12-06, €4, 40–45 minutes** (set 2026-11-18): ~21 story jobs across chapters 1–3, then
-20 freelance contracts. Scope, content and schedule live in [release](../design/release.md); the game
-shape in [chapters](../design/chapters.md). Out of this release: the daily contract and leaderboards,
-freelance tiers and scores, resize and rotate (chapter 4, the first update).
+**Target 2026-12-06, €4, 40–45 minutes** (set 2026-11-18): ~23 story jobs across chapters 1–3, then
+20 freelance contracts. Store validation has passed, so the release is a build upload; whatever is
+late ships as an update. Scope, content and schedule live in [release](../design/release.md); the
+game shape in [chapters](../design/chapters.md). Out of this release: the daily contract and
+leaderboards, freelance tiers and scores, resize and rotate, debris and inverted bodies.
 
 ## Now
 
 Active work.
 
-Nothing active; [fleet rebake](backlog/fleet-rebake.md) is next.
+- **25–26 Nov:** [fleet search](in-progress/fleet-search.md) →
+  [fleet rebake](in-progress/fleet-rebake.md) · [story arc](in-progress/story-arc.md)
 
 Past post-mortems are in [lessons](../lessons.md).
 
@@ -25,20 +27,16 @@ Past post-mortems are in [lessons](../lessons.md).
 
 The store release ([release](../design/release.md)), in schedule order:
 
-- **18–22 Nov:** [fleet rebake](backlog/fleet-rebake.md) · [story arc](backlog/story-arc.md) ·
-  [entitlement check](backlog/entitlement-check.md) · [store page](backlog/store-page.md) (find Meta's
-  review time first)
-- **23–29 Nov:** [chapter 2 to eight jobs](backlog/chapter-2-to-eight.md) ·
-  [multi-zone fleet bake](backlog/multi-zone-fleet-bake.md) · [chapter 3](backlog/chapter-3.md)
-- **30 Nov–4 Dec:** [freelance](backlog/freelance.md) · [release build](backlog/release-build.md)
-  (timing pass, build, submit)
+- **27–30 Nov:** [chapter 2 to ten jobs](backlog/chapter-2-to-ten.md)
+- **1–3 Dec:** [chapter 3](backlog/chapter-3.md) (anchored bodies, repulsors and the ending)
+- **3–5 Dec:** [freelance](backlog/freelance.md) + (timing pass, build, upload)
 
 ## Later
 
 Design-only or deferred. Nothing here is scheduled.
 
 - [Boot on one line](backlog/boot-one-line.md) — the console boot types through one localized line
-  instead of 13 per-line GameObjects (after the store update).
+  instead of 13 per-line GameObjects. Only if there is time; not needed for the release.
 
 - The contract card stays available during the run as a static reference; otherwise
   help reaches the player at the start (Jim's line, the gesture prompts) and the end (the complete/fail
@@ -52,7 +50,7 @@ hologram look, TTS companion (deferred), feel polish, playable map field.
 Loose ends that still need a home. Close one by linking the plan that finishes it.
 
 - **Job 7's manual shortening (from run fixes).** Waits on the lore rethink: does the "eleven years"
-  note move or stay. Likely settled by [story arc](backlog/story-arc.md).
+  note move or stay. Likely settled by [story arc](in-progress/story-arc.md).
 - **Field wells: kept (2026-11-11, headset).** The change-only wells are on in `Puzzle.prefab`
   (committed). Left to do: describe them in [the cube](../design/systems/cube.md) §Feedback (the lattice
   starts flat; a grown planet's well opens, a shrunk one flattens) and decide whether `LatticeWells`
@@ -66,19 +64,15 @@ Loose ends that still need a home. Close one by linking the plan that finishes i
   interchange keeps its markers. `OpenRing.asset` is now unused. Update
   [the cube](../design/systems/cube.md) §Feedback ("filled/open ring around the planet") once settled.
 - **The ending on the headset.** The exit cue and the lit-map cue start almost together; keep one if
-  they clash. The ending moves to chapter 3 ([story arc](backlog/story-arc.md)).
+  they clash. The ending moves to chapter 3 ([chapter 3](backlog/chapter-3.md) U5).
 - **Route end fallback.** `MapRouteLine.EndIndex` returns `-1` when no job is `Current` or solved
   (unreachable today); make it safe if that can ever happen.
 - **Gesture prompt icons — read well on the headset (2026-11-18).** Rendered by
   `Tools/Our Space/Render Gesture Prompt Art` (`GesturePrompts/Editor`); re-run it after tuning a motion.
 - **Job 1 on the headset.** Rebaked 2026-11-06 (six planets, a sun the cube does not cover, seed 141);
   it still needs a headset read. The job set's bake and shipped-asset tests are green (2026-11-20).
-- **Ship-zone cue.** The ship has a trail; there is no zone indicator. No plan owns it yet; multi-zone
-  fleets in [chapter 3](backlog/chapter-3.md) may need it.
-- **Resize.** Working, but the explanation (size is scope, not precision) is not ready. Chapter 4's
-  first lesson, the first update ([chapters](../design/chapters.md)).
-- **Mixed.** Owned by [chapter 3](backlog/chapter-3.md) U3; it falls to the first update if it does
-  not bake in time.
+- **Ship-zone cue.** The ship has a trail; there is no zone indicator. No plan owns it, and with
+  multi-zone fleets dropped (2026-11-25) nothing needs it yet.
 
 ## Conventions
 
