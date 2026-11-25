@@ -90,6 +90,10 @@ its sun, unchanged.
   with the sun: a sun on a field without a sun rule would fail `PuzzleSunRuleCheck.Matches`, and a
   centred sun is what let the old fields be won by shrinking it. If either finds no seed in the scan
   budget, record it here before falling back to sun-free.
+- **MinBlockers:** 02_01 keeps 1. 02_02/03 use 0: the validator counts blockers on ship 0's chord, and
+  every with-sun fan-out/converge seed baked its planet blocker on the shared run instead (8/8 seeds
+  reported `blockers 0`), so `MinBlockers = 1` would reject all of them. The field still carries a
+  blocker; the contract just stops rejecting it.
 - **Pin the seeds:** record `Seed`/`Attempts` (and `PlanetCount`, `SunOnChord`, `MinBlockers`) per
   job, so `JobSet_MeetsTheContract` and "Bake all" reproduce the rebake.
 - **Sun-answer fixtures:** both `SunOnlyJob_SunAnswers` and
