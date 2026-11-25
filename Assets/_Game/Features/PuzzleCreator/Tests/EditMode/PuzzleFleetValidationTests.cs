@@ -68,7 +68,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             try
             {
                 PuzzleShip ship = broken.ships[broken.ships.Length - 1];
-                ship.destination += new Vector3(0.2f, 0.2f, 0f);
+                ship.destination += new Vector3(1f, 1f, 0f);
                 broken.ships[broken.ships.Length - 1] = ship;
 
                 Assert.IsFalse(
