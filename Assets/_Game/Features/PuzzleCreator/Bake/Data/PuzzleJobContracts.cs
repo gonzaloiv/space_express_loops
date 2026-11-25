@@ -77,7 +77,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             },
             new PuzzleJobContract
             {
-                Id = "02_03", Seed = 1, Attempts = 1, PlanetCount = 12, FieldShape = PuzzleFieldShape.Spiral,
+                Id = "02_03", Seed = 8, Attempts = 1, PlanetCount = 12, FieldShape = PuzzleFieldShape.Spiral,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 0,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
@@ -97,9 +97,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Relation = PuzzleShipRelation.FanOut,
                 Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
             },
+            // Chapter 2 intro: two fixed-cube jobs. Pending until the off-editor scan pins Seed/Attempts
+            // and MaxScaleDelta is confirmed by playing; then unpin, bake and move them before 02_01.
             new PuzzleJobContract
             {
-                Id = "02_09", Seed = 1, Attempts = 1, PlanetCount = 9, FieldShape = PuzzleFieldShape.Ring,
+                Id = "02_09", Pending = true, Seed = 1, Attempts = 1, PlanetCount = 9,
+                FieldShape = PuzzleFieldShape.Ring,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
@@ -109,7 +112,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             },
             new PuzzleJobContract
             {
-                Id = "02_10", Seed = 1, Attempts = 1, PlanetCount = 9, FieldShape = PuzzleFieldShape.Ring,
+                Id = "02_10", Pending = true, Seed = 1, Attempts = 1, PlanetCount = 9,
+                FieldShape = PuzzleFieldShape.Ring,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
