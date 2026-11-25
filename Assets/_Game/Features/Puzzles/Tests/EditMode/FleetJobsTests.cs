@@ -11,13 +11,14 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         private const string ChapterPath = "Assets/_Game/Resources/Chapters/02.asset";
         private const string SelectorPath = "Assets/_Game/Resources/Chapters/LevelSelector.asset";
 
-        // Play order comes from the chapter asset, not the ids: the two fixed intros open chapter 2.
+        // Play order comes from the chapter asset, not the ids: the two fixed intros open chapter 2,
+        // and the three-ship capstone closes the fleet lessons.
         private static readonly string[] JobIds =
-            { "02_09", "02_10", "02_01", "02_02", "02_03", "02_04" };
-        private static readonly int[] ShipCounts = { 2, 2, 2, 2, 2, 3 };
+            { "02_09", "02_10", "02_01", "02_02", "02_03", "02_04", "02_05" };
+        private static readonly int[] ShipCounts = { 2, 2, 2, 2, 2, 3, 3 };
 
         [Test]
-        public void ChapterTwo_IsTheSixJobsAfterChapterOne()
+        public void ChapterTwo_IsTheSevenJobsAfterChapterOne()
         {
             ChapterData chapter = AssetDatabase.LoadAssetAtPath<ChapterData>(ChapterPath);
             Assert.IsNotNull(chapter, ChapterPath);

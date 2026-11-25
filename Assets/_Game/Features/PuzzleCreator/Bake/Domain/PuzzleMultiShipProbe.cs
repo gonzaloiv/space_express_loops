@@ -6,7 +6,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public sealed class PuzzleMultiShipProbe
     {
-        private const int ScaleSamples = 13;
+        // The bake's own scale grid. The shipped fleet re-solve tries it first (PuzzleFleetSolution),
+        // so a freshly baked answer is checked at the scale it was baked with.
+        public const int ScaleSamples = 13;
 
         private readonly PuzzleShipScan scan;
         private readonly FleetField fleet;
@@ -24,7 +26,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             required = brief.Ships;
             relation = brief.Relation;
             scan = new PuzzleShipScan(fleet, 0f);
-            scales = Linear(settings, ScaleSamples);
+            scales = PuzzleZoneCandidates.LinearScales(settings, ScaleSamples);
             if (brief.SunRule == PuzzleSunRule.NoSunAnswer)
                 sunShortcut = new PuzzleSunShortcut(fleet, scan, scales);
         }
@@ -133,18 +135,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             public int Count;
             public PuzzleZone Zone;
             public List<PuzzleShipRescue> Rescued;
-        }
-
-        private static float[] Linear(PuzzleSimSettings settings, int samples)
-        {
-            float[] scales = new float[samples];
-            for (int i = 0; i < samples; i++)
-            {
-                scales[i] = Mathf.Lerp(
-                    settings.MinScaleFactor, settings.MaxScaleFactor, i / (float)(samples - 1));
-            }
-
-            return scales;
         }
     }
 }

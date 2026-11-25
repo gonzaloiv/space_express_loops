@@ -4,7 +4,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleSunPlacementChoice
     {
-        private const int Directions = 32;
+        private const int Azimuths = 32;
+        private const int BandHeights = 3;
         private const float RimFactor = 1.05f;
 
         public static bool TryHome(
@@ -15,19 +16,36 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return false;
 
             float radius = FieldRadius(planets) * RimFactor + sunRadius + clearance;
-            float best = float.MinValue;
-            for (int i = 0; i < Directions; i++)
+            float low = float.MaxValue;
+            float high = float.MinValue;
+            for (int i = 0; i < planets.Length; i++)
             {
-                Vector3 candidate = Direction(i) * radius;
-                if (!ClearOfPlanets(candidate, planets, sunRadius + clearance))
-                    continue;
+                low = Mathf.Min(low, planets[i].position.y);
+                high = Mathf.Max(high, planets[i].position.y);
+            }
 
-                float score = ClearanceFromRuns(candidate, planets);
-                if (score <= best)
-                    continue;
+            float best = float.MinValue;
+            for (int h = 0; h < BandHeights; h++)
+            {
+                float y = BandHeights == 1
+                    ? (low + high) * 0.5f
+                    : Mathf.Lerp(low, high, h / (BandHeights - 1f));
+                float horizontal = Mathf.Sqrt(Mathf.Max(0f, radius * radius - y * y));
+                for (int a = 0; a < Azimuths; a++)
+                {
+                    float angle = a * (2f * Mathf.PI / Azimuths);
+                    Vector3 candidate = new(
+                        Mathf.Cos(angle) * horizontal, y, Mathf.Sin(angle) * horizontal);
+                    if (!ClearOfPlanets(candidate, planets, sunRadius + clearance))
+                        continue;
 
-                best = score;
-                home = candidate;
+                    float score = ClearanceFromRuns(candidate, planets);
+                    if (score <= best)
+                        continue;
+
+                    best = score;
+                    home = candidate;
+                }
             }
 
             return best > float.MinValue;
@@ -69,14 +87,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             }
 
             return clearance;
-        }
-
-        private static Vector3 Direction(int index)
-        {
-            float y = 1f - 2f * (index + 0.5f) / Directions;
-            float ring = Mathf.Sqrt(Mathf.Max(0f, 1f - y * y));
-            float angle = index * 2.39996323f;
-            return new Vector3(Mathf.Cos(angle) * ring, y, Mathf.Sin(angle) * ring);
         }
     }
 }

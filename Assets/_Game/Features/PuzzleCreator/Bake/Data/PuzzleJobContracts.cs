@@ -60,7 +60,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             new PuzzleJobContract
             {
                 Id = "02_01", Seed = 7, Attempts = 1, PlanetCount = 10, FieldShape = PuzzleFieldShape.Ring,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 1,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.Separate,
@@ -69,7 +69,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             new PuzzleJobContract
             {
                 Id = "02_02", Seed = 4, Attempts = 1, PlanetCount = 12, FieldShape = PuzzleFieldShape.Spiral,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 0,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.FanOut,
@@ -78,44 +78,50 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             new PuzzleJobContract
             {
                 Id = "02_03", Seed = 8, Attempts = 1, PlanetCount = 12, FieldShape = PuzzleFieldShape.Spiral,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 0,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.Converge,
                 Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
             },
-            // Fleet capstone: three ships from one origin, the chapter's hardest field. Pending until the
-            // off-editor scan pins the seed; the high-scramble bounds are set from that bake (MinScaleDelta)
-            // and the headset pass confirms them.
+            // Fleet capstone: three ships from one origin, the chapter's hardest field. Seed 9 is the
+            // widest of two passing seeds in the 2026-11-25 scan (window 0.19); its answer is a 0.40
+            // scale delta at a start 0.183 away, so the high-scramble bounds sit just under both. The
+            // headset pass confirms them.
             new PuzzleJobContract
             {
-                Id = "02_05", Pending = true, Seed = 1, Attempts = 1, PlanetCount = 12,
+                Id = "02_05", Seed = 9, Attempts = 1, PlanetCount = 12,
                 FieldShape = PuzzleFieldShape.Cluster,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 3,
                 Relation = PuzzleShipRelation.FanOut,
                 Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
+                MinScaleDelta = 0.35f, MinStartDistance = 0.15f,
             },
+            // Chapter 2 intro: two fixed-cube jobs, baked 2026-11-25. MaxScaleDelta is the widest
+            // baked answer's |scale - 1|; tune it by playing.
             new PuzzleJobContract
             {
-                Id = "02_09", Seed = 1, Attempts = 1, PlanetCount = 9, FieldShape = PuzzleFieldShape.Ring,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                Id = "02_09", Seed = 7, Attempts = 1, PlanetCount = 9,
+                FieldShape = PuzzleFieldShape.Ring,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.FanOut,
                 Translatable = false, NoFail = false, NoGrade = false, NoIntro = false,
-                MaxScaleDelta = 0.25f,
+                MaxScaleDelta = 0.5f,
             },
             new PuzzleJobContract
             {
-                Id = "02_10", Seed = 1, Attempts = 1, PlanetCount = 9, FieldShape = PuzzleFieldShape.Ring,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                Id = "02_10", Seed = 5, Attempts = 1, PlanetCount = 9,
+                FieldShape = PuzzleFieldShape.Ring,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.Separate,
                 Translatable = false, NoFail = false, NoGrade = false, NoIntro = false,
-                MaxScaleDelta = 0.25f,
+                MaxScaleDelta = 0.5f,
             },
             // Fleet Clear: movable two-ship jobs whose lesson is one blocker shared by both runs.
             // Pending until the off-editor Clear scan pins Seed/Attempts and the scramble bounds are
@@ -124,7 +130,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             {
                 Id = "02_06", Pending = false, Seed = 19, Attempts = 1, PlanetCount = 10,
                 FieldShape = PuzzleFieldShape.Ring,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 1,
                 Mechanism = PuzzleMechanism.Clear, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.Separate,
@@ -134,7 +140,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             {
                 Id = "02_07", Pending = true, Seed = 1, Attempts = 1, PlanetCount = 12,
                 FieldShape = PuzzleFieldShape.Cluster,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 1,
                 Mechanism = PuzzleMechanism.Clear, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.Separate,
@@ -144,7 +150,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             {
                 Id = "02_08", Pending = true, Seed = 1, Attempts = 1, PlanetCount = 12,
                 FieldShape = PuzzleFieldShape.Spiral,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 2,
                 Mechanism = PuzzleMechanism.Clear, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.Separate,

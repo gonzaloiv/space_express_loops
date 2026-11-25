@@ -49,12 +49,23 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public static float[] Sizes(FleetField field) =>
             Sizes(field.CubeSizeMin, field.CubeSizeMax);
 
-        public static float[] Scales(PuzzleSimSettings settings, int count)
+        // The fleet probe's own grid, low to high. A freshly baked answer sits exactly on it, so a
+        // shipped re-solve tries these first rather than hoping a denser grid lands in the plateau.
+        public static float[] LinearScales(PuzzleSimSettings settings, int count)
         {
             float[] scales = new float[count];
             for (int i = 0; i < count; i++)
-                scales[i] = Mathf.Lerp(settings.MinScaleFactor, settings.MaxScaleFactor, i / (float)(count - 1));
+            {
+                scales[i] = Mathf.Lerp(
+                    settings.MinScaleFactor, settings.MaxScaleFactor, i / (float)(count - 1));
+            }
 
+            return scales;
+        }
+
+        public static float[] Scales(PuzzleSimSettings settings, int count)
+        {
+            float[] scales = LinearScales(settings, count);
             System.Array.Sort(scales, (a, b) => Mathf.Abs(a - 1f).CompareTo(Mathf.Abs(b - 1f)));
             return scales;
         }

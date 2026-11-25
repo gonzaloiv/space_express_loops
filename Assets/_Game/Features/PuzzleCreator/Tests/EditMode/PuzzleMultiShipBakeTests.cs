@@ -56,7 +56,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
         [Test]
         [Explicit]
-        public void OffCorridorSun_BakesWithoutASunAnswer()
+        public void CentredSun_BakesWithoutASunAnswer()
         {
             SpaceShapingSettings sunSettings = Object.Instantiate(settings);
             sunSettings.sunRadius = 0.12f;
@@ -66,7 +66,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             seed.translatable = true;
             seed.ships = 2;
             seed.hasSun = true;
-            seed.sunPlacement = PuzzleSunPlacement.OffCorridor;
+            seed.sunPlacement = PuzzleSunPlacement.Centre;
             seed.sunRule = PuzzleSunRule.NoSunAnswer;
             PuzzleBrief sunBrief = PuzzleBrief.From(seed, sunSettings);
             PuzzleShapeAsset shape = PuzzleArtifactFactory.Shape(seed, sunSettings);
@@ -77,15 +77,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Assert.IsFalse(PuzzleSunRuleCheck.SunAnswers(result.Puzzle, sunSim));
             int sun = SunIndex(result.Puzzle.sources);
             Assert.GreaterOrEqual(sun, 0);
-            PuzzleSource source = result.Puzzle.sources[sun];
-            for (int i = 0; i < result.Puzzle.ships.Length; i++)
-            {
-                PuzzleShip ship = result.Puzzle.ships[i];
-                Assert.Greater(
-                    PuzzleRunGeometry.DistanceToSegment(source.home, ship.origin, ship.destination),
-                    source.scale,
-                    $"ship {i} runs through the sun");
-            }
+            Assert.Less(result.Puzzle.sources[sun].home.magnitude, 0.0001f, "the sun is not centred");
 
             Object.DestroyImmediate(result.Puzzle);
             Object.DestroyImmediate(sunPlanets);

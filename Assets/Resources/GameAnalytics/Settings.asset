@@ -12,50 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f78192cec1344d83a177ac5e6139ab3, type: 3}
   m_Name: Settings
   m_EditorClassIdentifier: Vendor.GameAnalytics::GameAnalyticsSDK.Setup.Settings
-  TotalMessagesSubmitted: 0
-  TotalMessagesFailed: 0
-  DesignMessagesSubmitted: 0
-  DesignMessagesFailed: 0
-  QualityMessagesSubmitted: 0
-  QualityMessagesFailed: 0
-  ErrorMessagesSubmitted: 0
-  ErrorMessagesFailed: 0
-  BusinessMessagesSubmitted: 0
-  BusinessMessagesFailed: 0
-  UserMessagesSubmitted: 0
-  UserMessagesFailed: 0
-  CustomArea: 
   gameKey:
-  - 44dec0d359f47bbb23b6772c4dc9c561
+  - ea1bf8dae698a45a367160172042211a
   secretKey:
-  - 7343a6964f93861770873de33fba76db60d65295
+  - cfa26f98657cd46815e82fc4581f693a40de676c
   Build:
-  - 1.0.1
+  - 0.1
   SelectedPlatformOrganization:
   - Digital Love
   SelectedPlatformStudio:
   - Digital Love
   SelectedPlatformGame:
-  - Space Express Loops
-  SelectedPlatformGameID: 78340500i
+  - Our Space
+  SelectedPlatformGameID: da800500i
   SelectedOrganization: 01000000i
   SelectedStudio: 01000000i
   SelectedGame: 01000000i
   NewVersion: 
   Changes: 
-  SignUpOpen: 0
   StudioName: Digital Love
-  GameName: Flip Hoops
-  OrganizationName: 
-  OrganizationIdentifier: 
+  GameName: Our Space
   EmailGA: aelthalion@gmail.com
-  IntroScreen: 0
   InfoLogEditor: 1
   InfoLogBuild: 1
   VerboseLogBuild: 0
   UseManualSessionHandling: 0
-  SendExampleGameDataToMyGame: 0
-  InternetConnectivity: 0
   CustomDimensions01: []
   CustomDimensions02:
   - small
@@ -66,41 +47,16 @@ MonoBehaviour:
   ResourceCurrencies: []
   LastCreatedGamePlatform: -1
   Platforms: 0b000000i
-  CurrentInspectorState: 1
-  ClosedHints: 
-  DisplayHints: 0
-  DisplayHintsScrollState: {x: 0, y: 0}
-  Logo: {fileID: 0}
-  UpdateIcon: {fileID: 0}
-  InfoIcon: {fileID: 0}
-  DeleteIcon: {fileID: 0}
-  GameIcon: {fileID: 0}
-  HomeIcon: {fileID: 0}
-  InstrumentIcon: {fileID: 0}
-  QuestionIcon: {fileID: 0}
-  UserIcon: {fileID: 0}
-  AmazonIcon: {fileID: 0}
-  GooglePlayIcon: {fileID: 0}
-  iosIcon: {fileID: 0}
-  macIcon: {fileID: 0}
-  windowsPhoneIcon: {fileID: 0}
   UsePlayerSettingsBuildNumber: 1
+  BuildNumberAutoDetect: 01y
   SubmitErrors: 1
   NativeErrorReporting: 0
   MaxErrorCount: 10
   SubmitFpsAverage: 0
   SubmitFpsCritical: 0
-  IncludeGooglePlay: 1
   FpsCriticalThreshold: 20
   FpsCirticalSubmitInterval: 1
-  PlatformFoldOut: 01y
-  CustomDimensions01FoldOut: 0
-  CustomDimensions02FoldOut: 0
-  CustomDimensions03FoldOut: 0
-  ResourceItemTypesFoldOut: 0
-  ResourceCurrenciesFoldOut: 0
   EnableMemoryHistogram: 0
-  EnableHealthEvent: 0
   EnableFPSHistogram: 0
   EnableSDKInitEvent: 0
   EnableHardwareTracking: 0
