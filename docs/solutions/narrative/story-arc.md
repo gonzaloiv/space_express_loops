@@ -1,0 +1,81 @@
+---
+title: Story arc across three chapters — seams, damage, and the solved-count wire
+date: 2026-11-25
+category: narrative
+module: story
+problem_type: design_pattern
+applies_when:
+  - Writing or revising a multi-chapter story arc
+  - Inserting jobs into an ordered run whose text is keyed to solved counts
+  - Changing a spoken line whose clip is prebuilt by key
+tags:
+  - story
+  - lore
+  - episodes
+  - sector-wire
+  - tts
+  - localization
+---
+
+# Story arc across three chapters — seams, damage, and the solved-count wire
+
+## Context
+
+By 2026-11-25 the story was three separate ideas: the Wrap works, the firm gets greedy, then damage —
+with nothing pulling the player from one chapter into the next. The arc had to settle what breaks,
+give each episode a turn, and revise episodes 1–2's lines without rewriting eleven jobs. It ships as
+23 story jobs across chapters 1–3 ([lore](../../design/world/lore.md) §Episodes).
+
+## Guidance
+
+**Put the arc on the seams, not every job.** Chapter 1 has no opener; job 1's receipt is Jim's
+introduction. The four beats that carry the arc are job 1's receipt, job 7's close (episode 1 → 2),
+chapter 2's opener, and 2-4's close (episode 2 → 3). The rest of the jobs keep their lines.
+
+**The damage is in the bodies.** The Wrap's entropy spend tears local spacetime; the tears show as
+anchored planets (the Wrap cannot change them) and repulsors (they push instead of pulling). The Wrap
+routes the delivery, it cannot mend a fused body. The anchored body is the guaranteed visible tell;
+the repulsor's raised lattice is the second if its gate passes. Whether the player's own Wraps caused
+it stays unspoken; Jim denies it.
+
+**Give the manual one register per chapter.** Chapter 1 is warm → corporate-bleak by job 7; chapter 2
+is complicit (the fleet, sold as green); chapter 3 is denial and liability (*DAMAGE CONTROL*). Do not
+replay cheerful → bleak inside chapter 1. The "eleven years" note moves to chapter 3's final manual
+entry; job 7 keeps the welcome and "There is still no office".
+
+**Episode 3 is *the damage*.** Its clients stay absurd; the sector audit is the frame. The six jobs
+and their clients/cargo live in [chapters](../../design/chapters.md) §Chapter 3.
+
+**The wire is keyed to solved counts.** `SectorWire.Key(solved)` clamps to `LineCount - 1`; inserting
+a job shifts every later line. Keep `SectorWire.LineCount` in step and re-check the tail when the
+chapter job counts lock. The story arc's 24 keys assume 23 jobs plus the boot line.
+
+**Only spoken keys need clips.** Client, cargo, manual, title, bulletin and wire strings are on
+screen, not TTS. Changing a spoken line in place keeps its key and leaves the old mp3; list every
+changed key and regenerate its clip. Renaming a key needs a new clip and the downloader list; do not
+leave a stale mp3.
+
+**Lines live in `Levels_en`; the sheet is a mirror.** If the line spreadsheet is still authoritative,
+mirror the strings before the next sync or the sync will overwrite the change.
+
+## Evidence
+
+- Arc and turns: [lore](../../design/world/lore.md) §Episodes, §Canon.
+- Episode and clients: [chapters](../../design/chapters.md) §Chapter 3,
+  [release](../../design/release.md) §Story arc.
+- Manual register and job 7 entry: [jobs](../../design/jobs.md) §The manual's arc.
+- Terms: [glossary](../../design/glossary.md) (anchor, repulsor, the damage).
+- Wire: `Assets/_Game/Features/PuzzleSelection/Domain/SectorWire.cs` (24 keys).
+- Lines: `Assets/_Game/Resources/Localization/Levels/Levels_en.asset`;
+  wire: `Assets/_Game/Resources/Localization/Global/Global_en.asset`.
+- Clips: `Assets/StreamingAssets/level_01_01_complete_03.mp3`,
+  `level_01_07_complete_05_laughing.mp3`, `level_02_04_complete_02_confused.mp3`.
+
+## Verification
+
+- `docs/check.ps1` passes; the plans board and all plan links are clean.
+- `DigitalLove.Game.PuzzleSelection.Tests.EditMode` passed 18/18 when the lines and wire changed.
+- The three clips were regenerated on 2026-11-25 (valid MPEG headers, new sizes).
+- The in-headset acceptance pass (the plan's five checks) is still part of the release timing pass.
+- At close, the in-progress fleet work had two red Creator tests
+  (`PuzzleFleetValidationTests`, "no fleet zone"); they are unrelated to this note.

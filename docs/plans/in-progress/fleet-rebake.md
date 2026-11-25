@@ -4,6 +4,8 @@
 tooling express a fleet and chapter 2, then rebake 2-1 to 2-3 with no sun answer.
 `PuzzleSunPlacement` / `OffCorridor` shipped (2026-11-20).
 
+**Bakes:** off the editor — U3 (scan and rebake 02_01–02_03) ([AGENTS](../../../AGENTS.md#bakes-run-off-the-editor), `docs/tools/bake.ps1`).
+
 **Related:** [plans board](../README.md) ·
 [fleet search](../../../Assets/_Modules/Docs~/solutions/architecture-patterns/editor-bakes-on-a-plain-snapshot.md)
 (built) ·
@@ -44,7 +46,9 @@ solution role is promised. 2-4 stays the sun job.
   ships from the rescue list, so they check a fresh set, not the saved one).
 - Start frame (safety net, not a known break; 02_01 agrees today): `CheckStartFrame` recomputes through
   `PuzzleStartFrame.Place`, while `PuzzleMultiShipBake.Frames` stores `zoneCentre`. Check that they
-  agree per fleet; if one does not, route `PuzzleMultiShipBake.Frames` through `PuzzleStartFrame.Place`.
+  agree per fleet. The routing of `PuzzleMultiShipBake.Frames` through `PuzzleStartFrame.Place` is
+  owned by [fleet Clear](../backlog/fleet-clear.md) U2; if a rebaked 02_01–02_03 disagrees, do that
+  change here and mark it done there.
 - Exit: under a test-local fleet contract, the validator rejects a solution where one ship misses and
   accepts today's 02_01 (two ships) with a zone that rescues both; fast suite green. 02_04 cannot be the
   fixture: it no longer solves under today's settings (no candidate zone rescues all three), so the

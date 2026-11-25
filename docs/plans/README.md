@@ -12,7 +12,9 @@ Store release: €4, 6 Dec, ~23 story jobs + 20 freelance; scope and schedule in
 ## Next
 
 - **27–30 Nov:** chapter 2 to ten jobs: [intro](backlog/chapter-2-intro.md) → [fleet Clear](backlog/fleet-clear.md) · [capstone](backlog/fleet-capstone.md) → [lines and wire](backlog/chapter-2-lines.md)
-- **1–3 Dec:** [chapter 3](backlog/chapter-3.md) (anchored bodies, repulsors and the ending)
+- **27 Nov–1 Dec, alongside chapter 2:** [broken bodies](backlog/broken-bodies.md) (anchors, then
+  repulsors; gate 1 Dec)
+- **1–3 Dec:** [chapter 3](backlog/chapter-3.md) (the jobs, lines and the ending)
 - **3–5 Dec:** [freelance](backlog/freelance.md) + timing pass, build, upload
 
 ## Later

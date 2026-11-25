@@ -3,6 +3,8 @@
 **Status:** next · flow · updated 2026-11-19 — 20 prebaked, hand-curated contracts, opened after the
 story as one extra system on the map.
 
+**Bakes:** off the editor — U1 (~40 candidates) ([AGENTS](../../../AGENTS.md#bakes-run-off-the-editor), `docs/tools/bake.ps1`).
+
 **Related:** [plans board](../README.md) · [release](../../design/release.md) ·
 [chapters](../../design/chapters.md#freelance-contracts-store-release)
 
