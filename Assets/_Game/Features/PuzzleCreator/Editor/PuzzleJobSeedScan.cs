@@ -29,7 +29,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 return entries;
 
             PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
-            PuzzleSeed seed = PuzzleTestSetBuilder.CreateSeed(job);
+            PuzzleSeed seed = job.CreateSeed();
             try
             {
                 for (int i = 0; i < count; i++)

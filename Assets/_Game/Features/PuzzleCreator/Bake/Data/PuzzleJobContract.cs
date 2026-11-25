@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public struct PuzzleJobContract
@@ -21,5 +23,29 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public bool NoGrade;
         public bool NoIntro;
         public bool GrowOnly;
+
+        // The one contract-to-seed mapping: the bake tests, the seed scan and the test set all bake
+        // from this, so a field added to the contract cannot be dropped by one of them.
+        public PuzzleSeed CreateSeed()
+        {
+            PuzzleSeed seed = ScriptableObject.CreateInstance<PuzzleSeed>();
+            seed.seed = Seed;
+            seed.planetCount = PlanetCount;
+            seed.fieldShape = FieldShape;
+            seed.hasSun = HasSun;
+            seed.sunRule = SunRule;
+            seed.sunOnChord = SunOnChord;
+            seed.mechanism = Mechanism;
+            seed.zones = Zones;
+            seed.minRoutes = MinRoutes;
+            seed.translatable = Translatable;
+            seed.startRule = StartRule;
+            seed.noFail = NoFail;
+            seed.noGrade = NoGrade;
+            seed.noIntro = NoIntro;
+            seed.growOnly = GrowOnly;
+            seed.resizable = false;
+            return seed;
+        }
     }
 }

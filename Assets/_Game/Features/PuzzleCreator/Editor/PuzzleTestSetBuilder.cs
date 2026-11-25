@@ -100,7 +100,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         private static PuzzleData BuildJob(PuzzleJobContract job, SpaceShapingSettings settings)
         {
-            PuzzleSeed seed = CreateSeed(job);
+            PuzzleSeed seed = job.CreateSeed();
             PuzzleSeedScanResult result = FindJob(job, settings, seed);
             Object.DestroyImmediate(seed);
 
@@ -118,28 +118,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 $"Test set: {job.Id} {result.Status} (seed {result.Seed}, {baked.zones} zone(s), " +
                 $"{result.Kind}) -> " + (saved != null ? "saved" : "MISSING"));
             return saved;
-        }
-
-        public static PuzzleSeed CreateSeed(PuzzleJobContract job)
-        {
-            PuzzleSeed seed = ScriptableObject.CreateInstance<PuzzleSeed>();
-            seed.seed = job.Seed;
-            seed.planetCount = job.PlanetCount;
-            seed.translatable = job.Translatable;
-            seed.startRule = job.StartRule;
-            seed.zones = job.Zones;
-            seed.minRoutes = job.MinRoutes;
-            seed.mechanism = job.Mechanism;
-            seed.hasSun = job.HasSun;
-            seed.sunRule = job.SunRule;
-            seed.sunOnChord = job.SunOnChord;
-            seed.noFail = job.NoFail;
-            seed.noGrade = job.NoGrade;
-            seed.noIntro = job.NoIntro;
-            seed.growOnly = job.GrowOnly;
-            seed.fieldShape = job.FieldShape;
-            seed.resizable = false;
-            return seed;
         }
 
         public static SpaceShapingSettings LoadSettings(string label)

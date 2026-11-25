@@ -11,7 +11,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         private const string SettingsPath =
             "Assets/_Game/Features/PuzzleCreator/Data/SpaceShapingSettings.asset";
 
-        private const string JobFolder = "Assets/_Game/Resources/Chapters/01";
+        private const string ChaptersFolder = "Assets/_Game/Resources/Chapters";
 
         [Test]
         [Explicit]
@@ -132,7 +132,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
         private static PuzzleData LoadShipped(PuzzleJobContract contract, List<string> failures)
         {
-            string path = $"{JobFolder}/Job_{contract.Id}_Puzzle.asset";
+            string chapter = contract.Id.Substring(0, contract.Id.IndexOf('_'));
+            string path = $"{ChaptersFolder}/{chapter}/Job_{contract.Id}_Puzzle.asset";
             PuzzleData puzzle = AssetDatabase.LoadAssetAtPath<PuzzleData>(path);
             if (puzzle == null)
                 failures.Add($"{contract.Id}: missing {path}");
@@ -141,7 +142,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
         private static PuzzleBrief Brief(PuzzleJobContract contract, SpaceShapingSettings settings)
         {
-            PuzzleSeed seed = Seed(contract);
+            PuzzleSeed seed = contract.CreateSeed();
             PuzzleBrief brief = PuzzleBrief.From(seed, settings);
             Object.DestroyImmediate(seed);
             return brief;
@@ -152,29 +153,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         {
             settings = AssetDatabase.LoadAssetAtPath<SpaceShapingSettings>(SettingsPath);
             Assert.IsNotNull(settings, SettingsPath);
-            seed = Seed(contract);
+            seed = contract.CreateSeed();
             return PuzzleSeedScanner.Find(seed, settings, contract.Attempts);
-        }
-
-        private static PuzzleSeed Seed(PuzzleJobContract contract)
-        {
-            PuzzleSeed seed = ScriptableObject.CreateInstance<PuzzleSeed>();
-            seed.seed = contract.Seed;
-            seed.planetCount = contract.PlanetCount;
-            seed.fieldShape = contract.FieldShape;
-            seed.hasSun = contract.HasSun;
-            seed.sunRule = contract.SunRule;
-            seed.sunOnChord = contract.SunOnChord;
-            seed.mechanism = contract.Mechanism;
-            seed.zones = contract.Zones;
-            seed.minRoutes = contract.MinRoutes;
-            seed.translatable = contract.Translatable;
-            seed.startRule = contract.StartRule;
-            seed.noFail = contract.NoFail;
-            seed.noGrade = contract.NoGrade;
-            seed.noIntro = contract.NoIntro;
-            seed.growOnly = contract.GrowOnly;
-            return seed;
         }
 
         private static void Cleanup(PuzzleSeedScanResult result, PuzzleSeed seed)

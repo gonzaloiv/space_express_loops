@@ -5,14 +5,15 @@ using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 {
-    // The checks a rebaked job must pass: the sun-answer tests and the whole job set against its
-    // contracts (an [Explicit] test, so it only runs when named). Runs them through the Test Runner and
+    // The checks a rebaked job must pass: the sun-answer tests, the saved assets against their contracts,
+    // and the whole job set baked from its contracts (an [Explicit] test, so it only runs when named). Runs them through the Test Runner and
     // keeps a one-line summary for the Job Baker.
     public sealed class PuzzleJobChecks : ICallbacks
     {
         private const string Tests = "DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode.";
         private const string SunAnswerClass = "^" + "DigitalLove\\.Game\\.SpaceShaping\\.Creator\\.Tests\\.EditMode\\.PuzzleSunAnswerTests\\.";
         private const string JobSetTest = Tests + "PuzzleJobBakeTests.JobSet_MeetsTheContract";
+        private const string ShippedJobsTest = Tests + "PuzzleJobBakeTests.ShippedJobs_MeetTheContract";
 
         private readonly StringBuilder failures = new();
         private TestRunnerApi api;
@@ -40,7 +41,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             api.RegisterCallbacks(this);
             api.Execute(new ExecutionSettings(
                 new Filter { testMode = TestMode.EditMode, groupNames = new[] { SunAnswerClass } },
-                new Filter { testMode = TestMode.EditMode, testNames = new[] { JobSetTest } }));
+                new Filter { testMode = TestMode.EditMode, testNames = new[] { JobSetTest, ShippedJobsTest } }));
             Changed?.Invoke();
         }
 
