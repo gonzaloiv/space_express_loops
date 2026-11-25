@@ -27,6 +27,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public bool NoIntro;
         public bool GrowOnly;
 
+        // Scramble bounds, each 0 = off. Low scramble: the solution's |scale - 1| stays at most
+        // MaxScaleDelta. High scramble: it is at least MinScaleDelta, and on a movable job the cube
+        // starts at least MinStartDistance from the solution zone. Checked at bake time against the
+        // baked answer, so ShippedJobs_MeetTheContract skips them.
+        public float MaxScaleDelta;
+        public float MinScaleDelta;
+        public float MinStartDistance;
+
         // The one contract-to-seed mapping: the bake tests, the seed scan and the test set all bake
         // from this, so a field added to the contract cannot be dropped by one of them.
         public PuzzleSeed CreateSeed()
