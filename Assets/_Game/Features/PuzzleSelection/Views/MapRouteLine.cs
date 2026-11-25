@@ -54,14 +54,14 @@ namespace DigitalLove.Game.PuzzleSelection
             PuzzleMap map, RunSlotView selected,
             ViewPool<RunSlotView> fields)
         {
-            points[map.SelectedIndex] = selected.SunMapPosition;
+            points[map.SelectedIndex] = selected.FieldMapPosition;
             fields.ForEachFrom(0, storeFieldPoint);
         }
 
         private void StoreFieldPoint(RunSlotView field)
         {
             if (field.MapIndex >= 0 && field.MapIndex < points.Length)
-                points[field.MapIndex] = field.SunMapPosition;
+                points[field.MapIndex] = field.FieldMapPosition;
         }
 
         private void DrawSegment(int index, int end, MapFade fade, float weight)

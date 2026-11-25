@@ -117,7 +117,7 @@ namespace DigitalLove.Game.PuzzleSelection
             tint.Reset();
             fieldView.Render(map);
             pose.SetPose(Focus);
-            mapCube.Show(SunFocus, map.CanEnter);
+            mapCube.Show(FieldFocus, map.CanEnter);
             lastCubePosition = mapCube.Position;
             pose.SetReach(1f);
         }
@@ -237,12 +237,12 @@ namespace DigitalLove.Game.PuzzleSelection
             if (changed)
                 SelectionChanged?.Invoke();
 
-            selection.Snap(SunFocus);
+            selection.Snap(FieldFocus);
             lastCubePosition = mapCube.Position;
         }
 
         private Vector3 Focus => map.Position(map.SelectedIndex);
 
-        private Vector3 SunFocus => selectedSlot.SunMapPosition;
+        private Vector3 FieldFocus => selectedSlot.FieldMapPosition;
     }
 }

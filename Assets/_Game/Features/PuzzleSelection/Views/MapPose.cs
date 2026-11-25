@@ -46,17 +46,17 @@ namespace DigitalLove.Game.PuzzleSelection
             mapRoot.localPosition = Vector3.zero;
         }
 
-        // Entering slides the map until the selected sun sits where the job's field opens, so the
+        // Entering slides the map until the selected field sits where the job's field opens, so the
         // growing diorama lands on the puzzle instead of jumping to it. t is 0 at rest, 1 entered.
         public void SlideToSelected(float t)
         {
-            Vector3 selected = -Vector3.Scale(mapRoot.localScale, selectedSlot.SunMapPosition);
+            Vector3 selected = -Vector3.Scale(mapRoot.localScale, selectedSlot.FieldMapPosition);
             mapRoot.localPosition = Vector3.Lerp(Vector3.zero, selected, Mathf.SmoothStep(0f, 1f, t));
         }
 
         public void PlaceSelected(Vector3 node)
         {
-            selectedSlot.PlaceSunAt(node);
+            selectedSlot.PlaceAt(node);
             ApplyFade();
         }
 

@@ -16,7 +16,7 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField, Range(0f, 1f)] private float lockedDim = 0.65f;
         [Tooltip("How far a job that is not selected greys its planets; its sun stays lit.")]
         [SerializeField, Range(0f, 1f)] private float backgroundDim = 0.6f;
-        [Tooltip("Height of the job's tag (number and stars) over the sun, in this slot's space.")]
+        [Tooltip("Height of the job's tag (number and stars) over the field, in this slot's space.")]
         [FormerlySerializedAs("starsAboveSun")]
         [SerializeField, Min(0f)] private float tagAboveSun = 0.03f;
 
@@ -31,10 +31,16 @@ namespace DigitalLove.Game.PuzzleSelection
         private bool tagged;
         private bool breathe;
 
-        // The sun in the map's space (this slot's parent).
-        public Vector3 SunMapPosition =>
-            transform.parent.InverseTransformPoint(diorama.SunWorldPosition);
+        // The field's centre in the map's space (this slot's parent). A centred system keeps the sun
+        // as its centre; an edge-sun system uses the slot's visual centre.
+        public Vector3 FieldMapPosition =>
+            renderedPuzzle != null && renderedPuzzle.HasCentredSun()
+                ? SunMapPosition
+                : transform.localPosition;
         public int MapIndex { get; private set; } = -1;
+
+        private Vector3 SunMapPosition =>
+            transform.parent.InverseTransformPoint(diorama.SunWorldPosition);
 
         // The tag fades with the planets: full near the cube, gone where they are culled.
         public void SetMapFade(Vector3 focus, float near, float far)
@@ -88,14 +94,16 @@ namespace DigitalLove.Game.PuzzleSelection
             diorama.transform.localScale = Vector3.one * breath;
         }
 
-        // The tag rides over the sun through the breath and the enter pinch.
+        // The tag rides over the field's centre through the breath and the enter pinch.
         private void LateUpdate()
         {
             if (!tagged || culled)
                 return;
 
-            jobTag.transform.position =
-                diorama.SunWorldPosition + transform.TransformVector(Vector3.up * tagAboveSun);
+            Vector3 field = renderedPuzzle != null && renderedPuzzle.HasCentredSun()
+                ? diorama.SunWorldPosition
+                : transform.position;
+            jobTag.transform.position = field + transform.TransformVector(Vector3.up * tagAboveSun);
         }
 
         // Every job carries its tag (faded by distance from the cube), stars unlit until earned; only
@@ -129,10 +137,13 @@ namespace DigitalLove.Game.PuzzleSelection
             diorama.SetStateDim(selected ? stateDim : Mathf.Max(stateDim, backgroundDim), stateDim);
         }
 
-        // Every sun sits at its node's height, so the map cube slides on one level over all jobs.
-        public void PlaceSunAt(Vector3 node)
+        // Every field sits at its node, so the map cube slides on one level over all jobs.
+        public void PlaceAt(Vector3 node)
         {
             transform.localPosition = node;
+            if (renderedPuzzle == null || !renderedPuzzle.HasCentredSun())
+                return;
+
             transform.localPosition += Vector3.up * (node.y - SunMapPosition.y);
         }
 
@@ -141,10 +152,13 @@ namespace DigitalLove.Game.PuzzleSelection
             StopRefusal();
             float zoom = Mathf.Max(scale, 0f);
             visualRoot.localScale = homeVisualScale * zoom;
-            visualRoot.localPosition = SunLocalAtRest() * (1f - zoom);
+            visualRoot.localPosition =
+                renderedPuzzle != null && renderedPuzzle.HasCentredSun()
+                    ? SunLocalAtRest() * (1f - zoom)
+                    : Vector3.zero;
         }
 
-        // The diorama grows around its sun, not the slot's origin, so the sun holds its node
+        // A centred system grows around its sun, not the slot's origin, so the sun holds its node
         // while the field scales up to enter.
         private Vector3 SunLocalAtRest()
         {

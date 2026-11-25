@@ -91,7 +91,7 @@ namespace DigitalLove.Game.PuzzleSelection
                 JobEntry entry = map[i];
                 RunSlotView field = fields.EnsureSlot(slot++);
                 field.ShowMapField(entry, tint.For(entry.State), showFrames, false);
-                field.PlaceSunAt(map.Position(i));
+                field.PlaceAt(map.Position(i));
                 if (entry.State == JobState.Current && i == highest)
                     CurrentSlot = field;
             }

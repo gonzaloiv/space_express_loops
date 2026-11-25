@@ -3,7 +3,7 @@ using UnityEngine;
 namespace DigitalLove.Game.PuzzleSelection
 {
     // The selection cube's snap-and-select pass: a drag previews the nearest node, a new node is
-    // selected, and the cube snaps back to the selected sun.
+    // selected, and the cube snaps back to the selected field.
     internal sealed class MapCubeSelection
     {
         private readonly MapCube cube;
@@ -33,9 +33,9 @@ namespace DigitalLove.Game.PuzzleSelection
             return false;
         }
 
-        public void Snap(Vector3 sunFocus)
+        public void Snap(Vector3 fieldFocus)
         {
-            cube.SnapTo(sunFocus);
+            cube.SnapTo(fieldFocus);
             pose.ApplyFade();
         }
 

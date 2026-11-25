@@ -106,7 +106,7 @@ job 1 carries a sun that the cube does not cover.)
 | 1 | no (`noFail`, unlimited spend) | no (`noGrade`) | no (`noIntro`) |
 | 2 | yes | no (`noGrade`) | yes |
 | 3–7 | yes | yes | yes |
-| intro 1–2, 2-1 – 2-4 | yes | yes | yes |
+| intro 1–2 (02_09, 02_10), 2-1 – 2-4 | yes | yes | yes |
 
 Job 1 bakes from a normal seed — six planets and a sun the cube does not cover, one fixed zone — and still records a reference
 solution, so the budget rule holds ([core loop](core-loop.md) §3). The lesson is the cube's scale, not a
@@ -260,8 +260,8 @@ stay absurd; the greed is in Jim's opener and receipts, and the manual's fine pr
 
 | # | Client | Cargo | Manual entry |
 |---|---|---|---|
-| intro 1 | Twin Moons Catering | two dinners, one kitchen | "Two ships, one origin. Bend near the start; both paths turn. Meals may swap." |
-| intro 2 | Two Rival Bakeries | two cakes, one feud | "One cube between two runs. Both ships share the bend; the feud is not our problem." |
+| intro 1 (02_09) | Twin Moons Catering | two dinners, one kitchen | "Two ships, one origin; bend near the start. Out here the star sits at the edge." |
+| intro 2 (02_10) | Two Rival Bakeries | two cakes, one feud | "One cube between two runs. Both ships share the bend; the feud is not our problem." |
 | 2-1 | Halfmoon & Halfmoon | two identical parcels | "Two ships, one budget. Extra ships do not raise your allowance. This is a feature." |
 | 2-2 | Slightly Used Stars Ltd. | two secondhand fusion cores (slightly dimmed) | "One origin, two promises: bend near the start. Shared failures are billed twice." |
 | 2-3 | The Last Two Customers | two halves of a gift | "Fix the shared approach once. Our Space Corp values every customer. Both of them." |

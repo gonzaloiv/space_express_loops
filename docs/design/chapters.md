@@ -45,10 +45,11 @@ No new verb. The ramp restarts: low scramble, Ring shape.
 | 2-5 | **Fleet capstone** | movable · 3 ships · fan-out | 12 + sun · Cluster · high scramble | Placement, shared paths and the field across every ship. |
 | 2-6 to 2-8 | **Clear with a fleet** | movable · 2 ships | + sun · Clear answer | One obstacle in more than one ship's path: one blocker → among decoys → two blockers. |
 
-**Every system keeps a star** (decided 2026-11-26): every chapter 2 job has a sun at the centre
-of its system, never the answer (`Centre`, `NoSunAnswer`; an off-corridor sun floated above the field). The map anchors each job on its
-sun, and a starless system would read as a gap; dark systems on purpose are an idea
-([later chapters](../ideas/later-chapters.md) §Other options).
+**Every system keeps a star** (decided 2026-11-26): chapter 1 and 2-4 keep the sun at the system's
+centre; the rest of chapter 2 puts it at the edge, level with the planets, never the answer
+(`SunPlacement`, `NoSunAnswer`; an off-corridor sun floated above the field before 2026-11-26). The map
+anchors each job on its system's centre, not its star, and a starless system would read as a gap; dark
+systems on purpose are an idea ([later chapters](../ideas/later-chapters.md) §Other options).
 
 The intro jobs play before 2-1; 2-1 to 2-4 keep their ids, and new jobs take the next free ids
 ([chapter 2 intro](../plans/in-progress/chapter-2-intro.md) and the plans after it). Multi-ship bakes need ≥ 9 planets, use
