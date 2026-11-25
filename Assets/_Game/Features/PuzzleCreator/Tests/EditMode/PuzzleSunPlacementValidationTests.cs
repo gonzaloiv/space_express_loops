@@ -24,7 +24,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleData puzzle = Puzzle(Sun(Vector3.zero));
 
             Assert.IsFalse(Validate(puzzle, OffCorridor()));
-            Assert.That(failures, Does.Contain("sun placement OffCorridor"));
+            Assert.That(failures, Has.Some.StartsWith("sun placement OffCorridor"));
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleData puzzle = Puzzle(Sun(new Vector3(2f, 0.4f, 0f)));
 
             Assert.IsFalse(Validate(puzzle, OffCorridor()));
-            Assert.That(failures, Does.Contain("sun placement OffCorridor"));
+            Assert.That(failures, Has.Some.StartsWith("sun placement OffCorridor"));
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
                 SunRule = PuzzleSunRule.Any, MinBlockers = 1,
                 Mechanism = PuzzleMechanism.Curve, Zones = 1, MinRoutes = 1,
             }));
-            Assert.That(failures, Does.Contain("sun placement Centre"));
+            Assert.That(failures, Has.Some.StartsWith("sun placement Centre"));
         }
 
         private bool Validate(PuzzleData puzzle, PuzzleJobContract contract)
