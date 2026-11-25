@@ -102,7 +102,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             // baked answer's |scale - 1|; tune it by playing.
             new PuzzleJobContract
             {
-                Id = "02_09", Seed = 7, Attempts = 1, PlanetCount = 9,
+                Id = "02_09", Seed = 19, Attempts = 1, PlanetCount = 9,
                 FieldShape = PuzzleFieldShape.Ring,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
