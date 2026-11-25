@@ -12,9 +12,12 @@ A plan is **one sitting of work**, not a roadmap. Keep it to what one agent can 
   morning.
 - **The board stays small.** A plan that has outgrown its shape moves to its own plan; it does not keep
   growing in place.
-- **Done plans are removed.** When a plan lands, delete its file and its board row; the code and tests
-  are the record. Do not archive it in a `done/` folder.
-- **Close with a post-mortem.** Before deleting a plan, add a few lines to
+- **Do not close a plan on your own.** Finishing the units, passing checks, or completing a manual
+  checklist is not permission to write the solution note, delete the plan, or update the board. Keep it
+  in `docs/plans/in-progress/` and report what remains until the user explicitly says to close it.
+- **Closing is explicit.** When the user says to close a plan, delete its file and board row; the code
+  and tests are the record. Do not archive it in a `done/` folder.
+- **When the user closes a plan, write the post-mortem.** Before deleting it, add a few lines to
   [`docs/lessons.md`](docs/lessons.md): what worked, what surprised us, and the rule for next time.
   Three to six bullets, one idea each, no history of the work. If a lesson changes how we build, also
   put it where it applies (this file, a design doc, a standard). This is required with or without
@@ -31,9 +34,9 @@ plan or the code, apply it in the same change and say so in the chat.
 ## Commits at unit and plan completion
 
 When a plan unit's exit is met and the automated checks pass — stage only that unit's files and make a
-local commit; report the hash. When the whole plan is finished — every unit and exit implemented and
-the checks pass — make the plan-completion commit as the final step. Do not push; the user still owns
-push and PR. If the work spans a submodule, commit the submodule first, then the parent pointer. Leave
+local commit; report the hash. When the user explicitly closes the plan and every unit and exit is
+implemented and the checks pass — make the plan-completion commit as the final step. Do not push; the
+user still owns push and PR. If the work spans a submodule, commit the submodule first, then the parent pointer. Leave
 unrelated worktree changes uncommitted.
 
 ## No internal APIs
@@ -106,6 +109,24 @@ Organize first-party code into folders that describe what it does, so the tree r
 - Prefer a descriptive folder over name prefixes or a flat dump of files.
 - When moving files, move the `.meta` too; keep GUIDs (never re-create assets).
 - Skip `**/Vendor/**`, `**/Samples/**`, and `**/Plugins/**`.
+
+## Bakes run off the editor
+
+Seed scans and level bakes take minutes and lock Unity. Never run them in the main editor or through
+the Unity MCP.
+
+- Run them in the bake checkout (`../our_space_bake`, branch `bake`) with
+  [`docs/tools/bake.ps1`](docs/tools/bake.ps1): `-Job <id> -Mode scan -Seeds <n>` to scan,
+  `-Mode bake` to save the pinned seed. Batch mode calls `PuzzleBatchBake`, which uses the synchronous
+  bake paths (`FleetSearchRun` needs `EditorApplication.update`, which does not tick in batch mode).
+- Commit the bake code first and merge it into `bake`; the checkout only sees committed code.
+- Baked assets come back through git: commit them on `bake`, then merge or cherry-pick. Never copy
+  `.asset`/`.meta` files by hand.
+- One Unity per checkout. To run two bakes at once, add a second worktree; meanwhile keep working in
+  the main editor.
+- The bake-heavy test suite and the shipped-asset checks for fleets run in the bake checkout too
+  (`-runTests -testFilter <name>`).
+- A plan that bakes says so under its title: `**Bakes:** off the editor — <which units>`.
 
 ## Tests — pick the suite, do not launch everything
 
