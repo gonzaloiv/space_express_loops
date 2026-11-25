@@ -15,26 +15,26 @@ MonoBehaviour:
   id: 02_02
   prefab: {fileID: 0}
   origin: {x: -0.13885772, y: -0.094173804, z: 0.1121102}
-  destination: {x: 0.043729667, y: 0.05732346, z: 0.29159254}
-  zoneCentre: {x: 0.009656362, y: -0.018425172, z: -0.006441176}
+  destination: {x: 0.19741304, y: 0.15756977, z: -0.0047600735}
+  zoneCentre: {x: 0.02927766, y: 0.03169798, z: 0.14341623}
   cubeSizeMin: 0.022
   cubeSizeMax: 0.1286583
   frames:
-  - centre: {x: 0.009656362, y: -0.018425172, z: -0.006441176}
+  - centre: {x: 0.02927766, y: 0.03169798, z: 0.14341623}
     size: 0.1286583
-  captureRadius: 0.016257325
+  captureRadius: 0.01827144
   translatable: 1
   zones: 1
   routes: 1
   resizable: 0
   growOnly: 0
-  entropyBudget: 1.1999999
+  entropyBudget: 0.60000014
   noFail: 0
   noGrade: 0
   noIntro: 0
   goalLineKey: 
   sources:
-  - home: {x: 0.23459534, y: -0.41661525, z: 0.12329575}
+  - home: {x: -0.38908583, y: 0.15756977, z: -0.2599789}
     scale: 0.12
     name: cestragua
     fixedMass: 0
@@ -101,8 +101,8 @@ MonoBehaviour:
     centreOnly: 0
   ships:
   - origin: {x: -0.13885772, y: -0.094173804, z: 0.1121102}
+    destination: {x: 0.19741304, y: 0.15756977, z: -0.0047600735}
+    captureRadius: 0.01827144
+  - origin: {x: -0.13885772, y: -0.094173804, z: 0.1121102}
     destination: {x: 0.043729667, y: 0.05732346, z: 0.29159254}
     captureRadius: 0.016257325
-  - origin: {x: -0.13885772, y: -0.094173804, z: 0.1121102}
-    destination: {x: 0.15817045, y: 0.007861716, z: -0.3044749}
-    captureRadius: 0.04375578
