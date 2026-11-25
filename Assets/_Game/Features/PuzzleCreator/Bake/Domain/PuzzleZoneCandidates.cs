@@ -14,39 +14,21 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private const int MaxCentres = 8;
         private const float MergeDistance = 0.0001f;
 
-        public static Vector3[] Centres(PuzzleData puzzle, float maxCubeSize)
-        {
-            List<Vector3> centres = new();
-            AddSources(centres, puzzle.sources);
-            AddPairs(centres, puzzle.sources, maxCubeSize);
-            centres.Sort((a, b) => RunDistance(a, puzzle).CompareTo(RunDistance(b, puzzle)));
-            return Trim(centres, MaxCentres);
-        }
+        public static Vector3[] Centres(PuzzleData puzzle, float maxCubeSize) =>
+            Centres(puzzle.sources, puzzle.origin, puzzle.destination, maxCubeSize);
+
+        public static Vector3[] Centres(FleetField field, float maxCubeSize) =>
+            Centres(field.Sources, field.Origin, field.Destination, maxCubeSize);
 
         // A zone only counts if it covers a scaleable source: a planet's centre must sit inside the zone
         // and the zone must enclose its body with a margin, so the cube reads as wrapping the planet. The
         // sun is centre-only — a cube over its centre scales it without needing to enclose the star. A
         // fixed source is skipped: it never scales, so it must not demand a star-sized cube.
-        public static bool CoversSource(PuzzleZone zone, PuzzleData puzzle)
-        {
-            bool covered = false;
-            for (int i = 0; i < puzzle.sources.Length; i++)
-            {
-                if (puzzle.sources[i].fixedMass)
-                    continue;
+        public static bool CoversSource(PuzzleZone zone, PuzzleData puzzle) =>
+            CoversSource(zone, puzzle.sources);
 
-                if (!zone.Contains(puzzle.sources[i].home))
-                    continue;
-
-                if (!puzzle.sources[i].centreOnly
-                    && zone.Extent < puzzle.sources[i].scale * 0.5f * PlanetMargin)
-                    return false;
-
-                covered = true;
-            }
-
-            return covered;
-        }
+        public static bool CoversSource(PuzzleZone zone, FleetField field) =>
+            CoversSource(zone, field.Sources);
 
         // Every ship's endpoints, the same rule the cube enforces at runtime.
         public static bool ContainsEndpoint(PuzzleZone zone, PuzzleData puzzle)
@@ -61,19 +43,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return false;
         }
 
-        public static float[] Sizes(PuzzleData puzzle)
-        {
-            float min = Mathf.Max(puzzle.cubeSizeMin, 0.01f);
-            float max = Mathf.Max(puzzle.cubeSizeMax, min);
-            if (max - min < MergeDistance)
-                return new[] { min };
+        public static float[] Sizes(PuzzleData puzzle) =>
+            Sizes(puzzle.cubeSizeMin, puzzle.cubeSizeMax);
 
-            float[] sizes = new float[SizeSamples];
-            for (int i = 0; i < sizes.Length; i++)
-                sizes[i] = Mathf.Lerp(min, max, i / (float)(sizes.Length - 1));
-
-            return sizes;
-        }
+        public static float[] Sizes(FleetField field) =>
+            Sizes(field.CubeSizeMin, field.CubeSizeMax);
 
         public static float[] Scales(PuzzleSimSettings settings, int count)
         {
@@ -112,6 +86,52 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public static List<PuzzleZone> Build(
             Vector3 centre, float[] sizes, float[] scales, float falloff) =>
             Build(new[] { centre }, sizes, scales, falloff);
+
+        private static Vector3[] Centres(
+            PuzzleSource[] sources, Vector3 origin, Vector3 destination, float maxCubeSize)
+        {
+            List<Vector3> centres = new();
+            AddSources(centres, sources);
+            AddPairs(centres, sources, maxCubeSize);
+            centres.Sort((a, b) => RunDistance(a, origin, destination)
+                .CompareTo(RunDistance(b, origin, destination)));
+            return Trim(centres, MaxCentres);
+        }
+
+        private static bool CoversSource(PuzzleZone zone, PuzzleSource[] sources)
+        {
+            bool covered = false;
+            for (int i = 0; i < sources.Length; i++)
+            {
+                if (sources[i].fixedMass)
+                    continue;
+
+                if (!zone.Contains(sources[i].home))
+                    continue;
+
+                if (!sources[i].centreOnly
+                    && zone.Extent < sources[i].scale * 0.5f * PlanetMargin)
+                    return false;
+
+                covered = true;
+            }
+
+            return covered;
+        }
+
+        private static float[] Sizes(float minSize, float maxSize)
+        {
+            float min = Mathf.Max(minSize, 0.01f);
+            float max = Mathf.Max(maxSize, min);
+            if (max - min < MergeDistance)
+                return new[] { min };
+
+            float[] sizes = new float[SizeSamples];
+            for (int i = 0; i < sizes.Length; i++)
+                sizes[i] = Mathf.Lerp(min, max, i / (float)(sizes.Length - 1));
+
+            return sizes;
+        }
 
         private static void AddSources(List<Vector3> centres, PuzzleSource[] sources)
         {
@@ -157,8 +177,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             centres.Add(centre);
         }
 
-        private static float RunDistance(Vector3 centre, PuzzleData puzzle) =>
-            PuzzleRunGeometry.DistanceToSegment(centre, puzzle.origin, puzzle.destination);
+        private static float RunDistance(Vector3 centre, Vector3 origin, Vector3 destination) =>
+            PuzzleRunGeometry.DistanceToSegment(centre, origin, destination);
 
         private static Vector3[] Trim(List<Vector3> centres, int max)
         {

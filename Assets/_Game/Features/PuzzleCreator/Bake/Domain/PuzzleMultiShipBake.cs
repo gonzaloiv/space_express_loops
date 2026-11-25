@@ -12,39 +12,25 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public static PuzzleMultiShipResult Bake(
             PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief)
         {
-            if (!brief.IsMulti)
-                return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.UnsupportedBrief };
-
-            if (brief.Mechanism != PuzzleMechanism.Any)
-                return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.UnsupportedMechanism };
-
-            PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
-            if (!PuzzleFieldBake.Apply(brief, field, planets, settings))
-            {
-                Object.DestroyImmediate(field);
-                return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.NoRun };
-            }
-
-            PuzzleMultiShipResult result = BakeField(field, settings, brief);
-            Object.DestroyImmediate(field);
+            PuzzleMultiShipSearch search = PuzzleMultiShipSearch.Prepare(planets, settings, brief, 0);
+            PuzzleMultiShipResult result = search.Confirm(search.Run());
+            search.Dispose();
             return result;
         }
 
-        private static PuzzleMultiShipResult BakeField(
-            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief)
+        // The seam the background search hands back to: the zone and runs came off the editor thread,
+        // and this main-thread step selects the ships, re-checks the rescue and builds the variant.
+        public static PuzzleMultiShipResult ConfirmZone(
+            PuzzleData field, FleetField fleet, FleetZoneResult found, PuzzleBrief brief)
         {
-            PuzzleMultiShipProbe probe = new(field, settings, brief);
-            if (!probe.Find(out PuzzleZone zone, out List<PuzzleShipRescue> rescued))
+            PuzzleShip[] ships = Select(fleet, found.Rescued, brief);
+            if (ships == null || !found.Scan.Rescues(found.Zone, ships))
                 return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.NoSolution };
 
-            PuzzleShip[] ships = Select(field, rescued, brief);
-            if (ships == null || !probe.Scan.Rescues(zone, ships))
-                return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.NoSolution };
-
-            if (!StartFrameClear(zone, ships))
+            if (!StartFrameClear(found.Zone, ships))
                 return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.StartCoversEndpoint };
 
-            return Confirm(field, settings, brief, zone, ships);
+            return Confirm(field, fleet.Settings, brief, found.Zone, ships);
         }
 
         // The movable start frame is the cube at the ships' bounding-box centre, so it must keep
@@ -97,7 +83,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         }
 
         // Take the first runs the brief's relation allows between every pair of ships.
-        private static PuzzleShip[] Select(PuzzleData field, List<PuzzleShipRescue> rescued, PuzzleBrief brief)
+        private static PuzzleShip[] Select(
+            FleetField fleet, List<PuzzleShipRescue> rescued, PuzzleBrief brief)
         {
             PuzzleShip[] ships = new PuzzleShip[brief.Ships];
             int taken = 0;
@@ -110,7 +97,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 {
                     origin = rescued[i].Origin,
                     destination = rescued[i].Destination,
-                    captureRadius = field.CaptureRadiusAt(rescued[i].Destination)
+                    captureRadius = fleet.CaptureRadiusAt(rescued[i].Destination)
                 };
                 taken++;
             }

@@ -13,6 +13,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         private string scannedId;
         private int contractSeed;
         private List<PuzzleJobSeedScan.Entry> scan;
+        private FleetSearchRun fleet;
         private Vector2 scroll;
         private PuzzleJobChecks checks;
 
@@ -38,12 +39,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             EditorGUILayout.LabelField("Chapter 01 jobs", EditorStyles.boldLabel);
             scanCount = EditorGUILayout.IntSlider("Seeds per scan", scanCount, 1, 1000);
             IReadOnlyList<PuzzleJobContract> jobs = PuzzleJobContracts.Enabled;
-            for (int i = 0; i < jobs.Count; i++)
-                DrawJob(jobs[i]);
+            using (new EditorGUI.DisabledScope(FleetSearchRun.IsRunning))
+            {
+                for (int i = 0; i < jobs.Count; i++)
+                    DrawJob(jobs[i]);
 
-            EditorGUILayout.Space();
-            if (GUILayout.Button("Bake all"))
-                PuzzleTestSetBuilder.Build();
+                EditorGUILayout.Space();
+                if (GUILayout.Button("Bake all"))
+                    PuzzleTestSetBuilder.Build();
+            }
 
             DrawChecks();
             DrawScan();
@@ -80,7 +84,46 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         {
             scannedId = job.Id;
             contractSeed = job.Seed;
-            scan = PuzzleJobSeedScan.Scan(job, scanCount);
+            scan = null;
+            if (FleetSearchRun.IsRunning)
+            {
+                Debug.LogWarning("Job baker: a fleet search is already running.");
+                return;
+            }
+
+            if (!IsFleet(job))
+            {
+                scan = PuzzleJobSeedScan.Scan(job, scanCount);
+                return;
+            }
+
+            fleet = PuzzleJobSeedScan.ScanFleetAsync(job, scanCount, OnFleetScan);
+        }
+
+        // A fleet contract is one whose seed bakes more than one ship; until the contract carries ships
+        // this is false, so the synchronous path stays for chapter 01.
+        private static bool IsFleet(PuzzleJobContract job)
+        {
+            SpaceShapingSettings settings = PuzzleTestSetBuilder.LoadSettings("Seed scan");
+            if (settings == null)
+                return false;
+
+            PuzzleSeed seed = job.CreateSeed();
+            bool multi = PuzzleBrief.From(seed, settings).IsMulti;
+            Object.DestroyImmediate(seed);
+            return multi;
+        }
+
+        private void OnFleetScan(List<PuzzleJobSeedScan.Entry> entries)
+        {
+            fleet = null;
+            scan = entries;
+            Repaint();
+        }
+
+        private void OnDisable()
+        {
+            fleet?.Cancel();
         }
 
         // The window is the run of arriving scales around the solution, as a share of the scale range:
@@ -88,6 +131,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         // Seed, then Bake. ✗ seeds bake but break a contract rule, named after the dash.
         private void DrawScan()
         {
+            if (fleet != null)
+            {
+                EditorGUILayout.Space();
+                EditorGUILayout.LabelField(
+                    $"Scanning {scannedId}: {fleet.SeedsDone}/{fleet.SeedsTotal} seeds · " +
+                    $"{fleet.ZonesDone} zones", EditorStyles.boldLabel);
+                if (GUILayout.Button("Cancel scan"))
+                    fleet.Cancel();
+                return;
+            }
+
             if (scan == null)
                 return;
 

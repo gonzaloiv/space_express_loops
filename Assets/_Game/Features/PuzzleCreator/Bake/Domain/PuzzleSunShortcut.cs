@@ -18,13 +18,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private readonly bool hasSun;
         private readonly Dictionary<float, List<PuzzleShipRescue>> bySize = new();
 
-        public PuzzleSunShortcut(
-            PuzzleData field, PuzzleSimSettings settings, PuzzleShipScan scan, float[] scales)
+        public PuzzleSunShortcut(FleetField fleet, PuzzleShipScan scan, float[] scales)
         {
             this.scan = scan;
-            this.settings = settings;
+            settings = fleet.Settings;
             this.scales = scales;
-            hasSun = TryFindSun(field, out sun);
+            hasSun = TryFindSun(fleet.Sources, out sun);
         }
 
         public bool Covers(PuzzleZone zone) => hasSun && zone.Contains(sun);
@@ -65,18 +64,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return false;
         }
 
-        private static bool TryFindSun(PuzzleData field, out Vector3 sun)
+        private static bool TryFindSun(PuzzleSource[] sources, out Vector3 sun)
         {
             sun = Vector3.zero;
-            if (field.sources == null)
+            if (sources == null)
                 return false;
 
-            for (int i = 0; i < field.sources.Length; i++)
+            for (int i = 0; i < sources.Length; i++)
             {
-                if (!field.sources[i].centreOnly)
+                if (!sources[i].centreOnly)
                     continue;
 
-                sun = field.sources[i].home;
+                sun = sources[i].home;
                 return true;
             }
 

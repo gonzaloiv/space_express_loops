@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Creator
@@ -8,7 +9,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private const int ScaleSamples = 13;
 
         private readonly PuzzleShipScan scan;
-        private readonly PuzzleData field;
+        private readonly FleetField fleet;
         private readonly PuzzleSimSettings settings;
         private readonly float[] scales;
         private readonly int required;
@@ -16,55 +17,48 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private readonly PuzzleSunShortcut sunShortcut;
 
         public PuzzleMultiShipProbe(PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief)
+            : this(FleetField.From(field, settings), brief)
         {
-            this.field = field;
-            this.settings = settings;
-            required = brief.Ships;
-            relation = brief.Relation;
-            scan = new PuzzleShipScan(field, settings, 0f);
-            scales = Linear(settings, ScaleSamples);
-            if (brief.SunRule == PuzzleSunRule.NoSunAnswer)
-                sunShortcut = new PuzzleSunShortcut(field, settings, scan, scales);
         }
 
-        public PuzzleShipScan Scan => scan;
+        // The snapshot path: the whole probe runs on plain data, so it is safe off the editor thread.
+        public PuzzleMultiShipProbe(FleetField fleet, PuzzleBrief brief)
+        {
+            this.fleet = fleet;
+            settings = fleet.Settings;
+            required = brief.Ships;
+            relation = brief.Relation;
+            scan = new PuzzleShipScan(fleet, 0f);
+            scales = Linear(settings, ScaleSamples);
+            if (brief.SunRule == PuzzleSunRule.NoSunAnswer)
+                sunShortcut = new PuzzleSunShortcut(fleet, scan, scales);
+        }
 
-        public bool Find(out PuzzleZone zone, out List<PuzzleShipRescue> rescued)
+        // Cancels between candidate zones, so a stopped search returns within one zone's work. onZone
+        // fires per zone for the searching window's progress.
+        public FleetZoneResult Find(CancellationToken token = default, System.Action onZone = null)
         {
             Candidate best = default;
-            Vector3[] centres = PuzzleZoneCandidates.Centres(field, field.cubeSizeMax);
-            float[] sizes = PuzzleZoneCandidates.Sizes(field);
+            Vector3[] centres = PuzzleZoneCandidates.Centres(fleet, fleet.CubeSizeMax);
+            float[] sizes = PuzzleZoneCandidates.Sizes(fleet);
 
             // Largest size first: the cube does not resize, so on a tie the biggest cube that rescues
             // every ship ships, like the single-ship jobs' full-size cube.
-            for (int c = 0; c < centres.Length; c++)
+            for (int c = 0; c < centres.Length && !token.IsCancellationRequested; c++)
             {
-                for (int s = sizes.Length - 1; s >= 0; s--)
-                    Consider(centres[c], sizes[s], ref best);
+                for (int s = sizes.Length - 1; s >= 0 && !token.IsCancellationRequested; s--)
+                    Consider(centres[c], sizes[s], token, onZone, ref best);
             }
 
-            zone = best.Zone;
-            rescued = best.Rescued;
-            return best.Count >= required;
+            return new FleetZoneResult(best.Count >= required, best.Zone, best.Rescued, scan);
         }
 
-        private void Consider(Vector3 centre, float size, ref Candidate best)
+        private void Consider(
+            Vector3 centre, float size, CancellationToken token, System.Action onZone, ref Candidate best)
         {
             List<PuzzleZone> zones = PuzzleZoneCandidates.Build(
                 centre, new[] { size }, scales, settings.ZoneFalloff);
-            List<PuzzleShipRescue>[] row = new List<PuzzleShipRescue>[zones.Count];
-            for (int k = 0; k < zones.Count; k++)
-            {
-                if (!PuzzleZoneCandidates.CoversSource(zones[k], field))
-                    continue;
-
-                if (sunShortcut != null && sunShortcut.Covers(zones[k]))
-                    continue;
-
-                row[k] = scan.RescuedFixed(zones[k]);
-                sunShortcut?.RemoveFrom(row[k], size);
-            }
-
+            List<PuzzleShipRescue>[] row = Row(zones, size, token, onZone);
             for (int k = 0; k < row.Length; k++)
             {
                 if (!Plateau(row, k))
@@ -78,6 +72,29 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 best.Zone = zones[k];
                 best.Rescued = row[k];
             }
+        }
+
+        private List<PuzzleShipRescue>[] Row(
+            List<PuzzleZone> zones, float size, CancellationToken token, System.Action onZone)
+        {
+            List<PuzzleShipRescue>[] row = new List<PuzzleShipRescue>[zones.Count];
+            for (int k = 0; k < zones.Count; k++)
+            {
+                if (token.IsCancellationRequested)
+                    return row;
+
+                onZone?.Invoke();
+                if (!PuzzleZoneCandidates.CoversSource(zones[k], fleet))
+                    continue;
+
+                if (sunShortcut != null && sunShortcut.Covers(zones[k]))
+                    continue;
+
+                row[k] = scan.RescuedFixed(zones[k]);
+                sunShortcut?.RemoveFrom(row[k], size);
+            }
+
+            return row;
         }
 
         private bool Plateau(List<PuzzleShipRescue>[] row, int k)

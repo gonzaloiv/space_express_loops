@@ -9,13 +9,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     // applied, with clearance. The ships of a multi-ship puzzle are the rescued runs of the edited field.
     //
     // A pair's pristine outcome does not depend on the zone, so it is computed once per field; a sweep
-    // can then test many zones against the same field cheaply.
+    // can then test many zones against the same field cheaply. It reads a FleetField snapshot, so the
+    // whole sweep runs off the editor thread.
     public sealed class PuzzleShipScan
     {
-        private readonly SpaceShapingSetup setup;
-        private readonly PuzzleData puzzle;
+        private readonly FleetField fleet;
         private readonly PuzzleSimSettings settings;
         private readonly float clearance;
+        private readonly SpaceShapingSetup setup;
         private readonly ShipLaunch launch = new();
         private readonly TrajectoryIntegrator integrator = new();
         private readonly FieldView start;
@@ -23,16 +24,21 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private readonly int count;
 
         public PuzzleShipScan(PuzzleData puzzle, PuzzleSimSettings settings, float clearance)
+            : this(FleetField.From(puzzle, settings), clearance)
         {
-            this.puzzle = puzzle;
-            this.settings = settings;
+        }
+
+        public PuzzleShipScan(FleetField fleet, float clearance)
+        {
+            this.fleet = fleet;
             this.clearance = clearance;
-            count = puzzle != null && puzzle.sources != null ? puzzle.sources.Length : 0;
+            settings = fleet.Settings;
+            count = fleet.Sources.Length;
             startArrives = new bool[count * count];
             if (count < 2)
                 return;
 
-            setup = SpaceShapingSetup.Build(puzzle, settings);
+            setup = fleet.ToSetup();
             launch.LaunchSpeed = setup.LaunchSpeed;
             start = FieldView.Build(setup, null);
             CacheStart();
@@ -84,7 +90,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                     if (!IsRun(i, j))
                         continue;
 
-                    float capture = puzzle.sources[j].scale * 0.5f;
+                    float capture = fleet.Sources[j].scale * 0.5f;
                     if (capture <= 0f)
                         continue;
 
@@ -117,9 +123,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (!IsRun(i, j) || startArrives[i * count + j])
                 return;
 
-            Vector3 origin = puzzle.sources[i].home;
-            Vector3 destination = puzzle.sources[j].home;
-            float capture = puzzle.sources[j].scale * 0.5f;
+            Vector3 origin = fleet.Sources[i].home;
+            Vector3 destination = fleet.Sources[j].home;
+            float capture = fleet.Sources[j].scale * 0.5f;
             if (capture <= 0f || zone.Contains(origin) || zone.Contains(destination))
                 return;
 
@@ -134,10 +140,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         // A ship flies between two different planets; the sun (the centre-only source) is never an end.
         private bool IsRun(int i, int j) =>
-            i != j && !puzzle.sources[i].centreOnly && !puzzle.sources[j].centreOnly;
+            i != j && !fleet.Sources[i].centreOnly && !fleet.Sources[j].centreOnly;
 
         private TrajectoryResult Run(FieldView view, int i, int j, float capture, bool timeDilation) =>
-            Run(view, puzzle.sources[i].home, puzzle.sources[j].home, capture, timeDilation);
+            Run(view, fleet.Sources[i].home, fleet.Sources[j].home, capture, timeDilation);
 
         private TrajectoryResult Run(
             FieldView view, Vector3 origin, Vector3 destination, float capture, bool timeDilation)

@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -45,11 +46,42 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             finally
             {
                 EditorUtility.ClearProgressBar();
-                Object.DestroyImmediate(seed);
+                UnityEngine.Object.DestroyImmediate(seed);
             }
 
             entries.Sort(ByUsefulness);
             return entries;
+        }
+
+        // Fleet contracts probe off the editor thread; the window polls the run and takes the entries
+        // when it finishes. The seed asset lives until then so the run can vary its seed value.
+        public static FleetSearchRun ScanFleetAsync(
+            PuzzleJobContract job, int count, Action<List<Entry>> onDone)
+        {
+            SpaceShapingSettings settings = PuzzleTestSetBuilder.LoadSettings("Seed scan");
+            if (settings == null)
+            {
+                onDone(new List<Entry>());
+                return null;
+            }
+
+            PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
+            PuzzleSeed seed = job.CreateSeed();
+            PuzzleBrief brief = PuzzleBrief.From(seed, settings);
+            List<Entry> entries = new();
+            return FleetSearchRun.Start(
+                new FleetSearchRequest(seed, settings, brief, job.Seed, count),
+                (seedValue, result) =>
+                {
+                    entries.Add(EntryFor(seedValue, result, job, sim));
+                    return true;
+                },
+                outcome =>
+                {
+                    UnityEngine.Object.DestroyImmediate(seed);
+                    entries.Sort(ByUsefulness);
+                    onDone(entries);
+                });
         }
 
         // Seeds that pass the contract first, then the widest solve window.
@@ -65,9 +97,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             PuzzleSeed seed, PuzzleJobContract job, SpaceShapingSettings settings, PuzzleSimSettings sim)
         {
             PuzzleSeedScanResult result = PuzzleSeedScanner.Find(seed, settings, 1);
+            return EntryFor(seed.seed, result, job, sim);
+        }
+
+        private static Entry EntryFor(
+            int seedValue, PuzzleSeedScanResult result, PuzzleJobContract job, PuzzleSimSettings sim)
+        {
             Entry entry = new()
             {
-                Seed = seed.seed,
+                Seed = seedValue,
                 Baked = result.Found,
                 Kind = result.Kind,
                 Status = result.Status,
@@ -78,7 +116,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 Measure(ref entry, result, job, sim);
 
             if (result.Puzzle != null)
-                Object.DestroyImmediate(result.Puzzle);
+                UnityEngine.Object.DestroyImmediate(result.Puzzle);
 
             return entry;
         }

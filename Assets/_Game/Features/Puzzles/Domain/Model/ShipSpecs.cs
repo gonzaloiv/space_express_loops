@@ -5,9 +5,14 @@ namespace DigitalLove.Game.SpaceShaping
     public static class ShipSpecs
     {
         public static ShipSpec[] From(PuzzleData puzzle) =>
-            puzzle.ships != null && puzzle.ships.Length > 0
-                ? Convert(puzzle.ships)
-                : Single(puzzle.Origin, puzzle.Destination);
+            From(puzzle.ships, puzzle.Origin, puzzle.Destination);
+
+        // A field snapshot carries ships but no PuzzleData; the fallback pair is the puzzle's
+        // single-ship run.
+        public static ShipSpec[] From(PuzzleShip[] ships, Vector3 origin, Vector3 destination) =>
+            ships != null && ships.Length > 0
+                ? Convert(ships)
+                : Single(origin, destination);
 
         public static ShipSpec[] Resolve(SpaceShapingSetup setup) =>
             setup.Ships != null && setup.Ships.Length > 0

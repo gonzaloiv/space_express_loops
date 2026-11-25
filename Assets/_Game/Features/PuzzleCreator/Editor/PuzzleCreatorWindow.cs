@@ -19,6 +19,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         private PuzzleBakeStatus status;
         private PuzzleSolutionKind generatedKind;
         private Vector2 scroll;
+        private FleetSearchRun fleetSearch;
+        private PuzzleSeedTally fleetTally;
+        private int fleetStart;
 
         [MenuItem("DigitalLove/Space Shaping/Puzzle Creator")]
         private static void Open() => GetWindow<PuzzleCreatorWindow>("Puzzle Creator");
@@ -76,7 +79,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         private void DrawBake()
         {
             bool ready = seed != null && settings != null;
-            using (new EditorGUI.DisabledScope(!ready))
+            using (new EditorGUI.DisabledScope(!ready || FleetSearchRun.IsRunning))
             {
                 if (GUILayout.Button("Generate (rebuild)"))
                     Generate();
@@ -87,6 +90,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 if (GUILayout.Button("Save level"))
                     Save();
             }
+
+            if (fleetSearch == null)
+                return;
+
+            EditorGUILayout.LabelField(
+                "Fleet search",
+                $"{fleetSearch.SeedsDone}/{fleetSearch.SeedsTotal} seeds · {fleetSearch.ZonesDone} zones");
+            if (GUILayout.Button("Cancel fleet search"))
+                fleetSearch.Cancel();
         }
 
         private int CurrentSeed() => seed != null ? seed.seed : 0;
@@ -124,20 +136,68 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         private void FindSeed()
         {
+            if (seed == null || settings == null)
+                return;
+
             PuzzleBrief brief = PuzzleBrief.From(seed, settings);
-            int attempts = brief.IsMulti ? MultiSeedAttempts : SeedAttempts;
+            if (brief.IsMulti)
+            {
+                StartFleetSearch(brief);
+                return;
+            }
+
             int start = CurrentSeed();
             PuzzleSeedScanResult result;
             try
             {
-                result = PuzzleSeedScanner.Find(
-                    seed, settings, attempts, ReportProgress);
+                result = PuzzleSeedScanner.Find(seed, settings, SeedAttempts, ReportProgress);
             }
             finally
             {
                 EditorUtility.ClearProgressBar();
             }
 
+            ApplySeedResult(result, start);
+        }
+
+        // The fleet sweep runs on the task; the window only applies the seed it stopped on.
+        private void StartFleetSearch(PuzzleBrief brief)
+        {
+            fleetStart = CurrentSeed();
+            fleetTally = new PuzzleSeedTally();
+            fleetSearch = FleetSearchRun.Start(
+                new FleetSearchRequest(seed, settings, brief, fleetStart, MultiSeedAttempts),
+                AddFleetSeed, FinishFleetSearch);
+            Repaint();
+        }
+
+        private bool AddFleetSeed(int seedValue, PuzzleSeedScanResult candidate)
+        {
+            fleetTally.Add(candidate);
+            return !candidate.Found;
+        }
+
+        private void FinishFleetSearch(FleetSearchOutcome outcome)
+        {
+            fleetSearch = null;
+            if (fleetTally == null)
+                return;
+
+            if (outcome != FleetSearchOutcome.Completed)
+            {
+                fleetTally = null;
+                Debug.LogWarning($"Puzzle creator: fleet search {outcome}.");
+                Repaint();
+                return;
+            }
+
+            PuzzleSeedScanResult result = fleetTally.Result();
+            fleetTally = null;
+            ApplySeedResult(result, fleetStart);
+        }
+
+        private void ApplySeedResult(PuzzleSeedScanResult result, int start)
+        {
             status = result.Status;
             generatedKind = result.Kind;
             string report = ScanReport(result, start);
@@ -146,6 +206,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 generated = null;
                 generatedSolution = null;
                 Debug.LogWarning($"Puzzle creator: no working seed. {report}");
+                Repaint();
                 return;
             }
 
@@ -155,12 +216,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             planets = PuzzleArtifactExporter.ExportPlanets(shape);
             generated = result.Puzzle;
             generatedSolution = result.Solution;
+            PuzzleBrief brief = PuzzleBrief.From(seed, settings);
             string summary = brief.IsMulti
                 ? $"{result.Puzzle.ships.Length} ship(s), {brief.Relation}"
                 : $"{result.Puzzle.zones} zone(s), {result.Routes} route(s)";
             summary += $", {result.Kind}";
             Debug.Log($"Puzzle creator: seed {result.Seed} baked a verified level ({summary}). {report}");
             Repaint();
+        }
+
+        private void OnDisable()
+        {
+            fleetSearch?.Cancel();
         }
 
         private void ReportProgress(int done, int total)
