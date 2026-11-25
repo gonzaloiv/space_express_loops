@@ -59,8 +59,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             },
             new PuzzleJobContract
             {
-                Id = "02_01", Seed = 7, Attempts = 1, PlanetCount = 10, FieldShape = PuzzleFieldShape.Ring,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
+                Id = "02_01", Seed = 23, Attempts = 1, PlanetCount = 10, FieldShape = PuzzleFieldShape.Ring,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 1,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.Separate,
