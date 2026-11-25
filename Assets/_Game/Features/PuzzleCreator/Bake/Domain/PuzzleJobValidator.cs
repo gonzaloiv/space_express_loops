@@ -107,6 +107,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 bool onChord = OnChord(sources[sun], puzzle);
                 if (onChord != contract.SunOnChord)
                     failures.Add($"sun on chord {onChord}, expected {contract.SunOnChord}");
+                PuzzleSunPlacementCheck.Check(sources, sun, contract.SunPlacement, failures);
             }
 
             if (solution == null || solution.Length == 0)
