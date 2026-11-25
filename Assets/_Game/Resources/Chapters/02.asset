@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Casual.Levels::DigitalLove.Casual.Levels.ChapterData
   id: 02
   levels:
+  - {fileID: 11400000, guid: bd0d15afbe0cf434197948e62d7e540c, type: 2}
+  - {fileID: 11400000, guid: a17f8518503682348b4277780779c2a2, type: 2}
   - {fileID: 11400000, guid: 178c84389478f354582cde67b4bdd81a, type: 2}
   - {fileID: 11400000, guid: 2572607fe7e531e439f7fb7ead7fe605, type: 2}
   - {fileID: 11400000, guid: ff6f1633973a9f0428162519a77b0941, type: 2}

@@ -97,29 +97,29 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Relation = PuzzleShipRelation.FanOut,
                 Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
             },
-            // Chapter 2 intro: two fixed-cube jobs. Pending until the off-editor scan pins Seed/Attempts
-            // and MaxScaleDelta is confirmed by playing; then unpin, bake and move them before 02_01.
+            // Chapter 2 intro: two fixed-cube jobs, baked 2026-11-25. MaxScaleDelta is the widest
+            // baked answer's |scale - 1|; tune it by playing.
             new PuzzleJobContract
             {
-                Id = "02_09", Pending = true, Seed = 1, Attempts = 1, PlanetCount = 9,
+                Id = "02_09", Seed = 7, Attempts = 1, PlanetCount = 9,
                 FieldShape = PuzzleFieldShape.Ring,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.FanOut,
                 Translatable = false, NoFail = false, NoGrade = false, NoIntro = false,
-                MaxScaleDelta = 0.25f,
+                MaxScaleDelta = 0.5f,
             },
             new PuzzleJobContract
             {
-                Id = "02_10", Pending = true, Seed = 1, Attempts = 1, PlanetCount = 9,
+                Id = "02_10", Seed = 5, Attempts = 1, PlanetCount = 9,
                 FieldShape = PuzzleFieldShape.Ring,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.Separate,
                 Translatable = false, NoFail = false, NoGrade = false, NoIntro = false,
-                MaxScaleDelta = 0.25f,
+                MaxScaleDelta = 0.5f,
             },
             // Fleet Clear: movable two-ship jobs whose lesson is one blocker shared by both runs.
             // Pending until the off-editor Clear scan pins Seed/Attempts and the scramble bounds are
