@@ -4,7 +4,7 @@
 (`0b66c195`, `e890d40b`); the fast fleet tests are green. Left: the headset pass and the
 `MaxScaleDelta = 0.5` scramble decision.
 
-**Bakes:** off the editor — U2 (scan and bake 02_09, 02_10) ([AGENTS](../../../AGENTS.md#bakes-run-off-the-editor), `docs/tools/bake.ps1`).
+**Bakes:** off the editor — U2 (scan and bake 02_09, 02_10); the edge-sun rebakes are [chapter 2 bakes](chapter-2-bakes.md) U2 ([AGENTS](../../../AGENTS.md#bakes-run-off-the-editor), `docs/tools/bake.ps1`).
 
 **Related:** [plans board](../README.md) · [chapters](../../design/chapters.md#chapter-2--the-fleet-v1-then-the-store-release) ·
 [fleet rebake](../in-progress/fleet-rebake.md) ·
@@ -15,7 +15,7 @@
 Chapter 2 opens with two jobs where one pinch on a fixed cube moves two ships: fan-out (the cube on a
 planet next to the shared origin), then separate (the cube on a planet between the runs). The first
 of four chapter 2 plans; the others are [fleet Clear](fleet-clear.md),
-[fleet capstone](fleet-capstone.md) and [chapter 2 lines](chapter-2-lines.md).
+[fleet capstone](fleet-capstone.md); the lines are in [story arc](../../solutions/narrative/story-arc.md).
 
 ## Depends on
 

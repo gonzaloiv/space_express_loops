@@ -15,8 +15,8 @@ Shrinking the blocker frees every ship.
 
 ## Depends on
 
-- **[Fleet rebake](fleet-rebake.md) U4 before any scan:** chapter 2 suns go back to the centre (`SunPlacement = Centre`);
-  scanning first bakes an off-corridor sun above the field.
+- **[Fleet rebake](fleet-rebake.md) U4 and [edge sun](edge-sun.md) U1 before any scan:** chapter 2 suns sit at the edge,
+  level with the planets, and the validator checks it; 02_06 (a4bad465, sun above the field) is rebaked.
 - [Chapter 2 intro](chapter-2-intro.md): the scramble bounds, the opened fleet tests.
 - [Fleet rebake](fleet-rebake.md) U2: the chapter-aware slot wiring that places a job
   after 2-4.
@@ -92,6 +92,9 @@ shipped movable jobs in `CheckStartFrame`. Rebake any job the shipped check reje
   `Validate_TooFewBlockers_Fails` stays green.
 
 ### U3 — the three jobs
+
+**The scans and bakes are [chapter 2 bakes](chapter-2-bakes.md) U3.** What stays here: the contracts and
+what a Clear job must show.
 
 - Contracts as [chapter 2 intro](chapter-2-intro.md) U2, movable (`Translatable = true`,
   `MinRoutes = 1`), `Ships = 2`, `Mechanism = Clear`, `MinBlockers` 1, 1, 2; scramble bounds by playing (`MaxScaleDelta` on the first job, the minimums on the third).

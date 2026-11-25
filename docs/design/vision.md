@@ -5,7 +5,7 @@
 **Target:** Meta VR Start Developer Competition 2026 · **seated mixed reality** ·
 hand-tracking first-class.
 **Date:** 2026-10-23.
-**Revised:** 2026-11-09.
+**Revised:** 2026-11-26.
 
 **Related:** [core loop](core-loop.md) · [the cube](systems/cube.md) ·
 [progression](systems/progression.md) · [jobs](jobs.md) ·
@@ -21,10 +21,7 @@ the space stretches (a shrunk zone is a shortcut) and the planets spread and gro
 deform the spacetime the ship flies through until the delivery **arrives** — and cheaply.
 Relativity is the language, and the cube is how you speak it.
 
-**Current shape.** The seated slice is playable in the MR bubble: the map (the same cube picks the
-job), the seven baked jobs of chapter 1, the four fleet jobs of chapter 2, the job card, Jim's panel,
-the gesture prompts and the solve window. The room-scale game is removed. Build status lives on the [plans board](../plans/README.md);
-this doc does not track it.
+Build status lives on the [plans board](../plans/README.md); this doc does not track it.
 
 ## 2. Design pillars
 
@@ -41,8 +38,8 @@ this doc does not track it.
    **fails**. Entropy left is the **eco rating**; **arriving** is the goal — the launch is only a check.
    The field itself shows the spend — calm at full, strained as it drains, about to blow near empty —
    and the bar lives in it, not on a panel. The launch itself is given, not a lever.
-5. **Discrete jobs.** ~1 minute each; a **10-minute first chapter** (seven jobs) and a **four-job
-   fleet episode**, **eleven jobs** in the run, all baked.
+5. **Discrete jobs.** A few minutes each; three chapters (7 + 10 + 6 story jobs) and 20 freelance
+   contracts, all baked.
    Nothing live-ticking.
 6. **Relativity is the language.** The theme and the feel, not a simulation — the cube speaks it.
 
@@ -93,16 +90,16 @@ routes; keep the economy *between* jobs. Then the management layer is a wrapper
 
 ## 6. Scope: the competition slice
 
-- **In:** the **full run** — the bubble, the cube, the **map** (level selector), the **eleven-job
-  run** (chapter 1's seven + chapter 2's four), the grade and player progression
-  ([core loop](core-loop.md), [progression](systems/progression.md), [jobs](jobs.md)). The four fleet
-  jobs are chapter 2 in v1; the 2-5 capstone stays in the store release ([chapters](chapters.md)).
+- **In:** the **full run** — the bubble, the cube, the **map** (level selector), the **23-job
+  story** (chapter 1's seven, chapter 2's ten fleet jobs, chapter 3's six broken-body jobs), the
+  freelance contracts, the grade and player progression ([core loop](core-loop.md),
+  [progression](systems/progression.md), [jobs](jobs.md), [chapters](chapters.md)).
 - **Out of the first run:** resize (working, but the explanation is not ready), a separate tutorial flow
   (the per-job manual card is in — [jobs](jobs.md)), and the whole feel pass. **Out until proven:**
   sectors as gameplay (the ambient sector field stays the map backdrop) and runtime/procedural level
   generation.
-- **After the slice: the store release** — ~€5 on the Meta store with chapters 1–2 and the freelance
-  contracts, chapter 3 as the first update ([chapters](chapters.md)).
+- **The store release** — €4 on the Meta store, 6 Dec: chapters 1–3 and 20 freelance contracts
+  ([release](release.md)).
 - **Technical target:** Meta Quest 3S, **72 fps**.
 - **Validation first:** do not invest past the validation (§7) until it passes.
 
@@ -144,8 +141,8 @@ mechanic before writing another plan.
 | Ship-zone legibility | **Open.** Jobs 5–7 are multi-zone, and v1 has no cue for which zone the ship is in; only the trail shows the path ([plans board](../plans/README.md) §Open tails). |
 | Prediction trust | **Mitigated in the lab.** The live trajectory previews while shaping, the ship flies on release, and the straight-line baseline shows on the start check and after a miss; the start run's read is the remaining question. |
 | Identity | **Resolved** by the transport-company pivot and the name "Our Space". |
-| Competition scope | **Active.** The run is authored (eleven jobs, the map, Jim's panel); what remains is the road to v1 and the deliverables. Internal freeze 2026-11-13; official deadline 2026-11-18 ([plans board](../plans/README.md)). |
+| Competition scope | **Done.** The competition slice (chapter 1 and the first fleet jobs) shipped by the 2026-11-18 deadline; the store release replaces it ([release](release.md)). |
 | Room-scale legacy drag | **Resolved.** The room view mode is removed from the code. |
-| Content ceiling | **Valid, narrower.** Authored multi-ship is fine; simultaneous unscripted multi-ship is "near-chaotic". Chapter 1's seven-job spine is single-ship; the four fleet jobs are chapter 2 in v1 ([chapters](chapters.md)). |
+| Content ceiling | **Valid, narrower.** Authored multi-ship is fine; simultaneous unscripted multi-ship is "near-chaotic". Chapter 1's seven-job spine is single-ship; chapter 2's ten jobs are the fleet ([chapters](chapters.md)). |
 | Entropy legibility | **In, tuning.** The in-field bar and the passthrough strain carry the spend; the budget is derived from the bake's best solution, so the 3★ band still needs a headset read ([progression](systems/progression.md) §Open questions). |
-| Run length | **Measuring.** The target is a 10-minute first chapter (seven jobs); eleven jobs × ~1 min are baked; minutes per job on the headset are not yet measured ([progression](systems/progression.md) §Open questions). |
+| Run length | **Measuring.** The target is ~3 minutes a job across 23 story jobs; minutes per job on the headset are measured in the timing pass before upload ([progression](systems/progression.md) §Open questions). |

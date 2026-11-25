@@ -2,7 +2,7 @@
 
 **Status:** now · space shaping · updated 2026-11-26 — U1–U3 done: 2-2 (seed 4) and 2-3 (seed 8)
 rebaked with an off-corridor sun, 2-1 (seed 7) and 2-4 unchanged; `ShippedJobs_MeetTheContract` green
-in the bake checkout. Left: U4 (the sun goes back to the centre; rescan the six baked jobs), then the headset pass.
+in the bake checkout. Left: the rebakes in [chapter 2 bakes](chapter-2-bakes.md) U1, then the headset pass.
 
 **Re-run after fleet Clear merges (review 2026-11-26):** done. `bake2` was branched from `our-space`
 at `5f982c5d`, which includes [fleet Clear](fleet-clear.md) U2's movable start-frame check
@@ -118,6 +118,11 @@ its sun, unchanged.
   all three have a sun off the corridor; 2-4 unchanged; the fast suite is green.
 
 ### U4 — the sun back at the centre (headset, 2026-11-26)
+
+**Superseded (2026-11-26): the fallback is the plan.** A centred sun cannot meet `NoSunAnswer` in a
+fleet (48 + 24 seeds, no bake). Every chapter 2 job but 02_04 uses the edge sun; the placement check,
+the introduction and the map read are [edge sun](edge-sun.md). The rebakes moved to [chapter 2 bakes](chapter-2-bakes.md). The text
+below is the history of the decision.
 
 **Fallback, only if the centre cannot bake (decided 2026-11-26).** The centre is the goal. If a job
 finds no centred seed without a sun answer in its budget, the fallback is a sun **at the edge, level with

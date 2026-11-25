@@ -73,6 +73,12 @@ are local and gitignored (`Assets/_Game/Editor/Localization/Google Sheets Servic
   (`LevelSelector.GetLevelOrdinal`, carried into the run by `JobCardStamp`), because new jobs can be
   inserted before older ids. The release name shows only on the chapter's first card.
 
+**Chapter 2 lines (2026-11-26).** The wire is owned by chapter seams: chapter 1 keys 01–07, chapter 2
+08–17 (ten jobs, the warranty line closes episode 2), chapter 3 18–23; `SectorWireTests`
+(`Key_ChapterSeamsFollowThePlayOrder`) pins the seams and `LineCount = 24`. New spoken keys go straight
+into the `Downloader - OS` scene's `TableDownloader.keys`, which is the batch's list. A chapter's first
+card sets what later manual entries may not repeat; re-read them when the play order changes.
+
 ## Evidence
 
 - Arc and turns: [lore](../../design/world/lore.md) §Episodes, §Canon.

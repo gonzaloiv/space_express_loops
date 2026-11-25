@@ -2,15 +2,17 @@
 
 **Status:** design · system · progression.
 **Date:** 2026-10-23.
-**Revised:** 2026-11-09.
+**Revised:** 2026-11-26.
 
 **Related:** [vision](../vision.md) · [core loop](../core-loop.md) · [the cube](cube.md) ·
 [lore](../world/lore.md) · [jobs](../jobs.md)
 
 ## Goal
 
-How the game advances across jobs — and what gates it. The competition slice is the **full run** —
-the **seven jobs** of chapter 1 — not a single job, so progression is **in scope**.
+How the game advances across jobs — and what gates it. The **full run** is the
+store release's **23 story jobs** (chapter 1's seven, chapter 2's ten, chapter 3's six;
+[release](../release.md)) plus 20 freelance contracts, so progression is **in scope**. The competition
+slice was chapter 1's seven jobs.
 
 ## Inputs
 
@@ -96,7 +98,7 @@ The **concrete run** — one row per job, with its brief fields, archetypes, fie
 runs are baked with a relation — **fan-out** (one origin), **converge** (one destination), or
 **separate** (no shared planet) — so the shared field stays legible. Multi-ship is a variation axis,
 not a mode: the same cube, entropy and arrival rules apply. Chapter 1's seven-job spine is
-single-ship; chapter 2's four jobs are the fleet, in v1 ([chapters](../chapters.md)).
+single-ship; chapter 2's ten jobs are the fleet ([chapters](../chapters.md)).
 
 ### The company is lore only
 
@@ -117,8 +119,8 @@ None — progression never blocks a run on a score (see Open).
 
 ## Tuning — the shape
 
-**The full run is eleven jobs** (chapter 1's seven + chapter 2's four), ~1 minute each. The curve rises by **planet count**, **field depth**,
-and **solution cost**.
+**The full run is 23 story jobs** (7 + 10 + 6), a few minutes each. The curve rises by **planet
+count**, **field depth**, and **solution cost**.
 
 **Entropy is derived, not hand-set** — the budget and star rule is in [core loop](../core-loop.md) §3,
 and which jobs fail or grade is in [jobs](../jobs.md). The field sets the absolute cost and how hard it
@@ -157,5 +159,5 @@ mid-flight (the seed is authoring-only).
   order is the working shape, not final.
 - **Entropy legibility.** The budget is derived from the bake's best solution; the player never sees
   that reference. Can they track spent vs remaining well enough from the readout?
-- **Run length.** What set fills a **10-minute session** and stays fun — 7, 11, or more jobs? Chapter 1's
-  seven × ~1 min are baked; the fleet adds four; measure minutes per job on the headset.
+- **Run length.** The target is ~3 minutes a job (23 story jobs); measure minutes per job on the
+  headset in the timing pass before upload.

@@ -2,9 +2,10 @@
 
 **Status:** design · release.
 **Date:** 2026-11-18.
+**Revised:** 2026-11-26.
 
 **Related:** [chapters](chapters.md) · [jobs](jobs.md) · [lore](world/lore.md) ·
-[plans board](../plans/README.md) §Road to the store
+[plans board](../plans/README.md)
 
 ## Goal
 
@@ -16,13 +17,10 @@ anchored bodies and repulsors).
 
 ## Where we are
 
-| Item | State |
-|---|---|
-| Chapter 1 (7 jobs) + chapter 2 (2-1 to 2-4) | Shipped in the competition build |
-| Seeds retune (01_03, 01_05, 01_07; `growOnly` on 01_01) | Done (2026-11-20) |
-| Fleet jobs won by shrinking the sun (2-1 to 2-3) | **To do**: needed before new fleet jobs |
-| Meta Platform | Init only (`MetaPlatformClient`); **no entitlement check yet** |
-| Store validation | **Passed** (2026-11-25): the current version is ready to publish; the release is a new build upload |
+Status and dates live on the [plans board](../plans/README.md). Two facts this definition depends
+on: store validation **passed** (2026-11-25), so the release is a build upload with no review wait and
+anything late ships as an update; and the Meta Platform is init only (`MetaPlatformClient`), with **no
+entitlement check yet**.
 
 ## Content: the story first, then 20 freelance contracts
 
@@ -109,16 +107,8 @@ and inverted bodies ([later chapters](../ideas/later-chapters.md)), and chapters
 
 ## Schedule
 
-Rescheduled 2026-11-25. Store validation has passed, so the release is a build upload with no review
-wait; anything that is late (freelance first) ships as an update.
-
-| Days | Lands |
-|---|---|
-| 25–26 Nov | The current state: fix the fleet sun answer (fleet rebake); the story arc and episodes 1–2's lines |
-| 27–30 Nov | Chapter 2 to ten jobs |
-| 1–3 Dec | Chapter 3: anchored bodies, repulsors and the ending |
-| 3–5 Dec | Freelance: bake, play and keep 20, and the map system; entitlement check (if still missing); headset timing pass; release build; upload |
-| 6 Dec | Release |
+On the [plans board](../plans/README.md) (Now → Next). The fixed date is the release, 6 Dec; freelance
+is the first thing to slip into an update.
 
 ## Open questions
 

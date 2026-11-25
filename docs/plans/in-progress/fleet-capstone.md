@@ -15,8 +15,8 @@ three-ship seeds are much slower, and no three-ship field has passed a shipped r
 
 ## Depends on
 
-- **[Fleet rebake](fleet-rebake.md) U4 before any scan:** chapter 2 suns go back to the centre (`SunPlacement = Centre`);
-  scanning first bakes an off-corridor sun above the field.
+- **[Fleet rebake](fleet-rebake.md) U4 and [edge sun](edge-sun.md) U1 before any scan:** chapter 2 suns sit at the edge,
+  level with the planets, and the validator checks it; 02_06 (a4bad465, sun above the field) is rebaked.
 [Chapter 2 intro](chapter-2-intro.md) (contracts pattern, scramble bounds) and
 [fleet Clear](fleet-clear.md) U2, which owns routing movable fleets' `PuzzleMultiShipBake.Frames`
 through `PuzzleStartFrame.Place` and the "start solves in place" failure (built and merged to `bake`
@@ -38,7 +38,8 @@ as `cd51f783`). Id: 02_05 ([chapter 2 intro](chapter-2-intro.md) §Ids).
 - **Order:** play `02_05` after `02_04`, before the Clear jobs (2-6..2-8), per
   [chapters](../../design/chapters.md) and [fleet Clear](fleet-clear.md). `WireChapterSlot` appends it
   after `02_04` on the first bake, which is the wanted slot until the Clear jobs land.
-- **Remaining:** sync this change set to the `bake` checkout, scan `02_05` (three ships are slow; budget
+- **Remaining:** the re-check and any rebake are [chapter 2 bakes](chapter-2-bakes.md) U2. Before the edge
+  sun: sync this change set to the `bake` checkout, scan `02_05` (three ships are slow; budget
   the seeds), pin the seed and set `MinScaleDelta` / `MinStartDistance` from the bake, unpin `Pending`,
   bake, then add `02_05` after `02_04` in `FleetJobsTests` (3 ships). Measure the shipped check; move the
   fleet part behind the `[Explicit]` job-set test only if it passes ~2 min.

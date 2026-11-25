@@ -2,7 +2,7 @@
 
 **Status:** design · core loop — what the player actually does.
 **Date:** 2026-10-23.
-**Revised:** 2026-11-01.
+**Revised:** 2026-11-26.
 
 **Related:** [vision](vision.md) · [the cube](systems/cube.md) · [progression](systems/progression.md) ·
 [jobs](jobs.md) · [glossary](glossary.md)

@@ -2,9 +2,10 @@
 
 **Status:** design · content · chapters.
 **Date:** 2026-11-07.
+**Revised:** 2026-11-26.
 
 **Related:** [jobs](jobs.md) · [progression](systems/progression.md) · [the cube](systems/cube.md) ·
-[vision](vision.md) §6 · [plans board](../plans/README.md) §Road to the store
+[vision](vision.md) §6 · [plans board](../plans/README.md)
 
 ## Goal
 
@@ -32,7 +33,8 @@ with more than one route, so it does not read as a new idea.
 ## Chapter 2 — the fleet (v1, then the store release)
 
 Several ships share one field and one entropy budget; the job solves only when **every ship arrives**.
-No new verb. The ramp restarts: low scramble, Ring shape.
+No new verb. The ramp restarts: low scramble, Ring shape. Fields and budgets per job are in
+[jobs](jobs.md) (the source); this table keeps the lessons.
 
 | # | Lesson | Brief | Field | Why |
 |---|---|---|---|---|
@@ -41,7 +43,7 @@ No new verb. The ramp restarts: low scramble, Ring shape.
 | 2-1 | **Two ships** | movable · 2 ships · separate | 10 + sun · Ring · low scramble | One field, two runs; each ship has its own fix. |
 | 2-2 | **Fan-out** | movable · 2 ships · one origin | 12 + sun · Spiral | An edit near the shared origin bends both paths. |
 | 2-3 | **Converge** | movable · 2 ships · one destination | 12 + sun · Spiral | The planet by the shared destination fixes both approaches. |
-| 2-4 | **Three ships** | movable · 3 ships · separate | 12 + sun · Cluster | One Wrap carries three ships; the field carries more than one ship. |
+| 2-4 | **Three ships** | movable · 3 ships · separate | 14 + sun · Cluster | One Wrap carries three ships; the field carries more than one ship. |
 | 2-5 | **Fleet capstone** | movable · 3 ships · fan-out | 12 + sun · Cluster · high scramble | Placement, shared paths and the field across every ship. |
 | 2-6 to 2-8 | **Clear with a fleet** | movable · 2 ships | + sun · Clear answer | One obstacle in more than one ship's path: one blocker → among decoys → two blockers. |
 
@@ -110,30 +112,24 @@ The rotation details are to be folded in from the earlier rotation idea when thi
 
 ## Freelance contracts (store release)
 
-Optional jobs beside the chapters: graded, no story. Jim's job board in the fiction.
+**The store release ships 20 hand-curated contracts** ([release](release.md),
+[freelance plan](../plans/backlog/freelance.md)): opened after the story's ending as one extra system on
+the map, ordered easy → hard, 1–3 stars, one client and cargo line each, no Jim intro. Playing them
+replaces an automatic quality filter. No tiers, no daily contract.
 
-- **Prebaked offline**, ~150 jobs shipped as assets; the bake is editor-only and too slow for the headset.
-- **Tiers follow the lessons** — Ring / Spiral / Cluster, 1 / 2 / 3 ships, 1 or 2 zones. A tier opens
-  once the chapters have taught what it needs.
-- **A finer score:** the exact entropy left ("94% efficient"); the chapters keep 1–3 stars.
-- **A quality filter.** Reject a bake when the start barely shows the field (the existing chord check),
-  the cheap and expensive routes cost about the same, there is one route, or the start is too close to
-  solved. Then play a sample of every batch.
-- **Lore:** a pool of absurd clients and cargo, recombined. No economy ([vision](vision.md) §5).
-
-**The daily contract.** One freelance job per day, picked from the pool by date, the same for every
-player, ranked by entropy left on Meta's platform leaderboards. Offline, it is the daily job without the
-board.
+**After the release (not scheduled):** a larger pool (~150 prebaked jobs) in tiers that follow the
+lessons (Ring / Spiral / Cluster, 1–3 ships, 1–2 zones), a finer score (the exact entropy left), a
+quality filter on the bake, and a daily contract ranked on Meta's leaderboards. Lore stays a pool of
+absurd clients and cargo; no economy ([vision](vision.md) §5).
 
 ## Tuning
 
-- **Price and pool size** follow measured minutes per job on the headset. Estimate: chapters 1–2
-  ~40–60 min, freelance 1 h+.
+- **Price and pool size** follow measured minutes per job on the headset. Target: ~3 min a job, so the 23 story jobs run
+  about an hour and the 20 contracts close to another.
 - **The demo** is the Meta store's own demo option; no separate build.
 
 ## Open questions
 
-- **Freelance unlock.** After chapter 2 only, or each tier as soon as its lesson is taught?
 - **Chapter break on the map.** Built (2026-11-13): each chapter is its own system (a small
   spiral) side by side, with an episode title and a fainter route hop between them
   (`PuzzleMapLayout.Systems`). Kept after the headset pass (2026-11-15).

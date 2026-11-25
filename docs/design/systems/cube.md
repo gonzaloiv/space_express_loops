@@ -2,7 +2,7 @@
 
 **Status:** design · system · cube.
 **Date:** 2026-10-23.
-**Revised:** 2026-11-01.
+**Revised:** 2026-11-26.
 
 **Related:** [vision](../vision.md) §3 · [core loop](../core-loop.md) · [jobs](../jobs.md) §The run — the brief ·
 [glossary](../glossary.md)
@@ -19,7 +19,10 @@ ready).
 
 **One gesture, two roles.** A two-hand pinch inside the cube changes the space and the bodies at once:
 
-- it stretches the **metric** — a shrunk zone is a **shortcut**;
+- it stretches the **metric** — a shrunk zone is a **shortcut**; simulated: inside a zone the ship's position step is
+  divided by the zone's factor (`TrajectoryIntegrator.Step`, `StepDivisor`), so a shrunk zone carries it
+  further per step. Its velocity is not scaled: the zone does not make the ship faster; wells do
+  (gravity assists, [core loop](../core-loop.md) §3);
 - it **spreads and scales** the covered planets: a grown planet is heavier (`mass ∝ radius³`) and bends
   the path more; a shrunken planet is a **smaller obstacle** and can clear a path it was blocking.
 
@@ -150,6 +153,3 @@ solve ([core loop](../core-loop.md) §3), and the job-1 tutorial is exempt.
 - **Resize explanation:** the mechanic works, but it needs a reason before it enters the run — a cost
   rule, or a field where the pieces must change together. It is not a lesson yet (2026-11-25); rotate
   follows it ([chapters](../chapters.md)).
-- **Simulation or fiction?** "A shrunk zone is a shortcut" (here and in the glossary) and "comes out
-  faster" ([core loop](../core-loop.md) §3) are stated as physics. Check whether the simulation does
-  either, or whether they are only the fiction, and word the docs to match.

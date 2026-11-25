@@ -2,7 +2,7 @@
 
 **Status:** design · glossary — the one place terms are defined.
 **Date:** 2026-10-23.
-**Revised:** 2026-11-07.
+**Revised:** 2026-11-25.
 
 **Related:** [vision](vision.md) · [the cube](systems/cube.md) · [core loop](core-loop.md)
 

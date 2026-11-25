@@ -2,7 +2,7 @@
 
 **Status:** design · world · lore.
 **Date:** 2026-10-23.
-**Revised:** 2026-11-07.
+**Revised:** 2026-11-25.
 
 **Related:** [vision](../vision.md) · [core loop](../core-loop.md) ·
 [progression](../systems/progression.md) · [glossary](../glossary.md)

@@ -2,7 +2,7 @@
 
 **Status:** design · content · jobs.
 **Date:** 2026-10-27.
-**Revised:** 2026-11-25.
+**Revised:** 2026-11-26.
 
 **Related:** [progression](systems/progression.md) · [lore](world/lore.md) ·
 [the cube](systems/cube.md) · [glossary](glossary.md)
@@ -11,8 +11,9 @@
 
 The **concrete run**: the jobs the player actually plays, one row each — their brief, field and entropy
 scale (the shape [progression](systems/progression.md) sets), plus their **lore skin**. Progression is
-the general system; this is the specific development of it. Chapter 1's seven jobs and seven of
-chapter 2's ten are baked; the three Clear jobs are landing.
+the general system; this is the specific development of it. Chapter 1's seven jobs are baked; chapter 2's
+ten are being (re)baked with the sun at the edge ([plans board](../plans/README.md)). This table is
+the source for every job's field and budget; [chapters](chapters.md) keeps the lessons.
 This doc is **chapters 1–2**; chapter 3 is in [chapters](chapters.md).
 
 ## The run — the mechanics
@@ -26,7 +27,9 @@ This doc is **chapters 1–2**; chapter 3 is in [chapters](chapters.md).
 | 5 | multi-zone intro | Curve | yes · 2+ zones · 1 ship | Spiral | 10–12 + sun · multi | medium | move + scale two zones — the combination enters |
 | 6 | the field carries you | Curve | yes · 2+ zones · 1 ship | Cluster | 10 + sun · multi · deep | high | a deep well already near the line does most of the bend; the cheap answer is to edit where a small change moves the path most |
 | 7 | the capstone | Curve | yes · 2+ zones · 1 ship | Cluster | 12 + sun · multi · deep | high | multi-zone + the centre + the star + several routes — both roles deferred to a later chapter |
-| 2-1 | two ships | Any | yes · 1 zone · 2 ships, separate | Ring | 12 + sun · multi | low (budget 0.30) | one field, two runs; each ship has its own fix |
+| intro 1 (02_09) | one pinch, two ships | Any | fixed · 1 zone · 2 ships, one origin | Ring | 9 + sun · multi | low | the fixed cube near the shared origin bends both paths at once |
+| intro 2 (02_10) | one zone between | Any | fixed · 1 zone · 2 ships, separate | Ring | 9 + sun · multi | low | one zone placed between two runs rescues both |
+| 2-1 | two ships | Any | yes · 1 zone · 2 ships, separate | Ring | 10 + sun · multi | low (budget 0.30) | one field, two runs; each ship has its own fix |
 | 2-2 | fan-out | Any | yes · 1 zone · 2 ships, one origin | Spiral | 12 + sun · multi | medium (budget 1.20) | an edit near the shared origin bends both paths |
 | 2-3 | converge | Any | yes · 1 zone · 2 ships, one destination | Spiral | 12 + sun · multi | medium (budget 1.50) | the planet by the shared destination fixes both approaches |
 | 2-4 | three ships | Any | yes · 1 zone · 3 ships, separate | Cluster | 14 + sun · multi | medium (budget 1.50) | one Wrap carries three ships; the field carries more than one ship |
@@ -272,6 +275,10 @@ stay absurd; the greed is in Jim's opener and receipts, and the manual's fine pr
 | 2-8 | The Two Shadows Company | two shadows, one lamp | "Two blockers, two edits, one budget. Growing a clear planet is not help." |
 
 ## The manual's arc
+
+**The card's behaviour** (what types and how fast, the patch number by play order, the release name on
+a chapter's first card) is specified in [story arc](../solutions/narrative/story-arc.md) §The job card;
+this section owns what the entries say.
 
 The job card is the company's **onboarding manual for new employees** ([lore](world/lore.md) §The tech
 team): dry, corporate, shipped in releases and patched after every delivery. The manual entry is read

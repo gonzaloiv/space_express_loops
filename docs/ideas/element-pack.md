@@ -22,6 +22,14 @@ More and smaller planets (just `PuzzleSource` entries), the sun as a real source
 - **Later systems, for the field or the sector backdrop:** an asteroid belt, a nebula (billboards or
   particles, not volumetric), a station, a comet, a gate, a black hole. Each is a system, not a body, and
   needs a perf budget and a decor-or-gameplay call before art.
+- **Edge suns — a recurring field variant.** Not a chapter: once introduced, some systems in any
+  chapter have their star at the edge, level with the planets, instead of at the centre. The system
+  reads differently and the sun is rarely on the ships' path, which varies the field without new
+  physics. 02_05's first bake showed the look (2026-11-26): not ideal for a first read, much better than
+  a sun above the field. Needs `PuzzleSunPlacementChoice.TryHome` limited to the planets' height band (no
+  pole directions), one job and a line that introduce it, and a rule for how often it recurs. Also the
+  chapter 2 fallback if a job cannot bake with a centred sun
+  ([fleet rebake](../plans/in-progress/fleet-rebake.md) U4).
 
 ## Rules any element must keep
 

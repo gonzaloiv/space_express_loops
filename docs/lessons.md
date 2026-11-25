@@ -317,3 +317,16 @@ bullet; the code and tests are the record of what was built.
   new subtitle until the clip is regenerated.
 - **Next time:** derive anything the player reads in order (versions, wire lines) from play order or
   solved count, never from the id; and give each derived value one source, not one per view.
+
+## 2026-11-26 — Chapter 2 lines
+
+- **Worked:** owning the wire by chapter seams (7 + 10 + 6 keys) and pinning the seams in
+  `SectorWireTests`. Inserting ten chapter 2 jobs moved lines once, with a test that catches the next
+  shift.
+- **Worked:** writing cards before the jobs baked. Missing keys show as empty text, so a job that
+  lands later already has its card.
+- **Surprised:** the first job's manual entry decides what every later entry may repeat. Once 02_09
+  opened the chapter, 02_02's "bend near the start" and 02_01's "two ships, one budget" became repeats.
+- **Next time:** keep the clip list where the batch reads it (the downloader scene's keys), not in a
+  side file in the plans folder; and close a lines plan only with its clips or with the clips as a
+  named open tail.

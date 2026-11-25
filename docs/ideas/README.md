@@ -8,7 +8,7 @@ The detailed notes live beside this file; this is the index.
 - **[Later chapters](later-chapters.md)** — chapters 4–6 (time, fragile cargo, stops), debris and
   inverted bodies, sold stars, the ghost path, hard versions, player-made contracts. *Why not now:* the store release
   ([chapters](../design/chapters.md)) comes first; real players decide what comes next.
-- **[Field elements](element-pack.md)** — what is left after the release: decor moons and the later
+- **[Field elements](element-pack.md)** — what is left after the release: edge suns as a recurring variant, decor moons and the later
   systems (belt, nebula, station, black hole), with the rules any element must keep. Dust, the sun and
   small planets are in.
 - **[Explorable map](explorable-map.md)** — puzzles near solved ones open up, so moving the cube is
