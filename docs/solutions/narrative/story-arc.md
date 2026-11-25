@@ -32,7 +32,8 @@ give each episode a turn, and revise episodes 1–2's lines without rewriting el
 
 **Put the arc on the seams, not every job.** Chapter 1 has no opener; job 1's receipt is Jim's
 introduction. The four beats that carry the arc are job 1's receipt, job 7's close (episode 1 → 2),
-chapter 2's opener, and 2-4's close (episode 2 → 3). The rest of the jobs keep their lines.
+chapter 2's opener, and 2-8's close (episode 2 → 3). 2-4's *the field came back wrong* is the
+mid-chapter turn once Clear follows it; the rest of the jobs keep their lines.
 
 **The damage is in the bodies.** The Wrap's entropy spend tears local spacetime; the tears show as
 anchored planets (the Wrap cannot change them) and repulsors (they push instead of pulling). The Wrap

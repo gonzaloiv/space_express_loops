@@ -2,7 +2,7 @@
 
 **Status:** design · content · jobs.
 **Date:** 2026-10-27.
-**Revised:** 2026-11-13.
+**Revised:** 2026-11-25.
 
 **Related:** [progression](systems/progression.md) · [lore](world/lore.md) ·
 [the cube](systems/cube.md) · [glossary](glossary.md)
@@ -11,8 +11,9 @@
 
 The **concrete run**: the jobs the player actually plays, one row each — their brief, field and entropy
 scale (the shape [progression](systems/progression.md) sets), plus their **lore skin**. Progression is
-the general system; this is the specific development of it. All eleven v1 jobs are baked.
-This doc is **chapters 1–2**; the store release's 2-5 and chapter 3 are in [chapters](chapters.md).
+the general system; this is the specific development of it. Chapter 1's seven jobs and seven of
+chapter 2's ten are baked; the three Clear jobs are landing.
+This doc is **chapters 1–2**; chapter 3 is in [chapters](chapters.md).
 
 ## The run — the mechanics
 
@@ -29,11 +30,16 @@ This doc is **chapters 1–2**; the store release's 2-5 and chapter 3 are in [ch
 | 2-2 | fan-out | Any | yes · 1 zone · 2 ships, one origin | Spiral | 12 + sun · multi | medium (budget 1.20) | an edit near the shared origin bends both paths |
 | 2-3 | converge | Any | yes · 1 zone · 2 ships, one destination | Spiral | 12 + sun · multi | medium (budget 1.50) | the planet by the shared destination fixes both approaches |
 | 2-4 | three ships | Any | yes · 1 zone · 3 ships, separate | Cluster | 14 + sun · multi | medium (budget 1.50) | one Wrap carries three ships; the field carries more than one ship |
+| 2-5 | fleet capstone | Any | yes · 1 zone · 3 ships, one origin | Cluster | 12 + sun · multi · deep | high (budget 1.20) | placement, shared paths and the field across every ship |
+| 2-6 | Clear with a fleet | Clear | yes · 1 zone · 2 ships, separate | Ring | 10 + sun · multi | medium | one blocker shared by both runs; shrinking it once frees the fleet |
+| 2-7 | Clear among decoys | Clear | yes · 1 zone · 2 ships, separate | Cluster | 12 + sun · multi | medium | the shared blocker hides among planets that only look involved |
+| 2-8 | two shared blockers | Clear | yes · 1 zone · 2 ships, separate | Spiral | 12 + sun · multi | medium | two shared blockers, two edits on one budget |
 
 Fleet jobs request **Any**, except the Clear fleets (2-6 to 2-8), which ask for **Clear**; the rest are checked by playing them.
 
-**Chapter 1 is seven jobs (2026-11-05); the run is eleven (2026-11-11): 1 scale, 2 centre, 3 clear,
-4 move, 5 multi-zone, 6 the field carries you, 7 capstone `Curve`, then chapter 2's four fleet jobs.**
+**Chapter 1 is seven jobs (2026-11-05); the run is twenty-three (2026-11-25): 1 scale, 2 centre,
+3 clear, 4 move, 5 multi-zone, 6 the field carries you, 7 capstone `Curve`, then chapter 2's ten
+fleet jobs.**
 The fixed-cube several-zones rung is retired; "several zones" lands with the move at
 job 5. There is no job 8 (decided 2026-11-11): **Mixed** moves to a later chapter, since chapter 2
 ships after job 7 ([chapters](chapters.md)).
@@ -122,7 +128,8 @@ includes an off-centre zone, so the player must move the cube.
 scales several zones with the star included, so the player must move out to the other zones. It combines
 every verb except both roles; both roles are deferred to a later chapter.
 
-**The slice.** Jobs 1–7 are chapter 1's seven-job run; chapter 2 adds four fleet jobs; ~1 minute each.
+**The slice.** Jobs 1–7 are chapter 1's seven-job run; chapter 2 adds ten fleet jobs; ~1–3 minutes
+each.
 
 **Multi-ship.** Chapter 1's seven-job spine is single-ship; the rule is in
 [progression](systems/progression.md) §The puzzle map; multi-ship is chapter 2
@@ -249,7 +256,7 @@ contract, not the dialogue.
 Episode 2: the Wrap works, so the firm sells more ships on the same entropy, sold as green. The clients
 stay absurd; the greed is in Jim's opener and receipts, and the manual's fine print
 ([lore](world/lore.md) §Episodes). Jim's opener ("Good news. Clients love our green initiative." /
-"Bad news. …") plays once before 2-1.
+"Bad news. …") plays once before the chapter's first job (02_09).
 
 | # | Client | Cargo | Manual entry |
 |---|---|---|---|
@@ -259,6 +266,10 @@ stay absurd; the greed is in Jim's opener and receipts, and the manual's fine pr
 | 2-2 | Slightly Used Stars Ltd. | two secondhand fusion cores (slightly dimmed) | "One origin, two promises: bend near the start. Shared failures are billed twice." |
 | 2-3 | The Last Two Customers | two halves of a gift | "Fix the shared approach once. Our Space Corp values every customer. Both of them." |
 | 2-4 | The Very Small Opera | the orchestra, one live animal | "Every ship draws on the same Wrap. Live cargo travels at its own existential risk." |
+| 2-5 | The Committee for Three Suns | three commemorative suns | "One Wrap carries three ships. Extra ships are a promise, not a budget line." |
+| 2-6 | The Bureau of Shared Walls | two doors, one frame | "Both runs cross the same blocker. Shrink it once; the budget stays one number." |
+| 2-7 | The Lost and Found Office | a crate of unclaimed umbrellas | "A blocker can hide among planets that only look involved. Read the runs." |
+| 2-8 | The Two Shadows Company | two shadows, one lamp | "Two blockers, two edits, one budget. Growing a clear planet is not help." |
 
 ## The manual's arc
 

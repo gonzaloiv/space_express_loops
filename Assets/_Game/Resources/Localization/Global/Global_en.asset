@@ -195,11 +195,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 74113009852272659
-    m_Localized: '> WIRE: A PLANET IN THE SECTOR WILL NOT MOVE'
+    m_Localized: '> WIRE: TRANSPORT FIRMS LEFT: 1'
     m_Metadata:
       m_Items: []
   - m_Id: 74113009852272660
-    m_Localized: '> WIRE: TRANSPORT FIRMS LEFT: 1'
+    m_Localized: '> WIRE: THE FIELD IS NOT COVERED BY THE WARRANTY'
     m_Metadata:
       m_Items: []
   - m_Id: 74113009852272661
@@ -211,11 +211,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 74113009852272663
-    m_Localized: '> WIRE: A BODY IN THE SECTOR WILL NOT MOVE'
+    m_Localized: '> WIRE: A PLANET IN THE SECTOR WILL NOT MOVE'
     m_Metadata:
       m_Items: []
   - m_Id: 74113009852272664
-    m_Localized: '> WIRE: THE FIELD IS NOT COVERED BY THE WARRANTY'
+    m_Localized: '> WIRE: A BODY IN THE SECTOR WILL NOT MOVE'
     m_Metadata:
       m_Items: []
   - m_Id: 74113009852272665

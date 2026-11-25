@@ -15,7 +15,7 @@
 Chapter 2 opens with two jobs where one pinch on a fixed cube moves two ships: fan-out (the cube on a
 planet next to the shared origin), then separate (the cube on a planet between the runs). The first
 of four chapter 2 plans; the others are [fleet Clear](fleet-clear.md),
-[fleet capstone](fleet-capstone.md) and [chapter 2 lines](../backlog/chapter-2-lines.md).
+[fleet capstone](fleet-capstone.md) and [chapter 2 lines](chapter-2-lines.md).
 
 ## Depends on
 

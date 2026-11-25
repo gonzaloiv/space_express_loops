@@ -1,7 +1,7 @@
 # Chapter 2 lines
 
-**Status:** next · universe · updated 2026-11-26 — cards, Jim's lines, clips and the sector wire for
-chapter 2's six new jobs.
+**Status:** now · universe · updated 2026-11-25 — U1 cards/lines and U3's wire are in; U2's 30 spoken
+keys are listed in [clips](chapter-2-lines-clips.txt) and await the `Downloader - OS` batch.
 
 **Related:** [plans board](../README.md) · [story arc](../../solutions/narrative/story-arc.md) ·
 [jobs](../../design/jobs.md) · [lore](../../design/world/lore.md#episodes)
@@ -16,6 +16,19 @@ with ten chapter 2 jobs.
 The jobs from [chapter 2 intro](../in-progress/chapter-2-intro.md), [fleet Clear](../in-progress/fleet-clear.md) and
 [fleet capstone](../in-progress/fleet-capstone.md) (ids in [chapter 2 intro](../in-progress/chapter-2-intro.md) §Ids), and [story arc](../../solutions/narrative/story-arc.md)
 (done: the ≤ 90-character manual rule, the card numbered by play order).
+
+## Progress (2026-11-25)
+
+- **U1 in.** 02_05–02_08 have client, cargo, manual entry and five spoken lines each in `Levels_en`
+  (02_09/02_10 already had theirs from the intro plan); `jobs.md` lists all four cards.
+- **U3 in.** Chapter 2 now owns wire keys 08–17: the two damage lines moved to chapter 3 (20–21),
+  key 17 is the episode-2 close (*not covered by the warranty*), and `SectorWireTests` pins the
+  7 + 10 + 6 seams to `LineCount = 24`.
+- **U2 open.** The 30 spoken keys are listed in [clips](chapter-2-lines-clips.txt); the mp3s are
+  generated outside the repo through the `Downloader - OS` batch. The line spreadsheet still needs
+  this batch mirrored before the next sync.
+- **Waiting on the Clear bakes.** 02_06–02_08 have no asset yet, so their new keys resolve but
+  cannot play until the jobs land in `Chapters/02.asset`.
 
 ## Units
 
@@ -34,10 +47,12 @@ The jobs from [chapter 2 intro](../in-progress/chapter-2-intro.md), [fleet Clear
 
 ### U3 — the sector wire
 
-- `SectorWire` is keyed by solved count (`LineCount = 24`); six new chapter 2 jobs shift keys 7–17.
+- `SectorWire` is keyed by solved count (`LineCount = 24`); the ten chapter 2 jobs own keys 08–17.
   Re-author the middle lines so each still lands in its chapter (chapter 2's lines while chapter 2
   plays, chapter 3's frame after), and update `SectorWireTests`.
 - Exit: the wire reads in order across 7 + 10 + chapter 3's jobs; the fast suite is green.
+- **Done:** keys 08–17 are the fleet arc; 20–21 are chapter 3's anchor reveal; the warranty line
+  closes episode 2. `Key_ChapterSeamsFollowThePlayOrder` checks the seams and the total.
 
 ## Manual check (headset)
 

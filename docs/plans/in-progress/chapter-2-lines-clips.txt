@@ -1,0 +1,30 @@
+level_02_09_complete_01_win	Both dinners arrived. Nobody checked which was which.
+level_02_09_complete_02	Twin Moons paid twice and called it efficiency.
+level_02_09_fail_annoyed	One dinner is late. The other is getting cold.
+level_02_09_init_01	Two dinners left the same kitchen at once.
+level_02_09_init_02_confused	The client wants both at the same time. Through different doors.
+level_02_10_complete_01_win	Both cakes arrived. Neither bakery will admit it.
+level_02_10_complete_02	The feud continues, now with better logistics.
+level_02_10_fail_annoyed	One cake is still in the field. So is the argument.
+level_02_10_init_01_annoyed	The bakeries will not share a van.
+level_02_10_init_02	So we are sending two ships and one cube between them.
+level_02_05_complete_01_win	All three arrived. The committee counted twice.
+level_02_05_complete_02	The field came back quiet. I am choosing to like that.
+level_02_05_fail_annoyed	One statue is still out there. They noticed.
+level_02_05_init_01_surprised	Three ships. The committee wants them all at once.
+level_02_05_init_02	Fan them out. One Wrap still has to carry all three.
+level_02_06_complete_01_win	Both doors through. The wall is smaller and still load-bearing.
+level_02_06_complete_02	One edit, two clearances. The ledger likes this one.
+level_02_06_fail_annoyed	One door is through. The other is still behind the wall.
+level_02_06_init_01	Two deliveries. One wall in the way of both.
+level_02_06_init_02_confused	The bureau says the wall is load-bearing. Shrink it anyway.
+level_02_07_complete_01_win	Both runs clear. The other planets were innocent.
+level_02_07_complete_02	The umbrellas are delivered. Still nobody claims them.
+level_02_07_fail_annoyed	That was a decoy. The crate is still behind the real one.
+level_02_07_init_01	The lost office lost the crate. We found it. Now move it.
+level_02_07_init_02	Every planet looks guilty. Only one is in the way of both.
+level_02_08_complete_01_win	Both shadows through. The lamp stayed.
+level_02_08_complete_02	Two blockers gone, one invoice. The field looks tired.
+level_02_08_fail_annoyed	One shadow is waiting. It has nowhere else to be.
+level_02_08_init_01_annoyed	Two shadows. Two planets in the way. One budget.
+level_02_08_init_02	The lamp is not moving. The shadows are.

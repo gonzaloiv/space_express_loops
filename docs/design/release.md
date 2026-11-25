@@ -86,7 +86,7 @@ something breaks the universe, there may be no good option left. For this releas
 - **What breaks (settled 2026-11-25).** The damage is in the bodies: anchored planets and repulsors.
   The Wrap routes a delivery through it, not mend a fused body; Jim denies the cause.
 - **Episodes 1–2's lines** now lead there: the job 1 receipt and job 7 close, chapter 2's opener and
-  2-4's close, the manual entries, the bulletins, and the sector wire.
+  2-8's close, the manual entries, the bulletins, and the sector wire.
 - **Each episode's turn** is in [lore](world/lore.md) §Episodes: episode 2 follows from episode 1 and
   sets up episode 3.
 - **The ending.** Chapter 3's close is the release's ending; the current ending moves there or is

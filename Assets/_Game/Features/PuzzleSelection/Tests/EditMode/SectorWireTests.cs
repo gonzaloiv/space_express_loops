@@ -4,6 +4,22 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
 {
     public class SectorWireTests
     {
+        private const int ChapterOneJobs = 7;
+        private const int ChapterTwoJobs = 10;
+        private const int ChapterThreeJobs = 6;
+
+        [Test]
+        public void Key_ChapterSeamsFollowThePlayOrder()
+        {
+            Assert.AreEqual("sector_wire_07", SectorWire.Key(ChapterOneJobs));
+            Assert.AreEqual("sector_wire_08", SectorWire.Key(ChapterOneJobs + 1));
+            Assert.AreEqual("sector_wire_17", SectorWire.Key(ChapterOneJobs + ChapterTwoJobs));
+            Assert.AreEqual("sector_wire_18",
+                SectorWire.Key(ChapterOneJobs + ChapterTwoJobs + 1));
+            Assert.AreEqual(1 + ChapterOneJobs + ChapterTwoJobs + ChapterThreeJobs,
+                SectorWire.LineCount);
+        }
+
         [Test]
         public void Key_FollowsTheSolvedCount()
         {
