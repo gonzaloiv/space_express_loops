@@ -4,6 +4,33 @@ Short post-mortems, written when a plan closes (rule in [AGENTS.md](../AGENTS.md
 morning). Newest first. Each entry: what worked, what surprised us, the rule for next time. One idea per
 bullet; the code and tests are the record of what was built.
 
+## 2026-11-25 — Fleet search
+
+- **Worked:** splitting the bake at a plain snapshot let the probe run on a Task while the field and the
+  variant stayed on the main thread; the synchronous bake and the background search share one
+  implementation.
+- **Surprised:** the editor dropping mid-scan was a recompile, not a cancel: the run must cancel, wait
+  briefly for the worker and release its assets on `beforeAssemblyReload`, or the one-search gate stays
+  locked.
+- **Surprised:** a test that compares two constructors of one type proves nothing once one delegates to
+  the other; assert the walk, the progress and the cancellation instead.
+- **Surprised:** the shipped three-ship fleet (02-4) no longer solves in the bake's candidate space
+  after the settings changed, so it cannot be a validating fixture; the headset check owns it.
+- **Next time:** give a background run its release hook from the start — `onDone` is never called on a
+  reload, so anything it would destroy leaks.
+
+## 2026-11-25 — Story arc
+
+- **Worked:** putting the arc on the seams — job 1's receipt, job 7's close, chapter 2's opener,
+  2-4's close — changed five beats instead of rewriting eleven jobs.
+- **Worked:** naming the damage as bodies (anchored, repulsor) gave chapter 3 a visible tell and the
+  arc a concrete hand-off; the "eleven years" note moved to the final manual entry.
+- **Surprised:** the sector wire is keyed to solved count, so inserting chapter 2's jobs shifts every
+  later line; the 24-key tail is only right while the 23-job count holds.
+- **Surprised:** changing a spoken line in place keeps its key and leaves the old mp3; the three clips
+  had to be regenerated after the text changed.
+- **Next time:** write the clip keys and the wire re-check into the plan before editing, not after.
+
 ## 2026-11-20 — Fleet sun answer
 
 - **Worked:** diagnosing the red smoke test first turned the mystery into a seed problem: seed 2's field

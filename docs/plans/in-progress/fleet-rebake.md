@@ -4,7 +4,9 @@
 tooling express a fleet and chapter 2, then rebake 2-1 to 2-3 with no sun answer.
 `PuzzleSunPlacement` / `OffCorridor` shipped (2026-11-20).
 
-**Related:** [plans board](../README.md) · [fleet search](fleet-search.md) (depends on) ·
+**Related:** [plans board](../README.md) ·
+[fleet search](../../../Assets/_Modules/Docs~/solutions/architecture-patterns/editor-bakes-on-a-plain-snapshot.md)
+(built) ·
 [release](../../design/release.md) ·
 [chapters](../../design/chapters.md#chapter-2--the-fleet-v1-then-the-store-release)
 
@@ -65,7 +67,8 @@ solution role is promised. 2-4 stays the sun job.
 
 ### U3 — rebake 2-1 to 2-3
 
-- Add `02_01`–`02_03` to `PuzzleJobContracts.All`, scan with the [fleet search](fleet-search.md),
+- Add `02_01`–`02_03` to `PuzzleJobContracts.All`, scan with the
+  [fleet search](../../../Assets/_Modules/Docs~/solutions/architecture-patterns/editor-bakes-on-a-plain-snapshot.md),
   and save each over its asset. The contracts carry the fleet bake's hard constraints and what the
   validator compares: `Translatable = true` (`CheckBrief`), `HasSun` per job (`CheckSources`: 2-1
   true, 2-2/2-3 false), `Mechanism = Any`, `Zones = 1`, `MinRoutes = 1`,

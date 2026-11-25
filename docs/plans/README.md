@@ -1,89 +1,42 @@
 # Plans — the board
 
-The single source of truth for what is being built: **Now → Next → Later**. Update this file when a
-plan changes state; each plan carries a matching `**Status:**` line.
-
-**Direction:** [vision](../design/vision.md) — the **lens** (the cube): scale the space, scale the content;
-the ship flies the deformed spacetime.
-
-## Road to the store
-
-**Target 2026-12-06, €4, 40–45 minutes** (set 2026-11-18): ~23 story jobs across chapters 1–3, then
-20 freelance contracts. Store validation has passed, so the release is a build upload; whatever is
-late ships as an update. Scope, content and schedule live in [release](../design/release.md); the
-game shape in [chapters](../design/chapters.md). Out of this release: the daily contract and
-leaderboards, freelance tiers and scores, resize and rotate, debris and inverted bodies.
+What is being built: **Now → Next → Later**. Each plan's `**Status:**` line matches its row here.
+Store release: €4, 6 Dec, ~23 story jobs + 20 freelance; scope and schedule in
+[release](../design/release.md). Post-mortems in [lessons](../lessons.md).
 
 ## Now
 
-Active work.
-
-- **25–26 Nov:** [fleet search](in-progress/fleet-search.md) →
-  [fleet rebake](in-progress/fleet-rebake.md) · [story arc](in-progress/story-arc.md)
-
-Past post-mortems are in [lessons](../lessons.md).
+- **25–26 Nov:** [fleet rebake](in-progress/fleet-rebake.md) · [story arc](in-progress/story-arc.md)
+  (clips, a lighter job card)
 
 ## Next
 
-The store release ([release](../design/release.md)), in schedule order:
-
-- **27–30 Nov:** [chapter 2 to ten jobs](backlog/chapter-2-to-ten.md)
+- **27–30 Nov:** chapter 2 to ten jobs: [intro](backlog/chapter-2-intro.md) → [fleet Clear](backlog/fleet-clear.md) · [capstone](backlog/fleet-capstone.md) → [lines and wire](backlog/chapter-2-lines.md)
 - **1–3 Dec:** [chapter 3](backlog/chapter-3.md) (anchored bodies, repulsors and the ending)
-- **3–5 Dec:** [freelance](backlog/freelance.md) + (timing pass, build, upload)
+- **3–5 Dec:** [freelance](backlog/freelance.md) + timing pass, build, upload
 
 ## Later
 
-Design-only or deferred. Nothing here is scheduled.
-
-- [Boot on one line](backlog/boot-one-line.md) — the console boot types through one localized line
-  instead of 13 per-line GameObjects. Only if there is time; not needed for the release.
-
-- The contract card stays available during the run as a static reference; otherwise
-  help reaches the player at the start (Jim's line, the gesture prompts) and the end (the complete/fail
-  message) — no reactive in-solve hint surface.
-
-Candidate ideas (not plans) live in [docs/ideas](../ideas/README.md): variations, element pack,
-hologram look, TTS companion (deferred), feel polish, playable map field.
+- [Boot on one line](backlog/boot-one-line.md) — only if there is time.
+- Ideas (not plans): [docs/ideas](../ideas/README.md).
 
 ## Open tails
 
-Loose ends that still need a home. Close one by linking the plan that finishes it.
+One line each: what is left and where it lands.
 
-- **Job 7's manual shortening (from run fixes).** Waits on the lore rethink: does the "eleven years"
-  note move or stay. Likely settled by [story arc](in-progress/story-arc.md).
-- **Field wells: kept (2026-11-11, headset).** The change-only wells are on in `Puzzle.prefab`
-  (committed). Left to do: describe them in [the cube](../design/systems/cube.md) §Feedback (the lattice
-  starts flat; a grown planet's well opens, a shrunk one flattens) and decide whether `LatticeWells`
-  keeps its toggle as a tuning block. The lattice still runs 48 points a line, uncommitted
-  (`LatticeMeshBuilder.SamplesPerLine`); with the line smoothing in, it can go back to 32.
-- **Endpoint rings (from endpoint shapes).** Second try (2026-11-11): a small ring *under* the planet
-  (a `Base` child at -0.7 body radius, planet-sized, not spinning) instead of around it, and the
-  endpoint bodies spin like every planet again (`ConstantRotation`). Third pass: one ring for every
-  endpoint, smaller (the filled band at ×0.7, 0.21–0.35 of the body radius), so origin and destination
-  no longer differ by shape — only the route colour and the line's direction tell them apart, and the
-  interchange keeps its markers. `OpenRing.asset` is now unused. Update
-  [the cube](../design/systems/cube.md) §Feedback ("filled/open ring around the planet") once settled.
-- **The ending on the headset.** The exit cue and the lit-map cue start almost together; keep one if
-  they clash. The ending moves to chapter 3 ([chapter 3](backlog/chapter-3.md) U5).
-- **Route end fallback.** `MapRouteLine.EndIndex` returns `-1` when no job is `Current` or solved
-  (unreachable today); make it safe if that can ever happen.
-- **Gesture prompt icons — read well on the headset (2026-11-18).** Rendered by
-  `Tools/Our Space/Render Gesture Prompt Art` (`GesturePrompts/Editor`); re-run it after tuning a motion.
-- **Job 1 on the headset.** Rebaked 2026-11-06 (six planets, a sun the cube does not cover, seed 141);
-  it still needs a headset read. The job set's bake and shipped-asset tests are green (2026-11-20).
-- **Ship-zone cue.** The ship has a trail; there is no zone indicator. No plan owns it, and with
-  multi-zone fleets dropped (2026-11-25) nothing needs it yet.
+- **Field wells** (on in `Puzzle.prefab`): describe them in [the cube](../design/systems/cube.md)
+  §Feedback; decide whether `LatticeWells` keeps its toggle; `LatticeMeshBuilder.SamplesPerLine` back
+  from 48 to 32 (uncommitted).
+- **Endpoint rings** (one small ring under every endpoint; `OpenRing.asset` unused): update
+  [the cube](../design/systems/cube.md) §Feedback once settled; delete `OpenRing.asset`.
+- **Route end fallback:** make `MapRouteLine.EndIndex` safe when it returns `-1` (unreachable today).
+- **Gesture prompt icons:** re-run `Tools/Our Space/Render Gesture Prompt Art` after tuning a motion.
+- **Job 1 on the headset:** rebaked 2026-11-06 (seed 141), still needs a headset read.
 
 ## Conventions
 
-- Every plan starts with a status line:
-  `**Status:** <state> · <area> · updated <yyyy-mm-dd> — <one-line summary>`
-  where `<state>` is one of `now`, `next`, `later`.
-- `<area>` is one of `space shaping`, `universe`, `presentation`, `flow`.
-- Folders: `now` → `in-progress/`; `next` and `later` → `backlog/`. Move the file and update this
-  board in the same change.
-- **Done plans are removed.** When a plan lands, add its post-mortem to [lessons](../lessons.md),
-  then delete its file and its board row; the code and tests are the record. Do not archive it in a
-  `done/` folder.
-- Run `docs/check.ps1` after moving files — it runs `check-plans.ps1` (links, status/folder, board) and
-  `check-docs.ps1` (design docs).
+- Status line: `**Status:** <now|next|later> · <space shaping|universe|presentation|flow> · updated
+  <yyyy-mm-dd> — <summary>`.
+- Folders: `now` → `in-progress/`; `next`/`later` → `backlog/`. **Only the user closes a plan.**
+  When they say to close it, follow [AGENTS](../../AGENTS.md) (post-mortem in lessons, then delete).
+  Run `docs/check.ps1` after moving files.
