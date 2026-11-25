@@ -60,7 +60,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             new PuzzleJobContract
             {
                 Id = "02_01", Seed = 7, Attempts = 1, PlanetCount = 10, FieldShape = PuzzleFieldShape.Ring,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 1,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.Separate,
@@ -69,7 +69,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             new PuzzleJobContract
             {
                 Id = "02_02", Seed = 4, Attempts = 1, PlanetCount = 12, FieldShape = PuzzleFieldShape.Spiral,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 0,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.FanOut,
@@ -78,7 +78,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             new PuzzleJobContract
             {
                 Id = "02_03", Seed = 8, Attempts = 1, PlanetCount = 12, FieldShape = PuzzleFieldShape.Spiral,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 0,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.Converge,
@@ -97,7 +97,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 3,
                 Relation = PuzzleShipRelation.FanOut,
                 Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
-                MinScaleDelta = 0.35f, MinStartDistance = 0.15f,
             },
             // Chapter 2 intro: two fixed-cube jobs, baked 2026-11-25. MaxScaleDelta is the widest
             // baked answer's |scale - 1|; tune it by playing.
