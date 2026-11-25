@@ -50,7 +50,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 PuzzleJobSeedScan.Entry entry = entries[i];
                 report.AppendLine(
                     $"seed={entry.Seed} baked={entry.Baked} meets={entry.MeetsContract} " +
-                    $"status={entry.Status} problem={entry.Problem} window={entry.Window}");
+                    $"status={entry.Status} problem={entry.Problem} window={entry.Window} " +
+                    $"scaleDelta={entry.ScaleDelta} startDistance={entry.StartDistance}");
             }
 
             WriteReport(job.Id, report.ToString());

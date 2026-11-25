@@ -17,6 +17,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             public bool MeetsContract;
             public string Problem;
             public float Window;
+            // The numbers a high-scramble contract pins: the answer's |scale - 1| and, on a
+            // movable job, how far the start frame sits from it.
+            public float ScaleDelta;
+            public float StartDistance;
             public PuzzleSolutionKind Kind;
             public PuzzleBakeStatus Status;
             public PuzzleRunReport RunReport;
@@ -128,6 +132,22 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 result.Puzzle, result.Kind, result.Solution, job, out List<string> problems, sim);
             entry.Problem = problems.Count > 0 ? problems[0] : string.Empty;
             entry.Window = PuzzleSolveWindow.Measure(result.Puzzle, result.Solution, sim);
+            MeasureScramble(ref entry, result);
+        }
+
+        // From the baked answer, not the asset: the shipped check re-solves and would measure another
+        // zone. The contract's bounds are pinned just under these.
+        private static void MeasureScramble(ref Entry entry, PuzzleSeedScanResult result)
+        {
+            if (result.Solution == null || result.Solution.Length == 0)
+                return;
+
+            Vector3 centre = result.Solution[0].centre;
+            entry.ScaleDelta = Mathf.Abs(result.Solution[0].scale - 1f);
+            if (result.Puzzle.frames == null || result.Puzzle.frames.Length == 0)
+                return;
+
+            entry.StartDistance = Vector3.Distance(result.Puzzle.frames[0].centre, centre);
         }
     }
 }

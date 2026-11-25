@@ -179,7 +179,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         private string ScanLine(PuzzleJobSeedScan.Entry entry)
         {
             string mark = entry.Seed == contractSeed ? "  ← contract" : string.Empty;
-            string line = $"seed {entry.Seed} · window {entry.Window:P0} · {entry.Kind}{mark}";
+            string line =
+                $"seed {entry.Seed} · window {entry.Window:P0} · Δ{entry.ScaleDelta:0.00} · " +
+                $"start {entry.StartDistance:0.000} · {entry.Kind}{mark}";
             return entry.MeetsContract ? $"✓ {line}" : $"✗ {line} — {entry.Problem}";
         }
 
