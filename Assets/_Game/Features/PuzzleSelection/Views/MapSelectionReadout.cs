@@ -11,16 +11,16 @@ namespace DigitalLove.Game.PuzzleSelection
             this.card = card;
         }
 
-        public void Show(JobEntry entry)
+        public void Show(JobEntry entry, int manualOrdinal)
         {
             PreviewIndex = entry.Index;
-            card.Show(entry.Puzzle, entry.State != JobState.Locked);
+            card.Show(entry.Puzzle, entry.State != JobState.Locked, manualOrdinal);
         }
 
-        public void ShowPreview(JobEntry entry)
+        public void ShowPreview(JobEntry entry, int manualOrdinal)
         {
             PreviewIndex = entry.Index;
-            card.ShowInstant(entry.Puzzle, entry.State != JobState.Locked);
+            card.ShowInstant(entry.Puzzle, entry.State != JobState.Locked, manualOrdinal);
         }
 
         public void Reset()

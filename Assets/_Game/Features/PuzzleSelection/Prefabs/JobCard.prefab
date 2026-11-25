@@ -753,8 +753,7 @@ MonoBehaviour:
   cargo: {fileID: 1674825546141324315}
   manual: {fileID: 7580705679710657139}
   manualRule: {fileID: 7895143132473514686}
-  typeCharsPerSec: 40
-  lineGapSecs: 0.12
+  typeCharsPerSec: 60
   bootSecs: 0.18
   closeSecs: 0.18
   minHeight: 300

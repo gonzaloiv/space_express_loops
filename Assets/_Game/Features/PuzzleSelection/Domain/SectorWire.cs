@@ -6,7 +6,7 @@ namespace DigitalLove.Game.PuzzleSelection
     // firm works. Past the last line the wire holds on it.
     public static class SectorWire
     {
-        public const int LineCount = 12;
+        public const int LineCount = 24;
         public const string CoverageKey = "map_coverage";
 
         public static string Key(int solved) =>

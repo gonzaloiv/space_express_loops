@@ -27,7 +27,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889858
-    m_Localized: The star is not a planet. It bends the same way. Stellar mass is included in your Wrap licence at no extra cost.
+    m_Localized: The star bends space like any planet. Stellar mass is included in your licence.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889860
@@ -39,7 +39,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889862
-    m_Localized: The Wrap takes as well as gives. A smaller world is a wider door. Shrinking inhabited bodies is permitted. Residents are not notified.
+    m_Localized: Shrink a world to widen the door. Residents are not notified.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889863
@@ -55,7 +55,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889866
-    m_Localized: The Wrap is yours to place. Where you work is a decision. Make it. Our Space Corp does not reimburse home office expenses.
+    m_Localized: Where you work is a decision. Our Space Corp does not reimburse home office expenses.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889868
@@ -67,7 +67,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889870
-    m_Localized: Multi-zone wrapping enabled. Spacetime elasticity is finite. Wrap only the minimum required volume. Our Space Corp accepts no liability for localized causality tears.
+    m_Localized: Multi-zone enabled. Wrap only what you need. No liability for causality tears.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889871
@@ -83,7 +83,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889874
-    m_Localized: The field is free. The Wrap is not. Existing gravity is public infrastructure. Use it before someone privatizes it.
+    m_Localized: The field is free. The Wrap is not. Use existing gravity before someone privatizes it.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889875
@@ -99,7 +99,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889878
-    m_Localized: This is the one the manual was written for. Welcome, new employee. There has not been a new employee in eleven years. There is still no office.
+    m_Localized: The manual was written for this one. Welcome, new employee. There is still no office.
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164255
@@ -115,7 +115,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164253
-    m_Localized: Three ships. The budget did not grow. Efficiency is a virtue until it is a cost. Live cargo travels at the client's own existential risk.
+    m_Localized: Every ship draws on the same Wrap. Live cargo travels at its own existential risk.
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164252
@@ -135,7 +135,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164247
-    m_Localized: Many routes may share one end. Fix the approach once. Our Space Corp values every customer. Both of them.
+    m_Localized: Fix the shared approach once. Our Space Corp values every customer. Both of them.
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164246
@@ -155,7 +155,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164241
-    m_Localized: One origin. Two promises. Bend near the start and both feel it. Shared departures are billed once. Shared failures are billed twice.
+    m_Localized: 'One origin, two promises: bend near the start. Shared failures are billed twice.'
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164240
@@ -175,7 +175,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164235
-    m_Localized: Two ships. One Wrap. One budget. Additional ships do not increase your entropy allowance. This is a feature.
+    m_Localized: Two ships, one budget. Extra ships do not raise your allowance. This is a feature.
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164234
@@ -195,7 +195,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164227
-    m_Localized: Today the space. Tomorrow the time.
+    m_Localized: The tech team says the Wrap can carry more than one ship. They want to try.
     m_Metadata:
       m_Items: []
   - m_Id: 7610346164226
@@ -283,7 +283,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969922
-    m_Localized: You bend space. Ships get through.
+    m_Localized: You bend space. Ships get through. The tech team already wants more.
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969921
@@ -339,7 +339,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889891
-    m_Localized: Welcome, new employee. Your console projects the Wrap into the room it stands in. Place it anywhere in your residential unit. Headquarters is undergoing an indefinite administrative restructuring.
+    m_Localized: Welcome, new employee. Wrap from any room. Headquarters is restructuring indefinitely.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889893
@@ -455,7 +455,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889922
-    m_Localized: Three for the price of one. I am not sure that is good news.
+    m_Localized: Three for the price of one. The field came back wrong. Probably nothing.
     m_Metadata:
       m_Items: []
   - m_Id: 40169889255424
@@ -475,7 +475,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889925
-    m_Localized: '> ONE FIRM FOUND ANOTHER WAY TO SPEND.'
+    m_Localized: '> ONE FIRM FOUND ANOTHER WAY TO SPEND. THE FIELD IS STARTING TO SHOW IT.'
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889926
@@ -487,7 +487,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889928
-    m_Localized: '> THE BROCHURES CALL IT GREEN.'
+    m_Localized: '> THE BROCHURES CALL IT GREEN. THE FIELD DOES NOT.'
     m_Metadata:
       m_Items: []
   references:

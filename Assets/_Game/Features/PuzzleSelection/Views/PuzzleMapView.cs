@@ -144,7 +144,7 @@ namespace DigitalLove.Game.PuzzleSelection
         public void Refuse()
         {
             enter.Reset();
-            readout.Show(map.Selected);
+            readout.Show(map.Selected, map.ManualOrdinal(map.SelectedIndex));
             selectedSlot.PlayRefusal();
             mapCube.Refuse();
         }

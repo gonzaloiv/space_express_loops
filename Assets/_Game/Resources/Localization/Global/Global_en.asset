@@ -178,6 +178,54 @@ MonoBehaviour:
     m_Localized: '> WIRE: TIME WRAP PROTOTYPE "ON SCHEDULE"'
     m_Metadata:
       m_Items: []
+  - m_Id: 74113009852272655
+    m_Localized: '> WIRE: FLEET RUNS UP. THE FIELD IS QUIETER'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272656
+    m_Localized: '> WIRE: THE FIELD IS NOT ON THE LEDGER'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272657
+    m_Localized: '> WIRE: GREEN INDEX UP. THE FIELD DOWN'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272658
+    m_Localized: '> WIRE: SCHOOL 7 STILL STORAGE. NOW IT LEANS'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272659
+    m_Localized: '> WIRE: A PLANET IN THE SECTOR WILL NOT MOVE'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272660
+    m_Localized: '> WIRE: TRANSPORT FIRMS LEFT: 1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272661
+    m_Localized: '> WIRE: AUDIT OFFICE OPENS A FILE ON THE WRAP'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272662
+    m_Localized: '> WIRE: ''ROUTINE,'' SAYS OUR SPACE CORP'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272663
+    m_Localized: '> WIRE: A BODY IN THE SECTOR WILL NOT MOVE'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272664
+    m_Localized: '> WIRE: THE FIELD IS NOT COVERED BY THE WARRANTY'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272665
+    m_Localized: '> WIRE: TIME WRAP PROTOTYPE DELAYED'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74113009852272666
+    m_Localized: '> WIRE: NOBODY IS BORN. NOTHING GROWS. SOMETHING LEANS'
+    m_Metadata:
+      m_Items: []
   - m_Id: 74113009852272654
     m_Localized: 'JOBS {0}/{1} · STARS {2}/{3}'
     m_Metadata:

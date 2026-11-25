@@ -56,7 +56,7 @@ namespace DigitalLove.Game.PuzzleSelection
                 return;
 
             JobEntry entry = map[nearest];
-            readout.ShowPreview(entry);
+            readout.ShowPreview(entry, map.ManualOrdinal(nearest));
         }
 
         public void Hide()
@@ -72,7 +72,7 @@ namespace DigitalLove.Game.PuzzleSelection
         {
             JobEntry selected = map.Selected;
             selectedSlot.ShowMapField(selected, tint.For(selected.State), showFrames, true);
-            readout.Show(selected);
+            readout.Show(selected, map.ManualOrdinal(selected.Index));
             selectedSlot.SetZoom(1f);
             if (selected.State == JobState.Current
                 && map.SelectedIndex == map.HighestCurrentIndex)

@@ -45,7 +45,7 @@ captions: many judges watch muted.
 | 1:15–1:35 | **The stakes.** The entropy meter drains, a crash and the fail sting, retry, the 3★ stamp. | *Every change costs entropy.* |
 | 1:35–1:55 | **Chapter 2, the fleet.** Two or three ships; one cube shape has to save them all. | *Then the fleet.* |
 | 1:55–2:15 | **The ending.** The whole map lights up, total stars, Jim closes the episode. | — |
-| 2:15–2:30 | **What's next + end card.** Chapter 3 (resize, rotate), freelance contracts, the daily contract, a Meta store release. | Name · Meta Quest · hand tracking |
+| 2:15–2:30 | **What's next + end card.** Chapter 3 (the damage), freelance contracts, a Meta store release. | Name · Meta Quest · hand tracking |
 
 **Capture notes.** Record each beat separately with several takes on the frozen build, using Meta's
 on-device capture (enable the 16:9 crop if offered). Keep the head still, move the hands slowly and

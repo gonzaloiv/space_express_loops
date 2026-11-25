@@ -26,8 +26,7 @@ namespace DigitalLove.Game.PuzzleSelection
         [SerializeField] private TMP_Text manual;
         [Tooltip("Rule between the contract and the manual; shown only when the card has a manual.")]
         [SerializeField] private GameObject manualRule;
-        [SerializeField, Min(0f)] private float typeCharsPerSec = 40f;
-        [SerializeField, Min(0f)] private float lineGapSecs = 0.12f;
+        [SerializeField, Min(0f)] private float typeCharsPerSec = 60f;
         [SerializeField, Min(0f)] private float bootSecs = 0.18f;
         [SerializeField, Min(0f)] private float closeSecs = 0.18f;
         [Tooltip("The card never gets shorter than this (canvas units); a longer contract grows it.")]
@@ -43,14 +42,14 @@ namespace DigitalLove.Game.PuzzleSelection
         public event Action Opened;
         public event Action LineTyped;
 
-        public void Show(PuzzleData puzzle, bool includeManual = true)
+        public void Show(PuzzleData puzzle, bool includeManual, int manualOrdinal)
         {
-            Open(puzzle, includeManual, typed: true);
+            Open(puzzle, includeManual, manualOrdinal, typed: true);
         }
 
-        public void ShowInstant(PuzzleData puzzle, bool includeManual = true)
+        public void ShowInstant(PuzzleData puzzle, bool includeManual, int manualOrdinal)
         {
-            Open(puzzle, includeManual, typed: false);
+            Open(puzzle, includeManual, manualOrdinal, typed: false);
         }
 
         public void Hide()
@@ -63,12 +62,12 @@ namespace DigitalLove.Game.PuzzleSelection
             closeRoutine = StartCoroutine(ShrinkOut());
         }
 
-        private void Open(PuzzleData puzzle, bool includeManual, bool typed)
+        private void Open(PuzzleData puzzle, bool includeManual, int manualOrdinal, bool typed)
         {
             bool wasActive = gameObject.activeSelf;
             StopClose();
             StopBoot();
-            ApplyContent(puzzle, includeManual);
+            ApplyContent(puzzle, includeManual, manualOrdinal);
             gameObject.SetActive(true);
             FitHeight();
             if (typed)
@@ -93,25 +92,29 @@ namespace DigitalLove.Game.PuzzleSelection
         }
 
         // The header carries the console's clock: the player's own local time, usually late.
-        private void ApplyContent(PuzzleData puzzle, bool includeManual)
+        private void ApplyContent(PuzzleData puzzle, bool includeManual, int manualOrdinal)
         {
             header.text = $"{HeaderTitle}   {DateTime.Now:HH:mm}";
             client.text = $"{Row("JOB", puzzle.id.Replace('_', '-'))}\n{Line("CLIENT", puzzle.ClientKey)}";
             cargo.text = Line("CARGO", puzzle.CargoKey);
-            manual.text = includeManual ? ManualLine(puzzle) : string.Empty;
+            manual.text = includeManual
+                ? ManualLine(puzzle, Mathf.Max(1, manualOrdinal))
+                : string.Empty;
             manualRule.SetActive(manual.text.Length > 0);
         }
 
         // The manual is a release the tech team keeps patching: "MANUAL v1.0.3 (INITIAL DEPLOYMENT)",
-        // then the entry on its own line.
-        private static string ManualLine(PuzzleData puzzle)
+        // then the entry on its own line. The release name shows on the chapter's first card only.
+        private static string ManualLine(PuzzleData puzzle, int manualOrdinal)
         {
             string entry = LocalizationUtil.GetValue(tableName: TableName, key: puzzle.ManualKey);
             if (string.IsNullOrEmpty(entry))
                 return string.Empty;
 
-            string release = LocalizationUtil.GetValue(tableName: TableName, key: puzzle.ManualReleaseKey);
-            string version = $"MANUAL v{puzzle.ManualVersion}";
+            string release = manualOrdinal == 1
+                ? LocalizationUtil.GetValue(tableName: TableName, key: puzzle.ManualReleaseKey)
+                : string.Empty;
+            string version = $"MANUAL v{puzzle.ManualVersionFor(manualOrdinal)}";
             string heading = string.IsNullOrEmpty(release) ? version : $"{version} ({release})";
             return $"{Dim}{heading}{Full}\n{entry}";
         }
@@ -159,7 +162,7 @@ namespace DigitalLove.Game.PuzzleSelection
             revealRoutine = StartCoroutine(
                 JobCardTypewriter.Reveal(
                     new CardLines(header, client, cargo, manual),
-                    typeCharsPerSec, lineGapSecs, () => LineTyped?.Invoke()));
+                    typeCharsPerSec, () => LineTyped?.Invoke()));
         }
 
         private void RevealAll()

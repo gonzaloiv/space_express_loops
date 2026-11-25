@@ -4,6 +4,8 @@
 the Wrap cannot change, then repulsors that push instead of pull; its episode and the release's
 ending.
 
+**Bakes:** off the editor — U4 (the jobs) ([AGENTS](../../../AGENTS.md#bakes-run-off-the-editor), `docs/tools/bake.ps1`).
+
 **Related:** [plans board](../README.md) · [release](../../design/release.md) ·
 [chapters](../../design/chapters.md#chapter-3--broken-bodies-store-release) ·
 [lore](../../design/world/lore.md#episodes) · [the cube](../../design/systems/cube.md)
@@ -17,8 +19,8 @@ ship aside. Both read as the damage: spacetime is torn and some bodies no longer
 
 ## Depends on
 
-The [story arc](../in-progress/story-arc.md) U1–U2 (what breaks, chapter 3's episode and clients). Anchored and
-pushing bodies are a candidate for U1's visible tell.
+The [story arc](../in-progress/story-arc.md) (what breaks, chapter 3's episode and clients). The
+anchored body is the guaranteed visible tell; pushing bodies are the second if the gate passes.
 
 ## Notes
 
@@ -34,7 +36,9 @@ pushing bodies are a candidate for U1's visible tell.
 
 ### U1 — the chapter
 
-- `Chapters/03.asset` and its folder; the map gains a third system; the episode and client rows.
+- `Chapters/03.asset` and its folder; `chapter_03_title` / `chapter_03_manual_release`
+  (*EPISODE 3 · THE DAMAGE* / *DAMAGE CONTROL*); the map gains a third system; the episode and client
+  rows from [chapters](../../design/chapters.md) §Chapter 3.
 - Exit: an empty chapter 3 opens after chapter 2 in the editor.
 
 ### U2 — anchored bodies
@@ -63,10 +67,15 @@ pushing bodies are a candidate for U1's visible tell.
 
 ### U5 — lines, manual and the ending
 
-- Jim's opener and per-job lines, the manual entries for both bodies, and the ending: today's ending
-  (Jim closing the episode) moves after chapter 3 or is rewritten; freelance plays as the epilogue,
-  Jim's job board after the story. Regenerate the TTS clips. If the ending keys change, update
-  `RunEndingView`'s serialized keys in `Game.unity`.
+- Jim's opener, per-job lines, the chapter bulletin (`chapter_03_bulletin_01..03`), the manual entries
+  for both bodies (one rule plus one fine-print line, ≤90 characters; the final entry is
+  *"Welcome, new employee. No new employee in eleven years. There is still no office."*), and the
+  ending: today's ending (Jim closing the episode) moves after chapter 3 or
+  is rewritten; freelance plays as the epilogue, Jim's job board after the story. The final manual
+  entry carries the "eleven years" note moved from job 7 (*DAMAGE CONTROL*); the roadmap slogan
+  *"Today the space. Tomorrow the time."* moves here from job 7. Re-check the sector wire tail against
+  the final job count. Regenerate the TTS clips. If the ending keys change, update `RunEndingView`'s
+  serialized keys in `Game.unity`.
 - Exit: the chapter plays end to end, ending included; [freelance](freelance.md) opens after it.
 
 ## Manual check (headset)
@@ -76,5 +85,6 @@ pushing bodies are a candidate for U1's visible tell.
 3. The anchor jobs are solved through the neighbours, not the anchor.
 4. A repulsor reads as different (look and raised lattice) before the ship flies.
 5. Shrinking a repulsor opens the gap; growing one shoves the ship aside.
-6. The ending plays after chapter 3, not after chapter 2.
+6. The ending plays after chapter 3, not after chapter 2; the exit cue and the lit-map cue do not
+   clash (they start almost together today; keep one if they do).
 7. Time each job; the target is ~3 min; check frame rate with both new bodies in the field.

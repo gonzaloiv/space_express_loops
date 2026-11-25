@@ -7,7 +7,7 @@ Store release: €4, 6 Dec, ~23 story jobs + 20 freelance; scope and schedule in
 ## Now
 
 - **25–26 Nov:** [fleet rebake](in-progress/fleet-rebake.md) · [story arc](in-progress/story-arc.md)
-  (clips, a lighter job card)
+  (headset pass, sheet mirror)
 
 ## Next
 

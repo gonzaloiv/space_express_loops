@@ -38,6 +38,19 @@ namespace DigitalLove.Game.PuzzleSelection
             return false;
         }
 
+        // 1-based place of the job in its chapter's play order: the manual's patch number.
+        public int ManualOrdinal(int index)
+        {
+            for (int i = 0; i < chapters.Length; i++)
+            {
+                MapChapter chapter = chapters[i];
+                if (index >= chapter.Start && index < chapter.Start + chapter.Count)
+                    return index - chapter.Start + 1;
+            }
+
+            return index + 1;
+        }
+
         public int SelectedIndex => selectedIndex;
 
         public int HighestCurrentIndex

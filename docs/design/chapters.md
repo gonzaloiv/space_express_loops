@@ -43,10 +43,10 @@ No new verb. The ramp restarts: low scramble, Ring shape.
 | 2-3 | **Converge** | movable · 2 ships · one destination | 12 · Spiral | The planet by the shared destination fixes both approaches. |
 | 2-4 | **Three ships** | movable · 3 ships · separate | 12 · Cluster | Three fixes on one budget; the field carries more than one ship. |
 | 2-5 | **Fleet capstone** | movable · 3 ships · fan-out | 12 · Cluster · high scramble | Placement, shared paths and the field across every ship. |
-| 2-6 to 2-8 | **Clear with a fleet** | movable · 2–3 ships | Clear answer | One obstacle in more than one ship's path: one blocker → among decoys → two blockers. |
+| 2-6 to 2-8 | **Clear with a fleet** | movable · 2 ships | Clear answer | One obstacle in more than one ship's path: one blocker → among decoys → two blockers. |
 
 The intro jobs play before 2-1; 2-1 to 2-4 keep their ids, and new jobs take the next free ids
-([chapter 2 to ten](../plans/backlog/chapter-2-to-ten.md)). Multi-ship bakes need ≥ 9 planets, use
+([chapter 2 intro](../plans/backlog/chapter-2-intro.md) and the plans after it). Multi-ship bakes need ≥ 9 planets, use
 one cube (fixed or movable), and cannot request a role yet, so every fleet job is checked by playing
 it. **Slightly Used Stars Ltd.** returns at 2-2.
 
@@ -68,6 +68,21 @@ The ramp: an anchor on the line → among decoys → a repulsor to shrink → a 
 a capstone (with a fleet or a second sun). A second sun (another `centreOnly` source) is field
 variety inside these jobs, not a lesson. If repulsors are not ready, chapter 3 ships with anchored
 jobs and repulsors come in an update.
+
+**Episode 3 — the damage** (named 2026-11-25; manual release *DAMAGE CONTROL*). The clients stay
+absurd; the damage stays in the bodies.
+
+| # | Lesson | Client | Cargo |
+|---|---|---|---|
+| 3-1 | anchor on the line | The Museum of Small Disasters | a cracked marble |
+| 3-2 | anchor among decoys | Two Brothers, One Address | a shared inheritance |
+| 3-3 | repulsor to shrink | The Quiet Hours Union | a night shift |
+| 3-4 | repulsor to grow | The Gravity Choir | a hymn in three parts |
+| 3-5 | repulsor and anchor | The Last Two Customers | the other half of the gift |
+| 3-6 | capstone: both, a fleet or a second sun | The Sector Audit Office | the firm's entropy ledger |
+
+The sector audit is the frame: Jim calls it routine; the player sees what it is. If repulsors do not
+ship, 3-3 and 3-4 become anchored jobs and 3-5/3-6 use anchors and a second sun.
 
 **Future options** ([later chapters](../ideas/later-chapters.md) §Broken physics): **debris** (a broken
 planet's tight cluster of fragments, each its own kind, so one pinch reshapes it unevenly) and

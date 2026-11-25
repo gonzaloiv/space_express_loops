@@ -117,21 +117,33 @@ it. An episode never explains itself and never resolves the bleak reading.
 |---|---|---|
 | 1 — the Wrap | the seven-job first episode | The firm bets on a machine nobody trusts, and the new employee makes it work. |
 | 2 — the fleet | the multi-ship jobs | It works, so the firm gets greedy: more ships on the same entropy, sold as green. Greed is eco-friendly, and Jim is not sure that is good news. |
-| 3 — *to name* | the store release's last chapter | Something breaks, and no choice left is a good one. Jim's frame is denial: *look, it's all broken, but don't worry — just do your job and carry on; it probably has nothing to do with our machine.* The player fixes the damage the Wrap likely caused and draws the conclusion alone. |
+| 3 — the damage | the store release's last chapter | Something breaks, and no choice left is a good one. The damage is in the bodies: some are fused in place, some push instead of pulling. Jim's frame is denial: *look, it's all broken, but don't worry — just do your job and carry on; it probably has nothing to do with our machine.* The player routes the delivery through the damage and draws the conclusion alone. |
 
-**The arc (decided 2026-11-18).** The episodes build to one realisation: if something breaks the
-universe, there may be no good option left. The Wrap spends entropy that does not come back, and
-it can, in principle, destroy the universe (§The tech). The fine print plants it from the start
-(job 5: *"Spacetime elasticity is finite… localized causality tears"*; job 6: *"The field is free. The
-Wrap is not."*). Episode 1 shows the machine working and hints at its cost; episode 2 spends more of
-it, for greed; episode 3 is where the cost shows. Still open: what breaks (something visible in the
-field that Jim cannot explain away) and whether the player's own Wraps contributed to it. The
-realisation stays unspoken, like the bleak reading (§The bleak reading).
+**The arc (decided 2026-11-18, settled 2026-11-25).** The episodes build to one realisation: if
+something breaks the universe, there may be no good option left. The Wrap spends entropy that does not
+come back, and that spend tears local spacetime (§The tech). The fine print plants it from the start
+(job 5: *"No liability for causality tears."*; job 6: *"The field is free. The Wrap is not."*).
+Episode 1 shows the machine working and hints at its cost; episode 2 spends more of
+it, for greed; episode 3 is where the cost shows.
 
-**The long arc.** The player goes from doing the job to using the Wrap to fix the universe. The same
-tool that bent space for deliveries is the only thing that can mend what it broke. Episode 3 starts
-it in the store release: its fields are presented as torn spacetime, and the player's Wraps put them
-back (the scramble, told as damage). Fields with truly broken physics are an idea for later
+**What breaks.** The tears show in the bodies, not the sky: a planet fused in place so the Wrap cannot
+change it (**anchored**), and a body that pushes instead of pulling (**repulsor**). The firm's fleet
+runs widened the tears; the player's own Wraps are part of that spend. The game never confirms the
+cause in dialogue — Jim denies it and the player decides. The Wrap can still bend the line around the
+damage, but it cannot put a fused body back. The realisation stays unspoken, like the bleak reading
+(§The bleak reading).
+
+**The turns.** Episode 1 ends with the ledger happy and the tech team's nerve up: the Wrap can carry
+more than one ship. Episode 2 spends that nerve — more ships on the same entropy, sold as green — until
+the field comes back wrong and Jim waves it away. Episode 3 is the damage: the firm is audited, some
+bodies no longer behave, and Jim keeps dispatching through it. The release ends with Jim out of
+contracts and the tech team promising more; freelance is the epilogue, not a fourth chapter.
+
+**The long arc.** The player goes from doing the job to using the Wrap to route around what it broke.
+The same tool that bent space for deliveries is the only thing that can still move through the damage;
+it cannot mend a fused body. Episode 3 starts it in the store release: its fields are presented as
+damaged, and the player's Wraps put the *route* back — the delivery lands, the broken bodies stay
+broken. Fields with truly broken physics are an idea for later
 ([later chapters](../../ideas/later-chapters.md) §Broken physics).
 
 **The bulletin frames the episode once you are inside it.** After a chapter's first job is solved,
@@ -145,8 +157,8 @@ and why). Then the job starts as usual with its own intro line, which stays the 
 never repeats the opener. Chapter 1 has none: job 1's receipt is Jim's introduction.
 
 The game is never finished in the fiction: the last episode closes with Jim out of contracts and the
-tech team promising more. The next episode is the
-next chapter; seeds for it live in §Seeds (externalised costs, *tomorrow the time*).
+tech team promising more. Freelance plays as the epilogue, not a fourth chapter; seeds for later work
+live in §Seeds (externalised costs, *tomorrow the time*).
 
 ## The customers
 
@@ -237,8 +249,8 @@ an object, not a line. Where each one lives:
 
 - **Externalised costs.** A cheap route that grazes an inhabited world, or a crew put in a time
   well, as a social/human price hidden from the ledger.
-- **The manual's arc.** The entries open cheerful and end bleak — they are written to "the new employee",
-  and that is you. The arc lives in the text and its revisions, not a second character.
+- **The manual's arc.** The entries open cheerful and end in denial — they are written to "the new
+  employee", and that is you. The arc lives in the text and its revisions, not a second character.
 - **Per-job launch (the narrative fuel).** Once the launch is per-job, each job's *given* launch
   becomes a story beat — a launch that would fail, made to land.
 - **The lit map at home.** The map as a physical object the firm lives around — lit cubes as quiet
@@ -258,4 +270,11 @@ an object, not a line. Where each one lives:
 - **Work is remote and the console is the company's.** The company issues the console; it projects the
   bubble into the player's room and carries the map between jobs. MR anchoring is the fiction, not a
   medium convenience.
+- **The damage is in the bodies.** The Wrap's entropy spend tears local spacetime; the tears show as
+  anchored planets (the Wrap cannot change them) and repulsors (they push instead of pulling). The
+  firm's fleet runs widened them; how much of the damage came from the player's own Wraps stays
+  unspoken. The Wrap can route a delivery through the damage, not mend a fused body.
+- **The last episode is *the damage*.** Its manual release is *DAMAGE CONTROL*. The manual's final
+  entry reads *"Welcome, new employee. No new employee in eleven years. There is still no office."*;
+  job 7 keeps the welcome and "There is still no office" without the number.
 - **The reading stays ambiguous** — triumph or satire, unresolved.

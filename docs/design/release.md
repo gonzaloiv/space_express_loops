@@ -40,8 +40,8 @@ anchored bodies and repulsors).
   capstone, and three jobs that bring Clear into the fleet.
 - **A new chapter 3 has ~6 jobs on broken bodies** (decided 2026-11-25): anchored planets, then
   repulsors, then both, with its own episode and client rows. **Its fields are presented as damage**
-  (decided 2026-11-18): the scramble is spacetime torn, and the player's Wraps put it back; some
-  bodies no longer behave. Jim plays it down: it's all broken, but just do your job; it probably has
+  (decided 2026-11-18): the scramble is spacetime torn, and the player's Wraps put the route back;
+  some bodies no longer behave. Jim plays it down: it's all broken, but just do your job; it probably has
   nothing to do with our machine ([lore](world/lore.md) §Episodes). If repulsors are not working in
   the editor by 1 Dec, chapter 3 ships with anchored jobs and repulsors come in an update.
 - **Dropped (2026-11-25):** multi-zone fleets (`zones = ships`) and Mixed as lessons. With a movable
@@ -79,20 +79,21 @@ freelance fills the gap.
 **The story needs an arc across the three episodes.** Today it is a string of separate ideas: the
 Wrap works (episode 1), then the firm gets greedy (episode 2), and each job adds its own beat. The
 pieces are good ([lore](world/lore.md) §Episodes, [jobs](jobs.md) §The manual's arc). What's missing
-is a line that pulls the player from one chapter into the next. The arc now lives in
-[lore](world/lore.md) §Episodes: the episodes build to the realisation that if something breaks the
-universe, there may be no good option left. For this release:
+is a line that pulls the player from one chapter into the next. The arc and its three turns now live in
+[lore](world/lore.md) §Episodes (settled 2026-11-25): the episodes build to the realisation that if
+something breaks the universe, there may be no good option left. For this release:
 
-- **Settle what breaks** and the player's part in it, before chapter 3's lines are written.
-- **Revise episodes 1–2's lines** (the job 1 receipt and job 7 close, chapter 2's opener and 2-4's
-  close, the manual entries, the bulletins, and the sector wire) so they lead there.
-- **Each episode's turn.** What changes for Jim and the firm in each chapter, so episode 2 follows
-  from episode 1 and sets up episode 3.
+- **What breaks (settled 2026-11-25).** The damage is in the bodies: anchored planets and repulsors.
+  The Wrap routes a delivery through it, not mend a fused body; Jim denies the cause.
+- **Episodes 1–2's lines** now lead there: the job 1 receipt and job 7 close, chapter 2's opener and
+  2-4's close, the manual entries, the bulletins, and the sector wire.
+- **Each episode's turn** is in [lore](world/lore.md) §Episodes: episode 2 follows from episode 1 and
+  sets up episode 3.
 - **The ending.** Chapter 3's close is the release's ending; the current ending moves there or is
   rewritten once chapter 3's jobs exist. Freelance plays as the epilogue: Jim's job board after the
   story.
-- **What stays.** Jim's pride → doubt and the manual's cheerful → bleak still run across all three
-  episodes, not just episode 1.
+- **What stays.** Jim's pride → doubt and the manual's cheerful → complicit → denial run across all
+  three episodes, not just episode 1.
 
 ## Scope
 
@@ -121,5 +122,6 @@ wait; anything that is late (freelance first) ships as an update.
 
 ## Open questions
 
-- **Chapter 3's episode.** Its title, what it says, and its clients; follows from §Story arc.
+- **Chapter 3's episode.** Closed 2026-11-25: *3 — the damage*; its clients and cargo are in
+  [chapters](chapters.md) §Chapter 3.
 - **Freelance on the map.** One system after the ending, or a separate board in Jim's panel?

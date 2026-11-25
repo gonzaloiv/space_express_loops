@@ -29,7 +29,7 @@ namespace DigitalLove.Game.PuzzleSelection
                 return true;
             }
 
-            readout.Show(map.Selected);
+            readout.Show(map.Selected, map.ManualOrdinal(map.SelectedIndex));
             return false;
         }
 

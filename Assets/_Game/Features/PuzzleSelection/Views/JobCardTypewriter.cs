@@ -2,26 +2,21 @@ using System;
 using System.Collections;
 using DigitalLove.UI.Behaviours;
 using TMPro;
-using UnityEngine;
 
 namespace DigitalLove.Game.PuzzleSelection
 {
     internal static class JobCardTypewriter
     {
+        // The contract lands at once; only the manual types, and its typing ticks.
         public static IEnumerator Reveal(
-            CardLines card, float typeCharsPerSec, float lineGapSecs, Action onLine)
+            CardLines card, float typeCharsPerSec, Action onLine)
         {
-            TMP_Text[] lines = { card.Header, card.Client, card.Cargo, card.Manual };
-            foreach (TMP_Text line in lines)
-                line.maxVisibleCharacters = 0;
-
-            foreach (TMP_Text line in lines)
-            {
-                yield return TerminalTypewriter.Reveal(line, typeCharsPerSec);
-                if (typeCharsPerSec > 0f && lineGapSecs > 0f && line.textInfo.characterCount > 0)
-                    yield return new WaitForSecondsRealtime(lineGapSecs);
-                onLine?.Invoke();
-            }
+            card.Header.maxVisibleCharacters = int.MaxValue;
+            card.Client.maxVisibleCharacters = int.MaxValue;
+            card.Cargo.maxVisibleCharacters = int.MaxValue;
+            card.Manual.maxVisibleCharacters = 0;
+            yield return TerminalTypewriter.RevealTo(
+                card.Manual, int.MaxValue, typeCharsPerSec, onLine);
         }
     }
 
