@@ -84,18 +84,20 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Relation = PuzzleShipRelation.Converge,
                 Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
             },
-            // Fleet capstone: three ships from one origin, the chapter's hardest field. Pending until the
-            // off-editor scan pins the seed; the high-scramble bounds are set from that bake (MinScaleDelta)
-            // and the headset pass confirms them.
+            // Fleet capstone: three ships from one origin, the chapter's hardest field. Seed 9 is the
+            // widest of two passing seeds in the 2026-11-25 scan (window 0.19); its answer is a 0.40
+            // scale delta at a start 0.183 away, so the high-scramble bounds sit just under both. The
+            // headset pass confirms them.
             new PuzzleJobContract
             {
-                Id = "02_05", Pending = true, Seed = 1, Attempts = 1, PlanetCount = 12,
+                Id = "02_05", Seed = 9, Attempts = 1, PlanetCount = 12,
                 FieldShape = PuzzleFieldShape.Cluster,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 3,
                 Relation = PuzzleShipRelation.FanOut,
                 Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
+                MinScaleDelta = 0.35f, MinStartDistance = 0.15f,
             },
             // Chapter 2 intro: two fixed-cube jobs, baked 2026-11-25. MaxScaleDelta is the widest
             // baked answer's |scale - 1|; tune it by playing.
@@ -126,7 +128,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             // set by playing; then unpin and bake them into chapter 2 after 02_04.
             new PuzzleJobContract
             {
-                Id = "02_06", Pending = true, Seed = 1, Attempts = 1, PlanetCount = 10,
+                Id = "02_06", Pending = true, Seed = 19, Attempts = 1, PlanetCount = 10,
                 FieldShape = PuzzleFieldShape.Ring,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 1,
