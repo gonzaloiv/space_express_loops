@@ -84,26 +84,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Relation = PuzzleShipRelation.Converge,
                 Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
             },
-            new PuzzleJobContract
-            {
-                Id = "02_09", Seed = 1, Attempts = 1, PlanetCount = 9, FieldShape = PuzzleFieldShape.Ring,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
-                SunRule = PuzzleSunRule.NoSunAnswer,
-                Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
-                Relation = PuzzleShipRelation.FanOut,
-                Translatable = false, NoFail = false, NoGrade = false, NoIntro = false,
-                MaxScaleDelta = 0.25f,
-            },
-            new PuzzleJobContract
-            {
-                Id = "02_10", Seed = 1, Attempts = 1, PlanetCount = 9, FieldShape = PuzzleFieldShape.Ring,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
-                SunRule = PuzzleSunRule.NoSunAnswer,
-                Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
-                Relation = PuzzleShipRelation.Separate,
-                Translatable = false, NoFail = false, NoGrade = false, NoIntro = false,
-                MaxScaleDelta = 0.25f,
-            },
         };
 
         public static readonly IReadOnlyList<PuzzleJobContract> Enabled = EnabledJobs();
