@@ -115,8 +115,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
                 if (puzzle == null)
                     continue;
 
-                if (!PuzzleSolutionSearch.TrySelect(
-                        puzzle, sim, Brief(contract, settings), out PuzzleSolution solution))
+                if (!TrySolve(puzzle, contract, settings, sim, out PuzzleSolution solution))
                 {
                     failures.Add($"{contract.Id}: no solution found");
                     continue;
@@ -132,12 +131,40 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
         private static PuzzleData LoadShipped(PuzzleJobContract contract, List<string> failures)
         {
-            string chapter = contract.Id.Substring(0, contract.Id.IndexOf('_'));
+            string chapter = PuzzleJobContracts.ChapterOf(contract.Id);
             string path = $"{ChaptersFolder}/{chapter}/Job_{contract.Id}_Puzzle.asset";
             PuzzleData puzzle = AssetDatabase.LoadAssetAtPath<PuzzleData>(path);
             if (puzzle == null)
                 failures.Add($"{contract.Id}: missing {path}");
             return puzzle;
+        }
+
+        private static bool TrySolve(
+            PuzzleData puzzle, PuzzleJobContract contract, SpaceShapingSettings settings,
+            PuzzleSimSettings sim, out PuzzleSolution solution)
+        {
+            if (contract.Ships > 1)
+                return TrySolveFleet(puzzle, sim, out solution);
+
+            return PuzzleSolutionSearch.TrySelect(
+                puzzle, sim, Brief(contract, settings), out solution);
+        }
+
+        private static bool TrySolveFleet(
+            PuzzleData puzzle, PuzzleSimSettings sim, out PuzzleSolution solution)
+        {
+            solution = default;
+            if (!PuzzleFleetSolution.TryFind(puzzle, sim, out PuzzleZone zone))
+                return false;
+
+            PuzzleVerification check = PuzzleVerifier.Verify(puzzle, new[] { zone }, sim);
+            solution = new PuzzleSolution
+            {
+                Zones = new[] { zone },
+                EntropySpent = check.EntropySpent,
+                Kind = check.Kind
+            };
+            return true;
         }
 
         private static PuzzleBrief Brief(PuzzleJobContract contract, SpaceShapingSettings settings)

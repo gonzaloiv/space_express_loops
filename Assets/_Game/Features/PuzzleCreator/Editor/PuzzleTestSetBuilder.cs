@@ -10,8 +10,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
     {
         private const string SettingsPath =
             "Assets/_Game/Features/PuzzleCreator/Data/SpaceShapingSettings.asset";
-        private const string GeneratedFolder = "Assets/_Game/Resources/Chapters/01";
-        private const string ChapterPath = "Assets/_Game/Resources/Chapters/01.asset";
+        private const string ChaptersFolder = "Assets/_Game/Resources/Chapters";
         private const int MazeSeed = 1;
         private const int MazePlanets = 6;
         private const int MazeAttempts = 8;
@@ -24,13 +23,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 return;
 
             IReadOnlyList<PuzzleJobContract> jobs = PuzzleJobContracts.Enabled;
-            for (int i = 0; i < jobs.Count; i++)
-                BuildJob(jobs[i], settings);
+            List<string> chapters = Chapters(jobs);
+            for (int i = 0; i < chapters.Count; i++)
+                BuildChapter(chapters[i], jobs, settings);
 
-            WireChapter(LoadJobs());
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log($"Test set: {jobs.Count} jobs built and wired into chapter 01.");
+            Debug.Log($"Test set: {jobs.Count} jobs built across {chapters.Count} chapter(s).");
         }
 
         public static void BuildOne(PuzzleJobContract job)
@@ -39,24 +38,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             if (settings == null)
                 return;
 
-            BuildJob(job, settings);
-            WireChapter(LoadJobs());
+            PuzzleData saved = BuildAndWire(job, settings);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log($"Test set: {job.Id} rebuilt; chapter 01 rewired.");
+            Debug.Log(saved != null
+                ? $"Test set: {job.Id} rebuilt in chapter {PuzzleJobContracts.ChapterOf(job.Id)}."
+                : $"Test set: {job.Id} did not build.");
         }
-
-        private static PuzzleData[] LoadJobs()
-        {
-            IReadOnlyList<PuzzleJobContract> jobs = PuzzleJobContracts.Enabled;
-            PuzzleData[] puzzles = new PuzzleData[jobs.Count];
-            for (int i = 0; i < jobs.Count; i++)
-                puzzles[i] = AssetDatabase.LoadAssetAtPath<PuzzleData>(JobPath(jobs[i].Id));
-
-            return puzzles;
-        }
-
-        private static string JobPath(string id) => $"{GeneratedFolder}/Job_{id}_Puzzle.asset";
 
         [MenuItem("DigitalLove/Space Shaping/Build Maze Test Level")]
         public static void BuildMaze()
@@ -83,8 +71,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
             PuzzleData baked = result.Puzzle;
             baked.id = "MZ_01";
-            PuzzleArtifactExporter.SaveVariant(baked, "Maze_01", GeneratedFolder);
-            string path = $"{GeneratedFolder}/Maze_01_Puzzle.asset";
+            string folder = GeneratedFolder("01");
+            PuzzleArtifactExporter.SaveVariant(baked, "Maze_01", folder);
+            string path = $"{folder}/Maze_01_Puzzle.asset";
             PuzzleData saved = AssetDatabase.LoadAssetAtPath<PuzzleData>(path);
             if (saved == null)
             {
@@ -92,10 +81,43 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 return;
             }
 
-            WireChapter(new[] { saved });
+            WireChapterLevels("01", new[] { saved });
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log($"Maze test: baked Maze_01 (seed {result.Seed}, {baked.zones} zone(s)) and wired into chapter 01.");
+        }
+
+        public static SpaceShapingSettings LoadSettings(string label)
+        {
+            SpaceShapingSettings settings =
+                AssetDatabase.LoadAssetAtPath<SpaceShapingSettings>(SettingsPath);
+            if (settings == null)
+                Debug.LogError($"{label}: missing settings at {SettingsPath}.");
+            return settings;
+        }
+
+        private static void BuildChapter(
+            string chapter, IReadOnlyList<PuzzleJobContract> jobs, SpaceShapingSettings settings)
+        {
+            int built = 0;
+            for (int i = 0; i < jobs.Count; i++)
+            {
+                if (PuzzleJobContracts.ChapterOf(jobs[i].Id) != chapter)
+                    continue;
+
+                if (BuildAndWire(jobs[i], settings) != null)
+                    built++;
+            }
+
+            Debug.Log($"Test set: chapter {chapter} — {built} job(s) built.");
+        }
+
+        private static PuzzleData BuildAndWire(PuzzleJobContract job, SpaceShapingSettings settings)
+        {
+            PuzzleData saved = BuildJob(job, settings);
+            if (saved != null)
+                WireChapterSlot(PuzzleJobContracts.ChapterOf(job.Id), saved);
+            return saved;
         }
 
         private static PuzzleData BuildJob(PuzzleJobContract job, SpaceShapingSettings settings)
@@ -112,21 +134,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
             PuzzleData baked = result.Puzzle;
             baked.id = job.Id;
-            PuzzleArtifactExporter.SaveVariant(baked, "Job_" + job.Id, GeneratedFolder);
+            string chapter = PuzzleJobContracts.ChapterOf(job.Id);
+            PuzzleArtifactExporter.SaveVariant(baked, "Job_" + job.Id, GeneratedFolder(chapter));
             PuzzleData saved = AssetDatabase.LoadAssetAtPath<PuzzleData>(JobPath(job.Id));
             Debug.Log(
                 $"Test set: {job.Id} {result.Status} (seed {result.Seed}, {baked.zones} zone(s), " +
-                $"{result.Kind}) -> " + (saved != null ? "saved" : "MISSING"));
+                $"{result.Kind}) -> " + (saved != null ? $"saved in chapter {chapter}" : "MISSING"));
             return saved;
-        }
-
-        public static SpaceShapingSettings LoadSettings(string label)
-        {
-            SpaceShapingSettings settings =
-                AssetDatabase.LoadAssetAtPath<SpaceShapingSettings>(SettingsPath);
-            if (settings == null)
-                Debug.LogError($"{label}: missing settings at {SettingsPath}.");
-            return settings;
         }
 
         private static PuzzleSeedScanResult FindJob(
@@ -148,30 +162,72 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             return result;
         }
 
-        private static void WireChapter(PuzzleData[] puzzles)
+        private static void WireChapterSlot(string chapter, PuzzleData puzzle)
         {
-            ChapterData chapter = AssetDatabase.LoadAssetAtPath<ChapterData>(ChapterPath);
-            if (chapter == null)
-            {
-                Debug.LogError($"Test set: missing chapter at {ChapterPath}.");
+            ChapterData data = LoadChapter(chapter);
+            if (data == null)
                 return;
-            }
 
-            int count = 0;
-            LevelData[] levels = new LevelData[puzzles.Length];
-            for (int i = 0; i < puzzles.Length; i++)
-            {
-                if (puzzles[i] == null)
-                    continue;
+            List<LevelData> levels = new();
+            if (data.levels != null)
+                levels.AddRange(data.levels);
 
-                levels[count++] = puzzles[i];
-            }
+            int index = LevelIndex(levels, puzzle.id);
+            if (index >= 0)
+                levels[index] = puzzle;
+            else
+                levels.Add(puzzle);
 
-            if (count != levels.Length)
-                System.Array.Resize(ref levels, count);
-
-            chapter.levels = levels;
-            EditorUtility.SetDirty(chapter);
+            data.levels = levels.ToArray();
+            EditorUtility.SetDirty(data);
         }
+
+        private static void WireChapterLevels(string chapter, PuzzleData[] puzzles)
+        {
+            ChapterData data = LoadChapter(chapter);
+            if (data == null)
+                return;
+
+            data.levels = puzzles;
+            EditorUtility.SetDirty(data);
+        }
+
+        private static ChapterData LoadChapter(string chapter)
+        {
+            string path = $"{ChaptersFolder}/{chapter}.asset";
+            ChapterData data = AssetDatabase.LoadAssetAtPath<ChapterData>(path);
+            if (data == null)
+                Debug.LogError($"Test set: missing chapter at {path}.");
+            return data;
+        }
+
+        private static int LevelIndex(List<LevelData> levels, string id)
+        {
+            for (int i = 0; i < levels.Count; i++)
+            {
+                if (levels[i] != null && levels[i].id == id)
+                    return i;
+            }
+
+            return -1;
+        }
+
+        private static List<string> Chapters(IReadOnlyList<PuzzleJobContract> jobs)
+        {
+            List<string> chapters = new();
+            for (int i = 0; i < jobs.Count; i++)
+            {
+                string chapter = PuzzleJobContracts.ChapterOf(jobs[i].Id);
+                if (!chapters.Contains(chapter))
+                    chapters.Add(chapter);
+            }
+
+            return chapters;
+        }
+
+        private static string GeneratedFolder(string chapter) => $"{ChaptersFolder}/{chapter}";
+
+        private static string JobPath(string id) =>
+            $"{GeneratedFolder(PuzzleJobContracts.ChapterOf(id))}/Job_{id}_Puzzle.asset";
     }
 }

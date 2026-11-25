@@ -18,6 +18,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             CheckBrief(puzzle, kind, contract, failures);
             CheckSources(puzzle, solution, contract, failures);
+            CheckFleet(puzzle, solution, contract, failures, settings);
             CheckStartFrame(puzzle, contract, failures, settings);
             CheckSunAnswer(puzzle, contract, failures, settings);
             return failures.Count == 0;
@@ -49,7 +50,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 failures.Add($"noIntro {puzzle.noIntro}, expected {contract.NoIntro}");
             if (puzzle.growOnly != contract.GrowOnly)
                 failures.Add($"growOnly {puzzle.growOnly}, expected {contract.GrowOnly}");
-            if (!PuzzleSolutionClassifier.Matches(contract.Mechanism, kind))
+            if (contract.Ships <= 1
+                && !PuzzleSolutionClassifier.Matches(contract.Mechanism, kind))
                 failures.Add($"role {kind}, expected {contract.Mechanism}");
             if (puzzle.routes < contract.MinRoutes)
                 failures.Add($"routes {puzzle.routes}, expected at least {contract.MinRoutes}");
@@ -83,6 +85,55 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             int blockers = BlockerCount(sources, sun, puzzle);
             if (blockers < contract.MinBlockers)
                 failures.Add($"blockers {blockers}, expected at least {contract.MinBlockers}");
+        }
+
+        private static void CheckFleet(
+            PuzzleData puzzle, PuzzleZone[] solution, PuzzleJobContract contract,
+            List<string> failures, PuzzleSimSettings? settings)
+        {
+            int expected = Mathf.Max(1, contract.Ships);
+            int stored = puzzle.ships != null ? puzzle.ships.Length : 0;
+            if (expected <= 1)
+            {
+                if (stored > 1)
+                    failures.Add($"ships {stored}, expected 1");
+                return;
+            }
+
+            if (stored != expected)
+            {
+                failures.Add($"ships {stored}, expected {expected}");
+                return;
+            }
+
+            CheckRelation(puzzle.ships, contract.Relation, failures);
+            if (!settings.HasValue || solution == null || solution.Length == 0)
+                return;
+
+            // Verify the passed zone for every stored ship. The validator never searches; the shipped
+            // test finds the zone, this checks it. StartFails keeps the pristine run from already
+            // arriving, which is what makes the edit the answer.
+            PuzzleVerification check = PuzzleVerifier.Verify(puzzle, solution, settings.Value);
+            if (!check.Solved || !check.StartFails)
+                failures.Add("the fleet does not solve");
+        }
+
+        private static void CheckRelation(
+            PuzzleShip[] ships, PuzzleShipRelation relation, List<string> failures)
+        {
+            for (int i = 0; i < ships.Length; i++)
+            {
+                for (int j = i + 1; j < ships.Length; j++)
+                {
+                    if (!PuzzleMultiShipBake.Allowed(
+                            relation, ships[i].origin, ships[i].destination,
+                            ships[j].origin, ships[j].destination))
+                    {
+                        failures.Add($"ship relation {relation} failed");
+                        return;
+                    }
+                }
+            }
         }
 
         // With the sim settings, the start frame may sit off the rule's spot when scaling there alone
@@ -135,6 +186,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                     return i;
 
             return -1;
+        }
+
+        // The rule a contract's SunOnChord is pinned from: whether the sun sits in the run's block band.
+        public static bool SunOnChord(PuzzleData puzzle)
+        {
+            PuzzleSource[] sources = puzzle.sources ?? System.Array.Empty<PuzzleSource>();
+            int sun = SunIndex(sources);
+            return sun >= 0 && OnChord(sources[sun], puzzle);
         }
 
         private static bool OnChord(PuzzleSource sun, PuzzleData puzzle)

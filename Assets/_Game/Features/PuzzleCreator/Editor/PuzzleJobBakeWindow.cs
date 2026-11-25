@@ -36,13 +36,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         private void OnGUI()
         {
             scroll = EditorGUILayout.BeginScrollView(scroll);
-            EditorGUILayout.LabelField("Chapter 01 jobs", EditorStyles.boldLabel);
             scanCount = EditorGUILayout.IntSlider("Seeds per scan", scanCount, 1, 1000);
             IReadOnlyList<PuzzleJobContract> jobs = PuzzleJobContracts.Enabled;
             using (new EditorGUI.DisabledScope(FleetSearchRun.IsRunning))
             {
-                for (int i = 0; i < jobs.Count; i++)
-                    DrawJob(jobs[i]);
+                DrawChapters(jobs);
 
                 EditorGUILayout.Space();
                 if (GUILayout.Button("Bake all"))
@@ -52,6 +50,22 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             DrawChecks();
             DrawScan();
             EditorGUILayout.EndScrollView();
+        }
+
+        private void DrawChapters(IReadOnlyList<PuzzleJobContract> jobs)
+        {
+            string chapter = null;
+            for (int i = 0; i < jobs.Count; i++)
+            {
+                string next = PuzzleJobContracts.ChapterOf(jobs[i].Id);
+                if (next != chapter)
+                {
+                    chapter = next;
+                    EditorGUILayout.LabelField($"Chapter {chapter} jobs", EditorStyles.boldLabel);
+                }
+
+                DrawJob(jobs[i]);
+            }
         }
 
         private void DrawJob(PuzzleJobContract job)

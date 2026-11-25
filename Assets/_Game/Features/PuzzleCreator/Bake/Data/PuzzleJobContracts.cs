@@ -83,5 +83,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             throw new System.ArgumentException($"Unknown job id {id}");
         }
+
+        public static string ChapterOf(string id)
+        {
+            int index = id != null ? id.IndexOf('_') : -1;
+            return index < 0 ? id : id.Substring(0, index);
+        }
     }
 }

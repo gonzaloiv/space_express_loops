@@ -3,7 +3,7 @@ using UnityEditor;
 
 namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 {
-    // NoSunAnswer on the shipped jobs: 02_01 is won by shrinking the sun, 01_04 was rebaked so it is not.
+    // A cube on the sun solves 01_02 (the centred, grown star job); 01_04 was rebaked so it does not.
     public class PuzzleSunAnswerTests
     {
         private const string SettingsPath =
@@ -21,7 +21,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
         [Test]
         public void SunOnlyJob_SunAnswers() =>
-            Assert.IsTrue(PuzzleSunRuleCheck.SunAnswers(Job("02/Job_02_01"), sim));
+            Assert.IsTrue(PuzzleSunRuleCheck.SunAnswers(Job("01/Job_01_02"), sim));
 
         [Test]
         public void RebakedJob_HasNoSunAnswer() =>
@@ -31,7 +31,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         public void Validator_RejectsASunAnswerUnderNoSunAnswer()
         {
             PuzzleJobContract contract = PuzzleJobContracts.ById("01_04");
-            PuzzleData sunJob = Job("02/Job_02_01");
+            PuzzleData sunJob = Job("01/Job_01_02");
 
             PuzzleJobValidator.Validate(
                 sunJob, PuzzleSolutionKind.Curve, null, contract, out var failures, sim);
