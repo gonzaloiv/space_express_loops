@@ -1,7 +1,8 @@
 # Chapter 2 intro
 
-**Status:** next · space shaping · updated 2026-11-26 — two fixed-cube fleet jobs open chapter 2, with
-their contracts, pinned seeds, a scramble bound and the fleet tests opened up to more than four jobs.
+**Status:** now · space shaping · updated 2026-11-25 — U1's fixed-frame fix, scramble bounds and
+contract fields are in with green Creator tests; U3's six-job chapter test is in; U2's 02_09/02_10
+contracts are in, but their scan and bake still need the off-editor checkout.
 
 **Bakes:** off the editor — U2 (scan and bake 02_09, 02_10) ([AGENTS](../../../AGENTS.md#bakes-run-off-the-editor), `docs/tools/bake.ps1`).
 
@@ -14,7 +15,7 @@ their contracts, pinned seeds, a scramble bound and the fleet tests opened up to
 Chapter 2 opens with two jobs where one pinch on a fixed cube moves two ships: fan-out (the cube on a
 planet next to the shared origin), then separate (the cube on a planet between the runs). The first
 of four chapter 2 plans; the others are [fleet Clear](fleet-clear.md),
-[fleet capstone](fleet-capstone.md) and [chapter 2 lines](chapter-2-lines.md).
+[fleet capstone](fleet-capstone.md) and [chapter 2 lines](../backlog/chapter-2-lines.md).
 
 ## Depends on
 
@@ -32,14 +33,23 @@ cosmetic.
 
 ## Units
 
+**Progress (2026-11-25):** U1 and U3 are in (scramble bounds in `0b66c195`; `FixedFleetFrameTests`
+green). U2's contracts are in with `MaxScaleDelta = 0.25f` as a placeholder. Left: merge `0b66c195`
+into `bake` (the checkout compiles without it but cannot check the bounds), scan and bake 02_09/02_10
+there, pin `Seed`/`Attempts`, move them before 02_01. Until then the three `FleetJobsTests` fail in the
+fast suite (96/99): they expect the six-job chapter. 02_09/02_10 are not `Pending` (02_06–02_08 are),
+so `ShippedJobs_MeetTheContract` looks for assets that do not exist: mark them `Pending` until they
+bake.
+
 ### U1 — a fixed fleet can bake
 
-- `PuzzleMultiShipBake.ConfirmZone` runs `StartFrameClear` (the *movable* bounding-box frame) for every
+- `PuzzleMultiShipBake.ConfirmZone` ran `StartFrameClear` (the *movable* bounding-box frame) for every
   fleet. A fixed fleet ships the zone itself as the frame, and for a fan-out pair the bbox centre can
-  sit on the shared origin, so every zone comes back `StartCoversEndpoint`. Run it only when
-  `brief.Translatable`; the fixed frame is already checked by `PuzzleVerifier.Fits` →
-  `ContainsEndpoint`. Movable fleets keep today's check, so 2-1 to 2-4 are untouched and need no
-  rebake.
+  sit on the shared origin, so every zone came back `StartCoversEndpoint`. **Superseded by
+  [fleet Clear](fleet-clear.md) U2:** movable fleets now place their frame through
+  `PuzzleStartFrame.Place` and `Confirm` no longer calls `StartFrameClear` for any fleet; fixed fleets
+  are checked by `PuzzleVerifier.Fits` → `ContainsEndpoint`. `StartFrameClear` and its test
+  `StartFrameClear_FanOutOnTheSharedOrigin_IsKeptForAFixedFleet` have no other caller: delete both.
 - **Scramble bounds.** There is no scramble dial. Add to `PuzzleJobContract` three fields, each
   **`0 = off`** (the contract is a zero-defaulted struct, so existing contracts and the tests'
   object-initialised contracts keep passing): `MaxScaleDelta` (low scramble: the solution's

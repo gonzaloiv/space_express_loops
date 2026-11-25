@@ -49,7 +49,7 @@ its sun, unchanged.
 - Start frame (safety net, not a known break; 02_01 agrees today): `CheckStartFrame` recomputes through
   `PuzzleStartFrame.Place`, while `PuzzleMultiShipBake.Frames` stores `zoneCentre`. Check that they
   agree per fleet. The routing of `PuzzleMultiShipBake.Frames` through `PuzzleStartFrame.Place` is
-  owned by [fleet Clear](../backlog/fleet-clear.md) U2; if a rebaked 02_01–02_03 disagrees, do that
+  owned by [fleet Clear](fleet-clear.md) U2; if a rebaked 02_01–02_03 disagrees, do that
   change here and mark it done there.
 - Exit: under a test-local fleet contract, the validator rejects a solution where one ship misses and
   accepts today's 02_01 (two ships) with a zone that rescues both; fast suite green. 02_04 cannot be the

@@ -27,31 +27,16 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (ships == null || !found.Scan.Rescues(found.Zone, ships))
                 return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.NoSolution };
 
-            if (!StartFrameClear(found.Zone, ships))
-                return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.StartCoversEndpoint };
-
+            // A movable fleet's frame is chosen by PuzzleStartFrame.Place, which already keeps it off
+            // endpoints; a fixed fleet ships the zone itself, which PuzzleVerifier.Fits checks.
             return Confirm(field, fleet.Settings, brief, found.Zone, ships);
-        }
-
-        // The movable start frame is the cube at the ships' bounding-box centre, so it must keep
-        // out of every ship's endpoints just like the solution zone does.
-        private static bool StartFrameClear(PuzzleZone zone, PuzzleShip[] ships)
-        {
-            SpaceZone frame = new(Centre(ships), Vector3.one * (zone.Width * 0.5f), 1f, 0f);
-            for (int i = 0; i < ships.Length; i++)
-            {
-                if (frame.Contains(ships[i].origin) || frame.Contains(ships[i].destination))
-                    return false;
-            }
-
-            return true;
         }
 
         private static PuzzleMultiShipResult Confirm(
             PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief,
             PuzzleZone zone, PuzzleShip[] ships)
         {
-            PuzzleData variant = Variant(field, zone, ships, brief);
+            PuzzleData variant = Variant(field, settings, zone, ships, brief);
             PuzzleVerification check = PuzzleVerifier.Verify(variant, new[] { zone }, settings);
             PuzzleBakeStatus rejected = Reject(variant, settings, brief, check);
             if (rejected != PuzzleBakeStatus.Baked)
@@ -74,6 +59,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             if (!check.Solved)
                 return PuzzleBakeStatus.Unverified;
+
+            if (brief.Mechanism != PuzzleMechanism.Any
+                && !PuzzleSolutionClassifier.Matches(brief.Mechanism, check.Kind))
+                return PuzzleBakeStatus.WrongRole;
 
             if (brief.SunRule == PuzzleSunRule.NoSunAnswer
                 && PuzzleSunRuleCheck.SunAnswers(variant, settings))
@@ -137,7 +126,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static bool Same(Vector3 a, Vector3 b) => (a - b).sqrMagnitude < 1e-8f;
 
         private static PuzzleData Variant(
-            PuzzleData field, PuzzleZone zone, PuzzleShip[] ships, PuzzleBrief brief)
+            PuzzleData field, PuzzleSimSettings settings, PuzzleZone zone, PuzzleShip[] ships,
+            PuzzleBrief brief)
         {
             PuzzleData puzzle = Object.Instantiate(field);
             puzzle.ships = ships;
@@ -147,7 +137,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.captureRadius = ships[0].captureRadius;
             puzzle.zoneCentre = Centre(ships);
             puzzle.entropyBudget = Mathf.Abs(zone.scale - 1f) * PuzzleGrade.BudgetFactor;
-            puzzle.frames = Frames(puzzle, zone, brief);
+            puzzle.frames = Frames(puzzle, settings, zone, brief);
             return puzzle;
         }
 
@@ -164,12 +154,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return (min + max) * 0.5f;
         }
 
-        private static PuzzleFrame[] Frames(PuzzleData puzzle, PuzzleZone zone, PuzzleBrief brief)
+        // A movable fleet starts at the contract's spot (run midpoint or field centre) and takes the
+        // nearest spot where scaling alone fails, so moving the cube is the lesson. A fixed fleet
+        // ships the solved zone itself.
+        private static PuzzleFrame[] Frames(
+            PuzzleData puzzle, PuzzleSimSettings settings, PuzzleZone zone, PuzzleBrief brief)
         {
             if (!brief.Translatable)
                 return new[] { new PuzzleFrame { centre = zone.centre, size = zone.Width } };
 
-            return new[] { new PuzzleFrame { centre = puzzle.zoneCentre, size = zone.Width } };
+            Vector3 preferred = PuzzleFieldBake.StartSpot(puzzle, brief.StartRule);
+            Vector3 centre = PuzzleStartFrame.Place(puzzle, settings, preferred, zone.Width);
+            return new[] { new PuzzleFrame { centre = centre, size = zone.Width } };
         }
     }
 }

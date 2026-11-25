@@ -13,8 +13,8 @@ with ten chapter 2 jobs.
 
 ## Depends on
 
-The jobs from [chapter 2 intro](chapter-2-intro.md), [fleet Clear](fleet-clear.md) and
-[fleet capstone](fleet-capstone.md) (ids in [chapter 2 intro](chapter-2-intro.md) §Ids), and [story arc](../../solutions/narrative/story-arc.md)
+The jobs from [chapter 2 intro](../in-progress/chapter-2-intro.md), [fleet Clear](../in-progress/fleet-clear.md) and
+[fleet capstone](../in-progress/fleet-capstone.md) (ids in [chapter 2 intro](../in-progress/chapter-2-intro.md) §Ids), and [story arc](../../solutions/narrative/story-arc.md)
 (done: the ≤ 90-character manual rule, the card numbered by play order).
 
 ## Units

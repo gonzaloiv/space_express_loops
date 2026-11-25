@@ -406,6 +406,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 return "Rejected: the start path stays under 5% of the chord or 4° off it, too straight "
                     + "for a curve lesson. Use Find working seed.";
 
+            if (status == PuzzleBakeStatus.WrongRole)
+                return $"Rejected: the fleet's confirmed answer is {generatedKind}, not " +
+                    $"{seed.mechanism}. The shrinking lesson needs a Clear field; try another seed.";
+
             if (status == PuzzleBakeStatus.WrongRoleRoute)
                 return $"Rejected: a {generatedKind} route is at least as cheap as the requested "
                     + $"{seed.mechanism} route. The taught role must be the best answer; use Find working "

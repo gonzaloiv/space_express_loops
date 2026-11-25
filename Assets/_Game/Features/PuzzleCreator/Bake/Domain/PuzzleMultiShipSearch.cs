@@ -33,7 +33,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (!brief.IsMulti)
                 return new PuzzleMultiShipSearch(null, null, brief, seed, PuzzleBakeStatus.UnsupportedBrief);
 
-            if (brief.Mechanism != PuzzleMechanism.Any)
+            if (!brief.SupportsFleetRole)
                 return new PuzzleMultiShipSearch(
                     null, null, brief, seed, PuzzleBakeStatus.UnsupportedMechanism);
 

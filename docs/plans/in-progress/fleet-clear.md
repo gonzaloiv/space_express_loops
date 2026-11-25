@@ -1,7 +1,7 @@
 # Fleet Clear
 
-**Status:** next · space shaping · updated 2026-11-26 — let a fleet bake ask for Clear, then three
-two-ship jobs where one obstacle blocks more than one ship.
+**Status:** now · space shaping · updated 2026-11-25 — U1–U2 built; U3's three Clear contracts are
+pending the off-editor scan (no Clear field has baked yet).
 
 **Bakes:** off the editor — U3 (the three Clear jobs) ([AGENTS](../../../AGENTS.md#bakes-run-off-the-editor), `docs/tools/bake.ps1`).
 
@@ -16,7 +16,7 @@ Shrinking the blocker frees every ship.
 ## Depends on
 
 - [Chapter 2 intro](chapter-2-intro.md): the scramble bounds, the opened fleet tests.
-- [Fleet rebake](../in-progress/fleet-rebake.md) U2: the chapter-aware slot wiring that places a job
+- [Fleet rebake](fleet-rebake.md) U2: the chapter-aware slot wiring that places a job
   after 2-4.
 - Ids **02_06–02_08** ([chapter 2 intro](chapter-2-intro.md) §Ids). Play order follows
   [chapters](../../design/chapters.md): after 2-5 (02_05); if the capstone slips, after 2-4.
@@ -31,6 +31,21 @@ Shrinking the blocker frees every ship.
   shared blocker, the headset check judges the decoys.
 
 ## Units
+
+**Progress (2026-11-25):** U1 and U2 are built and their Creator tests pass. The chapter-2 intro's
+scramble bounds and opened fleet tests landed; its 02_09–02_10 bakes are still pending. U3's contracts
+for 02_06–02_08 are in `PuzzleJobContracts.All` as `Pending` (placeholders for shape and counts); none
+has baked yet, so the `Seed`/`Attempts`, the scramble bounds and the chapter order wait on the
+off-editor Clear scan. Remaining U3 steps: scan each job (`docs/tools/bake.ps1 -Job 02_06 -Mode scan
+-Seeds 200`), pin the seed and scramble bounds, clear `Pending`, bake, move them after 02_04 in
+`Chapters/02.asset`, and extend `FleetJobsTests` to the nine shipped jobs.
+
+**Before the scans (review 2026-11-25):** U1–U2 are uncommitted, so the `bake` checkout runs without
+them: commit them and merge into `bake` first, or the Clear contracts are rejected and every bake uses
+the old frame. The 02_01–02_03 rebake now running there uses the pre-U2 frame, so after the merge run
+`ShippedJobs_MeetTheContract` in the bake checkout: the movable frame check (`AtPlacedSpot`, "the start
+solves in place") is new for every movable job, chapter 1 included, and has not run on a shipped asset.
+Rebake any job it rejects.
 
 ### U1 — a fleet can ask for Clear
 
@@ -65,7 +80,7 @@ Shrinking the blocker frees every ship.
 - **Shared blockers, for Clear fleets only.** `BlockerCount` measures ship 0's run (the variant pins
   `origin`/`destination` to ship 0). Keep that count as it is for single-ship jobs (`puzzle.ships` is
   null on 01_x; `Validate_TooFewBlockers_Fails` expects it) and for `Any` fleets (02_01–02_03 pin
-  `MinBlockers` against it in the [fleet rebake](../in-progress/fleet-rebake.md)). Only when
+  `MinBlockers` against it in the [fleet rebake](fleet-rebake.md)). Only when
   `Ships > 1 && Mechanism == Clear`: count blockers over every stored ship and require at least one on
   two or more ships' runs (the lesson itself); `MinBlockers = 2` then means two shared blockers.
 - Exit: a seconds-long test in `PuzzleCreator/Tests/EditMode` (next to `PuzzleJobValidatorTests`, not

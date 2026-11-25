@@ -6,11 +6,14 @@ Store release: €4, 6 Dec, ~23 story jobs + 20 freelance; scope and schedule in
 
 ## Now
 
-- **25–26 Nov:** [fleet rebake](in-progress/fleet-rebake.md)
+- **25–26 Nov:** [fleet rebake](in-progress/fleet-rebake.md) (02_01–02_03 rebaking off the editor)
+- **25–30 Nov:** chapter 2 to ten jobs: [intro](in-progress/chapter-2-intro.md) (code in, 02_09/02_10
+  bake left) → [fleet Clear](in-progress/fleet-clear.md) (U1–U2 in, 02_06–02_08 scan left) ·
+  [capstone](in-progress/fleet-capstone.md) (02_05 contract in; scan and bake left)
 
 ## Next
 
-- **27–30 Nov:** chapter 2 to ten jobs: [intro](backlog/chapter-2-intro.md) → [fleet Clear](backlog/fleet-clear.md) · [capstone](backlog/fleet-capstone.md) → [lines and wire](backlog/chapter-2-lines.md)
+- **27–30 Nov:** [chapter 2 lines and wire](backlog/chapter-2-lines.md), after the ten jobs bake
 - **27 Nov–1 Dec, alongside chapter 2:** [broken bodies](backlog/broken-bodies.md) (anchors, then
   repulsors; gate 1 Dec)
 - **1–3 Dec:** [chapter 3](backlog/chapter-3.md) (the jobs, lines and the ending)

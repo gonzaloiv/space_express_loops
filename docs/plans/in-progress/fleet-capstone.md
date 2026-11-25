@@ -1,7 +1,7 @@
 # Fleet capstone
 
-**Status:** next · space shaping · updated 2026-11-26 — 2-5: three ships, fan-out, the chapter's
-hardest field, and a three-ship re-solve the shipped check can trust.
+**Status:** now · space shaping · updated 2026-11-25 — 02_05's contract is in, pending the off-editor
+scan; U1 is a verification, not a widening (see Progress).
 
 **Bakes:** off the editor — U1 (the three-ship re-solve check) and U2 (bake 02_05) ([AGENTS](../../../AGENTS.md#bakes-run-off-the-editor), `docs/tools/bake.ps1`).
 
@@ -20,6 +20,24 @@ three-ship seeds are much slower, and 02_04 already fails today's shipped re-sol
 through `PuzzleStartFrame.Place` and the "start solves in place" failure. Without it a 02_05 bake can
 pass `StartFrameClear` and still fail `CheckStartFrame`. Id: 02_05
 ([chapter 2 intro](chapter-2-intro.md) §Ids).
+
+## Progress (2026-11-25)
+
+- **U2 contract in.** `02_05` sits in `PuzzleJobContracts.All` as `Pending` (Seed 1, bounds off), so the
+  scan can probe it while `Enabled` — and every fast test — stays unchanged.
+- **U1 is a verify, not a widening.** 02_04 has no contract, so `ShippedJobs_MeetTheContract` never
+  touches it; the fleet-rebake decision (2026-11-26) already leaves 02_04 to the headset. A fresh bake's
+  answer is inside `PuzzleFleetSolution`'s space today: its centre list is the untrimmed superset of
+  `PuzzleZoneCandidates.Centres`, its sizes are the bake's three plus the shipped frame size, and its 32
+  scales are denser than the probe's 13, so a plateau always contains a sample. No code change until the
+  fresh three-ship bake proves otherwise.
+- **Order:** play `02_05` after `02_04`, before the Clear jobs (2-6..2-8), per
+  [chapters](../../design/chapters.md) and [fleet Clear](fleet-clear.md). `WireChapterSlot` appends it
+  after `02_04` on the first bake, which is the wanted slot until the Clear jobs land.
+- **Remaining:** sync this change set to the `bake` checkout, scan `02_05` (three ships are slow; budget
+  the seeds), pin the seed and set `MinScaleDelta` / `MinStartDistance` from the bake, unpin `Pending`,
+  bake, then add `02_05` after `02_04` in `FleetJobsTests` (3 ships). Measure the shipped check; move the
+  fleet part behind the `[Explicit]` job-set test only if it passes ~2 min.
 
 ## Units
 

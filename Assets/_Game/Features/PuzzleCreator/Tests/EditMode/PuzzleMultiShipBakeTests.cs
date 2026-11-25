@@ -94,6 +94,28 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Object.DestroyImmediate(sunSettings);
         }
 
+        [Test]
+        [Explicit]
+        public void ClearBrief_AcceptsClearAndRejectsAnotherKind()
+        {
+            PuzzleBrief clear = brief;
+            clear.Mechanism = PuzzleMechanism.Clear;
+            PuzzleMultiShipResult any = PuzzleMultiShipBake.Bake(planets, sim, brief);
+            PuzzleMultiShipResult role = PuzzleMultiShipBake.Bake(planets, sim, clear);
+
+            Assert.AreEqual(PuzzleBakeStatus.Baked, any.Status);
+            Assert.AreNotEqual(
+                PuzzleBakeStatus.UnsupportedMechanism, role.Status, "a fleet may ask for Clear");
+            if (any.Kind == PuzzleSolutionKind.Clear)
+                Assert.AreEqual(PuzzleBakeStatus.Baked, role.Status);
+            else
+                Assert.AreEqual(PuzzleBakeStatus.WrongRole, role.Status);
+
+            if (role.Puzzle != null)
+                Object.DestroyImmediate(role.Puzzle);
+            Object.DestroyImmediate(any.Puzzle);
+        }
+
         private static int SunIndex(PuzzleSource[] sources)
         {
             for (int i = 0; i < sources.Length; i++)

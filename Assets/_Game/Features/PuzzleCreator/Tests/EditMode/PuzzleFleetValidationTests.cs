@@ -20,13 +20,35 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         {
             PuzzleData puzzle = Load();
             PuzzleSimSettings sim = Sim();
-            Assert.IsTrue(PuzzleFleetSolution.TryFind(puzzle, sim, out PuzzleZone zone), "no fleet zone");
+            PuzzleJobContract contract = Contract(puzzle);
+            Assert.IsTrue(
+                PuzzleFleetSolution.TryFind(puzzle, sim, contract.Mechanism, out PuzzleZone zone),
+                "no fleet zone");
 
             Assert.IsTrue(
                 PuzzleJobValidator.Validate(
-                    puzzle, PuzzleSolutionKind.Other, new[] { zone }, Contract(puzzle),
+                    puzzle, PuzzleSolutionKind.Other, new[] { zone }, contract,
                     out List<string> failures, sim),
                 string.Join("\n", failures));
+        }
+
+        [Test]
+        public void Validate_TwoShipClearFleet_CurveAnswer_Fails()
+        {
+            PuzzleData puzzle = Load();
+            PuzzleSimSettings sim = Sim();
+            PuzzleJobContract contract = Contract(puzzle);
+            contract.Mechanism = PuzzleMechanism.Clear;
+            Assert.IsTrue(
+                PuzzleFleetSolution.TryFind(puzzle, sim, PuzzleMechanism.Any, out PuzzleZone zone),
+                "no fleet zone");
+
+            Assert.IsFalse(
+                PuzzleJobValidator.Validate(
+                    puzzle, PuzzleSolutionKind.Curve, new[] { zone }, contract,
+                    out List<string> failures, sim),
+                string.Join("\n", failures));
+            Assert.That(failures, Does.Contain("role Curve, expected Clear"));
         }
 
         [Test]
@@ -34,7 +56,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         {
             PuzzleData puzzle = Load();
             PuzzleSimSettings sim = Sim();
-            Assert.IsTrue(PuzzleFleetSolution.TryFind(puzzle, sim, out PuzzleZone zone), "no fleet zone");
+            PuzzleJobContract contract = Contract(puzzle);
+            Assert.IsTrue(
+                PuzzleFleetSolution.TryFind(puzzle, sim, contract.Mechanism, out PuzzleZone zone),
+                "no fleet zone");
 
             PuzzleData broken = Object.Instantiate(puzzle);
             try

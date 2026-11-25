@@ -32,8 +32,12 @@ one `sunPlanet`), so two suns would be a third feature.
   `PuzzleJobBakeTests.Brief` must carry it too (the 2026-11-20 seed retune lost fields this way).
 - **A pinch on the anchor is a refused no-op.** Today it is a *paid* no-op: cost is `|scale − reference|`
   regardless of effect (`ZoneCommandLog`), `CommitScale` always commits and launches, and
-  `SpaceZone.ApplyTo` skips `FixedMass`. Drop the command when the zone changes no scalable source, and
-  route it through the existing `Refused` path (feedback, no spend, no launch).
+  `SpaceZone.ApplyTo` skips `FixedMass`. Drop the command when the zone changes no scalable source and
+  raise `Refused` with a **new `ZoneRefusal.NoEffect`** (appended at the end; `Locked` means a
+  locked frame and would mislead). `PuzzleEditionState.OnRefused` cues only `OutOfEntropy` today: add
+  a `NoEffect` case (a short refusal tick plus a pulse on the anchor's marker). The pulse needs a view
+  entry point: `FieldPlanetSet` only exposes `PulseEndpoint(point, danger)`, so add `PulseSource(index)`
+  delegating to the planet's existing `FieldPlanetBehaviour.PlayRefusal`. No spend, no launch.
 - **Bake rule (one check, the `SunAnswers` pattern).** With the lock lifted, a cube on the anchor
   solves (one `SolvesInPlace` call), and the anchor sits on the chord: the anchor is the tempting
   answer, not decoration. The zone search already skips fixed sources, so expect fewer candidates near
@@ -56,8 +60,12 @@ one `sunPlanet`), so two suns would be a third feature.
   flight.
 - **The role.** `PuzzleSolutionClassifier` calls a shrink `Clear` only for an obstacle from a crash or
   the chord; a repulsor off the chord makes a miss, so "shrink it" classifies as `Other` and fails the
-  validator. Add a repulsor-aware rule: shrinking a repulsor near the solved path is `Clear`, growing
-  one is a shove (`Curve`, or a new kind if the headset says it reads differently).
+  validator. Add a repulsor-aware rule: shrinking a repulsor is `Clear` when the **start run passes
+  within its push's reach** (or the start run fails near it), not within its body radius:
+  `NearAnyPath` measures `InitialScale * 0.5 + epsilon`, which an off-chord repulsor never meets.
+  Define the reach from the repulsor's strength (the distance where its push falls below a share of
+  the ship's other forces) and keep it in one place for the bake and the validator. Growing one is a
+  shove (`Curve`, or a new kind if the headset says it reads differently).
 - **The look.** A second authored marker on the planet prefab, same toggle/reset rule as U1.
 - Exit: fast tests: a ship flying past a repulsor is pushed; editing a repulsor's zone keeps the
   push (the `Scaled` copy); `WellPullTests` gains a negative-strength case. A Creator test bakes a

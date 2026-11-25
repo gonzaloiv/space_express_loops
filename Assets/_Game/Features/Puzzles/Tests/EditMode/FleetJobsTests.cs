@@ -8,14 +8,23 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
     public class FleetJobsTests
     {
         private const string ChapterFolder = "Assets/_Game/Resources/Chapters/02";
+        private const string ChapterPath = "Assets/_Game/Resources/Chapters/02.asset";
         private const string SelectorPath = "Assets/_Game/Resources/Chapters/LevelSelector.asset";
 
-        private static readonly string[] JobIds = { "02_01", "02_02", "02_03", "02_04" };
-        private static readonly int[] ShipCounts = { 2, 2, 2, 3 };
+        // Play order comes from the chapter asset, not the ids: the two fixed intros open chapter 2.
+        private static readonly string[] JobIds =
+            { "02_09", "02_10", "02_01", "02_02", "02_03", "02_04" };
+        private static readonly int[] ShipCounts = { 2, 2, 2, 2, 2, 3 };
 
         [Test]
-        public void ChapterTwo_IsTheFourJobsAfterChapterOne()
+        public void ChapterTwo_IsTheSixJobsAfterChapterOne()
         {
+            ChapterData chapter = AssetDatabase.LoadAssetAtPath<ChapterData>(ChapterPath);
+            Assert.IsNotNull(chapter, ChapterPath);
+            Assert.AreEqual(JobIds.Length, chapter.levels.Length);
+            for (int i = 0; i < JobIds.Length; i++)
+                Assert.AreEqual(JobIds[i], chapter.levels[i].id, $"chapter level {i}");
+
             LevelSelector selector = AssetDatabase.LoadAssetAtPath<LevelSelector>(SelectorPath);
             Assert.IsNotNull(selector, SelectorPath);
 

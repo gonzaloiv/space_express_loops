@@ -51,7 +51,7 @@ sun, and a starless system would read as a gap; dark systems on purpose are an i
 ([later chapters](../ideas/later-chapters.md) §Other options).
 
 The intro jobs play before 2-1; 2-1 to 2-4 keep their ids, and new jobs take the next free ids
-([chapter 2 intro](../plans/backlog/chapter-2-intro.md) and the plans after it). Multi-ship bakes need ≥ 9 planets, use
+([chapter 2 intro](../plans/in-progress/chapter-2-intro.md) and the plans after it). Multi-ship bakes need ≥ 9 planets, use
 one cube (fixed or movable), and cannot request a role yet, so every fleet job is checked by playing
 it. **Slightly Used Stars Ltd.** returns at 2-2.
 
