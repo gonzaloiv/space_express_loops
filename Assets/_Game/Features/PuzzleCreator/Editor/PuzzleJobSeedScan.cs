@@ -78,10 +78,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 },
                 outcome =>
                 {
-                    UnityEngine.Object.DestroyImmediate(seed);
                     entries.Sort(ByUsefulness);
                     onDone(entries);
-                });
+                },
+                () => UnityEngine.Object.DestroyImmediate(seed));
         }
 
         // Seeds that pass the contract first, then the widest solve window.

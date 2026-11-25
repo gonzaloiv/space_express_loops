@@ -25,9 +25,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             Ships = Copy(puzzle.ships);
             Origin = puzzle.Origin;
             Destination = puzzle.Destination;
-            CaptureRadius = puzzle.captureRadius > 0f
-                ? puzzle.captureRadius
-                : puzzle.CaptureRadiusAtDestination();
+            CaptureRadius = puzzle.EffectiveCaptureRadius;
             EntropyBudget = puzzle.entropyBudget;
             CubeSizeMin = puzzle.cubeSizeMin;
             CubeSizeMax = puzzle.cubeSizeMax;

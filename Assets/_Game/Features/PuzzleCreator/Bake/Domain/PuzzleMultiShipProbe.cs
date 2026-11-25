@@ -16,11 +16,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private readonly PuzzleShipRelation relation;
         private readonly PuzzleSunShortcut sunShortcut;
 
-        public PuzzleMultiShipProbe(PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief)
-            : this(FleetField.From(field, settings), brief)
-        {
-        }
-
         // The snapshot path: the whole probe runs on plain data, so it is safe off the editor thread.
         public PuzzleMultiShipProbe(FleetField fleet, PuzzleBrief brief)
         {

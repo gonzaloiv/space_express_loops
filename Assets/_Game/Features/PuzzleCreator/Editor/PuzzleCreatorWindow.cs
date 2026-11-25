@@ -168,6 +168,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             fleetSearch = FleetSearchRun.Start(
                 new FleetSearchRequest(seed, settings, brief, fleetStart, MultiSeedAttempts),
                 AddFleetSeed, FinishFleetSearch);
+
+            // A failure inside Start runs the completion callback before Start returns, so the field
+            // would hold a finished run; the gate is the truth.
+            if (!FleetSearchRun.IsRunning)
+                fleetSearch = null;
             Repaint();
         }
 
