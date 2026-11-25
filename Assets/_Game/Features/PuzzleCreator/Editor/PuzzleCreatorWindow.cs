@@ -390,10 +390,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 return "Rejected: a cube on the sun already solves it, and the sun rule is "
                     + "NoSunAnswer. Try another seed.";
 
-            if (status == PuzzleBakeStatus.StartCoversEndpoint)
-                return "Rejected: the movable cube starts over a ship's endpoint (the ships' centre is "
-                    + "too close to one). Try another seed.";
-
             if (status == PuzzleBakeStatus.StartNotFailed)
                 return "Rejected: the bare start already arrives. The level needs a failing start "
                     + "(a crash or a miss); use Find working seed.";
