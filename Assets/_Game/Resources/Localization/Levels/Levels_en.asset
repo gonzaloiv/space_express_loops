@@ -271,7 +271,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969926
-    m_Localized: No fuel burned. The ledger is happy.
+    m_Localized: Fuel for the launch, none after. The ledger is happy.
     m_Metadata:
       m_Items: []
   - m_Id: 7610341969925
@@ -339,7 +339,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889891
-    m_Localized: Welcome, new employee. Wrap from any room. Headquarters is restructuring indefinitely.
+    m_Localized: Welcome, new employee. One push at launch, then the field steers. Wrap from any room.
     m_Metadata:
       m_Items: []
   - m_Id: 72150890864889893
@@ -459,7 +459,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 40169889255424
-    m_Localized: No fuel burned. That is the whole business plan.
+    m_Localized: Fuel for the launch. After that, the field flies it. That is the whole business plan.
     m_Metadata:
       m_Items: []
   - m_Id: 40169927004160
@@ -488,6 +488,70 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 72150890864889928
     m_Localized: '> THE BROCHURES CALL IT GREEN. THE FIELD DOES NOT.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7610346164260
+    m_Localized: Both dinners arrived. Nobody checked which was which.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7610346164261
+    m_Localized: Twin Moons paid twice and called it efficiency.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7610346164262
+    m_Localized: One dinner is late. The other is getting cold.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7610346164263
+    m_Localized: Two dinners left the same kitchen at once.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7610346164264
+    m_Localized: The client wants both at the same time. Through different doors.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7610346164265
+    m_Localized: two dinners, one kitchen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7610346164266
+    m_Localized: Twin Moons Catering
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7610346164267
+    m_Localized: Two ships, one origin. Bend near the start; both paths turn. Meals may swap.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7610346164268
+    m_Localized: Both cakes arrived. Neither bakery will admit it.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7610346164269
+    m_Localized: The feud continues, now with better logistics.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7610346164270
+    m_Localized: One cake is still in the field. So is the argument.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7610346164271
+    m_Localized: The bakeries will not share a van.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7610346164272
+    m_Localized: So we are sending two ships and one cube between them.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7610346164273
+    m_Localized: two cakes, one feud
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7610346164274
+    m_Localized: Two Rival Bakeries
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7610346164275
+    m_Localized: One cube between two runs. Both ships share the bend; the feud is not our problem.
     m_Metadata:
       m_Items: []
   references:

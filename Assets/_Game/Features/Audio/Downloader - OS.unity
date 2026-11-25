@@ -820,9 +820,8 @@ MonoBehaviour:
   downloader: {fileID: 674238885}
   tableName: Levels
   keys:
-  - level_01_01_complete_03
-  - level_01_07_complete_05_laughing
-  - level_02_04_complete_02_confused
+  - level_01_01_complete_04_win
+  - level_01_02_complete_03
   containsFilter: 
   doesNotContainFilter:
   - manual
