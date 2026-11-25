@@ -34,7 +34,7 @@ MonoBehaviour:
   noIntro: 0
   goalLineKey: 
   sources:
-  - home: {x: 0.1222585, y: 0.4774968, z: 0}
+  - home: {x: -0.3824486, y: -0.17714591, z: 0.25554395}
     scale: 0.12
     name: xumuter
     fixedMass: 0
