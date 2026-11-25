@@ -36,14 +36,19 @@ No new verb. The ramp restarts: low scramble, Ring shape.
 
 | # | Lesson | Brief | Field | Why |
 |---|---|---|---|---|
-| intro 1 | **One pinch, two ships** | fixed · 2 ships · one origin | Ring · low scramble | The fixed cube near the shared origin bends both paths at once. |
-| intro 2 | **One zone between** | fixed · 2 ships · separate | Ring · low scramble | One zone placed between two runs rescues both. |
+| intro 1 | **One pinch, two ships** | fixed · 2 ships · one origin | 9 + sun · Ring · low scramble | The fixed cube near the shared origin bends both paths at once. |
+| intro 2 | **One zone between** | fixed · 2 ships · separate | 9 + sun · Ring · low scramble | One zone placed between two runs rescues both. |
 | 2-1 | **Two ships** | movable · 2 ships · separate | 10 + sun · Ring · low scramble | One field, two runs; each ship has its own fix. |
-| 2-2 | **Fan-out** | movable · 2 ships · one origin | 10–12 · Spiral | An edit near the shared origin bends both paths. |
-| 2-3 | **Converge** | movable · 2 ships · one destination | 12 · Spiral | The planet by the shared destination fixes both approaches. |
-| 2-4 | **Three ships** | movable · 3 ships · separate | 12 · Cluster | Three fixes on one budget; the field carries more than one ship. |
-| 2-5 | **Fleet capstone** | movable · 3 ships · fan-out | 12 · Cluster · high scramble | Placement, shared paths and the field across every ship. |
-| 2-6 to 2-8 | **Clear with a fleet** | movable · 2 ships | Clear answer | One obstacle in more than one ship's path: one blocker → among decoys → two blockers. |
+| 2-2 | **Fan-out** | movable · 2 ships · one origin | 12 + sun · Spiral | An edit near the shared origin bends both paths. |
+| 2-3 | **Converge** | movable · 2 ships · one destination | 12 + sun · Spiral | The planet by the shared destination fixes both approaches. |
+| 2-4 | **Three ships** | movable · 3 ships · separate | 12 + sun · Cluster | Three fixes on one budget; the field carries more than one ship. |
+| 2-5 | **Fleet capstone** | movable · 3 ships · fan-out | 12 + sun · Cluster · high scramble | Placement, shared paths and the field across every ship. |
+| 2-6 to 2-8 | **Clear with a fleet** | movable · 2 ships | + sun · Clear answer | One obstacle in more than one ship's path: one blocker → among decoys → two blockers. |
+
+**Every system keeps a star** (decided 2026-11-26): every chapter 2 job has a sun, placed off the
+ships' corridor and never the answer (`OffCorridor`, `NoSunAnswer`). The map anchors each job on its
+sun, and a starless system would read as a gap; dark systems on purpose are an idea
+([later chapters](../ideas/later-chapters.md) §Other options).
 
 The intro jobs play before 2-1; 2-1 to 2-4 keep their ids, and new jobs take the next free ids
 ([chapter 2 intro](../plans/backlog/chapter-2-intro.md) and the plans after it). Multi-ship bakes need ≥ 9 planets, use

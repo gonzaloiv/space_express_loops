@@ -17,7 +17,9 @@ tooling express a fleet and chapter 2, then rebake 2-1 to 2-3 with no sun answer
 2-1 to 2-3 are rebaked through the new sun placement and validate with no sun answer. Each keeps its
 `id`, lines, ship relation and field shape (2-1 separate · Ring, 2-2 fan-out · Spiral, 2-3
 converge · Spiral); fleets bake `Mechanism = Any`, so no
-solution role is promised. 2-4 stays the sun job.
+solution role is promised. **Every system keeps a star** (decided 2026-11-26): 2-1 to 2-3 all have a
+sun, off the ships' corridor, so the map and the field shapes read the same as chapter 1. 2-4 keeps
+its sun, unchanged.
 
 ## Why
 
@@ -74,8 +76,8 @@ solution role is promised. 2-4 stays the sun job.
 - Add `02_01`–`02_03` to `PuzzleJobContracts.All`, scan with the
   [fleet search](../../../Assets/_Modules/Docs~/solutions/architecture-patterns/editor-bakes-on-a-plain-snapshot.md),
   and save each over its asset. The contracts carry the fleet bake's hard constraints and what the
-  validator compares: `Translatable = true` (`CheckBrief`), `HasSun` per job (`CheckSources`: 2-1
-  true, 2-2/2-3 false), `Mechanism = Any`, `Zones = 1`, `MinRoutes = 1`,
+  validator compares: `Translatable = true` (`CheckBrief`), `HasSun = true` on all three
+  (`CheckSources`), `Mechanism = Any`, `Zones = 1`, `MinRoutes = 1`,
   `NoIntro`/`NoFail`/`NoGrade = false` (`FleetJobsTests` asserts them).
 - **Relation and shape per job**, from today's assets and [chapters](../../design/chapters.md):
   02_01 `Relation = Separate`, `FieldShape = Ring`, `PlanetCount = 10`; 02_02 `FanOut` (shared
@@ -83,9 +85,11 @@ solution role is promised. 2-4 stays the sun job.
   `PlanetCount = 12`. `Separate` is the enum's default, so an unset relation would silently bake 2-2
   as separate ships and lose its lesson and its "One origin. Two promises." line. Nothing validates
   the shape, so pin it with `PlanetCount`.
-- **Sun rule:** 2-1 keeps its sun with `NoSunAnswer` and `OffCorridor`. 2-2/2-3 are sun-free, and
-  `PuzzleSunRuleCheck.Matches` fails any rule on a field with no sun, so they use `SunRule = Any`; with
-  no sun there is no sun answer (`SunAnswers` is false).
+- **Sun rule:** all three use `HasSun = true`, `SunPlacement = OffCorridor`, `SunRule = NoSunAnswer`,
+  as 2-1 already does. 2-2 and 2-3 were first rebaked sun-free (2026-11-26); rescan and rebake them
+  with the sun: a sun on a field without a sun rule would fail `PuzzleSunRuleCheck.Matches`, and a
+  centred sun is what let the old fields be won by shrinking it. If either finds no seed in the scan
+  budget, record it here before falling back to sun-free.
 - **Pin the seeds:** record `Seed`/`Attempts` (and `PlanetCount`, `SunOnChord`, `MinBlockers`) per
   job, so `JobSet_MeetsTheContract` and "Bake all" reproduce the rebake.
 - **Sun-answer fixtures:** both `SunOnlyJob_SunAnswers` and
@@ -100,15 +104,15 @@ solution role is promised. 2-4 stays the sun job.
   fleets from either test. `FleetJobsTests` (ids, ship counts 2/2/2, sun/frame clearance) must stay
   green.
 - Exit: the Creator suite re-solves each saved 02_01–02_03 for every ship and asserts no sun answer;
-  2-1 keeps its sun; 2-4 unchanged; the fast suite is green.
+  all three have a sun off the corridor; 2-4 unchanged; the fast suite is green.
 
 If U3's fields do not bake after a day of seeds, split the layout retune into its own plan rather than
 expanding this one.
 
 ## Manual check (headset)
 
-1. 2-1 to 2-3: a cube on the sun does not solve.
+1. 2-1 to 2-3: each has a sun off the ships' path; a cube on the sun does not solve.
 2. Each is solvable within budget by working the planets.
-3. 2-1 still has its sun; 2-2 and 2-3 have none.
+3. On the map, every chapter 2 node sits on its star; no node floats over empty space.
 4. Jim's lines and the cards still match the new fields.
-5. 2-4 still teaches the sun with the fleet.
+5. 2-4 keeps its sun and plays as before.

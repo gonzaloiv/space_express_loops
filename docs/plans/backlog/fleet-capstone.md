@@ -36,8 +36,8 @@ pass `StartFrameClear` and still fail `CheckStartFrame`. Id: 02_05
 ### U2 — 2-5
 
 - Contract: `Ships = 3`, `Relation = FanOut`, `FieldShape = Cluster`, `PlanetCount = 12`,
-  `Translatable = true`, `MinRoutes = 1`, `HasSun` and `SunRule` pinned (sun present with
-  `NoSunAnswer`, or sun-free with `Any`), `MinScaleDelta` and `MinStartDistance` set (high scramble; `MaxScaleDelta` off).
+  `Translatable = true`, `MinRoutes = 1`, `HasSun = true`, `SunPlacement = OffCorridor`, `SunRule = NoSunAnswer` (every system keeps a
+  star), `MinScaleDelta` and `MinStartDistance` set (high scramble; `MaxScaleDelta` off).
 - Id 02_05; play it after 2-4 or as the chapter's last job (decide before baking).
 - Exit: the asset validates and re-solves; the start does not solve in place.
 
