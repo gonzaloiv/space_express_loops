@@ -46,9 +46,7 @@ namespace DigitalLove.Game.SpaceShaping
         {
             Origin = puzzle.Origin,
             Destination = puzzle.Destination,
-            CaptureRadius = puzzle.captureRadius > 0f
-                ? puzzle.captureRadius
-                : puzzle.CaptureRadiusAtDestination(),
+            CaptureRadius = puzzle.EffectiveCaptureRadius,
             EntropyBudget = puzzle.entropyBudget,
             NoFail = puzzle.noFail,
             NoGrade = puzzle.noGrade,

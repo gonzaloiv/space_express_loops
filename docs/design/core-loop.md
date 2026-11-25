@@ -65,6 +65,10 @@ The prediction's end dot **warms only on `noGrade` jobs** (1–2): it teaches "c
 nothing is at stake, and stays neutral once stars are on the line. The live line still previews the
 path on every job.
 
+**Help comes at the edges, not during the solve.** The contract card stays available during the run as
+a static reference; otherwise help reaches the player at the start (Jim's line, the gesture prompts)
+and the end (the complete/fail message). There is no reactive in-solve hint surface.
+
 **Entropy is charged per modification, not per launch** — it persists across launches, so failing
 drains the bar.
 

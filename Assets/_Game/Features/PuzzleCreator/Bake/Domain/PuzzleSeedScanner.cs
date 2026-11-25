@@ -10,7 +10,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             PuzzleSimSettings sim = PuzzleSimSettings.From(settings);
             PuzzleBrief brief = PuzzleBrief.From(seed, settings);
-            if (brief.IsMulti && brief.Mechanism != PuzzleMechanism.Any)
+            if (brief.IsMulti && !brief.SupportsFleetRole)
             {
                 return new PuzzleSeedScanResult
                 {

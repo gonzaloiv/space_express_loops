@@ -5128,6 +5128,7 @@ MonoBehaviour:
   cube: {fileID: 1650000003}
   cubeSize: 0.119
   contractCard: {fileID: 476077590}
+  levelSelector: {fileID: 11400000, guid: b85b9bd1f1508454b8fed75d4331c4ec, type: 2}
   viewRadius: 0.2
   enterAt: 1.8
   pinchFade: 0.6

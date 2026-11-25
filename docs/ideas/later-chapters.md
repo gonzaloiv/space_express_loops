@@ -37,6 +37,12 @@ turns from delivering cargo to repairing spacetime with the Wrap.
 
 ## Other options
 
+- **Sold stars — dark systems on purpose.** The firm sells off stars (Slightly Used Stars Ltd. is a
+  star dealer); from one job on, a system with no sun means "this one's star was sold". Needs a line or
+  card at the first dark job, a deliberate starless node on the map (a burnt-out remnant marker, not
+  empty space: the map anchors every job on its sun today), and a rule for which later jobs stay dark.
+  For the store release every system keeps a star (decided 2026-11-26); this could carry chapter 3's
+  damage or a later episode.
 - **Ghost of your best path.** A faint line of your previous best trajectory on retry; makes chasing
   3★ readable.
 - **Hard versions of solved jobs.** Same field, budget at 1.5× the solution instead of 3×. It breaks

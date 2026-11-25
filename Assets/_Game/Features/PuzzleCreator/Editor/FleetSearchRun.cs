@@ -36,15 +36,19 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
     // Runs the multi-ship probe on a Task so a fleet seed hunt never blocks the editor: the field and
     // the variant stay on the main thread, only the snapshot probe runs on the worker. One search at a
-    // time process-wide, and a recompile cancels the search before the domain goes away.
+    // time process-wide. A recompile cancels the search, waits briefly for the worker and releases the
+    // caller's assets, so the gate is never left locked.
     public sealed class FleetSearchRun
     {
+        private const int WorkerWaitMilliseconds = 500;
+
         private static FleetSearchRun running;
 
         private readonly FleetSearchRequest request;
         private readonly PuzzleSimSettings sim;
         private readonly Func<int, PuzzleSeedScanResult, bool> onSeed;
         private readonly Action<FleetSearchOutcome> onDone;
+        private readonly Action onRelease;
         private readonly CancellationTokenSource cancel = new();
 
         private PuzzleMultiShipSearch active;
@@ -53,14 +57,16 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         private int seedsDone;
         private int zonesDone;
         private bool finished;
+        private bool released;
 
         private FleetSearchRun(
             FleetSearchRequest request, Func<int, PuzzleSeedScanResult, bool> onSeed,
-            Action<FleetSearchOutcome> onDone)
+            Action<FleetSearchOutcome> onDone, Action onRelease)
         {
             this.request = request;
             this.onSeed = onSeed;
             this.onDone = onDone;
+            this.onRelease = onRelease;
             sim = PuzzleSimSettings.From(request.Settings);
         }
 
@@ -74,12 +80,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         public static FleetSearchRun Start(
             FleetSearchRequest request, Func<int, PuzzleSeedScanResult, bool> onSeed,
-            Action<FleetSearchOutcome> onDone)
+            Action<FleetSearchOutcome> onDone, Action onRelease = null)
         {
             if (running != null)
                 throw new InvalidOperationException("A fleet search is already running.");
 
-            FleetSearchRun run = new(request, onSeed, onDone);
+            FleetSearchRun run = new(request, onSeed, onDone, onRelease);
             running = run;
             AssemblyReloadEvents.beforeAssemblyReload += run.OnBeforeReload;
             EditorApplication.update += run.Poll;
@@ -94,6 +100,19 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         }
 
         private void StartSeed()
+        {
+            try
+            {
+                StartSeedCore();
+            }
+            catch (Exception error)
+            {
+                Debug.LogException(error);
+                Finish(FleetSearchOutcome.Failed);
+            }
+        }
+
+        private void StartSeedCore()
         {
             if (cancel.IsCancellationRequested)
             {
@@ -122,14 +141,34 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
             Task<FleetZoneResult> done = task;
             task = null;
-            if (done.IsFaulted || cancel.IsCancellationRequested)
+            if (done.IsFaulted)
             {
-                Finish(done.IsFaulted ? FleetSearchOutcome.Failed : FleetSearchOutcome.Cancelled);
+                Debug.LogException(done.Exception != null
+                    ? done.Exception.GetBaseException()
+                    : new InvalidOperationException("The fleet search task failed."));
+                Finish(FleetSearchOutcome.Failed);
+                return;
+            }
+
+            if (cancel.IsCancellationRequested)
+            {
+                Finish(FleetSearchOutcome.Cancelled);
                 return;
             }
 
             int seedValue = request.StartSeed + index;
-            PuzzleSeedScanResult result = active.ToScanResult(active.Confirm(done.Result));
+            PuzzleSeedScanResult result;
+            try
+            {
+                result = active.ToScanResult(active.Confirm(done.Result));
+            }
+            catch (Exception error)
+            {
+                Debug.LogException(error);
+                Finish(FleetSearchOutcome.Failed);
+                return;
+            }
+
             DisposeActive();
             seedsDone++;
             index++;
@@ -168,6 +207,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             if (running == this)
                 running = null;
 
+            Release();
             try
             {
                 onDone?.Invoke(outcome);
@@ -178,6 +218,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             }
         }
 
+        // A recompile unloads the assemblies under the worker: stop it, give it a bounded moment to
+        // leave the zone it is in, then release the assets. Do not call onDone; the windows are
+        // rebuilt and must not touch dead state.
         private void OnBeforeReload()
         {
             finished = true;
@@ -186,7 +229,41 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             cancel.Cancel();
             if (running == this)
                 running = null;
+
+            WaitForWorker();
             DisposeActive();
+            Release();
+        }
+
+        private void WaitForWorker()
+        {
+            Task<FleetZoneResult> pending = task;
+            if (pending == null)
+                return;
+
+            try
+            {
+                pending.Wait(WorkerWaitMilliseconds);
+            }
+            catch (AggregateException)
+            {
+            }
+        }
+
+        private void Release()
+        {
+            if (released)
+                return;
+
+            released = true;
+            try
+            {
+                onRelease?.Invoke();
+            }
+            catch (Exception error)
+            {
+                Debug.LogException(error);
+            }
         }
 
         private void DisposeActive()

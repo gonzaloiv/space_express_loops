@@ -84,6 +84,72 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Relation = PuzzleShipRelation.Converge,
                 Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
             },
+            // Fleet capstone: three ships from one origin, the chapter's hardest field. Pending until the
+            // off-editor scan pins the seed; the high-scramble bounds are set from that bake (MinScaleDelta)
+            // and the headset pass confirms them.
+            new PuzzleJobContract
+            {
+                Id = "02_05", Pending = true, Seed = 1, Attempts = 1, PlanetCount = 12,
+                FieldShape = PuzzleFieldShape.Cluster,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                SunRule = PuzzleSunRule.NoSunAnswer,
+                Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 3,
+                Relation = PuzzleShipRelation.FanOut,
+                Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
+            },
+            new PuzzleJobContract
+            {
+                Id = "02_09", Seed = 1, Attempts = 1, PlanetCount = 9, FieldShape = PuzzleFieldShape.Ring,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                SunRule = PuzzleSunRule.NoSunAnswer,
+                Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
+                Relation = PuzzleShipRelation.FanOut,
+                Translatable = false, NoFail = false, NoGrade = false, NoIntro = false,
+                MaxScaleDelta = 0.25f,
+            },
+            new PuzzleJobContract
+            {
+                Id = "02_10", Seed = 1, Attempts = 1, PlanetCount = 9, FieldShape = PuzzleFieldShape.Ring,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                SunRule = PuzzleSunRule.NoSunAnswer,
+                Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
+                Relation = PuzzleShipRelation.Separate,
+                Translatable = false, NoFail = false, NoGrade = false, NoIntro = false,
+                MaxScaleDelta = 0.25f,
+            },
+            // Fleet Clear: movable two-ship jobs whose lesson is one blocker shared by both runs.
+            // Pending until the off-editor Clear scan pins Seed/Attempts and the scramble bounds are
+            // set by playing; then unpin and bake them into chapter 2 after 02_04.
+            new PuzzleJobContract
+            {
+                Id = "02_06", Pending = true, Seed = 1, Attempts = 1, PlanetCount = 10,
+                FieldShape = PuzzleFieldShape.Ring,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 1,
+                Mechanism = PuzzleMechanism.Clear, Zones = 1, MinRoutes = 1, Ships = 2,
+                Relation = PuzzleShipRelation.Separate,
+                Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
+            },
+            new PuzzleJobContract
+            {
+                Id = "02_07", Pending = true, Seed = 1, Attempts = 1, PlanetCount = 12,
+                FieldShape = PuzzleFieldShape.Cluster,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 1,
+                Mechanism = PuzzleMechanism.Clear, Zones = 1, MinRoutes = 1, Ships = 2,
+                Relation = PuzzleShipRelation.Separate,
+                Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
+            },
+            new PuzzleJobContract
+            {
+                Id = "02_08", Pending = true, Seed = 1, Attempts = 1, PlanetCount = 12,
+                FieldShape = PuzzleFieldShape.Spiral,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 2,
+                Mechanism = PuzzleMechanism.Clear, Zones = 1, MinRoutes = 1, Ships = 2,
+                Relation = PuzzleShipRelation.Separate,
+                Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
+            },
         };
 
         public static readonly IReadOnlyList<PuzzleJobContract> Enabled = EnabledJobs();

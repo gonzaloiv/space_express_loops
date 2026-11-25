@@ -47,8 +47,9 @@ namespace DigitalLove.Game.Flow
             PuzzleRestart restart = memoryDataClient.Get<PuzzleRestart>();
             memoryDataClient.Remove<PuzzleRestart>();
             puzzle = memoryDataClient.Get<PuzzleData>();
+            JobCardStamp stamp = memoryDataClient.Get<JobCardStamp>();
             ShowPrompts(puzzle, restart.Value);
-            ShowContract(puzzle);
+            ShowContract(puzzle, stamp.ManualOrdinal);
             if (restart.ShowExitPrompt)
                 prompts.ShowAlways(GestureKind.Exit);
         }
@@ -96,10 +97,10 @@ namespace DigitalLove.Game.Flow
                 prompts.Show(GestureKind.Stars);
         }
 
-        private void ShowContract(PuzzleData puzzle)
+        private void ShowContract(PuzzleData puzzle, int manualOrdinal)
         {
             if (!puzzle.noIntro)
-                contractCard.ShowInstant(puzzle);
+                contractCard.ShowInstant(puzzle, true, manualOrdinal);
         }
 
         private void OnSolved()

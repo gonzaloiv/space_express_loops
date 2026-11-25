@@ -122,7 +122,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
                 }
 
                 if (!PuzzleJobValidator.Validate(
-                        puzzle, solution.Kind, solution.Zones, contract, out List<string> problems, sim))
+                        puzzle, solution.Kind, solution.Zones, contract, out List<string> problems, sim,
+                        checkScramble: false))
                     failures.Add($"{contract.Id}: {string.Join("; ", problems)}");
             }
 
@@ -144,17 +145,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleSimSettings sim, out PuzzleSolution solution)
         {
             if (contract.Ships > 1)
-                return TrySolveFleet(puzzle, sim, out solution);
+                return TrySolveFleet(puzzle, contract, sim, out solution);
 
             return PuzzleSolutionSearch.TrySelect(
                 puzzle, sim, Brief(contract, settings), out solution);
         }
 
         private static bool TrySolveFleet(
-            PuzzleData puzzle, PuzzleSimSettings sim, out PuzzleSolution solution)
+            PuzzleData puzzle, PuzzleJobContract contract, PuzzleSimSettings sim,
+            out PuzzleSolution solution)
         {
             solution = default;
-            if (!PuzzleFleetSolution.TryFind(puzzle, sim, out PuzzleZone zone))
+            if (!PuzzleFleetSolution.TryFind(puzzle, sim, contract.Mechanism, out PuzzleZone zone))
                 return false;
 
             PuzzleVerification check = PuzzleVerifier.Verify(puzzle, new[] { zone }, sim);

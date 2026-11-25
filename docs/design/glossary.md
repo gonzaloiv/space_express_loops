@@ -35,11 +35,14 @@ the UI. Do not introduce a third word for the same idea.
 | **well** | A planet's gravity well. A bigger planet makes a deeper well (`mass ∝ radius³`) and bends the path more. A smaller one is a smaller obstacle on the line. |
 | **obstacle** | A body on the origin→destination line. Shrinking it shrinks its collision radius, so the path can clear. |
 | **curve / clear** | The two roles of the scale: **grow to curve** (a well bends the path), **shrink to clear** (a smaller obstacle leaves the line). A multi-zone solution can mix them. |
+| **anchor (anchored body)** | A body fused in place: the Wrap cannot change its scale, so the player bends the line with its neighbours. The source flag is `fixedMass`. |
+| **repulsor** | A body that pushes instead of pulling: the lattice bulges up, shrinking it opens a gap, growing it shoves a ship aside. The source carries a negative strength. |
+| **the damage** | Chapter 3's frame: the scramble is spacetime torn and some bodies no longer behave (anchors, repulsors). The Wrap puts the **route** back, not the body. Use **broken bodies** for the field content. |
 | **readout** | The derived surface for one run: result, entropy and stars. The final bar lives **in the field**, not a panel; the lab panel is a diagnostic. |
 | **bubble** | The playfield: the miniature universe anchored in the room. |
-| **job (level, contract)** | One delivery — a node on the map; ~1 minute each, 7 in the run. **Contract** is the fiction word. |
+| **job (level, contract)** | One delivery — a node on the map; ~1–3 minutes each, in chapters 1–3. **Contract** is the fiction word. |
 | **chapter** | An ordered set of jobs that teaches one idea; numbers restart per chapter ([chapters](chapters.md)). |
-| **freelance contract** | An optional prebaked job outside the chapters, graded by exact entropy left, with no story. The **daily contract** is one per day, the same for everyone. |
+| **freelance contract** | An optional prebaked job outside the chapters, graded with the same 1–3 stars and no story. The **daily contract** is one per day, the same for everyone. |
 | **multi-ship** | A job with more than one run; it is solved only when **every ship arrives**. The runs relate as fan-out, converge, or separate. |
 | **the seed** | The authoring recipe for a job — its field, brief conditions and dials; the **level** is the baked result. |
 | **the map (level selector)** | The field of numbered **nodes**, one per job; solving lights them. The cube picks a node. **Direct pick only**; a fail restarts the job, a solve returns to the map. |

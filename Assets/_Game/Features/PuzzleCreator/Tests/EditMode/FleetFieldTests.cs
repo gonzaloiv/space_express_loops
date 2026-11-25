@@ -6,7 +6,7 @@ using UnityEngine;
 namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 {
     // The snapshot an off-thread probe runs on must carry every value the synchronous bake reads;
-    // these checks lock the projection and prove both constructor paths agree.
+    // these checks lock the projection and the probe's per-zone reporting.
     public class FleetFieldTests
     {
         private const float A = 0.15f;
@@ -58,21 +58,30 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             AssertSameShips(direct.Ships, snapshot.Ships);
         }
 
+        // This field is deliberately inert: every candidate cube sits on a ship endpoint, so nothing is
+        // rescued. The test is that the probe walks the whole candidate space and that a pre-cancelled
+        // token walks none of it; it does not pass on a bare "not found".
         [Test]
-        public void Snapshot_FindsTheSameZone()
+        public void Probe_WalksEveryZoneAndStopsOnCancel()
         {
-            FleetZoneResult asset = new PuzzleMultiShipProbe(field, sim, brief).Find();
-            FleetZoneResult snapshot =
-                new PuzzleMultiShipProbe(FleetField.From(field, sim), brief).Find();
+            FleetField fleet = FleetField.From(field, sim);
+            int zones = 0;
 
-            Assert.AreEqual(asset.Found, snapshot.Found);
-            if (!asset.Found)
-                return;
+            FleetZoneResult found = new PuzzleMultiShipProbe(fleet, brief).Find(
+                System.Threading.CancellationToken.None, () => zones++);
 
-            Assert.AreEqual(asset.Zone.centre, snapshot.Zone.centre);
-            Assert.AreEqual(asset.Zone.halfExtents, snapshot.Zone.halfExtents);
-            Assert.AreEqual(asset.Zone.scale, snapshot.Zone.scale, 1e-6f);
-            Assert.AreEqual(asset.Rescued.Count, snapshot.Rescued.Count);
+            Assert.AreEqual(ExpectedZones(fleet), zones);
+            Assert.IsFalse(found.Found);
+
+            System.Threading.CancellationTokenSource cancel = new();
+            cancel.Cancel();
+            int cancelledZones = 0;
+            FleetZoneResult stopped = new PuzzleMultiShipProbe(fleet, brief).Find(
+                cancel.Token, () => cancelledZones++);
+            cancel.Dispose();
+
+            Assert.AreEqual(0, cancelledZones);
+            Assert.IsFalse(stopped.Found);
         }
 
         [Test]
@@ -84,6 +93,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
             Assert.AreEqual(Radius, snapshot.Sources[0].scale, 1e-6f);
             Assert.AreEqual(-A, snapshot.Ships[0].origin.x, 1e-6f);
+        }
+
+        private int ExpectedZones(FleetField fleet)
+        {
+            const int ScaleSamples = 13;   // PuzzleMultiShipProbe's sample count
+            return PuzzleZoneCandidates.Centres(fleet, fleet.CubeSizeMax).Length
+                * PuzzleZoneCandidates.Sizes(fleet).Length
+                * PuzzleZoneCandidates.Scales(sim, ScaleSamples).Length;
         }
 
         private static void AssertSameSources(SourceSpec[] direct, SourceSpec[] snapshot)

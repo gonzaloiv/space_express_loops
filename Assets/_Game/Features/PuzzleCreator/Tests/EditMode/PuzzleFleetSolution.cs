@@ -8,7 +8,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         private const int ScaleSamples = 32;
         private const float MergeDistance = 0.0001f;
 
-        public static bool TryFind(PuzzleData puzzle, PuzzleSimSettings settings, out PuzzleZone zone)
+        public static bool TryFind(
+            PuzzleData puzzle, PuzzleSimSettings settings, PuzzleMechanism mechanism,
+            out PuzzleZone zone)
         {
             zone = default;
             if (puzzle.ships == null || puzzle.ships.Length < 2)
@@ -24,7 +26,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
                     centres[c], sizes, scales, settings.ZoneFalloff);
                 for (int i = 0; i < zones.Count; i++)
                 {
-                    if (TryZone(puzzle, settings, scan, zones[i], out zone))
+                    if (TryZone(puzzle, settings, scan, mechanism, zones[i], out zone))
                         return true;
                 }
             }
@@ -34,7 +36,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
         private static bool TryZone(
             PuzzleData puzzle, PuzzleSimSettings settings, PuzzleShipScan scan,
-            PuzzleZone candidate, out PuzzleZone zone)
+            PuzzleMechanism mechanism, PuzzleZone candidate, out PuzzleZone zone)
         {
             zone = default;
             if (!PuzzleZoneCandidates.CoversSource(candidate, puzzle)
@@ -44,7 +46,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             if (!scan.Rescues(candidate, puzzle.ships))
                 return false;
 
-            if (!PuzzleVerifier.Verify(puzzle, new[] { candidate }, settings).Solved)
+            PuzzleVerification check = PuzzleVerifier.Verify(puzzle, new[] { candidate }, settings);
+            if (!check.Solved)
+                return false;
+
+            // First matching zone, not the cheapest: keeping the early exit stops the shipped check
+            // from verifying every candidate. Any keeps the old first-solved behaviour.
+            if (mechanism != PuzzleMechanism.Any
+                && !PuzzleSolutionClassifier.Matches(mechanism, check.Kind))
                 return false;
 
             zone = candidate;

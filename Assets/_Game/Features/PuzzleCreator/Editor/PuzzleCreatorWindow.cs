@@ -168,6 +168,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             fleetSearch = FleetSearchRun.Start(
                 new FleetSearchRequest(seed, settings, brief, fleetStart, MultiSeedAttempts),
                 AddFleetSeed, FinishFleetSearch);
+
+            // A failure inside Start runs the completion callback before Start returns, so the field
+            // would hold a finished run; the gate is the truth.
+            if (!FleetSearchRun.IsRunning)
+                fleetSearch = null;
             Repaint();
         }
 
@@ -400,6 +405,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             if (status == PuzzleBakeStatus.StartTooStraight)
                 return "Rejected: the start path stays under 5% of the chord or 4° off it, too straight "
                     + "for a curve lesson. Use Find working seed.";
+
+            if (status == PuzzleBakeStatus.WrongRole)
+                return $"Rejected: the fleet's confirmed answer is {generatedKind}, not " +
+                    $"{seed.mechanism}. The shrinking lesson needs a Clear field; try another seed.";
 
             if (status == PuzzleBakeStatus.WrongRoleRoute)
                 return $"Rejected: a {generatedKind} route is at least as cheap as the requested "

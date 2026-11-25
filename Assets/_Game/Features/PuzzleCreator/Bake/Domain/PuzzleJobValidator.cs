@@ -7,7 +7,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     {
         public static bool Validate(
             PuzzleData puzzle, PuzzleSolutionKind kind, PuzzleZone[] solution,
-            PuzzleJobContract contract, out List<string> failures, PuzzleSimSettings? settings = null)
+            PuzzleJobContract contract, out List<string> failures, PuzzleSimSettings? settings = null,
+            bool checkScramble = true)
         {
             failures = new List<string>();
             if (puzzle == null)
@@ -21,7 +22,36 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             CheckFleet(puzzle, solution, contract, failures, settings);
             CheckStartFrame(puzzle, contract, failures, settings);
             CheckSunAnswer(puzzle, contract, failures, settings);
+            if (checkScramble)
+                CheckScramble(puzzle, solution, contract, failures);
             return failures.Count == 0;
+        }
+
+        // The scramble bounds describe the baked answer; ShippedJobs_MeetTheContract re-solves the
+        // asset, so it passes checkScramble false and judges only the frame and the ships.
+        private static void CheckScramble(
+            PuzzleData puzzle, PuzzleZone[] solution, PuzzleJobContract contract, List<string> failures)
+        {
+            if (solution == null || solution.Length == 0)
+                return;
+
+            float delta = Mathf.Abs(solution[0].scale - 1f);
+            if (contract.MaxScaleDelta > 0f && delta > contract.MaxScaleDelta)
+                failures.Add($"scale delta {delta}, expected at most {contract.MaxScaleDelta}");
+            if (contract.MinScaleDelta > 0f && delta < contract.MinScaleDelta)
+                failures.Add($"scale delta {delta}, expected at least {contract.MinScaleDelta}");
+            if (contract.MinStartDistance <= 0f || !puzzle.translatable)
+                return;
+
+            if (puzzle.frames == null || puzzle.frames.Length == 0)
+            {
+                failures.Add("no start frame");
+                return;
+            }
+
+            float distance = Vector3.Distance(puzzle.frames[0].centre, solution[0].centre);
+            if (distance < contract.MinStartDistance)
+                failures.Add($"start distance {distance}, expected at least {contract.MinStartDistance}");
         }
 
         // Needs the sim settings: only a run can tell whether a cube on the sun solves the job.
@@ -50,8 +80,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 failures.Add($"noIntro {puzzle.noIntro}, expected {contract.NoIntro}");
             if (puzzle.growOnly != contract.GrowOnly)
                 failures.Add($"growOnly {puzzle.growOnly}, expected {contract.GrowOnly}");
-            if (contract.Ships <= 1
-                && !PuzzleSolutionClassifier.Matches(contract.Mechanism, kind))
+            // A fleet's kind comes from ship 0 and an Any fleet promises no role; only a fleet that
+            // asks for one (Clear) is judged on it.
+            bool checkRole = contract.Ships <= 1 || contract.Mechanism != PuzzleMechanism.Any;
+            if (checkRole && !PuzzleSolutionClassifier.Matches(contract.Mechanism, kind))
                 failures.Add($"role {kind}, expected {contract.Mechanism}");
             if (puzzle.routes < contract.MinRoutes)
                 failures.Add($"routes {puzzle.routes}, expected at least {contract.MinRoutes}");
@@ -82,7 +114,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             else if (!PuzzleSunRuleCheck.Matches(puzzle, solution, contract.SunRule))
                 failures.Add($"sun rule {contract.SunRule} failed");
 
-            int blockers = BlockerCount(sources, sun, puzzle);
+            // A Clear fleet's lesson is one blocker on two or more ships' runs. Single-ship jobs and
+            // Any fleets keep ship 0's count (their contracts pin MinBlockers against it).
+            int blockers = contract.Ships > 1 && contract.Mechanism == PuzzleMechanism.Clear
+                ? PuzzleRunBlockers.SharedCount(sources, sun, puzzle)
+                : PuzzleRunBlockers.Count(sources, sun, puzzle);
             if (blockers < contract.MinBlockers)
                 failures.Add($"blockers {blockers}, expected at least {contract.MinBlockers}");
         }
@@ -107,6 +143,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             }
 
             CheckRelation(puzzle.ships, contract.Relation, failures);
+            if (!puzzle.translatable && settings.HasValue)
+                CheckFixedFrame(puzzle, settings.Value, failures);
+
             if (!settings.HasValue || solution == null || solution.Length == 0)
                 return;
 
@@ -116,6 +155,24 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleVerification check = PuzzleVerifier.Verify(puzzle, solution, settings.Value);
             if (!check.Solved || !check.StartFails)
                 failures.Add("the fleet does not solve");
+        }
+
+        // A frame stores only centre and size, so a fixed fleet's frame is checked by solving it in
+        // place: some reachable scale must land every ship, and the cube must keep clear of endpoints.
+        private static void CheckFixedFrame(
+            PuzzleData puzzle, PuzzleSimSettings settings, List<string> failures)
+        {
+            if (puzzle.frames == null || puzzle.frames.Length == 0)
+            {
+                failures.Add("no start frame");
+                return;
+            }
+
+            PuzzleFrame frame = puzzle.frames[0];
+            if (!PuzzleStartFrame.SolvesInPlace(puzzle, settings, frame.centre, frame.size))
+                failures.Add("the fixed frame does not solve in place");
+            else if (PuzzleStartFrameCheck.CoversEndpoint(puzzle))
+                failures.Add("start frame covers an endpoint");
         }
 
         private static void CheckRelation(
@@ -142,41 +199,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleData puzzle, PuzzleJobContract contract, List<string> failures,
             PuzzleSimSettings? settings)
         {
-            if (!puzzle.translatable)
-                return;
-
-            if (puzzle.frames == null || puzzle.frames.Length == 0)
-            {
-                failures.Add("no start frame");
-                return;
-            }
-
-            Vector3 spot = PuzzleFieldBake.StartSpot(puzzle, contract.StartRule);
-            Vector3 expected = settings.HasValue
-                ? PuzzleStartFrame.Place(puzzle, settings.Value, spot, puzzle.frames[0].size)
-                : spot;
-            if ((puzzle.frames[0].centre - expected).sqrMagnitude > 0.000001f)
-                failures.Add($"start frame {puzzle.frames[0].centre}, expected {expected}");
-            else if (StartFrameCoversEndpoint(puzzle))
-                failures.Add("start frame covers an endpoint");
-        }
-
-        private static bool StartFrameCoversEndpoint(PuzzleData puzzle)
-        {
-            PuzzleZone frame = new()
-            {
-                centre = puzzle.frames[0].centre,
-                halfExtents = puzzle.frames[0].BoxSize * 0.5f,
-                scale = 1f
-            };
-            PuzzleEndpoints endpoints = puzzle.Endpoints;
-            for (int i = 0; i < endpoints.Count; i++)
-            {
-                if (frame.Contains(endpoints[i]))
-                    return true;
-            }
-
-            return false;
+            if (puzzle.translatable)
+                PuzzleStartFrameCheck.CheckMovable(puzzle, contract, settings, failures);
         }
 
         private static int SunIndex(PuzzleSource[] sources)
@@ -203,27 +227,5 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 sun.home, puzzle.origin, puzzle.destination)
                 < radius * PuzzleRunChoice.SunBlockBandFactor;
         }
-
-        private static int BlockerCount(PuzzleSource[] sources, int sun, PuzzleData puzzle)
-        {
-            int count = 0;
-            for (int i = 0; i < sources.Length; i++)
-            {
-                if (i == sun || IsEndpoint(sources[i].home, puzzle))
-                    continue;
-
-                float radius = sources[i].scale * 0.5f;
-                if (PuzzleRunGeometry.DistanceToSegment(
-                        sources[i].home, puzzle.origin, puzzle.destination)
-                    < radius * PuzzleRunChoice.PlanetBlockBandFactor)
-                    count++;
-            }
-
-            return count;
-        }
-
-        private static bool IsEndpoint(Vector3 home, PuzzleData puzzle) =>
-            (home - puzzle.origin).sqrMagnitude < 0.000001f
-            || (home - puzzle.destination).sqrMagnitude < 0.000001f;
     }
 }

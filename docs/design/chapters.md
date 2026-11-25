@@ -36,17 +36,22 @@ No new verb. The ramp restarts: low scramble, Ring shape.
 
 | # | Lesson | Brief | Field | Why |
 |---|---|---|---|---|
-| intro 1 | **One pinch, two ships** | fixed · 2 ships · one origin | Ring · low scramble | The fixed cube near the shared origin bends both paths at once. |
-| intro 2 | **One zone between** | fixed · 2 ships · separate | Ring · low scramble | One zone placed between two runs rescues both. |
+| intro 1 | **One pinch, two ships** | fixed · 2 ships · one origin | 9 + sun · Ring · low scramble | The fixed cube near the shared origin bends both paths at once. |
+| intro 2 | **One zone between** | fixed · 2 ships · separate | 9 + sun · Ring · low scramble | One zone placed between two runs rescues both. |
 | 2-1 | **Two ships** | movable · 2 ships · separate | 10 + sun · Ring · low scramble | One field, two runs; each ship has its own fix. |
-| 2-2 | **Fan-out** | movable · 2 ships · one origin | 10–12 · Spiral | An edit near the shared origin bends both paths. |
-| 2-3 | **Converge** | movable · 2 ships · one destination | 12 · Spiral | The planet by the shared destination fixes both approaches. |
-| 2-4 | **Three ships** | movable · 3 ships · separate | 12 · Cluster | Three fixes on one budget; the field carries more than one ship. |
-| 2-5 | **Fleet capstone** | movable · 3 ships · fan-out | 12 · Cluster · high scramble | Placement, shared paths and the field across every ship. |
-| 2-6 to 2-8 | **Clear with a fleet** | movable · 2–3 ships | Clear answer | One obstacle in more than one ship's path: one blocker → among decoys → two blockers. |
+| 2-2 | **Fan-out** | movable · 2 ships · one origin | 12 + sun · Spiral | An edit near the shared origin bends both paths. |
+| 2-3 | **Converge** | movable · 2 ships · one destination | 12 + sun · Spiral | The planet by the shared destination fixes both approaches. |
+| 2-4 | **Three ships** | movable · 3 ships · separate | 12 + sun · Cluster | Three fixes on one budget; the field carries more than one ship. |
+| 2-5 | **Fleet capstone** | movable · 3 ships · fan-out | 12 + sun · Cluster · high scramble | Placement, shared paths and the field across every ship. |
+| 2-6 to 2-8 | **Clear with a fleet** | movable · 2 ships | + sun · Clear answer | One obstacle in more than one ship's path: one blocker → among decoys → two blockers. |
+
+**Every system keeps a star** (decided 2026-11-26): every chapter 2 job has a sun, placed off the
+ships' corridor and never the answer (`OffCorridor`, `NoSunAnswer`). The map anchors each job on its
+sun, and a starless system would read as a gap; dark systems on purpose are an idea
+([later chapters](../ideas/later-chapters.md) §Other options).
 
 The intro jobs play before 2-1; 2-1 to 2-4 keep their ids, and new jobs take the next free ids
-([chapter 2 to ten](../plans/backlog/chapter-2-to-ten.md)). Multi-ship bakes need ≥ 9 planets, use
+([chapter 2 intro](../plans/in-progress/chapter-2-intro.md) and the plans after it). Multi-ship bakes need ≥ 9 planets, use
 one cube (fixed or movable), and cannot request a role yet, so every fleet job is checked by playing
 it. **Slightly Used Stars Ltd.** returns at 2-2.
 
@@ -57,17 +62,33 @@ better than the single-ship jobs). They ship as episode 2 of the story ([lore](w
 ## Chapter 3 — broken bodies (store release)
 
 The damage shows in the bodies themselves (decided 2026-11-25). No new gesture: the same pinch meets
-bodies that no longer behave. ~6 jobs ([chapter 3](../plans/backlog/chapter-3.md)).
+bodies that no longer behave. ~6 jobs ([broken bodies](../plans/backlog/broken-bodies.md) for the
+mechanics, [chapter 3](../plans/backlog/chapter-3.md) for the jobs).
 
 | Lesson | Body | Teaches | Cost |
 |---|---|---|---|
-| **Anchored** | a planet fused in place; the Wrap does not change it | work around what you cannot touch: bend the line with its neighbours | low — `fixedMass` exists in the sim and the bake; needs a look and a bake rule |
-| **Repulsor** | a body that pushes instead of pulls; the lattice bulges up | the same verbs, read backwards: shrink it to open a gap, grow it to shove a ship aside | medium — a negative strength, the raised well, a look, bake support |
+| **Anchored** | a planet fused in place; the Wrap does not change it | work around what you cannot touch: bend the line with its neighbours | low–medium — `fixedMass` exists in the sim; needs the field through contract → seed → bake → validator, a refused no-op pinch, a look and a bake rule |
+| **Repulsor** | a body that pushes instead of pulls; the lattice bulges up | the same verbs, read backwards: shrink it to open a gap, grow it to shove a ship aside | medium — a negative strength, the raised well (drawn from the start), a look, a role rule, bake support |
 
 The ramp: an anchor on the line → among decoys → a repulsor to shrink → a repulsor to grow → both →
-a capstone (with a fleet or a second sun). A second sun (another `centreOnly` source) is field
-variety inside these jobs, not a lesson. If repulsors are not ready, chapter 3 ships with anchored
-jobs and repulsors come in an update.
+a capstone (with a fleet). If repulsors are not ready, chapter 3 ships with anchored jobs (more
+anchors per job for variety) and repulsors come in an update. A second sun is not a fallback: one sun
+is assumed across the validator and the field.
+
+**Episode 3 — the damage** (named 2026-11-25; manual release *DAMAGE CONTROL*). The clients stay
+absurd; the damage stays in the bodies.
+
+| # | Lesson | Client | Cargo |
+|---|---|---|---|
+| 3-1 | anchor on the line | The Museum of Small Disasters | a cracked marble |
+| 3-2 | anchor among decoys | Two Brothers, One Address | a shared inheritance |
+| 3-3 | repulsor to shrink | The Quiet Hours Union | a night shift |
+| 3-4 | repulsor to grow | The Gravity Choir | a hymn in three parts |
+| 3-5 | repulsor and anchor | The Last Two Customers | the other half of the gift |
+| 3-6 | capstone: both, with a fleet | The Sector Audit Office | the firm's entropy ledger |
+
+The sector audit is the frame: Jim calls it routine; the player sees what it is. If repulsors do not
+ship, 3-3 and 3-4 become anchored jobs and 3-5/3-6 use more anchors.
 
 **Future options** ([later chapters](../ideas/later-chapters.md) §Broken physics): **debris** (a broken
 planet's tight cluster of fragments, each its own kind, so one pinch reshapes it unevenly) and

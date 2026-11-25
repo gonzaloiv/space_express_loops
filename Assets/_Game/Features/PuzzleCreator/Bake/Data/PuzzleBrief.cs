@@ -31,6 +31,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public bool IsMulti =>
             Ships > 1;
 
+        // The fleet bake searches role-agnostically and classifies the confirmed answer, so it can ask
+        // for Clear (the shrinking lesson) or settle for Any; the single-ship selection owns the rest.
+        public bool SupportsFleetRole =>
+            Mechanism == PuzzleMechanism.Any || Mechanism == PuzzleMechanism.Clear;
+
         public static PuzzleBrief From(PuzzleSeed seed, SpaceShapingSettings settings) => new()
         {
             EndpointClearance = settings.endpointClearance,

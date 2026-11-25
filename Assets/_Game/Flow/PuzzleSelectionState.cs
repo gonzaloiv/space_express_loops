@@ -180,6 +180,7 @@ namespace DigitalLove.Game.Flow
         {
             autoEntryUsed = true;
             memoryDataClient.Remove<PuzzleRestart>();
+            memoryDataClient.Put(new JobCardStamp(levelSelector.GetLevelOrdinal(puzzle)));
             memoryDataClient.Put(puzzle);
             parent.SetCurrentState(nextState.RouteId);
         }

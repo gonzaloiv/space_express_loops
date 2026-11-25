@@ -9,13 +9,14 @@ namespace DigitalLove.Game.PuzzleSelection.Tests
         {
             Assert.AreEqual("sector_wire_00", SectorWire.Key(0));
             Assert.AreEqual("sector_wire_07", SectorWire.Key(7));
+            Assert.AreEqual("sector_wire_18", SectorWire.Key(18));
         }
 
         [Test]
         public void Key_HoldsOnTheLastLinePastTheEnd()
         {
-            Assert.AreEqual("sector_wire_11", SectorWire.Key(SectorWire.LineCount - 1));
-            Assert.AreEqual("sector_wire_11", SectorWire.Key(40));
+            Assert.AreEqual("sector_wire_23", SectorWire.Key(SectorWire.LineCount - 1));
+            Assert.AreEqual("sector_wire_23", SectorWire.Key(40));
             Assert.AreEqual("sector_wire_00", SectorWire.Key(-1));
         }
 

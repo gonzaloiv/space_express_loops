@@ -52,9 +52,11 @@ namespace DigitalLove.Game.SpaceShaping
 
         public string ManualKey => IntroKey + "_manual_entry";
 
-        // The tech team ships the manual in releases: one per chapter, one patch per job, so job
-        // 02_03 reads v2.0.3 of the chapter's release ("FLEET EXPANSION").
-        public string ManualVersion => $"{int.Parse(GetChapterId(id))}.0.{AsIndex(id)}";
+        // The tech team ships the manual in releases: one per chapter, one patch per played job, so
+        // the first card of a chapter reads x.0.1. The patch is the job's ordinal in the chapter's
+        // play order, not its id suffix (chapter 2's intro jobs have higher ids than 02_01).
+        public string ManualVersionFor(int patch) =>
+            $"{int.Parse(GetChapterId(id))}.0.{patch}";
 
         public string ManualReleaseKey => $"chapter_{GetChapterId(id)}_manual_release";
 
@@ -76,6 +78,10 @@ namespace DigitalLove.Game.SpaceShaping
             new(translatable, resizable, Endpoints.ToArray());
 
         public float CaptureRadiusAtDestination() => CaptureRadiusAt(destination);
+
+        // The one capture-radius rule: an explicit value, else the destination planet's own radius.
+        public float EffectiveCaptureRadius =>
+            captureRadius > 0f ? captureRadius : CaptureRadiusAtDestination();
 
         public float CaptureRadiusAt(Vector3 point)
         {

@@ -1,4 +1,5 @@
 using System;
+using DigitalLove.Casual.Levels;
 using DigitalLove.Game.SpaceShaping;
 using DigitalLove.Game.SpaceShaping.Cube;
 using DigitalLove.Global;
@@ -18,6 +19,7 @@ namespace DigitalLove.Game.PuzzleSelection
         [Tooltip("Edge of the selection cube, in map units.")]
         [SerializeField, Min(0.01f)] private float cubeSize = 0.119f;
         [SerializeField] private JobCardPanel contractCard;
+        [SerializeField] private LevelSelector levelSelector;
         [SerializeField] private float viewRadius = 0.5f;
         [Tooltip("Cube scale at which a pinch commits to entering the job.")]
         [SerializeField, Min(1.1f)] private float enterAt = 1.8f;
@@ -75,7 +77,7 @@ namespace DigitalLove.Game.PuzzleSelection
             pose.ShowAll = showAll;
             tint = new MapNodeTint(
                 selectionCubeColors, lockedBrightness, pulseSecs, pulseDepth);
-            readout = new MapSelectionReadout(contractCard);
+            readout = new MapSelectionReadout(contractCard, levelSelector);
             fieldView = new MapFieldRenderer(selectedSlot, fields, tint, readout, showFrames);
             selection = new MapCubeSelection(mapCube, pose, fieldView, readout);
             enter = new MapEnter(selectedSlot, enterSecs, enterScale);
