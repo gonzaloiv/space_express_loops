@@ -122,7 +122,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             // set by playing; then unpin and bake them into chapter 2 after 02_04.
             new PuzzleJobContract
             {
-                Id = "02_06", Pending = true, Seed = 1, Attempts = 1, PlanetCount = 10,
+                Id = "02_06", Pending = false, Seed = 19, Attempts = 1, PlanetCount = 10,
                 FieldShape = PuzzleFieldShape.Ring,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 1,
