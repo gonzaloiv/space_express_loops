@@ -17,7 +17,7 @@ episode opener, Jim's lines and the ending.
 ## Depends on
 
 - [Broken bodies](broken-bodies.md): both mechanics, or anchors only if the 1 Dec gate fails.
-- The [story arc](../in-progress/story-arc.md): what breaks, the episode and its clients, the
+- The [story arc](../../solutions/narrative/story-arc.md): what breaks, the episode and its clients, the
   ≤ 90-character manual rule, the card numbered by play order.
 
 ## Units

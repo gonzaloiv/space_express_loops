@@ -26,8 +26,8 @@ answer) and [fleet search](../../../Assets/_Modules/Docs~/solutions/architecture
 
 Ids are labels; play order comes from `Chapters/02.asset`. The names keep their ids: **2-5 capstone =
 02_05**, **Clear = 02_06–02_08**, and the two intros take **02_09** and **02_10**. Everything derived
-from the id must follow play order instead: the card's manual version is [story arc](../in-progress/story-arc.md)
-U3. `RoutePalette.StartIndex` (which palette colour a job's routes start on) stays on the id: it is
+from the id must follow play order instead: the card's manual version is [story arc](../../solutions/narrative/story-arc.md)
+(done). `RoutePalette.StartIndex` (which palette colour a job's routes start on) stays on the id: it is
 cosmetic.
 
 ## Units
@@ -73,8 +73,10 @@ cosmetic.
 
 - Contracts in `PuzzleJobContracts.All`: `Translatable = false`, `Ships = 2`, `Relation = FanOut`
   (02_09) then `Separate` (02_10), `FieldShape = Ring`, `PlanetCount = 9` (the multi-ship minimum;
-  the intro is about readability, the headset decides if it wants 10), `HasSun = false`,
-  `SunRule = Any` (a sun-free field with any other rule fails `CheckSources`), `Mechanism = Any`,
+  the intro is about readability, the headset decides if it wants 10), `HasSun = true`,
+  `SunPlacement = OffCorridor`, `SunRule = NoSunAnswer` (every system keeps a star, as in
+  [fleet rebake](../in-progress/fleet-rebake.md); a fixed cube on the sun must not be the answer),
+  `Mechanism = Any`,
   `Zones = 1`, `MinRoutes = 1` (a fleet never counts routes; `PuzzleData.routes` stays 1),
   `NoIntro`/`NoFail`/`NoGrade = false`, and `MaxScaleDelta` set (the other two bounds off).
 - **The zone covers a neighbour.** A zone enclosing the shared origin is rejected (`ContainsEndpoint`),

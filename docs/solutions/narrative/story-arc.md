@@ -8,6 +8,7 @@ applies_when:
   - Writing or revising a multi-chapter story arc
   - Inserting jobs into an ordered run whose text is keyed to solved counts
   - Changing a spoken line whose clip is prebuilt by key
+  - Shortening the job card or numbering anything the player reads in order
 tags:
   - story
   - lore
@@ -15,6 +16,7 @@ tags:
   - sector-wire
   - tts
   - localization
+  - job-card
 ---
 
 # Story arc across three chapters — seams, damage, and the solved-count wire
@@ -56,7 +58,19 @@ changed key and regenerate its clip. Renaming a key needs a new clip and the dow
 leave a stale mp3.
 
 **Lines live in `Levels_en`; the sheet is a mirror.** If the line spreadsheet is still authoritative,
-mirror the strings before the next sync or the sync will overwrite the change.
+mirror the strings before the next sync or the sync will overwrite the change. The sheet credentials
+are local and gitignored (`Assets/_Game/Editor/Localization/Google Sheets Service.asset`).
+
+**The job card reads at a glance (2026-11-26).** The card sat between every map pick and the job:
+6–8 seconds of typing before Jim spoke, and some manual entries repeated him. Now:
+
+- A manual entry is one teaching rule plus one fine-print line, about 90 characters at most, and never
+  repeats a line Jim speaks on the same job. New chapters follow the same rule.
+- The clock, JOB, CLIENT and CARGO land at once; only the manual types (60 characters a second,
+  `JobCard.prefab`).
+- The manual's patch number follows the chapter's **play order**, not the job id
+  (`LevelSelector.GetLevelOrdinal`, carried into the run by `JobCardStamp`), because new jobs can be
+  inserted before older ids. The release name shows only on the chapter's first card.
 
 ## Evidence
 
@@ -70,12 +84,18 @@ mirror the strings before the next sync or the sync will overwrite the change.
   wire: `Assets/_Game/Resources/Localization/Global/Global_en.asset`.
 - Clips: `Assets/StreamingAssets/level_01_01_complete_03.mp3`,
   `level_01_07_complete_05_laughing.mp3`, `level_02_04_complete_02_confused.mp3`.
+- Card: `JobCardPanel`, `JobCardTypewriter`, `JobCardStamp` (PuzzleSelection), `PuzzleData.ManualVersionFor`,
+  `LevelSelector.GetLevelOrdinal` (modules `c978074`); the entries table in
+  [jobs](../../design/jobs.md) §The manual's arc.
 
 ## Verification
 
 - `docs/check.ps1` passes; the plans board and all plan links are clean.
 - `DigitalLove.Game.PuzzleSelection.Tests.EditMode` passed 18/18 when the lines and wire changed.
 - The three clips were regenerated on 2026-11-25 (valid MPEG headers, new sizes).
-- The in-headset acceptance pass (the plan's five checks) is still part of the release timing pass.
+- Card: `PuzzleSelection` 19/19 and the fast suite 99/99 EditMode passed (2026-11-26); the editor
+  showed `MANUAL v2.0.1 (FLEET EXPANSION)` on chapter 2's first card and `v2.0.2` without the release.
+- Closed 2026-11-26 without the headset pass or the sheet mirror; both are open tails on the
+  [plans board](../../plans/README.md).
 - At close, the in-progress fleet work had two red Creator tests
   (`PuzzleFleetValidationTests`, "no fleet zone"); they are unrelated to this note.

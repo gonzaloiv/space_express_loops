@@ -6,8 +6,7 @@ Store release: €4, 6 Dec, ~23 story jobs + 20 freelance; scope and schedule in
 
 ## Now
 
-- **25–26 Nov:** [fleet rebake](in-progress/fleet-rebake.md) · [story arc](in-progress/story-arc.md)
-  (headset pass, sheet mirror)
+- **25–26 Nov:** [fleet rebake](in-progress/fleet-rebake.md)
 
 ## Next
 
@@ -34,6 +33,14 @@ One line each: what is left and where it lands.
 - **Route end fallback:** make `MapRouteLine.EndIndex` safe when it returns `-1` (unreachable today).
 - **Gesture prompt icons:** re-run `Tools/Our Space/Render Gesture Prompt Art` after tuning a motion.
 - **Job 1 on the headset:** rebaked 2026-11-06 (seed 141), still needs a headset read.
+- **Story arc and job card on the headset** (closed 2026-11-26,
+  [note](../solutions/narrative/story-arc.md)): new cards settle under 3 s, versions follow play order,
+  the three new clips play; then push the edited `Levels_en` lines and the 12 wire lines to the sheet.
+- **One source for the card number:** the map views call `PuzzleMap.ManualOrdinal`, the run uses
+  `LevelSelector.GetLevelOrdinal`; switch the map to `GetLevelOrdinal` and delete
+  `PuzzleMap.ManualOrdinal` before chapter 2's reorder.
+- **Jim's repeats (optional):** cut intro lines that say what the card shows; each cut deletes a
+  clip and its downloader key. Keep 2-4's `init_02` (which ship carries what).
 
 ## Conventions
 

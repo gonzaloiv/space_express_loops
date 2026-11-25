@@ -304,3 +304,16 @@ bullet; the code and tests are the record of what was built.
   chapter's idea.
 - **Next time:** look for a lesson in what the cube can already do but has not been taught (a fixed
   cube with a fleet, resize) before inventing a combination.
+
+## 2026-11-26 — Story arc and the job card
+
+- **Worked:** putting the arc on four seams (job 1's receipt, job 7's close, chapter 2's opener, 2-4's
+  close) instead of every job. Eleven jobs kept their lines and only three clips changed.
+- **Worked:** measuring the card before cutting it. Characters typed per card and the typing speed
+  gave the 6–8 second figure, and the fix (contract at once, one short manual line) followed from it.
+- **Surprised:** anything derived from a job id breaks once jobs are inserted before older ids. The
+  manual version read v2.0.9 on chapter 2's first card until it followed play order.
+- **Surprised:** a key-stable line edit keeps the old mp3, so the headset plays the old line under the
+  new subtitle until the clip is regenerated.
+- **Next time:** derive anything the player reads in order (versions, wire lines) from play order or
+  solved count, never from the id; and give each derived value one source, not one per view.

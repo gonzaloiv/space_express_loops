@@ -3,7 +3,7 @@
 **Status:** next · universe · updated 2026-11-26 — cards, Jim's lines, clips and the sector wire for
 chapter 2's six new jobs.
 
-**Related:** [plans board](../README.md) · [story arc](../in-progress/story-arc.md) ·
+**Related:** [plans board](../README.md) · [story arc](../../solutions/narrative/story-arc.md) ·
 [jobs](../../design/jobs.md) · [lore](../../design/world/lore.md#episodes)
 
 ## Goal
@@ -14,8 +14,8 @@ with ten chapter 2 jobs.
 ## Depends on
 
 The jobs from [chapter 2 intro](chapter-2-intro.md), [fleet Clear](fleet-clear.md) and
-[fleet capstone](fleet-capstone.md) (ids in [chapter 2 intro](chapter-2-intro.md) §Ids), and [story arc](../in-progress/story-arc.md)
-U2–U3 (the ≤ 90-character manual rule, the card numbered by play order).
+[fleet capstone](fleet-capstone.md) (ids in [chapter 2 intro](chapter-2-intro.md) §Ids), and [story arc](../../solutions/narrative/story-arc.md)
+(done: the ≤ 90-character manual rule, the card numbered by play order).
 
 ## Units
 
