@@ -18,5 +18,12 @@ New-Item -ItemType Directory -Force -Path $logs | Out-Null
 $method = if ($Mode -eq "bake") { "PuzzleBatchBake.Bake" } else { "PuzzleBatchBake.Scan" }
 $execute = "DigitalLove.Game.SpaceShaping.Creator.EditorTools.$method"
 
-& $Unity -batchmode -nographics -projectPath $project -executeMethod $execute -job $Job -seeds $Seeds -logFile (Join-Path $logs "bake-$Job.log")
-exit $LASTEXITCODE
+# Unity.exe is a GUI-subsystem program: "&" returns before it finishes, so wait on the process.
+$arguments = @(
+    "-batchmode", "-nographics", "-projectPath", "`"$project`"", "-executeMethod", $execute,
+    "-job", $Job, "-seeds", $Seeds, "-logFile", "`"$(Join-Path $logs "bake-$Job.log")`""
+)
+# Wait on Unity itself: -Wait would also wait on any helper Unity leaves behind.
+$unityProcess = Start-Process -FilePath $Unity -ArgumentList $arguments -PassThru -NoNewWindow
+$unityProcess.WaitForExit()
+exit $unityProcess.ExitCode
