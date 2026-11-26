@@ -1,6 +1,6 @@
 # Boot on one line
 
-**Status:** later · presentation · updated 2026-11-25 — the console boot types every line through one
+**Status:** archived · presentation · updated 2026-11-26 — the console boot types every line through one
 `TMP_Text` with localized strings, instead of one GameObject per line.
 
 **Related:** [plans board](../README.md)

@@ -90,3 +90,5 @@ Assets/Screenshots
 
 # Google Sheets localization service: holds OAuth credentials, keep local
 Assets/_Game/Editor/Localization/Google Sheets Service.asset
+Assets/Editor/Google Sheets Service.asset
+Assets/Editor/Google Sheets Service.asset.meta

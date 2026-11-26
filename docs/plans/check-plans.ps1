@@ -2,7 +2,8 @@
 #
 # Checks, under docs/:
 #   1. every markdown link target resolves;
-#   2. every plan's **Status:** state matches its folder (in-progress -> now, backlog -> next|later);
+#   2. every plan's **Status:** state matches its folder (in-progress -> now, backlog -> next|later,
+#      archive -> archived);
 #   3. every plan is referenced on the board (docs/plans/README.md).
 #
 # Exit code 1 if any problem is found. Run: powershell -NoProfile -File docs/plans/check-plans.ps1
@@ -19,6 +20,7 @@ function Get-AllowedStates([string] $folder) {
     switch ($folder) {
         'in-progress' { return @('now') }
         'backlog'     { return @('next', 'later') }
+        'archive'     { return @('archived') }
         default       { return @() }
     }
 }
