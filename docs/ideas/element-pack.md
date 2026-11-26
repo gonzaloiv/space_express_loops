@@ -11,7 +11,7 @@ store release. Not scheduled.
 More and smaller planets (just `PuzzleSource` entries), the sun as a real source at the system's centre
 (`hasSun`, `fixedMass` as a per-level lock), and seeded dust drawn through the lattice warp
 (`DustLayout`, `FieldDust`). Anchored bodies and repulsors are chapter 3
-([broken bodies](../plans/backlog/broken-bodies.md)).
+([broken bodies](../plans/backlog/chapter-3-broken-bodies.md)).
 
 ## Still ideas
 

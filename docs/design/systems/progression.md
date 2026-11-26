@@ -11,7 +11,7 @@
 
 How the game advances across jobs — and what gates it. The **full run** is the
 store release's **23 story jobs** (chapter 1's seven, chapter 2's ten, chapter 3's six;
-[release](../release.md)) plus 20 freelance contracts, so progression is **in scope**. The competition
+[release](../release.md)) plus freelance contracts (10 at launch, 10 in the first update), so progression is **in scope**. The competition
 slice was chapter 1's seven jobs.
 
 ## Inputs

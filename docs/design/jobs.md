@@ -274,6 +274,21 @@ stay absurd; the greed is in Jim's opener and receipts, and the manual's fine pr
 | 2-7 | The Lost and Found Office | a crate of unclaimed umbrellas | "A blocker can hide among planets that only look involved. Read the runs." |
 | 2-8 | The Two Shadows Company | two shadows, one lamp | "Two blockers, two edits, one budget. Growing a clear planet is not help." |
 
+### Chapter 3 — broken bodies
+
+Episode 3: the damage shows in the bodies, and the sector audit is the frame ([lore](world/lore.md) §Episodes).
+The manual's register is denial and liability (*DAMAGE CONTROL*): it states the rule for the broken body and
+bills the consequence to the employee. The final entry carries the eleven-years note (see §The manual's arc).
+
+| # | Client | Cargo | Manual entry |
+|---|---|---|---|
+| 3-1 | The Museum of Small Disasters | a cracked marble | "An anchored body ignores the Wrap. Route around it; the audit is not your concern." |
+| 3-2 | Two Brothers, One Address | a shared inheritance | "Only one body here is fused. The others are decoys; the budget is not." |
+| 3-3 | The Quiet Hours Union | a night shift | "A repulsor pushes, not pulls. Shrink it to open the gap. All pushes are billed." |
+| 3-4 | The Gravity Choir | a hymn in three parts | "Grow a repulsor to shove a ship off its line. The push is not free." |
+| 3-5 | The Last Two Customers | the other half of the gift | "Two damaged bodies, two edits. One will not move; the other must be paid for." |
+| 3-6 | The Sector Audit Office | the firm's entropy ledger | "Welcome, new employee. No new employee in eleven years. There is still no office." |
+
 ## The manual's arc
 
 **The card's behaviour** (what types and how fast, the patch number by play order, the release name on

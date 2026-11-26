@@ -10,8 +10,9 @@
 ## Goal
 
 A **€4 Meta store release on 2026-12-06**, about **40–45 minutes** of story. The harder new jobs
-carry most of that time. A small set of 20 freelance contracts comes after it as a bonus.
-**Decided 2026-11-18:** ~21 story jobs plus 20 freelance contracts is the content for €4. The daily contract is left out. Today the 11
+carry most of that time. A set of freelance contracts comes after it as a bonus: **10 at launch, 10 in the first update**
+(decided 2026-11-26). **Decided 2026-11-18:** ~21 story jobs plus a freelance bonus is the content for
+€4. The daily contract is left out. Today the 11
 jobs play in 15–20 minutes. **Updated 2026-11-25:** ~23 story jobs (chapter 2 to ten, chapter 3 on
 anchored bodies and repulsors).
 
@@ -22,7 +23,7 @@ on: store validation **passed** (2026-11-25), so the release is a build upload w
 anything late ships as an update; and the Meta Platform is init only (`MetaPlatformClient`), with **no
 entitlement check yet**.
 
-## Content: the story first, then 20 freelance contracts
+## Content: the story first, then the freelance contracts
 
 **The story is the game: about +12 jobs, for ~23 in total.** These are not taught yet:
 
@@ -48,14 +49,16 @@ entitlement check yet**.
   than one route, so it does not read as a new idea. Resize too: with a movable cube, two small
   pinches do what one big one does, so the bigger cube is a shortcut, not a lesson.
 
-**Freelance: 20 contracts, opened after the story ends.** This is a light version of the
-[chapters](chapters.md) §Freelance design, using what the story already has:
+**Freelance: 10 contracts at launch, 10 in the first update, opened after the story ends.** This is a
+light version of the [chapters](chapters.md) §Freelance design, using what the story already has:
 
-- Prebaked like the story jobs, then curated by playing each one. At 20 jobs, playing them replaces
-  the automatic quality filter.
+- Prebaked like the story jobs, then curated by playing each one; playing them replaces the automatic
+  quality filter.
 - Graded with the same 1–3 stars; the exact-entropy score waits.
 - One client and cargo line per job; no Jim intro.
-- Shown as one extra system on the map after the ending; no tiers and no job board.
+- One extra system on the map, hidden until the ending is seen, with the whole chapter open at once and
+  ordered easy → hard; no tiers and no job board. It is a post-story track, not part of the run: the
+  ending, the coverage count and the wire stay the story's.
 
 **Time estimate.** Today's ~1.5 min per job is the average of mostly teaching jobs. The new jobs are
 harder (capstones, Clear with a fleet, broken bodies), so they should take longer: estimate ~3 min each
@@ -65,10 +68,10 @@ harder (capstones, Clear with a fleet, broken bodies), so they should take longe
 |---|---|---|
 | Current story | 11 | 15–20 min |
 | New story jobs | ~12 | ~30 min |
-| Freelance (for players who play it) | 20 | ~30 min (no intro or Jim lines: ~1.5 min each, solving only) |
+| Freelance at launch (for players who play it) | 10 | ~15 min (no intro or Jim lines: ~1.5 min each, solving only) |
 
 The story alone could reach 40–45 min, so freelance is a bonus rather than needed to hit the target.
-Without an intro, a freelance job is mostly solving time, so 20 of them stay short.
+Without an intro, a freelance job is mostly solving time, so they stay short.
 Time the first new jobs on the headset. If they run long, chapter 3 can shrink; if they run short,
 freelance fills the gap.
 
@@ -97,7 +100,7 @@ something breaks the universe, there may be no good option left. For this releas
 
 **In:**
 - Chapters 1–3 (story) and Jim's lines for the new jobs
-- 20 freelance contracts
+- 10 freelance contracts at launch, 10 in the first update
 - Entitlement check
 - Store page and the Meta demo option
 - Release build
@@ -108,10 +111,12 @@ and inverted bodies ([later chapters](../ideas/later-chapters.md)), and chapters
 ## Schedule
 
 On the [plans board](../plans/README.md) (Now → Next). The fixed date is the release, 6 Dec; freelance
-is the first thing to slip into an update.
+ships in two batches, 10 at launch and 10 in the first update.
 
 ## Open questions
 
 - **Chapter 3's episode.** Closed 2026-11-25: *3 — the damage*; its clients and cargo are in
   [chapters](chapters.md) §Chapter 3.
-- **Freelance on the map.** One system after the ending, or a separate board in Jim's panel?
+- **Freelance on the map.** Closed 2026-11-26: one extra system, hidden until the ending, the whole
+  chapter open at once, as a post-story track outside the run's count and ending
+  ([track](../plans/backlog/freelance-track.md), [jobs](../plans/backlog/freelance-jobs.md)).

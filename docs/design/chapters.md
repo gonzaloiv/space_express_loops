@@ -65,8 +65,8 @@ better than the single-ship jobs). They ship as episode 2 of the story ([lore](w
 ## Chapter 3 — broken bodies (store release)
 
 The damage shows in the bodies themselves (decided 2026-11-25). No new gesture: the same pinch meets
-bodies that no longer behave. ~6 jobs ([broken bodies](../plans/backlog/broken-bodies.md) for the
-mechanics, [chapter 3](../plans/backlog/chapter-3.md) for the jobs).
+bodies that no longer behave. ~6 jobs ([broken bodies](../plans/backlog/chapter-3-broken-bodies.md) for the
+mechanics, [chapter 3](../plans/backlog/chapter-3-jobs.md) for the jobs).
 
 | Lesson | Body | Teaches | Cost |
 |---|---|---|---|
@@ -112,10 +112,12 @@ The rotation details are to be folded in from the earlier rotation idea when thi
 
 ## Freelance contracts (store release)
 
-**The store release ships 20 hand-curated contracts** ([release](release.md),
-[freelance plan](../plans/backlog/freelance.md)): opened after the story's ending as one extra system on
-the map, ordered easy → hard, 1–3 stars, one client and cargo line each, no Jim intro. Playing them
-replaces an automatic quality filter. No tiers, no daily contract.
+**The store release ships 10 hand-curated contracts and the first update another 10**
+([release](release.md), [freelance track](../plans/backlog/freelance-track.md),
+[jobs](../plans/backlog/freelance-jobs.md)): one extra system on the map, hidden until the ending and
+then fully open, ordered easy → hard, 1–3 stars, one client and cargo line each, no Jim intro. It is a
+post-story track outside the run's count and ending, so coverage and the wire stay the story's. Playing
+them replaces an automatic quality filter. No tiers, no daily contract.
 
 **After the release (not scheduled):** a larger pool (~150 prebaked jobs) in tiers that follow the
 lessons (Ring / Spiral / Cluster, 1–3 ships, 1–2 zones), a finer score (the exact entropy left), a
@@ -125,7 +127,7 @@ absurd clients and cargo; no economy ([vision](vision.md) §5).
 ## Tuning
 
 - **Price and pool size** follow measured minutes per job on the headset. Target: ~3 min a job, so the 23 story jobs run
-  about an hour and the 20 contracts close to another.
+  about an hour and the 10 launch contracts close to 15 minutes.
 - **The demo** is the Meta store's own demo option; no separate build.
 
 ## Open questions

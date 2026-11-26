@@ -38,8 +38,8 @@ Build status lives on the [plans board](../plans/README.md); this doc does not t
    **fails**. Entropy left is the **eco rating**; **arriving** is the goal — the launch is only a check.
    The field itself shows the spend — calm at full, strained as it drains, about to blow near empty —
    and the bar lives in it, not on a panel. The launch itself is given, not a lever.
-5. **Discrete jobs.** A few minutes each; three chapters (7 + 10 + 6 story jobs) and 20 freelance
-   contracts, all baked.
+5. **Discrete jobs.** A few minutes each; three chapters (7 + 10 + 6 story jobs) and freelance
+   contracts (10 at launch, 10 in an update), all baked.
    Nothing live-ticking.
 6. **Relativity is the language.** The theme and the feel, not a simulation — the cube speaks it.
 
@@ -98,8 +98,8 @@ routes; keep the economy *between* jobs. Then the management layer is a wrapper
   (the per-job manual card is in — [jobs](jobs.md)), and the whole feel pass. **Out until proven:**
   sectors as gameplay (the ambient sector field stays the map backdrop) and runtime/procedural level
   generation.
-- **The store release** — €4 on the Meta store, 6 Dec: chapters 1–3 and 20 freelance contracts
-  ([release](release.md)).
+- **The store release** — €4 on the Meta store, 6 Dec: chapters 1–3 and 10 freelance contracts, 10 more
+  in the first update ([release](release.md)).
 - **Technical target:** Meta Quest 3S, **72 fps**.
 - **Validation first:** do not invest past the validation (§7) until it passes.
 

@@ -15,7 +15,8 @@ player can reach the fleet or the broken bodies before the move.
 - **A spine plus side puzzles.** The story jobs stay an ordered spine through the galaxy. Optional
   side puzzles sit near spine nodes and open once a neighbour is solved; each uses only lessons the
   spine has already taught.
-- **The side puzzles may already exist.** The 20 freelance contracts ([freelance](../plans/backlog/freelance.md))
+- **The side puzzles may already exist.** The freelance contracts
+  ([jobs](../plans/backlog/freelance-jobs.md))
   open after the story today; placing them beside the spine nodes that teach their lesson is the
   cheapest version. The map already shows a per-chapter tally (`map_chapter_tally`).
 - **Moving becomes needed.** Finding side puzzles means moving the cube, so the map would teach the

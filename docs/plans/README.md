@@ -1,8 +1,8 @@
 # Plans — the board
 
 What is being built: **Now → Next → Later**. Each plan's `**Status:**` line matches its row here.
-Store release: €4, 6 Dec, ~23 story jobs + 20 freelance; scope and schedule in
-[release](../design/release.md). Post-mortems in [lessons](../lessons.md).
+Store release: €4, 6 Dec, ~23 story jobs + 10 freelance at launch (10 more in the first update); scope
+and schedule in [release](../design/release.md). Post-mortems in [lessons](../lessons.md).
 
 ## Now
 
@@ -17,10 +17,16 @@ Store release: €4, 6 Dec, ~23 story jobs + 20 freelance; scope and schedule in
 
 ## Next
 
-- **27 Nov–1 Dec, alongside chapter 2:** [broken bodies](backlog/broken-bodies.md) (anchors, then
+- **27 Nov–1 Dec, alongside chapter 2:** [broken bodies](backlog/chapter-3-broken-bodies.md) (anchors, then
   repulsors; gate 1 Dec)
-- **1–3 Dec:** [chapter 3](backlog/chapter-3.md) (the jobs, lines and the ending)
-- **3–5 Dec:** [freelance](backlog/freelance.md) + the entitlement check (`MetaPlatformClient` is init only) + timing pass, build, upload
+- **Before 1 Dec:** [map arc](backlog/chapter-3-map-arc.md) — chapter systems on an arc around the seat, so every
+  job stays in reach once chapter 3 adds the third
+- **1–3 Dec:** [chapter 3](backlog/chapter-3-jobs.md) (the jobs, lines and the ending)
+- **3 Dec:** [freelance track](backlog/freelance-track.md) — the post-story map system, hidden until the
+  ending
+- **27 Nov–5 Dec:** [freelance jobs](backlog/freelance-jobs.md) — 10 contracts at launch, 10 in the first
+  update; rows and bakes start once chapter 2's bakes free a checkout
+- **5 Dec:** the entitlement check (`MetaPlatformClient` is init only), timing pass, build, upload
 
 ## Later
 
@@ -56,6 +62,7 @@ One line each: what is left and where it lands.
 
 - Status line: `**Status:** <now|next|later> · <space shaping|universe|presentation|flow> · updated
   <yyyy-mm-dd> — <summary>`.
+- Names: plans that serve one goal share a prefix, `<group>-<part>.md` ([AGENTS](../../AGENTS.md#plans-are-a-morning)).
 - Folders: `now` → `in-progress/`; `next`/`later` → `backlog/`. **Only the user closes a plan.**
   When they say to close it, follow [AGENTS](../../AGENTS.md) (post-mortem in lessons, then delete).
   Run `docs/check.ps1` after moving files.

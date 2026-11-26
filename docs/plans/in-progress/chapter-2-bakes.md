@@ -12,8 +12,25 @@ the edge sun, after [edge sun](edge-sun.md) U1 is in both bake checkouts.
 
 **Progress (2026-11-25):** edge-sun U1 is committed (`ccd27b7c`) with its test fix (`edd8a79a`) and
 cherry-picked into `bake` (`71fe462c`, `8347e802`) and `bake2` (`03a5ec50`, `7caa53ed`); the
-placement tests pass 5/5. U2/U3 (edge-sun docs and map) are still uncommitted in `our-space` and do
-not gate these bakes. No job rebaked yet.
+placement tests pass 5/5.
+
+**Progress (2026-11-25, 20:47):** seven of nine rebaked at the edge, each sun level with its planets
+and outside the rim (read from the assets):
+
+| Job | Branch | Commit | Sun home |
+|---|---|---|---|
+| 02_01 | `bake2` | `ef92e9e8` | (-0.40, -0.11, 0.27) |
+| 02_02 | `bake` | `009b5a81` | (-0.39, 0.16, -0.26) |
+| 02_03 | `bake2` | `cb8f6b3e` | (-0.43, -0.17, -0.18) |
+| 02_05 | both | `33f624f7` (bounds restored `6be79f75` on `bake`) | (0.33, -0.07, -0.33) |
+| 02_06 | `bake` | `1fedd693` | (-0.38, -0.18, 0.26) |
+| 02_09 | `bake` | `df2b1777` | (-0.43, -0.18, 0.18) |
+| 02_10 | `bake` | `d9da4a64` | (0.48, 0.08, 0.09) |
+
+Running since 20:40: 02_07 (`bake2`, 200 seeds) and 02_08 (`bake`, 200 seeds). Left: those two, then
+U4 (merge both branches: `bake2` holds 02_01/02_03, `bake` the rest; keep both sides' pins in
+`PuzzleJobContracts.cs`; set the chapter order once; extend `FleetJobsTests`; run the shipped check).
+Each branch still carries the other's old assets, so take each job from the branch in the table.
 
 ## Goal
 

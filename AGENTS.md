@@ -10,6 +10,10 @@ A plan is **one sitting of work**, not a roadmap. Keep it to what one agent can 
 - **No archaeology.** Don't restate the design docs, the history, or every rejected option.
 - **If it grows, split it.** A plan that needs a week is a project: break it into plans that each fit a
   morning.
+- **Plans in a group share a prefix.** When several plans serve one goal, name each
+  `<group>-<part>.md` so they sort together: `chapter-3-broken-bodies`, `chapter-3-map-arc`,
+  `freelance-track`, `freelance-jobs`. The group is the chapter or feature, the part says what this plan
+  lands. Rename a plan when it joins a group, and fix its links in the same change.
 - **The board stays small.** A plan that has outgrown its shape moves to its own plan; it does not keep
   growing in place.
 - **Do not close a plan on your own.** Finishing the units, passing checks, or completing a manual
