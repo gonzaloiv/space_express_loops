@@ -1681,7 +1681,7 @@ MonoBehaviour:
   playerControllerInstaller: {fileID: 194917959}
   setupFunnelHelper: {fileID: 1210227667}
   noSave:
-    value: 0
+    value: 1
   noSavePlayerData:
     userId: 
     sessionCount: 0
@@ -1693,6 +1693,12 @@ MonoBehaviour:
     - id: level_complete_01_03
       metadata: 
     - id: level_complete_01_04
+      metadata: 
+    - id: level_complete_01_05
+      metadata: 
+    - id: level_complete_01_06
+      metadata: 
+    - id: level_complete_01_07
       metadata: 
 --- !u!114 &284223193
 MonoBehaviour:
@@ -4620,7 +4626,7 @@ MonoBehaviour:
   tickCooldownSecs: 0.06
   selectRandom:
     value: 0
-  puzzleToSet: {fileID: 0}
+  puzzleToSet: {fileID: 11400000, guid: bd0d15afbe0cf434197948e62d7e540c, type: 2}
 --- !u!1 &904848683
 GameObject:
   m_ObjectHideFlags: 0
