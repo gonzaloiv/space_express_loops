@@ -40,6 +40,12 @@ U4 (merge both branches: `bake2` holds 02_01/02_03, `bake` the rest; keep both s
 `PuzzleJobContracts.cs`; set the chapter order once; extend `FleetJobsTests`; run the shipped check).
 Each branch still carries the other's old assets, so take each job from the branch in the table.
 
+**U4 done (2026-11-26):** integrated in `1d181da8` (each job from its branch through git; pins merged;
+play order 02_09, 02_10, 02_01, 02_02, 02_03, 02_04, 02_06, 02_07, 02_05; 02_08's contract, lines, downloader
+keys and wire line removed, `LineCount` 23) and `c786483f` (both bake branches recorded as merged, both
+checkouts fast-forwarded). In the bake checkouts: `ShippedJobs_MeetTheContract` 1/1 and the fleet, wire
+and sun-placement tests 22/22. Left: the headset pass (02_04 still unverified on the headset).
+
 ## Goal
 
 Nine chapter 2 jobs rebaked at the edge (02_01–02_03, 02_05–02_10) and in play order in
