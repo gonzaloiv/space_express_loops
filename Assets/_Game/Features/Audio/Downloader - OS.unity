@@ -820,8 +820,36 @@ MonoBehaviour:
   downloader: {fileID: 674238885}
   tableName: Levels
   keys:
-  - level_01_01_complete_04_win
-  - level_01_02_complete_03
+  - level_02_09_complete_01_win
+  - level_02_09_complete_02
+  - level_02_09_fail_annoyed
+  - level_02_09_init_01
+  - level_02_09_init_02_confused
+  - level_02_10_complete_01_win
+  - level_02_10_complete_02
+  - level_02_10_fail_annoyed
+  - level_02_10_init_01_annoyed
+  - level_02_10_init_02
+  - level_02_05_complete_01_win
+  - level_02_05_complete_02
+  - level_02_05_fail_annoyed
+  - level_02_05_init_01_surprised
+  - level_02_05_init_02
+  - level_02_06_complete_01_win
+  - level_02_06_complete_02
+  - level_02_06_fail_annoyed
+  - level_02_06_init_01
+  - level_02_06_init_02_confused
+  - level_02_07_complete_01_win
+  - level_02_07_complete_02
+  - level_02_07_fail_annoyed
+  - level_02_07_init_01
+  - level_02_07_init_02
+  - level_02_08_complete_01_win
+  - level_02_08_complete_02
+  - level_02_08_fail_annoyed
+  - level_02_08_init_01_annoyed
+  - level_02_08_init_02
   containsFilter: 
   doesNotContainFilter:
   - manual
