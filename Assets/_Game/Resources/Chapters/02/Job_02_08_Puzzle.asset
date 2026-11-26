@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10000000000000000000000000000016, type: 3}
+  m_Name: Job_02_08_Puzzle
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Model::DigitalLove.Game.SpaceShaping.PuzzleData
+  id: 02_08
+  prefab: {fileID: 0}
+  origin: {x: 0.022677613, y: -0.08846583, z: 0.15577906}
+  destination: {x: -0.13484646, y: 0.05914068, z: 0.0016290675}
+  zoneCentre: {x: -0.056084424, y: 0.029647253, z: 0.028208151}
+  cubeSizeMin: 0.038240857
+  cubeSizeMax: 0.12794216
+  frames:
+  - centre: {x: -0.056084424, y: 0.029647253, z: 0.028208151}
+    size: 0.12794216
+  captureRadius: 0.037153568
+  translatable: 1
+  zones: 1
+  routes: 1
+  resizable: 0
+  growOnly: 0
+  entropyBudget: 0.59999996
+  noFail: 0
+  noGrade: 0
+  noIntro: 0
+  goalLineKey: 
+  sources:
+  - home: {x: 0.16117768, y: 0.21651171, z: 0.38911736}
+    scale: 0.12
+    name: cestragua
+    fixedMass: 0
+    centreOnly: 1
+  - home: {x: -0.08922966, y: -0.00036915392, z: 0.13700609}
+    scale: 0.10689092
+    name: solmuigawa
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: -0.29067242, y: 0.21651171, z: 0.00014159191}
+    scale: 0.058261923
+    name: xanzonides
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: -0.13484646, y: 0.05914068, z: 0.0016290675}
+    scale: 0.074307136
+    name: thennilia
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: 0.022677613, y: -0.08846583, z: 0.15577906}
+    scale: 0.036558017
+    name: chelluna
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: -0.079741664, y: 0.20382684, z: -0.17219767}
+    scale: 0.08191406
+    name: teiter
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: 0.13601604, y: 0.20819704, z: -0.17539635}
+    scale: 0.08528912
+    name: thuamia
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: 0.2882653, y: -0.11108221, z: 0.007715705}
+    scale: 0.06619036
+    name: gniviter
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: 0.12976249, y: -0.16946001, z: -0.07570636}
+    scale: 0.11631106
+    name: phexogantu
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: -0.11955517, y: -0.14453234, z: 0.22861397}
+    scale: 0.09715752
+    name: zippe 3VGR
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: -0.15911281, y: -0.024915589, z: -0.008438842}
+    scale: 0.0424736
+    name: trolla JUE
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: 0.026673693, y: -0.2522938, z: -0.030786334}
+    scale: 0.034764417
+    name: xumuter
+    fixedMass: 0
+    centreOnly: 0
+  - home: {x: 0.13721643, y: -0.21725002, z: 0.22663447}
+    scale: 0.052212086
+    name: socizuno
+    fixedMass: 0
+    centreOnly: 0
+  ships:
+  - origin: {x: 0.022677613, y: -0.08846583, z: 0.15577906}
+    destination: {x: -0.13484646, y: 0.05914068, z: 0.0016290675}
+    captureRadius: 0.037153568
+  - origin: {x: -0.079741664, y: 0.20382684, z: -0.17219767}
+    destination: {x: -0.11955517, y: -0.14453234, z: 0.22861397}
+    captureRadius: 0.04857876

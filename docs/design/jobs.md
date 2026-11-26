@@ -27,18 +27,18 @@ This doc is **chapters 1–2**; chapter 3 is in [chapters](chapters.md).
 | 5 | multi-zone intro | Curve | yes · 2+ zones · 1 ship | Spiral | 10–12 + sun · multi | medium | move + scale two zones — the combination enters |
 | 6 | the field carries you | Curve | yes · 2+ zones · 1 ship | Cluster | 10 + sun · multi · deep | high | a deep well already near the line does most of the bend; the cheap answer is to edit where a small change moves the path most |
 | 7 | the capstone | Curve | yes · 2+ zones · 1 ship | Cluster | 12 + sun · multi · deep | high | multi-zone + the centre + the star + several routes — both roles deferred to a later chapter |
-| intro 1 (02_09) | one pinch, two ships | Any | fixed · 1 zone · 2 ships, one origin | Ring | 9 + sun · multi | low | the fixed cube near the shared origin bends both paths at once |
-| intro 2 (02_10) | one zone between | Any | fixed · 1 zone · 2 ships, separate | Ring | 9 + sun · multi | low | one zone placed between two runs rescues both |
-| 2-1 | two ships | Any | yes · 1 zone · 2 ships, separate | Ring | 10 + sun · multi | low (budget 0.30) | one field, two runs; each ship has its own fix |
-| 2-2 | fan-out | Any | yes · 1 zone · 2 ships, one origin | Spiral | 12 + sun · multi | medium (budget 1.20) | an edit near the shared origin bends both paths |
-| 2-3 | converge | Any | yes · 1 zone · 2 ships, one destination | Spiral | 12 + sun · multi | medium (budget 1.50) | the planet by the shared destination fixes both approaches |
-| 2-4 | three ships | Any | yes · 1 zone · 3 ships, separate | Cluster | 14 + sun · multi | medium (budget 1.50) | one Wrap carries three ships; the field carries more than one ship |
-| 2-5 | fleet capstone | Any | yes · 1 zone · 3 ships, one origin | Cluster | 12 + sun · multi · deep | high (budget 1.20) | placement, shared paths and the field across every ship |
-| 2-6 | Clear with a fleet | Clear | yes · 1 zone · 2 ships, separate | Ring | 10 + sun · multi | medium | one blocker shared by both runs; shrinking it once frees the fleet |
-| 2-7 | Clear among decoys | Clear | yes · 1 zone · 2 ships, separate | Cluster | 12 + sun · multi | medium | the shared blocker hides among planets that only look involved |
-| 2-8 (dropped) | two shared blockers | Clear | yes · 1 zone · 2 ships, separate | Spiral | 12 + sun · multi | medium | two shared blockers, two edits on one budget |
+| 2-1 | one pinch, two ships | Any | fixed · 1 zone · 2 ships, one origin | Ring | 9 + sun · multi | low | the fixed cube near the shared origin bends both paths at once |
+| 2-2 | one zone between | Any | fixed · 1 zone · 2 ships, separate | Ring | 9 + sun · multi | low | one zone placed between two runs rescues both |
+| 2-3 | two ships | Any | yes · 1 zone · 2 ships, separate | Ring | 10 + sun · multi | low (budget 0.30) | one field, two runs; each ship has its own fix |
+| 2-4 | fan-out | Any | yes · 1 zone · 2 ships, one origin | Spiral | 12 + sun · multi | medium (budget 1.20) | an edit near the shared origin bends both paths |
+| 2-5 | converge | Any | yes · 1 zone · 2 ships, one destination | Spiral | 12 + sun · multi | medium (budget 1.50) | the planet by the shared destination fixes both approaches |
+| 2-6 | three ships | Any | yes · 1 zone · 3 ships, separate | Cluster | 14 + sun · multi | medium (budget 1.50) | one Wrap carries three ships; the field carries more than one ship |
+| 2-7 | Clear with a fleet | Clear | yes · 1 zone · 2 ships, separate | Ring | 10 + sun · multi | medium | one blocker shared by both runs; shrinking it once frees the fleet |
+| 2-8 | Clear among decoys | Clear | yes · 1 zone · 2 ships, separate | Cluster | 12 + sun · multi | medium | the shared blocker hides among planets that only look involved |
+| 2-9 | fleet capstone | Any | yes · 1 zone · 3 ships, one origin | Cluster | 12 + sun · multi · deep | high (budget 1.20) | placement, shared paths and the field across every ship |
+| — (dropped) | two shared blockers | Clear | yes · 1 zone · 2 ships, separate | Spiral | 12 + sun · multi | medium | two shared blockers, two edits on one budget |
 
-Fleet jobs request **Any**, except the Clear fleets (2-6 to 2-8), which ask for **Clear**; the rest are checked by playing them.
+Fleet jobs request **Any**, except the Clear fleets (2-7, 2-8), which ask for **Clear**; the rest are checked by playing them.
 
 **Chapter 1 is seven jobs (2026-11-05); the run is twenty-two (2026-11-26): 1 scale, 2 centre,
 3 clear, 4 move, 5 multi-zone, 6 the field carries you, 7 capstone `Curve`, then chapter 2's ten
@@ -60,10 +60,10 @@ the prior skill the job combines, so the ramp is cumulative, not additive.
 | 5 | medium | the move + several zones |
 | 6 | high | multi-zone + the read (use the field's wells) |
 | 7 | high | everything: centre, move, zones, star; Mixed deferred |
-| 2-1 | low | the move, now for two runs |
-| 2-2 | medium | the move + a shared origin |
-| 2-3 | medium | the move + a shared destination |
-| 2-4 | medium | the move + the read (the field carries more than one ship) |
+| 2-3 | low | the move, now for two runs |
+| 2-4 | medium | the move + a shared origin |
+| 2-5 | medium | the move + a shared destination |
+| 2-6 | medium | the move + the read (the field carries more than one ship) |
 
 **The role.** Each job states the role its reference solution must teach: **Curve** (a well grew),
 **Clear** (an obstacle shrank), **Mixed** (both, at least two zones), or **Any** (no request). It is a
@@ -109,7 +109,7 @@ job 1 carries a sun that the cube does not cover.)
 | 1 | no (`noFail`, unlimited spend) | no (`noGrade`) | no (`noIntro`) |
 | 2 | yes | no (`noGrade`) | yes |
 | 3–7 | yes | yes | yes |
-| intro 1–2 (02_09, 02_10), 2-1 – 2-4 | yes | yes | yes |
+| 2-1 – 2-6 | yes | yes | yes |
 
 Job 1 bakes from a normal seed — six planets and a sun the cube does not cover, one fixed zone — and still records a reference
 solution, so the budget rule holds ([core loop](core-loop.md) §3). The lesson is the cube's scale, not a
@@ -192,9 +192,9 @@ add a layout.
 | **Assist** | `zones ≥ 2`, `translatable`, a deep well near the line | edit where a small change moves the path most | 6 |
 | **Capstone** | `zones ≥ 2`, `translatable`, cube over the sun | combine the centre + several zones + the star | 7 |
 | **Mixed** | `zones ≥ 2`, one on the blocker, one on a run planet | clear with one zone, curve with another | 8 (future) |
-| **Fleet** | `ships ≥ 2`, `translatable`, `zones 1` | one cube, one budget, several runs | 2-1, 2-4 |
-| **Fan-out** | `ships 2`, one origin | edit near the shared origin to bend both | 2-2 |
-| **Converge** | `ships 2`, one destination | fix the shared approach once | 2-3 |
+| **Fleet** | `ships ≥ 2`, `translatable`, `zones 1` | one cube, one budget, several runs | 2-3, 2-6 |
+| **Fan-out** | `ships 2`, one origin | edit near the shared origin to bend both | 2-1, 2-4 |
+| **Converge** | `ships 2`, one destination | fix the shared approach once | 2-5 |
 
 **The obstacle is the second role.** A body on the straight line is an obstacle; reducing its scale
 reduces its collision radius, so the path can pass. It is **job 3**: it lands after the centre and before
@@ -259,20 +259,20 @@ contract, not the dialogue.
 Episode 2: the Wrap works, so the firm sells more ships on the same entropy, sold as green. The clients
 stay absurd; the greed is in Jim's opener and receipts, and the manual's fine print
 ([lore](world/lore.md) §Episodes). Jim's opener ("Good news. Clients love our green initiative." /
-"Bad news. …") plays once before the chapter's first job (02_09).
+"Bad news. …") plays once before the chapter's first job (02_01).
 
 | # | Client | Cargo | Manual entry |
 |---|---|---|---|
-| intro 1 (02_09) | Twin Moons Catering | two dinners, one kitchen | "Two ships, one origin; bend near the start. Out here the star sits at the edge." |
-| intro 2 (02_10) | Two Rival Bakeries | two cakes, one feud | "One cube between two runs. Both ships share the bend; the feud is not our problem." |
-| 2-1 | Halfmoon & Halfmoon | two identical parcels | "Two ships, one budget. Extra ships do not raise your allowance. This is a feature." |
-| 2-2 | Slightly Used Stars Ltd. | two secondhand fusion cores (slightly dimmed) | "One origin, two promises: bend near the start. Shared failures are billed twice." |
-| 2-3 | The Last Two Customers | two halves of a gift | "Fix the shared approach once. Our Space Corp values every customer. Both of them." |
-| 2-4 | The Very Small Opera | the orchestra, one live animal | "Every ship draws on the same Wrap. Live cargo travels at its own existential risk." |
-| 2-5 | The Committee for Three Suns | three commemorative suns | "One Wrap carries three ships. Extra ships are a promise, not a budget line." |
-| 2-6 | The Bureau of Shared Walls | two doors, one frame | "Both runs cross the same blocker. Shrink it once; the budget stays one number." |
-| 2-7 | The Lost and Found Office | a crate of unclaimed umbrellas | "A blocker can hide among planets that only look involved. Read the runs." |
-| 2-8 (dropped) | The Two Shadows Company | two shadows, one lamp | "Two blockers, two edits, one budget. Growing a clear planet is not help." |
+| 2-1 | Twin Moons Catering | two dinners, one kitchen | "Two ships, one origin; bend near the start. Out here the star sits at the edge." |
+| 2-2 | Two Rival Bakeries | two cakes, one feud | "One cube between two runs. Both ships share the bend; the feud is not our problem." |
+| 2-3 | Halfmoon & Halfmoon | two identical parcels | "Two ships, one budget. Extra ships do not raise your allowance. This is a feature." |
+| 2-4 | Slightly Used Stars Ltd. | two secondhand fusion cores (slightly dimmed) | "One origin, two promises: bend near the start. Shared failures are billed twice." |
+| 2-5 | The Last Two Customers | two halves of a gift | "Fix the shared approach once. Our Space Corp values every customer. Both of them." |
+| 2-6 | The Very Small Opera | the orchestra, one live animal | "Every ship draws on the same Wrap. Live cargo travels at its own existential risk." |
+| 2-7 | The Bureau of Shared Walls | two doors, one frame | "Both runs cross the same blocker. Shrink it once; the budget stays one number." |
+| 2-8 | The Lost and Found Office | a crate of unclaimed umbrellas | "A blocker can hide among planets that only look involved. Read the runs." |
+| 2-9 | The Committee for Three Suns | three commemorative suns | "One Wrap carries three ships. Extra ships are a promise, not a budget line." |
+| — (dropped) | The Two Shadows Company | two shadows, one lamp | "Two blockers, two edits, one budget. Growing a clear planet is not help." |
 
 ### Chapter 3 — broken bodies
 

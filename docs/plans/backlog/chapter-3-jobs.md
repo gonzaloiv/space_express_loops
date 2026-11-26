@@ -46,8 +46,8 @@ episode opener, Jim's lines and the ending.
   sun with `NoSunAnswer` (as chapter 1); the fleet capstone needs `OffCorridor`, because a centred sun
   cannot meet `NoSunAnswer` in a fleet. Every contract also sets `HasSun = true`.
 - **Test cost.** `ShippedJobs_MeetTheContract` is not `[Explicit]` and re-solves every *enabled*
-  contract, so chapter 3 adds six full searches in the bake checkout on top of chapter 2's nine (02_06–02_07
-  are baked; 02_08 ships only if a seed meets two shared blockers). If the Creator suite passes ~2 min, move it behind
+  contract, so chapter 3 adds six full searches in the bake checkout on top of chapter 2's nine (the Clear jobs 02_07–02_08
+  are baked; the two-blocker job was dropped). If the Creator suite passes ~2 min, move it behind
   `[Explicit]`; `PuzzleJobChecks` names the test explicitly, so the Job Baker still runs it.
 - Exit: the job assets validate and are in `Chapters/03` in play order.
 

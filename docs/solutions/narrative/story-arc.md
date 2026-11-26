@@ -32,7 +32,7 @@ give each episode a turn, and revise episodes 1–2's lines without rewriting el
 
 **Put the arc on the seams, not every job.** Chapter 1 has no opener; job 1's receipt is Jim's
 introduction. The four beats that carry the arc are job 1's receipt, job 7's close (episode 1 → 2),
-chapter 2's opener, and 2-8's close (episode 2 → 3). 2-4's *the field came back wrong* is the
+chapter 2's opener, and 2-9's close (episode 2 → 3). 2-6's *the field came back wrong* is the
 mid-chapter turn once Clear follows it; the rest of the jobs keep their lines.
 
 **The damage is in the bodies.** The Wrap's entropy spend tears local spacetime; the tears show as
@@ -71,7 +71,10 @@ are local and gitignored (`Assets/_Game/Editor/Localization/Google Sheets Servic
   `JobCard.prefab`).
 - The manual's patch number follows the chapter's **play order**, not the job id
   (`LevelSelector.GetLevelOrdinal`, carried into the run by `JobCardStamp`), because new jobs can be
-  inserted before older ids. The release name shows only on the chapter's first card.
+  inserted before older ids. The release name shows only on the chapter's first card. The JOB number on the card
+  follows the same play order (`PuzzleData.JobNumberFor`, 2026-11-26): chapter 2 reads 02-01 to 02-09
+  and since 2026-11-26 the ids match it (`02_01`…`02_09`): chapter 2 was renumbered to play order
+  before release, clips and keys included.
 
 **Chapter 2 lines (2026-11-26).** The wire is owned by chapter seams: chapter 1 keys 01–07, chapter 2
 08–16 (nine jobs, the warranty line closes episode 2), chapter 3 17–22; `SectorWireTests`
@@ -90,7 +93,7 @@ card sets what later manual entries may not repeat; re-read them when the play o
 - Lines: `Assets/_Game/Resources/Localization/Levels/Levels_en.asset`;
   wire: `Assets/_Game/Resources/Localization/Global/Global_en.asset`.
 - Clips: `Assets/StreamingAssets/level_01_01_complete_03.mp3`,
-  `level_01_07_complete_05_laughing.mp3`, `level_02_04_complete_02_confused.mp3`.
+  `level_01_07_complete_05_laughing.mp3`, `level_02_06_complete_02_confused.mp3`.
 - Card: `JobCardPanel`, `JobCardTypewriter`, `JobCardStamp` (PuzzleSelection), `PuzzleData.ManualVersionFor`,
   `LevelSelector.GetLevelOrdinal` (modules `c978074`); the entries table in
   [jobs](../../design/jobs.md) §The manual's arc.

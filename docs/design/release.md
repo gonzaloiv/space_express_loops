@@ -30,7 +30,7 @@ entitlement check yet**.
 | New job | What it asks | Cost |
 |---|---|---|
 | Fixed-cube fleet (chapter 2 intro) | One pinch on a fixed cube moves two ships | Low: the multi-ship bake already ships a fixed frame |
-| Fleet capstone (2-5) | 3 ships, fan-out, high scramble | Low once the sun answer is fixed |
+| Fleet capstone (2-9) | 3 ships, fan-out, high scramble | Low once the sun answer is fixed |
 | Clear with a fleet | Shrink an obstacle that blocks more than one ship | Low–medium: multi-ship bakes cannot request `Clear` yet |
 | Anchored bodies (chapter 3) | A planet the Wrap cannot change; bend the line with its neighbours | Low: `fixedMass` exists in the sim and the bake; needs a look and a bake rule |
 | Repulsors (chapter 3) | A body that pushes; shrink it to open a gap, grow it to shove a ship | Medium: a negative strength, a raised lattice bump, a look, bake support |
@@ -44,7 +44,7 @@ entitlement check yet**.
   nothing to do with our machine ([lore](world/lore.md) §Episodes). If repulsors are not working in
   the editor by 1 Dec, chapter 3 ships with anchored jobs and repulsors come in an update.
 - **Dropped (2026-11-25):** multi-zone fleets (`zones = ships`) and Mixed as lessons. With a movable
-  cube, one zone per ship is what the player already does in 2-1; the rule only lives in the
+  cube, one zone per ship is what the player already does in 2-3; the rule only lives in the
   validator. Mixed (grow one, shrink another) is something players already try on jobs with more
   than one route, so it does not read as a new idea. Resize too: with a movable cube, two small
   pinches do what one big one does, so the bigger cube is a shortcut, not a lesson.
@@ -87,7 +87,7 @@ something breaks the universe, there may be no good option left. For this releas
 - **What breaks (settled 2026-11-25).** The damage is in the bodies: anchored planets and repulsors.
   The Wrap routes a delivery through it, not mend a fused body; Jim denies the cause.
 - **Episodes 1–2's lines** now lead there: the job 1 receipt and job 7 close, chapter 2's opener and
-  2-8's close, the manual entries, the bulletins, and the sector wire.
+  2-9's close, the manual entries, the bulletins, and the sector wire.
 - **Each episode's turn** is in [lore](world/lore.md) §Episodes: episode 2 follows from episode 1 and
   sets up episode 3.
 - **The ending.** Chapter 3's close is the release's ending; the current ending moves there or is

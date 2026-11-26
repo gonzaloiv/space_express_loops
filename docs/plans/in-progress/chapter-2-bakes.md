@@ -46,6 +46,10 @@ keys and wire line removed, `LineCount` 23) and `c786483f` (both bake branches r
 checkouts fast-forwarded). In the bake checkouts: `ShippedJobs_MeetTheContract` 1/1 and the fleet, wire
 and sun-placement tests 22/22. Left: the headset pass (02_04 still unverified on the headset).
 
+**Renumbered to play order (2026-11-26).** Ids, assets, contracts, lines and clips: old 02_09 → 02_01,
+02_10 → 02_02, 02_01 → 02_03, 02_02 → 02_04, 02_03 → 02_05, 02_04 → 02_06, 02_06 → 02_07, 02_07 → 02_08,
+02_05 → 02_09. Notes above and in the other chapter 2 plans use the old ids.
+
 ## Goal
 
 Nine chapter 2 jobs rebaked at the edge (02_01–02_03, 02_05–02_10) and in play order in

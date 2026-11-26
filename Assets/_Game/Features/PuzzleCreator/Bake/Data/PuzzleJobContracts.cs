@@ -59,7 +59,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             },
             new PuzzleJobContract
             {
-                Id = "02_01", Seed = 23, Attempts = 1, PlanetCount = 10, FieldShape = PuzzleFieldShape.Ring,
+                Id = "02_03", Seed = 23, Attempts = 1, PlanetCount = 10, FieldShape = PuzzleFieldShape.Ring,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 1,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
@@ -68,7 +68,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             },
             new PuzzleJobContract
             {
-                Id = "02_02", Seed = 4, Attempts = 1, PlanetCount = 12, FieldShape = PuzzleFieldShape.Spiral,
+                Id = "02_04", Seed = 4, Attempts = 1, PlanetCount = 12, FieldShape = PuzzleFieldShape.Spiral,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 0,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
@@ -77,7 +77,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             },
             new PuzzleJobContract
             {
-                Id = "02_03", Seed = 14, Attempts = 1, PlanetCount = 12, FieldShape = PuzzleFieldShape.Spiral,
+                Id = "02_05", Seed = 14, Attempts = 1, PlanetCount = 12, FieldShape = PuzzleFieldShape.Spiral,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 0,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
@@ -90,7 +90,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             // headset pass confirms them.
             new PuzzleJobContract
             {
-                Id = "02_05", Seed = 9, Attempts = 1, PlanetCount = 12,
+                Id = "02_09", Seed = 9, Attempts = 1, PlanetCount = 12,
                 FieldShape = PuzzleFieldShape.Cluster,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
@@ -103,7 +103,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             // baked answer's |scale - 1|; tune it by playing.
             new PuzzleJobContract
             {
-                Id = "02_09", Seed = 19, Attempts = 1, PlanetCount = 9,
+                Id = "02_01", Seed = 19, Attempts = 1, PlanetCount = 9,
                 FieldShape = PuzzleFieldShape.Ring,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
@@ -114,7 +114,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             },
             new PuzzleJobContract
             {
-                Id = "02_10", Seed = 6, Attempts = 1, PlanetCount = 9,
+                Id = "02_02", Seed = 6, Attempts = 1, PlanetCount = 9,
                 FieldShape = PuzzleFieldShape.Ring,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
@@ -123,12 +123,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Translatable = false, NoFail = false, NoGrade = false, NoIntro = false,
                 MaxScaleDelta = 0.5f,
             },
-            // Fleet Clear: movable two-ship jobs whose lesson is one blocker shared by both runs.
-            // Pending until the off-editor Clear scan pins Seed/Attempts and the scramble bounds are
-            // set by playing; then unpin and bake them into chapter 2 after 02_04.
+            // Fleet Clear: movable two-ship jobs whose lesson is one blocker shared by both runs, played
+            // after the movable fleets and before the capstone. The two-blocker job did not bake.
             new PuzzleJobContract
             {
-                Id = "02_06", Pending = false, Seed = 19, Attempts = 1, PlanetCount = 10,
+                Id = "02_07", Pending = false, Seed = 19, Attempts = 1, PlanetCount = 10,
                 FieldShape = PuzzleFieldShape.Ring,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 1,
@@ -138,7 +137,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             },
             new PuzzleJobContract
             {
-                Id = "02_07", Pending = false, Seed = 65, Attempts = 1, PlanetCount = 12,
+                Id = "02_08", Pending = false, Seed = 65, Attempts = 1, PlanetCount = 12,
                 FieldShape = PuzzleFieldShape.Cluster,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 1,

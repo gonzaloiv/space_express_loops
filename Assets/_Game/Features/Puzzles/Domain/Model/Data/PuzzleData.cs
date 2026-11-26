@@ -54,11 +54,15 @@ namespace DigitalLove.Game.SpaceShaping
 
         // The tech team ships the manual in releases: one per chapter, one patch per played job, so
         // the first card of a chapter reads x.0.1. The patch is the job's ordinal in the chapter's
-        // play order, not its id suffix (chapter 2's intro jobs have higher ids than 02_01).
+        // play order, not its id suffix, so inserting a job never shifts an id.
         public string ManualVersionFor(int patch) =>
             $"{int.Parse(GetChapterId(id))}.0.{patch}";
 
         public string ManualReleaseKey => $"chapter_{GetChapterId(id)}_manual_release";
+
+        // The job number the player reads follows the same play order: "02-01" is the chapter's first
+        // job whatever its id. Saves and keys still use the id.
+        public string JobNumberFor(int ordinal) => $"{GetChapterId(id)}-{ordinal:D2}";
 
         public Vector3 Origin => origin;
 

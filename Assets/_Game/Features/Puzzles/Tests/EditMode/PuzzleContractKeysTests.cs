@@ -45,5 +45,17 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
 
             Object.DestroyImmediate(puzzle);
         }
+
+        [Test]
+        public void JobNumber_FollowsThePlayOrderNotTheId()
+        {
+            PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
+            puzzle.id = "02_09";
+
+            Assert.AreEqual("02-01", puzzle.JobNumberFor(1));
+            Assert.AreEqual("02-09", puzzle.JobNumberFor(9));
+
+            Object.DestroyImmediate(puzzle);
+        }
     }
 }

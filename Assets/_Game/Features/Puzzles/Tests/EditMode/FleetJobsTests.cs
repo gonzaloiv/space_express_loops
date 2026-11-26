@@ -11,10 +11,10 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         private const string ChapterPath = "Assets/_Game/Resources/Chapters/02.asset";
         private const string SelectorPath = "Assets/_Game/Resources/Chapters/LevelSelector.asset";
 
-        // Play order comes from the chapter asset, not the ids: the two fixed intros open chapter 2,
-        // the Clear jobs follow 2-4, and the three-ship capstone closes the chapter.
+        // The ids follow play order (renumbered 2026-11-26): two fixed intros, the movable fleets, the
+        // Clear jobs, and the three-ship capstone last.
         private static readonly string[] JobIds =
-            { "02_09", "02_10", "02_01", "02_02", "02_03", "02_04", "02_06", "02_07", "02_05" };
+            { "02_01", "02_02", "02_03", "02_04", "02_05", "02_06", "02_07", "02_08", "02_09" };
         private static readonly int[] ShipCounts = { 2, 2, 2, 2, 2, 3, 2, 2, 3 };
 
         [Test]

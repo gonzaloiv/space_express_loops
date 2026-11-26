@@ -6,6 +6,9 @@ and schedule in [release](../design/release.md). Post-mortems in [lessons](../le
 
 ## Now
 
+Chapter 2 was renumbered to play order on 2026-11-26 (mapping in
+[chapter 2 bakes](in-progress/chapter-2-bakes.md)); the Now plans' notes use the old ids.
+
 - **26 Nov:** [edge sun](in-progress/edge-sun.md) (built; Unity tests, commit and merge into both bake
   checkouts left) — before any further chapter 2 scan
 - **26–28 Nov:** [chapter 2 bakes](in-progress/chapter-2-bakes.md) — every chapter 2 scan and bake, one
@@ -48,23 +51,23 @@ One line each: what is left and where it lands.
 - **Endpoint rings** (one small ring under every endpoint): describe them in
   [the cube](../design/systems/cube.md) §Feedback; delete the unused `OpenRing.asset` (nothing
   references it).
-- **Job 1 and 02_04 on the headset:** job 1 was rebaked 2026-11-06 (seed 141) and never read on the
-  headset. 02_04 is the only chapter 2 job with no contract, so no check covers it, and the shipped
+- **Job 1 and 02_06 on the headset:** job 1 was rebaked 2026-11-06 (seed 141) and never read on the
+  headset. 02_06 (the three-ship job, formerly 02_04) is the only chapter 2 job with no contract, so no check covers it, and the shipped
   re-solve found no zone that rescues all three ships under today's physics: if it cannot be solved,
   rebake it with a contract (edge sun) or drop it.
 - **Story arc and job card on the headset** (closed 2026-11-26,
   [note](../solutions/narrative/story-arc.md)): new cards settle under 3 s, versions follow play order,
   the regenerated clips play.
-- **Chapter 2 clips:** run the `Downloader - OS` batch; its list holds the 25 spoken keys of 02_05–02_07,
-  02_09 and 02_10, which have no mp3 yet.
-- **Chapter 2 manual entries:** 02_02's repeats 02_09's "bend near the start" (02_02 is the movable
-  fan-out: teach finding the shared start), and 02_01's ("Two ships, one budget…") still introduces
-  fleets, which 02_09 now does.
+- **Chapter 2 clips:** one is missing, `level_02_02_init_02`; regenerate it with the `Downloader - OS`
+  batch (the other 24 new clips are in, renamed with the ids on 2026-11-26).
+- **Chapter 2 manual entries:** 02_04's repeats 02_01's "bend near the start" (02_04 is the movable
+  fan-out: teach finding the shared start), and 02_03's ("Two ships, one budget…") still introduces
+  fleets, which 02_01 now does.
 - **The sheet mirror:** push every `Levels_en` and `Global_en` change since 2026-11-25 to the line
   spreadsheet before the next sync, or the sync overwrites them: the story-arc lines, the two fuel lines
   and job 1's manual entry, chapter 2's cards and lines, and the wire (one line dropped, 23 keys).
 - **Jim's repeats (optional):** cut intro lines that say what the card shows; each cut deletes a
-  clip and its downloader key. Keep 2-4's `init_02` (which ship carries what).
+  clip and its downloader key. Keep 2-6's `init_02` (which ship carries what).
 
 ## Conventions
 

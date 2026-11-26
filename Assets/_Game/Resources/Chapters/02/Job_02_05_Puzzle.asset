@@ -14,98 +14,95 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Model::DigitalLove.Game.SpaceShaping.PuzzleData
   id: 02_05
   prefab: {fileID: 0}
-  origin: {x: -0.046047628, y: 0.031897135, z: -0.24918124}
-  destination: {x: -0.26984105, y: -0.09849694, z: 0.012317404}
-  zoneCentre: {x: -0.15794434, y: 0.06672319, z: -0.014031261}
-  cubeSizeMin: 0.024146872
-  cubeSizeMax: 0.12688628
+  origin: {x: -0.15756527, y: 0.17863286, z: 0.110941105}
+  destination: {x: 0.20458083, y: -0.038191378, z: 0.21698537}
+  zoneCentre: {x: -0.023710214, y: 0.07022074, z: 0.08881664}
+  cubeSizeMin: 0.022
+  cubeSizeMax: 0.122469105
   frames:
-  - centre: {x: -0.15794434, y: 0.06672319, z: -0.014031261}
-    size: 0.12688628
-  captureRadius: 0.028022073
+  - centre: {x: -0.023710214, y: 0.07022074, z: 0.08881664}
+    size: 0.122469105
+  captureRadius: 0.036010455
   translatable: 1
   zones: 1
   routes: 1
   resizable: 0
   growOnly: 0
-  entropyBudget: 1.1999999
+  entropyBudget: 1.7999997
   noFail: 0
   noGrade: 0
   noIntro: 0
   goalLineKey: 
   sources:
-  - home: {x: 0.3307436, y: -0.07381378, z: -0.32913482}
+  - home: {x: -0.42860234, y: -0.16701736, z: -0.17753291}
     scale: 0.12
     name: cestragua
     fixedMass: 0
     centreOnly: 1
-  - home: {x: -0.20070338, y: -0.037932176, z: -0.1746831}
-    scale: 0.0835562
+  - home: {x: -0.08663517, y: -0.057968426, z: 0.16186419}
+    scale: 0.0355778
     name: solmuigawa
     fixedMass: 0
     centreOnly: 0
-  - home: {x: -0.046047628, y: 0.031897135, z: -0.24918124}
-    scale: 0.021951701
+  - home: {x: 0.09169901, y: 0.080804534, z: -0.16104999}
+    scale: 0.015388956
     name: xanzonides
     fixedMass: 0
     centreOnly: 0
-  - home: {x: 0.07027093, y: 0.09685681, z: 0.20221598}
-    scale: 0.11229469
+  - home: {x: -0.15756527, y: 0.17863286, z: 0.110941105}
+    scale: 0.109353565
     name: thennilia
     fixedMass: 0
     centreOnly: 0
-  - home: {x: 0.1706061, y: -0.26007873, z: -0.0005983858}
-    scale: 0.065006256
+  - home: {x: 0.16014095, y: -0.16701736, z: -0.11052699}
+    scale: 0.061639357
     name: chelluna
     fixedMass: 0
     centreOnly: 0
-  - home: {x: -0.26984105, y: -0.09849694, z: 0.012317404}
-    scale: 0.056044146
+  - home: {x: -0.25200126, y: 0.050984215, z: -0.03935209}
+    scale: 0.04688454
     name: teiter
     fixedMass: 0
     centreOnly: 0
-  - home: {x: 0.0921283, y: 0.29059866, z: 0.18637131}
-    scale: 0.05722933
+  - home: {x: 0.257555, y: -0.02593854, z: 0.040245064}
+    scale: 0.086126514
     name: thuamia
     fixedMass: 0
     centreOnly: 0
-  - home: {x: -0.06623877, y: -0.14297743, z: 0.0948363}
-    scale: 0.07931567
+  - home: {x: -0.19662574, y: 0.074066274, z: -0.21570633}
+    scale: 0.04508693
     name: gniviter
     fixedMass: 0
     centreOnly: 0
-  - home: {x: -0.20085417, y: -0.16874109, z: 0.15035078}
-    scale: 0.0923657
+  - home: {x: 0.20458083, y: -0.038191378, z: 0.21698537}
+    scale: 0.07202091
     name: phexogantu
     fixedMass: 0
     centreOnly: 0
-  - home: {x: -0.085035965, y: -0.017159374, z: -0.15913612}
-    scale: 0.06586531
+  - home: {x: -0.03085167, y: 0.034539793, z: -0.337763}
+    scale: 0.04226153
     name: zippe 3VGR
     fixedMass: 0
     centreOnly: 0
-  - home: {x: 0.21210083, y: 0.12325538, z: -0.004977404}
-    scale: 0.03669679
+  - home: {x: 0.03000793, y: -0.03834505, z: 0.33762735}
+    scale: 0.111335546
     name: trolla JUE
     fixedMass: 0
     centreOnly: 0
-  - home: {x: -0.20817815, y: 0.05152382, z: 0.2693955}
-    scale: 0.06602274
+  - home: {x: 0.19249438, y: -0.042261966, z: -0.32608503}
+    scale: 0.022231905
     name: xumuter
     fixedMass: 0
     centreOnly: 0
-  - home: {x: -0.072552234, y: 0.2764238, z: 0.22111872}
-    scale: 0.115351155
+  - home: {x: -0.19567704, y: 0.027908871, z: 0.32557333}
+    scale: 0.035076
     name: socizuno
     fixedMass: 0
     centreOnly: 0
   ships:
-  - origin: {x: -0.046047628, y: 0.031897135, z: -0.24918124}
-    destination: {x: -0.26984105, y: -0.09849694, z: 0.012317404}
-    captureRadius: 0.028022073
-  - origin: {x: -0.046047628, y: 0.031897135, z: -0.24918124}
-    destination: {x: -0.06623877, y: -0.14297743, z: 0.0948363}
-    captureRadius: 0.039657835
-  - origin: {x: -0.046047628, y: 0.031897135, z: -0.24918124}
-    destination: {x: -0.072552234, y: 0.2764238, z: 0.22111872}
-    captureRadius: 0.057675578
+  - origin: {x: -0.15756527, y: 0.17863286, z: 0.110941105}
+    destination: {x: 0.20458083, y: -0.038191378, z: 0.21698537}
+    captureRadius: 0.036010455
+  - origin: {x: -0.25200126, y: 0.050984215, z: -0.03935209}
+    destination: {x: 0.20458083, y: -0.038191378, z: 0.21698537}
+    captureRadius: 0.036010455

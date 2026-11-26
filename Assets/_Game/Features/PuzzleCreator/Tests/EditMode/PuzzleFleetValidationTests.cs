@@ -11,12 +11,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         private const string SettingsPath =
             "Assets/_Game/Features/PuzzleCreator/Data/SpaceShapingSettings.asset";
 
-        // 02_05 is the capstone fleet and the first shipped edge-sun fleet, so it is the accepting
-        // fixture. 02_01 stays the two-ship negative fixture; 02_04 no longer solves (no candidate
+        // 02_09 is the capstone fleet and the first shipped edge-sun fleet, so it is the accepting
+        // fixture. 02_03 stays the two-ship negative fixture; 02_06 no longer solves (no candidate
         // zone rescues all three ships).
-        private const string FleetPath = "Assets/_Game/Resources/Chapters/02/Job_02_01_Puzzle.asset";
+        private const string FleetPath = "Assets/_Game/Resources/Chapters/02/Job_02_03_Puzzle.asset";
         private const string EdgeFleetPath =
-            "Assets/_Game/Resources/Chapters/02/Job_02_05_Puzzle.asset";
+            "Assets/_Game/Resources/Chapters/02/Job_02_09_Puzzle.asset";
 
         [Test]
         public void Validate_Fleet_Passes()

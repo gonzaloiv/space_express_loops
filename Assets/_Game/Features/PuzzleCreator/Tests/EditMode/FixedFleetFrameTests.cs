@@ -7,16 +7,16 @@ using UnityEngine;
 namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 {
     // A fixed fleet ships the solved zone as its frame, so the validator checks that the frame solves
-    // in place (a PuzzleFrame stores only centre and size) and keeps clear of endpoints. 02_05 is the
-    // edge-sun fixture; 02_01 is the two-ship negative fixture that still solves under today's settings.
+    // in place (a PuzzleFrame stores only centre and size) and keeps clear of endpoints. 02_09 is the
+    // edge-sun fixture; 02_03 is the two-ship negative fixture that still solves under today's settings.
     public class FixedFleetFrameTests
     {
         private const string SettingsPath =
             "Assets/_Game/Features/PuzzleCreator/Data/SpaceShapingSettings.asset";
 
-        private const string FleetPath = "Assets/_Game/Resources/Chapters/02/Job_02_01_Puzzle.asset";
+        private const string FleetPath = "Assets/_Game/Resources/Chapters/02/Job_02_03_Puzzle.asset";
         private const string EdgeFleetPath =
-            "Assets/_Game/Resources/Chapters/02/Job_02_05_Puzzle.asset";
+            "Assets/_Game/Resources/Chapters/02/Job_02_09_Puzzle.asset";
 
         [Test]
         public void Validate_FixedFrameAtTheFleetZone_Passes()

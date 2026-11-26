@@ -34,32 +34,32 @@ with more than one route, so it does not read as a new idea.
 
 Several ships share one field and one entropy budget; the job solves only when **every ship arrives**.
 No new verb. The ramp restarts: low scramble, Ring shape. Fields and budgets per job are in
-[jobs](jobs.md) (the source); this table keeps the lessons. **Play order** (2026-11-26): intro 1,
-intro 2, 2-1, 2-2, 2-3, 2-4, 2-6, 2-7, then the capstone 2-5 closes the chapter.
+[jobs](jobs.md) (the source); this table keeps the lessons. **Play order** (2026-11-26): 2-1 to 2-9 in order; the ids
+follow it (`02_01`…`02_09`, renumbered 2026-11-26), and the capstone 2-9 closes the chapter.
 
 | # | Lesson | Brief | Field | Why |
 |---|---|---|---|---|
-| intro 1 | **One pinch, two ships** | fixed · 2 ships · one origin | 9 + sun · Ring · low scramble | The fixed cube near the shared origin bends both paths at once. |
-| intro 2 | **One zone between** | fixed · 2 ships · separate | 9 + sun · Ring · low scramble | One zone placed between two runs rescues both. |
-| 2-1 | **Two ships** | movable · 2 ships · separate | 10 + sun · Ring · low scramble | One field, two runs; each ship has its own fix. |
-| 2-2 | **Fan-out** | movable · 2 ships · one origin | 12 + sun · Spiral | An edit near the shared origin bends both paths. |
-| 2-3 | **Converge** | movable · 2 ships · one destination | 12 + sun · Spiral | The planet by the shared destination fixes both approaches. |
-| 2-4 | **Three ships** | movable · 3 ships · separate | 14 + sun · Cluster | One Wrap carries three ships; the field carries more than one ship. |
-| 2-5 | **Fleet capstone** | movable · 3 ships · fan-out | 12 + sun · Cluster · high scramble | Placement, shared paths and the field across every ship. |
-| 2-6, 2-7 | **Clear with a fleet** | movable · 2 ships | + sun · Clear answer | One obstacle in more than one ship's path: one blocker → among decoys. Two shared blockers (2-8) did not bake and is dropped. |
+| 2-1 | **One pinch, two ships** | fixed · 2 ships · one origin | 9 + sun · Ring · low scramble | The fixed cube near the shared origin bends both paths at once. |
+| 2-2 | **One zone between** | fixed · 2 ships · separate | 9 + sun · Ring · low scramble | One zone placed between two runs rescues both. |
+| 2-3 | **Two ships** | movable · 2 ships · separate | 10 + sun · Ring · low scramble | One field, two runs; each ship has its own fix. |
+| 2-4 | **Fan-out** | movable · 2 ships · one origin | 12 + sun · Spiral | An edit near the shared origin bends both paths. |
+| 2-5 | **Converge** | movable · 2 ships · one destination | 12 + sun · Spiral | The planet by the shared destination fixes both approaches. |
+| 2-6 | **Three ships** | movable · 3 ships · separate | 14 + sun · Cluster | One Wrap carries three ships; the field carries more than one ship. |
+| 2-7, 2-8 | **Clear with a fleet** | movable · 2 ships | + sun · Clear answer | One obstacle in more than one ship's path: one blocker → among decoys. Two shared blockers (2-8) did not bake and is dropped. |
+| 2-9 | **Fleet capstone** | movable · 3 ships · fan-out | 12 + sun · Cluster · high scramble | Placement, shared paths and the field across every ship. |
 
-**Every system keeps a star** (decided 2026-11-26): chapter 1 and 2-4 keep the sun at the system's
+**Every system keeps a star** (decided 2026-11-26): chapter 1 and 2-6 keep the sun at the system's
 centre; the rest of chapter 2 puts it at the edge, level with the planets, never the answer
 (`SunPlacement`, `NoSunAnswer`; an off-corridor sun floated above the field before 2026-11-26). The map
 anchors each job on its system's centre, not its star, and a starless system would read as a gap; dark
 systems on purpose are an idea ([later chapters](../ideas/later-chapters.md) §Other options).
 
-The intro jobs play before 2-1; 2-1 to 2-4 keep their ids, and new jobs take the next free ids
+The ids follow play order (renumbered 2026-11-26; the original four are now 2-3 to 2-6)
 ([chapter 2 intro](../plans/in-progress/chapter-2-intro.md) and the plans after it). Multi-ship bakes need ≥ 9 planets, use
 one cube (fixed or movable), and cannot request a role yet, so every fleet job is checked by playing
-it. **Slightly Used Stars Ltd.** returns at 2-2.
+it. **Slightly Used Stars Ltd.** returns at 2-4.
 
-**2-1 to 2-4 move into v1** (decided 2026-11-11, after the two-ship headset test: the fleet bakes play
+**The original four (now 2-3 to 2-6) moved into v1** (decided 2026-11-11, after the two-ship headset test: the fleet bakes play
 better than the single-ship jobs). They ship as episode 2 of the story ([lore](world/lore.md)
 §Episodes); **The Very Small Opera** takes 2-4 until a 2-5 capstone bakes. Headset pass done 2026-11-15.
 

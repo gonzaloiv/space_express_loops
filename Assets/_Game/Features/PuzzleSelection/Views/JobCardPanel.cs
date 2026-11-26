@@ -95,7 +95,8 @@ namespace DigitalLove.Game.PuzzleSelection
         private void ApplyContent(PuzzleData puzzle, bool includeManual, int manualOrdinal)
         {
             header.text = $"{HeaderTitle}   {DateTime.Now:HH:mm}";
-            client.text = $"{Row("JOB", puzzle.id.Replace('_', '-'))}\n{Line("CLIENT", puzzle.ClientKey)}";
+            string job = puzzle.JobNumberFor(Mathf.Max(1, manualOrdinal));
+            client.text = $"{Row("JOB", job)}\n{Line("CLIENT", puzzle.ClientKey)}";
             cargo.text = Line("CARGO", puzzle.CargoKey);
             manual.text = includeManual
                 ? ManualLine(puzzle, Mathf.Max(1, manualOrdinal))
