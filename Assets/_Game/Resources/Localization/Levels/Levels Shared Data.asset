@@ -643,38 +643,6 @@ MonoBehaviour:
     m_Key: level_02_07_init_manual_entry
     m_Metadata:
       m_Items: []
-  - m_Id: 7610346164300
-    m_Key: level_02_08_complete_01_win
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610346164301
-    m_Key: level_02_08_complete_02
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610346164302
-    m_Key: level_02_08_fail_annoyed
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610346164303
-    m_Key: level_02_08_init_01_annoyed
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610346164304
-    m_Key: level_02_08_init_02
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610346164305
-    m_Key: level_02_08_init_cargo
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610346164306
-    m_Key: level_02_08_init_client
-    m_Metadata:
-      m_Items: []
-  - m_Id: 7610346164307
-    m_Key: level_02_08_init_manual_entry
-    m_Metadata:
-      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

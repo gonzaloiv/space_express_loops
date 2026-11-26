@@ -59,8 +59,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             },
             new PuzzleJobContract
             {
-                Id = "02_01", Seed = 7, Attempts = 1, PlanetCount = 10, FieldShape = PuzzleFieldShape.Ring,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
+                Id = "02_01", Seed = 23, Attempts = 1, PlanetCount = 10, FieldShape = PuzzleFieldShape.Ring,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 1,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.Separate,
@@ -69,7 +69,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             new PuzzleJobContract
             {
                 Id = "02_02", Seed = 4, Attempts = 1, PlanetCount = 12, FieldShape = PuzzleFieldShape.Spiral,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 0,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.FanOut,
@@ -77,8 +77,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             },
             new PuzzleJobContract
             {
-                Id = "02_03", Seed = 8, Attempts = 1, PlanetCount = 12, FieldShape = PuzzleFieldShape.Spiral,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
+                Id = "02_03", Seed = 14, Attempts = 1, PlanetCount = 12, FieldShape = PuzzleFieldShape.Spiral,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 0,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.Converge,
@@ -92,7 +92,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             {
                 Id = "02_05", Seed = 9, Attempts = 1, PlanetCount = 12,
                 FieldShape = PuzzleFieldShape.Cluster,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 3,
                 Relation = PuzzleShipRelation.FanOut,
@@ -103,9 +103,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             // baked answer's |scale - 1|; tune it by playing.
             new PuzzleJobContract
             {
-                Id = "02_09", Seed = 7, Attempts = 1, PlanetCount = 9,
+                Id = "02_09", Seed = 19, Attempts = 1, PlanetCount = 9,
                 FieldShape = PuzzleFieldShape.Ring,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.FanOut,
@@ -114,9 +114,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             },
             new PuzzleJobContract
             {
-                Id = "02_10", Seed = 5, Attempts = 1, PlanetCount = 9,
+                Id = "02_10", Seed = 6, Attempts = 1, PlanetCount = 9,
                 FieldShape = PuzzleFieldShape.Ring,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
                 Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.Separate,
@@ -128,9 +128,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             // set by playing; then unpin and bake them into chapter 2 after 02_04.
             new PuzzleJobContract
             {
-                Id = "02_06", Pending = true, Seed = 19, Attempts = 1, PlanetCount = 10,
+                Id = "02_06", Pending = false, Seed = 19, Attempts = 1, PlanetCount = 10,
                 FieldShape = PuzzleFieldShape.Ring,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 1,
                 Mechanism = PuzzleMechanism.Clear, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.Separate,
@@ -138,20 +138,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             },
             new PuzzleJobContract
             {
-                Id = "02_07", Pending = true, Seed = 1, Attempts = 1, PlanetCount = 12,
+                Id = "02_07", Pending = false, Seed = 65, Attempts = 1, PlanetCount = 12,
                 FieldShape = PuzzleFieldShape.Cluster,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 1,
-                Mechanism = PuzzleMechanism.Clear, Zones = 1, MinRoutes = 1, Ships = 2,
-                Relation = PuzzleShipRelation.Separate,
-                Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
-            },
-            new PuzzleJobContract
-            {
-                Id = "02_08", Pending = true, Seed = 1, Attempts = 1, PlanetCount = 12,
-                FieldShape = PuzzleFieldShape.Spiral,
-                HasSun = true, SunPlacement = PuzzleSunPlacement.Centre, SunOnChord = false,
-                SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 2,
                 Mechanism = PuzzleMechanism.Clear, Zones = 1, MinRoutes = 1, Ships = 2,
                 Relation = PuzzleShipRelation.Separate,
                 Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,

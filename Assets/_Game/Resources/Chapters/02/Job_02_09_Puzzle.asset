@@ -14,80 +14,80 @@ MonoBehaviour:
   m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Model::DigitalLove.Game.SpaceShaping.PuzzleData
   id: 02_09
   prefab: {fileID: 0}
-  origin: {x: 0.13717821, y: -0.043050192, z: 0.21805543}
-  destination: {x: 0.249625, y: -0.051761918, z: -0.07808377}
-  zoneCentre: {x: 0.14000763, y: 0.035431523, z: -0.07093641}
-  cubeSizeMin: 0.02787359
-  cubeSizeMax: 0.12093913
+  origin: {x: -0.040889006, y: 0.084315, z: 0.25038922}
+  destination: {x: 0.2114333, y: -0.17635645, z: 0.13667981}
+  zoneCentre: {x: 0.051025275, y: -0.046020724, z: 0.007007234}
+  cubeSizeMin: 0.033762567
+  cubeSizeMax: 0.13040741
   frames:
-  - centre: {x: 0.3773227, y: -0.064575724, z: 0.012263617}
-    size: 0.12093913
-  captureRadius: 0.012669814
+  - centre: {x: -0.2566391, y: 0.026593128, z: 0.032327563}
+    size: 0.13040741
+  captureRadius: 0.039095573
   translatable: 0
   zones: 1
   routes: 1
   resizable: 0
   growOnly: 0
-  entropyBudget: 1.5
+  entropyBudget: 1.1999999
   noFail: 0
   noGrade: 0
   noIntro: 0
   goalLineKey: 
   sources:
-  - home: {x: -0.154383, y: 0.4488355, z: 0.1414275}
+  - home: {x: -0.42806894, y: -0.17714591, z: 0.17731187}
     scale: 0.12
     name: trolla JUE
     fixedMass: 0
     centreOnly: 1
-  - home: {x: 0.011202052, y: -0.10631408, z: -0.29954833}
-    scale: 0.058030065
+  - home: {x: 0.2114333, y: -0.17635645, z: 0.13667981}
+    scale: 0.078191146
     name: solmuigawa
     fixedMass: 0
     centreOnly: 0
-  - home: {x: 0.249625, y: -0.051761918, z: -0.07808377}
-    scale: 0.025339628
+  - home: {x: -0.040889006, y: 0.084315, z: 0.25038922}
+    scale: 0.0993895
     name: xanzonides
     fixedMass: 0
     centreOnly: 0
-  - home: {x: 0.13717821, y: -0.043050192, z: 0.21805543}
-    scale: 0.0580684
+  - home: {x: -0.2566391, y: 0.026593128, z: 0.032327563}
+    scale: 0.118552186
     name: thennilia
     fixedMass: 0
     centreOnly: 0
-  - home: {x: -0.17055196, y: -0.088461705, z: 0.18067856}
-    scale: 0.076160684
+  - home: {x: -0.109382756, y: 0.016574938, z: -0.23637475}
+    scale: 0.117603734
     name: chelluna
     fixedMass: 0
     centreOnly: 0
-  - home: {x: -0.23934521, y: 0.052870795, z: -0.088128686}
-    scale: 0.10994466
+  - home: {x: 0.17315821, y: -0.17714591, z: -0.16705796}
+    scale: 0.057207733
     name: teiter
     fixedMass: 0
     centreOnly: 0
-  - home: {x: 0.030390274, y: 0.12262496, z: -0.35992825}
-    scale: 0.10062329
+  - home: {x: 0.33791164, y: 0.027575398, z: 0.1799996}
+    scale: 0.048566647
     name: thuamia
     fixedMass: 0
     centreOnly: 0
-  - home: {x: 0.3773227, y: -0.064575724, z: 0.012263617}
-    scale: 0.056026995
+  - home: {x: -0.1795258, y: 0.052429095, z: 0.33196178}
+    scale: 0.046095043
     name: gniviter
     fixedMass: 0
     centreOnly: 0
-  - home: {x: -0.031362094, y: -0.1419682, z: 0.35445118}
-    scale: 0.10908923
+  - home: {x: -0.32945237, y: 0.05808823, z: -0.18605}
+    scale: 0.03069324
     name: phexogantu
     fixedMass: 0
     centreOnly: 0
-  - home: {x: -0.3791022, y: 0.029153107, z: -0.022293506}
-    scale: 0.06451573
+  - home: {x: 0.17689626, y: -0.079058066, z: -0.3300809}
+    scale: 0.11207394
     name: zippe 3VGR
     fixedMass: 0
     centreOnly: 0
   ships:
-  - origin: {x: 0.13717821, y: -0.043050192, z: 0.21805543}
-    destination: {x: 0.249625, y: -0.051761918, z: -0.07808377}
-    captureRadius: 0.012669814
-  - origin: {x: 0.13717821, y: -0.043050192, z: 0.21805543}
-    destination: {x: 0.030390274, y: 0.12262496, z: -0.35992825}
-    captureRadius: 0.050311644
+  - origin: {x: -0.040889006, y: 0.084315, z: 0.25038922}
+    destination: {x: 0.2114333, y: -0.17635645, z: 0.13667981}
+    captureRadius: 0.039095573
+  - origin: {x: -0.040889006, y: 0.084315, z: 0.25038922}
+    destination: {x: -0.109382756, y: 0.016574938, z: -0.23637475}
+    captureRadius: 0.058801867

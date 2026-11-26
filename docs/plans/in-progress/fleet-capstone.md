@@ -35,7 +35,9 @@ as `cd51f783`). Id: 02_05 ([chapter 2 intro](chapter-2-intro.md) §Ids).
   plateau wider than one 32-step. `TryFind` now tries the probe's 13 scales first
   (`PuzzleMultiShipProbe.ScaleSamples`, built by `PuzzleZoneCandidates.LinearScales`) and the 32-scale
   grid only on a miss. The exit holds by construction, and a hit is cheaper than before.
-- **Order:** play `02_05` after `02_04`, before the Clear jobs (2-6..2-8), per
+- **Order (changed 2026-11-26):** `02_05` closes chapter 2, after the Clear jobs (02_06, 02_07): the
+  difficulty climbs to the end, and its last line ("The field came back quiet") leads into chapter 3.
+  Was: after `02_04`, before the Clear jobs, per
   [chapters](../../design/chapters.md) and [fleet Clear](fleet-clear.md). `WireChapterSlot` appends it
   after `02_04` on the first bake, which is the wanted slot until the Clear jobs land.
 - **Remaining:** the re-check and any rebake are [chapter 2 bakes](chapter-2-bakes.md) U2. Before the edge

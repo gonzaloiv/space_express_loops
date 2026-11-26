@@ -7,7 +7,7 @@ namespace DigitalLove.Game.PuzzleSelection
     public static class SectorWire
     {
         // The boot line plus 7 chapter 1, 10 chapter 2 and 6 chapter 3 jobs.
-        public const int LineCount = 24;
+        public const int LineCount = 23;
         public const string CoverageKey = "map_coverage";
 
         public static string Key(int solved) =>

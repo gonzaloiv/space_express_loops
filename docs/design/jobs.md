@@ -36,11 +36,11 @@ This doc is **chapters 1–2**; chapter 3 is in [chapters](chapters.md).
 | 2-5 | fleet capstone | Any | yes · 1 zone · 3 ships, one origin | Cluster | 12 + sun · multi · deep | high (budget 1.20) | placement, shared paths and the field across every ship |
 | 2-6 | Clear with a fleet | Clear | yes · 1 zone · 2 ships, separate | Ring | 10 + sun · multi | medium | one blocker shared by both runs; shrinking it once frees the fleet |
 | 2-7 | Clear among decoys | Clear | yes · 1 zone · 2 ships, separate | Cluster | 12 + sun · multi | medium | the shared blocker hides among planets that only look involved |
-| 2-8 | two shared blockers | Clear | yes · 1 zone · 2 ships, separate | Spiral | 12 + sun · multi | medium | two shared blockers, two edits on one budget |
+| 2-8 (dropped) | two shared blockers | Clear | yes · 1 zone · 2 ships, separate | Spiral | 12 + sun · multi | medium | two shared blockers, two edits on one budget |
 
 Fleet jobs request **Any**, except the Clear fleets (2-6 to 2-8), which ask for **Clear**; the rest are checked by playing them.
 
-**Chapter 1 is seven jobs (2026-11-05); the run is twenty-three (2026-11-25): 1 scale, 2 centre,
+**Chapter 1 is seven jobs (2026-11-05); the run is twenty-two (2026-11-26): 1 scale, 2 centre,
 3 clear, 4 move, 5 multi-zone, 6 the field carries you, 7 capstone `Curve`, then chapter 2's ten
 fleet jobs.**
 The fixed-cube several-zones rung is retired; "several zones" lands with the move at
@@ -131,7 +131,7 @@ includes an off-centre zone, so the player must move the cube.
 scales several zones with the star included, so the player must move out to the other zones. It combines
 every verb except both roles; both roles are deferred to a later chapter.
 
-**The slice.** Jobs 1–7 are chapter 1's seven-job run; chapter 2 adds ten fleet jobs; ~1–3 minutes
+**The slice.** Jobs 1–7 are chapter 1's seven-job run; chapter 2 adds nine fleet jobs; ~1–3 minutes
 each.
 
 **Multi-ship.** Chapter 1's seven-job spine is single-ship; the rule is in
@@ -272,7 +272,7 @@ stay absurd; the greed is in Jim's opener and receipts, and the manual's fine pr
 | 2-5 | The Committee for Three Suns | three commemorative suns | "One Wrap carries three ships. Extra ships are a promise, not a budget line." |
 | 2-6 | The Bureau of Shared Walls | two doors, one frame | "Both runs cross the same blocker. Shrink it once; the budget stays one number." |
 | 2-7 | The Lost and Found Office | a crate of unclaimed umbrellas | "A blocker can hide among planets that only look involved. Read the runs." |
-| 2-8 | The Two Shadows Company | two shadows, one lamp | "Two blockers, two edits, one budget. Growing a clear planet is not help." |
+| 2-8 (dropped) | The Two Shadows Company | two shadows, one lamp | "Two blockers, two edits, one budget. Growing a clear planet is not help." |
 
 ### Chapter 3 — broken bodies
 

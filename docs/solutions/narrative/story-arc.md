@@ -51,7 +51,7 @@ and their clients/cargo live in [chapters](../../design/chapters.md) §Chapter 3
 
 **The wire is keyed to solved counts.** `SectorWire.Key(solved)` clamps to `LineCount - 1`; inserting
 a job shifts every later line. Keep `SectorWire.LineCount` in step and re-check the tail when the
-chapter job counts lock. The story arc's 24 keys assume 23 jobs plus the boot line.
+chapter job counts lock. The wire's 23 keys assume 22 story jobs plus the boot line (02_08 dropped, 2026-11-26).
 
 **Only spoken keys need clips.** Client, cargo, manual, title, bulletin and wire strings are on
 screen, not TTS. Changing a spoken line in place keeps its key and leaves the old mp3; list every
@@ -74,8 +74,8 @@ are local and gitignored (`Assets/_Game/Editor/Localization/Google Sheets Servic
   inserted before older ids. The release name shows only on the chapter's first card.
 
 **Chapter 2 lines (2026-11-26).** The wire is owned by chapter seams: chapter 1 keys 01–07, chapter 2
-08–17 (ten jobs, the warranty line closes episode 2), chapter 3 18–23; `SectorWireTests`
-(`Key_ChapterSeamsFollowThePlayOrder`) pins the seams and `LineCount = 24`. New spoken keys go straight
+08–16 (nine jobs, the warranty line closes episode 2), chapter 3 17–22; `SectorWireTests`
+(`Key_ChapterSeamsFollowThePlayOrder`) pins the seams and `LineCount = 23`. New spoken keys go straight
 into the `Downloader - OS` scene's `TableDownloader.keys`, which is the batch's list. A chapter's first
 card sets what later manual entries may not repeat; re-read them when the play order changes.
 
@@ -86,7 +86,7 @@ card sets what later manual entries may not repeat; re-read them when the play o
   [release](../../design/release.md) §Story arc.
 - Manual register and job 7 entry: [jobs](../../design/jobs.md) §The manual's arc.
 - Terms: [glossary](../../design/glossary.md) (anchor, repulsor, the damage).
-- Wire: `Assets/_Game/Features/PuzzleSelection/Domain/SectorWire.cs` (24 keys).
+- Wire: `Assets/_Game/Features/PuzzleSelection/Domain/SectorWire.cs` (23 keys).
 - Lines: `Assets/_Game/Resources/Localization/Levels/Levels_en.asset`;
   wire: `Assets/_Game/Resources/Localization/Global/Global_en.asset`.
 - Clips: `Assets/StreamingAssets/level_01_01_complete_03.mp3`,

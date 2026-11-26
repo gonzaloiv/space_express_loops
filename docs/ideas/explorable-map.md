@@ -6,7 +6,7 @@ so moving the cube around the map is part of the game.
 **The idea.** Instead of a single "next" job, every puzzle near a solved one is playable. With the
 map cube ([the cube](../design/systems/cube.md) §The map uses the same cube), moving the cube and the cull around it reveal places the player can actually go, not only a view.
 
-**The tension: the lessons are ordered.** The 23 story jobs are a curriculum across three chapters
+**The tension: the lessons are ordered.** The 22 story jobs are a curriculum across three chapters
 ([jobs](../design/jobs.md), [chapters](../design/chapters.md)). If anything nearby is playable, a
 player can reach the fleet or the broken bodies before the move.
 

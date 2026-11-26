@@ -166,10 +166,6 @@ MonoBehaviour:
     m_Localized: '> WIRE: GREEN INDEX UP. NOBODY KNOWS WHY'
     m_Metadata:
       m_Items: []
-  - m_Id: 74113009852272651
-    m_Localized: '> WIRE: LAST NEW CUSTOMER SIGNED IN 2041'
-    m_Metadata:
-      m_Items: []
   - m_Id: 74113009852272652
     m_Localized: '> WIRE: TRANSPORT FIRMS LEFT: 2'
     m_Metadata:

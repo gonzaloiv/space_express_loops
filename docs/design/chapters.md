@@ -34,7 +34,8 @@ with more than one route, so it does not read as a new idea.
 
 Several ships share one field and one entropy budget; the job solves only when **every ship arrives**.
 No new verb. The ramp restarts: low scramble, Ring shape. Fields and budgets per job are in
-[jobs](jobs.md) (the source); this table keeps the lessons.
+[jobs](jobs.md) (the source); this table keeps the lessons. **Play order** (2026-11-26): intro 1,
+intro 2, 2-1, 2-2, 2-3, 2-4, 2-6, 2-7, then the capstone 2-5 closes the chapter.
 
 | # | Lesson | Brief | Field | Why |
 |---|---|---|---|---|
@@ -45,7 +46,7 @@ No new verb. The ramp restarts: low scramble, Ring shape. Fields and budgets per
 | 2-3 | **Converge** | movable · 2 ships · one destination | 12 + sun · Spiral | The planet by the shared destination fixes both approaches. |
 | 2-4 | **Three ships** | movable · 3 ships · separate | 14 + sun · Cluster | One Wrap carries three ships; the field carries more than one ship. |
 | 2-5 | **Fleet capstone** | movable · 3 ships · fan-out | 12 + sun · Cluster · high scramble | Placement, shared paths and the field across every ship. |
-| 2-6 to 2-8 | **Clear with a fleet** | movable · 2 ships | + sun · Clear answer | One obstacle in more than one ship's path: one blocker → among decoys → two blockers. |
+| 2-6, 2-7 | **Clear with a fleet** | movable · 2 ships | + sun · Clear answer | One obstacle in more than one ship's path: one blocker → among decoys. Two shared blockers (2-8) did not bake and is dropped. |
 
 **Every system keeps a star** (decided 2026-11-26): chapter 1 and 2-4 keep the sun at the system's
 centre; the rest of chapter 2 puts it at the edge, level with the planets, never the answer
@@ -126,7 +127,7 @@ absurd clients and cargo; no economy ([vision](vision.md) §5).
 
 ## Tuning
 
-- **Price and pool size** follow measured minutes per job on the headset. Target: ~3 min a job, so the 23 story jobs run
+- **Price and pool size** follow measured minutes per job on the headset. Target: ~3 min a job, so the 22 story jobs run
   about an hour and the 10 launch contracts close to 15 minutes.
 - **The demo** is the Meta store's own demo option; no separate build.
 

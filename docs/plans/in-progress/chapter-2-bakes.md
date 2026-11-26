@@ -27,7 +27,15 @@ and outside the rim (read from the assets):
 | 02_09 | `bake` | `df2b1777` | (-0.43, -0.18, 0.18) |
 | 02_10 | `bake` | `d9da4a64` | (0.48, 0.08, 0.09) |
 
-Running since 20:40: 02_07 (`bake2`, 200 seeds) and 02_08 (`bake`, 200 seeds). Left: those two, then
+Running since 20:40: 02_07 (`bake2`, 200 seeds) and 02_08 (`bake`, 200 seeds).
+
+**2026-11-26:** the long scans were stopped and only their candidate seeds rescanned. **02_07: seed 65**
+(meets, window 0.211; 57 and 92 also meet), baked and committed on `bake2` (`b414ced8`), sun
+(0.16, 0.22, 0.39). **02_08: dropped**, none of 17 candidates has two shared blockers
+([fleet Clear](fleet-clear.md)). Chapter 2 ships **nine** jobs. U4 now also: remove 02_08 from the chapter
+list and `FleetJobsTests`, retire its contract row, its `level_02_08_*` lines and downloader keys, and its
+jobs.md/chapters.md rows; the wire seams become 7 + 9 + 6 (`SectorWire.LineCount` 23, chapter 2 keys
+08–16) and the story 22 jobs (release, progression, vision). Left: those two, then
 U4 (merge both branches: `bake2` holds 02_01/02_03, `bake` the rest; keep both sides' pins in
 `PuzzleJobContracts.cs`; set the chapter order once; extend `FleetJobsTests`; run the shipped check).
 Each branch still carries the other's old assets, so take each job from the branch in the table.
@@ -100,7 +108,7 @@ outside their rim (a recentred centred sun can pass a y-only check). Commit only
 - Merge both bake branches into `our-space` (assets come back through git, never copied by hand). Expect
   conflicts in `PuzzleJobContracts.cs` and `Chapters/02.asset`; keep both sides' pins.
 - Set `Chapters/02.asset` by hand once, after both merges: 02_09, 02_10, 02_01, 02_02, 02_03, 02_04,
-  02_05, 02_06, 02_07, 02_08 (minus any Clear job that did not bake).
+  02_06, 02_07, **02_05** (the capstone closes the chapter, decided 2026-11-26; 02_08 dropped).
 - Extend `FleetJobsTests` to what shipped (ids, ship counts, chapter count); run it and
   `ShippedJobs_MeetTheContract` in a checkout that has the merged assets (sync `our-space` into `bake`
   first; `bake2` lacks the Clear assets).

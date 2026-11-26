@@ -845,11 +845,6 @@ MonoBehaviour:
   - level_02_07_fail_annoyed
   - level_02_07_init_01
   - level_02_07_init_02
-  - level_02_08_complete_01_win
-  - level_02_08_complete_02
-  - level_02_08_fail_annoyed
-  - level_02_08_init_01_annoyed
-  - level_02_08_init_02
   containsFilter: 
   doesNotContainFilter:
   - manual

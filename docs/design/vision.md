@@ -38,7 +38,7 @@ Build status lives on the [plans board](../plans/README.md); this doc does not t
    **fails**. Entropy left is the **eco rating**; **arriving** is the goal — the launch is only a check.
    The field itself shows the spend — calm at full, strained as it drains, about to blow near empty —
    and the bar lives in it, not on a panel. The launch itself is given, not a lever.
-5. **Discrete jobs.** A few minutes each; three chapters (7 + 10 + 6 story jobs) and freelance
+5. **Discrete jobs.** A few minutes each; three chapters (7 + 9 + 6 story jobs) and freelance
    contracts (10 at launch, 10 in an update), all baked.
    Nothing live-ticking.
 6. **Relativity is the language.** The theme and the feel, not a simulation — the cube speaks it.
@@ -90,8 +90,8 @@ routes; keep the economy *between* jobs. Then the management layer is a wrapper
 
 ## 6. Scope: the competition slice
 
-- **In:** the **full run** — the bubble, the cube, the **map** (level selector), the **23-job
-  story** (chapter 1's seven, chapter 2's ten fleet jobs, chapter 3's six broken-body jobs), the
+- **In:** the **full run** — the bubble, the cube, the **map** (level selector), the **22-job
+  story** (chapter 1's seven, chapter 2's nine fleet jobs, chapter 3's six broken-body jobs), the
   freelance contracts, the grade and player progression ([core loop](core-loop.md),
   [progression](systems/progression.md), [jobs](jobs.md), [chapters](chapters.md)).
 - **Out of the first run:** resize (working, but the explanation is not ready), a separate tutorial flow
@@ -145,4 +145,4 @@ mechanic before writing another plan.
 | Room-scale legacy drag | **Resolved.** The room view mode is removed from the code. |
 | Content ceiling | **Valid, narrower.** Authored multi-ship is fine; simultaneous unscripted multi-ship is "near-chaotic". Chapter 1's seven-job spine is single-ship; chapter 2's ten jobs are the fleet ([chapters](chapters.md)). |
 | Entropy legibility | **In, tuning.** The in-field bar and the passthrough strain carry the spend; the budget is derived from the bake's best solution, so the 3★ band still needs a headset read ([progression](systems/progression.md) §Open questions). |
-| Run length | **Measuring.** The target is ~3 minutes a job across 23 story jobs; minutes per job on the headset are measured in the timing pass before upload ([progression](systems/progression.md) §Open questions). |
+| Run length | **Measuring.** The target is ~3 minutes a job across 22 story jobs; minutes per job on the headset are measured in the timing pass before upload ([progression](systems/progression.md) §Open questions). |

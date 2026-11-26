@@ -1,7 +1,7 @@
 # Plans — the board
 
 What is being built: **Now → Next → Later**. Each plan's `**Status:**` line matches its row here.
-Store release: €4, 6 Dec, ~23 story jobs + 10 freelance at launch (10 more in the first update); scope
+Store release: €4, 6 Dec, 22 story jobs + 10 freelance at launch (10 more in the first update); scope
 and schedule in [release](../design/release.md). Post-mortems in [lessons](../lessons.md).
 
 ## Now
@@ -55,6 +55,9 @@ One line each: what is left and where it lands.
   run the `Downloader - OS` batch for the 30 `level_02_05`–`02_10` keys already in its list; mirror
   the chapter 2 lines and wire to the sheet; rewrite 02_02's manual (it repeats 02_09's "bend near the
   start") and 02_01's (it still introduces fleets); run `SectorWireTests`.
+- **02_04 before release:** the only chapter 2 job never rebaked and without a contract, so no check
+  covers it; the shipped re-solve found no zone that rescues all three ships under today's physics.
+  Play it on the headset: if it cannot be solved, rebake it with a contract (edge sun) or drop it.
 - **Jim's repeats (optional):** cut intro lines that say what the card shows; each cut deletes a
   clip and its downloader key. Keep 2-4's `init_02` (which ship carries what).
 

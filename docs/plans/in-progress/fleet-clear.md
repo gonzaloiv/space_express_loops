@@ -21,7 +21,7 @@ Shrinking the blocker frees every ship.
 - [Fleet rebake](fleet-rebake.md) U2: the chapter-aware slot wiring that places a job
   after 2-4.
 - Ids **02_06–02_08** ([chapter 2 intro](chapter-2-intro.md) §Ids). Play order follows
-  [chapters](../../design/chapters.md): after 2-5 (02_05); if the capstone slips, after 2-4.
+  [chapters](../../design/chapters.md): after 2-4 (02_04), before the capstone 02_05, which closes the chapter (2026-11-26).
 
 ## Decisions (2026-11-26)
 
@@ -93,6 +93,11 @@ shipped movable jobs in `CheckStartFrame`. Rebake any job the shipped check reje
 
 ### U3 — the three jobs
 
+**Gap (2026-11-26): 02_08 is dropped.** None of 17 candidate seeds (3–91, all baked by the fleet
+search) had two blockers shared by both runs (each 0 or 1), so "two shared blockers" did not bake. The
+two Clear jobs that shipped are 02_06 (seed 19) and 02_07 (seed 65, window 0.211). Relaxing to one
+shared blocker would repeat 02_06's lesson.
+
 **The scans and bakes are [chapter 2 bakes](chapter-2-bakes.md) U3.** What stays here: the contracts and
 what a Clear job must show.
 
@@ -103,7 +108,7 @@ what a Clear job must show.
   editor. If a job has no Clear bake after ~400 seeds, ship the ones that baked and record the gap
   here.
 - Exit: every Clear job that baked validates in `ShippedJobs_MeetTheContract` (three, or fewer with
-  the dropped lesson recorded here); none solves in place; they sit after 02_05 (or 02_04) in
+  the dropped lesson recorded here); none solves in place; they sit after 02_04, before 02_05, in
   `Chapters/02.asset`; `FleetJobsTests`' ids, ship counts and chapter count match what shipped.
 
 ## Manual check (headset)
