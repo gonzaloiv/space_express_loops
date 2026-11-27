@@ -43,9 +43,9 @@ namespace DigitalLove.Game.SpaceShaping
 
         public int RouteCount(int entry) => routeCounts[entry];
 
-        public int RouteAt(int entry, int pip) => routes[entry][pip];
+        public int RouteAt(int entry, int route) => routes[entry][route];
 
-        public Color ColorAt(int entry, int pip) => plan.ColorAt(routes[entry][pip]);
+        public Color ColorAt(int entry, int route) => plan.ColorAt(routes[entry][route]);
 
         public int RingCount(int entry) => Mathf.Min(routeCounts[entry], MaxRings);
 

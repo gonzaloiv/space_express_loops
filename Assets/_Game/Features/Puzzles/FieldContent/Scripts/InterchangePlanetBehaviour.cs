@@ -27,7 +27,7 @@ namespace DigitalLove.Game.SpaceShaping
         private bool coloured;
         private bool marksShown = true;
 
-        public void SetPips(int count, Color[] colors)
+        public void SetRings(int count, Color[] colors)
         {
             coloured = true;
             ringCount = Mathf.Min(count, RouteEndpoints.MaxRings);

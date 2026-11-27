@@ -1,11 +1,11 @@
 # Chapter 2 — playtest fixes
 
 **Status:** now · space shaping · updated 2026-11-27 — the non-bake fixes from the 2026-11-27 headset
-pass: one ring per route on shared endpoints, Jim names the edge sun, 02_08 parked. Code, lines and
-docs are in; the Interchange prefab wiring, the 02_01 clip and the test runs remain. The bakes moved to
-[chapter 2 rebakes](../backlog/chapter-2-rebakes.md).
+pass: one ring per route on shared endpoints, Jim names the edge sun, 02_08 parked. Code, prefab, lines
+and docs are in, and the fast suites pass 120/120; the 02_01 clip and the headset checks remain. The
+bakes moved to [chapter 2 rebakes](chapter-2-rebakes.md).
 
-**Related:** [plans board](../README.md) · [chapter 2 rebakes](../backlog/chapter-2-rebakes.md) ·
+**Related:** [plans board](../README.md) · [chapter 2 rebakes](chapter-2-rebakes.md) ·
 [lessons](../../lessons.md) · [story arc](../../solutions/narrative/story-arc.md) ·
 [freelance jobs](../backlog/freelance-jobs.md)
 
@@ -19,7 +19,7 @@ Ids are today's play-order ids (after the 2026-11-26 renumber).
 - **Edge sun:** the only mention was 02_01's card fine print. Jim never said it.
 - **Repetition:** 02_07 and 02_08 had the same contract (Clear, one blocker shared by both runs).
 - 02_06 cannot be solved and 02_09 plays like the Clear jobs: both are
-  [chapter 2 rebakes](../backlog/chapter-2-rebakes.md).
+  [chapter 2 rebakes](chapter-2-rebakes.md).
 
 ## Units
 
@@ -29,16 +29,13 @@ Ids are today's play-order ids (after the 2026-11-26 renumber).
 `ringGap`), `RouteEndpoints.RingCount`, `EndpointPools.ringColors`, the `SetMarksShown` hook in
 `FieldPlanetBehaviour`, and `RouteEndpointsTests` renamed.
 
-**Left:**
+**Done (2026-11-27):** `Interchange.prefab` now has `routeRing` on the existing `Ring`, an inactive
+`Ring Prototype` copy as `ringPrototype`, `ringGap = 0.06`, and no `markerPrototype`/`markerRadius`/
+`markerScale` or leftover `Marker` object. The fast `SpaceShaping.Tests.EditMode` +
+`PuzzleSelection.Tests.EditMode` suites pass 120/120.
 
-- `Interchange.prefab` (`Assets/_Game/Features/Puzzles/Models/`) still serializes `markerPrototype`,
-  `markerRadius` and `markerScale` and has no `routeRing` / `ringPrototype`. In the editor: assign
-  `routeRing` to the existing `Ring` renderer, add one inactive copy of it as `ringPrototype`
-  (`m_IsActive: 0`, the old `Marker` is the precedent), delete the `Marker` object, save. Let Unity
-  write the prefab; do not hand-type references.
-- Run the fast `SpaceShaping.Tests.EditMode` suite.
-- Exit: in the editor, 02_05's shared destination shows two rings in the two route colours, 02_09's
-  three-ship origin shows three, and a map preview hides all of them.
+**Left:** the headset check (and an editor look at the stacked rings).
+
 
 ### U2 — Jim names the edge sun
 
@@ -57,10 +54,13 @@ entries.
 **Done (2026-11-27):** 02_08 is out of `Chapters/02.asset`, its contract is `Pending` with a "parked"
 comment, its asset and lines stay for a freelance job; `FleetJobsTests`, `SectorWireTests` and
 `SectorWire.LineCount` (22) follow eight chapter 2 jobs; release, chapters, jobs, vision, progression
-and the story-arc note say 21 story jobs.
+and the story-arc note say 21 story jobs. The wire text shifts with the slot: the parked job's beat
+(`sector_wire_15`, "TRANSPORT FIRMS LEFT: 1") is gone and the later keys moved down one, so the
+warranty line closes chapter 2 and the chapter 3 lines start at the first chapter 3 solve. The fast
+suites pass.
 
-**Left:** run the fast suite (`FleetJobsTests`, `SectorWireTests`). Persistence needs no migration:
-`RunProgress` is indexed by global job position and this is pre-release.
+**Left:** the headset check. Persistence needs no migration: `RunProgress` is indexed by global job
+position and this is pre-release.
 
 ## Manual check (headset)
 
@@ -69,3 +69,19 @@ and the story-arc note say 21 story jobs.
 3. On a map preview, the endpoint rings hide as before.
 4. 02_01: Jim mentions the edge sun; the card does not repeat it.
 5. Chapter 2 has eight jobs; 02_08 no longer appears; the wire and coverage counts match.
+
+## Review applied (2026-11-27)
+
+- **Wire countdown:** `sector_wire_13` now reads "TRANSPORT FIRMS LEFT: 1", so the 3 → 2 → 1 line
+  still lands after the parked job's beat was removed. Mirror it to the line sheet when that sync runs.
+- **Refusal pulse:** `FieldPlanetBehaviour.PulseRefusal` now calls `OnTintApplied(1, danger)` each
+  frame, so every stacked ring pulses with the top ring instead of keeping its route colour.
+- **Rename:** finished — `InterchangePlanetBehaviour.SetPips` is `SetRings`, its `EndpointPools`
+  caller follows, and `RouteEndpoints.RouteAt`/`ColorAt` take `route` instead of `pip`.
+- **Left to the user:** commit the prefab wiring, the wire tables in `Global_en` / `Global Shared Data`
+  and this plan.
+
+Verified fine: the prefab wiring (`routeRing`, inactive `Ring Prototype`, `Marker` gone), rings stacked
+under the scaled root so `ringGap` follows the planet radius, tint and fade repainting every ring after
+`NodeBody`, the map preview hiding all rings, the 02_01 line and card matching `jobs.md`, and 02_08's
+removal (chapter list, `Pending` contract, data-driven tests, wire keys shifted with no gap).

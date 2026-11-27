@@ -140,7 +140,7 @@ namespace DigitalLove.Game.SpaceShaping
 
             for (int i = 0; i < rings; i++)
                 ringColors[i] = endpoints.ColorAt(entry, i);
-            view.SetPips(rings, ringColors);
+            view.SetRings(rings, ringColors);
         }
 
         private void TrackPrimary(int entry, FieldPlanetBehaviour view)

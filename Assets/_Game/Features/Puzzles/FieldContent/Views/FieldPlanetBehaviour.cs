@@ -60,6 +60,7 @@ namespace DigitalLove.Game.SpaceShaping
             while (elapsed < secs)
             {
                 nodeBody.SetTint(danger);
+                OnTintApplied(1f, danger);
                 nodeBody.SetPulse(Mathf.Sin(Mathf.PI * Mathf.Clamp01(elapsed / secs)));
                 elapsed += Time.deltaTime;
                 yield return null;
