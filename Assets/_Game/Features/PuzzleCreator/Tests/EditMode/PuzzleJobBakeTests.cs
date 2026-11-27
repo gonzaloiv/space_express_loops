@@ -160,7 +160,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             settings = AssetDatabase.LoadAssetAtPath<SpaceShapingSettings>(SettingsPath);
             Assert.IsNotNull(settings, SettingsPath);
             seed = contract.CreateSeed();
-            return PuzzleSeedScanner.Find(seed, settings, contract.Attempts);
+            return PuzzleSeedScanner.Find(contract, seed, settings, contract.Attempts);
         }
 
         private static void Cleanup(PuzzleSeedScanResult result, PuzzleSeed seed)

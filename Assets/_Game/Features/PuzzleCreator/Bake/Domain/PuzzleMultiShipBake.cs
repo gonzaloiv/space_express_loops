@@ -140,7 +140,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return puzzle;
         }
 
-        private static Vector3 Centre(PuzzleShip[] ships)
+        // The bounding box of every ship's endpoints; the field's zone centre.
+        public static Vector3 Centre(PuzzleShip[] ships)
         {
             Vector3 min = ships[0].origin;
             Vector3 max = ships[0].origin;

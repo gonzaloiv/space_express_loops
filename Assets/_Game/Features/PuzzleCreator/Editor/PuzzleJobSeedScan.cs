@@ -54,6 +54,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         private static List<PuzzleSeedScanResult> ScanResults(
             PuzzleJobContract job, SpaceShapingSettings settings, PuzzleSeed seed, int count, int workers)
         {
+            if (job.Generator == PuzzleGenerator.Construct)
+                return Sequential(seed, settings, job, count);
+
             PuzzleBrief brief = PuzzleBrief.From(seed, settings);
             Func<int, IPuzzleSeedSearch> prepare = seedValue =>
                 PuzzleMultiShipSearch.PrepareForSeed(seed, settings, brief, seedValue);
@@ -76,7 +79,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                     break;
 
                 seed.seed = job.Seed + i;
-                results.Add(Probe(seed, settings));
+                results.Add(Probe(job, seed, settings));
             }
 
             return results;
@@ -98,9 +101,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         // Fleet contracts probe off the editor thread; the window polls the run and takes the entries
         // when it finishes. The seed asset lives until then so the run can vary its seed value.
+        // A construct bake is main-thread (a PuzzleData and PlanetNames.Instance), so a Construct fleet
+        // runs the synchronous scan and reports it at once instead of a worker search.
         public static FleetSearchRun ScanFleetAsync(
             PuzzleJobContract job, int count, Action<List<Entry>> onDone)
         {
+            if (job.Generator == PuzzleGenerator.Construct)
+            {
+                onDone(Scan(job, count));
+                return null;
+            }
+
             SpaceShapingSettings settings = PuzzleTestSetBuilder.LoadSettings("Seed scan");
             if (settings == null)
             {
@@ -136,8 +147,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             return b.Window.CompareTo(a.Window);
         }
 
-        private static PuzzleSeedScanResult Probe(PuzzleSeed seed, SpaceShapingSettings settings) =>
-            PuzzleSeedScanner.Find(seed, settings, 1);
+        private static PuzzleSeedScanResult Probe(
+            PuzzleJobContract job, PuzzleSeed seed, SpaceShapingSettings settings) =>
+            PuzzleSeedScanner.Find(
+                job, seed, settings,
+                job.Generator == PuzzleGenerator.Construct ? Mathf.Max(1, job.Attempts) : 1);
 
         private static Entry EntryFor(
             int seedValue, PuzzleSeedScanResult result, PuzzleJobContract job, PuzzleSimSettings sim)
@@ -150,6 +164,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 Status = result.Status,
                 RunReport = result.RunReport
             };
+            if (result.Problems != null && result.Problems.Count > 0)
+                entry.Problem = result.Problems[0];
 
             if (result.Found)
                 Measure(ref entry, result, job, sim);
@@ -163,10 +179,23 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         private static void Measure(
             ref Entry entry, PuzzleSeedScanResult result, PuzzleJobContract job, PuzzleSimSettings sim)
         {
-            entry.MeetsContract = PuzzleJobValidator.Validate(
-                result.Puzzle, result.Kind, result.Solution, job, out List<string> problems, sim);
-            entry.Problem = problems.Count > 0 ? problems[0] : string.Empty;
-            entry.Window = PuzzleSolveWindow.Measure(result.Puzzle, result.Solution, sim);
+            if (result.ContractChecked)
+            {
+                entry.MeetsContract = result.Problems == null || result.Problems.Count == 0;
+                entry.Problem = result.Problems != null && result.Problems.Count > 0
+                    ? result.Problems[0]
+                    : string.Empty;
+            }
+            else
+            {
+                entry.MeetsContract = PuzzleJobValidator.Validate(
+                    result.Puzzle, result.Kind, result.Solution, job, out List<string> problems, sim);
+                entry.Problem = problems.Count > 0 ? problems[0] : string.Empty;
+            }
+
+            entry.Window = result.Window > 0f
+                ? result.Window
+                : PuzzleSolveWindow.Measure(result.Puzzle, result.Solution, sim);
             MeasureScramble(ref entry, result);
         }
 

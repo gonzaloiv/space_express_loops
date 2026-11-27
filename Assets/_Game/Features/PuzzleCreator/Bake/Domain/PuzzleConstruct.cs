@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Creator
 {
-    // Builds a field around an intended answer: the chord first, then the lesson's planets, then the
+    // Builds a field around an intended answer: the chords first, then the lesson's planets, then the
     // decoys clear of the corridor, then the sun. Plain data all the way; the verdict is separate.
     public static class PuzzleConstruct
     {
@@ -14,12 +14,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         }
 
         public static PuzzleConstructedField MoveDecoy(
-            PuzzleConstructedField field, PuzzleConstructRequest request, int retry)
+            PuzzleConstructedField field, PuzzleConstructRequest request, int retry, int ship = -1)
         {
             PuzzleFieldPlanet[] planets = (PuzzleFieldPlanet[])field.Planets.Clone();
-            PuzzleDecoyField decoys = Decoys(
-                planets, field.Protected, request, field.Origin, field.Destination);
-            int index = PuzzleConstructDecoys.NearestUnprotected(decoys);
+            PuzzleDecoyField decoys = Decoys(planets, field.Protected, request, field.Ships);
+            int index = PuzzleConstructDecoys.NearestUnprotected(decoys, ship);
             if (index < 0)
                 return null;
 
@@ -33,37 +32,75 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             int seedValue = PuzzleConstructSeeds.Value(request.Seed.Seed, request.Attempt);
             PuzzleFieldPlanet[] planets = Planets(request, seedValue);
-            if (planets == null
-                || !PuzzleConstructChord.TryPick(
-                    planets, request, out int origin, out int destination))
+            if (planets == null)
                 return null;
 
-            Parts parts = new()
-            {
-                Planets = planets,
-                Request = request,
-                Origin = origin,
-                Destination = destination,
-                SeedValue = seedValue
-            };
-            if (!AddLesson(parts) || !AddSun(parts))
+            Parts parts = request.Brief.IsMulti
+                ? Fleet(planets, request, seedValue)
+                : Single(planets, request, seedValue);
+            if (parts == null || !AddLesson(parts) || !AddSun(parts))
                 return null;
 
             AddCube(parts);
             return parts;
         }
 
+        private static Parts Single(
+            PuzzleFieldPlanet[] planets, PuzzleConstructRequest request, int seedValue)
+        {
+            if (!PuzzleConstructChord.TryPick(
+                    planets, request, out int origin, out int destination))
+                return null;
+
+            return new Parts
+            {
+                Planets = planets,
+                Request = request,
+                SeedValue = seedValue,
+                Hub = -1,
+                Ships = new[] { Ship(planets, origin, destination) }
+            };
+        }
+
+        private static Parts Fleet(
+            PuzzleFieldPlanet[] planets, PuzzleConstructRequest request, int seedValue)
+        {
+            if (!PuzzleConstructChord.TryPickShips(
+                    planets, request, out PuzzleConstructedShip[] ships, out int hub,
+                    out Vector3 hubHome))
+                return null;
+
+            return new Parts
+            {
+                Planets = planets,
+                Request = request,
+                SeedValue = seedValue,
+                Hub = hub,
+                HubHome = hubHome,
+                Ships = ships
+            };
+        }
+
+        private static PuzzleConstructedShip Ship(
+            PuzzleFieldPlanet[] planets, int origin, int destination) => new()
+        {
+            OriginIndex = origin,
+            DestinationIndex = destination,
+            Origin = planets[origin].position,
+            Destination = planets[destination].position,
+            CaptureRadius = planets[destination].radius
+        };
+
         private static bool AddLesson(Parts parts)
         {
             PuzzleLessonApplied lesson = PuzzleConstructLesson.Apply(
-                parts.Planets, parts.Request, parts.Origin, parts.Destination);
+                parts.Planets, parts.Request, parts.Ships, parts.Hub, parts.HubHome);
             if (lesson == null)
                 return false;
 
             parts.Lesson = lesson;
             PuzzleConstructDecoys.KeepClear(Decoys(
-                parts.Planets, lesson.Protected, parts.Request,
-                parts.Planets[parts.Origin].position, parts.Planets[parts.Destination].position));
+                parts.Planets, lesson.Protected, parts.Request, parts.Ships));
             return true;
         }
 
@@ -73,8 +110,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                     parts.Planets, parts.Request, out Vector3 sunHome, out bool hasSun))
                 return false;
             if (!PuzzleConstructSun.ClearsChord(
-                    sunHome, parts.Planets[parts.Origin].position,
-                    parts.Planets[parts.Destination].position, parts.Request))
+                    sunHome, parts.Ships[0].Origin, parts.Ships[0].Destination, parts.Request))
                 return false;
 
             parts.SunHome = sunHome;
@@ -97,10 +133,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static PuzzleConstructedField Field(Parts parts) => new()
         {
             Planets = parts.Planets,
-            Origin = parts.Planets[parts.Origin].position,
-            Destination = parts.Planets[parts.Destination].position,
-            OriginIndex = parts.Origin,
-            DestinationIndex = parts.Destination,
+            Origin = parts.Ships[0].Origin,
+            Destination = parts.Ships[0].Destination,
+            OriginIndex = parts.Ships[0].OriginIndex,
+            DestinationIndex = parts.Ships[0].DestinationIndex,
+            Ships = parts.Ships,
+            HubIndex = parts.Hub,
+            HubHome = parts.HubHome,
             Protected = parts.Lesson.Protected,
             HasSun = parts.HasSun,
             SunHome = parts.SunHome,
@@ -116,21 +155,23 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         private static PuzzleDecoyField Decoys(
             PuzzleFieldPlanet[] planets, bool[] isProtected, PuzzleConstructRequest request,
-            Vector3 origin, Vector3 destination) => new()
+            PuzzleConstructedShip[] ships) => new()
         {
             Planets = planets,
             Protected = isProtected,
             Request = request,
-            Origin = origin,
-            Destination = destination
+            Origin = ships[0].Origin,
+            Destination = ships[0].Destination,
+            Ships = ships
         };
 
         private sealed class Parts
         {
             public PuzzleFieldPlanet[] Planets;
             public PuzzleConstructRequest Request;
-            public int Origin;
-            public int Destination;
+            public PuzzleConstructedShip[] Ships;
+            public int Hub;
+            public Vector3 HubHome;
             public int SeedValue;
             public PuzzleLessonApplied Lesson;
             public Vector3 SunHome;

@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Creator
 {
-    // Keeps every unclaimed planet out of the start corridor. A failed verdict moves the decoy
-    // nearest the chord first; the step is deterministic for a given retry seed.
+    // Keeps every unclaimed planet out of every ship's start corridor. A failed verdict moves the
+    // decoy nearest the failing ship's chord first; the step is deterministic for a given retry seed.
     public static class PuzzleConstructDecoys
     {
         private const int Attempts = 32;
@@ -37,7 +37,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return false;
         }
 
-        public static int NearestUnprotected(PuzzleDecoyField field)
+        // The nearest unprotected planet to the given ship's chord, or to any chord when ship < 0.
+        public static int NearestUnprotected(PuzzleDecoyField field, int ship = -1)
         {
             int nearest = -1;
             float best = float.MaxValue;
@@ -46,8 +47,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 if (field.Protected[i])
                     continue;
 
-                float distance = PuzzleRunGeometry.DistanceToSegment(
-                    field.Planets[i].position, field.Origin, field.Destination);
+                float distance = Distance(field, i, ship);
                 if (distance >= best)
                     continue;
 
@@ -58,12 +58,37 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return nearest;
         }
 
+        private static float Distance(PuzzleDecoyField field, int index, int ship)
+        {
+            float best = float.MaxValue;
+            int count = RunCount(field);
+            for (int i = 0; i < count; i++)
+            {
+                if (ship >= 0 && i != ship)
+                    continue;
+
+                Run(field, i, out Vector3 origin, out Vector3 destination);
+                best = Mathf.Min(best, PuzzleRunGeometry.DistanceToSegment(
+                    field.Planets[index].position, origin, destination));
+            }
+
+            return best;
+        }
+
         private static bool InCorridor(PuzzleDecoyField field, int index)
         {
             float margin = field.Request.Brief.EndpointClearance
                 + field.Planets[index].radius * PuzzleRunChoice.PlanetBlockBandFactor;
-            return PuzzleRunGeometry.DistanceToSegment(
-                field.Planets[index].position, field.Origin, field.Destination) < margin;
+            int count = RunCount(field);
+            for (int i = 0; i < count; i++)
+            {
+                Run(field, i, out Vector3 origin, out Vector3 destination);
+                if (PuzzleRunGeometry.DistanceToSegment(
+                        field.Planets[index].position, origin, destination) < margin)
+                    return true;
+            }
+
+            return false;
         }
 
         // A moved decoy keeps its ring radius and height; only the azimuth changes, so a Ring or
@@ -82,8 +107,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleFieldPlanet planet = field.Planets[index];
             float clearance = field.Request.Brief.EndpointClearance;
             float margin = clearance + planet.radius * PuzzleRunChoice.PlanetBlockBandFactor;
-            if (PuzzleRunGeometry.DistanceToSegment(candidate, field.Origin, field.Destination) < margin)
-                return false;
+            int count = RunCount(field);
+            for (int i = 0; i < count; i++)
+            {
+                Run(field, i, out Vector3 origin, out Vector3 destination);
+                if (PuzzleRunGeometry.DistanceToSegment(candidate, origin, destination) < margin)
+                    return false;
+            }
+
             if (!ClearOfEndpoints(field, candidate, clearance + planet.radius))
                 return false;
             if (!Separated(field, index, candidate))
@@ -95,8 +126,16 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleDecoyField field, Vector3 candidate, float clearance)
         {
             float squared = clearance * clearance;
-            return (candidate - field.Origin).sqrMagnitude >= squared
-                && (candidate - field.Destination).sqrMagnitude >= squared;
+            int count = RunCount(field);
+            for (int i = 0; i < count; i++)
+            {
+                Run(field, i, out Vector3 origin, out Vector3 destination);
+                if ((candidate - origin).sqrMagnitude < squared
+                    || (candidate - destination).sqrMagnitude < squared)
+                    return false;
+            }
+
+            return true;
         }
 
         private static bool Separated(PuzzleDecoyField field, int index, Vector3 candidate)
@@ -123,6 +162,25 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             float required = sun + radius;
             return candidate.sqrMagnitude >= required * required;
+        }
+
+        private static int RunCount(PuzzleDecoyField field) =>
+            field.Ships != null && field.Ships.Length > 0 ? field.Ships.Length : 1;
+
+        private static void Run(
+            PuzzleDecoyField field, int index, out Vector3 origin, out Vector3 destination)
+        {
+            if (field.Ships != null && field.Ships.Length > 0)
+            {
+                PuzzleConstructedShip ship =
+                    field.Ships[Mathf.Clamp(index, 0, field.Ships.Length - 1)];
+                origin = ship.Origin;
+                destination = ship.Destination;
+                return;
+            }
+
+            origin = field.Origin;
+            destination = field.Destination;
         }
     }
 }

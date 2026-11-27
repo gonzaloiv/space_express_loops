@@ -4,6 +4,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleSeedScanner
     {
+        // The contract decides the generator; the mechanism picks the constructor's recipe, and an
+        // explicit lesson overrides it (the Creator tests pass one directly).
+        public static PuzzleSeedScanResult Find(
+            PuzzleJobContract job, PuzzleSeed seed, SpaceShapingSettings settings, int attempts,
+            IPuzzleLesson lesson = null, System.Action<int, int> onProgress = null)
+        {
+            if (job.Generator == PuzzleGenerator.Construct)
+                return Construct(job, seed, settings, attempts, lesson, onProgress);
+
+            return Find(seed, settings, attempts, onProgress);
+        }
+
         public static PuzzleSeedScanResult Find(
             PuzzleSeed seed, SpaceShapingSettings settings, int attempts,
             System.Action<int, int> onProgress = null)
@@ -21,6 +33,41 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             return Scan(seed, settings, sim, brief, attempts, onProgress);
         }
+
+        private static PuzzleSeedScanResult Construct(
+            PuzzleJobContract job, PuzzleSeed seed, SpaceShapingSettings settings, int attempts,
+            IPuzzleLesson lesson, System.Action<int, int> onProgress)
+        {
+            PuzzleBrief brief = PuzzleBrief.From(seed, settings);
+            int retries = Mathf.Max(1, attempts);
+            PuzzleConstructRequest request = new()
+            {
+                Contract = job,
+                Brief = brief,
+                Seed = PuzzleSeedFields.From(seed, settings),
+                Field = PuzzleFieldSettings.From(settings),
+                Sim = PuzzleSimSettings.From(settings),
+                Lesson = lesson ?? PuzzleLessonChoice.For(brief)
+            };
+            PuzzleBakeResult baked = PuzzleConstructBake.Bake(request, retries);
+            onProgress?.Invoke(retries, retries);
+            return Result(request.Seed.Seed, baked);
+        }
+
+        private static PuzzleSeedScanResult Result(int seed, PuzzleBakeResult baked) => new()
+        {
+            Found = baked.Baked,
+            Seed = seed,
+            Status = baked.Status,
+            Puzzle = baked.Puzzle,
+            Solution = baked.Solution,
+            Kind = baked.Kind,
+            RunReport = baked.RunReport,
+            Routes = baked.Baked ? baked.Puzzle.routes : 0,
+            Window = baked.Window,
+            ContractChecked = baked.Baked || baked.Problems != null,
+            Problems = baked.Problems
+        };
 
         private static PuzzleSeedScanResult Scan(
             PuzzleSeed seed, SpaceShapingSettings settings, PuzzleSimSettings sim, PuzzleBrief brief,

@@ -4,10 +4,11 @@
 one planet near it; a spike first, with the search as the fallback. Not started.
 
 **Bakes:** off the editor — the convergence and 20-seed rates are a Creator test loop (bake-heavy; run
-in the bake checkout); the fleet `bake.ps1` seam lands in [jobs](bake-construct-jobs.md) U1.
+in the bake checkout); the fleet `bake.ps1` seam lands in [jobs](../in-progress/bake-construct-jobs.md) U1.
 
-**Related:** [plans board](../README.md) · [construct separate](bake-construct-separate.md) (must land
-first) · [construct jobs](bake-construct-jobs.md) (next)
+**Related:** [plans board](../README.md) ·
+[construct separate](../in-progress/bake-construct-separate.md) (must land
+first) · [construct jobs](../in-progress/bake-construct-jobs.md) (next)
 
 Same rule as the core: only what today's jobs use; **no anchored (`fixedMass`) planets**.
 
@@ -22,7 +23,7 @@ Same rule as the core: only what today's jobs use; **no anchored (`fixedMass`) p
 - After each move: a destination is also a planet, so the pristine run must still miss by more than
   its capture radius (`StartFails`), and the grown zone must not contain the shared origin.
 - Write the convergence rate here. If it does not converge, stop: fan-out stays on the search, and
-  [construct jobs](bake-construct-jobs.md) bakes only 02_06.
+  [construct jobs](../in-progress/bake-construct-jobs.md) bakes only 02_06.
 - Exit: a convergence rate on 20 two-ship seeds.
 
 ### U2 — two and three ships

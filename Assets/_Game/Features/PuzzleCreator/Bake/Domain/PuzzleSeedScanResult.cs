@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public struct PuzzleSeedScanResult
@@ -10,6 +12,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public PuzzleZone[] Solution;
         public PuzzleSolutionKind Kind;
         public PuzzleRunReport RunReport;
+        // The constructor's verdict measures these; 0/false means the scan still has to.
+        public float Window;
+        public bool ContractChecked;
+        public List<string> Problems;
         public int Attempts;
         public int Baked;
         public bool HasFailure;

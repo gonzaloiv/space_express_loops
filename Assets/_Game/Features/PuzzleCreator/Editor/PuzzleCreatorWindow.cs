@@ -375,6 +375,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 return $"Rejected: no clear solution. The cheapest field solve is {generatedKind}. "
                     + "Use Find working seed.";
 
+            if (status == PuzzleBakeStatus.ClearShortcut)
+                return "Rejected: a clear shortcut lands; the blocker shrinks alone. "
+                    + "Use Find working seed.";
+
             if (status == PuzzleBakeStatus.NotMixed)
                 return $"Rejected: no mixed clear+curve solution. The cheapest field solve is "
                     + $"{generatedKind}. Use Find working seed.";

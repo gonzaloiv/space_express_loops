@@ -60,14 +60,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         private static void BakeJob(PuzzleJobContract job)
         {
-            PuzzleTestSetBuilder.BuildOne(job);
-            string chapter = PuzzleJobContracts.ChapterOf(job.Id);
-            string path = $"Assets/_Game/Resources/Chapters/{chapter}/Job_{job.Id}_Puzzle.asset";
+            PuzzleData built = PuzzleTestSetBuilder.BuildOne(job);
+            if (built == null)
+                throw new InvalidOperationException($"{job.Id} did not bake.");
+            string path = PuzzleTestSetBuilder.JobPath(job);
             PuzzleData baked = AssetDatabase.LoadAssetAtPath<PuzzleData>(path);
             if (baked == null || baked.id != job.Id)
                 throw new InvalidOperationException($"{job.Id} was not saved at {path}.");
 
-            string answerPath = PuzzleAnswerAsset.PathFor(job.Id);
+            string answerPath = PuzzleTestSetBuilder.AnswerPath(job);
             PuzzleAnswerAsset answer = AssetDatabase.LoadAssetAtPath<PuzzleAnswerAsset>(answerPath);
             if (answer == null || answer.id != job.Id)
                 throw new InvalidOperationException($"{job.Id} has no answer at {answerPath}.");

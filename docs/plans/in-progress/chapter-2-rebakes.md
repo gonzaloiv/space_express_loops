@@ -9,7 +9,7 @@ U1–U4 done; the headset check remains.
 
 **Related:** [plans board](../README.md) · [chapter 2 playtest fixes](chapter-2-playtest.md) ·
 [lessons](../../lessons.md) ·
-[bake construct jobs](../backlog/bake-construct-jobs.md)
+[bake construct jobs](bake-construct-jobs.md)
 
 ## Why
 
@@ -20,9 +20,9 @@ and 02_09 (`Mechanism = Any`) plays out like the Clear jobs before it.
 
 The bake overhaul (closed 2026-11-27, [lessons](../../lessons.md)): one
 checkout, every core, bakes that write only their job and its answer. If
-[bake construct jobs](../backlog/bake-construct-jobs.md) has landed, bake both with `Generator = Construct`;
+[bake construct jobs](bake-construct-jobs.md) has landed, bake both with `Generator = Construct`;
 otherwise use the search (the constructor is not built as of 2026-11-27); that field stays live until
-[construct jobs](../backlog/bake-construct-jobs.md) U2 re-bakes both with `Construct` and re-pins
+[construct jobs](bake-construct-jobs.md) U2 re-bakes both with `Construct` and re-pins
 them.
 
 ## Before U1

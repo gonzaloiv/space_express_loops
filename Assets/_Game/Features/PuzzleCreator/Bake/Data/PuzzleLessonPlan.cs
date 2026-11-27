@@ -25,9 +25,19 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public int DestinationIndex;
         public Vector3 Origin;
         public Vector3 Destination;
+        // One entry per ship; ship 0 is Origin/Destination, kept for the single-ship recipes.
+        public PuzzleConstructedShip[] Ships;
+        // The chord a placement is aimed at; null means the single Origin/Destination pair.
+        public PuzzleConstructedShip Chord;
+        // The shared blocker/bend: a planet index and its position, or -1 for a single-ship job.
+        public int HubIndex;
+        public Vector3 HubPosition;
+        // Ship 0's capture radius (the destination planet's radius).
+        public float CaptureRadius;
         public float CubeSizeMin;
         public float CubeSizeMax;
         public float SunRadius;
+        public PuzzleBrief Brief;
         public PuzzleSimSettings Settings;
         public int SeedValue;
     }

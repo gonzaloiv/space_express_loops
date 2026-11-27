@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DigitalLove.Game.SpaceShaping;
 using UnityEngine;
 
@@ -14,21 +15,33 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public static PuzzleBakeResult Bake(
             PuzzleConstructRequest request, int attempts = DefaultAttempts)
         {
+            PuzzleBakeResult last = default;
+            int count = Mathf.Max(1, attempts);
+            for (int attempt = 0; attempt < count; attempt++)
+            {
+                last = TryAttempt(request.WithAttempt(attempt), attempt);
+                if (last.Baked)
+                    return last;
+            }
+
+            return last;
+        }
+
+        // A local decoy move stays within the attempt; the next attempt re-seeds the stream from
+        // (seed, attempt), so an attempt-1 retry is not the next seed.
+        private static PuzzleBakeResult TryAttempt(
+            PuzzleConstructRequest request, int attempt)
+        {
             PuzzleConstructedField field = PuzzleConstruct.Build(request);
             if (field == null)
                 return Fail(PuzzleBakeStatus.NoRun);
 
-            PuzzleBakeResult last = default;
-            for (int attempt = 0; attempt < attempts && field != null; attempt++)
-            {
-                last = Verify(field, request);
-                if (last.Baked)
-                    return last;
+            PuzzleBakeResult result = Verify(field, request);
+            if (result.Baked)
+                return result;
 
-                field = PuzzleConstruct.MoveDecoy(field, request, attempt + 1);
-            }
-
-            return last;
+            field = PuzzleConstruct.MoveDecoy(field, request, attempt + 1);
+            return field != null ? Verify(field, request) : result;
         }
 
         public static PuzzleBakeResult Verify(
@@ -87,23 +100,44 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return result;
             if (!PuzzleJobValidator.Validate(
                     result.Puzzle, result.Kind, result.Solution, request.Contract,
-                    out System.Collections.Generic.List<string> problems, request.Sim))
-            {
-                Object.DestroyImmediate(result.Puzzle);
-                PuzzleBakeResult failed = Fail(PuzzleBakeStatus.ContractFailed, result.Kind);
-                failed.Problems = problems;
-                return failed;
-            }
+                    out List<string> problems, request.Sim))
+                return Failed(result, PuzzleBakeStatus.ContractFailed, problems);
+            if (ClearShortcut(result.Puzzle, request))
+                return Failed(result, PuzzleBakeStatus.ClearShortcut);
 
             float window = PuzzleSolveWindow.Measure(result.Puzzle, result.Solution, request.Sim);
             if (window <= 0f)
-            {
-                Object.DestroyImmediate(result.Puzzle);
-                return Fail(PuzzleBakeStatus.Unverified, result.Kind);
-            }
+                return Failed(result, PuzzleBakeStatus.Unverified);
 
             result.Window = window;
             return result;
+        }
+
+        private static PuzzleBakeResult Failed(
+            PuzzleBakeResult result, PuzzleBakeStatus status, List<string> problems = null)
+        {
+            Object.DestroyImmediate(result.Puzzle);
+            PuzzleBakeResult failed = Fail(status, result.Kind);
+            failed.Problems = problems;
+            return failed;
+        }
+
+        // A Curve job must not be solvable by shrinking alone: a cube that shrinks a blocker and lands
+        // is a Clear shortcut, not the bend lesson. Fleets share one cube across every blocker; a
+        // movable single-ship job can put the cube on the blocker, a fixed one cannot.
+        public static bool ClearShortcut(PuzzleData puzzle, PuzzleConstructRequest request)
+        {
+            if (request.Brief.Mechanism != PuzzleMechanism.Curve)
+                return false;
+            if (request.Brief.IsMulti)
+                return PuzzleFleetSolution.TryFind(
+                    puzzle, request.Sim, PuzzleMechanism.Clear, out _);
+            if (request.Brief.GrowOnly || !request.Brief.Translatable)
+                return false;
+
+            PuzzleBrief clear = request.Brief;
+            clear.Mechanism = PuzzleMechanism.Clear;
+            return PuzzleSolutionSearch.TrySelect(puzzle, request.Sim, clear, out _);
         }
 
         private static PuzzleData Materialize(
@@ -117,13 +151,37 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             puzzle.sources = Sources(planets, field);
             puzzle.origin = field.Origin;
             puzzle.destination = field.Destination;
-            puzzle.zoneCentre = (field.Origin + field.Destination) * 0.5f;
             puzzle.cubeSizeMin = field.CubeSizeMin;
             puzzle.cubeSizeMax = field.CubeSizeMax;
             ApplyBrief(puzzle, request.Brief, field.Answer);
             puzzle.entropyBudget = OpenBudget;
-            puzzle.captureRadius = puzzle.CaptureRadiusAtDestination();
+            puzzle.ships = Fleet(field) ? ToShips(field.Ships) : null;
+            puzzle.zoneCentre = Fleet(field)
+                ? PuzzleMultiShipBake.Centre(puzzle.ships)
+                : (field.Origin + field.Destination) * 0.5f;
+            puzzle.captureRadius = field.Ships != null && field.Ships.Length > 0
+                ? field.Ships[0].CaptureRadius
+                : puzzle.CaptureRadiusAtDestination();
             return puzzle;
+        }
+
+        private static bool Fleet(PuzzleConstructedField field) =>
+            field.Ships != null && field.Ships.Length > 1;
+
+        private static PuzzleShip[] ToShips(PuzzleConstructedShip[] ships)
+        {
+            PuzzleShip[] result = new PuzzleShip[ships.Length];
+            for (int i = 0; i < ships.Length; i++)
+            {
+                result[i] = new PuzzleShip
+                {
+                    origin = ships[i].Origin,
+                    destination = ships[i].Destination,
+                    captureRadius = ships[i].CaptureRadius
+                };
+            }
+
+            return result;
         }
 
         private static void ApplyBrief(

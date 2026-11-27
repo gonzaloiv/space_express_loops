@@ -12,13 +12,21 @@ and schedule in [release](../design/release.md). Post-mortems in [lessons](../le
   solvable; starting with the answer backfill and the 02_09 replay
 - **27 Nov, today:** [construct core](in-progress/bake-construct-core.md) — U1–U2 in: the plain
   skeleton and the whole gate; the Clear/Curve recipes are the single plan
+- **27 Nov:** [construct wire](in-progress/bake-construct-wire.md) — U1 seam in (generator, retries,
+  fleet unsupported, single measurement); miss status and the timing comparison are open
+- **27 Nov:** [construct separate](in-progress/bake-construct-separate.md) — U1 in (fleet plumbing,
+  scratch fixtures, 7 fast tests); the Clear/Curve spikes and rates are next in the bake checkout
+- **27 Nov:** [construct jobs](in-progress/bake-construct-jobs.md) — U1 in (a Construct fleet scans and
+  bakes sequentially); U2 waits on fan-out and the replace-or-prove call
 
 ## Next
 
 - **27 Nov:** build the answer first, six plans: core (in progress) →
-  [single](backlog/bake-construct-single.md) → [wire](backlog/bake-construct-wire.md) →
-  [separate](backlog/bake-construct-separate.md) → [fan-out](backlog/bake-construct-fanout.md) →
-  [jobs](backlog/bake-construct-jobs.md) (no anchors: same jobs, quicker bakes)
+  [single](in-progress/bake-construct-single.md) (in progress) → [wire](in-progress/bake-construct-wire.md) (in progress) →
+  [separate](in-progress/bake-construct-separate.md) (in progress) →
+  [fan-out](backlog/bake-construct-fanout.md) (next)
+- **Jobs:** [construct jobs](in-progress/bake-construct-jobs.md) U2 ports 02_06 and 02_09 to the
+  constructor once fan-out lands
 - **After the bake overhaul:** [chapter 2 rebakes](in-progress/chapter-2-rebakes.md) — moved to Now;
   the answer backfill runs first
 - **27 Nov–1 Dec, alongside chapter 2:** [broken bodies](backlog/chapter-3-broken-bodies.md) (anchors, then

@@ -20,6 +20,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         SunRuleFailed,
         SunAnswers,
         WrongRole,
-        ContractFailed
+        ContractFailed,
+        ClearShortcut
     }
 }

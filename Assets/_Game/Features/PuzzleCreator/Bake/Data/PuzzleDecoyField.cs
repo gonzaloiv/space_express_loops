@@ -9,5 +9,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public PuzzleConstructRequest Request;
         public UnityEngine.Vector3 Origin;
         public UnityEngine.Vector3 Destination;
+        // One entry per ship; empty falls back to the single Origin/Destination pair.
+        public PuzzleConstructedShip[] Ships;
     }
 }

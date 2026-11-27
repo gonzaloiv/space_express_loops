@@ -11,7 +11,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public Vector3 Destination;
         public int OriginIndex;
         public int DestinationIndex;
-        // Endpoints and lesson planets: the decoy step never moves these.
+        // Every ship's pair; one ship for a single-ship job. Origin/Destination above are ship 0's.
+        public PuzzleConstructedShip[] Ships;
+        // The shared blocker/bend's planet, or -1 for a single-ship job.
+        public int HubIndex;
+        // The point the shared planet is moved to (the chords' midpoint centre).
+        public Vector3 HubHome;
+        // Endpoints, the hub and lesson planets: the decoy step never moves these.
         public bool[] Protected;
         public bool HasSun;
         public Vector3 SunHome;

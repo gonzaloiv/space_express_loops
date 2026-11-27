@@ -32,18 +32,19 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             Debug.Log($"Test set: {jobs.Count} jobs built across {chapters.Count} chapter(s).");
         }
 
-        public static void BuildOne(PuzzleJobContract job)
+        public static PuzzleData BuildOne(PuzzleJobContract job)
         {
             SpaceShapingSettings settings = LoadSettings("Test set");
             if (settings == null)
-                return;
+                return null;
 
             PuzzleData saved = BuildJob(job, settings);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log(saved != null
-                ? $"Test set: {job.Id} rebuilt in chapter {PuzzleJobContracts.ChapterOf(job.Id)}."
+                ? $"Test set: {job.Id} rebuilt at {JobPath(job)}."
                 : $"Test set: {job.Id} did not build.");
+            return saved;
         }
 
         [MenuItem("DigitalLove/Space Shaping/Build Maze Test Level")]
@@ -126,13 +127,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
             PuzzleData baked = result.Puzzle;
             baked.id = job.Id;
-            string chapter = PuzzleJobContracts.ChapterOf(job.Id);
-            PuzzleArtifactExporter.SaveVariant(baked, "Job_" + job.Id, GeneratedFolder(chapter));
-            PuzzleData saved = AssetDatabase.LoadAssetAtPath<PuzzleData>(JobPath(job.Id));
+            PuzzleArtifactExporter.SaveVariant(baked, "Job_" + job.Id, FolderFor(job));
+            PuzzleData saved = AssetDatabase.LoadAssetAtPath<PuzzleData>(JobPath(job));
             SaveAnswer(job, result, settings);
             Debug.Log(
                 $"Test set: {job.Id} {result.Status} (seed {result.Seed}, {baked.zones} zone(s), " +
-                $"{result.Kind}) -> " + (saved != null ? $"saved in chapter {chapter}" : "MISSING"));
+                $"{result.Kind}) -> " + (saved != null ? $"saved at {JobPath(job)}" : "MISSING"));
             return saved;
         }
 
@@ -142,13 +142,16 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             PuzzleSolution solution = new() { Zones = result.Solution, Kind = result.Kind };
             PuzzleAnswerAsset answer = PuzzleAnswerFactory.From(
                 job, result.Seed, result.Puzzle, solution, PuzzleSimSettings.From(settings));
-            PuzzleArtifactExporter.SaveAnswer(answer);
+            PuzzleArtifactExporter.SaveAnswer(answer, AnswerFolder(job));
         }
 
         private static PuzzleSeedScanResult FindJob(
             PuzzleJobContract job, SpaceShapingSettings settings, PuzzleSeed seed)
         {
             seed.mechanism = job.Mechanism;
+            if (job.Generator == PuzzleGenerator.Construct)
+                return PuzzleSeedScanner.Find(job, seed, settings, Mathf.Max(1, job.Attempts));
+
             PuzzleBrief brief = PuzzleBrief.From(seed, settings);
             if (brief.IsMulti && job.Attempts > 1)
                 return FindFleetJob(job, settings, seed, brief);
@@ -214,7 +217,22 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         private static string GeneratedFolder(string chapter) => $"{ChaptersFolder}/{chapter}";
 
-        private static string JobPath(string id) =>
-            $"{GeneratedFolder(PuzzleJobContracts.ChapterOf(id))}/Job_{id}_Puzzle.asset";
+        // A construct comparison copy writes outside Resources, so it never ships with the chapter.
+        public static string JobPath(PuzzleJobContract job) =>
+            $"{FolderFor(job)}/Job_{job.Id}_Puzzle.asset";
+
+        public static string AnswerPath(PuzzleJobContract job) =>
+            $"{AnswerFolder(job)}/{job.Id}.asset";
+
+        private static string FolderFor(PuzzleJobContract job) =>
+            IsScratch(job)
+                ? PuzzleConstructScratch.Folder
+                : GeneratedFolder(PuzzleJobContracts.ChapterOf(job.Id));
+
+        private static string AnswerFolder(PuzzleJobContract job) =>
+            IsScratch(job) ? PuzzleConstructScratch.Folder : PuzzleAnswerAsset.Folder;
+
+        private static bool IsScratch(PuzzleJobContract job) =>
+            PuzzleConstructScratch.Has(job.Id);
     }
 }
