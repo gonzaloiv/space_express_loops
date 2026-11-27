@@ -108,20 +108,22 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         // The cube must enclose the planet it covers, so the range spans the field's planets with the
         // same margin the search requires: the smallest planet for the floor, the largest for the
         // ceiling.
-        private static void CubeRange(PuzzlePlanetListAsset planets, out float min, out float max)
+        public static void CubeRange(PuzzleFieldPlanet[] planets, out float min, out float max)
         {
             float smallest = float.MaxValue;
             float largest = 0f;
-            for (int i = 0; i < planets.planets.Length; i++)
+            for (int i = 0; i < planets.Length; i++)
             {
-                float radius = planets.planets[i].radius;
-                smallest = Mathf.Min(smallest, radius);
-                largest = Mathf.Max(largest, radius);
+                smallest = Mathf.Min(smallest, planets[i].radius);
+                largest = Mathf.Max(largest, planets[i].radius);
             }
 
             min = Mathf.Max(smallest, 0.01f) * 2f * PuzzleZoneCandidates.PlanetMargin;
             max = Mathf.Max(largest, 0.01f) * 2f * PuzzleZoneCandidates.PlanetMargin;
         }
+
+        private static void CubeRange(PuzzlePlanetListAsset planets, out float min, out float max) =>
+            CubeRange(planets.planets, out min, out max);
 
         private static PuzzleBakeResult Run(
             PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief)
@@ -156,7 +158,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return Check(field, settings, brief, found, kind);
         }
 
-        private static PuzzleBakeResult Check(
+        // The constructor's answer takes the same path as a searched one: the start, the shorter-zone
+        // rule, then the confirm (entropy, frames, routes, sun rule).
+        public static PuzzleBakeResult Check(
             PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief,
             PuzzleSolution found, PuzzleSolutionKind kind)
         {

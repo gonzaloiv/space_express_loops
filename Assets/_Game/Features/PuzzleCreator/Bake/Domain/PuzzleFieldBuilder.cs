@@ -12,59 +12,59 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private const float SeparationMargin = 1.1f;
         private const float MinSectorRadius = 0.1f;
 
-        public static SectorShapeData Build(PuzzleSeed seed, SpaceShapingSettings settings)
+        public static SectorShapeData Build(PuzzleSeed seed, SpaceShapingSettings settings) =>
+            Build(PuzzleSeedFields.From(seed, settings), PuzzleFieldSettings.From(settings));
+
+        public static SectorShapeData Build(PuzzleSeedFields seed, PuzzleFieldSettings settings)
         {
             float sectorRadius = SectorRadius(settings);
             return BuildShape(seed, settings, sectorRadius);
         }
 
-        private static float PlanetRadiusMin(SpaceShapingSettings settings) => settings.planetRadiusMin;
-
-        private static float PlanetRadiusMax(SpaceShapingSettings settings) => settings.planetRadiusMax;
-
-        private static float SectorRadius(SpaceShapingSettings settings) =>
+        private static float SectorRadius(PuzzleFieldSettings settings) =>
             Mathf.Max(
                 MinSectorRadius,
-                (settings.runDistance * FieldRunScale - PlanetRadiusMax(settings)) / SpreadMax);
+                (settings.RunDistance * FieldRunScale - settings.PlanetRadiusMax) / SpreadMax);
 
-        private static float Spread(PuzzleSeed seed) =>
-            Mathf.Lerp(SpreadMin, SpreadMax, Mathf.InverseLerp(3f, 6f, seed.planetCount));
+        private static float Spread(PuzzleSeedFields seed) =>
+            Mathf.Lerp(SpreadMin, SpreadMax, Mathf.InverseLerp(3f, 6f, seed.PlanetCount));
 
         private static SectorShapeData BuildShape(
-            PuzzleSeed seed, SpaceShapingSettings settings, float sectorRadius) => new()
+            PuzzleSeedFields seed, PuzzleFieldSettings settings, float sectorRadius) => new()
         {
             kind = Shape(seed),
             radius = new MinMaxFloat(sectorRadius, sectorRadius),
             anchorScale = new MinMaxFloat(1f, 1f),
-            anchorRadius = seed.EffectiveSunRadius(settings),
-            planetCount = new MinMaxInt { min = seed.planetCount, max = seed.planetCount },
-            planetRadius = new MinMaxFloat(PlanetRadiusMin(settings), PlanetRadiusMax(settings)),
+            anchorRadius = seed.SunRadius,
+            planetCount = new MinMaxInt { min = seed.PlanetCount, max = seed.PlanetCount },
+            planetRadius = new MinMaxFloat(
+                settings.PlanetRadiusMin, settings.PlanetRadiusMax),
             ringCount = new MinMaxInt { min = Rings(seed), max = Rings(seed) },
             armCount = new MinMaxInt { min = 2, max = 3 },
             spread = Spread(seed),
-            inclination = settings.fieldThickness,
-            tilt = settings.fieldTilt,
-            bulge = settings.fieldBulge,
-            minSeparation = settings.separationScale * SeparationMargin
+            inclination = settings.FieldThickness,
+            tilt = settings.FieldTilt,
+            bulge = settings.FieldBulge,
+            minSeparation = settings.SeparationScale * SeparationMargin
         };
 
-        private static SectorShapeKind Shape(PuzzleSeed seed)
+        private static SectorShapeKind Shape(PuzzleSeedFields seed)
         {
-            if (seed.fieldShape == PuzzleFieldShape.Ring)
+            if (seed.FieldShape == PuzzleFieldShape.Ring)
                 return SectorShapeKind.Ring;
 
-            if (seed.fieldShape == PuzzleFieldShape.Spiral)
+            if (seed.FieldShape == PuzzleFieldShape.Spiral)
                 return SectorShapeKind.Spiral;
 
-            if (seed.fieldShape == PuzzleFieldShape.Cluster)
+            if (seed.FieldShape == PuzzleFieldShape.Cluster)
                 return SectorShapeKind.Cluster;
 
-            return (SectorShapeKind)(((seed.seed % 3) + 3) % 3);
+            return (SectorShapeKind)(((seed.Seed % 3) + 3) % 3);
         }
 
         // At least two rings so the bulge always has an inner ring to sit on; a single ring would dome
         // the rim instead of the centre. SectorShape clamps this to the planet count.
-        private static int Rings(PuzzleSeed seed) =>
-            Mathf.Max(2, (seed.planetCount + PlanetsPerRing - 1) / PlanetsPerRing);
+        private static int Rings(PuzzleSeedFields seed) =>
+            Mathf.Max(2, (seed.PlanetCount + PlanetsPerRing - 1) / PlanetsPerRing);
     }
 }

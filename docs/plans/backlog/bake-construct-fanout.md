@@ -3,7 +3,8 @@
 **Status:** next · puzzle creator · updated 2026-11-27 — two and three ships from one origin, bent by
 one planet near it; a spike first, with the search as the fallback. Not started.
 
-**Bakes:** off the editor — the 20-seed rates are scans; run them in the bake checkout.
+**Bakes:** off the editor — the convergence and 20-seed rates are a Creator test loop (bake-heavy; run
+in the bake checkout); the fleet `bake.ps1` seam lands in [jobs](bake-construct-jobs.md) U1.
 
 **Related:** [plans board](../README.md) · [construct separate](bake-construct-separate.md) (must land
 first) · [construct jobs](bake-construct-jobs.md) (next)
@@ -28,5 +29,5 @@ Same rule as the core: only what today's jobs use; **no anchored (`fixedMass`) p
 
 - The same loop with a third destination; check all three paths pass the bend on the same side.
 - Tune by the separate plan's scale intersection, accepted only inside the scramble bounds.
-- Exit: 20 seeds against 02_04's contract (two ships) and 20 against 02_09's (three ships, Curve), the
-  02_09 answers meeting `MinScaleDelta` / `MinStartDistance`. Rates here.
+- Exit: 20 seeds against 02_04's contract (two ships; assert the kind is Curve) and 20 against 02_09's
+  (three ships, Curve), the 02_09 answers meeting `MinScaleDelta` / `MinStartDistance`. Rates here.

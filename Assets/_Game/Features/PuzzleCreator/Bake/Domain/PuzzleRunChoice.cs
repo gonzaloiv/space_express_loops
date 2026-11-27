@@ -7,8 +7,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     {
         private const float MinRunFraction = 0.5f;
         private const float MaxRunFactor = 1.5f;
-        internal const float SunBlockBandFactor = 2f;
-        internal const float PlanetBlockBandFactor = 2f;
+        public const float SunBlockBandFactor = 2f;
+        public const float PlanetBlockBandFactor = 2f;
 
         public static bool TryPick(
             PuzzleRunRequest request, out Vector3 origin, out Vector3 destination) =>

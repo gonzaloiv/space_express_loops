@@ -21,7 +21,10 @@ first) · [construct separate](bake-construct-separate.md) (next)
   (`PuzzleAnswerAsset`).
 - `Attempts` means construct retries at the same seed (the core varies the stream per attempt); a run
   that never passes reports the last attempt's `PuzzleBakeStatus` (`NoSolution` if none built a field).
-- Exit: a `Construct` contract bakes through `docs/tools/bake.ps1` with no other change.
+- Exit: a `Construct` contract bakes through `docs/tools/bake.ps1` with no other change. The shipped
+  `01_03`/`01_01` stay search: bake a copy with `Generator = Construct` (a `-Generator` override that
+  writes a scratch path, or a test-local contract with a distinct id) so U2's comparison does not touch
+  the shipped fields.
 
 ### U2 — search vs construct
 

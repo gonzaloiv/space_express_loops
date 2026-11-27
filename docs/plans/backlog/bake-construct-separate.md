@@ -3,7 +3,8 @@
 **Status:** next · puzzle creator · updated 2026-11-27 — two and three ships from different origins,
 sharing one blocker (Clear) or one bend (Curve). Not started.
 
-**Bakes:** off the editor — the 20-seed rates are scans; run them in the bake checkout.
+**Bakes:** off the editor — the 20-seed rates are a Creator test loop (bake-heavy; run in the bake
+checkout); the fleet `bake.ps1` seam lands in [jobs](bake-construct-jobs.md) U1.
 
 **Related:** [plans board](../README.md) · [construct wire](bake-construct-wire.md) (must land first) ·
 [construct fan-out](bake-construct-fanout.md) (next)
@@ -19,6 +20,16 @@ Same rule as the core: only what today's jobs use; **no anchored (`fixedMass`) p
   ranges, take the middle, and accept it only inside the contract's scramble bounds.
 - **Decoys clear every ship.** The core's decoy step rejects spots near any ship's start or answered
   path; a failed verify moves the decoy nearest the failing run.
+- **The field's single-ship fields follow ship 0.** `origin`, `destination` and `captureRadius` are
+  ship 0's; `zoneCentre` is the bounding box of every endpoint, as `PuzzleMultiShipBake.Variant` sets
+  them. `PuzzleStartCheck`, the start spot and the validator read these.
+- **Materialize with the fleet variant step.** `PuzzleMultiShipBake.Variant`/`Confirm` already set
+  `ships`, `zoneCentre`, `frames` and `entropyBudget`; make that seam public (as the core does for
+  `PuzzleFieldBake`'s variant) so the construct builds the same `PuzzleData` the search does.
+- **The curve-start gate is ship 0's.** `PuzzleStartCheck` reads the field's origin/destination, so it
+  gates ship 0 (crash when `NoFail`, and the ≥5 %/4° deviation for Curve); the other paths are held by
+  their blockers and the shared bend, and `PuzzleVerifier.StartFails`/`Solved` checks every ship lands.
+  Confirmed 2026-11-27: ship 0 only, no fleet variant.
 - **Build, then verify** on the main thread with the core's gate, plus `PuzzleJobValidator`'s fleet
   checks (every ship lands, relation, ship count).
 

@@ -10,8 +10,8 @@ and schedule in [release](../design/release.md). Post-mortems in [lessons](../le
   the Interchange prefab wiring, the 02_01 clip and the test runs remain
 - **27 Nov:** [chapter 2 rebakes](in-progress/chapter-2-rebakes.md) — 02_09 as a bend, 02_06
   solvable; starting with the answer backfill and the 02_09 replay
-- **27 Nov, today:** [construct core](in-progress/bake-construct-core.md) — the answer-first
-  generator's skeleton and its pass/fail gate; in progress
+- **27 Nov, today:** [construct core](in-progress/bake-construct-core.md) — U1–U2 in: the plain
+  skeleton and the whole gate; the Clear/Curve recipes are the single plan
 
 ## Next
 

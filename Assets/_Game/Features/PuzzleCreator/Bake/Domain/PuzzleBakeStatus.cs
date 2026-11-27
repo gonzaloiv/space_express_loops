@@ -19,6 +19,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         StartTooStraight,
         SunRuleFailed,
         SunAnswers,
-        WrongRole
+        WrongRole,
+        ContractFailed
     }
 }
