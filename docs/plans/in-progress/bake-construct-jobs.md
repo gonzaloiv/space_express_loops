@@ -1,8 +1,9 @@
 # Bake construct — the first real jobs
 
-**Status:** now · puzzle creator · updated 2026-11-27 — U1 in: a Construct fleet scans and bakes
-sequentially (no worker seam), and the unsupported path is gone. U2 is the scratch proof on `02_06C`
-and `02_09C`; it waits on fan-out for 02_09 and on U1 reaching the `bake` checkout.
+**Status:** now · puzzle creator · updated 2026-11-27 — U1 in and merged into `bake`; a Construct
+fleet scans through `bake.ps1`. U2's proof is negative: fleet Curve builds 0/20 (`02_03C`, `02_06C`),
+so 02_06 stays search-baked and 02_09C waits on fan-out. The remaining tail is the fleet recipes'
+yield (separate U2/U3), not this seam.
 
 **Bakes:** off the editor — U1 and U2.
 
@@ -48,12 +49,20 @@ and `02_09C`; it waits on fan-out for 02_09 and on U1 reaching the `bake` checko
 
 ## State
 
-- **U1 — code in.** `PuzzleSeedScanner.Construct` accepts a fleet and `ScanFleetAsync` runs the
+- **U1 — done.** `PuzzleSeedScanner.Construct` accepts a fleet and `ScanFleetAsync` runs the
   synchronous `Scan` for a Construct job; `ConstructFleet_UsesTheFleetLesson` replaces the unsupported
-  test. `PuzzleSeedScannerTests` 4/4 and the fast Game suite 101/101 are green. The `bake.ps1` exit
-  waits on the code reaching the `bake` checkout (the user commits and merges).
-- **U2 — decided: scratch proof.** 02_06 and 02_09 keep the search bakes; `02_06C` runs once U1
-  reaches the `bake` checkout, and `02_09C` also waits on fan-out.
+  test. `PuzzleSeedScannerTests` 4/4 and the fast Game suite 101/101 are green. Merged into `bake` at
+  `952fe82b`; `bake.ps1 -Job 02_06C -Mode scan -Seeds 20` exits 0 and reports a status per seed.
+  `-Mode bake` is still untested for a fleet: no fixture's pinned seed builds yet.
+- **U2 — negative proof (2026-11-27).** In the `bake` checkout at `952fe82b`:
+  - `02_06C` (Separate Curve, 3 ships): 0/20, all `NoRun`; 37 s for 20 seeds against a 22 s one-seed
+    baseline, so about 0.8 s/seed for a failing build.
+  - `02_03C` (Separate Curve, 2 ships): 0/20, all `NoRun`.
+  - `02_07C` (Separate Clear control): 1/20 (seed 26, window 0.106, scale delta 0.394).
+  No accepted 02_06C asset, so there is no constructed field to read. The fleet recipes are far below
+  their 12/20 bars and Curve builds nothing; the blocker is
+  [separate](bake-construct-separate.md) U2/U3, not this seam. 02_06 and 02_09 keep the search bakes;
+  no contract, chapter or shipped asset changed. `02_09C` also waits on fan-out.
 
 ## Review (2026-11-27)
 
@@ -69,3 +78,24 @@ and `02_09C`; it waits on fan-out for 02_09 and on U1 reaching the `bake` checko
 - **Applied — U1 is a bake too.** The `**Bakes:**` line covers U1's `bake.ps1` exit.
 - **Resolved (2026-11-27) — prove, do not replace.** The user chose the scratch copies; the shipped
   02_06 and 02_09 keep `Generator = Search`, and U2 records the comparison instead of swapping fields.
+
+## Re-review (2026-11-27)
+
+The plan makes sense after the decision: U1 is two guards, not a new batch path, and U2 is a measured
+comparison on scratch copies with real baselines (02_06 window 0.397, 02_09 0.246).
+
+- **It depends on the wire fix.** The scratch copies are `Pending`, and today
+  `PuzzleTestSetBuilder.FolderFor` sends every `Pending` contract to Scratch. Until
+  [wire](bake-construct-wire.md)'s to-do 1 keys the folder on `PuzzleConstructScratch.Has`, a parked or
+  not-yet-flipped shipped job would also bake into Scratch. Do not run U2 before that lands.
+- **Per-seed time must include the gate.** A Construct fleet runs `ClearShortcut` on every passing seed
+  (a full Clear search); count it in the per-seed wall clock, or the comparison flatters the
+  constructor.
+- 02_09C only exists once [fan-out](../backlog/bake-construct-fanout.md) lands; if fan-out moves after
+  the release, U2 proves 02_06C only, and the plan should say so.
+
+### To do (from the re-review)
+
+1. Wait for wire's scratch-folder fix before running U2.
+2. Include the Clear-shortcut gate in the per-seed time.
+3. Record whether U2 covers 02_09C, once fan-out's timing is decided.

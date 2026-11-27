@@ -16,8 +16,8 @@ and schedule in [release](../design/release.md). Post-mortems in [lessons](../le
   fleet unsupported, single measurement); miss status and the timing comparison are open
 - **27 Nov:** [construct separate](in-progress/bake-construct-separate.md) — U1 in (fleet plumbing,
   scratch fixtures, 7 fast tests); the Clear/Curve spikes and rates are next in the bake checkout
-- **27 Nov:** [construct jobs](in-progress/bake-construct-jobs.md) — U1 in (a Construct fleet scans and
-  bakes sequentially); U2 proves the constructor on the scratch copies, 02_09C after fan-out
+- **27 Nov:** [construct jobs](in-progress/bake-construct-jobs.md) — U1 in and merged into `bake`; U2
+  proved negative (fleet Curve 0/20), so 02_06/02_09 stay search-baked and 02_09C waits on fan-out
 
 ## Next
 
@@ -25,8 +25,8 @@ and schedule in [release](../design/release.md). Post-mortems in [lessons](../le
   [single](in-progress/bake-construct-single.md) (in progress) → [wire](in-progress/bake-construct-wire.md) (in progress) →
   [separate](in-progress/bake-construct-separate.md) (in progress) →
   [fan-out](backlog/bake-construct-fanout.md) (next)
-- **Jobs:** [construct jobs](in-progress/bake-construct-jobs.md) U2 proves the constructor on the
-  scratch copies once fan-out lands
+- **Jobs:** [construct jobs](in-progress/bake-construct-jobs.md) U2 proved the constructor on the
+  scratch copies; the fleet recipes' yield is the separate plan's next pass
 - **After the bake overhaul:** [chapter 2 rebakes](in-progress/chapter-2-rebakes.md) — moved to Now;
   the answer backfill runs first
 - **27 Nov–1 Dec, alongside chapter 2:** [broken bodies](backlog/chapter-3-broken-bodies.md) (anchors, then
