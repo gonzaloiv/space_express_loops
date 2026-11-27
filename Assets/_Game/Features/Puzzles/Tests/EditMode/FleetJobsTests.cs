@@ -12,13 +12,13 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         private const string SelectorPath = "Assets/_Game/Resources/Chapters/LevelSelector.asset";
 
         // The ids follow play order (renumbered 2026-11-26): two fixed intros, the movable fleets, the
-        // Clear jobs, and the three-ship capstone last.
+        // Clear job and the three-ship capstone last. 02_08 is parked (2026-11-27), so it is not listed.
         private static readonly string[] JobIds =
-            { "02_01", "02_02", "02_03", "02_04", "02_05", "02_06", "02_07", "02_08", "02_09" };
-        private static readonly int[] ShipCounts = { 2, 2, 2, 2, 2, 3, 2, 2, 3 };
+            { "02_01", "02_02", "02_03", "02_04", "02_05", "02_06", "02_07", "02_09" };
+        private static readonly int[] ShipCounts = { 2, 2, 2, 2, 2, 3, 2, 3 };
 
         [Test]
-        public void ChapterTwo_IsTheNineJobsAfterChapterOne()
+        public void ChapterTwo_IsTheEightJobsAfterChapterOne()
         {
             ChapterData chapter = AssetDatabase.LoadAssetAtPath<ChapterData>(ChapterPath);
             Assert.IsNotNull(chapter, ChapterPath);

@@ -4,116 +4,114 @@ using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping
 {
-    // An endpoint shared by two or more routes: a neutral ring with one marker per route. In play
-    // the markers carry the route colours; on the map they stay neutral, so their count still reads
-    // as a station's notches.
+    // An endpoint shared by two or more routes: one neutral ring per route, stacked below the first. In
+    // play the rings carry the route colours; on the map they stay neutral, so their count still reads
+    // as a station's notches. Route 0 is the endpoint's own ring, which stays in NodeBody's marks.
     public class InterchangePlanetBehaviour : FieldPlanetBehaviour
     {
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");
 
-        [SerializeField] private MeshRenderer markerPrototype;
+        [SerializeField] private MeshRenderer routeRing;
+        [SerializeField] private MeshRenderer ringPrototype;
         [SerializeField] private ColorValue neutralColor;
-        [Tooltip("Marker centre distance from the ring's centre, in local units of the body radius.")]
-        [SerializeField] private float markerRadius = 0.4675f;
-        [Tooltip("Marker diameter in local units of the body radius.")]
-        [SerializeField] private float markerScale = 0.12f;
+        [Tooltip("Vertical gap between stacked rings, in local units of the body radius.")]
+        [SerializeField] private float ringGap = 0.06f;
 
-        // Markers sit just above the ring's plane so the two do not z-fight.
-        private const float MarkerLift = 0.015f;
-
-        private readonly List<MeshRenderer> markers = new();
-        private readonly Color[] markerColors = new Color[RouteEndpoints.MaxPips];
+        private readonly List<MeshRenderer> extraRings = new();
+        private readonly Color[] ringColors = new Color[RouteEndpoints.MaxRings];
         private MaterialPropertyBlock tintBlock;
         private Color tint;
         private float tintAmount;
-        private int markerCount;
+        private int ringCount;
         private bool coloured;
+        private bool marksShown = true;
 
         public void SetPips(int count, Color[] colors)
         {
             coloured = true;
-            markerCount = Mathf.Min(count, RouteEndpoints.MaxPips);
-            for (int i = 0; i < markerCount; i++)
-                markerColors[i] = colors[i];
-            RefreshMarkers();
+            ringCount = Mathf.Min(count, RouteEndpoints.MaxRings);
+            for (int i = 0; i < ringCount; i++)
+                ringColors[i] = colors[i];
+            SetRouteColor(neutralColor.value);
+            RefreshRings();
         }
 
         public void SetNotches(int count)
         {
             coloured = false;
-            markerCount = Mathf.Min(count, RouteEndpoints.MaxPips);
-            RefreshMarkers();
+            ringCount = Mathf.Min(count, RouteEndpoints.MaxRings);
+            SetRouteColor(neutralColor.value);
+            RefreshRings();
         }
 
-        protected override void OnVisibilityChanged(bool visible)
+        protected override void OnVisibilityChanged(bool visible) => RefreshRings();
+
+        protected override void OnMarksShownChanged(bool shown)
         {
-            for (int i = 0; i < markers.Count; i++)
-                markers[i].gameObject.SetActive(visible && i < markerCount);
+            marksShown = shown;
+            RefreshRings();
         }
 
         protected override void OnTintApplied(float amount, Color tint)
         {
             tintAmount = Mathf.Clamp01(amount);
             this.tint = tint;
-            for (int i = 0; i < markers.Count; i++)
+            RefreshRings();
+        }
+
+        private void RefreshRings()
+        {
+            EnsureRings(ringCount);
+            for (int i = 0; i < extraRings.Count; i++)
             {
-                if (i < markerCount)
-                    TintMarker(markers[i], MarkerColor(i));
+                bool shown = IsVisible && marksShown && i + 1 < ringCount;
+                extraRings[i].gameObject.SetActive(shown);
+                if (shown)
+                    PlaceRing(extraRings[i], i + 1);
+            }
+
+            for (int i = 0; i < ringCount; i++)
+                PaintRing(RingAt(i), RingColor(i));
+        }
+
+        private void EnsureRings(int count)
+        {
+            int extras = Mathf.Max(0, count - 1);
+            while (extraRings.Count < extras)
+            {
+                MeshRenderer ring = Instantiate(ringPrototype, ringPrototype.transform.parent);
+                ring.gameObject.name = "Ring " + (extraRings.Count + 2);
+                ring.transform.localRotation = routeRing.transform.localRotation;
+                ring.transform.localScale = routeRing.transform.localScale;
+                ring.gameObject.SetActive(true);
+                extraRings.Add(ring);
             }
         }
 
-        private void RefreshMarkers()
+        private void PlaceRing(MeshRenderer ring, int index)
         {
-            SetRouteColor(neutralColor.value);
-            EnsureMarkers(markerCount);
-            for (int i = 0; i < markers.Count; i++)
-            {
-                bool shown = IsVisible && i < markerCount;
-                markers[i].gameObject.SetActive(shown);
-                if (!shown)
-                    continue;
-
-                PlaceMarker(markers[i], i);
-                TintMarker(markers[i], MarkerColor(i));
-            }
+            ring.transform.localPosition =
+                routeRing.transform.localPosition + Vector3.down * (ringGap * index);
         }
 
-        private void EnsureMarkers(int count)
-        {
-            while (markers.Count < count)
-            {
-                MeshRenderer marker = Instantiate(markerPrototype, markerPrototype.transform.parent);
-                marker.gameObject.name = "Pip " + (markers.Count + 1);
-                marker.gameObject.SetActive(true);
-                markers.Add(marker);
-            }
-        }
+        private MeshRenderer RingAt(int index) => index == 0 ? routeRing : extraRings[index - 1];
 
-        private void PlaceMarker(MeshRenderer marker, int index)
-        {
-            float angle = markerCount > 0 ? 360f * index / markerCount * Mathf.Deg2Rad : 0f;
-            marker.transform.localPosition = new Vector3(
-                Mathf.Sin(angle) * markerRadius, MarkerLift, Mathf.Cos(angle) * markerRadius);
-            marker.transform.localScale = Vector3.one * markerScale;
-            marker.transform.localRotation = Quaternion.identity;
-        }
-
-        private Color MarkerColor(int index)
+        private Color RingColor(int index)
         {
             if (tintAmount > 0.001f)
                 return tint;
 
-            return coloured ? markerColors[index] : neutralColor.value;
+            return coloured ? ringColors[index] : neutralColor.value;
         }
 
-        private void TintMarker(MeshRenderer marker, Color color)
+        private void PaintRing(MeshRenderer ring, Color color)
         {
             tintBlock ??= new MaterialPropertyBlock();
-            marker.GetPropertyBlock(tintBlock);
+            ring.GetPropertyBlock(tintBlock);
             tintBlock.SetColor(BaseColorId, color);
             tintBlock.SetColor(ColorId, color);
-            marker.SetPropertyBlock(tintBlock);
+            ring.SetPropertyBlock(tintBlock);
         }
     }
 }

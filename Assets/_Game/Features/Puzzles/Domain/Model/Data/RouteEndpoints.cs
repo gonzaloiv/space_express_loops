@@ -15,7 +15,7 @@ namespace DigitalLove.Game.SpaceShaping
     // an endpoint off its authored point), so views spawn at the session's position.
     public sealed class RouteEndpoints
     {
-        public const int MaxPips = 4;
+        public const int MaxRings = 4;
 
         private RoutePlan plan = RoutePlan.Empty;
         private Vector3[] points = Array.Empty<Vector3>();
@@ -47,7 +47,7 @@ namespace DigitalLove.Game.SpaceShaping
 
         public Color ColorAt(int entry, int pip) => plan.ColorAt(routes[entry][pip]);
 
-        public int PipCount(int entry) => Mathf.Min(routeCounts[entry], MaxPips);
+        public int RingCount(int entry) => Mathf.Min(routeCounts[entry], MaxRings);
 
         public bool IsEndpointSource(int source)
         {

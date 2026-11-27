@@ -32,13 +32,15 @@ This doc is **chapters 1–2**; chapter 3 is in [chapters](chapters.md).
 | 2-3 | two ships | Any | yes · 1 zone · 2 ships, separate | Ring | 10 + sun · multi | low (budget 0.30) | one field, two runs; each ship has its own fix |
 | 2-4 | fan-out | Any | yes · 1 zone · 2 ships, one origin | Spiral | 12 + sun · multi | medium (budget 1.20) | an edit near the shared origin bends both paths |
 | 2-5 | converge | Any | yes · 1 zone · 2 ships, one destination | Spiral | 12 + sun · multi | medium (budget 1.50) | the planet by the shared destination fixes both approaches |
-| 2-6 | three ships | Any | yes · 1 zone · 3 ships, separate | Cluster | 14 + sun · multi | medium (budget 1.50) | one Wrap carries three ships; the field carries more than one ship |
+| 2-6 | three ships | Curve | yes · 1 zone · 3 ships, separate | Cluster | 14 + sun · multi | medium (budget 1.50) | one Wrap carries three ships; the field carries more than one ship |
 | 2-7 | Clear with a fleet | Clear | yes · 1 zone · 2 ships, separate | Ring | 10 + sun · multi | medium | one blocker shared by both runs; shrinking it once frees the fleet |
 | 2-8 | Clear among decoys | Clear | yes · 1 zone · 2 ships, separate | Cluster | 12 + sun · multi | medium | the shared blocker hides among planets that only look involved |
-| 2-9 | fleet capstone | Any | yes · 1 zone · 3 ships, one origin | Cluster | 12 + sun · multi · deep | high (budget 1.20) | placement, shared paths and the field across every ship |
+| 2-9 | fleet capstone | Curve | yes · 1 zone · 3 ships, one origin | Cluster | 12 + sun · multi · deep | high (budget 1.20) | placement, shared paths and the field across every ship |
 | — (dropped) | two shared blockers | Clear | yes · 1 zone · 2 ships, separate | Spiral | 12 + sun · multi | medium | two shared blockers, two edits on one budget |
 
-Fleet jobs request **Any**, except the Clear fleets (2-7, 2-8), which ask for **Clear**; the rest are checked by playing them.
+Fleet jobs request **Curve** (2-6, 2-9), except the Clear fleets (2-7, 2-8), which ask for **Clear**; the
+rest are checked by playing them. 2-8 is parked (2026-11-27) because it repeats 2-7; its asset and lines
+stay for a freelance job.
 
 **Chapter 1 is seven jobs (2026-11-05); the run is twenty-two (2026-11-26): 1 scale, 2 centre,
 3 clear, 4 move, 5 multi-zone, 6 the field carries you, 7 capstone `Curve`, then chapter 2's ten
@@ -131,7 +133,7 @@ includes an off-centre zone, so the player must move the cube.
 scales several zones with the star included, so the player must move out to the other zones. It combines
 every verb except both roles; both roles are deferred to a later chapter.
 
-**The slice.** Jobs 1–7 are chapter 1's seven-job run; chapter 2 adds nine fleet jobs; ~1–3 minutes
+**The slice.** Jobs 1–7 are chapter 1's seven-job run; chapter 2 adds eight fleet jobs; ~1–3 minutes
 each.
 
 **Multi-ship.** Chapter 1's seven-job spine is single-ship; the rule is in
@@ -263,7 +265,7 @@ stay absurd; the greed is in Jim's opener and receipts, and the manual's fine pr
 
 | # | Client | Cargo | Manual entry |
 |---|---|---|---|
-| 2-1 | Twin Moons Catering | two dinners, one kitchen | "Two ships, one origin; bend near the start. Out here the star sits at the edge." |
+| 2-1 | Twin Moons Catering | two dinners, one kitchen | "Two ships, one origin; bend near the start. Late is still late, times two." |
 | 2-2 | Two Rival Bakeries | two cakes, one feud | "One cube between two runs. Both ships share the bend; the feud is not our problem." |
 | 2-3 | Halfmoon & Halfmoon | two identical parcels | "Two ships, one budget. Extra ships do not raise your allowance. This is a feature." |
 | 2-4 | Slightly Used Stars Ltd. | two secondhand fusion cores (slightly dimmed) | "One origin, two promises: bend near the start. Shared failures are billed twice." |

@@ -49,7 +49,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
         }
 
         [Test]
-        public void Build_FanOutSharesOneInterchangeWithTwoPips()
+        public void Build_FanOutSharesOneInterchangeWithTwoRings()
         {
             PuzzleData puzzle = TwoShips(
                 new Vector3(-4f, 0f, 0f), new Vector3(4f, 2f, 0f));
@@ -59,20 +59,20 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             int shared = Entry(endpoints, new Vector3(-4f, 0f, 0f));
             Assert.AreEqual(RouteEndpointRole.Interchange, endpoints.RoleAt(shared));
             Assert.AreEqual(2, endpoints.RouteCount(shared));
-            Assert.AreEqual(2, endpoints.PipCount(shared));
+            Assert.AreEqual(2, endpoints.RingCount(shared));
             Assert.AreEqual(Color.red, endpoints.ColorAt(shared, 0));
             Assert.AreEqual(Color.green, endpoints.ColorAt(shared, 1));
         }
 
         [Test]
-        public void Build_ThreeRouteInterchangeHasThreePips()
+        public void Build_ThreeRouteInterchangeHasThreeRings()
         {
             PuzzleData puzzle = ThreeShipsSharingOrigin();
             RouteEndpoints endpoints = endpointsFor(puzzle);
 
             int shared = Entry(endpoints, new Vector3(-4f, 0f, 0f));
             Assert.AreEqual(RouteEndpointRole.Interchange, endpoints.RoleAt(shared));
-            Assert.AreEqual(3, endpoints.PipCount(shared));
+            Assert.AreEqual(3, endpoints.RingCount(shared));
             Assert.AreEqual(Color.blue, endpoints.ColorAt(shared, 2));
         }
 
@@ -85,7 +85,7 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
 
             int shared = Entry(endpoints, new Vector3(4f, 0f, 0f));
             Assert.AreEqual(RouteEndpointRole.Interchange, endpoints.RoleAt(shared));
-            Assert.AreEqual(2, endpoints.PipCount(shared));
+            Assert.AreEqual(2, endpoints.RingCount(shared));
         }
 
         [Test]

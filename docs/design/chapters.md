@@ -34,8 +34,9 @@ with more than one route, so it does not read as a new idea.
 
 Several ships share one field and one entropy budget; the job solves only when **every ship arrives**.
 No new verb. The ramp restarts: low scramble, Ring shape. Fields and budgets per job are in
-[jobs](jobs.md) (the source); this table keeps the lessons. **Play order** (2026-11-26): 2-1 to 2-9 in order; the ids
-follow it (`02_01`…`02_09`, renumbered 2026-11-26), and the capstone 2-9 closes the chapter.
+[jobs](jobs.md) (the source); this table keeps the lessons. **Play order** (2026-11-26): 2-1 to 2-9 in order,
+with 2-8 parked (2026-11-27); the ids follow it (`02_01`…`02_09`, renumbered 2026-11-26), and the
+capstone 2-9 closes the chapter.
 
 | # | Lesson | Brief | Field | Why |
 |---|---|---|---|---|
@@ -45,19 +46,20 @@ follow it (`02_01`…`02_09`, renumbered 2026-11-26), and the capstone 2-9 close
 | 2-4 | **Fan-out** | movable · 2 ships · one origin | 12 + sun · Spiral | An edit near the shared origin bends both paths. |
 | 2-5 | **Converge** | movable · 2 ships · one destination | 12 + sun · Spiral | The planet by the shared destination fixes both approaches. |
 | 2-6 | **Three ships** | movable · 3 ships · separate | 14 + sun · Cluster | One Wrap carries three ships; the field carries more than one ship. |
-| 2-7, 2-8 | **Clear with a fleet** | movable · 2 ships | + sun · Clear answer | One obstacle in more than one ship's path: one blocker → among decoys. Two shared blockers (2-8) did not bake and is dropped. |
+| 2-7, 2-8 | **Clear with a fleet** | movable · 2 ships | + sun · Clear answer | One obstacle in more than one ship's path: one blocker → among decoys. 2-8 is parked (2026-11-27) because it repeats 2-7; the old two-blocker variant never baked. |
 | 2-9 | **Fleet capstone** | movable · 3 ships · fan-out | 12 + sun · Cluster · high scramble | Placement, shared paths and the field across every ship. |
 
-**Every system keeps a star** (decided 2026-11-26): chapter 1 and 2-6 keep the sun at the system's
-centre; the rest of chapter 2 puts it at the edge, level with the planets, never the answer
-(`SunPlacement`, `NoSunAnswer`; an off-corridor sun floated above the field before 2026-11-26). The map
+**Every system keeps a star** (decided 2026-11-26): chapter 1 keeps the sun at the system's centre;
+chapter 2 puts it at the edge, level with the planets, never the answer (`SunPlacement`, `NoSunAnswer`;
+an off-corridor sun floated above the field before 2026-11-26). 02_06 moved from a centred sun to the
+edge on 2026-11-27 because no valid three-ship puzzles came out centred. The map
 anchors each job on its system's centre, not its star, and a starless system would read as a gap; dark
 systems on purpose are an idea ([later chapters](../ideas/later-chapters.md) §Other options).
 
 The ids follow play order (renumbered 2026-11-26; the original four are now 2-3 to 2-6)
-([chapter 2 intro](../plans/in-progress/chapter-2-intro.md) and the plans after it). Multi-ship bakes need ≥ 9 planets, use
-one cube (fixed or movable), and cannot request a role yet, so every fleet job is checked by playing
-it. **Slightly Used Stars Ltd.** returns at 2-4.
+([lessons](../lessons.md), 2026-11-27). Multi-ship bakes need ≥ 9 planets, use
+one cube (fixed or movable), and can request Curve or Clear, so every fleet job is still checked by
+playing it. **Slightly Used Stars Ltd.** returns at 2-4.
 
 **The original four (now 2-3 to 2-6) moved into v1** (decided 2026-11-11, after the two-ship headset test: the fleet bakes play
 better than the single-ship jobs). They ship as episode 2 of the story ([lore](world/lore.md)
@@ -127,7 +129,7 @@ absurd clients and cargo; no economy ([vision](vision.md) §5).
 
 ## Tuning
 
-- **Price and pool size** follow measured minutes per job on the headset. Target: ~3 min a job, so the 22 story jobs run
+- **Price and pool size** follow measured minutes per job on the headset. Target: ~3 min a job, so the 21 story jobs run
   about an hour and the 10 launch contracts close to 15 minutes.
 - **The demo** is the Meta store's own demo option; no separate build.
 

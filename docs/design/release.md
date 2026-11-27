@@ -13,8 +13,8 @@ A **€4 Meta store release on 2026-12-06**, about **40–45 minutes** of story.
 carry most of that time. A set of freelance contracts comes after it as a bonus: **10 at launch, 10 in the first update**
 (decided 2026-11-26). **Decided 2026-11-18:** ~21 story jobs plus a freelance bonus is the content for
 €4. The daily contract is left out. Today the 11
-jobs play in 15–20 minutes. **Updated 2026-11-26:** 22 story jobs (chapter 2 at nine after 02_08 did not bake, chapter 3 on
-anchored bodies and repulsors).
+jobs play in 15–20 minutes. **Updated 2026-11-27:** 21 story jobs (chapter 2 at eight after 02_08 was
+parked, chapter 3 on anchored bodies and repulsors).
 
 ## Where we are
 
@@ -25,7 +25,7 @@ entitlement check yet**.
 
 ## Content: the story first, then the freelance contracts
 
-**The story is the game: about +11 jobs, for 22 in total.** These are not taught yet:
+**The story is the game: about +11 jobs, for 21 in total.** These are not taught yet:
 
 | New job | What it asks | Cost |
 |---|---|---|

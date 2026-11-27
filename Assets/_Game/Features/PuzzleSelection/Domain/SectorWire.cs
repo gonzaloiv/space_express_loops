@@ -6,8 +6,8 @@ namespace DigitalLove.Game.PuzzleSelection
     // firm works. Past the last line the wire holds on it.
     public static class SectorWire
     {
-        // The boot line plus 7 chapter 1, 10 chapter 2 and 6 chapter 3 jobs.
-        public const int LineCount = 23;
+        // The boot line plus 7 chapter 1, 8 chapter 2 and 6 chapter 3 jobs.
+        public const int LineCount = 22;
         public const string CoverageKey = "map_coverage";
 
         public static string Key(int solved) =>

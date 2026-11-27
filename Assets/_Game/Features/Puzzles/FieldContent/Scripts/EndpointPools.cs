@@ -11,7 +11,7 @@ namespace DigitalLove.Game.SpaceShaping
         private readonly ViewPool<FieldPlanetBehaviour> origins;
         private readonly ViewPool<FieldPlanetBehaviour> destinations;
         private readonly ViewPool<InterchangePlanetBehaviour> interchanges;
-        private readonly Color[] pipColors = new Color[RouteEndpoints.MaxPips];
+        private readonly Color[] ringColors = new Color[RouteEndpoints.MaxRings];
 
         private bool routeColoured = true;
         private bool labelsVisible = true;
@@ -131,16 +131,16 @@ namespace DigitalLove.Game.SpaceShaping
 
         private void PaintInterchange(InterchangePlanetBehaviour view, int entry)
         {
-            int pips = endpoints.PipCount(entry);
+            int rings = endpoints.RingCount(entry);
             if (!routeColoured)
             {
-                view.SetNotches(pips);
+                view.SetNotches(rings);
                 return;
             }
 
-            for (int i = 0; i < pips; i++)
-                pipColors[i] = endpoints.ColorAt(entry, i);
-            view.SetPips(pips, pipColors);
+            for (int i = 0; i < rings; i++)
+                ringColors[i] = endpoints.ColorAt(entry, i);
+            view.SetPips(rings, ringColors);
         }
 
         private void TrackPrimary(int entry, FieldPlanetBehaviour view)

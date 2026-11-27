@@ -94,7 +94,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 FieldShape = PuzzleFieldShape.Cluster,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
-                Mechanism = PuzzleMechanism.Any, Zones = 1, MinRoutes = 1, Ships = 3,
+                Mechanism = PuzzleMechanism.Curve, Zones = 1, MinRoutes = 1, Ships = 3,
                 Relation = PuzzleShipRelation.FanOut,
                 Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
                 MinScaleDelta = 0.35f, MinStartDistance = 0.15f,
@@ -123,6 +123,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Translatable = false, NoFail = false, NoGrade = false, NoIntro = false,
                 MaxScaleDelta = 0.5f,
             },
+            // U5: 02_06's first contract, from the jobs row (3 ships, separate, 14 + sun, edge sun).
+            // Parked until the `bake2` scan pins a seed, so the shipped check stays green meanwhile.
+            new PuzzleJobContract
+            {
+                Id = "02_06", Pending = true, Seed = 0, Attempts = 1, PlanetCount = 14,
+                FieldShape = PuzzleFieldShape.Cluster,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                SunRule = PuzzleSunRule.NoSunAnswer,
+                Mechanism = PuzzleMechanism.Curve, Zones = 1, MinRoutes = 1, Ships = 3,
+                Relation = PuzzleShipRelation.Separate,
+                Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
+            },
             // Fleet Clear: movable two-ship jobs whose lesson is one blocker shared by both runs, played
             // after the movable fleets and before the capstone. The two-blocker job did not bake.
             new PuzzleJobContract
@@ -135,9 +147,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Relation = PuzzleShipRelation.Separate,
                 Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
             },
+            // Parked 2026-11-27: repeats 02_07 (Clear, one blocker shared by both runs). Keep the asset
+            // and its lines for a freelance job; the chapter and the shipped check skip it.
             new PuzzleJobContract
             {
-                Id = "02_08", Pending = false, Seed = 65, Attempts = 1, PlanetCount = 12,
+                Id = "02_08", Pending = true, Seed = 65, Attempts = 1, PlanetCount = 12,
                 FieldShape = PuzzleFieldShape.Cluster,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 1,
@@ -149,6 +163,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         public static readonly IReadOnlyList<PuzzleJobContract> Enabled = EnabledJobs();
 
+        // Levels placed by hand rather than baked from a contract: the chapter list may include them,
+        // and the chapter check does not require a contract or an answer for them.
+        public static readonly IReadOnlyList<string> AuthoredByHand = System.Array.Empty<string>();
+
         private static IReadOnlyList<PuzzleJobContract> EnabledJobs()
         {
             List<PuzzleJobContract> enabled = new List<PuzzleJobContract>();
@@ -159,6 +177,28 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             }
 
             return enabled;
+        }
+
+        public static bool Has(string id)
+        {
+            for (int i = 0; i < All.Count; i++)
+            {
+                if (All[i].Id == id)
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static bool IsAuthoredByHand(string id)
+        {
+            for (int i = 0; i < AuthoredByHand.Count; i++)
+            {
+                if (AuthoredByHand[i] == id)
+                    return true;
+            }
+
+            return false;
         }
 
         public static PuzzleJobContract ById(string id)

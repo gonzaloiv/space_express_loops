@@ -144,6 +144,11 @@ namespace DigitalLove.Game.SpaceShaping
         {
         }
 
+        // A subclass with extra markers (an interchange's route rings) follows SetMarksShown.
+        protected virtual void OnMarksShownChanged(bool shown)
+        {
+        }
+
         protected virtual void OnTintApplied(float amount, Color tint)
         {
         }
@@ -195,7 +200,11 @@ namespace DigitalLove.Game.SpaceShaping
 
         public void ClearRouteColor() => nodeBody.ClearRouteColor();
 
-        public void SetMarksShown(bool shown) => nodeBody.SetMarksShown(shown);
+        public void SetMarksShown(bool shown)
+        {
+            nodeBody.SetMarksShown(shown);
+            OnMarksShownChanged(shown);
+        }
 
         private void SetVisible(bool visible)
         {

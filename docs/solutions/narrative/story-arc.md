@@ -26,7 +26,7 @@ tags:
 By 2026-11-25 the story was three separate ideas: the Wrap works, the firm gets greedy, then damage —
 with nothing pulling the player from one chapter into the next. The arc had to settle what breaks,
 give each episode a turn, and revise episodes 1–2's lines without rewriting eleven jobs. It ships as
-23 story jobs across chapters 1–3 ([lore](../../design/world/lore.md) §Episodes).
+22 story jobs across chapters 1–3 ([lore](../../design/world/lore.md) §Episodes).
 
 ## Guidance
 
@@ -51,7 +51,8 @@ and their clients/cargo live in [chapters](../../design/chapters.md) §Chapter 3
 
 **The wire is keyed to solved counts.** `SectorWire.Key(solved)` clamps to `LineCount - 1`; inserting
 a job shifts every later line. Keep `SectorWire.LineCount` in step and re-check the tail when the
-chapter job counts lock. The wire's 23 keys assume 22 story jobs plus the boot line (02_08 dropped, 2026-11-26).
+chapter job counts lock. The wire's 22 keys assume 21 story jobs plus the boot line (02_08 was parked
+2026-11-27 after the pre-renumber two-blocker job had already been dropped).
 
 **Only spoken keys need clips.** Client, cargo, manual, title, bulletin and wire strings are on
 screen, not TTS. Changing a spoken line in place keeps its key and leaves the old mp3; list every
@@ -77,8 +78,8 @@ are local and gitignored (`Assets/_Game/Editor/Localization/Google Sheets Servic
   before release, clips and keys included.
 
 **Chapter 2 lines (2026-11-26).** The wire is owned by chapter seams: chapter 1 keys 01–07, chapter 2
-08–16 (nine jobs, the warranty line closes episode 2), chapter 3 17–22; `SectorWireTests`
-(`Key_ChapterSeamsFollowThePlayOrder`) pins the seams and `LineCount = 23`. New spoken keys go straight
+08–15 (eight jobs, the warranty line closes episode 2), chapter 3 16–21; `SectorWireTests`
+(`Key_ChapterSeamsFollowThePlayOrder`) pins the seams and `LineCount = 22`. New spoken keys go straight
 into the `Downloader - OS` scene's `TableDownloader.keys`, which is the batch's list. A chapter's first
 card sets what later manual entries may not repeat; re-read them when the play order changes.
 
@@ -89,7 +90,7 @@ card sets what later manual entries may not repeat; re-read them when the play o
   [release](../../design/release.md) §Story arc.
 - Manual register and job 7 entry: [jobs](../../design/jobs.md) §The manual's arc.
 - Terms: [glossary](../../design/glossary.md) (anchor, repulsor, the damage).
-- Wire: `Assets/_Game/Features/PuzzleSelection/Domain/SectorWire.cs` (23 keys).
+- Wire: `Assets/_Game/Features/PuzzleSelection/Domain/SectorWire.cs` (22 keys).
 - Lines: `Assets/_Game/Resources/Localization/Levels/Levels_en.asset`;
   wire: `Assets/_Game/Resources/Localization/Global/Global_en.asset`.
 - Clips: `Assets/StreamingAssets/level_01_01_complete_03.mp3`,

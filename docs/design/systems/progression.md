@@ -10,7 +10,7 @@
 ## Goal
 
 How the game advances across jobs — and what gates it. The **full run** is the
-store release's **22 story jobs** (chapter 1's seven, chapter 2's nine, chapter 3's six;
+store release's **21 story jobs** (chapter 1's seven, chapter 2's eight, chapter 3's six;
 [release](../release.md)) plus freelance contracts (10 at launch, 10 in the first update), so progression is **in scope**. The competition
 slice was chapter 1's seven jobs.
 
@@ -119,7 +119,7 @@ None — progression never blocks a run on a score (see Open).
 
 ## Tuning — the shape
 
-**The full run is 22 story jobs** (7 + 9 + 6), a few minutes each. The curve rises by **planet
+**The full run is 21 story jobs** (7 + 8 + 6), a few minutes each. The curve rises by **planet
 count**, **field depth**, and **solution cost**.
 
 **Entropy is derived, not hand-set** — the budget and star rule is in [core loop](../core-loop.md) §3,
@@ -159,5 +159,5 @@ mid-flight (the seed is authoring-only).
   order is the working shape, not final.
 - **Entropy legibility.** The budget is derived from the bake's best solution; the player never sees
   that reference. Can they track spent vs remaining well enough from the readout?
-- **Run length.** The target is ~3 minutes a job (22 story jobs); measure minutes per job on the
+- **Run length.** The target is ~3 minutes a job (21 story jobs); measure minutes per job on the
   headset in the timing pass before upload.
