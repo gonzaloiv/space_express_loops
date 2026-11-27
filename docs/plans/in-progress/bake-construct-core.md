@@ -89,3 +89,30 @@ searched one. **No anchored (`fixedMass`) planets**: those are chapter 3's
   single plan's Clear target must construct a field that admits 2 current routes; whether the shipped
   `01_03` is rebaked is a content call.
 - Next: [single](../backlog/bake-construct-single.md) — Clear `01_03`, Curve `01_01`.
+
+## Review (2026-11-27)
+
+U1 and U2 match the plan: plain steps, the bake's own gate through the now-public
+`PuzzleFieldBake.Check`, and the `PuzzleFieldBuilder` refactor is behaviour-preserving (same sun
+radius and settings). Findings:
+
+- **Decoys move out of the field's shape.** `PuzzleConstructDecoys.Candidate` draws a relocated decoy
+  uniformly inside a disc (`InsideCircleXZ(field.Radius)`), so a Ring or Spiral field gets planets in
+  its middle, unlike a searched field. That breaks the goal (same jobs, quicker bakes). Relocate along
+  the generated shape instead (swap with another generated position, or re-sample from
+  `PuzzleFieldGenerator` and keep the first spot that fits), and add a test that a Ring field's decoys
+  stay on its rings.
+- **Retry seeds collide with the next seed.** `PuzzleConstruct.Place` and `PuzzleConstructLesson` use
+  `seed + attempt`, so attempt 1 of seed 5 builds seed 6's field, and a scan over a seed range counts
+  the same field twice. Use one salted mix everywhere (`seed + attempt * RetrySalt`, as
+  `PuzzleConstructDecoys.KeepClear` already does).
+- **The sun is copied, not shared.** `PuzzleConstructBake.Sources` duplicates
+  `PuzzleSunSources.WithSun` because that type is `internal`. Make `PuzzleSunSources` public on its
+  owner and call it (AGENTS: fix the boundary, do not copy around it).
+- Minor: `ContractFailed` drops `PuzzleJobValidator.Validate`'s problems (`out _`); return them so a
+  scan can say which contract line failed. `Bake`'s retries only move a decoy; the `(seed, attempt)`
+  re-seed is the wire plan's `Attempts`, so say so in U2's state line.
+
+Verified fine: `Check` instantiates its own variant, so destroying the working copy is safe; the chord,
+lesson-move and sun steps keep endpoints and lesson planets protected; the found `01_03`
+route-count drift is recorded for the single plan.
