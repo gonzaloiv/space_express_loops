@@ -21,6 +21,25 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return TrySelect(context, brief, out solution);
         }
 
+        // A fixed job's answer is its start frame: search the scales at the frame, not the whole field.
+        public static bool TryFindAtFrame(
+            PuzzleData puzzle, PuzzleSimSettings settings, PuzzleBrief brief,
+            out PuzzleSolution solution)
+        {
+            solution = default;
+            if (puzzle.frames == null || puzzle.frames.Length == 0)
+                return false;
+
+            PuzzleSolutionContext context =
+                PuzzleSolutionContext.Create(puzzle, settings, brief.Mechanism);
+            float[] sizes = { puzzle.frames[0].size };
+            float[] scales = PuzzleZoneCandidates.Scales(
+                context.Settings, PuzzleZoneCandidates.DefaultSamples);
+            solution = BestEntropyAtCentre(
+                context, puzzle.frames[0].centre, sizes, scales);
+            return solution.Zones != null;
+        }
+
         private static bool TrySelect(
             PuzzleSolutionContext context, PuzzleBrief brief, out PuzzleSolution solution)
         {

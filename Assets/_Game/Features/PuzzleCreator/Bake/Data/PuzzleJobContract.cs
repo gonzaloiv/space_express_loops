@@ -29,8 +29,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         // Scramble bounds, each 0 = off. Low scramble: the solution's |scale - 1| stays at most
         // MaxScaleDelta. High scramble: it is at least MinScaleDelta, and on a movable job the cube
-        // starts at least MinStartDistance from the solution zone. Checked at bake time against the
-        // baked answer, so ShippedJobs_MeetTheContract skips them.
+        // starts at least MinStartDistance from the solution zone. Checked against the stored answer,
+        // both at bake time and in ShippedJobs_MeetTheContract.
         public float MaxScaleDelta;
         public float MinScaleDelta;
         public float MinStartDistance;

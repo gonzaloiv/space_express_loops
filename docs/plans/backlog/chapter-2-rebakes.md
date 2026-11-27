@@ -20,7 +20,26 @@ and 02_09 (`Mechanism = Any`) plays out like the Clear jobs before it.
 [Bake answer](../in-progress/bake-answer.md) and [bake parallel](../in-progress/bake-parallel.md): one
 checkout, every core, bakes that write only their job and its answer. If
 [bake construct fleet](bake-construct-fleet.md) has landed, bake both with `Generator = Construct`;
-otherwise use the search.
+otherwise use the search (the constructor is not built as of 2026-11-27).
+
+## Before U1
+
+The bake answer and bake parallel code is ready (reviewed 2026-11-27, fixed-frame answers included) but
+uncommitted, and the bake checkout only sees committed code. In order:
+
+1. **Commit on `our-space`, one commit per plan:** bake answer + bake parallel (the `PuzzleCreator`
+   code and tests, `bake.ps1`, AGENTS, both plans), and the playtest leftovers (the Interchange prefab,
+   the ring code, the wire tables in `Global_en` / `Global Shared Data`, the `Downloader - OS` scene
+   and the playtest plan). Stage explicit paths; leave unrelated changes alone.
+2. **Merge `our-space` into `bake`** in `../our_space_bake`. Run the fast suite and the Creator suite
+   there (not `PuzzleSeedBatchRealTests` unless the batch changed; it takes ~90 s).
+3. **Backfill the answers in `bake`:** `docs/tools/bake.ps1 -Mode answers`. Read
+   `Logs/bake-answers.txt`: every enabled job should be written. A job listed as failed is a finding,
+   not a reason to stop: 02_09 failing here means it has no `Curve` answer, so U1 is red and U2 runs.
+   Commit the answer assets (`Assets/_Game/Features/PuzzleCreator/Answers/`) on `bake` and merge them
+   back into `our-space` through git.
+4. Run `ShippedJobs_MeetTheContract` in `bake`. Every job but a failed 02_09 should pass; anything else
+   is a bake answer bug: stop and report.
 
 ## State on `our-space` (2026-11-27)
 

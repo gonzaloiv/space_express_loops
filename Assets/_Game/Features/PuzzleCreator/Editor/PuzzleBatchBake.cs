@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using DigitalLove.Game.SpaceShaping;
 using UnityEditor;
@@ -12,6 +11,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
     {
         private const string ArgumentJob = "-job";
         private const string ArgumentSeeds = "-seeds";
+        private const string ArgumentWorkers = "-workers";
 
         public static void Scan() => Run(false);
 
@@ -23,11 +23,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             {
                 string id = Required(ArgumentJob);
                 int seeds = bake ? 1 : ParseSeeds();
+                int workers = bake ? 1 : ParseWorkers();
                 PuzzleJobContract job = PuzzleJobContracts.ById(id);
                 if (bake)
                     BakeJob(job);
                 else
-                    ScanJob(job, seeds);
+                    ScanJob(job, seeds, workers);
 
                 AssetDatabase.SaveAssets();
                 EditorApplication.Exit(0);
@@ -35,16 +36,16 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             catch (Exception error)
             {
                 Debug.LogException(error);
-                WriteReport("error", error.ToString());
+                BakeReport.Write("error", error.ToString());
                 EditorApplication.Exit(1);
             }
         }
 
-        private static void ScanJob(PuzzleJobContract job, int seeds)
+        private static void ScanJob(PuzzleJobContract job, int seeds, int workers)
         {
-            List<PuzzleJobSeedScan.Entry> entries = PuzzleJobSeedScan.Scan(job, seeds);
+            List<PuzzleJobSeedScan.Entry> entries = PuzzleJobSeedScan.Scan(job, seeds, workers);
             StringBuilder report = new();
-            report.AppendLine($"job={job.Id} seeds={seeds}");
+            report.AppendLine($"job={job.Id} seeds={seeds} workers={workers}");
             for (int i = 0; i < entries.Count; i++)
             {
                 PuzzleJobSeedScan.Entry entry = entries[i];
@@ -54,7 +55,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                     $"scaleDelta={entry.ScaleDelta} startDistance={entry.StartDistance}");
             }
 
-            WriteReport(job.Id, report.ToString());
+            BakeReport.Write(job.Id, report.ToString());
         }
 
         private static void BakeJob(PuzzleJobContract job)
@@ -66,7 +67,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             if (baked == null || baked.id != job.Id)
                 throw new InvalidOperationException($"{job.Id} was not saved at {path}.");
 
-            WriteReport(job.Id, $"job={job.Id} baked seed={job.Seed} path={path}");
+            string answerPath = PuzzleAnswerAsset.PathFor(job.Id);
+            PuzzleAnswerAsset answer = AssetDatabase.LoadAssetAtPath<PuzzleAnswerAsset>(answerPath);
+            if (answer == null || answer.id != job.Id)
+                throw new InvalidOperationException($"{job.Id} has no answer at {answerPath}.");
+
+            BakeReport.Write(job.Id, $"job={job.Id} baked seed={job.Seed} path={path}");
         }
 
         private static int ParseSeeds()
@@ -76,6 +82,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 throw new ArgumentException($"{ArgumentSeeds} must be a positive integer.");
 
             return seeds;
+        }
+
+        private static int ParseWorkers()
+        {
+            string value = Argument(ArgumentWorkers);
+            if (string.IsNullOrEmpty(value))
+                return PuzzleSeedBatch.DefaultWorkers;
+
+            if (!int.TryParse(value, out int workers) || workers < 1)
+                throw new ArgumentException($"{ArgumentWorkers} must be a positive integer.");
+
+            return workers;
         }
 
         private static string Required(string name)
@@ -98,15 +116,5 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
             return null;
         }
-
-        private static void WriteReport(string name, string text)
-        {
-            string folder = Path.Combine(ProjectRoot(), "Logs");
-            Directory.CreateDirectory(folder);
-            File.WriteAllText(Path.Combine(folder, $"bake-{name}.txt"), text);
-        }
-
-        private static string ProjectRoot() =>
-            Path.GetDirectoryName(Application.dataPath) ?? Directory.GetCurrentDirectory();
     }
 }

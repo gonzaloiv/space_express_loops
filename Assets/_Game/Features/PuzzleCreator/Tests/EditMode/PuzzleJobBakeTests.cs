@@ -98,8 +98,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Assert.AreEqual(0, failures.Count, string.Join("\n", failures));
         }
 
-        // The shipped assets are the content: each one must validate against its own contract. Nothing
-        // stores a job's answer or kind, so the test re-solves the asset before validating it.
+        // The shipped assets are the content: each one must validate against its own contract, replaying
+        // the answer the bake stored instead of re-solving the asset.
         [Test]
         public void ShippedJobs_MeetTheContract()
         {
@@ -112,19 +112,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             {
                 PuzzleJobContract contract = PuzzleJobContracts.Enabled[i];
                 PuzzleData puzzle = LoadShipped(contract, failures);
-                if (puzzle == null)
-                    continue;
-
-                if (!TrySolve(puzzle, contract, settings, sim, out PuzzleSolution solution))
-                {
-                    failures.Add($"{contract.Id}: no solution found");
-                    continue;
-                }
-
-                if (!PuzzleJobValidator.Validate(
-                        puzzle, solution.Kind, solution.Zones, contract, out List<string> problems, sim,
-                        checkScramble: false))
-                    failures.Add($"{contract.Id}: {string.Join("; ", problems)}");
+                if (puzzle != null)
+                    CheckShipped(contract, puzzle, sim, failures);
             }
 
             Assert.AreEqual(0, failures.Count, string.Join("\n", failures));
@@ -140,41 +129,29 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             return puzzle;
         }
 
-        private static bool TrySolve(
-            PuzzleData puzzle, PuzzleJobContract contract, SpaceShapingSettings settings,
-            PuzzleSimSettings sim, out PuzzleSolution solution)
+        private static void CheckShipped(
+            PuzzleJobContract contract, PuzzleData puzzle, PuzzleSimSettings sim,
+            List<string> failures)
         {
-            if (contract.Ships > 1)
-                return TrySolveFleet(puzzle, contract, sim, out solution);
+            PuzzleAnswerAsset answer = LoadAnswer(contract.Id, failures);
+            if (answer == null)
+                return;
 
-            return PuzzleSolutionSearch.TrySelect(
-                puzzle, sim, Brief(contract, settings), out solution);
+            if (!PuzzleJobValidator.Validate(
+                    puzzle, answer.kind, answer.zones, contract, out List<string> problems, sim))
+                failures.Add($"{contract.Id}: {string.Join("; ", problems)}");
+
+            if (!PuzzleAnswerReplay.Lands(puzzle, answer, sim, out string replayProblem))
+                failures.Add($"{contract.Id}: {replayProblem}");
         }
 
-        private static bool TrySolveFleet(
-            PuzzleData puzzle, PuzzleJobContract contract, PuzzleSimSettings sim,
-            out PuzzleSolution solution)
+        private static PuzzleAnswerAsset LoadAnswer(string id, List<string> failures)
         {
-            solution = default;
-            if (!PuzzleFleetSolution.TryFind(puzzle, sim, contract.Mechanism, out PuzzleZone zone))
-                return false;
-
-            PuzzleVerification check = PuzzleVerifier.Verify(puzzle, new[] { zone }, sim);
-            solution = new PuzzleSolution
-            {
-                Zones = new[] { zone },
-                EntropySpent = check.EntropySpent,
-                Kind = check.Kind
-            };
-            return true;
-        }
-
-        private static PuzzleBrief Brief(PuzzleJobContract contract, SpaceShapingSettings settings)
-        {
-            PuzzleSeed seed = contract.CreateSeed();
-            PuzzleBrief brief = PuzzleBrief.From(seed, settings);
-            Object.DestroyImmediate(seed);
-            return brief;
+            string path = PuzzleAnswerAsset.PathFor(id);
+            PuzzleAnswerAsset answer = AssetDatabase.LoadAssetAtPath<PuzzleAnswerAsset>(path);
+            if (answer == null)
+                failures.Add($"{id}: no stored answer");
+            return answer;
         }
 
         private static PuzzleSeedScanResult Bake(

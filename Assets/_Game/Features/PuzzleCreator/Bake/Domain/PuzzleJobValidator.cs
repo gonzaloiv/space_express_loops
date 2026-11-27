@@ -5,6 +5,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleJobValidator
     {
+        private const float AnswerTolerance = 0.0001f;
+
         public static bool Validate(
             PuzzleData puzzle, PuzzleSolutionKind kind, PuzzleZone[] solution,
             PuzzleJobContract contract, out List<string> failures, PuzzleSimSettings? settings = null,
@@ -18,6 +20,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             }
 
             CheckBrief(puzzle, kind, contract, failures);
+            CheckFixedAnswer(puzzle, solution, failures);
             CheckSources(puzzle, solution, contract, failures);
             CheckFleet(puzzle, solution, contract, failures, settings);
             CheckStartFrame(puzzle, contract, failures, settings);
@@ -27,8 +30,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return failures.Count == 0;
         }
 
-        // The scramble bounds describe the baked answer; ShippedJobs_MeetTheContract re-solves the
-        // asset, so it passes checkScramble false and judges only the frame and the ships.
+        // The scramble bounds describe the baked answer; ShippedJobs_MeetTheContract replays the stored
+        // answer, so it checks these bounds too.
         private static void CheckScramble(
             PuzzleData puzzle, PuzzleZone[] solution, PuzzleJobContract contract, List<string> failures)
         {
@@ -55,7 +58,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         }
 
         // Needs the sim settings: only a run can tell whether a cube on the sun solves the job.
-        private static void CheckSunAnswer(
+        public static void CheckSunAnswer(
             PuzzleData puzzle, PuzzleJobContract contract, List<string> failures,
             PuzzleSimSettings? settings)
         {
@@ -87,6 +90,27 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 failures.Add($"role {kind}, expected {contract.Mechanism}");
             if (puzzle.routes < contract.MinRoutes)
                 failures.Add($"routes {puzzle.routes}, expected at least {contract.MinRoutes}");
+        }
+
+        // A fixed level's answer is its start frame: the player can only scale the cube there, so a
+        // stored zone elsewhere would never be reachable.
+        private static void CheckFixedAnswer(
+            PuzzleData puzzle, PuzzleZone[] solution, List<string> failures)
+        {
+            if (puzzle.translatable || solution == null || solution.Length == 0)
+                return;
+
+            if (puzzle.frames == null || puzzle.frames.Length == 0)
+            {
+                failures.Add("no start frame");
+                return;
+            }
+
+            PuzzleFrame frame = puzzle.frames[0];
+            if (Vector3.Distance(frame.centre, solution[0].centre) > AnswerTolerance)
+                failures.Add($"answer centre {solution[0].centre}, expected the frame {frame.centre}");
+            if (Mathf.Abs(frame.size - solution[0].Width) > AnswerTolerance)
+                failures.Add($"answer size {solution[0].Width}, expected the frame size {frame.size}");
         }
 
         private static void CheckSources(
@@ -160,7 +184,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         // A frame stores only centre and size, so a fixed fleet's frame is checked by solving it in
         // place: some reachable scale must land every ship, and the cube must keep clear of endpoints.
-        private static void CheckFixedFrame(
+        public static void CheckFixedFrame(
             PuzzleData puzzle, PuzzleSimSettings settings, List<string> failures)
         {
             if (puzzle.frames == null || puzzle.frames.Length == 0)

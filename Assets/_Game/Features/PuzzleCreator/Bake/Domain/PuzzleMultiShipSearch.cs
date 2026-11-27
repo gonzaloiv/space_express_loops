@@ -5,7 +5,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     // One multi-ship bake split so the probe can run off the editor thread: Prepare and Confirm run on
     // the main thread (the field is a ScriptableObject), Run is the only part the worker calls.
-    public sealed class PuzzleMultiShipSearch
+    public sealed class PuzzleMultiShipSearch : IPuzzleSeedSearch
     {
         private readonly PuzzleData field;
         private readonly FleetField fleet;
@@ -48,6 +48,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 field, FleetField.From(field, settings), brief, seed, PuzzleBakeStatus.Baked);
         }
 
+        // A batch's preparation: the planets are made and released on the main thread, and the field
+        // stays for the confirm after the worker returns.
+        public static PuzzleMultiShipSearch PrepareForSeed(
+            PuzzleSeed seed, SpaceShapingSettings settings, PuzzleBrief brief, int seedValue)
+        {
+            PuzzlePlanetListAsset planets = PuzzleArtifactFactory.PlanetsFor(seed, settings, seedValue);
+            PuzzleMultiShipSearch search =
+                Prepare(planets, PuzzleSimSettings.From(settings), brief, seedValue);
+            Object.DestroyImmediate(planets);
+            return search;
+        }
+
         // The worker's whole job: plain data in, zone and rescued runs out.
         public FleetZoneResult Run(CancellationToken token = default, System.Action onZone = null) =>
             Prepared ? new PuzzleMultiShipProbe(fleet, brief).Find(token, onZone) : default;
@@ -63,6 +75,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             return PuzzleMultiShipBake.ConfirmZone(field, fleet, found, brief);
         }
+
+        // The batch's view: confirm and map to the scan result in one step.
+        PuzzleSeedScanResult IPuzzleSeedSearch.Confirm(FleetZoneResult found) =>
+            ToScanResult(Confirm(found));
 
         public PuzzleSeedScanResult ToScanResult(PuzzleMultiShipResult baked)
         {

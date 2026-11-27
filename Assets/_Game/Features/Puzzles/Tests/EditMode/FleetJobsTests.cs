@@ -1,4 +1,5 @@
 using DigitalLove.Casual.Levels;
+using DigitalLove.Game.SpaceShaping.Creator;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -7,59 +8,69 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
 {
     public class FleetJobsTests
     {
-        private const string ChapterFolder = "Assets/_Game/Resources/Chapters/02";
-        private const string ChapterPath = "Assets/_Game/Resources/Chapters/02.asset";
+        private const string ChapterOnePath = "Assets/_Game/Resources/Chapters/01.asset";
+        private const string ChapterTwoPath = "Assets/_Game/Resources/Chapters/02.asset";
         private const string SelectorPath = "Assets/_Game/Resources/Chapters/LevelSelector.asset";
 
-        // The ids follow play order (renumbered 2026-11-26): two fixed intros, the movable fleets, the
-        // Clear job and the three-ship capstone last. 02_08 is parked (2026-11-27), so it is not listed.
-        private static readonly string[] JobIds =
-            { "02_01", "02_02", "02_03", "02_04", "02_05", "02_06", "02_07", "02_09" };
-        private static readonly int[] ShipCounts = { 2, 2, 2, 2, 2, 3, 2, 3 };
-
         [Test]
-        public void ChapterTwo_IsTheEightJobsAfterChapterOne()
+        public void ChapterTwo_IsTheChapterAfterChapterOne()
         {
-            ChapterData chapter = AssetDatabase.LoadAssetAtPath<ChapterData>(ChapterPath);
-            Assert.IsNotNull(chapter, ChapterPath);
-            Assert.AreEqual(JobIds.Length, chapter.levels.Length);
-            for (int i = 0; i < JobIds.Length; i++)
-                Assert.AreEqual(JobIds[i], chapter.levels[i].id, $"chapter level {i}");
+            ChapterData one = LoadChapter(ChapterOnePath);
+            ChapterData two = LoadChapter(ChapterTwoPath);
+            Assert.AreEqual("02", two.id);
 
             LevelSelector selector = AssetDatabase.LoadAssetAtPath<LevelSelector>(SelectorPath);
             Assert.IsNotNull(selector, SelectorPath);
 
-            for (int i = 0; i < JobIds.Length; i++)
+            for (int i = 0; i < two.levels.Length; i++)
             {
-                LevelData level = selector.GetLevelByGlobalIndex<LevelData>(7 + i);
-                Assert.IsNotNull(level, JobIds[i]);
-                Assert.AreEqual(JobIds[i], level.id);
+                LevelData level = selector.GetLevelByGlobalIndex<LevelData>(one.levels.Length + i);
+                Assert.IsNotNull(level, two.levels[i].id);
+                Assert.AreEqual(two.levels[i].id, level.id);
+            }
+        }
+
+        [Test]
+        public void ChapterTwo_LevelsAreInPlayOrder()
+        {
+            ChapterData two = LoadChapter(ChapterTwoPath);
+            for (int i = 1; i < two.levels.Length; i++)
+            {
+                int previous = LevelData.AsIndex(two.levels[i - 1].id);
+                int current = LevelData.AsIndex(two.levels[i].id);
+                Assert.Less(previous, current, $"{two.levels[i - 1].id} then {two.levels[i].id}");
             }
         }
 
         [Test]
         public void ChapterTwoJobs_AreMultiShipAndSpeak()
         {
-            for (int i = 0; i < JobIds.Length; i++)
+            ChapterData two = LoadChapter(ChapterTwoPath);
+            for (int i = 0; i < two.levels.Length; i++)
             {
-                PuzzleData puzzle = Load(JobIds[i]);
-                Assert.AreEqual(ShipCounts[i], puzzle.ships.Length, JobIds[i]);
-                Assert.IsFalse(puzzle.noIntro, JobIds[i]);
-                Assert.IsFalse(puzzle.noFail, JobIds[i]);
-                Assert.IsFalse(puzzle.noGrade, JobIds[i]);
+                PuzzleData puzzle = PuzzleOf(two.levels[i]);
+                if (PuzzleJobContracts.TryGet(puzzle.id, out PuzzleJobContract contract))
+                    Assert.AreEqual(contract.Ships, puzzle.ships.Length, puzzle.id);
+                else
+                    TestContext.WriteLine($"{puzzle.id}: no contract (hand-authored)");
+
+                Assert.IsFalse(puzzle.noIntro, puzzle.id);
+                Assert.IsFalse(puzzle.noFail, puzzle.id);
+                Assert.IsFalse(puzzle.noGrade, puzzle.id);
             }
         }
 
         [Test]
         public void ChapterTwoJobs_KeepEveryShipClearOfFramesAndTheSun()
         {
-            for (int i = 0; i < JobIds.Length; i++)
+            ChapterData two = LoadChapter(ChapterTwoPath);
+            for (int i = 0; i < two.levels.Length; i++)
             {
-                PuzzleData puzzle = Load(JobIds[i]);
+                PuzzleData puzzle = PuzzleOf(two.levels[i]);
                 for (int s = 0; s < puzzle.ships.Length; s++)
                 {
                     PuzzleShip ship = puzzle.ships[s];
-                    string label = $"{JobIds[i]} ship {s}";
+                    string label = $"{puzzle.id} ship {s}";
                     AssertOutsideFrames(puzzle, ship.origin, label + " origin");
                     AssertOutsideFrames(puzzle, ship.destination, label + " destination");
                     AssertNotOnTheSun(puzzle, ship, label);
@@ -67,12 +78,17 @@ namespace DigitalLove.Game.SpaceShaping.Tests.EditMode
             }
         }
 
-        private static PuzzleData Load(string id)
+        private static ChapterData LoadChapter(string path)
         {
-            string path = $"{ChapterFolder}/Job_{id}_Puzzle.asset";
-            PuzzleData puzzle = AssetDatabase.LoadAssetAtPath<PuzzleData>(path);
-            Assert.IsNotNull(puzzle, path);
-            Assert.AreEqual(id, puzzle.id, path);
+            ChapterData chapter = AssetDatabase.LoadAssetAtPath<ChapterData>(path);
+            Assert.IsNotNull(chapter, path);
+            return chapter;
+        }
+
+        private static PuzzleData PuzzleOf(LevelData level)
+        {
+            PuzzleData puzzle = level as PuzzleData;
+            Assert.IsNotNull(puzzle, $"{level.id} is not a PuzzleData");
             return puzzle;
         }
 

@@ -201,16 +201,25 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return false;
         }
 
-        public static PuzzleJobContract ById(string id)
+        public static bool TryGet(string id, out PuzzleJobContract contract)
         {
             for (int i = 0; i < All.Count; i++)
             {
-                if (All[i].Id == id)
-                    return All[i];
+                if (All[i].Id != id)
+                    continue;
+
+                contract = All[i];
+                return true;
             }
 
-            throw new System.ArgumentException($"Unknown job id {id}");
+            contract = default;
+            return false;
         }
+
+        public static PuzzleJobContract ById(string id) =>
+            TryGet(id, out PuzzleJobContract contract)
+                ? contract
+                : throw new System.ArgumentException($"Unknown job id {id}");
 
         public static string ChapterOf(string id)
         {

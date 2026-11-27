@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
+namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleFleetSolution
     {
@@ -10,15 +11,23 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
 
         public static bool TryFind(
             PuzzleData puzzle, PuzzleSimSettings settings, PuzzleMechanism mechanism,
-            out PuzzleZone zone)
+            out PuzzleZone zone) =>
+            TryFind(puzzle, settings, mechanism, AcceptAny, out zone);
+
+        // Filters the solved candidates, so a caller that pins bounds can walk past a zone that solves
+        // but does not meet its contract.
+        public static bool TryFind(
+            PuzzleData puzzle, PuzzleSimSettings settings, PuzzleMechanism mechanism,
+            Func<PuzzleZone, PuzzleVerification, bool> accept, out PuzzleZone zone)
         {
             zone = default;
             if (puzzle.ships == null || puzzle.ships.Length < 2)
                 return false;
 
-            Search search = new(puzzle, settings, mechanism);
-            List<Vector3> centres = Centres(puzzle);
-            float[] sizes = Sizes(puzzle);
+            if (!TryCandidates(puzzle, out List<Vector3> centres, out float[] sizes))
+                return false;
+
+            Search search = new(puzzle, settings, mechanism, accept);
 
             // The bake's own grid first: a freshly baked answer is checked at the scale it was baked
             // with. The wider grid is a fallback, so a miss pays one extra pass, not every field.
@@ -32,18 +41,46 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
                 centres, sizes, PuzzleZoneCandidates.Scales(settings, ScaleSamples), out zone);
         }
 
+        private static bool AcceptAny(PuzzleZone zone, PuzzleVerification check) => true;
+
+        // A fixed fleet cannot move or resize the cube, so its only possible answer is the start frame
+        // itself; only the scale varies. A movable fleet searches the field as before.
+        private static bool TryCandidates(
+            PuzzleData puzzle, out List<Vector3> centres, out float[] sizes)
+        {
+            if (puzzle.translatable)
+            {
+                centres = Centres(puzzle);
+                sizes = Sizes(puzzle);
+                return true;
+            }
+
+            centres = null;
+            sizes = null;
+            if (puzzle.frames == null || puzzle.frames.Length == 0)
+                return false;
+
+            centres = new List<Vector3> { puzzle.frames[0].centre };
+            sizes = new[] { puzzle.frames[0].size };
+            return true;
+        }
+
         private sealed class Search
         {
             private readonly PuzzleData puzzle;
             private readonly PuzzleSimSettings settings;
             private readonly PuzzleMechanism mechanism;
+            private readonly Func<PuzzleZone, PuzzleVerification, bool> accept;
             private readonly PuzzleShipScan scan;
 
-            public Search(PuzzleData puzzle, PuzzleSimSettings settings, PuzzleMechanism mechanism)
+            public Search(
+                PuzzleData puzzle, PuzzleSimSettings settings, PuzzleMechanism mechanism,
+                Func<PuzzleZone, PuzzleVerification, bool> accept)
             {
                 this.puzzle = puzzle;
                 this.settings = settings;
                 this.mechanism = mechanism;
+                this.accept = accept;
                 scan = new PuzzleShipScan(puzzle, settings, 0f);
             }
 
@@ -84,6 +121,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
                 // check from verifying every candidate. Any keeps the first-solved behaviour.
                 if (mechanism != PuzzleMechanism.Any
                     && !PuzzleSolutionClassifier.Matches(mechanism, check.Kind))
+                    return false;
+
+                if (!accept(candidate, check))
                     return false;
 
                 zone = candidate;

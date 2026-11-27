@@ -121,22 +121,24 @@ the Unity MCP.
 
 - Run them in the bake checkout (`../our_space_bake`, branch `bake`) with
   [`docs/tools/bake.ps1`](docs/tools/bake.ps1): `-Job <id> -Mode scan -Seeds <n>` to scan,
-  `-Mode bake` to save the pinned seed. Batch mode calls `PuzzleBatchBake`, which uses the synchronous
-  bake paths (`FleetSearchRun` needs `EditorApplication.update`, which does not tick in batch mode).
+  `-Mode bake` to save the pinned seed, `-Mode answers` (no `-Job`) to backfill the stored answers.
+  A fleet scan runs its probes on `-Workers` tasks (default: cores − 1); a single-ship scan stays
+  sequential. Batch mode calls `PuzzleBatchBake`, which uses the synchronous bake paths
+  (`FleetSearchRun` needs `EditorApplication.update`, which does not tick in batch mode).
 - Commit the bake code first and merge it into `bake`; the checkout only sees committed code.
 - Baked assets come back through git: commit them on `bake`, then merge or cherry-pick. Never copy
   `.asset`/`.meta` files by hand.
-- One Unity per checkout. To run two bakes at once, add a second worktree; meanwhile keep working in
-  the main editor.
-- **A second bake checkout** (at most two: a third slows the main editor, and merging becomes the
-  bottleneck). Each batch bake uses about one core and 3–4 GB.
+- One Unity per checkout, one job at a time: a fleet scan already uses every core, so a second Unity
+  only splits memory. Keep working in the main editor meanwhile.
+- **A second bake checkout** is the fallback for two very long jobs whose seeds you already know (at
+  most two: a third slows the main editor, and merging becomes the bottleneck). A normal scan does
+  not need it. A batch Unity holds 3–4 GB.
   1. `git worktree add ../our_space_bake2 -b bake2 bake` (from a branch that has the bake code).
   2. Before its first open, copy `Library/` from `../our_space_bake`, so it skips most of the full
      import.
   3. Run with `docs/tools/bake.ps1 -ProjectPath ..\our_space_bake2 -Job <id> ...`.
-  4. Split by job, never one job across two checkouts: each bake rewrites `Chapters/<nn>.asset`, so
-     commit only that job's assets and its contract pin, and set the chapter order by hand once,
-     after both branches merge.
+  4. Split by job. A job's commit is its puzzle asset, its `.meta`, its answer and its contract pin,
+     never `Chapters/<nn>.asset`: the chapter order is set by hand once, after both branches merge.
 - The bake-heavy test suite and the shipped-asset checks for fleets run in the bake checkout too
   (`-runTests -testFilter <name>`).
 - A plan that bakes says so under its title: `**Bakes:** off the editor — <which units>`.

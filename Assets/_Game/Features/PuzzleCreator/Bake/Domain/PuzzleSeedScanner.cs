@@ -46,10 +46,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleSeed seed, SpaceShapingSettings settings, PuzzleSimSettings sim, PuzzleBrief brief,
             int seedValue)
         {
-            PuzzlePlanetListAsset planets = Planets(seed, settings, seedValue);
             if (brief.IsMulti)
-                return ProbeMulti(planets, sim, brief, seedValue);
+                return ProbeMulti(seed, settings, brief, seedValue);
 
+            PuzzlePlanetListAsset planets = Planets(seed, settings, seedValue);
             PuzzleBakeResult baked = PuzzleFieldBake.Bake(planets, sim, brief);
             Object.DestroyImmediate(planets);
             return new PuzzleSeedScanResult
@@ -67,10 +67,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         // The field is copied into the search on the main thread, so the planets asset can go at once.
         private static PuzzleSeedScanResult ProbeMulti(
-            PuzzlePlanetListAsset planets, PuzzleSimSettings sim, PuzzleBrief brief, int seedValue)
+            PuzzleSeed seed, SpaceShapingSettings settings, PuzzleBrief brief, int seedValue)
         {
-            PuzzleMultiShipSearch search = PuzzleMultiShipSearch.Prepare(planets, sim, brief, seedValue);
-            Object.DestroyImmediate(planets);
+            PuzzleMultiShipSearch search =
+                PuzzleMultiShipSearch.PrepareForSeed(seed, settings, brief, seedValue);
             PuzzleSeedScanResult result = search.ToScanResult(search.Confirm(search.Run()));
             search.Dispose();
             return result;

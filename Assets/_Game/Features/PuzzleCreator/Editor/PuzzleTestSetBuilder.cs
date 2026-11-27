@@ -38,7 +38,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             if (settings == null)
                 return;
 
-            PuzzleData saved = BuildAndWire(job, settings);
+            PuzzleData saved = BuildJob(job, settings);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log(saved != null
@@ -105,19 +105,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 if (PuzzleJobContracts.ChapterOf(jobs[i].Id) != chapter)
                     continue;
 
-                if (BuildAndWire(jobs[i], settings) != null)
+                if (BuildJob(jobs[i], settings) != null)
                     built++;
             }
 
             Debug.Log($"Test set: chapter {chapter} — {built} job(s) built.");
-        }
-
-        private static PuzzleData BuildAndWire(PuzzleJobContract job, SpaceShapingSettings settings)
-        {
-            PuzzleData saved = BuildJob(job, settings);
-            if (saved != null)
-                WireChapterSlot(PuzzleJobContracts.ChapterOf(job.Id), saved);
-            return saved;
         }
 
         private static PuzzleData BuildJob(PuzzleJobContract job, SpaceShapingSettings settings)
@@ -137,16 +129,30 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             string chapter = PuzzleJobContracts.ChapterOf(job.Id);
             PuzzleArtifactExporter.SaveVariant(baked, "Job_" + job.Id, GeneratedFolder(chapter));
             PuzzleData saved = AssetDatabase.LoadAssetAtPath<PuzzleData>(JobPath(job.Id));
+            SaveAnswer(job, result, settings);
             Debug.Log(
                 $"Test set: {job.Id} {result.Status} (seed {result.Seed}, {baked.zones} zone(s), " +
                 $"{result.Kind}) -> " + (saved != null ? $"saved in chapter {chapter}" : "MISSING"));
             return saved;
         }
 
+        private static void SaveAnswer(
+            PuzzleJobContract job, PuzzleSeedScanResult result, SpaceShapingSettings settings)
+        {
+            PuzzleSolution solution = new() { Zones = result.Solution, Kind = result.Kind };
+            PuzzleAnswerAsset answer = PuzzleAnswerFactory.From(
+                job, result.Seed, result.Puzzle, solution, PuzzleSimSettings.From(settings));
+            PuzzleArtifactExporter.SaveAnswer(answer);
+        }
+
         private static PuzzleSeedScanResult FindJob(
             PuzzleJobContract job, SpaceShapingSettings settings, PuzzleSeed seed)
         {
             seed.mechanism = job.Mechanism;
+            PuzzleBrief brief = PuzzleBrief.From(seed, settings);
+            if (brief.IsMulti && job.Attempts > 1)
+                return FindFleetJob(job, settings, seed, brief);
+
             PuzzleSeedScanResult result = default;
             for (int attempt = 0; attempt < job.Attempts; attempt++)
             {
@@ -162,24 +168,16 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             return result;
         }
 
-        private static void WireChapterSlot(string chapter, PuzzleData puzzle)
+        // A fleet bake's attempt range runs in parallel and stops on the first pass, so a bake does
+        // not wait for seeds after the one it saves.
+        private static PuzzleSeedScanResult FindFleetJob(
+            PuzzleJobContract job, SpaceShapingSettings settings, PuzzleSeed seed, PuzzleBrief brief)
         {
-            ChapterData data = LoadChapter(chapter);
-            if (data == null)
-                return;
-
-            List<LevelData> levels = new();
-            if (data.levels != null)
-                levels.AddRange(data.levels);
-
-            int index = LevelIndex(levels, puzzle.id);
-            if (index >= 0)
-                levels[index] = puzzle;
-            else
-                levels.Add(puzzle);
-
-            data.levels = levels.ToArray();
-            EditorUtility.SetDirty(data);
+            PuzzleSeedBatch batch = new(
+                seedValue => PuzzleMultiShipSearch.PrepareForSeed(seed, settings, brief, seedValue),
+                job.Seed, job.Attempts, PuzzleSeedBatch.DefaultWorkers, stopOnFirst: true);
+            List<PuzzleSeedScanResult> results = batch.Run();
+            return results.Count > 0 ? results[results.Count - 1] : default;
         }
 
         private static void WireChapterLevels(string chapter, PuzzleData[] puzzles)
@@ -199,17 +197,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             if (data == null)
                 Debug.LogError($"Test set: missing chapter at {path}.");
             return data;
-        }
-
-        private static int LevelIndex(List<LevelData> levels, string id)
-        {
-            for (int i = 0; i < levels.Count; i++)
-            {
-                if (levels[i] != null && levels[i].id == id)
-                    return i;
-            }
-
-            return -1;
         }
 
         private static List<string> Chapters(IReadOnlyList<PuzzleJobContract> jobs)

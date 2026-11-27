@@ -26,7 +26,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             public PuzzleRunReport RunReport;
         }
 
-        public static List<Entry> Scan(PuzzleJobContract job, int count)
+        public static List<Entry> Scan(PuzzleJobContract job, int count, int workers = 1)
         {
             List<Entry> entries = new();
             SpaceShapingSettings settings = PuzzleTestSetBuilder.LoadSettings("Seed scan");
@@ -37,15 +37,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             PuzzleSeed seed = job.CreateSeed();
             try
             {
-                for (int i = 0; i < count; i++)
-                {
-                    if (EditorUtility.DisplayCancelableProgressBar(
-                            "Seed scan", $"{job.Id}: seed {job.Seed + i}", i / (float)count))
-                        break;
-
-                    seed.seed = job.Seed + i;
-                    entries.Add(Probe(seed, job, settings, sim));
-                }
+                List<PuzzleSeedScanResult> results = ScanResults(job, settings, seed, count, workers);
+                for (int i = 0; i < results.Count; i++)
+                    entries.Add(EntryFor(results[i].Seed, results[i], job, sim));
             }
             finally
             {
@@ -55,6 +49,51 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
             entries.Sort(ByUsefulness);
             return entries;
+        }
+
+        private static List<PuzzleSeedScanResult> ScanResults(
+            PuzzleJobContract job, SpaceShapingSettings settings, PuzzleSeed seed, int count, int workers)
+        {
+            PuzzleBrief brief = PuzzleBrief.From(seed, settings);
+            Func<int, IPuzzleSeedSearch> prepare = seedValue =>
+                PuzzleMultiShipSearch.PrepareForSeed(seed, settings, brief, seedValue);
+            if (brief.IsMulti && workers > 1)
+                return Fleet(prepare, job, count, workers);
+
+            return Sequential(seed, settings, job, count);
+        }
+
+        // A single-ship scan stays on the calling thread: its bake searches through assets, not a
+        // snapshot, so there is nothing to hand to a worker.
+        private static List<PuzzleSeedScanResult> Sequential(
+            PuzzleSeed seed, SpaceShapingSettings settings, PuzzleJobContract job, int count)
+        {
+            List<PuzzleSeedScanResult> results = new();
+            for (int i = 0; i < count; i++)
+            {
+                if (EditorUtility.DisplayCancelableProgressBar(
+                        "Seed scan", $"{job.Id}: seed {job.Seed + i}", i / (float)count))
+                    break;
+
+                seed.seed = job.Seed + i;
+                results.Add(Probe(seed, settings));
+            }
+
+            return results;
+        }
+
+        // Fleets run their probes on one task per worker; the batch confirms them in seed order.
+        private static List<PuzzleSeedScanResult> Fleet(
+            Func<int, IPuzzleSeedSearch> prepare, PuzzleJobContract job, int count, int workers)
+        {
+            PuzzleSeedBatch batch = new(prepare, job.Seed, count, workers);
+            return batch.Run((done, total) =>
+            {
+                bool stopped = EditorUtility.DisplayCancelableProgressBar(
+                    "Seed scan", $"{job.Id}: {done}/{total} seeds", done / (float)total);
+                if (stopped)
+                    batch.Cancel();
+            });
         }
 
         // Fleet contracts probe off the editor thread; the window polls the run and takes the entries
@@ -97,12 +136,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             return b.Window.CompareTo(a.Window);
         }
 
-        private static Entry Probe(
-            PuzzleSeed seed, PuzzleJobContract job, SpaceShapingSettings settings, PuzzleSimSettings sim)
-        {
-            PuzzleSeedScanResult result = PuzzleSeedScanner.Find(seed, settings, 1);
-            return EntryFor(seed.seed, result, job, sim);
-        }
+        private static PuzzleSeedScanResult Probe(PuzzleSeed seed, SpaceShapingSettings settings) =>
+            PuzzleSeedScanner.Find(seed, settings, 1);
 
         private static Entry EntryFor(
             int seedValue, PuzzleSeedScanResult result, PuzzleJobContract job, PuzzleSimSettings sim)
@@ -135,8 +170,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             MeasureScramble(ref entry, result);
         }
 
-        // From the baked answer, not the asset: the shipped check re-solves and would measure another
-        // zone. The contract's bounds are pinned just under these.
+        // From the baked answer: the shipped check replays the same stored zone. The contract's bounds
+        // are pinned just under these.
         private static void MeasureScramble(ref Entry entry, PuzzleSeedScanResult result)
         {
             if (result.Solution == null || result.Solution.Length == 0)

@@ -21,6 +21,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         public static void SaveVariant(PuzzleData variant, string name, string folder) =>
             Write(variant, $"{name}_Puzzle", folder);
 
+        public static PuzzleAnswerAsset SaveAnswer(PuzzleAnswerAsset answer) =>
+            Write(answer, answer.id, PuzzleAnswerAsset.Folder);
+
         private static T Write<T>(T asset, string name) where T : ScriptableObject =>
             Write(asset, name, GeneratedFolder);
 
