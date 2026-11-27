@@ -10,11 +10,11 @@ and schedule in [release](../design/release.md). Post-mortems in [lessons](../le
   the Interchange prefab wiring, the 02_01 clip and the test runs remain
 - **27 Nov:** [chapter 2 rebakes](in-progress/chapter-2-rebakes.md) — 02_09 as a bend, 02_06
   solvable; starting with the answer backfill and the 02_09 replay
+- **27 Nov:** [bake scan speed](in-progress/bake-scan-speed.md) — timings around a seed's phases; baseline
+  in the bake checkout, then decide whether a cut is needed
 
 ## Next
 
-- **27 Nov:** [bake scan speed](backlog/bake-scan-speed.md) — measure the scan, then singles on every
-  core, a pruned fleet probe and one role pass; no shipped asset changes
 - **27 Nov–1 Dec, alongside chapter 2:** [broken bodies](backlog/chapter-3-broken-bodies.md) (anchors, then
   repulsors; gate 1 Dec)
 - **Before 1 Dec:** [map arc](backlog/chapter-3-map-arc.md) — chapter systems on an arc around the seat, so every
@@ -53,7 +53,8 @@ One line each: what is left and where it lands.
   [chapter 2 rebakes](in-progress/chapter-2-rebakes.md) U3.
 - **Parallel scan timing** (bake parallel closed 2026-11-27, [lessons](../lessons.md)): time ~24 seeds
   of a two-ship job with `-Workers 1` and the default in the bake checkout, compare both reports, and
-  note the speed-up in AGENTS' bake section.
+  note the speed-up in AGENTS' bake section. Folded into
+  [bake scan speed](in-progress/bake-scan-speed.md) U1.
 - **Chapter 2 headset pass** (plans closed 2026-11-27, [lessons](../lessons.md)): every edge sun level
   with its planets and none an answer; the map cube over each system's centre with no jump on entry;
   the intros' `MaxScaleDelta = 0.5` (tighten to ~0.3 and rescan if they play hard); time the capstone

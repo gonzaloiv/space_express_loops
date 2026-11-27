@@ -67,5 +67,5 @@ lookups in `PuzzleJobContracts`, `PuzzleSeedScanner.Construct`, the Construct ca
 
 - [Lessons — the answer-first generator](../../lessons.md)
 - [Run a long editor bake on a Task over a plain snapshot](../../../Assets/_Modules/Docs~/solutions/architecture-patterns/editor-bakes-on-a-plain-snapshot.md)
-- [Bake scan speed](../../plans/backlog/bake-scan-speed.md) — the next search speed pass
+- [Bake scan speed](../../plans/in-progress/bake-scan-speed.md) — the next search speed pass
 - Code: `PuzzleSeedScanner.cs`, `PuzzleSeedBatch.cs`

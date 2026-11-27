@@ -24,6 +24,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             public PuzzleSolutionKind Kind;
             public PuzzleBakeStatus Status;
             public PuzzleRunReport RunReport;
+            public PuzzleScanTimings Timings;
         }
 
         public static List<Entry> Scan(PuzzleJobContract job, int count, int workers = 1)
@@ -56,7 +57,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         {
             PuzzleBrief brief = PuzzleBrief.From(seed, settings);
             Func<int, IPuzzleSeedSearch> prepare = seedValue =>
-                PuzzleMultiShipSearch.PrepareForSeed(seed, settings, brief, seedValue);
+                PuzzleMultiShipSearch.PrepareForSeed(
+                    seed, settings, brief, seedValue, new PuzzleScanTimings());
             if (brief.IsMulti && workers > 1)
                 return Fleet(prepare, job, count, workers);
 
@@ -76,7 +78,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                     break;
 
                 seed.seed = job.Seed + i;
-                results.Add(Probe(seed, settings));
+                results.Add(Probe(seed, settings, new PuzzleScanTimings()));
             }
 
             return results;
@@ -113,7 +115,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             PuzzleBrief brief = PuzzleBrief.From(seed, settings);
             List<Entry> entries = new();
             return FleetSearchRun.Start(
-                new FleetSearchRequest(seed, settings, brief, job.Seed, count),
+                new FleetSearchRequest(seed, settings, brief, job.Seed, count, measure: true),
                 (seedValue, result) =>
                 {
                     entries.Add(EntryFor(seedValue, result, job, sim));
@@ -137,8 +139,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         }
 
         private static PuzzleSeedScanResult Probe(
-            PuzzleSeed seed, SpaceShapingSettings settings) =>
-            PuzzleSeedScanner.Find(seed, settings, 1);
+            PuzzleSeed seed, SpaceShapingSettings settings, PuzzleScanTimings timings) =>
+            PuzzleSeedScanner.Find(seed, settings, 1, null, timings);
 
         private static Entry EntryFor(
             int seedValue, PuzzleSeedScanResult result, PuzzleJobContract job, PuzzleSimSettings sim)
@@ -149,7 +151,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                 Baked = result.Found,
                 Kind = result.Kind,
                 Status = result.Status,
-                RunReport = result.RunReport
+                RunReport = result.RunReport,
+                Timings = result.Timings
             };
             if (result.Found)
                 Measure(ref entry, result, job, sim);
@@ -166,7 +169,9 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             entry.MeetsContract = PuzzleJobValidator.Validate(
                 result.Puzzle, result.Kind, result.Solution, job, out List<string> problems, sim);
             entry.Problem = problems.Count > 0 ? problems[0] : string.Empty;
+            long started = result.Timings != null ? result.Timings.Start() : 0;
             entry.Window = PuzzleSolveWindow.Measure(result.Puzzle, result.Solution, sim);
+            result.Timings?.Add(PuzzleScanTimings.Window, started);
             MeasureScramble(ref entry, result);
         }
 

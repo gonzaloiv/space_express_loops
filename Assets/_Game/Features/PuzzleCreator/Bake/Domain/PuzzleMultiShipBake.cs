@@ -20,15 +20,23 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         // The seam the background search hands back to: the zone and runs came off the editor thread,
         // and this main-thread step selects the ships, re-checks the rescue and builds the variant.
         public static PuzzleMultiShipResult ConfirmZone(
-            PuzzleData field, FleetField fleet, FleetZoneResult found, PuzzleBrief brief)
+            PuzzleData field, FleetField fleet, FleetZoneResult found, PuzzleBrief brief,
+            PuzzleScanTimings timings = null)
         {
+            long started = timings != null ? timings.Start() : 0;
             PuzzleShip[] ships = Select(fleet, found.Rescued, brief);
-            if (ships == null || !found.Scan.Rescues(found.Zone, ships))
+            timings?.Add(PuzzleScanTimings.Select, started);
+            if (ships == null)
                 return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.NoSolution };
 
             // A movable fleet's frame is chosen by PuzzleStartFrame.Place, which already keeps it off
             // endpoints; a fixed fleet ships the zone itself, which PuzzleVerifier.Fits checks.
-            return Confirm(field, fleet.Settings, brief, found.Zone, ships);
+            started = timings != null ? timings.Start() : 0;
+            PuzzleMultiShipResult result = found.Scan.Rescues(found.Zone, ships)
+                ? Confirm(field, fleet.Settings, brief, found.Zone, ships)
+                : new PuzzleMultiShipResult { Status = PuzzleBakeStatus.NoSolution };
+            timings?.Add(PuzzleScanTimings.Confirm, started);
+            return result;
         }
 
         private static PuzzleMultiShipResult Confirm(

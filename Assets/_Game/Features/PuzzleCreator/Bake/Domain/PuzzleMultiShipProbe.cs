@@ -19,13 +19,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private readonly PuzzleSunShortcut sunShortcut;
 
         // The snapshot path: the whole probe runs on plain data, so it is safe off the editor thread.
-        public PuzzleMultiShipProbe(FleetField fleet, PuzzleBrief brief)
+        public PuzzleMultiShipProbe(
+            FleetField fleet, PuzzleBrief brief, PuzzleScanTimings timings = null)
         {
             this.fleet = fleet;
             settings = fleet.Settings;
             required = brief.Ships;
             relation = brief.Relation;
-            scan = new PuzzleShipScan(fleet, 0f);
+            scan = new PuzzleShipScan(fleet, 0f, timings);
             scales = PuzzleZoneCandidates.LinearScales(settings, ScaleSamples);
             if (brief.SunRule == PuzzleSunRule.NoSunAnswer)
                 sunShortcut = new PuzzleSunShortcut(fleet, scan, scales);
