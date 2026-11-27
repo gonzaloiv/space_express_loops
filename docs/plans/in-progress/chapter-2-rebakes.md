@@ -92,3 +92,20 @@ U1 was red and U2 ran.
 1. 02_06 can be solved by bending the paths; time it.
 2. 02_09 is solved by a bend, not by clearing a blocker, and feels different from 02_07.
 3. Both suns sit level with their planets, beside the system.
+4. The suns sit at the edge of the planets' height band (02_06 at the low edge, 02_09 at the high
+   edge); check they read beside the system, not below or above it. If either reads wrong, prefer the
+   middle band height in `PuzzleSunPlacementChoice.TryHome` and re-bake.
+
+## Review applied (2026-11-27)
+
+Both rebakes are in `our-space` (02_09 `b934ce64`, 02_06 `7ce5f818` + `0e2de3c4`), each with a `Curve`
+answer and its pin; 02_06 kept its guid, so the chapter slot did not move.
+
+- **Done — U4 is recorded.** The three checks ran in `bake` with both new assets:
+  `ShippedJobs_MeetTheContract` (9 ms), `FleetJobsTests` (4/4) and `SectorWireTests` (5/5). State
+  carries the numbers, and U3 no longer says "baking next".
+- **Done — the sun height band is in the headset check.** The middle-band preference in
+  `PuzzleSunPlacementChoice.TryHome` waits for that read, as the review asked.
+- **Done — bake commits stay scoped.** The bake commits staged only the job assets, the stored
+  answers and the pins; the bake checkout's mp3 `.meta`, `OculusProjectConfig`,
+  `EditorBuildSettings` and `_Modules` changes were left out.
