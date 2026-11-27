@@ -4,6 +4,18 @@ Short post-mortems, written when a plan closes (rule in [AGENTS.md](../AGENTS.md
 morning). Newest first. Each entry: what worked, what surprised us, the rule for next time. One idea per
 bullet; the code and tests are the record of what was built.
 
+## 2026-11-27 — The answer-first generator
+
+- **Worked:** the single-ship constructor met its bakes (Clear 12/20, Curve 11/20), and the search was
+  never chapter 1's bottleneck. The generator was a second path, not the next speed-up.
+- **Surprised:** the fleet recipe never converged. The lesson placed the blockers but every bend offset
+  failed on a crowded crossing; bend-first moved the failure to the start curve (310/474) and the
+  scale (155/474). Clear was 1/20, Curve 0/20.
+- **Next time:** test a new fleet idea by measuring the search's passing seeds first (02_06 already had
+  33/200). A recipe that has not passed one seed is not a shortcut.
+- **Next time:** measure the speed-up before building the second path. Two bake paths double every rule
+  (`Generator`, scratch folder, pins) for an unmeasured gain.
+
 ## 2026-11-27 — Bake answer and bake parallel
 
 - **Worked:** storing each job's answer turned the shipped check from a re-solve into a replay, and a
