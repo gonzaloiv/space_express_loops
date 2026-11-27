@@ -1,8 +1,8 @@
 # Chapter 2 — rebakes
 
 **Status:** now · space shaping · updated 2026-11-27 — 02_09 must be solved by a bend and 02_06 must
-be solvable; both rebake after the bake overhaul, with the constructor if it is ready. In progress:
-U1 red (02_09 has no solved zone), seed 183 pinned; baking.
+be solvable; both rebaked after the bake overhaul, with the search (the constructor is not ready).
+U1–U4 done; the headset check remains.
 
 **Bakes:** off the editor — U2 (02_09) and U3 (02_06)
 ([AGENTS](../../../AGENTS.md#bakes-run-off-the-editor), `docs/tools/bake.ps1`).
@@ -27,41 +27,25 @@ them.
 
 ## Before U1
 
-The bake answer and bake parallel code is ready (reviewed 2026-11-27, fixed-frame answers included) but
-uncommitted, and the bake checkout only sees committed code. In order:
-
-1. **Commit on `our-space`, one commit per plan:** bake answer + bake parallel (the `PuzzleCreator`
-   code and tests, `bake.ps1`, AGENTS, both plans), and the playtest leftovers (the Interchange prefab,
-   the ring code, the wire tables in `Global_en` / `Global Shared Data`, the `Downloader - OS` scene
-   and the playtest plan). Stage explicit paths; leave unrelated changes alone.
-2. **Merge `our-space` into `bake`** in `../our_space_bake`. Run the fast suite and the Creator suite
-   there (not `PuzzleSeedBatchRealTests` unless the batch changed; it takes ~90 s).
-3. **Backfill the answers in `bake`:** `docs/tools/bake.ps1 -Mode answers`. Read
-   `Logs/bake-answers.txt`: every enabled job should be written. A job listed as failed is a finding,
-   not a reason to stop: 02_09 failing here means it has no `Curve` answer, so U1 is red and U2 runs.
-   Commit the answer assets (`Assets/_Game/Features/PuzzleCreator/Answers/`) on `bake` and merge them
-   back into `our-space` through git.
-4. Run `ShippedJobs_MeetTheContract` in `bake`. Every job but a failed 02_09 should pass; anything else
-   is a bake answer bug: stop and report.
+Done 2026-11-27: the bake answer/parallel code and the playtest leftovers are committed, `bake` is
+fast-forwarded, and the backfill wrote 13 answers. 02_09 was the one failure (`no solved zone`), so
+U1 was red and U2 ran.
 
 ## State on `our-space` (2026-11-27)
 
-- 02_09's contract is already `Mechanism = Curve` and enabled, so `ShippedJobs_MeetTheContract` may be
-  red on it until U2.
-- 02_06's first contract is in, `Pending = true`, `Seed = 0`: 3 ships, `Separate`, `Cluster`,
-  `PlanetCount = 14`, edge sun (`OffCorridor`, `NoSunAnswer`), `Mechanism = Curve`. A centred sun yields
-  no valid puzzles for a three-ship field, so 02_06 moves to the edge like the rest of chapter 2
-  (`chapters.md` and `jobs.md` already say so).
-- `PuzzleBrief.SupportsFleetRole` accepts `Curve`: the probe searches role-agnostically and
-  `PuzzleMultiShipBake.Reject` filters the confirmed answer, as for Clear fleets.
+- 02_09: `Curve`, seed 183, answer stored (0.50 scale delta at a 0.241 start). The edge sun sits at
+  y 0.299, level with the planets, and horizontal 0.350, beyond the 0.338 rim.
+- 02_06: `Pending` cleared, seed 86, 3 ships `Separate` with their own origins, 14 planets, edge sun.
+  The answer is a 0.40 scale delta at a 0.269 start; the sun sits at y -0.312 (the planet band's low
+  edge) and horizontal 0.360, beyond the 0.285 rim.
+- `PuzzleBrief.SupportsFleetRole` accepts `Curve`, as for Clear fleets.
 
 ## Units
 
 ### U1 — check 02_09 as shipped
 
-- Seed 9's documented answer is a curve (0.40 scale delta at a 0.183 start). Run
-  `ShippedJobs_MeetTheContract`; once the backfill has stored 02_09's answer, this is a
-  replay. If green, nothing to bake: skip U2.
+- The shipped field (seed 9) was documented as a curve, but the backfill could not solve it. Run
+  `ShippedJobs_MeetTheContract`; it is a replay once the answer is stored. If green, skip U2.
 - Exit: green, or a red result that names why.
 
 ### U2 — rebake 02_09 (only if U1 is red)
@@ -92,9 +76,16 @@ uncommitted, and the bake checkout only sees committed code. In order:
 - **U1 — red.** `PuzzleAnswerBackfill` on the shipped 02_09 asset reports `no answer meets the
   contract: no solved zone`; the other 13 enabled jobs got answers. The shipped field has no fleet
   answer under today's physics, so U2 runs.
-- **U2 — in progress.** The 200-seed scan (workers 31) found four passing seeds: 183 (window 0.246,
+- **U2 — done.** The 200-seed scan (workers 31) found four passing seeds: 183 (window 0.246,
   scale 0.50, start 0.241), 158 (0.241, 0.40, 0.244), 33 (0.171, 0.50, 0.236), 86 (0.141, 0.70,
-  0.224). Seed 183 is pinned; baking next.
+  0.224). Seed 183 is pinned, baked and committed; the asset's sun sits at y 0.299 (level) and
+  horizontal 0.350, beyond the planets' 0.338 rim.
+- **U3 — done.** The 200-seed scan found 33 passing seeds; seed 86 was widest (window 0.397, scale
+  0.40, start 0.269). `Pending` cleared, baked and committed; the asset's sun sits at y -0.312 (the
+  band's low edge) and horizontal 0.360, beyond the 0.285 rim.
+- **U4 — done.** The chapter order is unchanged (02_01–02_07, 02_09) and 02_06 keeps guid `80ba`.
+  `ShippedJobs_MeetTheContract` (9 ms), `FleetJobsTests` (4) and `SectorWireTests` (5) pass in
+  `bake`.
 
 ## Manual check (headset)
 
