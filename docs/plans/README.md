@@ -17,7 +17,7 @@ and schedule in [release](../design/release.md). Post-mortems in [lessons](../le
 - **27 Nov:** [construct separate](in-progress/bake-construct-separate.md) — U1 in (fleet plumbing,
   scratch fixtures, 7 fast tests); the Clear/Curve spikes and rates are next in the bake checkout
 - **27 Nov:** [construct jobs](in-progress/bake-construct-jobs.md) — U1 in (a Construct fleet scans and
-  bakes sequentially); U2 waits on fan-out and the replace-or-prove call
+  bakes sequentially); U2 proves the constructor on the scratch copies, 02_09C after fan-out
 
 ## Next
 
@@ -25,8 +25,8 @@ and schedule in [release](../design/release.md). Post-mortems in [lessons](../le
   [single](in-progress/bake-construct-single.md) (in progress) → [wire](in-progress/bake-construct-wire.md) (in progress) →
   [separate](in-progress/bake-construct-separate.md) (in progress) →
   [fan-out](backlog/bake-construct-fanout.md) (next)
-- **Jobs:** [construct jobs](in-progress/bake-construct-jobs.md) U2 ports 02_06 and 02_09 to the
-  constructor once fan-out lands
+- **Jobs:** [construct jobs](in-progress/bake-construct-jobs.md) U2 proves the constructor on the
+  scratch copies once fan-out lands
 - **After the bake overhaul:** [chapter 2 rebakes](in-progress/chapter-2-rebakes.md) — moved to Now;
   the answer backfill runs first
 - **27 Nov–1 Dec, alongside chapter 2:** [broken bodies](backlog/chapter-3-broken-bodies.md) (anchors, then
