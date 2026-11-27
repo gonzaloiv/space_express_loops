@@ -93,8 +93,10 @@ namespace DigitalLove.Game.Flow
             string cue = solved ? puzzle.CompleteKey : puzzle.FailKey;
             if (solved)
                 ttsPresenter.Play(new[] { cue }, ReturnWhenSaved);
-            else
+            else if (HeardJobLines.In(memoryDataClient).FirstTime(cue))
                 ttsPresenter.Play(new[] { cue }, Restart);
+            else
+                Restart();
         }
 
         private JobOpenResult OpenNext(PuzzleData puzzle)

@@ -19,6 +19,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         private bool scaleGrab;
         private bool hadTwoHands;
         private bool moveStarted;
+        private bool moveLocked;
         private int lastCount;
         private float startHandDistance;
         private float startScale;
@@ -49,6 +50,10 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         // Two hands drive the cube: resizing its frame, or scaling while the pinch centre stays inside.
         public bool TwoHandGrab => frameGrab || scaleGrab;
 
+        // The hands that drive the cube: a hand that joins a move under way rides along, it does not
+        // turn the move into a scale.
+        public int ActiveHands(int count) => moveLocked ? 1 : count;
+
         public void Tick(int count)
         {
             if (!classified)
@@ -68,6 +73,7 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             moveGrab = false;
             hadTwoHands = false;
             moveStarted = false;
+            moveLocked = false;
             classified = false;
             lastCount = 0;
         }
@@ -85,27 +91,48 @@ namespace DigitalLove.Game.SpaceShaping.Cube
         private void TrackCount(int count)
         {
             if (count >= 2 && lastCount < 2)
-            {
-                startHandDistance = CubeGesture.HandDistance(grabbable);
-                startScale = zone.Scale;
-                startSize = zone.Size;
-                bool inside = CubeGesture.PinchCentreInsideScale(zone, grabbable);
-                frameGrab = zone.CanResize && !inside;
-                scaleGrab = inside;
-                hadTwoHands = true;
-            }
+                SecondHandJoined();
 
             if (count == 1 && lastCount != 1)
+                OneHandLeft();
+        }
+
+        // Once the cube is moving, the grab stays a move until every hand lets go: a second hand that
+        // pinches near the cube mid-move does not start a scale.
+        private void SecondHandJoined()
+        {
+            if (moveStarted)
             {
-                moveGrab = !hadTwoHands && CubeGesture.HandInsideFrame(zone, grabbable);
-                moveStarted = false;
-                grabOrigin = HandLocal();
+                moveLocked = true;
+                return;
             }
+
+            startHandDistance = CubeGesture.HandDistance(grabbable);
+            startScale = zone.Scale;
+            startSize = zone.Size;
+            bool inside = CubeGesture.PinchCentreInsideScale(zone, grabbable);
+            frameGrab = zone.CanResize && !inside;
+            scaleGrab = inside;
+            hadTwoHands = true;
+        }
+
+        private void OneHandLeft()
+        {
+            if (moveLocked)
+            {
+                // The hand left holding may be the one that joined: carry on from where the cube is.
+                grabOffset = zone.Centre - HandLocal();
+                return;
+            }
+
+            moveGrab = !hadTwoHands && CubeGesture.HandInsideFrame(zone, grabbable);
+            moveStarted = false;
+            grabOrigin = HandLocal();
         }
 
         private void Apply(int count)
         {
-            if (count == 1)
+            if (count == 1 || moveLocked)
                 Move();
             else if (frameGrab)
                 ResizeFrame();

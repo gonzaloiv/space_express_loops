@@ -148,9 +148,10 @@ namespace DigitalLove.Game.SpaceShaping.Cube
             }
 
             gesture.Tick(count);
-            bool stray = count == 1 ? !gesture.MoveGrab : !gesture.TwoHandGrab;
-            SetMoving(count == 1 && zone.CanMove && !stray);
-            ApplyFeedback(stray ? 0 : count);
+            int hands = gesture.ActiveHands(count);
+            bool stray = hands == 1 ? !gesture.MoveGrab : !gesture.TwoHandGrab;
+            SetMoving(hands == 1 && zone.CanMove && !stray);
+            ApplyFeedback(stray ? 0 : hands);
         }
 
         private void SetMoving(bool value)

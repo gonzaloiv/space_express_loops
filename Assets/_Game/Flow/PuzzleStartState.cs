@@ -71,7 +71,7 @@ namespace DigitalLove.Game.Flow
                 return true;
             }
 
-            string[] lines = puzzle.noIntro
+            string[] lines = puzzle.noIntro || !FirstIntro(puzzle)
                 ? new[] { chapter.IntroKey }
                 : new[] { chapter.IntroKey, puzzle.IntroLinesKey };
             ttsPresenter.Play(lines, ttsPresenter.HidePanel);
@@ -95,12 +95,16 @@ namespace DigitalLove.Game.Flow
                 return;
             }
 
-            if (puzzle.noIntro)
+            if (puzzle.noIntro || !FirstIntro(puzzle))
                 ttsPresenter.HidePanel();
             else
                 ttsPresenter.Play(new[] { puzzle.IntroLinesKey }, ttsPresenter.HidePanel);
             StartPuzzle();
         }
+
+        // Jim briefs a job once per session; entering it again from the map goes straight in.
+        private bool FirstIntro(PuzzleData puzzle) =>
+            HeardJobLines.In(memoryDataClient).FirstTime(puzzle.IntroLinesKey);
 
         private void StartPuzzle()
         {
