@@ -21,6 +21,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         public void Validate_ValidSunCurve_Passes()
         {
             PuzzleData puzzle = Puzzle(Sun(), Planet(Blocker()), Endpoint(-1f), Endpoint(1f));
+            puzzle.frames = new[] { new PuzzleFrame { centre = Blocker(), size = 0.1f } };
 
             Assert.IsTrue(
                 PuzzleJobValidator.Validate(
@@ -35,6 +36,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             PuzzleSource sun = Sun();
             sun.scale = 0.07f;
             PuzzleData puzzle = Puzzle(sun, Planet(Blocker()), Endpoint(-1f), Endpoint(1f));
+            puzzle.frames = new[] { new PuzzleFrame { centre = Vector3.zero, size = 0.1f } };
             PuzzleJobContract contract = Contract(PuzzleMechanism.Curve);
             contract.SunRule = PuzzleSunRule.CentredGrown;
 

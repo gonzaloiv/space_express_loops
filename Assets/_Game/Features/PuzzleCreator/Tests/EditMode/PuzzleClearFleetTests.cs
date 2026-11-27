@@ -27,6 +27,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         public void Validate_TwoShipClearFleet_SharedBlocker_Passes()
         {
             PuzzleData puzzle = ClearFleet(0.2f);
+            puzzle.frames = new[] { new PuzzleFrame { centre = new Vector3(0f, 0.2f, 0f), size = 0.1f } };
             PuzzleJobContract contract = ClearFleetContract();
 
             Assert.IsTrue(
