@@ -2,7 +2,7 @@
 
 **Status:** design · content · chapters.
 **Date:** 2026-11-07.
-**Revised:** 2026-11-26.
+**Revised:** 2026-11-27.
 
 **Related:** [jobs](jobs.md) · [progression](systems/progression.md) · [the cube](systems/cube.md) ·
 [vision](vision.md) §6 · [plans board](../plans/README.md)
@@ -95,6 +95,10 @@ absurd; the damage stays in the bodies.
 
 The sector audit is the frame: Jim calls it routine; the player sees what it is. If repulsors do not
 ship, 3-3 and 3-4 become anchored jobs and 3-5/3-6 use more anchors.
+
+**The sun is picked per job at bake.** A single-ship job may keep it centred (chapter 1's rule) or put
+it at the edge (chapter 2's); the contract pins `SunPlacement`, `SunOnChord` and `SunRule` from the seed,
+so neither look is fixed for the chapter. A centred star cannot meet `NoSunAnswer` in a fleet.
 
 **Future options** ([later chapters](../ideas/later-chapters.md) §Broken physics): **debris** (a broken
 planet's tight cluster of fragments, each its own kind, so one pinch reshapes it unevenly) and

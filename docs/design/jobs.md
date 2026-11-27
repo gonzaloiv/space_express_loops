@@ -2,7 +2,7 @@
 
 **Status:** design · content · jobs.
 **Date:** 2026-10-27.
-**Revised:** 2026-11-26.
+**Revised:** 2026-11-27.
 
 **Related:** [progression](systems/progression.md) · [lore](world/lore.md) ·
 [the cube](systems/cube.md) · [glossary](glossary.md)
@@ -12,13 +12,13 @@
 The **concrete run**: the jobs the player actually plays, one row each — their brief, field and entropy
 scale (the shape [progression](systems/progression.md) sets), plus their **lore skin**. Progression is
 the general system; this is the specific development of it. Chapter 1's seven jobs are baked; chapter 2's
-ten are being (re)baked with the sun at the edge ([plans board](../plans/README.md)). This table is
-the source for every job's field and budget; [chapters](chapters.md) keeps the lessons.
-This doc is **chapters 1–2**; chapter 3 is in [chapters](chapters.md).
+eight are being (re)baked with the sun at the edge ([plans board](../plans/README.md)). This table is
+the source for every job's field and budget; [chapters](chapters.md) keeps the lessons. Chapter 3's six
+rows are at the table's end; its manual entries are below.
 
 ## The run — the mechanics
 
-| # | Teaches | Role | Brief (translatable · zones · ships) | Shape | Field (planets + sun · wells · depth) | Entropy scale (derived) | Why |
+| # | Teaches | Role | Brief (translatable · zones · ships) | Shape | Field (planets + sun · wells · depth · bodies) | Entropy scale (derived) | Why |
 |---|---|---|---|---|---|---|---|
 | 1 | the scale | Curve | fixed · 1 zone · 1 ship | Ring | 6 + sun · single · tutorial | low | first contact: a viable six-planet field, the sun in the background, one pinch |
 | 2 | the centre | Curve | fixed · 1 zone · 1 ship | Ring | 4–6 + sun · single · medium | medium | the fixed cube over the sun — the star is a source too |
@@ -37,16 +37,26 @@ This doc is **chapters 1–2**; chapter 3 is in [chapters](chapters.md).
 | 2-8 | Clear among decoys | Clear | yes · 1 zone · 2 ships, separate | Cluster | 12 + sun · multi | medium | the shared blocker hides among planets that only look involved |
 | 2-9 | fleet capstone | Curve | yes · 1 zone · 3 ships, one origin | Cluster | 12 + sun · multi · deep | high (budget 1.20) | placement, shared paths and the field across every ship |
 | — (dropped) | two shared blockers | Clear | yes · 1 zone · 2 ships, separate | Spiral | 12 + sun · multi | medium | two shared blockers, two edits on one budget |
+| 3-1 | the fused body | Curve | yes · 1 zone · 1 ship | Ring | 8 + sun · single · medium · 1 anchor | low | the fused planet cannot shrink; growing a neighbour bends the line around it |
+| 3-2 | the decoy | Curve | yes · 1 zone · 1 ship | Ring | 10 + sun · single · medium · 1 anchor among decoys | low–medium | only one body is fused; the other planets still bill the budget |
+| 3-3 | the repulsor, shrunk | Clear | yes · 1 zone · 1 ship | Spiral | 10 + sun · single · medium · 1 repulsor | medium | shrinking it opens the gap the run needs |
+| 3-4 | the repulsor, grown | Curve | yes · 1 zone · 1 ship | Spiral | 12 + sun · single · medium · 1 repulsor | medium | growing it shoves the ship off its line |
+| 3-5 | both bodies | Mixed | yes · 2 zones · 1 ship | Cluster | 12 + sun · multi · deep · 1 anchor + 1 repulsor | medium | one body will not move; the other must be paid for |
+| 3-6 | broken-body capstone | Any | yes · 2 zones · 3 ships, one origin | Cluster | 14 + sun · multi · deep · 1 anchor + 1 repulsor | high | both damaged bodies in one fleet field; the answer may use either |
 
 Fleet jobs request **Curve** (2-6, 2-9), except the Clear fleets (2-7, 2-8), which ask for **Clear**; the
 rest are checked by playing them. 2-8 is parked (2026-11-27) because it repeats 2-7; its asset and lines
 stay for a freelance job.
 
-**Chapter 1 is seven jobs (2026-11-05); the run is twenty-two (2026-11-26): 1 scale, 2 centre,
-3 clear, 4 move, 5 multi-zone, 6 the field carries you, 7 capstone `Curve`, then chapter 2's ten
-fleet jobs.**
+Chapter 3's rows are the starting brief for its scans (2026-11-27); the sun is chosen per job at bake,
+not fixed for the chapter. If repulsors do not ship (1 Dec gate), 3-3 and 3-4 become anchored jobs and
+3-5/3-6 use more anchors per job ([chapters](chapters.md)).
+
+**Chapter 1 is seven jobs (2026-11-05); the run is twenty-one (2026-11-27): 1 scale, 2 centre,
+3 clear, 4 move, 5 multi-zone, 6 the field carries you, 7 capstone `Curve`, then chapter 2's eight
+fleet jobs and chapter 3's six broken-body jobs.**
 The fixed-cube several-zones rung is retired; "several zones" lands with the move at
-job 5. There is no job 8 (decided 2026-11-11): **Mixed** moves to a later chapter, since chapter 2
+job 5. There is no job 8 (decided 2026-11-11): **Mixed** lands in chapter 3 (3-5), since chapter 2
 ships after job 7 ([chapters](chapters.md)).
 
 **The ramp by job.** Scramble is how far the start sits from the solved arrangement: it rises within an

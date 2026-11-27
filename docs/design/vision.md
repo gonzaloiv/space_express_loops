@@ -143,6 +143,6 @@ mechanic before writing another plan.
 | Identity | **Resolved** by the transport-company pivot and the name "Our Space". |
 | Competition scope | **Done.** The competition slice (chapter 1 and the first fleet jobs) shipped by the 2026-11-18 deadline; the store release replaces it ([release](release.md)). |
 | Room-scale legacy drag | **Resolved.** The room view mode is removed from the code. |
-| Content ceiling | **Valid, narrower.** Authored multi-ship is fine; simultaneous unscripted multi-ship is "near-chaotic". Chapter 1's seven-job spine is single-ship; chapter 2's ten jobs are the fleet ([chapters](chapters.md)). |
+| Content ceiling | **Valid, narrower.** Authored multi-ship is fine; simultaneous unscripted multi-ship is "near-chaotic". Chapter 1's seven-job spine is single-ship; chapter 2's eight jobs are the fleet ([chapters](chapters.md)). |
 | Entropy legibility | **In, tuning.** The in-field bar and the passthrough strain carry the spend; the budget is derived from the bake's best solution, so the 3★ band still needs a headset read ([progression](systems/progression.md) §Open questions). |
 | Run length | **Measuring.** The target is ~3 minutes a job across 21 story jobs; minutes per job on the headset are measured in the timing pass before upload ([progression](systems/progression.md) §Open questions). |

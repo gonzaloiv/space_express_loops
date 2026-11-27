@@ -26,7 +26,7 @@ tags:
 By 2026-11-25 the story was three separate ideas: the Wrap works, the firm gets greedy, then damage —
 with nothing pulling the player from one chapter into the next. The arc had to settle what breaks,
 give each episode a turn, and revise episodes 1–2's lines without rewriting eleven jobs. It ships as
-22 story jobs across chapters 1–3 ([lore](../../design/world/lore.md) §Episodes).
+21 story jobs across chapters 1–3 ([lore](../../design/world/lore.md) §Episodes).
 
 ## Guidance
 

@@ -98,7 +98,7 @@ The **concrete run** — one row per job, with its brief fields, archetypes, fie
 runs are baked with a relation — **fan-out** (one origin), **converge** (one destination), or
 **separate** (no shared planet) — so the shared field stays legible. Multi-ship is a variation axis,
 not a mode: the same cube, entropy and arrival rules apply. Chapter 1's seven-job spine is
-single-ship; chapter 2's ten jobs are the fleet ([chapters](../chapters.md)).
+single-ship; chapter 2's eight jobs are the fleet ([chapters](../chapters.md)).
 
 ### The company is lore only
 
