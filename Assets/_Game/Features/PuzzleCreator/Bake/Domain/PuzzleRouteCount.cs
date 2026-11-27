@@ -8,6 +8,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private const int Samples = 8;
         private const float MergeDistance = 0.0001f;
 
+        // Known drift: the shipped 01_03 stores 2 routes but this scan finds 1; the shipped check
+        // trusts the stored count, so a rebake would move the field to 1. Measure before rebaking it.
         public static int Count(PuzzleData puzzle, PuzzleSimSettings settings, PuzzleZone[] solution)
         {
             if (solution == null || solution.Length == 0)

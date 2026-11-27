@@ -160,7 +160,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         // The constructor's answer takes the same path as a searched one: the start, the shorter-zone
         // rule, then the confirm (entropy, frames, routes, sun rule).
-        public static PuzzleBakeResult Check(
+        private static PuzzleBakeResult Check(
             PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief,
             PuzzleSolution found, PuzzleSolutionKind kind)
         {
@@ -223,7 +223,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return puzzle.routes >= Mathf.Max(1, brief.MinRoutes);
         }
 
-        private static PuzzleBakeResult Fail(PuzzleBakeStatus status, PuzzleSolutionKind kind = PuzzleSolutionKind.Other) =>
+        private static PuzzleBakeResult Fail(
+            PuzzleBakeStatus status, PuzzleSolutionKind kind = PuzzleSolutionKind.Other) =>
             new() { Status = status, Kind = kind };
 
         private static PuzzleBakeResult Fail(PuzzleBakeStatus status, PuzzleRunReport runReport) =>

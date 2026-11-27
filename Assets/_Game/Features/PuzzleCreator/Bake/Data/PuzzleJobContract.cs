@@ -8,8 +8,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public bool Pending;
         public int Seed;
         public int Attempts;
-        // Search is the default; Construct is the answer-first generator.
-        public PuzzleGenerator Generator;
         public int PlanetCount;
         public PuzzleFieldShape FieldShape;
         public bool HasSun;

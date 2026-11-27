@@ -149,9 +149,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             PuzzleJobContract job, SpaceShapingSettings settings, PuzzleSeed seed)
         {
             seed.mechanism = job.Mechanism;
-            if (job.Generator == PuzzleGenerator.Construct)
-                return PuzzleSeedScanner.Find(job, seed, settings, Mathf.Max(1, job.Attempts));
-
             PuzzleBrief brief = PuzzleBrief.From(seed, settings);
             if (brief.IsMulti && job.Attempts > 1)
                 return FindFleetJob(job, settings, seed, brief);
@@ -217,7 +214,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         private static string GeneratedFolder(string chapter) => $"{ChaptersFolder}/{chapter}";
 
-        // A construct comparison copy writes outside Resources, so it never ships with the chapter.
+        // A job's field and answer paths: the chapter folder for a shipped field.
         public static string JobPath(PuzzleJobContract job) =>
             $"{FolderFor(job)}/Job_{job.Id}_Puzzle.asset";
 
@@ -225,14 +222,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             $"{AnswerFolder(job)}/{job.Id}.asset";
 
         private static string FolderFor(PuzzleJobContract job) =>
-            IsScratch(job)
-                ? PuzzleConstructScratch.Folder
-                : GeneratedFolder(PuzzleJobContracts.ChapterOf(job.Id));
+            GeneratedFolder(PuzzleJobContracts.ChapterOf(job.Id));
 
-        private static string AnswerFolder(PuzzleJobContract job) =>
-            IsScratch(job) ? PuzzleConstructScratch.Folder : PuzzleAnswerAsset.Folder;
-
-        private static bool IsScratch(PuzzleJobContract job) =>
-            PuzzleConstructScratch.Has(job.Id);
+        private static string AnswerFolder(PuzzleJobContract job) => PuzzleAnswerAsset.Folder;
     }
 }

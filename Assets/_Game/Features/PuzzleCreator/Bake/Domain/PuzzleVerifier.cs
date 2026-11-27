@@ -25,8 +25,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return new PuzzleVerification
             {
                 Start = startResult,
-            SolvedRun = solvedResults[0],
-            Solution = solution,
+                SolvedRun = solvedResults[0],
+                Solution = solution,
                 EntropySpent = solved.EntropySpent,
                 Kind = PuzzleSolutionClassifier.Classify(solved, setup, startResults, solvedResults),
                 StartMargin = startResult.HasPoints

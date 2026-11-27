@@ -4,8 +4,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 {
     public static class PuzzleJobContracts
     {
-        // Shipped contracts. The pending constructor copies live in PuzzleConstructScratch and are
-        // found by TryGet/ById, not by Enabled.
+        // Shipped contracts. Pending entries are authored but not yet shipped.
         public static readonly IReadOnlyList<PuzzleJobContract> All = new[]
         {
             new PuzzleJobContract
@@ -190,7 +189,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                     return true;
             }
 
-            return PuzzleConstructScratch.Has(id);
+            return false;
         }
 
         public static bool IsAuthoredByHand(string id)
@@ -215,7 +214,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return true;
             }
 
-            return PuzzleConstructScratch.TryGet(id, out contract);
+            contract = default;
+            return false;
         }
 
         public static PuzzleJobContract ById(string id) =>
