@@ -84,13 +84,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Relation = PuzzleShipRelation.Converge,
                 Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
             },
-            // Fleet capstone: three ships from one origin, the chapter's hardest field. Seed 9 is the
-            // widest of two passing seeds in the 2026-11-25 scan (window 0.19); its answer is a 0.40
-            // scale delta at a start 0.183 away, so the high-scramble bounds sit just under both. The
-            // headset pass confirms them.
+            // Fleet capstone: three ships from one origin, the chapter's hardest field. Seed 9 shipped
+            // with no solved zone under the current physics, so the 2026-11-27 200-seed scan rebaked it.
+            // Seed 183 is the widest of four passing seeds (window 0.246); its answer is a 0.50 scale
+            // delta at a start 0.241 away, so the high-scramble bounds stay under both.
             new PuzzleJobContract
             {
-                Id = "02_09", Seed = 9, Attempts = 1, PlanetCount = 12,
+                Id = "02_09", Seed = 183, Attempts = 1, PlanetCount = 12,
                 FieldShape = PuzzleFieldShape.Cluster,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
