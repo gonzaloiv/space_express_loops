@@ -1,7 +1,9 @@
 # Chapter 3
 
-**Status:** next · space shaping · updated 2026-11-26 — chapter 3's ~6 jobs on broken bodies, its
-episode, lines and the release's ending. The mechanics are [broken bodies](chapter-3-broken-bodies.md).
+**Status:** next · space shaping · updated 2026-11-27 — chapter 3's ~6 jobs on broken bodies, its
+episode, lines and the release's ending. The mechanics are [anchors](chapter-3-anchors.md),
+[pinch refusal](chapter-3-pinch-refusal.md), [repulsors](chapter-3-repulsors.md) and
+[fleet bodies](chapter-3-fleet-bodies.md).
 
 **Bakes:** off the editor — U2 (the jobs) ([AGENTS](../../../AGENTS.md#bakes-run-off-the-editor), `docs/tools/bake.ps1`).
 
@@ -16,7 +18,10 @@ episode opener, Jim's lines and the ending.
 
 ## Depends on
 
-- [Broken bodies](chapter-3-broken-bodies.md): both mechanics, or anchors only if the 1 Dec gate fails.
+- U1 needs nothing. U2's single-ship jobs need [anchors](chapter-3-anchors.md),
+  [pinch refusal](chapter-3-pinch-refusal.md) and [repulsors](chapter-3-repulsors.md) (or anchors
+  only if the 1 Dec gate fails); the capstone needs [fleet bodies](chapter-3-fleet-bodies.md). If
+  fleet bodies slips, bake 3-1…3-5 first and the capstone last.
 - The [story arc](../../solutions/narrative/story-arc.md): what breaks, the episode and its clients, the
   ≤ 90-character manual rule, the card numbered by play order.
 
@@ -43,18 +48,18 @@ episode opener, Jim's lines and the ending.
   ([chapters](../../design/chapters.md) §Chapter 3).
 - **Contracts.** Add all six to `PuzzleJobContracts.All` as `Pending = true`, then clear it once each
   is baked and wired. Each pins the knobs the bake and validator read: `Anchors` and `Pushes`
-  ([broken bodies](chapter-3-broken-bodies.md)), `PlanetCount`, `FieldShape`, `Mechanism`, `Zones`,
+  ([anchors](chapter-3-anchors.md), [repulsors](chapter-3-repulsors.md)), `PlanetCount`, `FieldShape`, `Mechanism`, `Zones`,
   `Ships`, `Relation`, `Translatable`, `MinRoutes`, `MinBlockers`, `HasSun`, `SunPlacement`,
   `SunOnChord`, `SunRule`, the `No*` flags and the scramble bounds (`MaxScaleDelta`, `MinScaleDelta`,
   `MinStartDistance`, which encode the design table's low/medium/high column). The six rows are in
   [jobs](../../design/jobs.md#the-run--the-mechanics); tune planets, zones and role from the scans. A
   repulsor contract's answer must cover the pushed body
-  ([broken bodies](chapter-3-broken-bodies.md)), so a seed whose cheapest role is a normal planet is
+  ([repulsors](chapter-3-repulsors.md)), so a seed whose cheapest role is a normal planet is
   rejected. A fleet cannot request `Mixed` (`PuzzleBrief.SupportsFleetRole`), so the capstone asks
   `Any`.
 - **Scan, pin, then bake.** `-Mode bake` bakes from the contract's `Seed`, not from a `-Mode scan`
-  (`PuzzleBatchBake`, `PuzzleTestSetBuilder.FindJob`); an `Attempts` window above one scans forward
-  from that seed and stops on the first pass. Scan the seeds, pin a passing one with `Attempts = 1`
+  (`PuzzleBatchBake`, `PuzzleTestSetBuilder.FindJob`); for a fleet, an `Attempts` window above one
+  scans forward from that seed and stops on the first pass. Scan the seeds, pin a passing one with `Attempts = 1`
   (a window above one can bake `Seed + attempt`, not the seed you pinned), then bake. A bake writes
   `Chapters/03/Job_03_xx_Puzzle.asset` and its answer only.
 - **The chapter order is hand-wired.** No tool appends to a chapter's `levels`

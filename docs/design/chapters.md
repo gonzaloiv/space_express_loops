@@ -68,7 +68,7 @@ better than the single-ship jobs). They ship as episode 2 of the story ([lore](w
 ## Chapter 3 — broken bodies (store release)
 
 The damage shows in the bodies themselves (decided 2026-11-25). No new gesture: the same pinch meets
-bodies that no longer behave. ~6 jobs ([broken bodies](../plans/backlog/chapter-3-broken-bodies.md) for the
+bodies that no longer behave. ~6 jobs ([broken bodies](../plans/backlog/chapter-3-anchors.md) for the
 mechanics, [chapter 3](../plans/backlog/chapter-3-jobs.md) for the jobs).
 
 | Lesson | Body | Teaches | Cost |

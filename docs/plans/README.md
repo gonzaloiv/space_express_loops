@@ -12,8 +12,12 @@ and schedule in [release](../design/release.md). Post-mortems in [lessons](../le
   solvable; starting with the answer backfill and the 02_09 replay
 ## Next
 
-- **27 Nov–1 Dec, alongside chapter 2:** [broken bodies](backlog/chapter-3-broken-bodies.md) (anchors, then
-  repulsors; gate 1 Dec)
+- **27–30 Nov:** [anchors](backlog/chapter-3-anchors.md) (single-ship) and
+  [pinch refusal](backlog/chapter-3-pinch-refusal.md), in parallel
+- **By 1 Dec (the gate):** [repulsors](backlog/chapter-3-repulsors.md), single-ship; if the gate
+  fails, chapter 3 ships anchors only
+- **After the gate:** [fleet bodies](backlog/chapter-3-fleet-bodies.md) — the two-pass fleet bake for
+  the capstone; can slip without blocking the chapter
 - **Before 1 Dec:** [map arc](backlog/chapter-3-map-arc.md) — chapter systems on an arc around the seat, so every
   job stays in reach once chapter 3 adds the third
 - **1–3 Dec:** [chapter 3](backlog/chapter-3-jobs.md) (the jobs, lines and the ending)
