@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using DigitalLove.Game.SpaceShaping;
+using DigitalLove.Global;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -142,18 +144,104 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
             Assert.IsFalse(moved.Protected[changed]);
         }
 
-        private PuzzleConstructRequest Request(IPuzzleLesson lesson, int attempt = 0)
+        [Test]
+        public void RetrySeed_DoesNotCollideWithTheNextSeed()
+        {
+            PuzzleSeed next = contract.CreateSeed();
+            next.seed = seed.seed + 1;
+            try
+            {
+                PuzzleConstructedField retry = PuzzleConstruct.Build(Request(new NoMoves(), 1));
+                PuzzleConstructedField nextField =
+                    PuzzleConstruct.Build(RequestFor(next, new NoMoves()));
+                Assert.IsNotNull(retry);
+                Assert.IsNotNull(nextField);
+                CollectionAssert.AreNotEqual(retry.Planets, nextField.Planets);
+            }
+            finally
+            {
+                Object.DestroyImmediate(next);
+            }
+        }
+
+        [Test]
+        public void RingField_DecoysStayOnTheRings()
+        {
+            PuzzleConstructRequest request = Request(new NoMoves());
+            request.Field.FieldTilt = 0f;
+            request.Field.FieldThickness = 0f;
+            PuzzleConstructedField field = PuzzleConstruct.Build(request);
+            Assert.IsNotNull(field);
+            Assert.LessOrEqual(DistinctRadii(field.Planets), 2);
+        }
+
+        [Test]
+        public void RelocatedDecoy_KeepsItsRingRadius()
+        {
+            PuzzleConstructRequest request = Request(new NoMoves());
+            PuzzleConstructedField field = PuzzleConstruct.Build(request);
+            int index = FirstUnprotected(field);
+            Assert.GreaterOrEqual(index, 0);
+
+            Vector3 before = field.Planets[index].position;
+            PuzzleDecoyField decoys = new()
+            {
+                Planets = (PuzzleFieldPlanet[])field.Planets.Clone(),
+                Protected = field.Protected,
+                Request = request,
+                Origin = field.Origin,
+                Destination = field.Destination
+            };
+            Assert.IsTrue(PuzzleConstructDecoys.TryRelocate(
+                decoys, index, new SeededRandom(1234)));
+            Assert.AreEqual(
+                HorizontalRadius(before),
+                HorizontalRadius(decoys.Planets[index].position), 0.0001f);
+        }
+
+        private PuzzleConstructRequest Request(IPuzzleLesson lesson, int attempt = 0) =>
+            RequestFor(seed, lesson, attempt);
+
+        private PuzzleConstructRequest RequestFor(
+            PuzzleSeed source, IPuzzleLesson lesson, int attempt = 0)
         {
             return new PuzzleConstructRequest
             {
                 Contract = contract,
-                Brief = PuzzleBrief.From(seed, settings),
-                Seed = PuzzleSeedFields.From(seed, settings),
+                Brief = PuzzleBrief.From(source, settings),
+                Seed = PuzzleSeedFields.From(source, settings),
                 Field = PuzzleFieldSettings.From(settings),
                 Sim = PuzzleSimSettings.From(settings),
                 Lesson = lesson,
                 Attempt = attempt
             };
+        }
+
+        private static int FirstUnprotected(PuzzleConstructedField field)
+        {
+            for (int i = 0; i < field.Planets.Length; i++)
+            {
+                if (!field.Protected[i])
+                    return i;
+            }
+
+            return -1;
+        }
+
+        private static float HorizontalRadius(Vector3 point) =>
+            new Vector2(point.x, point.z).magnitude;
+
+        private static int DistinctRadii(PuzzleFieldPlanet[] planets)
+        {
+            List<float> radii = new();
+            for (int i = 0; i < planets.Length; i++)
+            {
+                float radius = HorizontalRadius(planets[i].position);
+                if (!radii.Exists(value => Mathf.Abs(value - radius) < 0.0001f))
+                    radii.Add(radius);
+            }
+
+            return radii.Count;
         }
 
         private sealed class NoMoves : IPuzzleLesson

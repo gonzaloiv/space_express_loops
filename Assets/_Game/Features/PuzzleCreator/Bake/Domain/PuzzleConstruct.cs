@@ -7,9 +7,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     // decoys clear of the corridor, then the sun. Plain data all the way; the verdict is separate.
     public static class PuzzleConstruct
     {
-        private const int RetrySalt = 7919;
-        private const float MinFieldRadius = 0.01f;
-
         public static PuzzleConstructedField Build(PuzzleConstructRequest request)
         {
             Parts parts = Place(request);
@@ -26,7 +23,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (index < 0)
                 return null;
 
-            SeededRandom random = new(field.SeedValue + retry * RetrySalt);
+            SeededRandom random = new(PuzzleConstructSeeds.Value(field.SeedValue, retry));
             return PuzzleConstructDecoys.TryRelocate(decoys, index, random)
                 ? field.WithPlanet(index, planets[index].position)
                 : null;
@@ -34,7 +31,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         private static Parts Place(PuzzleConstructRequest request)
         {
-            int seedValue = request.Seed.Seed + request.Attempt;
+            int seedValue = PuzzleConstructSeeds.Value(request.Seed.Seed, request.Attempt);
             PuzzleFieldPlanet[] planets = Planets(request, seedValue);
             if (planets == null
                 || !PuzzleConstructChord.TryPick(
@@ -125,18 +122,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             Protected = isProtected,
             Request = request,
             Origin = origin,
-            Destination = destination,
-            Radius = FieldRadius(planets)
+            Destination = destination
         };
-
-        private static float FieldRadius(PuzzleFieldPlanet[] planets)
-        {
-            float radius = MinFieldRadius;
-            for (int i = 0; i < planets.Length; i++)
-                radius = Mathf.Max(radius, planets[i].position.magnitude);
-
-            return radius;
-        }
 
         private sealed class Parts
         {

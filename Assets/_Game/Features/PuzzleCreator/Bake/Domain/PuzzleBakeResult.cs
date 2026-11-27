@@ -10,6 +10,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         // The run of arriving scales around the answer, as a share of the range (the verdict measures
         // it). A zero window is a knife edge.
         public float Window;
+        // The validator's lines when the contract fails; null otherwise.
+        public System.Collections.Generic.List<string> Problems;
 
         public bool Baked => Puzzle != null;
     }

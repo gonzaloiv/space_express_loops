@@ -37,7 +37,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 CubeSizeMax = max,
                 SunRadius = request.Brief.SunRadius,
                 Settings = request.Sim,
-                SeedValue = request.Seed.Seed + request.Attempt
+                SeedValue = PuzzleConstructSeeds.Value(request.Seed.Seed, request.Attempt)
             };
         }
 

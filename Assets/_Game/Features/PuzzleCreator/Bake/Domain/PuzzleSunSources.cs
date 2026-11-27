@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Creator
 {
-    internal static class PuzzleSunSources
+    public static class PuzzleSunSources
     {
         // The sun is a source at the field's centre, fixed or scalable as the seed says. It stays out of
         // the cube range so a planet-sized cube still reads as the player's tool, while the run choice

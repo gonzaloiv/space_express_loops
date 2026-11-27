@@ -86,10 +86,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (!result.Baked)
                 return result;
             if (!PuzzleJobValidator.Validate(
-                    result.Puzzle, result.Kind, result.Solution, request.Contract, out _, request.Sim))
+                    result.Puzzle, result.Kind, result.Solution, request.Contract,
+                    out System.Collections.Generic.List<string> problems, request.Sim))
             {
                 Object.DestroyImmediate(result.Puzzle);
-                return Fail(PuzzleBakeStatus.ContractFailed, result.Kind);
+                PuzzleBakeResult failed = Fail(PuzzleBakeStatus.ContractFailed, result.Kind);
+                failed.Problems = problems;
+                return failed;
             }
 
             float window = PuzzleSolveWindow.Measure(result.Puzzle, result.Solution, request.Sim);
@@ -111,7 +114,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             names?.Assign(planets);
             PuzzleData puzzle = ScriptableObject.CreateInstance<PuzzleData>();
             puzzle.id = request.Contract.Id;
-            puzzle.sources = Sources(planets, field, names);
+            puzzle.sources = Sources(planets, field);
             puzzle.origin = field.Origin;
             puzzle.destination = field.Destination;
             puzzle.zoneCentre = (field.Origin + field.Destination) * 0.5f;
@@ -136,25 +139,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         }
 
         private static PuzzleSource[] Sources(
-            PuzzleFieldPlanet[] planets, PuzzleConstructedField field, PlanetNames names)
+            PuzzleFieldPlanet[] planets, PuzzleConstructedField field)
         {
             PuzzleSource[] planetSources = PuzzleSourceBridge.ToSources(planets);
-            if (!field.HasSun)
-                return planetSources;
-
-            PuzzleSource[] withSun = new PuzzleSource[planetSources.Length + 1];
-            withSun[0] = new PuzzleSource
-            {
-                home = field.SunHome,
-                scale = field.SunRadius * 2f,
-                name = names != null ? names.NameAt(planets.Length) : string.Empty,
-                fixedMass = !field.SunScalable,
-                centreOnly = true
-            };
-            for (int i = 0; i < planetSources.Length; i++)
-                withSun[i + 1] = planetSources[i];
-
-            return withSun;
+            return field.HasSun
+                ? PuzzleSunSources.WithSun(
+                    planetSources, field.SunRadius, field.SunScalable, field.SunHome)
+                : planetSources;
         }
 
         private static PuzzleBakeResult Fail(

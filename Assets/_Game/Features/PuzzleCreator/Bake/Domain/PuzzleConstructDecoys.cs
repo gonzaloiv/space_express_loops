@@ -11,8 +11,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
         public static void KeepClear(PuzzleDecoyField field)
         {
-            SeededRandom random = new(
-                field.Request.Seed.Seed + field.Request.Attempt * 7919);
+            SeededRandom random = new(PuzzleConstructSeeds.Value(
+                field.Request.Seed.Seed, field.Request.Attempt));
             for (int i = 0; i < field.Planets.Length; i++)
             {
                 if (field.Protected[i] || !InCorridor(field, i))
@@ -26,7 +26,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             for (int i = 0; i < Attempts; i++)
             {
-                Vector3 candidate = Candidate(field, random);
+                Vector3 candidate = Candidate(field, index, random);
                 if (!Fits(field, index, candidate))
                     continue;
 
@@ -66,12 +66,15 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 field.Planets[index].position, field.Origin, field.Destination) < margin;
         }
 
-        private static Vector3 Candidate(PuzzleDecoyField field, SeededRandom random)
+        // A moved decoy keeps its ring radius and height; only the azimuth changes, so a Ring or
+        // Spiral field stays on its rings instead of gaining planets in the middle.
+        private static Vector3 Candidate(PuzzleDecoyField field, int index, SeededRandom random)
         {
-            Vector3 point = random.InsideCircleXZ(field.Radius);
-            point.y = random.Range(-1f, 1f)
-                * field.Radius * field.Request.Field.FieldThickness;
-            return point;
+            Vector3 current = field.Planets[index].position;
+            float radius = new Vector2(current.x, current.z).magnitude;
+            float angle = random.Range(0f, Mathf.PI * 2f);
+            return new Vector3(
+                Mathf.Cos(angle) * radius, current.y, Mathf.Sin(angle) * radius);
         }
 
         private static bool Fits(PuzzleDecoyField field, int index, Vector3 candidate)

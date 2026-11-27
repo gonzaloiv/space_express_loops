@@ -42,11 +42,13 @@ searched one. **No anchored (`fixedMass`) planets**: those are chapter 3's
      reject any spot within a corridor margin of every ship's start path and answered path. Not
      `PuzzleArtifactFactory.PlanetsFor`: its `PuzzleBlockerPlacement.Apply` moves a planet onto the run
      and would overwrite the lesson;
-  4. the sun: `Centre` is a plain `PuzzleSource` at the field origin (the bake's `PuzzleSunSources` is
-     `internal`; do not call it); `OffCorridor` uses the public `PuzzleSunPlacementChoice.TryHome`,
-     which needs the planets, so it runs after them.
-- **Retries vary.** Each attempt seeds its random stream from `(seed, attempt)`, so a retry builds a
-  different field.
+  4. the sun: `Centre` is a plain `PuzzleSource` at the field origin; the public
+     `PuzzleSunSources.WithSun` owns that rule, so the materializer calls it rather than copying it.
+     `OffCorridor` uses the public `PuzzleSunPlacementChoice.TryHome`, which needs the planets, so it
+     runs after them.
+- **Retries vary.** Each attempt seeds its random stream from `(seed, attempt)` through one salted
+  mix (`seed + attempt × 7919`), so a retry builds a different field and attempt 1 of seed 5 is not
+  seed 6.
 - Make `PuzzleRunChoice.PlanetBlockBandFactor` public (it is `internal`, and the constructor reads the
   block band, `radius × 2`); no internal APIs across types (AGENTS).
 - Exit: fast unit tests for each step on fixed seeds (no simulation).
@@ -76,14 +78,16 @@ searched one. **No anchored (`fixedMass`) planets**: those are chapter 3's
 
 - **U1** — done. `PuzzleConstruct` with the plain snapshots (`PuzzleSeedFields`,
   `PuzzleFieldSettings`, `PuzzleConstructedField`, `PuzzleDecoyField`), the chord/lesson/decoy/sun
-  steps, and `PuzzleRunChoice.PlanetBlockBandFactor` public. `PuzzleConstructTests`: 7 fast tests
-  (counts/endpoints, corridor, Centre sun, OffCorridor sun, attempt variation, lesson move, decoy
-  move), green.
+  steps, and `PuzzleRunChoice.PlanetBlockBandFactor` public. `PuzzleConstructTests`: 10 fast tests
+  (counts/endpoints, corridor, Centre sun, OffCorridor sun, attempt variation, retry-vs-next-seed,
+  lesson move, decoy move, Ring radii, relocated-decoy radius), green.
 - **U2** — done. `PuzzleConstructBake` materializes through the public `PuzzleFieldBake.Check`
   (`Variant` stays private; `Check` runs it), then the contract validator and the solve window, and
-  reports the failing `PuzzleBakeStatus`. The retry moves the nearest unprotected decoy; the
-  lesson/cube repairs named in U2 belong to the recipes. `PuzzleConstructVerdictTests`: the shipped
-  `01_01` and its stored answer pass; an empty answer is `NoSolution`; green (~1.7 s).
+  reports the failing `PuzzleBakeStatus`, keeping the validator's lines in
+  `PuzzleBakeResult.Problems` on `ContractFailed`. The retry moves the nearest unprotected decoy; a
+  new attempt re-seeds the field with the salted mix (the wire plan's `Attempts`), and the lesson/cube
+  repairs named in U2 belong to the recipes. `PuzzleConstructVerdictTests`: the shipped `01_01` and
+  its stored answer pass; an empty answer is `NoSolution`; green (~1.7 s).
 - **Found:** `PuzzleRouteCount` now counts 1 route for the shipped `01_03` (the asset stores 2), so
   the construct gate returns `SingleRoute` for it. The shipped check trusts the stored count. The
   single plan's Clear target must construct a field that admits 2 current routes; whether the shipped
@@ -116,3 +120,18 @@ radius and settings). Findings:
 Verified fine: `Check` instantiates its own variant, so destroying the working copy is safe; the chord,
 lesson-move and sun steps keep endpoints and lesson planets protected; the found `01_03`
 route-count drift is recorded for the single plan.
+
+## Review fixes (2026-11-27)
+
+- **Done — decoys follow the field's shape.** A relocated decoy keeps its horizontal radius and height;
+  only the azimuth changes, so a Ring or Spiral field stays on its rings.
+  `RingField_DecoysStayOnTheRings` and `RelocatedDecoy_KeepsItsRingRadius` cover it.
+- **Done — one salted retry stream.** `PuzzleConstructSeeds.Value(seed, attempt)` is `seed +
+  attempt × 7919`, used by the field, the lesson and the decoy step;
+  `RetrySeed_DoesNotCollideWithTheNextSeed` covers it.
+- **Done — the sun is shared, not copied.** `PuzzleSunSources` is public and
+  `PuzzleConstructBake` calls `WithSun`.
+- **Done — the contract's lines are kept.** `PuzzleBakeResult.Problems` carries
+  `PuzzleJobValidator.Validate`'s failures on `ContractFailed`.
+- **Done — the attempt note.** U2's state says a new attempt re-seeds the field (the wire plan's
+  `Attempts`); `Bake`'s retries only move a decoy.
