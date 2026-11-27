@@ -123,11 +123,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Translatable = false, NoFail = false, NoGrade = false, NoIntro = false,
                 MaxScaleDelta = 0.5f,
             },
-            // U5: 02_06's first contract, from the jobs row (3 ships, separate, 14 + sun, edge sun).
-            // Parked until the `bake2` scan pins a seed, so the shipped check stays green meanwhile.
+            // 02_06: the three-ship Separate job from the jobs row (14 + sun, edge sun). The 2026-11-27
+            // 200-seed scan found a field; seed 86 is the widest answer (window 0.397, scale 0.40,
+            // start 0.269).
             new PuzzleJobContract
             {
-                Id = "02_06", Pending = true, Seed = 0, Attempts = 1, PlanetCount = 14,
+                Id = "02_06", Pending = false, Seed = 86, Attempts = 1, PlanetCount = 14,
                 FieldShape = PuzzleFieldShape.Cluster,
                 HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
                 SunRule = PuzzleSunRule.NoSunAnswer,
