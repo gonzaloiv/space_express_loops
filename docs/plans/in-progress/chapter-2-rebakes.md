@@ -1,14 +1,15 @@
 # Chapter 2 — rebakes
 
-**Status:** next · space shaping · updated 2026-11-27 — 02_09 must be solved by a bend and 02_06 must
-be solvable; both rebake after the bake overhaul, with the constructor if it is ready. Not started.
+**Status:** now · space shaping · updated 2026-11-27 — 02_09 must be solved by a bend and 02_06 must
+be solvable; both rebake after the bake overhaul, with the constructor if it is ready. In progress:
+U1 red (02_09 has no solved zone), seed 183 pinned; baking.
 
 **Bakes:** off the editor — U2 (02_09) and U3 (02_06)
 ([AGENTS](../../../AGENTS.md#bakes-run-off-the-editor), `docs/tools/bake.ps1`).
 
-**Related:** [plans board](../README.md) · [chapter 2 playtest fixes](../in-progress/chapter-2-playtest.md) ·
-[bake answer](../in-progress/bake-answer.md) · [bake parallel](../in-progress/bake-parallel.md) ·
-[bake construct fleet](bake-construct-fleet.md)
+**Related:** [plans board](../README.md) · [chapter 2 playtest fixes](chapter-2-playtest.md) ·
+[lessons](../../lessons.md) ·
+[bake construct jobs](../backlog/bake-construct-jobs.md)
 
 ## Why
 
@@ -17,10 +18,12 @@ and 02_09 (`Mechanism = Any`) plays out like the Clear jobs before it.
 
 ## Depends on
 
-[Bake answer](../in-progress/bake-answer.md) and [bake parallel](../in-progress/bake-parallel.md): one
+The bake overhaul (closed 2026-11-27, [lessons](../../lessons.md)): one
 checkout, every core, bakes that write only their job and its answer. If
-[bake construct fleet](bake-construct-fleet.md) has landed, bake both with `Generator = Construct`;
-otherwise use the search (the constructor is not built as of 2026-11-27).
+[bake construct jobs](../backlog/bake-construct-jobs.md) has landed, bake both with `Generator = Construct`;
+otherwise use the search (the constructor is not built as of 2026-11-27); that field stays live until
+[construct jobs](../backlog/bake-construct-jobs.md) U2 re-bakes both with `Construct` and re-pins
+them.
 
 ## Before U1
 
@@ -57,7 +60,7 @@ uncommitted, and the bake checkout only sees committed code. In order:
 ### U1 — check 02_09 as shipped
 
 - Seed 9's documented answer is a curve (0.40 scale delta at a 0.183 start). Run
-  `ShippedJobs_MeetTheContract`; once [bake answer](../in-progress/bake-answer.md) has stored 02_09's answer, this is a
+  `ShippedJobs_MeetTheContract`; once the backfill has stored 02_09's answer, this is a
   replay. If green, nothing to bake: skip U2.
 - Exit: green, or a red result that names why.
 
@@ -83,6 +86,15 @@ uncommitted, and the bake checkout only sees committed code. In order:
   move; check it.
 - Run `ShippedJobs_MeetTheContract`, `FleetJobsTests` and `SectorWireTests`.
 - Exit: all green; the board says what baked.
+
+## State
+
+- **U1 — red.** `PuzzleAnswerBackfill` on the shipped 02_09 asset reports `no answer meets the
+  contract: no solved zone`; the other 13 enabled jobs got answers. The shipped field has no fleet
+  answer under today's physics, so U2 runs.
+- **U2 — in progress.** The 200-seed scan (workers 31) found four passing seeds: 183 (window 0.246,
+  scale 0.50, start 0.241), 158 (0.241, 0.40, 0.244), 33 (0.171, 0.50, 0.236), 86 (0.141, 0.70,
+  0.224). Seed 183 is pinned; baking next.
 
 ## Manual check (headset)
 

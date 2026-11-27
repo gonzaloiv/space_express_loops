@@ -8,20 +8,19 @@ and schedule in [release](../design/release.md). Post-mortems in [lessons](../le
 
 - **27 Nov:** [chapter 2 playtest fixes](in-progress/chapter-2-playtest.md) — code, lines and docs in;
   the Interchange prefab wiring, the 02_01 clip and the test runs remain
-- **27 Nov, today:** [bake answer](in-progress/bake-answer.md) — store the answer, replay the shipped
-  check, bakes leave the chapter list alone; code in, the shipped answers backfilled on `bake`
-- **27 Nov, today:** [bake parallel](in-progress/bake-parallel.md) — one batch Unity scans the fleet
-  seeds on every core, and the wire and fleet counts derive from the chapter assets; the timed scan
-  is still due in the bake checkout
+- **27 Nov:** [chapter 2 rebakes](in-progress/chapter-2-rebakes.md) — 02_09 as a bend, 02_06
+  solvable; starting with the answer backfill and the 02_09 replay
+- **27 Nov, today:** [construct core](in-progress/bake-construct-core.md) — the answer-first
+  generator's skeleton and its pass/fail gate; in progress
 
 ## Next
 
-- **27 Nov:** the bake overhaul, in order: [bake answer](in-progress/bake-answer.md) (in progress) →
-  [bake parallel](in-progress/bake-parallel.md) (in progress) →
-  [construct core](backlog/bake-construct-core.md) (answer first, one ship) →
-  [construct fleet](backlog/bake-construct-fleet.md) (two and three ships)
-- **After the bake overhaul:** [chapter 2 rebakes](backlog/chapter-2-rebakes.md) — 02_09 as a bend,
-  02_06 solvable; with the constructor if it is ready
+- **27 Nov:** build the answer first, six plans: core (in progress) →
+  [single](backlog/bake-construct-single.md) → [wire](backlog/bake-construct-wire.md) →
+  [separate](backlog/bake-construct-separate.md) → [fan-out](backlog/bake-construct-fanout.md) →
+  [jobs](backlog/bake-construct-jobs.md) (no anchors: same jobs, quicker bakes)
+- **After the bake overhaul:** [chapter 2 rebakes](in-progress/chapter-2-rebakes.md) — moved to Now;
+  the answer backfill runs first
 - **27 Nov–1 Dec, alongside chapter 2:** [broken bodies](backlog/chapter-3-broken-bodies.md) (anchors, then
   repulsors; gate 1 Dec)
 - **Before 1 Dec:** [map arc](backlog/chapter-3-map-arc.md) — chapter systems on an arc around the seat, so every
@@ -57,7 +56,10 @@ One line each: what is left and where it lands.
   headset. 02_06 (the three-ship job, formerly 02_04) is the only chapter 2 job with no contract, so no check covers it, and the shipped
   re-solve found no zone that rescues all three ships under today's physics; the headset pass
   (2026-11-27) confirmed it cannot be solved. Its rebake is
-  [chapter 2 rebakes](backlog/chapter-2-rebakes.md) U3.
+  [chapter 2 rebakes](in-progress/chapter-2-rebakes.md) U3.
+- **Parallel scan timing** (bake parallel closed 2026-11-27, [lessons](../lessons.md)): time ~24 seeds
+  of a two-ship job with `-Workers 1` and the default in the bake checkout, compare both reports, and
+  note the speed-up in AGENTS' bake section.
 - **Chapter 2 headset pass** (plans closed 2026-11-27, [lessons](../lessons.md)): every edge sun level
   with its planets and none an answer; the map cube over each system's centre with no jump on entry;
   the intros' `MaxScaleDelta = 0.5` (tighten to ~0.3 and rescan if they play hard); time the capstone
@@ -86,3 +88,4 @@ One line each: what is left and where it lands.
   later, not closed). **Only the user closes a plan.**
   When they say to close it, follow [AGENTS](../../AGENTS.md) (post-mortem in lessons, then delete).
   Run `docs/check.ps1` after moving files.
+after moving files.

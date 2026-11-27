@@ -4,6 +4,20 @@ Short post-mortems, written when a plan closes (rule in [AGENTS.md](../AGENTS.md
 morning). Newest first. Each entry: what worked, what surprised us, the rule for next time. One idea per
 bullet; the code and tests are the record of what was built.
 
+## 2026-11-27 — Bake answer and bake parallel
+
+- **Worked:** storing each job's answer turned the shipped check from a re-solve into a replay, and a
+  settings change now names every job whose answer stopped landing.
+- **Worked:** the fleet search already ran on a plain snapshot, so parallel scans were scheduling work,
+  not a rewrite; one checkout on every core retired the second worktree.
+- **Surprised:** a backfill that re-solves stores a stand-in, not the baked answer: it passed bounds by
+  luck and could even pick a cube a fixed job's player can never place. A stored answer must be checked
+  against the contract and, for a fixed job, sit on its frame.
+- **Surprised:** reviews caught three answer bugs (stand-in zones, stale kind, wrong seed) before the
+  backfill ran; running it first would have stored them.
+- **Next time:** review a data migration before running it, and give derived numbers (wire count,
+  fleet ids) a test that names the value to set instead of a hand-kept constant.
+
 ## 2026-11-27 — Chapter 2 bakes
 
 - **Worked:** one list for every chapter 2 scan across two checkouts, each job taken from its own
