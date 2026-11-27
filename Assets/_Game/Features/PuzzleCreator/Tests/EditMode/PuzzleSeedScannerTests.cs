@@ -74,6 +74,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         }
 
         [Test]
+        public void BuildFailure_NamesTheStep()
+        {
+            contract.Generator = PuzzleGenerator.Construct;
+            RecordingLesson lesson = new() { Plan = null };
+            PuzzleSeedScanResult result = PuzzleSeedScanner.Find(contract, seed, settings, 1, lesson);
+            Assert.AreEqual(PuzzleBakeStatus.NoRun, result.Status);
+            Assert.IsNotNull(result.Problems);
+            StringAssert.Contains(nameof(PuzzleConstructStep.Lesson), result.Problems[0]);
+        }
+
+        [Test]
         public void Bake_RetriesWithAFreshStreamPerAttempt()
         {
             RecordingLesson lesson = new();
@@ -98,12 +109,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator.Tests.EditMode
         {
             public readonly List<int> SeedValues = new();
             public readonly List<int> ShipCounts = new();
+            public PuzzleLessonPlan Plan = PuzzleLessonPlan.None;
 
             public PuzzleLessonPlan Place(PuzzleLessonContext context)
             {
                 SeedValues.Add(context.SeedValue);
                 ShipCounts.Add(context.Ships != null ? context.Ships.Length : 0);
-                return PuzzleLessonPlan.None;
+                return Plan;
             }
         }
     }

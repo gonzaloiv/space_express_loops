@@ -37,6 +37,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public float CubeSizeMin;
         public float CubeSizeMax;
         public float SunRadius;
+        // The contract's high-scramble floor (0 = off): an answer's |scale - 1| must reach it.
+        public float MinScaleDelta;
         public PuzzleBrief Brief;
         public PuzzleSimSettings Settings;
         public int SeedValue;

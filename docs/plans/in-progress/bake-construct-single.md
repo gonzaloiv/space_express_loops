@@ -51,21 +51,13 @@ Same rule as the core: only what today's jobs use; **no anchored (`fixedMass`) p
 
 ## Review (2026-11-27)
 
-Both recipes are in and recorded (Clear 12/20 on `01_03`, Curve 11/20 on `01_01`).
+Both recipes are in and recorded (Clear 12/20 on `01_03`, Curve 11/20 on `01_01`). The review's three
+fixes landed.
 
-- **The single-ship "shrinking must not solve" gate is missing.** U2 says the verdict sweeps the
-  blocker's shrink and rejects a seed that lands, but `PuzzleConstructBake.ClearShortcut` only runs for
-  fleets (`IsMulti`; `PuzzleFleetSolution.TryFind` needs two ships). `01_01` is `GrowOnly`, so it is
-  vacuous there, but the next non-`GrowOnly` single-ship Curve contract (chapter 3, freelance) would
-  bake with a Clear shortcut. Add the single-ship branch (a Clear-only `PuzzleSolutionSearch` on the
-  variant) when `!GrowOnly`, with one test.
-- `NotCleared` is reused for "a Clear shortcut exists"; it reads as the opposite. Add a status
-  (`ClearShortcut`) at the end of the enum.
-- Docs: the status line says `next` but the plan is in `in-progress/` (the docs check fails); set
-  `now`.
-
-### To do (from the review)
-
-1. Add the single-ship Clear-shortcut gate for non-`GrowOnly` Curve contracts, with a test.
-2. Add a `ClearShortcut` status at the end of `PuzzleBakeStatus` and use it instead of `NotCleared`.
-3. Set the status line to `now` (the plan is in `in-progress/`); run `docs/check.ps1`.
+- **The single-ship "shrinking must not solve" gate is missing.** Fixed: `PuzzleConstructBake.ClearShortcut`
+  now runs the Clear-only `PuzzleSolutionSearch` for a single-ship Curve job when the cube is reachable
+  (`!GrowOnly && Translatable`); a fixed job cannot put the cube on the blocker. The fleet branch is
+  unchanged. `SingleCurve_RejectsAClearShortcut` covers it on the shipped `01_03` field.
+- `NotCleared` is reused for "a Clear shortcut exists"; fixed with a `ClearShortcut` status at the end
+  of `PuzzleBakeStatus`, used by the construct gate and the creator window's message.
+- Docs: the status line is `now` (the plan is in `in-progress/`); `docs/check.ps1` passes.

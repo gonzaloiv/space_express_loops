@@ -6,6 +6,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         {
             if (brief.IsMulti)
             {
+                if (brief.Relation == PuzzleShipRelation.FanOut)
+                    return brief.Mechanism == PuzzleMechanism.Curve
+                        ? new PuzzleFanOutCurveLesson()
+                        : null;
                 if (brief.Mechanism == PuzzleMechanism.Clear)
                     return new PuzzleFleetClearLesson();
                 if (brief.Mechanism == PuzzleMechanism.Curve)

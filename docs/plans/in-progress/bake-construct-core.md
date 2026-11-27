@@ -2,8 +2,9 @@
 
 **Status:** now · puzzle creator · updated 2026-11-27 — the answer-first generator's skeleton and its
 pass/fail gate: a field built around an intended answer, judged by the bake's existing checks. U1–U2
-in; the recipes are the single plan. First of six: core → [single](../in-progress/bake-construct-single.md) → [wire](bake-construct-wire.md) →
-[separate](bake-construct-separate.md) → [fan-out](../backlog/bake-construct-fanout.md) →
+in and the decoy-shape re-review fix done (Ring, Spiral and Cluster covered); the recipes are the
+single plan. First of six: core → [single](../in-progress/bake-construct-single.md) → [wire](bake-construct-wire.md) →
+[separate](bake-construct-separate.md) → [fan-out](bake-construct-fanout.md) →
 [jobs](bake-construct-jobs.md).
 
 **Related:** [plans board](../README.md) · `PuzzleAnswerAsset` (stores what
@@ -92,6 +93,9 @@ searched one. **No anchored (`fixedMass`) planets**: those are chapter 3's
   the construct gate returns `SingleRoute` for it. The shipped check trusts the stored count. The
   single plan's Clear target must construct a field that admits 2 current routes; whether the shipped
   `01_03` is rebaked is a content call.
+- **Re-review fix — done (2026-11-27).** A moved decoy re-samples the generated shape (see the to-do
+  below); the fast path is green: `PuzzleConstructDecoyTests` 4/4, construct + fleet 15 passed (8
+  Explicit skipped), verdict + single 5 passed (2 Explicit skipped), fan-out 7/7.
 - Next: [single](../in-progress/bake-construct-single.md) — Clear `01_03`, Curve `01_01`.
 
 ## Review (2026-11-27)
@@ -123,9 +127,9 @@ route-count drift is recorded for the single plan.
 
 ## Review fixes (2026-11-27)
 
-- **Done — decoys follow the field's shape.** A relocated decoy keeps its horizontal radius and height;
-  only the azimuth changes, so a Ring or Spiral field stays on its rings.
-  `RingField_DecoysStayOnTheRings` and `RelocatedDecoy_KeepsItsRingRadius` cover it.
+- **Superseded — decoys follow the field's shape.** The first fix kept a moved decoy's horizontal
+  radius and height; the re-review fix below re-samples the generated shape instead, so Ring, Spiral
+  and Cluster all hold. `PuzzleConstructDecoyTests` covers the three shapes and the built field.
 - **Done — one salted retry stream.** `PuzzleConstructSeeds.Value(seed, attempt)` is `seed +
   attempt × 7919`, used by the field, the lesson and the decoy step;
   `RetrySeed_DoesNotCollideWithTheNextSeed` covers it.
@@ -150,5 +154,11 @@ The three fixes landed (`9330b0cc`): salted retries (`PuzzleConstructSeeds.Value
 
 ### To do (from the re-review)
 
-1. Relocate a moved decoy to a free spot of the generated shape (Spiral and Cluster too, not only
-   Ring), and extend the Ring test to Spiral and Cluster.
+1. **Done — a moved decoy follows the generated shape.** `PuzzleConstructDecoys.TryRelocate(field,
+   index, int shapeSeed)` re-samples `PuzzleConstructShape.Generate` and takes the first free spot that
+   `Fits`, keeping the decoy's radius and name; the current spot is skipped so a retry always moves.
+   `KeepClear` salts per planet (`seed + i`) and `MoveDecoy` uses `Value(field.SeedValue, retry)`. The
+   old azimuth-only candidate is gone, and the comment no longer claims Spiral. `PuzzleConstructDecoyTests`:
+   `RelocatedDecoy_StaysOnTheRing`/`Spiral`/`Cluster` and `Build_KeepsEveryDecoyOnTheShape`, green
+   (4/4, ~1.0 s); `PuzzleConstructTests` + `PuzzleConstructFleetTests` green (15 passed, 8 Explicit
+   skipped). This unblocks fan-out's manual item 7 (both fan-out fixtures are Spiral/Cluster).

@@ -1,36 +1,37 @@
-using DigitalLove.Global;
 using UnityEngine;
 
 namespace DigitalLove.Game.SpaceShaping.Creator
 {
-    // Keeps every unclaimed planet out of every ship's start corridor. A failed verdict moves the
-    // decoy nearest the failing ship's chord first; the step is deterministic for a given retry seed.
+    // Keeps every unclaimed planet out of every ship's start corridor. A moved decoy goes to a free
+    // spot of the generated shape, so a Ring stays on its rings, a Spiral on its arms and a Cluster in
+    // its group. The step is deterministic for a given shape seed.
     public static class PuzzleConstructDecoys
     {
-        private const int Attempts = 32;
-
         public static void KeepClear(PuzzleDecoyField field)
         {
-            SeededRandom random = new(PuzzleConstructSeeds.Value(
-                field.Request.Seed.Seed, field.Request.Attempt));
+            int seed = PuzzleConstructSeeds.Value(field.Request.Seed.Seed, field.Request.Attempt);
             for (int i = 0; i < field.Planets.Length; i++)
             {
                 if (field.Protected[i] || !InCorridor(field, i))
                     continue;
 
-                TryRelocate(field, i, random);
+                TryRelocate(field, i, seed + i);
             }
         }
 
-        public static bool TryRelocate(PuzzleDecoyField field, int index, SeededRandom random)
+        public static bool TryRelocate(PuzzleDecoyField field, int index, int shapeSeed)
         {
-            for (int i = 0; i < Attempts; i++)
+            PuzzleFieldPlanet[] shape = PuzzleConstructShape.Generate(field.Request, shapeSeed);
+            PuzzleFieldPlanet planet = field.Planets[index];
+            for (int i = 0; i < shape.Length; i++)
             {
-                Vector3 candidate = Candidate(field, index, random);
+                Vector3 candidate = shape[i].position;
+                if ((candidate - planet.position).sqrMagnitude < 0.000001f)
+                    continue;
                 if (!Fits(field, index, candidate))
                     continue;
 
-                field.Planets[index].position = candidate;
+                field.Planets[index] = new PuzzleFieldPlanet(candidate, planet.radius, planet.name);
                 return true;
             }
 
@@ -89,17 +90,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             }
 
             return false;
-        }
-
-        // A moved decoy keeps its ring radius and height; only the azimuth changes, so a Ring or
-        // Spiral field stays on its rings instead of gaining planets in the middle.
-        private static Vector3 Candidate(PuzzleDecoyField field, int index, SeededRandom random)
-        {
-            Vector3 current = field.Planets[index].position;
-            float radius = new Vector2(current.x, current.z).magnitude;
-            float angle = random.Range(0f, Mathf.PI * 2f);
-            return new Vector3(
-                Mathf.Cos(angle) * radius, current.y, Mathf.Sin(angle) * radius);
         }
 
         private static bool Fits(PuzzleDecoyField field, int index, Vector3 candidate)

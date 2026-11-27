@@ -9,7 +9,7 @@ yield (separate U2/U3), not this seam.
 
 **Related:** [plans board](../README.md) ·
 [construct separate](../in-progress/bake-construct-separate.md) (its fleet recipes are the base) ·
-[construct fan-out](../backlog/bake-construct-fanout.md) (must land first for 02_09) ·
+[construct fan-out](bake-construct-fanout.md) (must land first for 02_09) ·
 [chapter 2 rebakes](../in-progress/chapter-2-rebakes.md) (the search bakes this compares against)
 
 ## Units
@@ -63,6 +63,12 @@ yield (separate U2/U3), not this seam.
   their 12/20 bars and Curve builds nothing; the blocker is
   [separate](bake-construct-separate.md) U2/U3, not this seam. 02_06 and 02_09 keep the search bakes;
   no contract, chapter or shipped asset changed. `02_09C` also waits on fan-out.
+- **Diagnosed (2026-11-27).** Both fail at `Lesson`, and the instrumented lesson names
+  `bend offsets`: the per-ship blockers place, but all six shared-bend offsets fail
+  `PuzzleLessonPlacement.TryAt` (endpoint clearance or separation from the blockers/planets). `02_03C`
+  reached it on 4/4 attempts; `02_06C` on 2/4, the other attempts failing earlier at the chords. The
+  fix belongs to [separate](bake-construct-separate.md) U3 — place or reserve the bend before the
+  blockers, or widen its search — not to the fleet seam.
 
 ## Review (2026-11-27)
 
@@ -91,11 +97,14 @@ comparison on scratch copies with real baselines (02_06 window 0.397, 02_09 0.24
 - **Per-seed time must include the gate.** A Construct fleet runs `ClearShortcut` on every passing seed
   (a full Clear search); count it in the per-seed wall clock, or the comparison flatters the
   constructor.
-- 02_09C only exists once [fan-out](../backlog/bake-construct-fanout.md) lands; if fan-out moves after
+- 02_09C only exists once [fan-out](bake-construct-fanout.md) lands; if fan-out moves after
   the release, U2 proves 02_06C only, and the plan should say so.
 
 ### To do (from the re-review)
 
-1. Wait for wire's scratch-folder fix before running U2.
+1. **Done (checked 2026-11-27) — wire's scratch-folder fix is in.** `PuzzleTestSetBuilder.FolderFor`
+   keys on `PuzzleConstructScratch.Has`, so a parked `Pending` job keeps its chapter path. The U2 run
+   at `952fe82b` predates the fix but wrote no asset (0/20 Curve), so nothing landed in the wrong
+   folder; rerun on a `bake` that has it before baking any fixture's pin.
 2. Include the Clear-shortcut gate in the per-seed time.
 3. Record whether U2 covers 02_09C, once fan-out's timing is decided.

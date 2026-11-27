@@ -43,7 +43,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             return isProtected;
         }
 
-        private static PuzzleLessonContext Context(
+        public static PuzzleLessonContext Context(
             PuzzleFieldPlanet[] planets, PuzzleConstructRequest request,
             PuzzleConstructedShip[] ships, int hubIndex, Vector3 hubHome)
         {
@@ -63,6 +63,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 CubeSizeMin = min,
                 CubeSizeMax = max,
                 SunRadius = request.Brief.SunRadius,
+                MinScaleDelta = request.Contract.MinScaleDelta,
                 Brief = request.Brief,
                 Settings = request.Sim,
                 SeedValue = PuzzleConstructSeeds.Value(request.Seed.Seed, request.Attempt)

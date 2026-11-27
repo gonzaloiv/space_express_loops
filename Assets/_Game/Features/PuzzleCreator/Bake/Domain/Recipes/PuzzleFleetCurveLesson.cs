@@ -130,7 +130,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleZone zone = PuzzleZoneCandidates.Zone(
                 planets[context.HubIndex].position, PuzzleLessonAnswer.Size(context, radius), 1f,
                 context.Settings.ZoneFalloff);
-            if (PuzzleLessonAnswer.Rejected(context, zone) || HoldsAnother(context, planets, zone))
+            if (PuzzleLessonAnswer.Rejected(context, zone)
+                || PuzzleLessonAnswer.HoldsAnother(context.HubIndex, planets, zone))
                 return null;
             if (!PuzzleLessonScale.TryMiddle(
                     setup, zone, 1f, context.Settings.MaxScaleFactor, out PuzzleZone answer))
@@ -174,18 +175,6 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 copy[moves[i].Index] = new PuzzleFieldPlanet(
                     moves[i].Home, moves[i].Radius, copy[moves[i].Index].name);
             return copy;
-        }
-
-        private static bool HoldsAnother(
-            PuzzleLessonContext context, PuzzleFieldPlanet[] planets, PuzzleZone zone)
-        {
-            for (int i = 0; i < planets.Length; i++)
-            {
-                if (i != context.HubIndex && zone.Contains(planets[i].position))
-                    return true;
-            }
-
-            return false;
         }
     }
 }

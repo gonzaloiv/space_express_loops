@@ -69,6 +69,29 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Relation = PuzzleShipRelation.Separate,
                 Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
             },
+            // Fan-out Curve: 02_04's two-ship Spiral and 02_09's three-ship Cluster, both pinned to
+            // Curve because the shipped contracts are Any/Curve. 02_09 keeps the high-scramble floor.
+            new PuzzleJobContract
+            {
+                Id = "02_04C", Pending = true, Generator = PuzzleGenerator.Construct,
+                Seed = 4, Attempts = 4, PlanetCount = 12, FieldShape = PuzzleFieldShape.Spiral,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                SunRule = PuzzleSunRule.NoSunAnswer, MinBlockers = 0,
+                Mechanism = PuzzleMechanism.Curve, Zones = 1, MinRoutes = 1, Ships = 2,
+                Relation = PuzzleShipRelation.FanOut,
+                Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
+            },
+            new PuzzleJobContract
+            {
+                Id = "02_09C", Pending = true, Generator = PuzzleGenerator.Construct,
+                Seed = 183, Attempts = 4, PlanetCount = 12, FieldShape = PuzzleFieldShape.Cluster,
+                HasSun = true, SunPlacement = PuzzleSunPlacement.OffCorridor, SunOnChord = false,
+                SunRule = PuzzleSunRule.NoSunAnswer,
+                Mechanism = PuzzleMechanism.Curve, Zones = 1, MinRoutes = 1, Ships = 3,
+                Relation = PuzzleShipRelation.FanOut,
+                Translatable = true, NoFail = false, NoGrade = false, NoIntro = false,
+                MinScaleDelta = 0.35f, MinStartDistance = 0.15f,
+            },
         };
 
         public static bool Has(string id)

@@ -41,5 +41,53 @@ namespace DigitalLove.Game.SpaceShaping.Creator
 
             return max;
         }
+
+        // The point of the run nearest a target; the fan-out aim moves a destination onto it.
+        public static Vector3 ClosestPoint(TrajectoryResult result, Vector3 point)
+        {
+            if (!result.HasPoints)
+                return point;
+
+            Vector3 best = result.Points[0];
+            float bestSquared = (best - point).sqrMagnitude;
+            for (int i = 1; i < result.Points.Count; i++)
+            {
+                Vector3 candidate =
+                    SegmentGeometry.ClosestPoint(point, result.Points[i - 1], result.Points[i]);
+                float squared = (candidate - point).sqrMagnitude;
+                if (squared >= bestSquared)
+                    continue;
+
+                best = candidate;
+                bestSquared = squared;
+            }
+
+            return best;
+        }
+
+        // The horizontal side of the point relative to the run's nearest segment: +1 left, -1 right,
+        // 0 when the run has no segment or the point sits exactly on it.
+        public static int SideOf(TrajectoryResult result, Vector3 point)
+        {
+            if (!result.HasPoints || result.Points.Count < 2)
+                return 0;
+
+            int nearest = 1;
+            float best = float.MaxValue;
+            for (int i = 1; i < result.Points.Count; i++)
+            {
+                float distance = DistanceToSegment(point, result.Points[i - 1], result.Points[i]);
+                if (distance >= best)
+                    continue;
+
+                best = distance;
+                nearest = i;
+            }
+
+            Vector3 from = result.Points[nearest - 1];
+            Vector3 to = result.Points[nearest];
+            float side = Vector3.Dot(Vector3.Cross(to - from, point - from), Vector3.up);
+            return side > 0f ? 1 : side < 0f ? -1 : 0;
+        }
     }
 }

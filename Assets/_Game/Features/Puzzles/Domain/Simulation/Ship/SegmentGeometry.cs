@@ -14,7 +14,10 @@ namespace DigitalLove.Game.SpaceShaping
             return Mathf.Clamp01(Vector3.Dot(point - from, segment) / lengthSq);
         }
 
+        public static Vector3 ClosestPoint(Vector3 point, Vector3 from, Vector3 to) =>
+            from + (to - from) * ClosestT(point, from, to);
+
         public static float DistanceToSegment(Vector3 point, Vector3 from, Vector3 to) =>
-            Vector3.Distance(point, from + (to - from) * ClosestT(point, from, to));
+            Vector3.Distance(point, ClosestPoint(point, from, to));
     }
 }

@@ -32,9 +32,10 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private static PuzzleBakeResult TryAttempt(
             PuzzleConstructRequest request, int attempt)
         {
-            PuzzleConstructedField field = PuzzleConstruct.Build(request);
+            PuzzleConstructedField field =
+                PuzzleConstruct.Build(request, out PuzzleConstructStep failedStep);
             if (field == null)
-                return Fail(PuzzleBakeStatus.NoRun);
+                return NoRun(failedStep);
 
             PuzzleBakeResult result = Verify(field, request);
             if (result.Baked)
@@ -204,6 +205,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 ? PuzzleSunSources.WithSun(
                     planetSources, field.SunRadius, field.SunScalable, field.SunHome)
                 : planetSources;
+        }
+
+        private static PuzzleBakeResult NoRun(PuzzleConstructStep step)
+        {
+            PuzzleBakeResult failed = Fail(PuzzleBakeStatus.NoRun);
+            failed.Problems = new List<string> { $"build step: {step}" };
+            return failed;
         }
 
         private static PuzzleBakeResult Fail(

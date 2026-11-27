@@ -24,11 +24,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Settings = context.Settings
             });
 
-        public static bool Arrives(SpaceShapingSetup setup, PuzzleZone zone)
+        public static bool Arrives(SpaceShapingSetup setup, PuzzleZone zone) =>
+            AnswerResults(setup, zone).AllArrived();
+
+        public static TrajectoryResult[] AnswerResults(SpaceShapingSetup setup, PuzzleZone zone)
         {
             SpaceShapingSession session = new(setup);
             session.ApplyZone(zone.ToSpaceZone());
-            return session.SimulateAll().AllArrived();
+            return session.SimulateAll();
         }
 
         public static TrajectoryResult[] StartResults(SpaceShapingSetup setup) =>

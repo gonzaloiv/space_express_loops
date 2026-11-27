@@ -13,7 +13,7 @@ seam lands in jobs U1.
 **Related:** [plans board](../README.md) ·
 [construct single](../in-progress/bake-construct-single.md) (its recipes and Clear fix are the base) ·
 [construct wire](bake-construct-wire.md) (the `Generator` seam; fleet scanning stays in jobs U1) ·
-[construct fan-out](../backlog/bake-construct-fanout.md) (next)
+[construct fan-out](bake-construct-fanout.md) (next)
 
 Same rule as the core: only what today's jobs use; **no anchored (`fixedMass`) planets**.
 
@@ -139,13 +139,16 @@ next bake-checkout pass), so this is a review of the code, not the yield.
 - Moving the hub (`PuzzleFleetClearLesson`) does not check separation from endpoints or other planets;
   the verdict catches overlaps, but each one costs an attempt. Check clearance in the lesson move.
 - Keep the spikes and rates `[Explicit]` as they are, and record them here before
-  [fan-out](../backlog/bake-construct-fanout.md) starts.
+  [fan-out](bake-construct-fanout.md) starts.
 
 ### To do (from the review)
 
 1. **Done — the Clear hub's move is checked.** `PuzzleFleetClearLesson` moves the hub through
    `PuzzleLessonPlacement.TryAt`, so the move is clear of every endpoint, the other planets and a
    Centre sun before the setup is built; an overlap fails the seed instead of costing a verdict.
-2. Run the spikes and the 20-seed rates in the bake checkout and record them here.
+2. Run the spikes and the 20-seed rates in the bake checkout and record them here. (Checked
+   2026-11-27: still open. Jobs U2 already measured the Curve copies through `bake.ps1` at 0/20, all
+   `NoRun`; the scan now names the failing build step in `Problems`, so rerun and record which step
+   fails before changing the order.)
 3. If the rates are low, place the shared planet first and then each ship's endpoints, as the plan's
    "How the shared planet shapes the build" says.

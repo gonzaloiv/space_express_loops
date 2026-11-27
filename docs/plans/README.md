@@ -18,13 +18,16 @@ and schedule in [release](../design/release.md). Post-mortems in [lessons](../le
   scratch fixtures, 7 fast tests); the Clear/Curve spikes and rates are next in the bake checkout
 - **27 Nov:** [construct jobs](in-progress/bake-construct-jobs.md) — U1 in and merged into `bake`; U2
   proved negative (fleet Curve 0/20), so 02_06/02_09 stay search-baked and 02_09C waits on fan-out
+- **27 Nov:** [construct fan-out](in-progress/bake-construct-fanout.md) — code in: the picker, aim,
+  lesson and 02_04C/02_09C fixtures; the fast run awaits the Test Runner (MCP bridge dropped), and the
+  spike and 20-seed rates are next in the bake checkout
 
 ## Next
 
 - **27 Nov:** build the answer first, six plans: core (in progress) →
   [single](in-progress/bake-construct-single.md) (in progress) → [wire](in-progress/bake-construct-wire.md) (in progress) →
   [separate](in-progress/bake-construct-separate.md) (in progress) →
-  [fan-out](backlog/bake-construct-fanout.md) (next)
+  [fan-out](in-progress/bake-construct-fanout.md) (in progress)
 - **Jobs:** [construct jobs](in-progress/bake-construct-jobs.md) U2 proved the constructor on the
   scratch copies; the fleet recipes' yield is the separate plan's next pass
 - **After the bake overhaul:** [chapter 2 rebakes](in-progress/chapter-2-rebakes.md) — moved to Now;

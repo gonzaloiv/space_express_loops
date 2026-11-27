@@ -22,10 +22,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 planets, radius, request.Brief.EndpointClearance, out home);
         }
 
-        // An OffCorridor sun is placed after the chord; an OffCorridor contract that forbids a sun on
-        // the chord must still pass the validator's SunOnChord rule.
-        public static bool ClearsChord(
-            Vector3 home, Vector3 origin, Vector3 destination, PuzzleConstructRequest request)
+        // An OffCorridor sun is placed after the chords; an OffCorridor contract that forbids a sun on
+        // the chord must still pass the validator's SunOnChord rule. Every ship's chord is checked, so a
+        // fleet's other runs cannot hide the sun on their path (the validator reads ship 0).
+        public static bool ClearsChords(
+            Vector3 home, PuzzleConstructedShip[] ships, PuzzleConstructRequest request)
         {
             if (request.Brief.SunOnChord || request.Brief.SunRadius <= 0f)
                 return true;
@@ -33,7 +34,14 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 return true;
 
             float blocked = request.Brief.SunRadius * PuzzleRunChoice.SunBlockBandFactor;
-            return PuzzleRunGeometry.DistanceToSegment(home, origin, destination) >= blocked;
+            for (int i = 0; i < ships.Length; i++)
+            {
+                if (PuzzleRunGeometry.DistanceToSegment(
+                        home, ships[i].Origin, ships[i].Destination) < blocked)
+                    return false;
+            }
+
+            return true;
         }
     }
 }
