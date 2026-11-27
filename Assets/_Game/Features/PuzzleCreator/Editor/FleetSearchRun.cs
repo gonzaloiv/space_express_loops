@@ -22,15 +22,18 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         public readonly PuzzleBrief Brief;
         public readonly int StartSeed;
         public readonly int Count;
+        public readonly bool Measure;
 
         public FleetSearchRequest(
-            PuzzleSeed seed, SpaceShapingSettings settings, PuzzleBrief brief, int startSeed, int count)
+            PuzzleSeed seed, SpaceShapingSettings settings, PuzzleBrief brief, int startSeed, int count,
+            bool measure = false)
         {
             Seed = seed;
             Settings = settings;
             Brief = brief;
             StartSeed = startSeed;
             Count = Math.Max(1, count);
+            Measure = measure;
         }
     }
 
@@ -121,9 +124,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             }
 
             int seedValue = request.StartSeed + index;
+            PuzzleScanTimings timings = request.Measure ? new PuzzleScanTimings() : null;
+            long started = timings != null ? timings.Start() : 0;
             PuzzlePlanetListAsset planets =
                 PuzzleArtifactFactory.PlanetsFor(request.Seed, request.Settings, seedValue);
-            active = PuzzleMultiShipSearch.Prepare(planets, sim, request.Brief, seedValue);
+            timings?.Add(PuzzleScanTimings.Setup, started);
+            active = PuzzleMultiShipSearch.Prepare(planets, sim, request.Brief, seedValue, timings);
             UnityEngine.Object.DestroyImmediate(planets);
 
             zonesDone = 0;

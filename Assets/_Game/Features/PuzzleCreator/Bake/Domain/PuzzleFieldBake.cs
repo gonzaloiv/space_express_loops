@@ -5,16 +5,17 @@ namespace DigitalLove.Game.SpaceShaping.Creator
     public static class PuzzleFieldBake
     {
         public static PuzzleBakeResult Bake(
-            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief) =>
-            Run(planets, brief.Reach(settings), brief);
+            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief,
+            PuzzleScanTimings timings = null) =>
+            Run(planets, brief.Reach(settings), brief, timings);
 
         public static bool Apply(
             PuzzleBrief brief, PuzzleData puzzle, PuzzlePlanetListAsset planets, PuzzleSimSettings settings) =>
-            Apply(brief, puzzle, planets, settings, out _);
+            Apply(brief, puzzle, planets, settings, out _, null);
 
         public static bool Apply(
             PuzzleBrief brief, PuzzleData puzzle, PuzzlePlanetListAsset planets,
-            PuzzleSimSettings settings, out PuzzleRunReport runReport)
+            PuzzleSimSettings settings, out PuzzleRunReport runReport, PuzzleScanTimings timings = null)
         {
             PuzzleSource[] planetSources = PuzzleSourceBridge.ToSources(planets.planets);
             ApplyCubeRange(puzzle, planets, brief);
@@ -32,8 +33,11 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 run.AllowSunOnChord = true;
             }
 
-            if (!PuzzleRunChoice.TryPick(
-                    run, out Vector3 origin, out Vector3 destination, out runReport))
+            long started = timings != null ? timings.Start() : 0;
+            bool picked = PuzzleRunChoice.TryPick(
+                run, out Vector3 origin, out Vector3 destination, out runReport);
+            timings?.Add(PuzzleScanTimings.Setup, started);
+            if (!picked)
                 return false;
 
             if (!AddSun(brief, puzzle, planetSources, planets.planets))
@@ -126,23 +130,24 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             CubeRange(planets.planets, out min, out max);
 
         private static PuzzleBakeResult Run(
-            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief)
+            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief,
+            PuzzleScanTimings timings)
         {
             PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
-            if (!Apply(brief, field, planets, settings, out PuzzleRunReport runReport))
+            if (!Apply(brief, field, planets, settings, out PuzzleRunReport runReport, timings))
             {
                 Object.DestroyImmediate(field);
                 return Fail(PuzzleBakeStatus.NoRun, runReport);
             }
 
-            PuzzleBakeResult result = BakeField(field, settings, brief);
+            PuzzleBakeResult result = BakeField(field, settings, brief, timings);
             result.RunReport = runReport;
             Object.DestroyImmediate(field);
             return result;
         }
 
         private static PuzzleBakeResult BakeField(
-            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief)
+            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, PuzzleScanTimings timings)
         {
             if (!brief.SupportsZones)
                 return Fail(PuzzleBakeStatus.UnsupportedBrief);
@@ -150,94 +155,41 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (brief.Mechanism == PuzzleMechanism.Mixed && brief.Zones < 2)
                 return Fail(PuzzleBakeStatus.UnsupportedMechanism);
 
+            long started = timings != null ? timings.Start() : 0;
             PuzzleBakeStatus selected = PuzzleSolutionSelection.Select(
                 field, settings, brief, out PuzzleSolution found, out PuzzleSolutionKind kind);
+            timings?.Add(PuzzleScanTimings.Select, started);
             if (selected != PuzzleBakeStatus.Baked)
                 return Fail(selected, kind);
 
-            return Check(field, settings, brief, found, kind);
+            return Check(field, settings, brief, found, kind, timings);
         }
 
         // The constructor's answer takes the same path as a searched one: the start, the shorter-zone
         // rule, then the confirm (entropy, frames, routes, sun rule).
         private static PuzzleBakeResult Check(
             PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief,
-            PuzzleSolution found, PuzzleSolutionKind kind)
+            PuzzleSolution found, PuzzleSolutionKind kind, PuzzleScanTimings timings)
         {
             PuzzleBakeStatus start = PuzzleStartCheck.Status(field, settings, brief);
             if (start != PuzzleBakeStatus.Baked)
                 return Fail(start, kind);
 
-            if (PuzzleSolutionSelection.HasShorter(field, settings, brief, found))
+            long started = timings != null ? timings.Start() : 0;
+            bool shorter = PuzzleSolutionSelection.HasShorter(field, settings, brief, found);
+            timings?.Add(PuzzleScanTimings.Select, started);
+            if (shorter)
                 return Fail(PuzzleBakeStatus.FewerZones, kind);
 
-            return Confirm(field, settings, brief, found, kind);
+            return PuzzleFieldConfirm.Run(field, settings, brief, found, timings);
         }
 
-        private static PuzzleBakeResult Confirm(
-            PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief, PuzzleSolution found,
-            PuzzleSolutionKind kind)
-        {
-            field.entropyBudget = found.EntropySpent * PuzzleGrade.BudgetFactor;
-            PuzzleData variant = Variant(field, found, brief, settings);
-            PuzzleVerification check = PuzzleVerifier.Verify(variant, found.Zones, settings);
-            kind = check.Kind;
-            if (!check.Solved)
-            {
-                Object.DestroyImmediate(variant);
-                return Fail(PuzzleBakeStatus.Unverified, kind);
-            }
-
-            if (!PuzzleSunRuleCheck.Matches(variant, found.Zones, brief.SunRule))
-            {
-                Object.DestroyImmediate(variant);
-                return Fail(PuzzleBakeStatus.SunRuleFailed, kind);
-            }
-
-            if (brief.SunRule == PuzzleSunRule.NoSunAnswer
-                && PuzzleSunRuleCheck.SunAnswers(variant, settings))
-            {
-                Object.DestroyImmediate(variant);
-                return Fail(PuzzleBakeStatus.SunAnswers, kind);
-            }
-
-            if (!HasRoutes(variant, settings, brief, found.Zones))
-            {
-                Object.DestroyImmediate(variant);
-                return Fail(PuzzleBakeStatus.SingleRoute, kind);
-            }
-
-            return new PuzzleBakeResult
-            {
-                Puzzle = variant,
-                Solution = found.Zones,
-                Status = PuzzleBakeStatus.Baked,
-                Kind = kind
-            };
-        }
-
-        private static bool HasRoutes(
-            PuzzleData puzzle, PuzzleSimSettings settings, PuzzleBrief brief, PuzzleZone[] zones)
-        {
-            puzzle.routes = PuzzleRouteCount.Count(puzzle, settings, zones);
-            return puzzle.routes >= Mathf.Max(1, brief.MinRoutes);
-        }
-
-        private static PuzzleBakeResult Fail(
+        internal static PuzzleBakeResult Fail(
             PuzzleBakeStatus status, PuzzleSolutionKind kind = PuzzleSolutionKind.Other) =>
             new() { Status = status, Kind = kind };
 
         private static PuzzleBakeResult Fail(PuzzleBakeStatus status, PuzzleRunReport runReport) =>
             new() { Status = status, RunReport = runReport };
-
-        private static PuzzleData Variant(
-            PuzzleData field, PuzzleSolution solution, PuzzleBrief brief, PuzzleSimSettings settings)
-        {
-            PuzzleData puzzle = Object.Instantiate(field);
-            puzzle.frames = BuildFrames(field, solution, brief, settings);
-            puzzle.zones = solution.Zones.Length;
-            return puzzle;
-        }
 
         // A fixed level ships the solved zone geometry and the player finds the scales; a movable
         // level ships one start frame near the brief's start rule and the player moves and scales it.

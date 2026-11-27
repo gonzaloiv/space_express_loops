@@ -10,13 +10,16 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private readonly PuzzleData field;
         private readonly FleetField fleet;
         private readonly PuzzleBrief brief;
+        private readonly PuzzleScanTimings timings;
 
         private PuzzleMultiShipSearch(
-            PuzzleData field, FleetField fleet, PuzzleBrief brief, int seed, PuzzleBakeStatus status)
+            PuzzleData field, FleetField fleet, PuzzleBrief brief, int seed, PuzzleBakeStatus status,
+            PuzzleScanTimings timings)
         {
             this.field = field;
             this.fleet = fleet;
             this.brief = brief;
+            this.timings = timings;
             Seed = seed;
             Status = status;
         }
@@ -28,41 +31,47 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         public bool Prepared => Status == PuzzleBakeStatus.Baked;
 
         public static PuzzleMultiShipSearch Prepare(
-            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief, int seed)
+            PuzzlePlanetListAsset planets, PuzzleSimSettings settings, PuzzleBrief brief, int seed,
+            PuzzleScanTimings timings = null)
         {
             if (!brief.IsMulti)
-                return new PuzzleMultiShipSearch(null, null, brief, seed, PuzzleBakeStatus.UnsupportedBrief);
+                return new PuzzleMultiShipSearch(
+                    null, null, brief, seed, PuzzleBakeStatus.UnsupportedBrief, timings);
 
             if (!brief.SupportsFleetRole)
                 return new PuzzleMultiShipSearch(
-                    null, null, brief, seed, PuzzleBakeStatus.UnsupportedMechanism);
+                    null, null, brief, seed, PuzzleBakeStatus.UnsupportedMechanism, timings);
 
             PuzzleData field = ScriptableObject.CreateInstance<PuzzleData>();
-            if (!PuzzleFieldBake.Apply(brief, field, planets, settings))
+            if (!PuzzleFieldBake.Apply(brief, field, planets, settings, out _, timings))
             {
                 Object.DestroyImmediate(field);
-                return new PuzzleMultiShipSearch(null, null, brief, seed, PuzzleBakeStatus.NoRun);
+                return new PuzzleMultiShipSearch(
+                    null, null, brief, seed, PuzzleBakeStatus.NoRun, timings);
             }
 
             return new PuzzleMultiShipSearch(
-                field, FleetField.From(field, settings), brief, seed, PuzzleBakeStatus.Baked);
+                field, FleetField.From(field, settings), brief, seed, PuzzleBakeStatus.Baked, timings);
         }
 
         // A batch's preparation: the planets are made and released on the main thread, and the field
         // stays for the confirm after the worker returns.
         public static PuzzleMultiShipSearch PrepareForSeed(
-            PuzzleSeed seed, SpaceShapingSettings settings, PuzzleBrief brief, int seedValue)
+            PuzzleSeed seed, SpaceShapingSettings settings, PuzzleBrief brief, int seedValue,
+            PuzzleScanTimings timings = null)
         {
+            long started = timings != null ? timings.Start() : 0;
             PuzzlePlanetListAsset planets = PuzzleArtifactFactory.PlanetsFor(seed, settings, seedValue);
+            timings?.Add(PuzzleScanTimings.Setup, started);
             PuzzleMultiShipSearch search =
-                Prepare(planets, PuzzleSimSettings.From(settings), brief, seedValue);
+                Prepare(planets, PuzzleSimSettings.From(settings), brief, seedValue, timings);
             Object.DestroyImmediate(planets);
             return search;
         }
 
         // The worker's whole job: plain data in, zone and rescued runs out.
         public FleetZoneResult Run(CancellationToken token = default, System.Action onZone = null) =>
-            Prepared ? new PuzzleMultiShipProbe(fleet, brief).Find(token, onZone) : default;
+            Prepared ? new PuzzleMultiShipProbe(fleet, brief, timings).Find(token, onZone) : default;
 
         // Back on the main thread: select the ships, re-check the rescue, build the variant.
         public PuzzleMultiShipResult Confirm(FleetZoneResult found)
@@ -73,7 +82,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (!found.Found)
                 return new PuzzleMultiShipResult { Status = PuzzleBakeStatus.NoSolution };
 
-            return PuzzleMultiShipBake.ConfirmZone(field, fleet, found, brief);
+            return PuzzleMultiShipBake.ConfirmZone(field, fleet, found, brief, timings);
         }
 
         // The batch's view: confirm and map to the scan result in one step.
@@ -90,7 +99,8 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                 Status = baked.Status,
                 Puzzle = variant,
                 Solution = variant != null ? new[] { baked.Solution } : null,
-                Kind = baked.Kind
+                Kind = baked.Kind,
+                Timings = timings
             };
         }
 

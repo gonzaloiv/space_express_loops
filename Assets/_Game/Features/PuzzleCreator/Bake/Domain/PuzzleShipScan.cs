@@ -22,26 +22,32 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         private readonly FieldView start;
         private readonly bool[] startArrives;
         private readonly int count;
+        private readonly PuzzleScanTimings timings;
 
-        public PuzzleShipScan(PuzzleData puzzle, PuzzleSimSettings settings, float clearance)
-            : this(FleetField.From(puzzle, settings), clearance)
+        public PuzzleShipScan(
+            PuzzleData puzzle, PuzzleSimSettings settings, float clearance,
+            PuzzleScanTimings timings = null)
+            : this(FleetField.From(puzzle, settings), clearance, timings)
         {
         }
 
-        public PuzzleShipScan(FleetField fleet, float clearance)
+        public PuzzleShipScan(FleetField fleet, float clearance, PuzzleScanTimings timings = null)
         {
             this.fleet = fleet;
             this.clearance = clearance;
+            this.timings = timings;
             settings = fleet.Settings;
             count = fleet.Sources.Length;
             startArrives = new bool[count * count];
             if (count < 2)
                 return;
 
+            long started = timings != null ? timings.Start() : 0;
             setup = fleet.ToSetup();
             launch.LaunchSpeed = setup.LaunchSpeed;
             start = FieldView.Build(setup, null);
             CacheStart();
+            timings?.Add(PuzzleScanTimings.StartCache, started);
         }
 
         // Runtime semantics: a zone buys time (its scale inflates the step budget).
@@ -106,6 +112,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (count < 2)
                 return rescued;
 
+            long started = timings != null ? timings.Start() : 0;
             FieldView edited = FieldView.Build(setup, zone);
             for (int i = 0; i < count; i++)
             {
@@ -113,6 +120,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                     Consider(edited, zone, i, j, timeDilation, rescued);
             }
 
+            timings?.Add(PuzzleScanTimings.Probe, started);
             return rescued;
         }
 
@@ -129,6 +137,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             if (capture <= 0f || zone.Contains(origin) || zone.Contains(destination))
                 return;
 
+            timings?.CountSimulation();
             TrajectoryResult result = Run(edited, i, j, capture, timeDilation);
             if (result.Outcome != TrajectoryOutcome.Arrive)
                 return;
