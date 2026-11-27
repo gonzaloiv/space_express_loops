@@ -24,7 +24,7 @@ client and cargo line, no Jim. The story's epilogue, in two batches.
   would collide with a later story chapter 4 ([later chapters](../../ideas/later-chapters.md)) in
   players' saves.
 - **Sun placement:** single-ship contracts keep the centred sun with `NoSunAnswer`; fleet contracts use
-  `OffCorridor` ([edge sun](../in-progress/edge-sun.md)), since a centred sun cannot meet
+  `OffCorridor` ([chapters](../../design/chapters.md)), since a centred sun cannot meet
   `NoSunAnswer` in a fleet.
 - **The bakes do not wait for the track.** Contract rows and bakes need no map code: commit the rows
   (U1), merge them into a free bake checkout and start U3 as soon as chapter 2's bakes free one; the

@@ -29,7 +29,7 @@ More and smaller planets (just `PuzzleSource` entries), the sun as a real source
   a sun above the field. Needs `PuzzleSunPlacementChoice.TryHome` limited to the planets' height band (no
   pole directions), one job and a line that introduce it, and a rule for how often it recurs. Also the
   chapter 2 fallback if a job cannot bake with a centred sun
-  ([fleet rebake](../plans/in-progress/fleet-rebake.md) U4).
+  ([lessons](../lessons.md), fleet rebake).
 
 ## Rules any element must keep
 

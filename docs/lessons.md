@@ -4,6 +4,61 @@ Short post-mortems, written when a plan closes (rule in [AGENTS.md](../AGENTS.md
 morning). Newest first. Each entry: what worked, what surprised us, the rule for next time. One idea per
 bullet; the code and tests are the record of what was built.
 
+## 2026-11-27 — Chapter 2 bakes
+
+- **Worked:** one list for every chapter 2 scan across two checkouts, each job taken from its own
+  branch through git, kept nine bakes and their pins straight.
+- **Worked:** stopping the long scans and rescanning only their candidate seeds saved hours (02_08,
+  then 02_07, came from seed 65 of a 200-seed run).
+- **Surprised:** both checkouts rewrite `Chapters/02.asset` and `PuzzleJobContracts.cs`, so every merge
+  conflicted and the chapter order had to be set by hand afterwards.
+- **Surprised:** renumbering to play order after the bakes touched ids, assets, contracts, lines and
+  clips at once, and left every open plan's notes on the old ids.
+- **Next time:** a bake writes only its own job (bake answer U4) and scans on every core in one
+  checkout (bake parallel); fix ids to play order before the first bake.
+
+## 2026-11-27 — Edge sun
+
+- **Worked:** making the validator check where the sun is caught 02_06's above-field sun, committed
+  under a `Centre` contract that nothing checked.
+- **Surprised:** a height-only check passes a centred sun (y = 0 sits inside most bands); the edge needs
+  the height band and a horizontal distance beyond the rim.
+- **Surprised:** the map anchored on the sun in four places (focus, slide, route line, zoom pivot);
+  moving the star off the centre needed one field-centre point instead.
+- **Surprised:** the only mention of the edge sun was a card's fine print, and the playtest missed it;
+  a change to the picture of a system needs Jim to say it.
+
+## 2026-11-27 — Fleet rebake
+
+- **Worked:** fleet contracts plus a stored-ships re-solve turned "won by shrinking the sun" from a
+  headset surprise into a failing check.
+- **Surprised:** at the centre the sun sits on every fleet corridor, so `NoSunAnswer` cannot be met
+  there (48 + 24 seeds); the sun's place flipped centre → above → centre → edge in one day.
+- **Surprised:** `Separate` is the relation enum's default, so an unset relation silently bakes the
+  wrong lesson.
+- **Next time:** settle the picture (where the star sits) on the headset before scanning seeds
+  against it.
+
+## 2026-11-27 — Chapter 2 intro
+
+- **Worked:** scramble bounds as zero-default contract fields kept every existing contract passing.
+- **Surprised:** fixed fleets failed a check written for the movable frame (the bounding-box centre
+  sat on the shared origin); the fixed frame had no check of its own until then.
+- **Surprised:** `MaxScaleDelta = 0.5` was set to admit the widest baked answer, so it screens nothing.
+- **Next time:** a bound set from the answer it should screen is a record, not a check; set bounds by
+  playing first.
+
+## 2026-11-27 — Fleet capstone and fleet Clear
+
+- **Worked:** classifying the confirmed fleet solution and rejecting `WrongRole` let a fleet ask for
+  Clear; trying the probe's own 13 scales first made the re-solve exact by construction.
+- **Surprised:** "two shared blockers" baked on none of 17 seeds, and the two Clear jobs that shipped
+  share one contract, so the playtest read them (and the `Any` capstone after them) as one solution.
+- **Surprised:** three-ship seeds are rare and slow, and a shipped three-ship job (02_06) stopped
+  solving under a settings change with nothing to say so.
+- **Next time:** two jobs need two different contracts; a ramp only the headset can tell apart
+  ("decoys judged by playing") is one job twice. A capstone names the mechanism it must be solved by.
+
 ## 2026-11-25 — Fleet search
 
 - **Worked:** splitting the bake at a plain snapshot let the probe run on a Task while the field and the

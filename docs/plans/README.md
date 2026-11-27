@@ -1,25 +1,27 @@
 # Plans — the board
 
 What is being built: **Now → Next → Later**. Each plan's `**Status:**` line matches its row here.
-Store release: €4, 6 Dec, 22 story jobs + 10 freelance at launch (10 more in the first update); scope
+Store release: €4, 6 Dec, 21 story jobs + 10 freelance at launch (10 more in the first update); scope
 and schedule in [release](../design/release.md). Post-mortems in [lessons](../lessons.md).
 
 ## Now
 
-Chapter 2 was renumbered to play order on 2026-11-26 (mapping in
-[chapter 2 bakes](in-progress/chapter-2-bakes.md)); the Now plans' notes use the old ids.
-
-- **26 Nov:** [edge sun](in-progress/edge-sun.md) (built; Unity tests, commit and merge into both bake
-  checkouts left) — before any further chapter 2 scan
-- **26–28 Nov:** [chapter 2 bakes](in-progress/chapter-2-bakes.md) — every chapter 2 scan and bake, one
-  list, after edge sun U1
-- **25–27 Nov:** [fleet rebake](in-progress/fleet-rebake.md) (contracts in; bakes in chapter 2 bakes; headset pass left)
-- **25–30 Nov:** chapter 2 to ten jobs: [intro](in-progress/chapter-2-intro.md) (code in) →
-  [fleet Clear](in-progress/fleet-clear.md) (U1–U2 in) · [capstone](in-progress/fleet-capstone.md)
-  (contract in); their bakes are in chapter 2 bakes
+- **27 Nov:** [chapter 2 playtest fixes](in-progress/chapter-2-playtest.md) — code, lines and docs in;
+  the Interchange prefab wiring, the 02_01 clip and the test runs remain
+- **27 Nov, today:** [bake answer](in-progress/bake-answer.md) — store the answer, replay the shipped
+  check, bakes leave the chapter list alone; code in, the shipped answers backfilled on `bake`
+- **27 Nov, today:** [bake parallel](in-progress/bake-parallel.md) — one batch Unity scans the fleet
+  seeds on every core, and the wire and fleet counts derive from the chapter assets; the timed scan
+  is still due in the bake checkout
 
 ## Next
 
+- **27 Nov:** the bake overhaul, in order: [bake answer](in-progress/bake-answer.md) (in progress) →
+  [bake parallel](in-progress/bake-parallel.md) (in progress) →
+  [construct core](backlog/bake-construct-core.md) (answer first, one ship) →
+  [construct fleet](backlog/bake-construct-fleet.md) (two and three ships)
+- **After the bake overhaul:** [chapter 2 rebakes](backlog/chapter-2-rebakes.md) — 02_09 as a bend,
+  02_06 solvable; with the constructor if it is ready
 - **27 Nov–1 Dec, alongside chapter 2:** [broken bodies](backlog/chapter-3-broken-bodies.md) (anchors, then
   repulsors; gate 1 Dec)
 - **Before 1 Dec:** [map arc](backlog/chapter-3-map-arc.md) — chapter systems on an arc around the seat, so every
@@ -53,8 +55,14 @@ One line each: what is left and where it lands.
   references it).
 - **Job 1 and 02_06 on the headset:** job 1 was rebaked 2026-11-06 (seed 141) and never read on the
   headset. 02_06 (the three-ship job, formerly 02_04) is the only chapter 2 job with no contract, so no check covers it, and the shipped
-  re-solve found no zone that rescues all three ships under today's physics: if it cannot be solved,
-  rebake it with a contract (edge sun) or drop it.
+  re-solve found no zone that rescues all three ships under today's physics; the headset pass
+  (2026-11-27) confirmed it cannot be solved. Its rebake is
+  [chapter 2 rebakes](backlog/chapter-2-rebakes.md) U3.
+- **Chapter 2 headset pass** (plans closed 2026-11-27, [lessons](../lessons.md)): every edge sun level
+  with its planets and none an answer; the map cube over each system's centre with no jump on entry;
+  the intros' `MaxScaleDelta = 0.5` (tighten to ~0.3 and rescan if they play hard); time the capstone
+  (~3–4 min). Optional: count blockers on any ship's run for `Any` fleets and put 02_04/02_05 back to
+  `MinBlockers = 1` if the shipped fields pass.
 - **Story arc and job card on the headset** (closed 2026-11-26,
   [note](../solutions/narrative/story-arc.md)): new cards settle under 3 s, versions follow play order,
   the regenerated clips play.
@@ -65,7 +73,7 @@ One line each: what is left and where it lands.
   fleets, which 02_01 now does.
 - **The sheet mirror:** push every `Levels_en` and `Global_en` change since 2026-11-25 to the line
   spreadsheet before the next sync, or the sync overwrites them: the story-arc lines, the two fuel lines
-  and job 1's manual entry, chapter 2's cards and lines, and the wire (one line dropped, 23 keys).
+  and job 1's manual entry, chapter 2's cards and lines, and the wire (two lines dropped since 2026-11-25, 22 keys).
 - **Jim's repeats (optional):** cut intro lines that say what the card shows; each cut deletes a
   clip and its downloader key. Keep 2-6's `init_02` (which ship carries what).
 

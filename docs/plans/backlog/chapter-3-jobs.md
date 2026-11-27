@@ -42,12 +42,12 @@ episode opener, Jim's lines and the ending.
 - Bake in ramp order: `PuzzleTestSetBuilder` appends a new id to the chapter's level list, so bake 3-1
   through 3-6 in that order (rebaking an existing id keeps its slot).
 - Contracts in `PuzzleJobContracts.All` with pinned seeds, like chapter 2's plans.
-- **Sun placement per job** ([edge sun](../in-progress/edge-sun.md)): single-ship jobs keep the centred
+- **Sun placement per job** ([chapters](../../design/chapters.md)): single-ship jobs keep the centred
   sun with `NoSunAnswer` (as chapter 1); the fleet capstone needs `OffCorridor`, because a centred sun
   cannot meet `NoSunAnswer` in a fleet. Every contract also sets `HasSun = true`.
 - **Test cost.** `ShippedJobs_MeetTheContract` is not `[Explicit]` and re-solves every *enabled*
-  contract, so chapter 3 adds six full searches in the bake checkout on top of chapter 2's nine (the Clear jobs 02_07–02_08
-  are baked; the two-blocker job was dropped). If the Creator suite passes ~2 min, move it behind
+  contract, so chapter 3 adds six full searches in the bake checkout on top of chapter 2's eight (the Clear job 02_07
+  is baked; 02_08 is parked and the two-blocker job was dropped). If the Creator suite passes ~2 min, move it behind
   `[Explicit]`; `PuzzleJobChecks` names the test explicitly, so the Job Baker still runs it.
 - Exit: the job assets validate and are in `Chapters/03` in play order.
 
