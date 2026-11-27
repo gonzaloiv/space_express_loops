@@ -19,8 +19,8 @@ and schedule in [release](../design/release.md). Post-mortems in [lessons](../le
 - **27 Nov:** [construct jobs](in-progress/bake-construct-jobs.md) — U1 in and merged into `bake`; U2
   proved negative (fleet Curve 0/20), so 02_06/02_09 stay search-baked and 02_09C waits on fan-out
 - **27 Nov:** [construct fan-out](in-progress/bake-construct-fanout.md) — code in: the picker, aim,
-  lesson and 02_04C/02_09C fixtures; the fast run awaits the Test Runner (MCP bridge dropped), and the
-  spike and 20-seed rates are next in the bake checkout
+  lesson and 02_04C/02_09C fixtures; the fast suite is green (7/7), and the spike and 20-seed rates
+  are next in the bake checkout
 
 ## Next
 

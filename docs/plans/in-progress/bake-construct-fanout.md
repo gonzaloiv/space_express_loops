@@ -1,8 +1,8 @@
 # Bake construct — fan-out fleets
 
 **Status:** now · puzzle creator · updated 2026-11-27 — U1–U3 code in (picker, aim, lesson, fixtures;
-the project compiles clean). The fast run needs the Test Runner after the MCP bridge dropped; the
-spikes and 20-seed rates are the next bake-checkout pass. The search stays the fallback.
+the project compiles clean and the seven fast tests pass). The spikes and 20-seed rates are the next
+bake-checkout pass. The search stays the fallback.
 
 **Bakes:** off the editor — U2's spike and U3's 20-seed rates are `[Explicit]` Creator tests; run them in
 the bake checkout. The fleet `bake.ps1` seam lands in [jobs](bake-construct-jobs.md) U1.
@@ -110,10 +110,9 @@ Same rule as the core: only what today's jobs use; **no anchored (`fixedMass`) p
   `PuzzleLessonContext.MinScaleDelta`. Fixtures `02_04C` and `02_09C` are in `PuzzleConstructScratch`
   (`Attempts = 4`, `Relation = FanOut`; 02_09C keeps `MinScaleDelta = 0.35`).
 - **Tests.** `PuzzleConstructFanOutTests`: 7 fast tests (fixtures, lesson choice, shared origin,
-  distinct destinations, cone, bend clearance, closest point, side). `PuzzleConstructFanOutBakeTests`:
-  the aim's shape check plus the two spikes and two 20-seed rates, all `[Explicit]`. The project
-  compiles clean; the fast run still needs the Test Runner after the MCP bridge dropped mid-run (the
-  known domain-reload drop), and the spikes/rates are the bake-checkout pass.
+  distinct destinations, cone, bend clearance, closest point, side), green 7/7 (~1.0 s).
+  `PuzzleConstructFanOutBakeTests`: the aim's shape check plus the two spikes and two 20-seed rates,
+  all `[Explicit]`. The project compiles clean; the spikes/rates are the bake-checkout pass.
 - **Context.** The Separate fleet Curve came back 0/20 (jobs U2), so the shared-bend recipe is not
   proven; fan-out is a different geometry (one origin, one near-origin bend) and its spike decides. If
   `02_04C` is below 12/20, fan-out stays on the search and 02_06/02_09 keep their current bakes.
@@ -194,7 +193,9 @@ than copied; `PuzzleLessonChoice` returns no lesson for a fan-out Clear; the NoR
 
 ### To do (from the implementation review)
 
-1. Run the fast suite in the Test Runner and record the seven fan-out tests here.
+1. **Done — the fast suite is green.** `PuzzleConstructFanOutTests` passes 7/7 (~1.0 s), alongside the
+   construct/fleet (15 passed, 8 Explicit skipped) and verdict/single (5 passed, 2 Explicit skipped)
+   checks after the decoy-shape fix.
 2. Run the spikes and the 20-seed rates in the bake checkout (with the Clear-shortcut gate's share,
    review to-do 3); below 12/20 on `02_04C`, fan-out stays on the search.
 3. Use the `MinScaleDelta` floor/ceiling in the other four recipes.
