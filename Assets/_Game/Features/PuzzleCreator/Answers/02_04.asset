@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afc685c9661c5ab44b0e99d732e8b5fa, type: 3}
+  m_Name: 02_04
+  m_EditorClassIdentifier: DigitalLove.Game.SpaceShaping.Creator.Data::DigitalLove.Game.SpaceShaping.Creator.PuzzleAnswerAsset
+  id: 02_04
+  kind: 0
+  zones:
+  - centre: {x: 0.14446889, y: 0.05735244, z: -0.1048748}
+    halfExtents: {x: 0.06432915, y: 0.06432915, z: 0.06432915}
+    scale: 0.6
+    falloff: 0.5
+  seed: 4
+  window: 0.23115578
+  scaleDelta: 0.39999998
+  startDistance: 0.27491015
