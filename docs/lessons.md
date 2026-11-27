@@ -4,6 +4,19 @@ Short post-mortems, written when a plan closes (rule in [AGENTS.md](../AGENTS.md
 morning). Newest first. Each entry: what worked, what surprised us, the rule for next time. One idea per
 bullet; the code and tests are the record of what was built.
 
+## 2026-11-27 — Bake scan speed
+
+- **Worked:** optional timings on the existing scan phases found the cost without a second scan path:
+  fleets are 93% probe, singles 91% solution search.
+- **Surprised:** the plan's read said the fleet probe was the cost; for singles it is the solution
+  search, 0.9 s a seed, so a 64-seed scan is a minute.
+- **Worked:** 20 seeds on 31 workers took 105 s (two ships) and 199 s (three ships); the two-ship
+  6.3× over one worker is a floor because 20 seeds leave cores idle.
+- **Next time:** size a scan budget from CPU-per-seed ÷ workers, not a 20-seed wall; 200 three-ship
+  seeds is ~15 min (~23 min worst case), inside an hour.
+- **Surprised:** report floats followed the machine's culture (`window=0,160804`); format machine-read
+  reports with `InvariantCulture`.
+
 ## 2026-11-27 — The answer-first generator
 
 - **Worked:** the single-ship constructor met its bakes (Clear 12/20, Curve 11/20), and the search was

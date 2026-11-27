@@ -30,7 +30,8 @@ client and cargo line, no Jim. The story's epilogue, in two batches.
 - **The bakes do not wait for the track.** Contract rows and bakes need no map code: commit the rows
   (U1), merge them into the bake checkout and start U3; the [track](freelance-track.md) is built
   alongside. One checkout is enough: a fleet scan runs on every core (`bake.ps1 -Workers`, default
-  cores − 1). A one-seed fleet scan takes about 2 minutes on one core.
+  cores − 1). A fleet seed takes ~43 s of CPU with two ships and ~2.2 min with three; 200
+  three-ship seeds take ~15 min on 31 workers ([scan speed](../../solutions/bake/seed-scan-timings.md)).
 - **It lives on the post-story track** ([track](freelance-track.md)): hidden until the ending is seen,
   then fully open. Coverage, the wire and the ending stay the story's.
 - **Order is the chapter asset, not the ids.** Slots are baked in order anyway, so `90_01`…`90_10` read

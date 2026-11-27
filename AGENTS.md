@@ -125,6 +125,10 @@ the Unity MCP.
   A fleet scan runs its probes on `-Workers` tasks (default: cores − 1); a single-ship scan stays
   sequential. Batch mode calls `PuzzleBatchBake`, which uses the synchronous bake paths
   (`FleetSearchRun` needs `EditorApplication.update`, which does not tick in batch mode).
+- Measured 2026-11-27 on the bake checkout (`PuzzleScanTimings`, 32 cores): 20 two-ship seeds take
+  658 s at `-Workers 1` and 105 s at the default (31 workers, 6.3× on 20 seeds; a longer scan gains
+  more, since 20 seeds leave cores idle and the slowest seed sets the wall). CPU per seed: ~0.9 s one
+  ship, ~43 s two ships, ~132 s three ships, so 200 three-ship seeds take ~15 min on 31 workers.
 - Commit the bake code first and merge it into `bake`; the checkout only sees committed code.
 - Baked assets come back through git: commit them on `bake`, then merge or cherry-pick. Never copy
   `.asset`/`.meta` files by hand.

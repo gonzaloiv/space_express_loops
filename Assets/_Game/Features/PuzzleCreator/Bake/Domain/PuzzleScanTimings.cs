@@ -17,18 +17,23 @@ namespace DigitalLove.Game.SpaceShaping.Creator
         // The zone sweep's RescuedFixed calls.
         public const int Probe = 2;
 
-        // The solution search and the shorter-zone check (singles), or the ship selection (fleets).
+        // The solution search, the start check and the shorter-zone check (singles), or the ship
+        // selection (fleets).
         public const int Select = 3;
 
         // The variant, verifier and the role/sun/route checks.
         public const int Confirm = 4;
 
+        // The job contract check, on a passing seed only.
+        public const int Validate = 5;
+
         // PuzzleSolveWindow.Measure, on a passing seed only.
-        public const int Window = 5;
+        public const int Window = 6;
 
-        public const int PhaseCount = 6;
+        public const int PhaseCount = 7;
 
-        private static readonly string[] Names = { "setup", "start", "probe", "select", "confirm", "window" };
+        private static readonly string[] Names =
+            { "setup", "start", "probe", "select", "confirm", "validate", "window" };
 
         private readonly long[] phaseTicks = new long[PhaseCount];
         private int simulations;

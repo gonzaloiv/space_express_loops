@@ -171,11 +171,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator
             PuzzleData field, PuzzleSimSettings settings, PuzzleBrief brief,
             PuzzleSolution found, PuzzleSolutionKind kind, PuzzleScanTimings timings)
         {
+            long started = timings != null ? timings.Start() : 0;
             PuzzleBakeStatus start = PuzzleStartCheck.Status(field, settings, brief);
+            timings?.Add(PuzzleScanTimings.Select, started);
             if (start != PuzzleBakeStatus.Baked)
                 return Fail(start, kind);
 
-            long started = timings != null ? timings.Start() : 0;
+            started = timings != null ? timings.Start() : 0;
             bool shorter = PuzzleSolutionSelection.HasShorter(field, settings, brief, found);
             timings?.Add(PuzzleScanTimings.Select, started);
             if (shorter)

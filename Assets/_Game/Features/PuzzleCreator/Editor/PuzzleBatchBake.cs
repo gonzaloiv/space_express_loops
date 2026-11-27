@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using DigitalLove.Game.SpaceShaping;
 using UnityEditor;
@@ -49,8 +50,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             wall.Stop();
 
             StringBuilder report = new();
-            report.AppendLine(
-                $"job={job.Id} seeds={seeds} workers={workers} wallMs={wall.ElapsedMilliseconds}");
+            report.AppendLine($"job={job.Id} seeds={seeds} workers={workers}");
             for (int i = 0; i < entries.Count; i++)
                 AppendSeed(report, entries[i]);
 
@@ -62,20 +62,42 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
 
         private static void AppendSeed(StringBuilder report, PuzzleJobSeedScan.Entry entry)
         {
-            string line =
-                $"seed={entry.Seed} baked={entry.Baked} meets={entry.MeetsContract} " +
-                $"status={entry.Status} problem={entry.Problem} window={entry.Window} " +
-                $"scaleDelta={entry.ScaleDelta} startDistance={entry.StartDistance} " +
-                Describe(entry.Timings);
+            string line = string.Format(
+                CultureInfo.InvariantCulture,
+                "seed={0} baked={1} meets={2} status={3} problem={4} window={5} " +
+                "scaleDelta={6} startDistance={7} {8}",
+                entry.Seed, entry.Baked, entry.MeetsContract, entry.Status, entry.Problem,
+                entry.Window, entry.ScaleDelta, entry.StartDistance, Describe(entry.Timings));
             report.AppendLine(line);
             Debug.Log(line);
         }
 
         private static string Totals(List<PuzzleJobSeedScan.Entry> entries, long wallMs)
         {
+            double[] ms = PhaseTotals(entries, out int simulations, out int measured);
+            StringBuilder line = new();
+            line.Append(string.Format(
+                CultureInfo.InvariantCulture,
+                "timings seeds={0} wallMs={1} wallPerSeedMs={2} cpuMs={3:F0} sims={4}",
+                measured, wallMs, PerSeed(wallMs, measured), Sum(ms), simulations));
+            for (int phase = 0; phase < ms.Length; phase++)
+            {
+                line.Append(string.Format(
+                    CultureInfo.InvariantCulture,
+                    " {0}Ms={1:F0}", PuzzleScanTimings.Name(phase), ms[phase]));
+            }
+
+            AppendHistogram(line, entries);
+            return line.ToString();
+        }
+
+        // Phase times add up across workers, so they are CPU milliseconds; wallMs is the run clock.
+        private static double[] PhaseTotals(
+            List<PuzzleJobSeedScan.Entry> entries, out int simulations, out int measured)
+        {
             double[] ms = new double[PuzzleScanTimings.PhaseCount];
-            int simulations = 0;
-            int measured = 0;
+            simulations = 0;
+            measured = 0;
             for (int i = 0; i < entries.Count; i++)
             {
                 PuzzleScanTimings timings = entries[i].Timings;
@@ -88,14 +110,20 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
                     ms[phase] += timings.Milliseconds(phase);
             }
 
-            StringBuilder line = new();
-            line.Append($"timings seeds={measured} wallMs={wallMs} sims={simulations}");
-            for (int phase = 0; phase < ms.Length; phase++)
-                line.Append($" {PuzzleScanTimings.Name(phase)}Ms={ms[phase]:F0}");
-
-            AppendHistogram(line, entries);
-            return line.ToString();
+            return ms;
         }
+
+        private static double Sum(double[] values)
+        {
+            double total = 0;
+            for (int i = 0; i < values.Length; i++)
+                total += values[i];
+
+            return total;
+        }
+
+        private static long PerSeed(long wallMs, int measured) =>
+            measured > 0 ? wallMs / measured : 0;
 
         private static void AppendHistogram(
             StringBuilder line, List<PuzzleJobSeedScan.Entry> entries)
@@ -127,7 +155,12 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
             StringBuilder line = new();
             line.Append($"sims={timings.Simulations}");
             for (int phase = 0; phase < PuzzleScanTimings.PhaseCount; phase++)
-                line.Append($" {PuzzleScanTimings.Name(phase)}Ms={timings.Milliseconds(phase):F0}");
+            {
+                line.Append(string.Format(
+                    CultureInfo.InvariantCulture,
+                    " {0}Ms={1:F0}",
+                    PuzzleScanTimings.Name(phase), timings.Milliseconds(phase)));
+            }
 
             return line.ToString();
         }

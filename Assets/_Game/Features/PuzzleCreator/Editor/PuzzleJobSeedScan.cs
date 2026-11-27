@@ -166,10 +166,13 @@ namespace DigitalLove.Game.SpaceShaping.Creator.EditorTools
         private static void Measure(
             ref Entry entry, PuzzleSeedScanResult result, PuzzleJobContract job, PuzzleSimSettings sim)
         {
+            long started = result.Timings != null ? result.Timings.Start() : 0;
             entry.MeetsContract = PuzzleJobValidator.Validate(
                 result.Puzzle, result.Kind, result.Solution, job, out List<string> problems, sim);
+            result.Timings?.Add(PuzzleScanTimings.Validate, started);
             entry.Problem = problems.Count > 0 ? problems[0] : string.Empty;
-            long started = result.Timings != null ? result.Timings.Start() : 0;
+
+            started = result.Timings != null ? result.Timings.Start() : 0;
             entry.Window = PuzzleSolveWindow.Measure(result.Puzzle, result.Solution, sim);
             result.Timings?.Add(PuzzleScanTimings.Window, started);
             MeasureScramble(ref entry, result);

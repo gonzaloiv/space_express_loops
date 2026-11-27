@@ -7,6 +7,7 @@ Each entry shows the situation the note applies to. Also see [shared solution no
 ## bake
 
 - [One bake path — measure the seed search before building an answer-first generator](bake/one-bake-path.md) — Deciding whether to add an answer-first generator beside the seed search
+- [Bake scan speed — profile the scan's phases before cutting the candidate grid](bake/seed-scan-timings.md) — Deciding whether a seed scan needs a speed cut
 
 ## narrative
 

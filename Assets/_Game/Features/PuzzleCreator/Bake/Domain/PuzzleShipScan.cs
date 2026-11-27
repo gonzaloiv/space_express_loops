@@ -100,6 +100,7 @@ namespace DigitalLove.Game.SpaceShaping.Creator
                     if (capture <= 0f)
                         continue;
 
+                    timings?.CountSimulation();
                     startArrives[i * count + j] =
                         Run(start, i, j, capture, false).Outcome == TrajectoryOutcome.Arrive;
                 }
